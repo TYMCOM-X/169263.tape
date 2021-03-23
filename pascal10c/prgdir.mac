@@ -1,0 +1,84 @@
+	TITLE	PRGDIR  -- FETCHES HIGH SEG PPN
+	TWOSEG
+	RELOC	400000
+
+;    +----------------------------------------------------------------+
+;    I                                                                I
+;    I                         P R G D I R                            I
+;    I                         - - - - - -                            I
+;    I                                                                I
+;    +----------------------------------------------------------------+
+;
+;    MDSI, COMPANY CONFIDENTIAL
+;
+;    STARTED:  7-Apr-78
+;
+;    PURPOSE: This module returns the ppn  in  which  the  active  high
+;       segment  resides.  The  two  entrypoints  return  the ppn as an
+;       integer or as a string.
+;
+;    USAGE:
+;       EXTERNAL PROCEDURE PRGM_PPN ( VAR PPN: INTEGER );
+;
+;       EXTERNAL FUNCTION PRGM_DIR (): STRING[15];
+;
+;    NOTES: If the program is run under link  (with  /e/g),  this  will
+;       return a ppn of [0,0].
+;
+;    RESPONSIBLE: Software Tools
+;
+;    CHANGES: NONE.
+;
+;    ------------------------------------------------------------------
+
+	CURHGH=	-2			; GETTAB PARAMETERS
+	.GTPPN=	2
+
+	ENTRY	PRGM%P
+PRGM%P:	MOVE	1,[CURHGH,,.GTPPN]	; REQUEST PPN FOR CURRENT HIGH SEG
+	GETTAB	1,
+	SETZ	1,			; ERROR - RETURN ZERO
+	MOVEM	1,0(2)			; SET VAR PARAMETER TO RESULT
+	POPJ	17,
+
+	ENTRY	PRGM%D
+PRGM%D:	MOVE	3,[POINT 7,1(2)]	; GET BYTE PTR TO STRING TO RETURN
+	SETZM	0(2)			; RETURN NULL STRING
+
+	MOVE	1,[CURHGH,,.GTPPN]	; REQUEST PPN OF HIGH SEG
+	GETTAB	1,
+	POPJ	17,			; RETURN NULL STRING IF ERROR
+
+	MOVEI	4,"["			; OUTPUT [ PROG , PROJ ]
+	PUSHJ	17,WRCHR
+	HLRZ	5,1			; PROJ IN LH
+	PUSHJ	17,WRNUM
+	MOVEI	4,","			; COMMA IS THE SEPARATOR
+	PUSHJ	17,WRCHR
+	HRRZ	5,1			; PROG IN RH
+	PUSHJ	17,WRNUM
+	MOVEI	4,"]"			; TERMINATE PPN
+	PUSHJ	17,WRCHR
+	POPJ	17,			; RETURN PPN STRING
+
+;
+;    Write routines move text into return string
+;
+
+WRCHR:	AOS	0(2)			; INCREMENT LENGTH
+	IDPB	4,3
+	POPJ	17,
+
+WRNUM:	MOVE	4,5		; ISOLATE LOW ORDER DIGIT
+	ANDI	4,7
+	ADDI	4,"0"		; MAKE IT ASCII
+	PUSH	17,4		; SAVE IT
+	LSH	5,-3			; WRITE NEXT ORDER CHAR FIRST, IF NOT 0
+	SKIPE	5
+	PUSHJ	17,WRNUM		; RECURSION WRITES LEFTMOST DIGIT 1ST
+	POP	17,4		; WRITE RIGHT HAND DIGIT
+	PUSHJ	17,WRCHR
+	POPJ	17,
+
+	LIT
+	END

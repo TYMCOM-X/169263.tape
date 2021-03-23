@@ -1,0 +1,3374 @@
+       File DSK:EXE016.PAS[31024,274425]   Compiled 10-Aug-82 11:02   Pascal, Version 2A(440)-1
+
+       File DSK:EXE016.PAS[31024,274425]   Compiled 10-Aug-82 11:02   Pascal, Version 2A(440)-1
+
+       File DSK:EXE016.PAS[31024,274425]   Compiled 10-Aug-82 11:02   Pascal, Version 2A(440)-1
+
+       File DSK:EXE016.PAS[31024,274425]   Compiled 10-Aug-82 11:02   Pascal, Version 2A(440)-1
+
+
+
+
+
+			    $$$$$   $   $   $$$$$     $$      $       $$ 
+			    $       $   $   $        $  $    $$      $   
+			    $        $ $    $        $  $     $     $    
+			    $$$       $     $$$      $  $     $     $ $$ 
+			    $        $ $    $        $  $     $     $$  $
+			    $       $   $   $        $  $     $     $   $
+			    $$$$$   $   $   $$$$$     $$     $$$     $$$ 
+
+
+				    DSK:EXE016.PAS[31024,274425]
+
+
+Options in effect: 
+
+	CHECK, NOSPECIAL, NOMAP, NOSYMBOLS, NOCALLS, ASSEMBLY, NOXREF, TRACE, NOQBLOCKS, NOOPTIMIZE, 
+	CODE, NODEBUG, FINISH, NOGLOBAL, NOMAINSEG, NOOVERLAY, AUTOQUICK, SOURCE, NOSTANDARD, 
+	LENGTH (45), WIDTH (102), NOEXTLENGTH, STORAGE (2048), ALLOC (0), ENABLE(M68)
+
+
+
+
+       File DSK:EXE016.PAS[31024,274425]   Compiled 10-Aug-82 11:02   Pascal, Version 2A(440)-1
+
+       File DSK:EXE016.PAS[31024,274425]   Compiled 10-Aug-82 11:02   Pascal, Version 2A(440)-1
+
+       File DSK:EXE016.PAS[31024,274425]   Compiled 10-Aug-82 11:02   Pascal, Version 2A(440)-1
+
+       File DSK:EXE016.PAS[31024,274425]   Compiled 10-Aug-82 11:02   Pascal, Version 2A(440)-1
+       File DSK:EXE016.PAS[31024,274425]   Compiled 10-Aug-82 11:02   Pascal, Version 2A(440)-1
+
+       File DSK:EXE016.PAS[31024,274425]   Compiled 10-Aug-82 11:02   Pascal, Version 2A(440)-1
+
+       File DSK:EXE016.PAS[31024,274425]   Compiled 10-Aug-82 11:02   Pascal, Version 2A(440)-1
+
+       File DSK:EXE016.PAS[31024,274425]   Compiled 10-Aug-82 11:02   Pascal, Version 2A(440)-1
+
+
+
+
+
+			    $$$$$   $   $   $$$$$     $$      $       $$ 
+			    $       $   $   $        $  $    $$      $   
+			    $        $ $    $        $  $     $     $    
+			    $$$       $     $$$      $  $     $     $ $$ 
+			    $        $ $    $        $  $     $     $$  $
+			    $       $   $   $        $  $     $     $   $
+			    $$$$$   $   $   $$$$$     $$     $$$     $$$ 
+
+
+				    DSK:EXE016.PAS[31024,274425]
+
+
+Options in effect: 
+
+	CHECK, NOSPECIAL, NOMAP, NOSYMBOLS, NOCALLS, ASSEMBLY, NOXREF, TRACE, NOQBLOCKS, NOOPTIMIZE, 
+	CODE, NODEBUG, FINISH, NOGLOBAL, NOMAINSEG, NOOVERLAY, AUTOQUICK, SOURCE, NOSTANDARD, 
+	LENGTH (45), WIDTH (102), NOEXTLENGTH, STORAGE (2048), ALLOC (0), ENABLE(M68)
+
+
+
+
+       File DSK:EXE016.PAS[31024,274425]   Compiled 10-Aug-82 11:02   Pascal, Version 2A(440)-1
+
+       File DSK:EXE016.PAS[31024,274425]   Compiled 10-Aug-82 11:02   Pascal, Version 2A(440)-1
+
+       File DSK:EXE016.PAS[31024,274425]   Compiled 10-Aug-82 11:02   Pascal, Version 2A(440)-1
+
+       File DSK:EXE016.PAS[31024,274425]   Compiled 10-Aug-82 11:02   Pascal, Version 2A(440)-1
+MODULE  EXE016       DSK:EXE016.PAS[31024,274425]                                      10-Aug-82 11:02
+SECTION 0                                                                                       PAGE 1
+
+    1	program exe016 options noqblock;
+    2	(* Any changes to this program should be done to EXE016.PMF *)
+    3	(*          and then regenerate EXE016.PAS with PMF         *)
+    4	
+    5	var sequence: integer;
+    6	
+    7	type
+    8	    access_index = 0 .. 4;
+    9	    access_array = array [access_index] of integer;
+   10	    access_record = record
+   11	        i: access_index;
+   12	        a: access_array;
+   13	    end;
+   14	
+   15	var a_r_0: access_record;
+   16	
+   17	label 01, 02;MODULE  EXE016       DSK:EXE016.PAS[31024,274425]                                      10-Aug-82 11:02
+SECTION 1            call tests                                                                 PAGE 2
+
+    2	procedure ct_top_uncle ( n: integer );
+    3	begin
+    4	  case n of
+    5	    1 : begin
+    6	  if sequence <> 2 then
+    7	    writeln (tty, 'Sequence error: point 2 follows point', sequence-1)
+    8 *	$IF points
+    9 *	  else
+   10 *	    writeln (tty, '[2]')
+   11 *	$ENDIF
+   12	  ;
+   13	  sequence := 2 + 1;
+   14	end;
+   15	    2 : begin
+   16	  if sequence <> 5 then
+   17	    writeln (tty, 'Sequence error: point 5 follows point', sequence-1)
+   18 *	$IF points
+   19 *	  else
+   20 *	    writeln (tty, '[5]')
+   21 *	$ENDIF
+   22	  ;
+   23	  sequence := 5 + 1;
+   24	end;
+   25	    3 : begin
+   26	  if sequence <> 8 then
+   27	    writeln (tty, 'Sequence error: point 8 follows point', sequence-1)
+   28 *	$IF points
+   29 *	  else
+   30 *	    writeln (tty, '[8]')
+   31 *	$ENDIF
+   32	  ;
+   33	  sequence := 8 + 1;
+   34	end;
+   35	  end;
+   36	end;
+   37	
+   38	procedure ct_level_1 ( n: integer );
+   39	
+   40	procedure ct_sub_uncle ( n: integer );
+   41	begin
+   42	  case n of
+   43	    2 : beginMODULE  EXE016       DSK:EXE016.PAS[31024,274425]                                      10-Aug-82 11:02
+SECTION 1            call tests                                                                 PAGE 3
+
+   44	  if sequence <> 23 then
+   45	    writeln (tty, 'Sequence error: point 23 follows point', sequence-1)
+   46 *	$IF points
+   47 *	  else
+   48 *	    writeln (tty, '[23]')
+   49 *	$ENDIF
+   50	  ;
+   51	  sequence := 23 + 1;
+   52	end;
+   53	    3 : begin
+   54	  if sequence <> 16 then
+   55	    writeln (tty, 'Sequence error: point 16 follows point', sequence-1)
+   56 *	$IF points
+   57 *	  else
+   58 *	    writeln (tty, '[16]')
+   59 *	$ENDIF
+   60	  ;
+   61	  sequence := 16 + 1;
+   62	end;
+   63	  end;
+   64	end;
+   65	
+   66	procedure ct_level_2 ( n: integer );
+   67	
+   68	procedure ct_level_3 ( n: integer );
+   69	begin
+   70	  case n of
+   71	    2 : begin
+   72	          begin
+   73	  if sequence <> 7 then
+   74	    writeln (tty, 'Sequence error: point 7 follows point', sequence-1)
+   75 *	$IF points
+   76 *	  else
+   77 *	    writeln (tty, '[7]')
+   78 *	$ENDIF
+   79	  ;
+   80	  sequence := 7 + 1;
+   81	end;
+   82	          ct_top_uncle (3);
+   83	          begin
+   84	  if sequence <> 9 then
+   85	    writeln (tty, 'Sequence error: point 9 follows point', sequence-1)MODULE  EXE016       DSK:EXE016.PAS[31024,274425]                                      10-Aug-82 11:02
+SECTION 1            call tests                                                                 PAGE 4
+
+   86 *	$IF points
+   87 *	  else
+   88 *	    writeln (tty, '[9]')
+   89 *	$ENDIF
+   90	  ;
+   91	  sequence := 9 + 1;
+   92	end;
+   93	          ct_level_3 (3);
+   94	          begin
+   95	  if sequence <> 11 then
+   96	    writeln (tty, 'Sequence error: point 11 follows point', sequence-1)
+   97 *	$IF points
+   98 *	  else
+   99 *	    writeln (tty, '[11]')
+  100 *	$ENDIF
+  101	  ;
+  102	  sequence := 11 + 1;
+  103	end;
+  104	          ct_level_2 (3);
+  105	          begin
+  106	  if sequence <> 13 then
+  107	    writeln (tty, 'Sequence error: point 13 follows point', sequence-1)
+  108 *	$IF points
+  109 *	  else
+  110 *	    writeln (tty, '[13]')
+  111 *	$ENDIF
+  112	  ;
+  113	  sequence := 13 + 1;
+  114	end;
+  115	          ct_level_1 (3);
+  116	          begin
+  117	  if sequence <> 15 then
+  118	    writeln (tty, 'Sequence error: point 15 follows point', sequence-1)
+  119 *	$IF points
+  120 *	  else
+  121 *	    writeln (tty, '[15]')
+  122 *	$ENDIF
+  123	  ;
+  124	  sequence := 15 + 1;
+  125	end;
+  126	          ct_sub_uncle (3);
+  127	          beginMODULE  EXE016       DSK:EXE016.PAS[31024,274425]                                      10-Aug-82 11:02
+SECTION 1            call tests                                                                 PAGE 5
+
+  128	  if sequence <> 17 then
+  129	    writeln (tty, 'Sequence error: point 17 follows point', sequence-1)
+  130 *	$IF points
+  131 *	  else
+  132 *	    writeln (tty, '[17]')
+  133 *	$ENDIF
+  134	  ;
+  135	  sequence := 17 + 1;
+  136	end;
+  137	        end;
+  138	    3 : begin
+  139	  if sequence <> 10 then
+  140	    writeln (tty, 'Sequence error: point 10 follows point', sequence-1)
+  141 *	$IF points
+  142 *	  else
+  143 *	    writeln (tty, '[10]')
+  144 *	$ENDIF
+  145	  ;
+  146	  sequence := 10 + 1;
+  147	end;
+  148	  end;
+  149	end;
+  150	
+  151	begin (* ct_level_2 *);
+  152	  case n of
+  153	    1 : begin
+  154	          begin
+  155	  if sequence <> 4 then
+  156	    writeln (tty, 'Sequence error: point 4 follows point', sequence-1)
+  157 *	$IF points
+  158 *	  else
+  159 *	    writeln (tty, '[4]')
+  160 *	$ENDIF
+  161	  ;
+  162	  sequence := 4 + 1;
+  163	end;
+  164	          ct_top_uncle (2);
+  165	          begin
+  166	  if sequence <> 6 then
+  167	    writeln (tty, 'Sequence error: point 6 follows point', sequence-1)
+  168 *	$IF points
+  169 *	  elseMODULE  EXE016       DSK:EXE016.PAS[31024,274425]                                      10-Aug-82 11:02
+SECTION 1            call tests                                                                 PAGE 6
+
+  170 *	    writeln (tty, '[6]')
+  171 *	$ENDIF
+  172	  ;
+  173	  sequence := 6 + 1;
+  174	end;
+  175	          ct_level_3 (2);
+  176	          begin
+  177	  if sequence <> 18 then
+  178	    writeln (tty, 'Sequence error: point 18 follows point', sequence-1)
+  179 *	$IF points
+  180 *	  else
+  181 *	    writeln (tty, '[18]')
+  182 *	$ENDIF
+  183	  ;
+  184	  sequence := 18 + 1;
+  185	end;
+  186	          ct_level_2 (2);
+  187	          begin
+  188	  if sequence <> 20 then
+  189	    writeln (tty, 'Sequence error: point 20 follows point', sequence-1)
+  190 *	$IF points
+  191 *	  else
+  192 *	    writeln (tty, '[20]')
+  193 *	$ENDIF
+  194	  ;
+  195	  sequence := 20 + 1;
+  196	end;
+  197	          ct_level_1 (2);
+  198	          begin
+  199	  if sequence <> 22 then
+  200	    writeln (tty, 'Sequence error: point 22 follows point', sequence-1)
+  201 *	$IF points
+  202 *	  else
+  203 *	    writeln (tty, '[22]')
+  204 *	$ENDIF
+  205	  ;
+  206	  sequence := 22 + 1;
+  207	end;
+  208	          ct_sub_uncle (2);
+  209	          begin
+  210	  if sequence <> 24 then
+  211	    writeln (tty, 'Sequence error: point 24 follows point', sequence-1)MODULE  EXE016       DSK:EXE016.PAS[31024,274425]                                      10-Aug-82 11:02
+SECTION 1            call tests                                                                 PAGE 7
+
+  212 *	$IF points
+  213 *	  else
+  214 *	    writeln (tty, '[24]')
+  215 *	$ENDIF
+  216	  ;
+  217	  sequence := 24 + 1;
+  218	end;
+  219	        end;
+  220	    2 : begin
+  221	  if sequence <> 19 then
+  222	    writeln (tty, 'Sequence error: point 19 follows point', sequence-1)
+  223 *	$IF points
+  224 *	  else
+  225 *	    writeln (tty, '[19]')
+  226 *	$ENDIF
+  227	  ;
+  228	  sequence := 19 + 1;
+  229	end;
+  230	    3 : begin
+  231	  if sequence <> 12 then
+  232	    writeln (tty, 'Sequence error: point 12 follows point', sequence-1)
+  233 *	$IF points
+  234 *	  else
+  235 *	    writeln (tty, '[12]')
+  236 *	$ENDIF
+  237	  ;
+  238	  sequence := 12 + 1;
+  239	end;
+  240	  end;
+  241	end;
+  242	
+  243	begin (* ct_level_1 *);
+  244	  case n of
+  245	    0 : begin
+  246	          begin
+  247	  if sequence <> 1 then
+  248	    writeln (tty, 'Sequence error: point 1 follows point', sequence-1)
+  249 *	$IF points
+  250 *	  else
+  251 *	    writeln (tty, '[1]')
+  252 *	$ENDIF
+  253	  ;MODULE  EXE016       DSK:EXE016.PAS[31024,274425]                                      10-Aug-82 11:02
+SECTION 1            call tests                                                                 PAGE 8
+
+  254	  sequence := 1 + 1;
+  255	end;
+  256	          ct_top_uncle (1);
+  257	          begin
+  258	  if sequence <> 3 then
+  259	    writeln (tty, 'Sequence error: point 3 follows point', sequence-1)
+  260 *	$IF points
+  261 *	  else
+  262 *	    writeln (tty, '[3]')
+  263 *	$ENDIF
+  264	  ;
+  265	  sequence := 3 + 1;
+  266	end;
+  267	          ct_level_2 (1);
+  268	          begin
+  269	  if sequence <> 25 then
+  270	    writeln (tty, 'Sequence error: point 25 follows point', sequence-1)
+  271 *	$IF points
+  272 *	  else
+  273 *	    writeln (tty, '[25]')
+  274 *	$ENDIF
+  275	  ;
+  276	  sequence := 25 + 1;
+  277	end;
+  278	          ct_level_1 (1);
+  279	          begin
+  280	  if sequence <> 27 then
+  281	    writeln (tty, 'Sequence error: point 27 follows point', sequence-1)
+  282 *	$IF points
+  283 *	  else
+  284 *	    writeln (tty, '[27]')
+  285 *	$ENDIF
+  286	  ;
+  287	  sequence := 27 + 1;
+  288	end;
+  289	        end;
+  290	    1 : begin
+  291	  if sequence <> 26 then
+  292	    writeln (tty, 'Sequence error: point 26 follows point', sequence-1)
+  293 *	$IF points
+  294 *	  else
+  295 *	    writeln (tty, '[26]')MODULE  EXE016       DSK:EXE016.PAS[31024,274425]                                      10-Aug-82 11:02
+SECTION 1            call tests                                                                 PAGE 9
+
+  296 *	$ENDIF
+  297	  ;
+  298	  sequence := 26 + 1;
+  299	end;
+  300	    2 : begin
+  301	  if sequence <> 21 then
+  302	    writeln (tty, 'Sequence error: point 21 follows point', sequence-1)
+  303 *	$IF points
+  304 *	  else
+  305 *	    writeln (tty, '[21]')
+  306 *	$ENDIF
+  307	  ;
+  308	  sequence := 21 + 1;
+  309	end;
+  310	    3 : begin
+  311	          begin
+  312	  if sequence <> 14 then
+  313	    writeln (tty, 'Sequence error: point 14 follows point', sequence-1)
+  314 *	$IF points
+  315 *	  else
+  316 *	    writeln (tty, '[14]')
+  317 *	$ENDIF
+  318	  ;
+  319	  sequence := 14 + 1;
+  320	end;
+  321 *	$IF trace
+  322 *	          writeln (tty, 'Traceback follows - should be');
+  323 *	          writeln (tty, '   CT_LEVEL_1, CT_LEVEL_3, CT_LEVEL_2, CT_LEVEL_1, EXE016');
+  324 *	          trace;
+  325 *	          writeln (tty, 'Assertion failure follows.');
+  326 *	          writeln (tty, 'Type REENTER, CONTINUE.');
+  327 *	          writeln (tty, 'Same traceback should be repeated.');
+  328 *	          assert (false);
+  329 *	$ENDIF
+  330	        end;
+  331	  end;
+  332	end;MODULE  EXE016       DSK:EXE016.PAS[31024,274425]                                      10-Aug-82 11:02
+SECTION 2            variable and parameter access tests                                       PAGE 10
+
+    2	procedure dt_level_1 (prm_a_1: access_array; prm_i_1: access_index);
+    3	var a_r_1: access_record;
+    4	
+    5	  procedure dt_level_2 (flag: boolean; prm_a_2: access_array; prm_i_2: access_index);
+    6	  var a_r_2: access_record;
+    7	
+    8	    procedure dt_level_3 (flag: boolean; prm_a_3: access_array; prm_i_3: access_index);
+    9	    var a_r_3: access_record;
+   10	    begin
+   11	      begin
+   12	  a_r_3 := (3, (930, 931, 932, 933, 934));
+   13	  begin
+   14	  if a_r_0.a[a_r_0.i] <> 900 then
+   15	    writeln (tty, 'Variable access error: level 3 to level 0 - value is',
+   16	                  a_r_0.a[a_r_0.i]);
+   17	end;
+   18	begin
+   19	  if a_r_1.a[a_r_1.i] <> 911 then
+   20	    writeln (tty, 'Variable access error: level 3 to level 1 - value is',
+   21	                  a_r_1.a[a_r_1.i]);
+   22	end;
+   23	begin
+   24	  if a_r_2.a[a_r_2.i] <> 922 then
+   25	    writeln (tty, 'Variable access error: level 3 to level 2 - value is',
+   26	                  a_r_2.a[a_r_2.i]);
+   27	end;
+   28	begin
+   29	  if a_r_3.a[a_r_3.i] <> 933 then
+   30	    writeln (tty, 'Variable access error: level 3 to level 3 - value is',
+   31	                  a_r_3.a[a_r_3.i]);
+   32	end;
+   33	  begin
+   34	  if prm_a_1[prm_i_1] <> 711 then
+   35	    writeln (tty, 'Parameter access error: level 3 to level 1 - value is',
+   36	                  prm_a_1[prm_i_1]);
+   37	end;
+   38	begin
+   39	  if prm_a_2[prm_i_2] <> 722 then
+   40	    writeln (tty, 'Parameter access error: level 3 to level 2 - value is',
+   41	                  prm_a_2[prm_i_2]);
+   42	end;
+   43	beginMODULE  EXE016       DSK:EXE016.PAS[31024,274425]                                      10-Aug-82 11:02
+SECTION 2            variable and parameter access tests                                       PAGE 11
+
+   44	  if prm_a_3[prm_i_3] <> 733 then
+   45	    writeln (tty, 'Parameter access error: level 3 to level 3 - value is',
+   46	                  prm_a_3[prm_i_3]);
+   47	end;
+   48	end;
+   49	      if not flag then
+   50	        dt_level_2 (true, (720, 721, 722, 723, 724), 2);
+   51	    end;
+   52	
+   53	  begin
+   54	    begin
+   55	  a_r_2 := (2, (920, 921, 922, 923, 924));
+   56	  begin
+   57	  if a_r_0.a[a_r_0.i] <> 900 then
+   58	    writeln (tty, 'Variable access error: level 2 to level 0 - value is',
+   59	                  a_r_0.a[a_r_0.i]);
+   60	end;
+   61	begin
+   62	  if a_r_1.a[a_r_1.i] <> 911 then
+   63	    writeln (tty, 'Variable access error: level 2 to level 1 - value is',
+   64	                  a_r_1.a[a_r_1.i]);
+   65	end;
+   66	begin
+   67	  if a_r_2.a[a_r_2.i] <> 922 then
+   68	    writeln (tty, 'Variable access error: level 2 to level 2 - value is',
+   69	                  a_r_2.a[a_r_2.i]);
+   70	end;
+   71	  begin
+   72	  if prm_a_1[prm_i_1] <> 711 then
+   73	    writeln (tty, 'Parameter access error: level 2 to level 1 - value is',
+   74	                  prm_a_1[prm_i_1]);
+   75	end;
+   76	begin
+   77	  if prm_a_2[prm_i_2] <> 722 then
+   78	    writeln (tty, 'Parameter access error: level 2 to level 2 - value is',
+   79	                  prm_a_2[prm_i_2]);
+   80	end;
+   81	end;
+   82	    dt_level_3 (flag, (730, 731, 732, 733, 734), 3);
+   83	  end;
+   84	
+   85	beginMODULE  EXE016       DSK:EXE016.PAS[31024,274425]                                      10-Aug-82 11:02
+SECTION 2            variable and parameter access tests                                       PAGE 12
+
+   86	  begin
+   87	  a_r_1 := (1, (910, 911, 912, 913, 914));
+   88	  begin
+   89	  if a_r_0.a[a_r_0.i] <> 900 then
+   90	    writeln (tty, 'Variable access error: level 1 to level 0 - value is',
+   91	                  a_ra_r_0.i]);
+   92	end;
+   93	begin
+   94	  if a_r_1.a[a_r_1.i] <> 911 then
+   95	    writeln (tty, 'Variable access error: level 1 to level 1 - value is',
+   96	                  a_r_1.a[a_r_1.i]);
+   97	end;
+   98	  begin
+   99	  if prm_a_1[prm_i_1] <> 711 then
+  100	    writeln (tty, 'Parameter access error: level 1 to level 1 - value is',
+  101	                  prm_a_1[prm_i_1]);
+  102	end;
+  103	end;
+  104	  dt_level_2 (false, (720, 721, 722, 723, 724), 2);
+  105	end;MODULE  EXE016       DSK:EXE016.PAS[31024,274425]                                      10-Aug-82 11:02
+SECTION 3            nonlocal goto tests                                                       PAGE 13
+
+    2	procedure gt_level_1 ( n: integer );
+    3	
+    4	  label 11, 12;
+    5	
+    6	  procedure gt_level_2 ( n: integer );
+    7	
+    8	    label 21;
+    9	
+   10	    procedure gt_level_3 ( n: integer );
+   11	    begin
+   12	      case n of
+   13	        1 : return;
+   14	        2 : goto 21;
+   15	        3 : goto 12;
+   16	        4 : goto 02;
+   17	      end;
+   18	    end;
+   19	
+   20	  begin (* gt_level_2 *)
+   21	    case n of
+   22	      1 : begin
+   23	            begin
+   24	  if sequence <> 30 then
+   25	    writeln (tty, 'Sequence error: point 30 follows point', sequence-1)
+   26 *	$IF points
+   27 *	  else
+   28 *	    writeln (tty, '[30]')
+   29 *	$ENDIF
+   30	  ;
+   31	  sequence := 30 + 1;
+   32	end;
+   33	            gt_level_3 (1);
+   34	            begin
+   35	  if sequence <> 31 then
+   36	    writeln (tty, 'Sequence error: point 31 follows point', sequence-1)
+   37 *	$IF points
+   38 *	  else
+   39 *	    writeln (tty, '[31]')
+   40 *	$ENDIF
+   41	  ;
+   42	  sequence := 31 + 1;
+   43	end;MODULE  EXE016       DSK:EXE016.PAS[31024,274425]                                      10-Aug-82 11:02
+SECTION 3            nonlocal goto tests                                                       PAGE 14
+
+   44	            gt_level_3 (2);
+   45	            begin
+   46	  writeln (tty, 'Control has reached inaccessible point 1');
+   47	  stop;
+   48	end;
+   49	          end;
+   50	      2 : goto 11;
+   51	      3 : begin
+   52	            gt_level_3 (3);
+   53	            begin
+   54	  writeln (tty, 'Control has reached inaccessible point 2');
+   55	  stop;
+   56	end;
+   57	          end;
+   58	      4 : begin
+   59	            gt_level_3 (4);
+   60	            begin
+   61	  writeln (tty, 'Control has reached inaccessible point 3');
+   62	  stop;
+   63	end;
+   64	          end;
+   65	    end;
+   66	  21 :
+   67	    begin
+   68	  if sequence <> 32 then
+   69	    writeln (tty, 'Sequence error: point 32 follows point', sequence-1)
+   70 *	$IF points
+   71 *	  else
+   72 *	    writeln (tty, '[32]')
+   73 *	$ENDIF
+   74	  ;
+   75	  sequence := 32 + 1;
+   76	end;
+   77	  end;
+   78	
+   79	begin (* gt_level_1 *)
+   80	  case n of
+   81	    1 : begin
+   82	          begin
+   83	  if sequence <> 29 then
+   84	    writeln (tty, 'Sequence error: point 29 follows point', sequence-1)
+   85 *	$IF pointsMODULE  EXE016       DSK:EXE016.PAS[31024,274425]                                      10-Aug-82 11:02
+SECTION 3            nonlocal goto tests                                                       PAGE 15
+
+   86 *	  else
+   87 *	    writeln (tty, '[29]')
+   88 *	$ENDIF
+   89	  ;
+   90	  sequence := 29 + 1;
+   91	end;
+   92	          gt_level_2 (1);
+   93	          begin
+   94	  if sequence <> 33 then
+   95	    writeln (tty, 'Sequence error: point 33 follows point', sequence-1)
+   96 *	$IF points
+   97 *	  else
+   98 *	    writeln (tty, '[33]')
+   99 *	$ENDIF
+  100	  ;
+  101	  sequence := 33 + 1;
+  102	end;
+  103	          return;
+  104	        end;
+  105	    2 : goto 01;
+  106	    3 : begin
+  107	          begin
+  108	  if sequence <> 36 then
+  109	    writeln (tty, 'Sequence error: point 36 follows point', sequence-1)
+  110 *	$IF points
+  111 *	  else
+  112 *	    writeln (tty, '[36]')
+  113 *	$ENDIF
+  114	  ;
+  115	  sequence := 36 + 1;
+  116	end;
+  117	          gt_level_2 (2);
+  118	          begin
+  119	  writeln (tty, 'Control has reached inaccessible point 4');
+  120	  stop;
+  121	end;
+  122	        end;
+  123	  end;
+  124	11 :
+  125	  begin
+  126	  if sequence <> 37 then
+  127	    writeln (tty, 'Sequence error: point 37 follows point', sequence-1)MODULE  EXE016       DSK:EXE016.PAS[31024,274425]                                      10-Aug-82 11:02
+SECTION 3            nonlocal goto tests                                                       PAGE 16
+
+  128 *	$IF points
+  129 *	  else
+  130 *	    writeln (tty, '[37]')
+  131 *	$ENDIF
+  132	  ;
+  133	  sequence := 37 + 1;
+  134	end;
+  135	  gt_level_2 (3);
+  136	  begin
+  137	  writeln (tty, 'Control has reached inaccessible point 5');
+  138	  stop;
+  139	end;
+  140	12 :
+  141	  begin
+  142	  if sequence <> 38 then
+  143	    writeln (tty, 'Sequence error: point 38 follows point', sequence-1)
+  144 *	$IF points
+  145 *	  else
+  146 *	    writeln (tty, '[38]')
+  147 *	$ENDIF
+  148	  ;
+  149	  sequence := 38 + 1;
+  150	end;
+  151	  gt_level_2 (4);
+  152	  begin
+  153	  writeln (tty, 'Control has reached inaccessible point 6');
+  154	  stop;
+  155	end;
+  156	end;MODULE  EXE016       DSK:EXE016.PAS[31024,274425]                                      10-Aug-82 11:02
+SECTION 4            main program                                                              PAGE 17
+
+    2	begin
+    3	  rewrite (tty);
+    4	  writeln (tty, 'Begin EXE016');
+    5	
+    6	  (*  Simple call tests.  *)
+    7	
+    8	  sequence := 0;
+    9	  begin
+   10	  if sequence <> 0 then
+   11	    writeln (tty, 'Sequence error: point 0 follows point', sequence-1)
+   12 *	$IF points
+   13 *	  else
+   14 *	    writeln (tty, '[0]')
+   15 *	$ENDIF
+   16	  ;
+   17	  sequence := 0 + 1;
+   18	end;
+   19	  ct_level_1 (0);
+   20	  begin
+   21	  if sequence <> 28 then
+   22	    writeln (tty, 'Sequence error: point 28 follows point', sequence-1)
+   23 *	$IF points
+   24 *	  else
+   25 *	    writeln (tty, '[28]')
+   26 *	$ENDIF
+   27	  ;
+   28	  sequence := 28 + 1;
+   29	end;
+   30	
+   31	  (*  Variable and parameter access tests.  *)
+   32	
+   33	  a_r_0 := (0, (900, 901, 902, 903, 904));
+   34	  dt_level_1 ((710, 711, 712, 713, 714), 1);
+   35	
+   36	  (*  Nonlocal goto tests.  *)
+   37	
+   38	  gt_level_1 (1);
+   39	  begin
+   40	  if sequence <> 34 then
+   41	    writeln (tty, 'Sequence error: point 34 follows point', sequence-1)
+   42 *	$IF points
+   43 *	  elseMODULE  EXE016       DSK:EXE016.PAS[31024,274425]                                      10-Aug-82 11:02
+SECTION 4            main program                                                              PAGE 18
+
+   44 *	    writeln (tty, '[34]')
+   45 *	$ENDIF
+   46	  ;
+   47	  sequence := 34 + 1;
+   48	end;
+   49	  gt_level_1 (2);
+   50	  begin
+   51	  writeln (tty, 'Control has reached inaccessible point 7');
+   52	  stop;
+   53	end;
+   54	01 :
+   55	  begin
+   56	  if sequence <> 35 then
+   57	    writeln (tty, 'Sequence error: point 35 follows point', sequence-1)
+   58 *	$IF points
+   59 *	  else
+   60 *	    writeln (tty, '[35]')
+   61 *	$ENDIF
+   62	  ;
+   63	  sequence := 35 + 1;
+   64	end;
+   65	  gt_level_1 (3);
+   66	  begin
+   67	  writeln (tty, 'Control has reached inaccessible point 8');
+   68	  stop;
+   69	end;
+   70	02 :
+   71	  begin
+   72	  if sequence <> 39 then
+   73	    writeln (tty, 'Sequence error: point 39 follows point', sequence-1)
+   74 *	$IF points
+   75 *	  else
+   76 *	    writeln (tty, '[39]')
+   77 *	$ENDIF
+   78	  ;
+   79	  sequence := 39 + 1;
+   80	end;
+   81	
+   82	  writeln (tty, 'End EXE016');
+   83	end.
+File   level   on page     name
+
+  0	 0	    1	DSK:EXE016.PAS[31024,274425]
+
+
+
+Section   in file   on page     title
+
+     1	      0	         2    call tests
+     4	      0	        17    main program
+     3	      0	        13    nonlocal goto tests
+     2	      0	        10    variable and parameter access tests
+                                                                                                                                                                                                                                                                                                             		      EXE016     IDNT	   0,0
+		      *
+		      *		 MC68000 Checkout Code Generator,  Aug 10, 1982  11:02:58 am
+		      *
+	 00000002		 SECTION   2
+	 00000000     STATIC.	 EQU	   *
+	 0000000A		 SECTION   10
+	 00000000     CODE.	 EQU	   *
+00000000 C21DD6D1     C.1	 DC.L	   $C21DD6D1			       Date-time
+00000004 0000			 DC.W	   0				         $0
+00000006 455845303136		 DC.B	   'EXE016'
+	 00000002		 SECTION   2
+		      *
+		      *		 Unitialized static area
+		      *
+00000000 0000001C		 DS.B	   28
+	 0000000A		 SECTION   10
+		      *
+		      *		 Constant area for subroutine CT_SUB_UNCLE
+		      *
+0000000C 53657175656E K.1	 DC.B	   'Sequence error: point 23 follows point'
+00000032 53657175656E K.2	 DC.B	   'Sequence error: point 16 follows point'
+		      *
+		      *		 Begin subroutine CT_SUB_UNCLE
+		      *
+00000058 7018	      B.5	 MOVEQ	   #24,D0			         $18
+0000005A 2F00			 MOVE.L	   D0,-(A7)
+0000005C 6114			 BSR.S	   X.5.1(PC)
+0000005E 00000000		 DC.L	   C.1
+00000062 0000			 DC.W	   0				         $0
+00000064 000C			 DC.W	   12				       String length word
+00000066 43545F535542		 DC.B	   'CT_SUB_UNCLE'
+00000072 203CFFFFFFF8 X.5.1	 MOVE.L	   #T.5-4,D0			         -4
+00000078 4EB900000000		 JSR	   M.ENTRY
+		      *							       LINE 1/41
+		      *							       LINE 1/42
+0000007E 202E0018     L.5.1	 MOVE.L	   24(A6),D0			         N
+00000082 5580			 SUBQ.L	   #2,D0			         $2
+00000084 6D0000BE		 BLT.L	   L.5.10(PC)
+00000088 0C8000000001		 CMPI.L	   #1,D0			         $1
+0000008E 6E0000B4		 BGT.L	   L.5.10(PC)
+00000092 D040			 ADD.W	   D0,D0
+00000094 303B0006		 MOVE.W	   X.5.2(PC,D0.W),D0
+00000098 4EFB0002		 JMP	   X.5.2(PC,D0.W)
+0000009C 0000	      X.5.2	 DC.W	   L.5.2-*0000009E 0000			 DC.W	   L.5.6+2-*
+000000A0	      L.5.2
+		      *							       LINE 1/43
+		      *							       LINE 1/44
+000000A0 7017	      L.5.3	 MOVEQ	   #23,D0			         $17
+000000A2 B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         SEQUENCE
+000000A6 6742			 BEQ.S	   L.5.5(PC)
+		      *							       LINE 1/45
+000000A8 202D0000     L.5.4	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+000000AC 4A80			 TST.L	   D0
+000000AE 6606			 BNE.S	   X.5.3(PC)
+000000B0 4EB900000000		 JSR	   E.FILE
+000000B6 7226	      X.5.3	 MOVEQ	   #38,D1			         $26
+000000B8 3F01			 MOVE.W	   D1,-(A7)
+000000BA 7204			 MOVEQ	   #4,D1			         $4
+000000BC 3F01			 MOVE.W	   D1,-(A7)
+000000BE 487AFF4C		 PEA	   K.1(PC)			         CODE.+$C
+000000C2 2F00			 MOVE.L	   D0,-(A7)
+000000C4 4EB900000000		 JSR	   T.WRITE
+000000CA 222D8000		 MOVE.L	   STATIC.+0-32768(A5),D1	         SEQUENCE
+000000CE 5381			 SUBQ.L	   #1,D1			         $1
+000000D0 4267			 CLR.W	   -(A7)
+000000D2 2D41FFFC		 MOVE.L	   D1,-4(A6)			         $FFFFFFFC
+000000D6 486EFFFC		 PEA	   -4(A6)			         $FFFFFFFC
+000000DA 2F00			 MOVE.L	   D0,-(A7)
+000000DC 4EB900000000		 JSR	   T.WRITE
+000000E2 2F00			 MOVE.L	   D0,-(A7)
+000000E4 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/51
+000000EA 7018	      L.5.5	 MOVEQ	   #24,D0			         $18
+000000EC 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         SEQUENCE
+		      *							       LINE 1/52
+000000F0 6058			 BRA.S	   L.5.11(PC)
+000000F2	      L.5.6
+		      *							       LINE 1/53
+		      *							       LINE 1/54
+000000F2 7010	      L.5.7	 MOVEQ	   #16,D0			         $10
+000000F4 B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         SEQUENCE
+000000F8 6742			 BEQ.S	   L.5.9(PC)
+		      *							       LINE 1/55
+000000FA 202D0000     L.5.8	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+000000FE 4A80			 TST.L	   D0
+00000100 6606			 BNE.S	   X.5.4(PC)
+00000102 4EB900000000		 JSR	   E.FILE
+00000108 7226	      X.5.4	 MOVEQ	   #38,D1			         $260000010A 3F01			 MOVE.W	   D1,-(A7)
+0000010C 7204			 MOVEQ	   #4,D1			         $4
+0000010E 3F01			 MOVE.W	   D1,-(A7)
+00000110 487AFF20		 PEA	   K.2(PC)			         CODE.+$32
+00000114 2F00			 MOVE.L	   D0,-(A7)
+00000116 4EB900000000		 JSR	   T.WRITE
+0000011C 222D8000		 MOVE.L	   STATIC.+0-32768(A5),D1	         SEQUENCE
+00000120 5381			 SUBQ.L	   #1,D1			         $1
+00000122 4267			 CLR.W	   -(A7)
+00000124 2D41FFFC		 MOVE.L	   D1,-4(A6)			         $FFFFFFFC
+00000128 486EFFFC		 PEA	   -4(A6)			         $FFFFFFFC
+0000012C 2F00			 MOVE.L	   D0,-(A7)
+0000012E 4EB900000000		 JSR	   T.WRITE
+00000134 2F00			 MOVE.L	   D0,-(A7)
+00000136 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/61
+0000013C 7011	      L.5.9	 MOVEQ	   #17,D0			         $11
+0000013E 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         SEQUENCE
+		      *							       LINE 1/62
+00000142 6006			 BRA.S	   L.5.11(PC)
+00000144 4EB900000000 L.5.10	 JSR	   E.CASE
+		      *							       LINE 1/63
+		      *							       LINE 1/64
+0000014A 4EB900000000 L.5.11	 JSR	   M.RETURN
+		      *
+		      *		 Constant area for subroutine CT_TOP_UNCLE
+		      *
+00000150 53657175656E K.3	 DC.B	   'Sequence error: point 2 follows point'
+00000175 00000001		 DS.B	   1
+00000176 53657175656E K.4	 DC.B	   'Sequence error: point 5 follows point'
+0000019B 00000001		 DS.B	   1
+0000019C 53657175656E K.5	 DC.B	   'Sequence error: point 8 follows point'
+000001C1 00000001		 DS.B	   1
+		      *
+		      *		 Begin subroutine CT_TOP_UNCLE
+		      *
+000001C2 7014	      B.3	 MOVEQ	   #20,D0			         $14
+000001C4 2F00			 MOVE.L	   D0,-(A7)
+000001C6 6114			 BSR.S	   X.3.1(PC)
+000001C8 00000000		 DC.L	   C.1
+000001CC 0000			 DC.W	   0				         $0
+000001CE 000C			 DC.W	   12				       String length word
+000001D0 43545F544F50		 DC.B	   'CT_TOP_UNCLE'
+000001DC 203CFFFFFFF8 X.3.1	 MOVE.L	   #T.3-4,D0			         -4
+000001E2 4EB900000000		 JSR	   M.ENTRY		      *							       LINE 1/3
+		      *							       LINE 1/4
+000001E8 202E0014     L.3.1	 MOVE.L	   20(A6),D0			         N
+000001EC 5380			 SUBQ.L	   #1,D0			         $1
+000001EE 6D000114		 BLT.L	   L.3.14(PC)
+000001F2 0C8000000002		 CMPI.L	   #2,D0			         $2
+000001F8 6E00010A		 BGT.L	   L.3.14(PC)
+000001FC D040			 ADD.W	   D0,D0
+000001FE 303B0006		 MOVE.W	   X.3.2(PC,D0.W),D0
+00000202 4EFB0002		 JMP	   X.3.2(PC,D0.W)
+00000206 0000	      X.3.2	 DC.W	   L.3.2-*
+00000208 0000			 DC.W	   L.3.6+2-*
+0000020A 0000			 DC.W	   L.3.10+4-*
+0000020C	      L.3.2
+		      *							       LINE 1/5
+		      *							       LINE 1/6
+0000020C 7002	      L.3.3	 MOVEQ	   #2,D0			         $2
+0000020E B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         SEQUENCE
+00000212 6742			 BEQ.S	   L.3.5(PC)
+		      *							       LINE 1/7
+00000214 202D0000     L.3.4	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00000218 4A80			 TST.L	   D0
+0000021A 6606			 BNE.S	   X.3.3(PC)
+0000021C 4EB900000000		 JSR	   E.FILE
+00000222 7225	      X.3.3	 MOVEQ	   #37,D1			         $25
+00000224 3F01			 MOVE.W	   D1,-(A7)
+00000226 7204			 MOVEQ	   #4,D1			         $4
+00000228 3F01			 MOVE.W	   D1,-(A7)
+0000022A 487AFF24		 PEA	   K.3(PC)			         CODE.+$150
+0000022E 2F00			 MOVE.L	   D0,-(A7)
+00000230 4EB900000000		 JSR	   T.WRITE
+00000236 222D8000		 MOVE.L	   STATIC.+0-32768(A5),D1	         SEQUENCE
+0000023A 5381			 SUBQ.L	   #1,D1			         $1
+0000023C 4267			 CLR.W	   -(A7)
+0000023E 2D41FFFC		 MOVE.L	   D1,-4(A6)			         $FFFFFFFC
+00000242 486EFFFC		 PEA	   -4(A6)			         $FFFFFFFC
+00000246 2F00			 MOVE.L	   D0,-(A7)
+00000248 4EB900000000		 JSR	   T.WRITE
+0000024E 2F00			 MOVE.L	   D0,-(A7)
+00000250 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/13
+00000256 7003	      L.3.5	 MOVEQ	   #3,D0			         $3
+00000258 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         SEQUENCE
+		      *							       LINE 1/14
+0000025C 600000AC		 BRA.L	   L.3.15(PC)00000260	      L.3.6
+		      *							       LINE 1/15
+		      *							       LINE 1/16
+00000260 7005	      L.3.7	 MOVEQ	   #5,D0			         $5
+00000262 B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         SEQUENCE
+00000266 6742			 BEQ.S	   L.3.9(PC)
+		      *							       LINE 1/17
+00000268 202D0000     L.3.8	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+0000026C 4A80			 TST.L	   D0
+0000026E 6606			 BNE.S	   X.3.4(PC)
+00000270 4EB900000000		 JSR	   E.FILE
+00000276 7225	      X.3.4	 MOVEQ	   #37,D1			         $25
+00000278 3F01			 MOVE.W	   D1,-(A7)
+0000027A 7204			 MOVEQ	   #4,D1			         $4
+0000027C 3F01			 MOVE.W	   D1,-(A7)
+0000027E 487AFEF6		 PEA	   K.4(PC)			         CODE.+$176
+00000282 2F00			 MOVE.L	   D0,-(A7)
+00000284 4EB900000000		 JSR	   T.WRITE
+0000028A 222D8000		 MOVE.L	   STATIC.+0-32768(A5),D1	         SEQUENCE
+0000028E 5381			 SUBQ.L	   #1,D1			         $1
+00000290 4267			 CLR.W	   -(A7)
+00000292 2D41FFFC		 MOVE.L	   D1,-4(A6)			         $FFFFFFFC
+00000296 486EFFFC		 PEA	   -4(A6)			         $FFFFFFFC
+0000029A 2F00			 MOVE.L	   D0,-(A7)
+0000029C 4EB900000000		 JSR	   T.WRITE
+000002A2 2F00			 MOVE.L	   D0,-(A7)
+000002A4 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/23
+000002AA 7006	      L.3.9	 MOVEQ	   #6,D0			         $6
+000002AC 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         SEQUENCE
+		      *							       LINE 1/24
+000002B0 6058			 BRA.S	   L.3.15(PC)
+000002B2	      L.3.10
+		      *							       LINE 1/25
+		      *							       LINE 1/26
+000002B2 7008	      L.3.11	 MOVEQ	   #8,D0			         $8
+000002B4 B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         SEQUENCE
+000002B8 6742			 BEQ.S	   L.3.13(PC)
+		      *							       LINE 1/27
+000002BA 202D0000     L.3.12	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+000002BE 4A80			 TST.L	   D0
+000002C0 6606			 BNE.S	   X.3.5(PC)
+000002C2 4EB900000000		 JSR	   E.FILE
+000002C8 7225	      X.3.5	 MOVEQ	   #37,D1			         $25
+000002CA 3F01			 MOVE.W	   D1,-(A7)000002CC 7204			 MOVEQ	   #4,D1			         $4
+000002CE 3F01			 MOVE.W	   D1,-(A7)
+000002D0 487AFECA		 PEA	   K.5(PC)			         CODE.+$19C
+000002D4 2F00			 MOVE.L	   D0,-(A7)
+000002D6 4EB900000000		 JSR	   T.WRITE
+000002DC 222D8000		 MOVE.L	   STATIC.+0-32768(A5),D1	         SEQUENCE
+000002E0 5381			 SUBQ.L	   #1,D1			         $1
+000002E2 4267			 CLR.W	   -(A7)
+000002E4 2D41FFFC		 MOVE.L	   D1,-4(A6)			         $FFFFFFFC
+000002E8 486EFFFC		 PEA	   -4(A6)			         $FFFFFFFC
+000002EC 2F00			 MOVE.L	   D0,-(A7)
+000002EE 4EB900000000		 JSR	   T.WRITE
+000002F4 2F00			 MOVE.L	   D0,-(A7)
+000002F6 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/33
+000002FC 7009	      L.3.13	 MOVEQ	   #9,D0			         $9
+000002FE 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         SEQUENCE
+		      *							       LINE 1/34
+00000302 6006			 BRA.S	   L.3.15(PC)
+00000304 4EB900000000 L.3.14	 JSR	   E.CASE
+		      *							       LINE 1/35
+		      *							       LINE 1/36
+0000030A 4EB900000000 L.3.15	 JSR	   M.RETURN
+		      *
+		      *		 Constant area for subroutine CT_LEVEL_3
+		      *
+00000310 53657175656E K.6	 DC.B	   'Sequence error: point 7 follows point'
+00000335 00000001		 DS.B	   1
+00000336 53657175656E K.7	 DC.B	   'Sequence error: point 9 follows point'
+0000035B 00000001		 DS.B	   1
+0000035C 53657175656E K.8	 DC.B	   'Sequence error: point 11 follows point'
+00000382 53657175656E K.9	 DC.B	   'Sequence error: point 13 follows point'
+000003A8 53657175656E K.10	 DC.B	   'Sequence error: point 15 follows point'
+000003CE 53657175656E K.11	 DC.B	   'Sequence error: point 17 follows point'
+000003F4 53657175656E K.12	 DC.B	   'Sequence error: point 10 follows point'
+		      *
+		      *		 Begin subroutine CT_LEVEL_3
+		      *
+0000041A 7018	      B.7	 MOVEQ	   #24,D0			         $18
+0000041C 2F00			 MOVE.L	   D0,-(A7)
+0000041E 6112			 BSR.S	   X.7.1(PC)
+00000420 00000000		 DC.L	   C.1
+00000424 0000			 DC.W	   0				         $0
+00000426 000A			 DC.W	   10				       String length word
+00000428 43545F4C4556		 DC.B	   'CT_LEVEL_3'00000432 203CFFFFFFF8 X.7.1	 MOVE.L	   #T.7-4,D0			         -4
+00000438 4EB900000000		 JSR	   M.ENTRY
+		      *							       LINE 1/69
+		      *							       LINE 1/70
+0000043E 202E0018     L.7.1	 MOVE.L	   24(A6),D0			         N
+00000442 5580			 SUBQ.L	   #2,D0			         $2
+00000444 6D000290		 BLT.L	   L.7.26(PC)
+00000448 0C8000000001		 CMPI.L	   #1,D0			         $1
+0000044E 6E000286		 BGT.L	   L.7.26(PC)
+00000452 D040			 ADD.W	   D0,D0
+00000454 303B0006		 MOVE.W	   X.7.2(PC,D0.W),D0
+00000458 4EFB0002		 JMP	   X.7.2(PC,D0.W)
+0000045C 0000	      X.7.2	 DC.W	   L.7.2-*
+0000045E 0000			 DC.W	   L.7.22+2-*
+00000460	      L.7.2
+00000460	      L.7.3
+		      *							       LINE 1/71
+		      *							       LINE 1/72
+		      *							       LINE 1/73
+00000460 7007	      L.7.4	 MOVEQ	   #7,D0			         $7
+00000462 B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         SEQUENCE
+00000466 6742			 BEQ.S	   L.7.6(PC)
+		      *							       LINE 1/74
+00000468 202D0000     L.7.5	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+0000046C 4A80			 TST.L	   D0
+0000046E 6606			 BNE.S	   X.7.3(PC)
+00000470 4EB900000000		 JSR	   E.FILE
+00000476 7225	      X.7.3	 MOVEQ	   #37,D1			         $25
+00000478 3F01			 MOVE.W	   D1,-(A7)
+0000047A 7204			 MOVEQ	   #4,D1			         $4
+0000047C 3F01			 MOVE.W	   D1,-(A7)
+0000047E 487AFE90		 PEA	   K.6(PC)			         CODE.+$310
+00000482 2F00			 MOVE.L	   D0,-(A7)
+00000484 4EB900000000		 JSR	   T.WRITE
+0000048A 222D8000		 MOVE.L	   STATIC.+0-32768(A5),D1	         SEQUENCE
+0000048E 5381			 SUBQ.L	   #1,D1			         $1
+00000490 4267			 CLR.W	   -(A7)
+00000492 2D41FFFC		 MOVE.L	   D1,-4(A6)			         $FFFFFFFC
+00000496 486EFFFC		 PEA	   -4(A6)			         $FFFFFFFC
+0000049A 2F00			 MOVE.L	   D0,-(A7)
+0000049C 4EB900000000		 JSR	   T.WRITE
+000004A2 2F00			 MOVE.L	   D0,-(A7)
+000004A4 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/80
+000004AA 7008	      L.7.6	 MOVEQ	   #8,D0			         $8000004AC 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         SEQUENCE
+		      *							       LINE 1/81
+		      *							       LINE 1/82
+000004B0 7003			 MOVEQ	   #3,D0			         $3
+000004B2 2F00			 MOVE.L	   D0,-(A7)
+000004B4 6100FD0C		 BSR.L	   B.3(PC)			         CT_TOP_UNCLE = CODE.+
+		      *							       LINE 1/83
+		      *							       LINE 1/84
+000004B8 7009	      L.7.7	 MOVEQ	   #9,D0			         $9
+000004BA B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         SEQUENCE
+000004BE 6742			 BEQ.S	   L.7.9(PC)
+		      *							       LINE 1/85
+000004C0 202D0000     L.7.8	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+000004C4 4A80			 TST.L	   D0
+000004C6 6606			 BNE.S	   X.7.4(PC)
+000004C8 4EB900000000		 JSR	   E.FILE
+000004CE 7225	      X.7.4	 MOVEQ	   #37,D1			         $25
+000004D0 3F01			 MOVE.W	   D1,-(A7)
+000004D2 7204			 MOVEQ	   #4,D1			         $4
+000004D4 3F01			 MOVE.W	   D1,-(A7)
+000004D6 487AFE5E		 PEA	   K.7(PC)			         CODE.+$336
+000004DA 2F00			 MOVE.L	   D0,-(A7)
+000004DC 4EB900000000		 JSR	   T.WRITE
+000004E2 222D8000		 MOVE.L	   STATIC.+0-32768(A5),D1	         SEQUENCE
+000004E6 5381			 SUBQ.L	   #1,D1			         $1
+000004E8 4267			 CLR.W	   -(A7)
+000004EA 2D41FFFC		 MOVE.L	   D1,-4(A6)			         $FFFFFFFC
+000004EE 486EFFFC		 PEA	   -4(A6)			         $FFFFFFFC
+000004F2 2F00			 MOVE.L	   D0,-(A7)
+000004F4 4EB900000000		 JSR	   T.WRITE
+000004FA 2F00			 MOVE.L	   D0,-(A7)
+000004FC 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/91
+00000502 700A	      L.7.9	 MOVEQ	   #10,D0			         $A
+00000504 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         SEQUENCE
+		      *							       LINE 1/92
+		      *							       LINE 1/93
+00000508 7003			 MOVEQ	   #3,D0			         $3
+0000050A 2F00			 MOVE.L	   D0,-(A7)
+0000050C 2F2E0014		 MOVE.L	   20(A6),-(A7)			         $14
+00000510 4EB90000041A		 JSR	   B.7				         CT_LEVEL_3 = CODE.+$4
+		      *							       LINE 1/94
+		      *							       LINE 1/95
+00000516 700B	      L.7.10	 MOVEQ	   #11,D0			         $B
+00000518 B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         SEQUENCE0000051C 6742			 BEQ.S	   L.7.12(PC)
+		      *							       LINE 1/96
+0000051E 202D0000     L.7.11	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00000522 4A80			 TST.L	   D0
+00000524 6606			 BNE.S	   X.7.5(PC)
+00000526 4EB900000000		 JSR	   E.FILE
+0000052C 7226	      X.7.5	 MOVEQ	   #38,D1			         $26
+0000052E 3F01			 MOVE.W	   D1,-(A7)
+00000530 7204			 MOVEQ	   #4,D1			         $4
+00000532 3F01			 MOVE.W	   D1,-(A7)
+00000534 487AFE26		 PEA	   K.8(PC)			         CODE.+$35C
+00000538 2F00			 MOVE.L	   D0,-(A7)
+0000053A 4EB900000000		 JSR	   T.WRITE
+00000540 222D8000		 MOVE.L	   STATIC.+0-32768(A5),D1	         SEQUENCE
+00000544 5381			 SUBQ.L	   #1,D1			         $1
+00000546 4267			 CLR.W	   -(A7)
+00000548 2D41FFFC		 MOVE.L	   D1,-4(A6)			         $FFFFFFFC
+0000054C 486EFFFC		 PEA	   -4(A6)			         $FFFFFFFC
+00000550 2F00			 MOVE.L	   D0,-(A7)
+00000552 4EB900000000		 JSR	   T.WRITE
+00000558 2F00			 MOVE.L	   D0,-(A7)
+0000055A 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/102
+00000560 700C	      L.7.12	 MOVEQ	   #12,D0			         $C
+00000562 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         SEQUENCE
+		      *							       LINE 1/103
+		      *							       LINE 1/104
+00000566 7003			 MOVEQ	   #3,D0			         $3
+00000568 2F00			 MOVE.L	   D0,-(A7)
+0000056A 206E0014		 MOVEA.L   20(A6),A0			         $14
+0000056E 2F280014		 MOVE.L	   20(A0),-(A7)			         $14
+00000572 4EB900000000		 JSR	   B.6				         CT_LEVEL_2
+		      *							       LINE 1/105
+		      *							       LINE 1/106
+00000578 700D	      L.7.13	 MOVEQ	   #13,D0			         $D
+0000057A B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         SEQUENCE
+0000057E 6742			 BEQ.S	   L.7.15(PC)
+		      *							       LINE 1/107
+00000580 202D0000     L.7.14	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00000584 4A80			 TST.L	   D0
+00000586 6606			 BNE.S	   X.7.6(PC)
+00000588 4EB900000000		 JSR	   E.FILE
+0000058E 7226	      X.7.6	 MOVEQ	   #38,D1			         $26
+00000590 3F01			 MOVE.W	   D1,-(A7)
+00000592 7204			 MOVEQ	   #4,D1			         $400000594 3F01			 MOVE.W	   D1,-(A7)
+00000596 487AFDEA		 PEA	   K.9(PC)			         CODE.+$382
+0000059A 2F00			 MOVE.L	   D0,-(A7)
+0000059C 4EB900000000		 JSR	   T.WRITE
+000005A2 222D8000		 MOVE.L	   STATIC.+0-32768(A5),D1	         SEQUENCE
+000005A6 5381			 SUBQ.L	   #1,D1			         $1
+000005A8 4267			 CLR.W	   -(A7)
+000005AA 2D41FFFC		 MOVE.L	   D1,-4(A6)			         $FFFFFFFC
+000005AE 486EFFFC		 PEA	   -4(A6)			         $FFFFFFFC
+000005B2 2F00			 MOVE.L	   D0,-(A7)
+000005B4 4EB900000000		 JSR	   T.WRITE
+000005BA 2F00			 MOVE.L	   D0,-(A7)
+000005BC 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/113
+000005C2 700E	      L.7.15	 MOVEQ	   #14,D0			         $E
+000005C4 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         SEQUENCE
+		      *							       LINE 1/114
+		      *							       LINE 1/115
+000005C8 7003			 MOVEQ	   #3,D0			         $3
+000005CA 2F00			 MOVE.L	   D0,-(A7)
+000005CC 4EB900000000		 JSR	   B.4				         CT_LEVEL_1
+		      *							       LINE 1/116
+		      *							       LINE 1/117
+000005D2 700F	      L.7.16	 MOVEQ	   #15,D0			         $F
+000005D4 B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         SEQUENCE
+000005D8 6742			 BEQ.S	   L.7.18(PC)
+		      *							       LINE 1/118
+000005DA 202D0000     L.7.17	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+000005DE 4A80			 TST.L	   D0
+000005E0 6606			 BNE.S	   X.7.7(PC)
+000005E2 4EB900000000		 JSR	   E.FILE
+000005E8 7226	      X.7.7	 MOVEQ	   #38,D1			         $26
+000005EA 3F01			 MOVE.W	   D1,-(A7)
+000005EC 7204			 MOVEQ	   #4,D1			         $4
+000005EE 3F01			 MOVE.W	   D1,-(A7)
+000005F0 487AFDB6		 PEA	   K.10(PC)			         CODE.+$3A8
+000005F4 2F00			 MOVE.L	   D0,-(A7)
+000005F6 4EB900000000		 JSR	   T.WRITE
+000005FC 222D8000		 MOVE.L	   STATIC.+0-32768(A5),D1	         SEQUENCE
+00000600 5381			 SUBQ.L	   #1,D1			         $1
+00000602 4267			 CLR.W	   -(A7)
+00000604 2D41FFFC		 MOVE.L	   D1,-4(A6)			         $FFFFFFFC
+00000608 486EFFFC		 PEA	   -4(A6)			         $FFFFFFFC
+0000060C 2F00			 MOVE.L	   D0,-(A7)
+0000060E 4EB900000000		 JSR	   T.WRITE00000614 2F00			 MOVE.L	   D0,-(A7)
+00000616 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/124
+0000061C 7010	      L.7.18	 MOVEQ	   #16,D0			         $10
+0000061E 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         SEQUENCE
+		      *							       LINE 1/125
+		      *							       LINE 1/126
+00000622 7003			 MOVEQ	   #3,D0			         $3
+00000624 2F00			 MOVE.L	   D0,-(A7)
+00000626 206E0014		 MOVEA.L   20(A6),A0			         $14
+0000062A 2F280014		 MOVE.L	   20(A0),-(A7)			         $14
+0000062E 6100FA28		 BSR.L	   B.5(PC)			         CT_SUB_UNCLE = CODE.+
+		      *							       LINE 1/127
+		      *							       LINE 1/128
+00000632 7011	      L.7.19	 MOVEQ	   #17,D0			         $11
+00000634 B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         SEQUENCE
+00000638 6742			 BEQ.S	   L.7.21(PC)
+		      *							       LINE 1/129
+0000063A 202D0000     L.7.20	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+0000063E 4A80			 TST.L	   D0
+00000640 6606			 BNE.S	   X.7.8(PC)
+00000642 4EB900000000		 JSR	   E.FILE
+00000648 7226	      X.7.8	 MOVEQ	   #38,D1			         $26
+0000064A 3F01			 MOVE.W	   D1,-(A7)
+0000064C 7204			 MOVEQ	   #4,D1			         $4
+0000064E 3F01			 MOVE.W	   D1,-(A7)
+00000650 487AFD7C		 PEA	   K.11(PC)			         CODE.+$3CE
+00000654 2F00			 MOVE.L	   D0,-(A7)
+00000656 4EB900000000		 JSR	   T.WRITE
+0000065C 222D8000		 MOVE.L	   STATIC.+0-32768(A5),D1	         SEQUENCE
+00000660 5381			 SUBQ.L	   #1,D1			         $1
+00000662 4267			 CLR.W	   -(A7)
+00000664 2D41FFFC		 MOVE.L	   D1,-4(A6)			         $FFFFFFFC
+00000668 486EFFFC		 PEA	   -4(A6)			         $FFFFFFFC
+0000066C 2F00			 MOVE.L	   D0,-(A7)
+0000066E 4EB900000000		 JSR	   T.WRITE
+00000674 2F00			 MOVE.L	   D0,-(A7)
+00000676 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/135
+0000067C 7012	      L.7.21	 MOVEQ	   #18,D0			         $12
+0000067E 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         SEQUENCE
+		      *							       LINE 1/136
+		      *							       LINE 1/137
+00000682 6058			 BRA.S	   L.7.27(PC)
+00000684	      L.7.22		      *							       LINE 1/138
+		      *							       LINE 1/139
+00000684 700A	      L.7.23	 MOVEQ	   #10,D0			         $A
+00000686 B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         SEQUENCE
+0000068A 6742			 BEQ.S	   L.7.25(PC)
+		      *							       LINE 1/140
+0000068C 202D0000     L.7.24	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00000690 4A80			 TST.L	   D0
+00000692 6606			 BNE.S	   X.7.9(PC)
+00000694 4EB900000000		 JSR	   E.FILE
+0000069A 7226	      X.7.9	 MOVEQ	   #38,D1			         $26
+0000069C 3F01			 MOVE.W	   D1,-(A7)
+0000069E 7204			 MOVEQ	   #4,D1			         $4
+000006A0 3F01			 MOVE.W	   D1,-(A7)
+000006A2 487AFD50		 PEA	   K.12(PC)			         CODE.+$3F4
+000006A6 2F00			 MOVE.L	   D0,-(A7)
+000006A8 4EB900000000		 JSR	   T.WRITE
+000006AE 222D8000		 MOVE.L	   STATIC.+0-32768(A5),D1	         SEQUENCE
+000006B2 5381			 SUBQ.L	   #1,D1			         $1
+000006B4 4267			 CLR.W	   -(A7)
+000006B6 2D41FFFC		 MOVE.L	   D1,-4(A6)			         $FFFFFFFC
+000006BA 486EFFFC		 PEA	   -4(A6)			         $FFFFFFFC
+000006BE 2F00			 MOVE.L	   D0,-(A7)
+000006C0 4EB900000000		 JSR	   T.WRITE
+000006C6 2F00			 MOVE.L	   D0,-(A7)
+000006C8 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/146
+000006CE 700B	      L.7.25	 MOVEQ	   #11,D0			         $B
+000006D0 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         SEQUENCE
+		      *							       LINE 1/147
+000006D4 6006			 BRA.S	   L.7.27(PC)
+000006D6 4EB900000000 L.7.26	 JSR	   E.CASE
+		      *							       LINE 1/148
+		      *							       LINE 1/149
+000006DC 4EB900000000 L.7.27	 JSR	   M.RETURN
+		      *
+		      *		 Constant area for subroutine CT_LEVEL_2
+		      *
+000006E2 53657175656E K.13	 DC.B	   'Sequence error: point 4 follows point'
+00000707 00000001		 DS.B	   1
+00000708 53657175656E K.14	 DC.B	   'Sequence error: point 6 follows point'
+0000072D 00000001		 DS.B	   1
+0000072E 53657175656E K.15	 DC.B	   'Sequence error: point 18 follows point'
+00000754 53657175656E K.16	 DC.B	   'Sequence error: point 20 follows point'
+0000077A 53657175656E K.17	 DC.B	   'Sequence error: point 22 follows point'000007A0 53657175656E K.18	 DC.B	   'Sequence error: point 24 follows point'
+000007C6 53657175656E K.19	 DC.B	   'Sequence error: point 19 follows point'
+000007EC 53657175656E K.20	 DC.B	   'Sequence error: point 12 follows point'
+		      *
+		      *		 Begin subroutine CT_LEVEL_2
+		      *
+00000812 7018	      B.6	 MOVEQ	   #24,D0			         $18
+00000814 2F00			 MOVE.L	   D0,-(A7)
+00000816 6112			 BSR.S	   X.6.1(PC)
+00000818 00000000		 DC.L	   C.1
+0000081C 0000			 DC.W	   0				         $0
+0000081E 000A			 DC.W	   10				       String length word
+00000820 43545F4C4556		 DC.B	   'CT_LEVEL_2'
+0000082A 203CFFFFFFF8 X.6.1	 MOVE.L	   #T.6-4,D0			         -4
+00000830 4EB900000000		 JSR	   M.ENTRY
+		      *							       LINE 1/151
+		      *							       LINE 1/152
+00000836 202E0018     L.6.1	 MOVE.L	   24(A6),D0			         N
+0000083A 5380			 SUBQ.L	   #1,D0			         $1
+0000083C 6D0002DA		 BLT.L	   L.6.30(PC)
+00000840 0C8000000002		 CMPI.L	   #2,D0			         $2
+00000846 6E0002D0		 BGT.L	   L.6.30(PC)
+0000084A D040			 ADD.W	   D0,D0
+0000084C 303B0006		 MOVE.W	   X.6.2(PC,D0.W),D0
+00000850 4EFB0002		 JMP	   X.6.2(PC,D0.W)
+00000854 0000	      X.6.2	 DC.W	   L.6.2-*
+00000856 0000			 DC.W	   L.6.22+2-*
+00000858 0000			 DC.W	   L.6.26+4-*
+0000085A	      L.6.2
+0000085A	      L.6.3
+		      *							       LINE 1/153
+		      *							       LINE 1/154
+		      *							       LINE 1/155
+0000085A 7004	      L.6.4	 MOVEQ	   #4,D0			         $4
+0000085C B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         SEQUENCE
+00000860 6742			 BEQ.S	   L.6.6(PC)
+		      *							       LINE 1/156
+00000862 202D0000     L.6.5	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00000866 4A80			 TST.L	   D0
+00000868 6606			 BNE.S	   X.6.3(PC)
+0000086A 4EB900000000		 JSR	   E.FILE
+00000870 7225	      X.6.3	 MOVEQ	   #37,D1			         $25
+00000872 3F01			 MOVE.W	   D1,-(A7)
+00000874 7204			 MOVEQ	   #4,D1			         $4
+00000876 3F01			 MOVE.W	   D1,-(A7)00000878 487AFE68		 PEA	   K.13(PC)			         CODE.+$6E2
+0000087C 2F00			 MOVE.L	   D0,-(A7)
+0000087E 4EB900000000		 JSR	   T.WRITE
+00000884 222D8000		 MOVE.L	   STATIC.+0-32768(A5),D1	         SEQUENCE
+00000888 5381			 SUBQ.L	   #1,D1			         $1
+0000088A 4267			 CLR.W	   -(A7)
+0000088C 2D41FFFC		 MOVE.L	   D1,-4(A6)			         $FFFFFFFC
+00000890 486EFFFC		 PEA	   -4(A6)			         $FFFFFFFC
+00000894 2F00			 MOVE.L	   D0,-(A7)
+00000896 4EB900000000		 JSR	   T.WRITE
+0000089C 2F00			 MOVE.L	   D0,-(A7)
+0000089E 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/162
+000008A4 7005	      L.6.6	 MOVEQ	   #5,D0			         $5
+000008A6 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         SEQUENCE
+		      *							       LINE 1/163
+		      *							       LINE 1/164
+000008AA 7002			 MOVEQ	   #2,D0			         $2
+000008AC 2F00			 MOVE.L	   D0,-(A7)
+000008AE 6100F912		 BSR.L	   B.3(PC)			         CT_TOP_UNCLE = CODE.+
+		      *							       LINE 1/165
+		      *							       LINE 1/166
+000008B2 7006	      L.6.7	 MOVEQ	   #6,D0			         $6
+000008B4 B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         SEQUENCE
+000008B8 6742			 BEQ.S	   L.6.9(PC)
+		      *							       LINE 1/167
+000008BA 202D0000     L.6.8	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+000008BE 4A80			 TST.L	   D0
+000008C0 6606			 BNE.S	   X.6.4(PC)
+000008C2 4EB900000000		 JSR	   E.FILE
+000008C8 7225	      X.6.4	 MOVEQ	   #37,D1			         $25
+000008CA 3F01			 MOVE.W	   D1,-(A7)
+000008CC 7204			 MOVEQ	   #4,D1			         $4
+000008CE 3F01			 MOVE.W	   D1,-(A7)
+000008D0 487AFE36		 PEA	   K.14(PC)			         CODE.+$708
+000008D4 2F00			 MOVE.L	   D0,-(A7)
+000008D6 4EB900000000		 JSR	   T.WRITE
+000008DC 222D8000		 MOVE.L	   STATIC.+0-32768(A5),D1	         SEQUENCE
+000008E0 5381			 SUBQ.L	   #1,D1			         $1
+000008E2 4267			 CLR.W	   -(A7)
+000008E4 2D41FFFC		 MOVE.L	   D1,-4(A6)			         $FFFFFFFC
+000008E8 486EFFFC		 PEA	   -4(A6)			         $FFFFFFFC
+000008EC 2F00			 MOVE.L	   D0,-(A7)
+000008EE 4EB900000000		 JSR	   T.WRITE
+000008F4 2F00			 MOVE.L	   D0,-(A7)000008F6 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/173
+000008FC 7007	      L.6.9	 MOVEQ	   #7,D0			         $7
+000008FE 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         SEQUENCE
+		      *							       LINE 1/174
+		      *							       LINE 1/175
+00000902 7002			 MOVEQ	   #2,D0			         $2
+00000904 2F00			 MOVE.L	   D0,-(A7)
+00000906 2F0E			 MOVE.L	   A6,-(A7)
+00000908 6100FB10		 BSR.L	   B.7(PC)			         CT_LEVEL_3 = CODE.+$4
+		      *							       LINE 1/176
+		      *							       LINE 1/177
+0000090C 7012	      L.6.10	 MOVEQ	   #18,D0			         $12
+0000090E B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         SEQUENCE
+00000912 6742			 BEQ.S	   L.6.12(PC)
+		      *							       LINE 1/178
+00000914 202D0000     L.6.11	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00000918 4A80			 TST.L	   D0
+0000091A 6606			 BNE.S	   X.6.5(PC)
+0000091C 4EB900000000		 JSR	   E.FILE
+00000922 7226	      X.6.5	 MOVEQ	   #38,D1			         $26
+00000924 3F01			 MOVE.W	   D1,-(A7)
+00000926 7204			 MOVEQ	   #4,D1			         $4
+00000928 3F01			 MOVE.W	   D1,-(A7)
+0000092A 487AFE02		 PEA	   K.15(PC)			         CODE.+$72E
+0000092E 2F00			 MOVE.L	   D0,-(A7)
+00000930 4EB900000000		 JSR	   T.WRITE
+00000936 222D8000		 MOVE.L	   STATIC.+0-32768(A5),D1	         SEQUENCE
+0000093A 5381			 SUBQ.L	   #1,D1			         $1
+0000093C 4267			 CLR.W	   -(A7)
+0000093E 2D41FFFC		 MOVE.L	   D1,-4(A6)			         $FFFFFFFC
+00000942 486EFFFC		 PEA	   -4(A6)			         $FFFFFFFC
+00000946 2F00			 MOVE.L	   D0,-(A7)
+00000948 4EB900000000		 JSR	   T.WRITE
+0000094E 2F00			 MOVE.L	   D0,-(A7)
+00000950 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/184
+00000956 7013	      L.6.12	 MOVEQ	   #19,D0			         $13
+00000958 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         SEQUENCE
+		      *							       LINE 1/185
+		      *							       LINE 1/186
+0000095C 7002			 MOVEQ	   #2,D0			         $2
+0000095E 2F00			 MOVE.L	   D0,-(A7)
+00000960 2F2E0014		 MOVE.L	   20(A6),-(A7)			         $14
+00000964 4EB900000812		 JSR	   B.6				         CT_LEVEL_2 = CODE.+$8		      *							       LINE 1/187
+		      *							       LINE 1/188
+0000096A 7014	      L.6.13	 MOVEQ	   #20,D0			         $14
+0000096C B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         SEQUENCE
+00000970 6742			 BEQ.S	   L.6.15(PC)
+		      *							       LINE 1/189
+00000972 202D0000     L.6.14	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00000976 4A80			 TST.L	   D0
+00000978 6606			 BNE.S	   X.6.6(PC)
+0000097A 4EB900000000		 JSR	   E.FILE
+00000980 7226	      X.6.6	 MOVEQ	   #38,D1			         $26
+00000982 3F01			 MOVE.W	   D1,-(A7)
+00000984 7204			 MOVEQ	   #4,D1			         $4
+00000986 3F01			 MOVE.W	   D1,-(A7)
+00000988 487AFDCA		 PEA	   K.16(PC)			         CODE.+$754
+0000098C 2F00			 MOVE.L	   D0,-(A7)
+0000098E 4EB900000000		 JSR	   T.WRITE
+00000994 222D8000		 MOVE.L	   STATIC.+0-32768(A5),D1	         SEQUENCE
+00000998 5381			 SUBQ.L	   #1,D1			         $1
+0000099A 4267			 CLR.W	   -(A7)
+0000099C 2D41FFFC		 MOVE.L	   D1,-4(A6)			         $FFFFFFFC
+000009A0 486EFFFC		 PEA	   -4(A6)			         $FFFFFFFC
+000009A4 2F00			 MOVE.L	   D0,-(A7)
+000009A6 4EB900000000		 JSR	   T.WRITE
+000009AC 2F00			 MOVE.L	   D0,-(A7)
+000009AE 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/195
+000009B4 7015	      L.6.15	 MOVEQ	   #21,D0			         $15
+000009B6 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         SEQUENCE
+		      *							       LINE 1/196
+		      *							       LINE 1/197
+000009BA 7002			 MOVEQ	   #2,D0			         $2
+000009BC 2F00			 MOVE.L	   D0,-(A7)
+000009BE 4EB900000000		 JSR	   B.4				         CT_LEVEL_1
+		      *							       LINE 1/198
+		      *							       LINE 1/199
+000009C4 7016	      L.6.16	 MOVEQ	   #22,D0			         $16
+000009C6 B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         SEQUENCE
+000009CA 6742			 BEQ.S	   L.6.18(PC)
+		      *							       LINE 1/200
+000009CC 202D0000     L.6.17	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+000009D0 4A80			 TST.L	   D0
+000009D2 6606			 BNE.S	   X.6.7(PC)
+000009D4 4EB900000000		 JSR	   E.FILE
+000009DA 7226	      X.6.7	 MOVEQ	   #38,D1			         $26000009DC 3F01			 MOVE.W	   D1,-(A7)
+000009DE 7204			 MOVEQ	   #4,D1			         $4
+000009E0 3F01			 MOVE.W	   D1,-(A7)
+000009E2 487AFD96		 PEA	   K.17(PC)			         CODE.+$77A
+000009E6 2F00			 MOVE.L	   D0,-(A7)
+000009E8 4EB900000000		 JSR	   T.WRITE
+000009EE 222D8000		 MOVE.L	   STATIC.+0-32768(A5),D1	         SEQUENCE
+000009F2 5381			 SUBQ.L	   #1,D1			         $1
+000009F4 4267			 CLR.W	   -(A7)
+000009F6 2D41FFFC		 MOVE.L	   D1,-4(A6)			         $FFFFFFFC
+000009FA 486EFFFC		 PEA	   -4(A6)			         $FFFFFFFC
+000009FE 2F00			 MOVE.L	   D0,-(A7)
+00000A00 4EB900000000		 JSR	   T.WRITE
+00000A06 2F00			 MOVE.L	   D0,-(A7)
+00000A08 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/206
+00000A0E 7017	      L.6.18	 MOVEQ	   #23,D0			         $17
+00000A10 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         SEQUENCE
+		      *							       LINE 1/207
+		      *							       LINE 1/208
+00000A14 7002			 MOVEQ	   #2,D0			         $2
+00000A16 2F00			 MOVE.L	   D0,-(A7)
+00000A18 2F2E0014		 MOVE.L	   20(A6),-(A7)			         $14
+00000A1C 6100F63A		 BSR.L	   B.5(PC)			         CT_SUB_UNCLE = CODE.+
+		      *							       LINE 1/209
+		      *							       LINE 1/210
+00000A20 7018	      L.6.19	 MOVEQ	   #24,D0			         $18
+00000A22 B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         SEQUENCE
+00000A26 6742			 BEQ.S	   L.6.21(PC)
+		      *							       LINE 1/211
+00000A28 202D0000     L.6.20	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00000A2C 4A80			 TST.L	   D0
+00000A2E 6606			 BNE.S	   X.6.8(PC)
+00000A30 4EB900000000		 JSR	   E.FILE
+00000A36 7226	      X.6.8	 MOVEQ	   #38,D1			         $26
+00000A38 3F01			 MOVE.W	   D1,-(A7)
+00000A3A 7204			 MOVEQ	   #4,D1			         $4
+00000A3C 3F01			 MOVE.W	   D1,-(A7)
+00000A3E 487AFD60		 PEA	   K.18(PC)			         CODE.+$7A0
+00000A42 2F00			 MOVE.L	   D0,-(A7)
+00000A44 4EB900000000		 JSR	   T.WRITE
+00000A4A 222D8000		 MOVE.L	   STATIC.+0-32768(A5),D1	         SEQUENCE
+00000A4E 5381			 SUBQ.L	   #1,D1			         $1
+00000A50 4267			 CLR.W	   -(A7)
+00000A52 2D41FFFC		 MOVE.L	   D1,-4(A6)			         $FFFFFFFC00000A56 486EFFFC		 PEA	   -4(A6)			         $FFFFFFFC
+00000A5A 2F00			 MOVE.L	   D0,-(A7)
+00000A5C 4EB900000000		 JSR	   T.WRITE
+00000A62 2F00			 MOVE.L	   D0,-(A7)
+00000A64 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/217
+00000A6A 7019	      L.6.21	 MOVEQ	   #25,D0			         $19
+00000A6C 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         SEQUENCE
+		      *							       LINE 1/218
+		      *							       LINE 1/219
+00000A70 600000AC		 BRA.L	   L.6.31(PC)
+00000A74	      L.6.22
+		      *							       LINE 1/220
+		      *							       LINE 1/221
+00000A74 7013	      L.6.23	 MOVEQ	   #19,D0			         $13
+00000A76 B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         SEQUENCE
+00000A7A 6742			 BEQ.S	   L.6.25(PC)
+		      *							       LINE 1/222
+00000A7C 202D0000     L.6.24	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00000A80 4A80			 TST.L	   D0
+00000A82 6606			 BNE.S	   X.6.9(PC)
+00000A84 4EB900000000		 JSR	   E.FILE
+00000A8A 7226	      X.6.9	 MOVEQ	   #38,D1			         $26
+00000A8C 3F01			 MOVE.W	   D1,-(A7)
+00000A8E 7204			 MOVEQ	   #4,D1			         $4
+00000A90 3F01			 MOVE.W	   D1,-(A7)
+00000A92 487AFD32		 PEA	   K.19(PC)			         CODE.+$7C6
+00000A96 2F00			 MOVE.L	   D0,-(A7)
+00000A98 4EB900000000		 JSR	   T.WRITE
+00000A9E 222D8000		 MOVE.L	   STATIC.+0-32768(A5),D1	         SEQUENCE
+00000AA2 5381			 SUBQ.L	   #1,D1			         $1
+00000AA4 4267			 CLR.W	   -(A7)
+00000AA6 2D41FFFC		 MOVE.L	   D1,-4(A6)			         $FFFFFFFC
+00000AAA 486EFFFC		 PEA	   -4(A6)			         $FFFFFFFC
+00000AAE 2F00			 MOVE.L	   D0,-(A7)
+00000AB0 4EB900000000		 JSR	   T.WRITE
+00000AB6 2F00			 MOVE.L	   D0,-(A7)
+00000AB8 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/228
+00000ABE 7014	      L.6.25	 MOVEQ	   #20,D0			         $14
+00000AC0 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         SEQUENCE
+		      *							       LINE 1/229
+00000AC4 6058			 BRA.S	   L.6.31(PC)
+00000AC6	      L.6.26
+		      *							       LINE 1/230		      *							       LINE 1/231
+00000AC6 700C	      L.6.27	 MOVEQ	   #12,D0			         $C
+00000AC8 B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         SEQUENCE
+00000ACC 6742			 BEQ.S	   L.6.29(PC)
+		      *							       LINE 1/232
+00000ACE 202D0000     L.6.28	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00000AD2 4A80			 TST.L	   D0
+00000AD4 6606			 BNE.S	   X.6.10(PC)
+00000AD6 4EB900000000		 JSR	   E.FILE
+00000ADC 7226	      X.6.10	 MOVEQ	   #38,D1			         $26
+00000ADE 3F01			 MOVE.W	   D1,-(A7)
+00000AE0 7204			 MOVEQ	   #4,D1			         $4
+00000AE2 3F01			 MOVE.W	   D1,-(A7)
+00000AE4 487AFD06		 PEA	   K.20(PC)			         CODE.+$7EC
+00000AE8 2F00			 MOVE.L	   D0,-(A7)
+00000AEA 4EB900000000		 JSR	   T.WRITE
+00000AF0 222D8000		 MOVE.L	   STATIC.+0-32768(A5),D1	         SEQUENCE
+00000AF4 5381			 SUBQ.L	   #1,D1			         $1
+00000AF6 4267			 CLR.W	   -(A7)
+00000AF8 2D41FFFC		 MOVE.L	   D1,-4(A6)			         $FFFFFFFC
+00000AFC 486EFFFC		 PEA	   -4(A6)			         $FFFFFFFC
+00000B00 2F00			 MOVE.L	   D0,-(A7)
+00000B02 4EB900000000		 JSR	   T.WRITE
+00000B08 2F00			 MOVE.L	   D0,-(A7)
+00000B0A 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/238
+00000B10 700D	      L.6.29	 MOVEQ	   #13,D0			         $D
+00000B12 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         SEQUENCE
+		      *							       LINE 1/239
+00000B16 6006			 BRA.S	   L.6.31(PC)
+00000B18 4EB900000000 L.6.30	 JSR	   E.CASE
+		      *							       LINE 1/240
+		      *							       LINE 1/241
+00000B1E 4EB900000000 L.6.31	 JSR	   M.RETURN
+		      *
+		      *		 Constant area for subroutine CT_LEVEL_1
+		      *
+00000B24 53657175656E K.21	 DC.B	   'Sequence error: point 1 follows point'
+00000B49 00000001		 DS.B	   1
+00000B4A 53657175656E K.22	 DC.B	   'Sequence error: point 3 follows point'
+00000B6F 00000001		 DS.B	   1
+00000B70 53657175656E K.23	 DC.B	   'Sequence error: point 25 follows point'
+00000B96 53657175656E K.24	 DC.B	   'Sequence error: point 27 follows point'
+00000BBC 53657175656E K.25	 DC.B	   'Sequence error: point 26 follows point'
+00000BE2 53657175656E K.26	 DC.B	   'Sequence error: point 21 follows point'00000C08 53657175656E K.27	 DC.B	   'Sequence error: point 14 follows point'
+		      *
+		      *		 Begin subroutine CT_LEVEL_1
+		      *
+00000C2E 7014	      B.4	 MOVEQ	   #20,D0			         $14
+00000C30 2F00			 MOVE.L	   D0,-(A7)
+00000C32 6112			 BSR.S	   X.4.1(PC)
+00000C34 00000000		 DC.L	   C.1
+00000C38 0000			 DC.W	   0				         $0
+00000C3A 000A			 DC.W	   10				       String length word
+00000C3C 43545F4C4556		 DC.B	   'CT_LEVEL_1'
+00000C46 203CFFFFFFF8 X.4.1	 MOVE.L	   #T.4-4,D0			         -4
+00000C4C 4EB900000000		 JSR	   M.ENTRY
+		      *							       LINE 1/243
+		      *							       LINE 1/244
+00000C52 202E0014     L.4.1	 MOVE.L	   20(A6),D0			         N
+00000C56 4A80			 TST.L	   D0
+00000C58 6D000276		 BLT.L	   L.4.29(PC)
+00000C5C 0C8000000003		 CMPI.L	   #3,D0			         $3
+00000C62 6E00026C		 BGT.L	   L.4.29(PC)
+00000C66 D040			 ADD.W	   D0,D0
+00000C68 303B0006		 MOVE.W	   X.4.2(PC,D0.W),D0
+00000C6C 4EFB0002		 JMP	   X.4.2(PC,D0.W)
+00000C70 0000	      X.4.2	 DC.W	   L.4.2-*
+00000C72 0000			 DC.W	   L.4.16+2-*
+00000C74 0000			 DC.W	   L.4.20+4-*
+00000C76 0000			 DC.W	   L.4.24+6-*
+00000C78	      L.4.2
+00000C78	      L.4.3
+		      *							       LINE 1/245
+		      *							       LINE 1/246
+		      *							       LINE 1/247
+00000C78 7001	      L.4.4	 MOVEQ	   #1,D0			         $1
+00000C7A B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         SEQUENCE
+00000C7E 6742			 BEQ.S	   L.4.6(PC)
+		      *							       LINE 1/248
+00000C80 202D0000     L.4.5	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00000C84 4A80			 TST.L	   D0
+00000C86 6606			 BNE.S	   X.4.3(PC)
+00000C88 4EB900000000		 JSR	   E.FILE
+00000C8E 7225	      X.4.3	 MOVEQ	   #37,D1			         $25
+00000C90 3F01			 MOVE.W	   D1,-(A7)
+00000C92 7204			 MOVEQ	   #4,D1			         $4
+00000C94 3F01			 MOVE.W	   D1,-(A7)
+00000C96 487AFE8C		 PEA	   K.21(PC)			         CODE.+$B2400000C9A 2F00			 MOVE.L	   D0,-(A7)
+00000C9C 4EB900000000		 JSR	   T.WRITE
+00000CA2 222D8000		 MOVE.L	   STATIC.+0-32768(A5),D1	         SEQUENCE
+00000CA6 5381			 SUBQ.L	   #1,D1			         $1
+00000CA8 4267			 CLR.W	   -(A7)
+00000CAA 2D41FFFC		 MOVE.L	   D1,-4(A6)			         $FFFFFFFC
+00000CAE 486EFFFC		 PEA	   -4(A6)			         $FFFFFFFC
+00000CB2 2F00			 MOVE.L	   D0,-(A7)
+00000CB4 4EB900000000		 JSR	   T.WRITE
+00000CBA 2F00			 MOVE.L	   D0,-(A7)
+00000CBC 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/254
+00000CC2 7002	      L.4.6	 MOVEQ	   #2,D0			         $2
+00000CC4 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         SEQUENCE
+		      *							       LINE 1/255
+		      *							       LINE 1/256
+00000CC8 7001			 MOVEQ	   #1,D0			         $1
+00000CCA 2F00			 MOVE.L	   D0,-(A7)
+00000CCC 6100F4F4		 BSR.L	   B.3(PC)			         CT_TOP_UNCLE = CODE.+
+		      *							       LINE 1/257
+		      *							       LINE 1/258
+00000CD0 7003	      L.4.7	 MOVEQ	   #3,D0			         $3
+00000CD2 B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         SEQUENCE
+00000CD6 6742			 BEQ.S	   L.4.9(PC)
+		      *							       LINE 1/259
+00000CD8 202D0000     L.4.8	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00000CDC 4A80			 TST.L	   D0
+00000CDE 6606			 BNE.S	   X.4.4(PC)
+00000CE0 4EB900000000		 JSR	   E.FILE
+00000CE6 7225	      X.4.4	 MOVEQ	   #37,D1			         $25
+00000CE8 3F01			 MOVE.W	   D1,-(A7)
+00000CEA 7204			 MOVEQ	   #4,D1			         $4
+00000CEC 3F01			 MOVE.W	   D1,-(A7)
+00000CEE 487AFE5A		 PEA	   K.22(PC)			         CODE.+$B4A
+00000CF2 2F00			 MOVE.L	   D0,-(A7)
+00000CF4 4EB900000000		 JSR	   T.WRITE
+00000CFA 222D8000		 MOVE.L	   STATIC.+0-32768(A5),D1	         SEQUENCE
+00000CFE 5381			 SUBQ.L	   #1,D1			         $1
+00000D00 4267			 CLR.W	   -(A7)
+00000D02 2D41FFFC		 MOVE.L	   D1,-4(A6)			         $FFFFFFFC
+00000D06 486EFFFC		 PEA	   -4(A6)			         $FFFFFFFC
+00000D0A 2F00			 MOVE.L	   D0,-(A7)
+00000D0C 4EB900000000		 JSR	   T.WRITE
+00000D12 2F00			 MOVE.L	   D0,-(A7)
+00000D14 4EB900000000		 JSR	   T.WRTLN		      *							       LINE 1/265
+00000D1A 7004	      L.4.9	 MOVEQ	   #4,D0			         $4
+00000D1C 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         SEQUENCE
+		      *							       LINE 1/266
+		      *							       LINE 1/267
+00000D20 7001			 MOVEQ	   #1,D0			         $1
+00000D22 2F00			 MOVE.L	   D0,-(A7)
+00000D24 2F0E			 MOVE.L	   A6,-(A7)
+00000D26 6100FAEA		 BSR.L	   B.6(PC)			         CT_LEVEL_2 = CODE.+$8
+		      *							       LINE 1/268
+		      *							       LINE 1/269
+00000D2A 7019	      L.4.10	 MOVEQ	   #25,D0			         $19
+00000D2C B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         SEQUENCE
+00000D30 6742			 BEQ.S	   L.4.12(PC)
+		      *							       LINE 1/270
+00000D32 202D0000     L.4.11	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00000D36 4A80			 TST.L	   D0
+00000D38 6606			 BNE.S	   X.4.5(PC)
+00000D3A 4EB900000000		 JSR	   E.FILE
+00000D40 7226	      X.4.5	 MOVEQ	   #38,D1			         $26
+00000D42 3F01			 MOVE.W	   D1,-(A7)
+00000D44 7204			 MOVEQ	   #4,D1			         $4
+00000D46 3F01			 MOVE.W	   D1,-(A7)
+00000D48 487AFE26		 PEA	   K.23(PC)			         CODE.+$B70
+00000D4C 2F00			 MOVE.L	   D0,-(A7)
+00000D4E 4EB900000000		 JSR	   T.WRITE
+00000D54 222D8000		 MOVE.L	   STATIC.+0-32768(A5),D1	         SEQUENCE
+00000D58 5381			 SUBQ.L	   #1,D1			         $1
+00000D5A 4267			 CLR.W	   -(A7)
+00000D5C 2D41FFFC		 MOVE.L	   D1,-4(A6)			         $FFFFFFFC
+00000D60 486EFFFC		 PEA	   -4(A6)			         $FFFFFFFC
+00000D64 2F00			 MOVE.L	   D0,-(A7)
+00000D66 4EB900000000		 JSR	   T.WRITE
+00000D6C 2F00			 MOVE.L	   D0,-(A7)
+00000D6E 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/276
+00000D74 701A	      L.4.12	 MOVEQ	   #26,D0			         $1A
+00000D76 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         SEQUENCE
+		      *							       LINE 1/277
+		      *							       LINE 1/278
+00000D7A 7001			 MOVEQ	   #1,D0			         $1
+00000D7C 2F00			 MOVE.L	   D0,-(A7)
+00000D7E 4EB900000C2E		 JSR	   B.4				         CT_LEVEL_1 = CODE.+$C
+		      *							       LINE 1/279
+		      *							       LINE 1/28000000D84 701B	      L.4.13	 MOVEQ	   #27,D0			         $1B
+00000D86 B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         SEQUENCE
+00000D8A 6742			 BEQ.S	   L.4.15(PC)
+		      *							       LINE 1/281
+00000D8C 202D0000     L.4.14	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00000D90 4A80			 TST.L	   D0
+00000D92 6606			 BNE.S	   X.4.6(PC)
+00000D94 4EB900000000		 JSR	   E.FILE
+00000D9A 7226	      X.4.6	 MOVEQ	   #38,D1			         $26
+00000D9C 3F01			 MOVE.W	   D1,-(A7)
+00000D9E 7204			 MOVEQ	   #4,D1			         $4
+00000DA0 3F01			 MOVE.W	   D1,-(A7)
+00000DA2 487AFDF2		 PEA	   K.24(PC)			         CODE.+$B96
+00000DA6 2F00			 MOVE.L	   D0,-(A7)
+00000DA8 4EB900000000		 JSR	   T.WRITE
+00000DAE 222D8000		 MOVE.L	   STATIC.+0-32768(A5),D1	         SEQUENCE
+00000DB2 5381			 SUBQ.L	   #1,D1			         $1
+00000DB4 4267			 CLR.W	   -(A7)
+00000DB6 2D41FFFC		 MOVE.L	   D1,-4(A6)			         $FFFFFFFC
+00000DBA 486EFFFC		 PEA	   -4(A6)			         $FFFFFFFC
+00000DBE 2F00			 MOVE.L	   D0,-(A7)
+00000DC0 4EB900000000		 JSR	   T.WRITE
+00000DC6 2F00			 MOVE.L	   D0,-(A7)
+00000DC8 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/287
+00000DCE 701C	      L.4.15	 MOVEQ	   #28,D0			         $1C
+00000DD0 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         SEQUENCE
+		      *							       LINE 1/288
+		      *							       LINE 1/289
+00000DD4 60000100		 BRA.L	   L.4.30(PC)
+00000DD8	      L.4.16
+		      *							       LINE 1/290
+		      *							       LINE 1/291
+00000DD8 701A	      L.4.17	 MOVEQ	   #26,D0			         $1A
+00000DDA B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         SEQUENCE
+00000DDE 6742			 BEQ.S	   L.4.19(PC)
+		      *							       LINE 1/292
+00000DE0 202D0000     L.4.18	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00000DE4 4A80			 TST.L	   D0
+00000DE6 6606			 BNE.S	   X.4.7(PC)
+00000DE8 4EB900000000		 JSR	   E.FILE
+00000DEE 7226	      X.4.7	 MOVEQ	   #38,D1			         $26
+00000DF0 3F01			 MOVE.W	   D1,-(A7)
+00000DF2 7204			 MOVEQ	   #4,D1			         $4
+00000DF4 3F01			 MOVE.W	   D1,-(A7)00000DF6 487AFDC4		 PEA	   K.25(PC)			         CODE.+$BBC
+00000DFA 2F00			 MOVE.L	   D0,-(A7)
+00000DFC 4EB900000000		 JSR	   T.WRITE
+00000E02 222D8000		 MOVE.L	   STATIC.+0-32768(A5),D1	         SEQUENCE
+00000E06 5381			 SUBQ.L	   #1,D1			         $1
+00000E08 4267			 CLR.W	   -(A7)
+00000E0A 2D41FFFC		 MOVE.L	   D1,-4(A6)			         $FFFFFFFC
+00000E0E 486EFFFC		 PEA	   -4(A6)			         $FFFFFFFC
+00000E12 2F00			 MOVE.L	   D0,-(A7)
+00000E14 4EB900000000		 JSR	   T.WRITE
+00000E1A 2F00			 MOVE.L	   D0,-(A7)
+00000E1C 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/298
+00000E22 701B	      L.4.19	 MOVEQ	   #27,D0			         $1B
+00000E24 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         SEQUENCE
+		      *							       LINE 1/299
+00000E28 600000AC		 BRA.L	   L.4.30(PC)
+00000E2C	      L.4.20
+		      *							       LINE 1/300
+		      *							       LINE 1/301
+00000E2C 7015	      L.4.21	 MOVEQ	   #21,D0			         $15
+00000E2E B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         SEQUENCE
+00000E32 6742			 BEQ.S	   L.4.23(PC)
+		      *							       LINE 1/302
+00000E34 202D0000     L.4.22	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00000E38 4A80			 TST.L	   D0
+00000E3A 6606			 BNE.S	   X.4.8(PC)
+00000E3C 4EB900000000		 JSR	   E.FILE
+00000E42 7226	      X.4.8	 MOVEQ	   #38,D1			         $26
+00000E44 3F01			 MOVE.W	   D1,-(A7)
+00000E46 7204			 MOVEQ	   #4,D1			         $4
+00000E48 3F01			 MOVE.W	   D1,-(A7)
+00000E4A 487AFD96		 PEA	   K.26(PC)			         CODE.+$BE2
+00000E4E 2F00			 MOVE.L	   D0,-(A7)
+00000E50 4EB900000000		 JSR	   T.WRITE
+00000E56 222D8000		 MOVE.L	   STATIC.+0-32768(A5),D1	         SEQUENCE
+00000E5A 5381			 SUBQ.L	   #1,D1			         $1
+00000E5C 4267			 CLR.W	   -(A7)
+00000E5E 2D41FFFC		 MOVE.L	   D1,-4(A6)			         $FFFFFFFC
+00000E62 486EFFFC		 PEA	   -4(A6)			         $FFFFFFFC
+00000E66 2F00			 MOVE.L	   D0,-(A7)
+00000E68 4EB900000000		 JSR	   T.WRITE
+00000E6E 2F00			 MOVE.L	   D0,-(A7)
+00000E70 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/30800000E76 7016	      L.4.23	 MOVEQ	   #22,D0			         $16
+00000E78 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         SEQUENCE
+		      *							       LINE 1/309
+00000E7C 6058			 BRA.S	   L.4.30(PC)
+00000E7E	      L.4.24
+00000E7E	      L.4.25
+		      *							       LINE 1/310
+		      *							       LINE 1/311
+		      *							       LINE 1/312
+00000E7E 700E	      L.4.26	 MOVEQ	   #14,D0			         $E
+00000E80 B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         SEQUENCE
+00000E84 6742			 BEQ.S	   L.4.28(PC)
+		      *							       LINE 1/313
+00000E86 202D0000     L.4.27	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00000E8A 4A80			 TST.L	   D0
+00000E8C 6606			 BNE.S	   X.4.9(PC)
+00000E8E 4EB900000000		 JSR	   E.FILE
+00000E94 7226	      X.4.9	 MOVEQ	   #38,D1			         $26
+00000E96 3F01			 MOVE.W	   D1,-(A7)
+00000E98 7204			 MOVEQ	   #4,D1			         $4
+00000E9A 3F01			 MOVE.W	   D1,-(A7)
+00000E9C 487AFD6A		 PEA	   K.27(PC)			         CODE.+$C08
+00000EA0 2F00			 MOVE.L	   D0,-(A7)
+00000EA2 4EB900000000		 JSR	   T.WRITE
+00000EA8 222D8000		 MOVE.L	   STATIC.+0-32768(A5),D1	         SEQUENCE
+00000EAC 5381			 SUBQ.L	   #1,D1			         $1
+00000EAE 4267			 CLR.W	   -(A7)
+00000EB0 2D41FFFC		 MOVE.L	   D1,-4(A6)			         $FFFFFFFC
+00000EB4 486EFFFC		 PEA	   -4(A6)			         $FFFFFFFC
+00000EB8 2F00			 MOVE.L	   D0,-(A7)
+00000EBA 4EB900000000		 JSR	   T.WRITE
+00000EC0 2F00			 MOVE.L	   D0,-(A7)
+00000EC2 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/319
+00000EC8 700F	      L.4.28	 MOVEQ	   #15,D0			         $F
+00000ECA 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         SEQUENCE
+		      *							       LINE 1/320
+		      *							       LINE 1/330
+00000ECE 6006			 BRA.S	   L.4.30(PC)
+00000ED0 4EB900000000 L.4.29	 JSR	   E.CASE
+		      *							       LINE 1/331
+		      *							       LINE 1/332
+00000ED6 4EB900000000 L.4.30	 JSR	   M.RETURN
+		      *
+		      *		 Constant area for subroutine DT_LEVEL_3		      *
+00000EDC 00000003     K.28	 DC.L	   3				         $3
+00000EE0 000003A2		 DC.L	   930				         $3A2
+00000EE4 000003A3		 DC.L	   931				         $3A3
+00000EE8 000003A4		 DC.L	   932				         $3A4
+00000EEC 000003A5		 DC.L	   933				         $3A5
+00000EF0 000003A6		 DC.L	   934				         $3A6
+00000EF4 566172696162 K.29	 DC.B	   'Variable access error: level 3 to level 0 - value is'
+00000F28 566172696162 K.30	 DC.B	   'Variable access error: level 3 to level 1 - value is'
+00000F5C 566172696162 K.31	 DC.B	   'Variable access error: level 3 to level 2 - value is'
+00000F90 566172696162 K.32	 DC.B	   'Variable access error: level 3 to level 3 - value is'
+00000FC4 506172616D65 K.33	 DC.B	   'Parameter access error: level 3 to level 1 - value is'
+00000FF9 00000001		 DS.B	   1
+00000FFA 506172616D65 K.34	 DC.B	   'Parameter access error: level 3 to level 2 - value is'
+0000102F 00000001		 DS.B	   1
+00001030 506172616D65 K.35	 DC.B	   'Parameter access error: level 3 to level 3 - value is'
+00001065 00000001		 DS.B	   1
+00001066 000002D0     K.36	 DC.L	   720				         $2D0
+0000106A 000002D1		 DC.L	   721				         $2D1
+0000106E 000002D2		 DC.L	   722				         $2D2
+00001072 000002D3		 DC.L	   723				         $2D3
+00001076 000002D4		 DC.L	   724				         $2D4
+		      *
+		      *		 Begin subroutine DT_LEVEL_3
+		      *
+0000107A 701E	      B.10	 MOVEQ	   #30,D0			         $1E
+0000107C 2F00			 MOVE.L	   D0,-(A7)
+0000107E 6112			 BSR.S	   X.10.1(PC)
+00001080 00000000		 DC.L	   C.1
+00001084 0000			 DC.W	   0				         $0
+00001086 000A			 DC.W	   10				       String length word
+00001088 44545F4C4556		 DC.B	   'DT_LEVEL_3'
+00001092 203CFFFFFFE4 X.10.1	 MOVE.L	   #T.10-4,D0			         -24
+00001098 4EB900000000		 JSR	   M.ENTRY
+0000109E	      L.10.1
+		      *							       LINE 2/10
+		      *							       LINE 2/11
+		      *							       LINE 2/12
+0000109E 4CFA003FFE3C L.10.2	 MOVEM.L   K.28(PC),#63			         CODE.+$EDC  $3F
+000010A4 48EE003FFFE8		 MOVEM.L   #63,-24(A6)			         $3F  A_R_3
+		      *							       LINE 2/13
+		      *							       LINE 2/14
+000010AA 202D8004     L.10.3	 MOVE.L	   STATIC.+4-32768(A5),D0	         A_R_0
+000010AE E540			 ASL.W	   #2,D0			         $2
+000010B0 41ED8008		 LEA	   STATIC.+4-32764(A5),A0	         A_R_0000010B4 0CB000000384		 CMPI.L	   #900,0(A0,D0.W)		         $384  $0
+	 0000
+000010BC 6742			 BEQ.S	   L.10.5(PC)
+		      *							       LINE 2/15
+000010BE 202D0000     L.10.4	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+000010C2 4A80			 TST.L	   D0
+000010C4 6606			 BNE.S	   X.10.2(PC)
+000010C6 4EB900000000		 JSR	   E.FILE
+000010CC 7234	      X.10.2	 MOVEQ	   #52,D1			         $34
+000010CE 3F01			 MOVE.W	   D1,-(A7)
+000010D0 7204			 MOVEQ	   #4,D1			         $4
+000010D2 3F01			 MOVE.W	   D1,-(A7)
+000010D4 487AFE1E		 PEA	   K.29(PC)			         CODE.+$EF4
+000010D8 2F00			 MOVE.L	   D0,-(A7)
+000010DA 4EB900000000		 JSR	   T.WRITE
+000010E0 222D8004		 MOVE.L	   STATIC.+4-32768(A5),D1	         A_R_0
+000010E4 E541			 ASL.W	   #2,D1			         $2
+000010E6 41ED8008		 LEA	   STATIC.+4-32764(A5),A0	         A_R_0
+000010EA 4267			 CLR.W	   -(A7)
+000010EC 48701000		 PEA	   0(A0,D1.W)			         $0
+000010F0 2F00			 MOVE.L	   D0,-(A7)
+000010F2 4EB900000000		 JSR	   T.WRITE
+000010F8 2F00			 MOVE.L	   D0,-(A7)
+000010FA 4EB900000000		 JSR	   T.WRTLN
+00001100	      L.10.5
+		      *							       LINE 2/17
+		      *							       LINE 2/18
+		      *							       LINE 2/19
+00001100 206E0014     L.10.6	 MOVEA.L   20(A6),A0			         $14
+00001104 20680014		 MOVEA.L   20(A0),A0			         $14
+00001108 226E0014		 MOVEA.L   20(A6),A1			         $14
+0000110C 22690014		 MOVEA.L   20(A1),A1			         $14
+00001110 2028FFE8		 MOVE.L	   -24(A0),D0			         A_R_1
+00001114 E540			 ASL.W	   #2,D0			         $2
+00001116 D2C0			 ADDA.W	   D0,A1
+00001118 0CA90000038F		 CMPI.L	   #911,-24+4(A1)		         $38F  A_R_1
+	 FFEC
+00001120 6750			 BEQ.S	   L.10.8(PC)
+		      *							       LINE 2/20
+00001122 202D0000     L.10.7	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00001126 4A80			 TST.L	   D0
+00001128 6606			 BNE.S	   X.10.3(PC)
+0000112A 4EB900000000		 JSR	   E.FILE
+00001130 7234	      X.10.3	 MOVEQ	   #52,D1			         $34
+00001132 3F01			 MOVE.W	   D1,-(A7)00001134 7204			 MOVEQ	   #4,D1			         $4
+00001136 3F01			 MOVE.W	   D1,-(A7)
+00001138 487AFDEE		 PEA	   K.30(PC)			         CODE.+$F28
+0000113C 2F00			 MOVE.L	   D0,-(A7)
+0000113E 4EB900000000		 JSR	   T.WRITE
+00001144 206E0014		 MOVEA.L   20(A6),A0			         $14
+00001148 20680014		 MOVEA.L   20(A0),A0			         $14
+0000114C 226E0014		 MOVEA.L   20(A6),A1			         $14
+00001150 22690014		 MOVEA.L   20(A1),A1			         $14
+00001154 2228FFE8		 MOVE.L	   -24(A0),D1			         A_R_1
+00001158 E541			 ASL.W	   #2,D1			         $2
+0000115A D2C1			 ADDA.W	   D1,A1
+0000115C 4267			 CLR.W	   -(A7)
+0000115E 4869FFEC		 PEA	   -24+4(A1)			         A_R_1
+00001162 2F00			 MOVE.L	   D0,-(A7)
+00001164 4EB900000000		 JSR	   T.WRITE
+0000116A 2F00			 MOVE.L	   D0,-(A7)
+0000116C 4EB900000000		 JSR	   T.WRTLN
+00001172	      L.10.8
+		      *							       LINE 2/22
+		      *							       LINE 2/23
+		      *							       LINE 2/24
+00001172 206E0014     L.10.9	 MOVEA.L   20(A6),A0			         $14
+00001176 226E0014		 MOVEA.L   20(A6),A1			         $14
+0000117A 2028FFE8		 MOVE.L	   -24(A0),D0			         A_R_2
+0000117E E540			 ASL.W	   #2,D0			         $2
+00001180 D2C0			 ADDA.W	   D0,A1
+00001182 0CA90000039A		 CMPI.L	   #922,-24+4(A1)		         $39A  A_R_2
+	 FFEC
+0000118A 6748			 BEQ.S	   L.10.11(PC)
+		      *							       LINE 2/25
+0000118C 202D0000     L.10.10	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00001190 4A80			 TST.L	   D0
+00001192 6606			 BNE.S	   X.10.4(PC)
+00001194 4EB900000000		 JSR	   E.FILE
+0000119A 7234	      X.10.4	 MOVEQ	   #52,D1			         $34
+0000119C 3F01			 MOVE.W	   D1,-(A7)
+0000119E 7204			 MOVEQ	   #4,D1			         $4
+000011A0 3F01			 MOVE.W	   D1,-(A7)
+000011A2 487AFDB8		 PEA	   K.31(PC)			         CODE.+$F5C
+000011A6 2F00			 MOVE.L	   D0,-(A7)
+000011A8 4EB900000000		 JSR	   T.WRITE
+000011AE 206E0014		 MOVEA.L   20(A6),A0			         $14
+000011B2 226E0014		 MOVEA.L   20(A6),A1			         $14
+000011B6 2228FFE8		 MOVE.L	   -24(A0),D1			         A_R_2000011BA E541			 ASL.W	   #2,D1			         $2
+000011BC D2C1			 ADDA.W	   D1,A1
+000011BE 4267			 CLR.W	   -(A7)
+000011C0 4869FFEC		 PEA	   -24+4(A1)			         A_R_2
+000011C4 2F00			 MOVE.L	   D0,-(A7)
+000011C6 4EB900000000		 JSR	   T.WRITE
+000011CC 2F00			 MOVE.L	   D0,-(A7)
+000011CE 4EB900000000		 JSR	   T.WRTLN
+000011D4	      L.10.11
+		      *							       LINE 2/27
+		      *							       LINE 2/28
+		      *							       LINE 2/29
+000011D4 202EFFE8     L.10.12	 MOVE.L	   -24(A6),D0			         A_R_3
+000011D8 E540			 ASL.W	   #2,D0			         $2
+000011DA 41EEFFEC		 LEA	   -24+4(A6),A0			         A_R_3
+000011DE 0CB0000003A5		 CMPI.L	   #933,0(A0,D0.W)		         $3A5  $0
+	 0000
+000011E6 6742			 BEQ.S	   L.10.14(PC)
+		      *							       LINE 2/30
+000011E8 202D0000     L.10.13	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+000011EC 4A80			 TST.L	   D0
+000011EE 6606			 BNE.S	   X.10.5(PC)
+000011F0 4EB900000000		 JSR	   E.FILE
+000011F6 7234	      X.10.5	 MOVEQ	   #52,D1			         $34
+000011F8 3F01			 MOVE.W	   D1,-(A7)
+000011FA 7204			 MOVEQ	   #4,D1			         $4
+000011FC 3F01			 MOVE.W	   D1,-(A7)
+000011FE 487AFD90		 PEA	   K.32(PC)			         CODE.+$F90
+00001202 2F00			 MOVE.L	   D0,-(A7)
+00001204 4EB900000000		 JSR	   T.WRITE
+0000120A 222EFFE8		 MOVE.L	   -24(A6),D1			         A_R_3
+0000120E E541			 ASL.W	   #2,D1			         $2
+00001210 41EEFFEC		 LEA	   -24+4(A6),A0			         A_R_3
+00001214 4267			 CLR.W	   -(A7)
+00001216 48701000		 PEA	   0(A0,D1.W)			         $0
+0000121A 2F00			 MOVE.L	   D0,-(A7)
+0000121C 4EB900000000		 JSR	   T.WRITE
+00001222 2F00			 MOVE.L	   D0,-(A7)
+00001224 4EB900000000		 JSR	   T.WRTLN
+0000122A	      L.10.14
+		      *							       LINE 2/32
+		      *							       LINE 2/33
+		      *							       LINE 2/34
+0000122A 206E0014     L.10.15	 MOVEA.L   20(A6),A0			         $14
+0000122E 20680014		 MOVEA.L   20(A0),A0			         $1400001232 226E0014		 MOVEA.L   20(A6),A1			         $14
+00001236 22690014		 MOVEA.L   20(A1),A1			         $14
+0000123A 22690014		 MOVEA.L   20(A1),A1			         PRM_A_1
+0000123E 20280018		 MOVE.L	   24(A0),D0			         PRM_I_1
+00001242 E540			 ASL.W	   #2,D0			         $2
+00001244 0CB1000002C7		 CMPI.L	   #711,0(A1,D0.W)		         $2C7  $0
+	 0000
+0000124C 6752			 BEQ.S	   L.10.17(PC)
+		      *							       LINE 2/35
+0000124E 202D0000     L.10.16	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00001252 4A80			 TST.L	   D0
+00001254 6606			 BNE.S	   X.10.6(PC)
+00001256 4EB900000000		 JSR	   E.FILE
+0000125C 7235	      X.10.6	 MOVEQ	   #53,D1			         $35
+0000125E 3F01			 MOVE.W	   D1,-(A7)
+00001260 7204			 MOVEQ	   #4,D1			         $4
+00001262 3F01			 MOVE.W	   D1,-(A7)
+00001264 487AFD5E		 PEA	   K.33(PC)			         CODE.+$FC4
+00001268 2F00			 MOVE.L	   D0,-(A7)
+0000126A 4EB900000000		 JSR	   T.WRITE
+00001270 206E0014		 MOVEA.L   20(A6),A0			         $14
+00001274 20680014		 MOVEA.L   20(A0),A0			         $14
+00001278 226E0014		 MOVEA.L   20(A6),A1			         $14
+0000127C 22690014		 MOVEA.L   20(A1),A1			         $14
+00001280 22690014		 MOVEA.L   20(A1),A1			         PRM_A_1
+00001284 22280018		 MOVE.L	   24(A0),D1			         PRM_I_1
+00001288 E541			 ASL.W	   #2,D1			         $2
+0000128A 4267			 CLR.W	   -(A7)
+0000128C 48711000		 PEA	   0(A1,D1.W)			         $0
+00001290 2F00			 MOVE.L	   D0,-(A7)
+00001292 4EB900000000		 JSR	   T.WRITE
+00001298 2F00			 MOVE.L	   D0,-(A7)
+0000129A 4EB900000000		 JSR	   T.WRTLN
+000012A0	      L.10.17
+		      *							       LINE 2/37
+		      *							       LINE 2/38
+		      *							       LINE 2/39
+000012A0 206E0014     L.10.18	 MOVEA.L   20(A6),A0			         $14
+000012A4 226E0014		 MOVEA.L   20(A6),A1			         $14
+000012A8 2269001A		 MOVEA.L   26(A1),A1			         PRM_A_2
+000012AC 2028001E		 MOVE.L	   30(A0),D0			         PRM_I_2
+000012B0 E540			 ASL.W	   #2,D0			         $2
+000012B2 0CB1000002D2		 CMPI.L	   #722,0(A1,D0.W)		         $2D2  $0
+	 0000
+000012BA 674A			 BEQ.S	   L.10.20(PC)		      *							       LINE 2/40
+000012BC 202D0000     L.10.19	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+000012C0 4A80			 TST.L	   D0
+000012C2 6606			 BNE.S	   X.10.7(PC)
+000012C4 4EB900000000		 JSR	   E.FILE
+000012CA 7235	      X.10.7	 MOVEQ	   #53,D1			         $35
+000012CC 3F01			 MOVE.W	   D1,-(A7)
+000012CE 7204			 MOVEQ	   #4,D1			         $4
+000012D0 3F01			 MOVE.W	   D1,-(A7)
+000012D2 487AFD26		 PEA	   K.34(PC)			         CODE.+$FFA
+000012D6 2F00			 MOVE.L	   D0,-(A7)
+000012D8 4EB900000000		 JSR	   T.WRITE
+000012DE 206E0014		 MOVEA.L   20(A6),A0			         $14
+000012E2 226E0014		 MOVEA.L   20(A6),A1			         $14
+000012E6 2269001A		 MOVEA.L   26(A1),A1			         PRM_A_2
+000012EA 2228001E		 MOVE.L	   30(A0),D1			         PRM_I_2
+000012EE E541			 ASL.W	   #2,D1			         $2
+000012F0 4267			 CLR.W	   -(A7)
+000012F2 48711000		 PEA	   0(A1,D1.W)			         $0
+000012F6 2F00			 MOVE.L	   D0,-(A7)
+000012F8 4EB900000000		 JSR	   T.WRITE
+000012FE 2F00			 MOVE.L	   D0,-(A7)
+00001300 4EB900000000		 JSR	   T.WRTLN
+00001306	      L.10.20
+		      *							       LINE 2/42
+		      *							       LINE 2/43
+		      *							       LINE 2/44
+00001306 206E001A     L.10.21	 MOVEA.L   26(A6),A0			         PRM_A_3
+0000130A 202E001E		 MOVE.L	   30(A6),D0			         PRM_I_3
+0000130E E540			 ASL.W	   #2,D0			         $2
+00001310 0CB0000002DD		 CMPI.L	   #733,0(A0,D0.W)		         $2DD  $0
+	 0000
+00001318 6742			 BEQ.S	   L.10.23(PC)
+		      *							       LINE 2/45
+0000131A 202D0000     L.10.22	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+0000131E 4A80			 TST.L	   D0
+00001320 6606			 BNE.S	   X.10.8(PC)
+00001322 4EB900000000		 JSR	   E.FILE
+00001328 7235	      X.10.8	 MOVEQ	   #53,D1			         $35
+0000132A 3F01			 MOVE.W	   D1,-(A7)
+0000132C 7204			 MOVEQ	   #4,D1			         $4
+0000132E 3F01			 MOVE.W	   D1,-(A7)
+00001330 487AFCFE		 PEA	   K.35(PC)			         CODE.+$1030
+00001334 2F00			 MOVE.L	   D0,-(A7)
+00001336 4EB900000000		 JSR	   T.WRITE0000133C 206E001A		 MOVEA.L   26(A6),A0			         PRM_A_3
+00001340 222E001E		 MOVE.L	   30(A6),D1			         PRM_I_3
+00001344 E541			 ASL.W	   #2,D1			         $2
+00001346 4267			 CLR.W	   -(A7)
+00001348 48701000		 PEA	   0(A0,D1.W)			         $0
+0000134C 2F00			 MOVE.L	   D0,-(A7)
+0000134E 4EB900000000		 JSR	   T.WRITE
+00001354 2F00			 MOVE.L	   D0,-(A7)
+00001356 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 2/47
+		      *							       LINE 2/48
+		      *							       LINE 2/49
+0000135C 4A2E0018     L.10.23	 TST.B	   24(A6)			         FLAG
+00001360 661A			 BNE.S	   L.10.25(PC)
+		      *							       LINE 2/50
+00001362 7002	      L.10.24	 MOVEQ	   #2,D0			         $2
+00001364 2F00			 MOVE.L	   D0,-(A7)
+00001366 487AFCFE		 PEA	   K.36(PC)			         CODE.+$1066
+0000136A 7001			 MOVEQ	   #1,D0			         $1
+0000136C 1F00			 MOVE.B	   D0,-(A7)
+0000136E 206E0014		 MOVEA.L   20(A6),A0			         $14
+00001372 2F280014		 MOVE.L	   20(A0),-(A7)			         $14
+00001376 4EB900000000		 JSR	   B.9				         DT_LEVEL_2
+		      *							       LINE 2/51
+0000137C 4EB900000000 L.10.25	 JSR	   M.RETURN
+		      *
+		      *		 Constant area for subroutine DT_LEVEL_2
+		      *
+00001382 00000002     K.37	 DC.L	   2				         $2
+00001386 00000398		 DC.L	   920				         $398
+0000138A 00000399		 DC.L	   921				         $399
+0000138E 0000039A		 DC.L	   922				         $39A
+00001392 0000039B		 DC.L	   923				         $39B
+00001396 0000039C		 DC.L	   924				         $39C
+0000139A 566172696162 K.38	 DC.B	   'Variable access error: level 2 to level 0 - value is'
+000013CE 566172696162 K.39	 DC.B	   'Variable access error: level 2 to level 1 - value is'
+00001402 566172696162 K.40	 DC.B	   'Variable access error: level 2 to level 2 - value is'
+00001436 506172616D65 K.41	 DC.B	   'Parameter access error: level 2 to level 1 - value is'
+0000146B 00000001		 DS.B	   1
+0000146C 506172616D65 K.42	 DC.B	   'Parameter access error: level 2 to level 2 - value is'
+000014A1 00000001		 DS.B	   1
+000014A2 000002DA     K.43	 DC.L	   730				         $2DA
+000014A6 000002DB		 DC.L	   731				         $2DB
+000014AA 000002DC		 DC.L	   732				         $2DC
+000014AE 000002DD		 DC.L	   733				         $2DD000014B2 000002DE		 DC.L	   734				         $2DE
+		      *
+		      *		 Begin subroutine DT_LEVEL_2
+		      *
+000014B6 701E	      B.9	 MOVEQ	   #30,D0			         $1E
+000014B8 2F00			 MOVE.L	   D0,-(A7)
+000014BA 6112			 BSR.S	   X.9.1(PC)
+000014BC 00000000		 DC.L	   C.1
+000014C0 0000			 DC.W	   0				         $0
+000014C2 000A			 DC.W	   10				       String length word
+000014C4 44545F4C4556		 DC.B	   'DT_LEVEL_2'
+000014CE 203CFFFFFFE4 X.9.1	 MOVE.L	   #T.9-4,D0			         -24
+000014D4 4EB900000000		 JSR	   M.ENTRY
+000014DA	      L.9.1
+		      *							       LINE 2/53
+		      *							       LINE 2/54
+		      *							       LINE 2/55
+000014DA 4CFA003FFEA6 L.9.2	 MOVEM.L   K.37(PC),#63			         CODE.+$1382  $3F
+000014E0 48EE003FFFE8		 MOVEM.L   #63,-24(A6)			         $3F  A_R_2
+		      *							       LINE 2/56
+		      *							       LINE 2/57
+000014E6 202D8004     L.9.3	 MOVE.L	   STATIC.+4-32768(A5),D0	         A_R_0
+000014EA E540			 ASL.W	   #2,D0			         $2
+000014EC 41ED8008		 LEA	   STATIC.+4-32764(A5),A0	         A_R_0
+000014F0 0CB000000384		 CMPI.L	   #900,0(A0,D0.W)		         $384  $0
+	 0000
+000014F8 6742			 BEQ.S	   L.9.5(PC)
+		      *							       LINE 2/58
+000014FA 202D0000     L.9.4	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+000014FE 4A80			 TST.L	   D0
+00001500 6606			 BNE.S	   X.9.2(PC)
+00001502 4EB900000000		 JSR	   E.FILE
+00001508 7234	      X.9.2	 MOVEQ	   #52,D1			         $34
+0000150A 3F01			 MOVE.W	   D1,-(A7)
+0000150C 7204			 MOVEQ	   #4,D1			         $4
+0000150E 3F01			 MOVE.W	   D1,-(A7)
+00001510 487AFE88		 PEA	   K.38(PC)			         CODE.+$139A
+00001514 2F00			 MOVE.L	   D0,-(A7)
+00001516 4EB900000000		 JSR	   T.WRITE
+0000151C 222D8004		 MOVE.L	   STATIC.+4-32768(A5),D1	         A_R_0
+00001520 E541			 ASL.W	   #2,D1			         $2
+00001522 41ED8008		 LEA	   STATIC.+4-32764(A5),A0	         A_R_0
+00001526 4267			 CLR.W	   -(A7)
+00001528 48701000		 PEA	   0(A0,D1.W)			         $0
+0000152C 2F00			 MOVE.L	   D0,-(A7)0000152E 4EB900000000		 JSR	   T.WRITE
+00001534 2F00			 MOVE.L	   D0,-(A7)
+00001536 4EB900000000		 JSR	   T.WRTLN
+0000153C	      L.9.5
+		      *							       LINE 2/60
+		      *							       LINE 2/61
+		      *							       LINE 2/62
+0000153C 206E0014     L.9.6	 MOVEA.L   20(A6),A0			         $14
+00001540 226E0014		 MOVEA.L   20(A6),A1			         $14
+00001544 2028FFE8		 MOVE.L	   -24(A0),D0			         A_R_1
+00001548 E540			 ASL.W	   #2,D0			         $2
+0000154A D2C0			 ADDA.W	   D0,A1
+0000154C 0CA90000038F		 CMPI.L	   #911,-24+4(A1)		         $38F  A_R_1
+	 FFEC
+00001554 6748			 BEQ.S	   L.9.8(PC)
+		      *							       LINE 2/63
+00001556 202D0000     L.9.7	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+0000155A 4A80			 TST.L	   D0
+0000155C 6606			 BNE.S	   X.9.3(PC)
+0000155E 4EB900000000		 JSR	   E.FILE
+00001564 7234	      X.9.3	 MOVEQ	   #52,D1			         $34
+00001566 3F01			 MOVE.W	   D1,-(A7)
+00001568 7204			 MOVEQ	   #4,D1			         $4
+0000156A 3F01			 MOVE.W	   D1,-(A7)
+0000156C 487AFE60		 PEA	   K.39(PC)			         CODE.+$13CE
+00001570 2F00			 MOVE.L	   D0,-(A7)
+00001572 4EB900000000		 JSR	   T.WRITE
+00001578 206E0014		 MOVEA.L   20(A6),A0			         $14
+0000157C 226E0014		 MOVEA.L   20(A6),A1			         $14
+00001580 2228FFE8		 MOVE.L	   -24(A0),D1			         A_R_1
+00001584 E541			 ASL.W	   #2,D1			         $2
+00001586 D2C1			 ADDA.W	   D1,A1
+00001588 4267			 CLR.W	   -(A7)
+0000158A 4869FFEC		 PEA	   -24+4(A1)			         A_R_1
+0000158E 2F00			 MOVE.L	   D0,-(A7)
+00001590 4EB900000000		 JSR	   T.WRITE
+00001596 2F00			 MOVE.L	   D0,-(A7)
+00001598 4EB900000000		 JSR	   T.WRTLN
+0000159E	      L.9.8
+		      *							       LINE 2/65
+		      *							       LINE 2/66
+		      *							       LINE 2/67
+0000159E 202EFFE8     L.9.9	 MOVE.L	   -24(A6),D0			         A_R_2
+000015A2 E540			 ASL.W	   #2,D0			         $2
+000015A4 41EEFFEC		 LEA	   -24+4(A6),A0			         A_R_2000015A8 0CB00000039A		 CMPI.L	   #922,0(A0,D0.W)		         $39A  $0
+	 0000
+000015B0 6742			 BEQ.S	   L.9.11(PC)
+		      *							       LINE 2/68
+000015B2 202D0000     L.9.10	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+000015B6 4A80			 TST.L	   D0
+000015B8 6606			 BNE.S	   X.9.4(PC)
+000015BA 4EB900000000		 JSR	   E.FILE
+000015C0 7234	      X.9.4	 MOVEQ	   #52,D1			         $34
+000015C2 3F01			 MOVE.W	   D1,-(A7)
+000015C4 7204			 MOVEQ	   #4,D1			         $4
+000015C6 3F01			 MOVE.W	   D1,-(A7)
+000015C8 487AFE38		 PEA	   K.40(PC)			         CODE.+$1402
+000015CC 2F00			 MOVE.L	   D0,-(A7)
+000015CE 4EB900000000		 JSR	   T.WRITE
+000015D4 222EFFE8		 MOVE.L	   -24(A6),D1			         A_R_2
+000015D8 E541			 ASL.W	   #2,D1			         $2
+000015DA 41EEFFEC		 LEA	   -24+4(A6),A0			         A_R_2
+000015DE 4267			 CLR.W	   -(A7)
+000015E0 48701000		 PEA	   0(A0,D1.W)			         $0
+000015E4 2F00			 MOVE.L	   D0,-(A7)
+000015E6 4EB900000000		 JSR	   T.WRITE
+000015EC 2F00			 MOVE.L	   D0,-(A7)
+000015EE 4EB900000000		 JSR	   T.WRTLN
+000015F4	      L.9.11
+		      *							       LINE 2/70
+		      *							       LINE 2/71
+		      *							       LINE 2/72
+000015F4 206E0014     L.9.12	 MOVEA.L   20(A6),A0			         $14
+000015F8 226E0014		 MOVEA.L   20(A6),A1			         $14
+000015FC 22690014		 MOVEA.L   20(A1),A1			         PRM_A_1
+00001600 20280018		 MOVE.L	   24(A0),D0			         PRM_I_1
+00001604 E540			 ASL.W	   #2,D0			         $2
+00001606 0CB1000002C7		 CMPI.L	   #711,0(A1,D0.W)		         $2C7  $0
+	 0000
+0000160E 674A			 BEQ.S	   L.9.14(PC)
+		      *							       LINE 2/73
+00001610 202D0000     L.9.13	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00001614 4A80			 TST.L	   D0
+00001616 6606			 BNE.S	   X.9.5(PC)
+00001618 4EB900000000		 JSR	   E.FILE
+0000161E 7235	      X.9.5	 MOVEQ	   #53,D1			         $35
+00001620 3F01			 MOVE.W	   D1,-(A7)
+00001622 7204			 MOVEQ	   #4,D1			         $4
+00001624 3F01			 MOVE.W	   D1,-(A7)00001626 487AFE0E		 PEA	   K.41(PC)			         CODE.+$1436
+0000162A 2F00			 MOVE.L	   D0,-(A7)
+0000162C 4EB900000000		 JSR	   T.WRITE
+00001632 206E0014		 MOVEA.L   20(A6),A0			         $14
+00001636 226E0014		 MOVEA.L   20(A6),A1			         $14
+0000163A 22690014		 MOVEA.L   20(A1),A1			         PRM_A_1
+0000163E 22280018		 MOVE.L	   24(A0),D1			         PRM_I_1
+00001642 E541			 ASL.W	   #2,D1			         $2
+00001644 4267			 CLR.W	   -(A7)
+00001646 48711000		 PEA	   0(A1,D1.W)			         $0
+0000164A 2F00			 MOVE.L	   D0,-(A7)
+0000164C 4EB900000000		 JSR	   T.WRITE
+00001652 2F00			 MOVE.L	   D0,-(A7)
+00001654 4EB900000000		 JSR	   T.WRTLN
+0000165A	      L.9.14
+		      *							       LINE 2/75
+		      *							       LINE 2/76
+		      *							       LINE 2/77
+0000165A 206E001A     L.9.15	 MOVEA.L   26(A6),A0			         PRM_A_2
+0000165E 202E001E		 MOVE.L	   30(A6),D0			         PRM_I_2
+00001662 E540			 ASL.W	   #2,D0			         $2
+00001664 0CB0000002D2		 CMPI.L	   #722,0(A0,D0.W)		         $2D2  $0
+	 0000
+0000166C 6742			 BEQ.S	   L.9.17(PC)
+		      *							       LINE 2/78
+0000166E 202D0000     L.9.16	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00001672 4A80			 TST.L	   D0
+00001674 6606			 BNE.S	   X.9.6(PC)
+00001676 4EB900000000		 JSR	   E.FILE
+0000167C 7235	      X.9.6	 MOVEQ	   #53,D1			         $35
+0000167E 3F01			 MOVE.W	   D1,-(A7)
+00001680 7204			 MOVEQ	   #4,D1			         $4
+00001682 3F01			 MOVE.W	   D1,-(A7)
+00001684 487AFDE6		 PEA	   K.42(PC)			         CODE.+$146C
+00001688 2F00			 MOVE.L	   D0,-(A7)
+0000168A 4EB900000000		 JSR	   T.WRITE
+00001690 206E001A		 MOVEA.L   26(A6),A0			         PRM_A_2
+00001694 222E001E		 MOVE.L	   30(A6),D1			         PRM_I_2
+00001698 E541			 ASL.W	   #2,D1			         $2
+0000169A 4267			 CLR.W	   -(A7)
+0000169C 48701000		 PEA	   0(A0,D1.W)			         $0
+000016A0 2F00			 MOVE.L	   D0,-(A7)
+000016A2 4EB900000000		 JSR	   T.WRITE
+000016A8 2F00			 MOVE.L	   D0,-(A7)
+000016AA 4EB900000000		 JSR	   T.WRTLN		      *							       LINE 2/80
+		      *							       LINE 2/81
+		      *							       LINE 2/82
+000016B0 7003	      L.9.17	 MOVEQ	   #3,D0			         $3
+000016B2 2F00			 MOVE.L	   D0,-(A7)
+000016B4 487AFDEC		 PEA	   K.43(PC)			         CODE.+$14A2
+000016B8 1F2E0018		 MOVE.B	   24(A6),-(A7)			         FLAG
+000016BC 2F0E			 MOVE.L	   A6,-(A7)
+000016BE 6100F9BA		 BSR.L	   B.10(PC)			         DT_LEVEL_3 = CODE.+$1
+		      *							       LINE 2/83
+000016C2 4EB900000000		 JSR	   M.RETURN
+		      *
+		      *		 Constant area for subroutine DT_LEVEL_1
+		      *
+000016C8 00000001     K.44	 DC.L	   1				         $1
+000016CC 0000038E		 DC.L	   910				         $38E
+000016D0 0000038F		 DC.L	   911				         $38F
+000016D4 00000390		 DC.L	   912				         $390
+000016D8 00000391		 DC.L	   913				         $391
+000016DC 00000392		 DC.L	   914				         $392
+000016E0 566172696162 K.45	 DC.B	   'Variable access error: level 1 to level 0 - value is'
+00001714 566172696162 K.46	 DC.B	   'Variable access error: level 1 to level 1 - value is'
+00001748 506172616D65 K.47	 DC.B	   'Parameter access error: level 1 to level 1 - value is'
+0000177D 00000001		 DS.B	   1
+0000177E 000002D0     K.48	 DC.L	   720				         $2D0
+00001782 000002D1		 DC.L	   721				         $2D1
+00001786 000002D2		 DC.L	   722				         $2D2
+0000178A 000002D3		 DC.L	   723				         $2D3
+0000178E 000002D4		 DC.L	   724				         $2D4
+		      *
+		      *		 Begin subroutine DT_LEVEL_1
+		      *
+00001792 7018	      B.8	 MOVEQ	   #24,D0			         $18
+00001794 2F00			 MOVE.L	   D0,-(A7)
+00001796 6112			 BSR.S	   X.8.1(PC)
+00001798 00000000		 DC.L	   C.1
+0000179C 0000			 DC.W	   0				         $0
+0000179E 000A			 DC.W	   10				       String length word
+000017A0 44545F4C4556		 DC.B	   'DT_LEVEL_1'
+000017AA 203CFFFFFFE4 X.8.1	 MOVE.L	   #T.8-4,D0			         -24
+000017B0 4EB900000000		 JSR	   M.ENTRY
+000017B6	      L.8.1
+		      *							       LINE 2/85
+		      *							       LINE 2/86
+		      *							       LINE 2/87000017B6 4CFA003FFF10 L.8.2	 MOVEM.L   K.44(PC),#63			         CODE.+$16C8  $3F
+000017BC 48EE003FFFE8		 MOVEM.L   #63,-24(A6)			         $3F  A_R_1
+		      *							       LINE 2/88
+		      *							       LINE 2/89
+000017C2 202D8004     L.8.3	 MOVE.L	   STATIC.+4-32768(A5),D0	         A_R_0
+000017C6 E540			 ASL.W	   #2,D0			         $2
+000017C8 41ED8008		 LEA	   STATIC.+4-32764(A5),A0	         A_R_0
+000017CC 0CB000000384		 CMPI.L	   #900,0(A0,D0.W)		         $384  $0
+	 0000
+000017D4 6742			 BEQ.S	   L.8.5(PC)
+		      *							       LINE 2/90
+000017D6 202D0000     L.8.4	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+000017DA 4A80			 TST.L	   D0
+000017DC 6606			 BNE.S	   X.8.2(PC)
+000017DE 4EB900000000		 JSR	   E.FILE
+000017E4 7234	      X.8.2	 MOVEQ	   #52,D1			         $34
+000017E6 3F01			 MOVE.W	   D1,-(A7)
+000017E8 7204			 MOVEQ	   #4,D1			         $4
+000017EA 3F01			 MOVE.W	   D1,-(A7)
+000017EC 487AFEF2		 PEA	   K.45(PC)			         CODE.+$16E0
+000017F0 2F00			 MOVE.L	   D0,-(A7)
+000017F2 4EB900000000		 JSR	   T.WRITE
+000017F8 222D8004		 MOVE.L	   STATIC.+4-32768(A5),D1	         A_R_0
+000017FC E541			 ASL.W	   #2,D1			         $2
+000017FE 41ED8008		 LEA	   STATIC.+4-32764(A5),A0	         A_R_0
+00001802 4267			 CLR.W	   -(A7)
+00001804 48701000		 PEA	   0(A0,D1.W)			         $0
+00001808 2F00			 MOVE.L	   D0,-(A7)
+0000180A 4EB900000000		 JSR	   T.WRITE
+00001810 2F00			 MOVE.L	   D0,-(A7)
+00001812 4EB900000000		 JSR	   T.WRTLN
+00001818	      L.8.5
+		      *							       LINE 2/92
+		      *							       LINE 2/93
+		      *							       LINE 2/94
+00001818 202EFFE8     L.8.6	 MOVE.L	   -24(A6),D0			         A_R_1
+0000181C E540			 ASL.W	   #2,D0			         $2
+0000181E 41EEFFEC		 LEA	   -24+4(A6),A0			         A_R_1
+00001822 0CB00000038F		 CMPI.L	   #911,0(A0,D0.W)		         $38F  $0
+	 0000
+0000182A 6742			 BEQ.S	   L.8.8(PC)
+		      *							       LINE 2/95
+0000182C 202D0000     L.8.7	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00001830 4A80			 TST.L	   D0
+00001832 6606			 BNE.S	   X.8.3(PC)00001834 4EB900000000		 JSR	   E.FILE
+0000183A 7234	      X.8.3	 MOVEQ	   #52,D1			         $34
+0000183C 3F01			 MOVE.W	   D1,-(A7)
+0000183E 7204			 MOVEQ	   #4,D1			         $4
+00001840 3F01			 MOVE.W	   D1,-(A7)
+00001842 487AFED0		 PEA	   K.46(PC)			         CODE.+$1714
+00001846 2F00			 MOVE.L	   D0,-(A7)
+00001848 4EB900000000		 JSR	   T.WRITE
+0000184E 222EFFE8		 MOVE.L	   -24(A6),D1			         A_R_1
+00001852 E541			 ASL.W	   #2,D1			         $2
+00001854 41EEFFEC		 LEA	   -24+4(A6),A0			         A_R_1
+00001858 4267			 CLR.W	   -(A7)
+0000185A 48701000		 PEA	   0(A0,D1.W)			         $0
+0000185E 2F00			 MOVE.L	   D0,-(A7)
+00001860 4EB900000000		 JSR	   T.WRITE
+00001866 2F00			 MOVE.L	   D0,-(A7)
+00001868 4EB900000000		 JSR	   T.WRTLN
+0000186E	      L.8.8
+		      *							       LINE 2/97
+		      *							       LINE 2/98
+		      *							       LINE 2/99
+0000186E 206E0014     L.8.9	 MOVEA.L   20(A6),A0			         PRM_A_1
+00001872 202E0018		 MOVE.L	   24(A6),D0			         PRM_I_1
+00001876 E540			 ASL.W	   #2,D0			         $2
+00001878 0CB0000002C7		 CMPI.L	   #711,0(A0,D0.W)		         $2C7  $0
+	 0000
+00001880 6742			 BEQ.S	   L.8.11(PC)
+		      *							       LINE 2/100
+00001882 202D0000     L.8.10	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00001886 4A80			 TST.L	   D0
+00001888 6606			 BNE.S	   X.8.4(PC)
+0000188A 4EB900000000		 JSR	   E.FILE
+00001890 7235	      X.8.4	 MOVEQ	   #53,D1			         $35
+00001892 3F01			 MOVE.W	   D1,-(A7)
+00001894 7204			 MOVEQ	   #4,D1			         $4
+00001896 3F01			 MOVE.W	   D1,-(A7)
+00001898 487AFEAE		 PEA	   K.47(PC)			         CODE.+$1748
+0000189C 2F00			 MOVE.L	   D0,-(A7)
+0000189E 4EB900000000		 JSR	   T.WRITE
+000018A4 206E0014		 MOVEA.L   20(A6),A0			         PRM_A_1
+000018A8 222E0018		 MOVE.L	   24(A6),D1			         PRM_I_1
+000018AC E541			 ASL.W	   #2,D1			         $2
+000018AE 4267			 CLR.W	   -(A7)
+000018B0 48701000		 PEA	   0(A0,D1.W)			         $0
+000018B4 2F00			 MOVE.L	   D0,-(A7)000018B6 4EB900000000		 JSR	   T.WRITE
+000018BC 2F00			 MOVE.L	   D0,-(A7)
+000018BE 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 2/102
+		      *							       LINE 2/103
+		      *							       LINE 2/104
+000018C4 7002	      L.8.11	 MOVEQ	   #2,D0			         $2
+000018C6 2F00			 MOVE.L	   D0,-(A7)
+000018C8 487AFEB4		 PEA	   K.48(PC)			         CODE.+$177E
+000018CC 4227			 CLR.B	   -(A7)
+000018CE 2F0E			 MOVE.L	   A6,-(A7)
+000018D0 6100FBE4		 BSR.L	   B.9(PC)			         DT_LEVEL_2 = CODE.+$1
+		      *							       LINE 2/105
+000018D4 4EB900000000		 JSR	   M.RETURN
+		      *
+		      *		 Begin subroutine GT_LEVEL_3
+		      *
+000018DA 7018	      B.13	 MOVEQ	   #24,D0			         $18
+000018DC 2F00			 MOVE.L	   D0,-(A7)
+000018DE 6112			 BSR.S	   X.13.1(PC)
+000018E0 00000000		 DC.L	   C.1
+000018E4 0000			 DC.W	   0				         $0
+000018E6 000A			 DC.W	   10				       String length word
+000018E8 47545F4C4556		 DC.B	   'GT_LEVEL_3'
+000018F2 203CFFFFFFFC X.13.1	 MOVE.L	   #T.13-4,D0			         0
+000018F8 4EB900000000		 JSR	   M.ENTRY
+		      *							       LINE 3/11
+		      *							       LINE 3/12
+000018FE 202E0018     L.13.1	 MOVE.L	   24(A6),D0			         N
+00001902 5380			 SUBQ.L	   #1,D0			         $1
+00001904 6D48			 BLT.S	   L.13.6(PC)
+00001906 0C8000000003		 CMPI.L	   #3,D0			         $3
+0000190C 6E40			 BGT.S	   L.13.6(PC)
+0000190E D040			 ADD.W	   D0,D0
+00001910 303B0006		 MOVE.W	   X.13.2(PC,D0.W),D0
+00001914 4EFB0002		 JMP	   X.13.2(PC,D0.W)
+00001918 0000	      X.13.2	 DC.W	   L.13.2-*
+0000191A 0000			 DC.W	   L.13.3+2-*
+0000191C 0000			 DC.W	   L.13.4+4-*
+0000191E 0000			 DC.W	   L.13.5+6-*
+		      *							       LINE 3/13
+00001920 4EB900000000 L.13.2	 JSR	   M.RETURN
+		      *							       LINE 3/14
+00001926 206E0014     L.13.3	 MOVEA.L   20(A6),A0			         $14
+0000192A 2C48			 MOVEA.L   A0,A60000192C 4EF900000000		 JMP	   S.16
+		      *							       LINE 3/15
+00001932 206E0014     L.13.4	 MOVEA.L   20(A6),A0			         $14
+00001936 20680014		 MOVEA.L   20(A0),A0			         $14
+0000193A 2C48			 MOVEA.L   A0,A6
+0000193C 4EF900000000		 JMP	   S.15
+		      *							       LINE 3/16
+00001942 207C00000000 L.13.5	 MOVEA.L   #S.10,A0
+00001948 4EB900000000		 JSR	   M.GOMAIN
+0000194E 4EB900000000 L.13.6	 JSR	   E.CASE
+		      *							       LINE 3/17
+		      *							       LINE 3/18
+00001954 4EB900000000 L.13.7	 JSR	   M.RETURN
+		      *
+		      *		 Constant area for subroutine GT_LEVEL_2
+		      *
+0000195A 53657175656E K.49	 DC.B	   'Sequence error: point 30 follows point'
+00001980 53657175656E K.50	 DC.B	   'Sequence error: point 31 follows point'
+000019A6 436F6E74726F K.51	 DC.B	   'Control has reached inaccessible point 1'
+000019CE 436F6E74726F K.52	 DC.B	   'Control has reached inaccessible point 2'
+000019F6 436F6E74726F K.53	 DC.B	   'Control has reached inaccessible point 3'
+00001A1E 53657175656E K.54	 DC.B	   'Sequence error: point 32 follows point'
+		      *
+		      *		 Begin subroutine GT_LEVEL_2
+		      *
+00001A44 7018	      B.12	 MOVEQ	   #24,D0			         $18
+00001A46 2F00			 MOVE.L	   D0,-(A7)
+00001A48 6112			 BSR.S	   X.12.1(PC)
+00001A4A 00000000		 DC.L	   C.1
+00001A4E 0000			 DC.W	   0				         $0
+00001A50 000A			 DC.W	   10				       String length word
+00001A52 47545F4C4556		 DC.B	   'GT_LEVEL_2'
+00001A5C 203CFFFFFFF4 X.12.1	 MOVE.L	   #T.12-4,D0			         -8
+00001A62 4EB900000000		 JSR	   M.ENTRY
+00001A68 2D4FFFF8		 MOVE.L	   A7,ST.12(A6)			         -8
+		      *							       LINE 3/20
+		      *							       LINE 3/21
+00001A6C 202E0018     L.12.1	 MOVE.L	   24(A6),D0			         N
+00001A70 5380			 SUBQ.L	   #1,D0			         $1
+00001A72 6D000182		 BLT.L	   L.12.18(PC)
+00001A76 0C8000000003		 CMPI.L	   #3,D0			         $3
+00001A7C 6E000178		 BGT.L	   L.12.18(PC)
+00001A80 D040			 ADD.W	   D0,D0
+00001A82 303B0006		 MOVE.W	   X.12.2(PC,D0.W),D0
+00001A86 4EFB0002		 JMP	   X.12.2(PC,D0.W)00001A8A 0000	      X.12.2	 DC.W	   L.12.2-*
+00001A8C 0000			 DC.W	   L.12.11+2-*
+00001A8E 0000			 DC.W	   L.12.12+4-*
+00001A90 0000			 DC.W	   L.12.15+6-*
+00001A92	      L.12.2
+00001A92	      L.12.3
+		      *							       LINE 3/22
+		      *							       LINE 3/23
+		      *							       LINE 3/24
+00001A92 701E	      L.12.4	 MOVEQ	   #30,D0			         $1E
+00001A94 B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         SEQUENCE
+00001A98 6742			 BEQ.S	   L.12.6(PC)
+		      *							       LINE 3/25
+00001A9A 202D0000     L.12.5	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00001A9E 4A80			 TST.L	   D0
+00001AA0 6606			 BNE.S	   X.12.3(PC)
+00001AA2 4EB900000000		 JSR	   E.FILE
+00001AA8 7226	      X.12.3	 MOVEQ	   #38,D1			         $26
+00001AAA 3F01			 MOVE.W	   D1,-(A7)
+00001AAC 7204			 MOVEQ	   #4,D1			         $4
+00001AAE 3F01			 MOVE.W	   D1,-(A7)
+00001AB0 487AFEA8		 PEA	   K.49(PC)			         CODE.+$195A
+00001AB4 2F00			 MOVE.L	   D0,-(A7)
+00001AB6 4EB900000000		 JSR	   T.WRITE
+00001ABC 222D8000		 MOVE.L	   STATIC.+0-32768(A5),D1	         SEQUENCE
+00001AC0 5381			 SUBQ.L	   #1,D1			         $1
+00001AC2 4267			 CLR.W	   -(A7)
+00001AC4 2D41FFFC		 MOVE.L	   D1,-4(A6)			         $FFFFFFFC
+00001AC8 486EFFFC		 PEA	   -4(A6)			         $FFFFFFFC
+00001ACC 2F00			 MOVE.L	   D0,-(A7)
+00001ACE 4EB900000000		 JSR	   T.WRITE
+00001AD4 2F00			 MOVE.L	   D0,-(A7)
+00001AD6 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 3/31
+00001ADC 701F	      L.12.6	 MOVEQ	   #31,D0			         $1F
+00001ADE 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         SEQUENCE
+		      *							       LINE 3/32
+		      *							       LINE 3/33
+00001AE2 7001			 MOVEQ	   #1,D0			         $1
+00001AE4 2F00			 MOVE.L	   D0,-(A7)
+00001AE6 2F0E			 MOVE.L	   A6,-(A7)
+00001AE8 6100FDF0		 BSR.L	   B.13(PC)			         GT_LEVEL_3 = CODE.+$1
+		      *							       LINE 3/34
+		      *							       LINE 3/35
+00001AEC 701F	      L.12.7	 MOVEQ	   #31,D0			         $1F00001AEE B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         SEQUENCE
+00001AF2 6742			 BEQ.S	   L.12.9(PC)
+		      *							       LINE 3/36
+00001AF4 202D0000     L.12.8	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00001AF8 4A80			 TST.L	   D0
+00001AFA 6606			 BNE.S	   X.12.4(PC)
+00001AFC 4EB900000000		 JSR	   E.FILE
+00001B02 7226	      X.12.4	 MOVEQ	   #38,D1			         $26
+00001B04 3F01			 MOVE.W	   D1,-(A7)
+00001B06 7204			 MOVEQ	   #4,D1			         $4
+00001B08 3F01			 MOVE.W	   D1,-(A7)
+00001B0A 487AFE74		 PEA	   K.50(PC)			         CODE.+$1980
+00001B0E 2F00			 MOVE.L	   D0,-(A7)
+00001B10 4EB900000000		 JSR	   T.WRITE
+00001B16 222D8000		 MOVE.L	   STATIC.+0-32768(A5),D1	         SEQUENCE
+00001B1A 5381			 SUBQ.L	   #1,D1			         $1
+00001B1C 4267			 CLR.W	   -(A7)
+00001B1E 2D41FFFC		 MOVE.L	   D1,-4(A6)			         $FFFFFFFC
+00001B22 486EFFFC		 PEA	   -4(A6)			         $FFFFFFFC
+00001B26 2F00			 MOVE.L	   D0,-(A7)
+00001B28 4EB900000000		 JSR	   T.WRITE
+00001B2E 2F00			 MOVE.L	   D0,-(A7)
+00001B30 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 3/42
+00001B36 7020	      L.12.9	 MOVEQ	   #32,D0			         $20
+00001B38 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         SEQUENCE
+		      *							       LINE 3/43
+		      *							       LINE 3/44
+00001B3C 7002			 MOVEQ	   #2,D0			         $2
+00001B3E 2F00			 MOVE.L	   D0,-(A7)
+00001B40 2F0E			 MOVE.L	   A6,-(A7)
+00001B42 6100FD96		 BSR.L	   B.13(PC)			         GT_LEVEL_3 = CODE.+$1
+		      *							       LINE 3/45
+		      *							       LINE 3/46
+00001B46 202D0000     L.12.10	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00001B4A 4A80			 TST.L	   D0
+00001B4C 6606			 BNE.S	   X.12.5(PC)
+00001B4E 4EB900000000		 JSR	   E.FILE
+00001B54 7228	      X.12.5	 MOVEQ	   #40,D1			         $28
+00001B56 3F01			 MOVE.W	   D1,-(A7)
+00001B58 7204			 MOVEQ	   #4,D1			         $4
+00001B5A 3F01			 MOVE.W	   D1,-(A7)
+00001B5C 487AFE48		 PEA	   K.51(PC)			         CODE.+$19A6
+00001B60 2F00			 MOVE.L	   D0,-(A7)
+00001B62 4EB900000000		 JSR	   T.WRITE00001B68 2F00			 MOVE.L	   D0,-(A7)
+00001B6A 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 3/47
+00001B70 4EB900000000		 JSR	   M.STOP
+		      *							       LINE 3/50
+00001B76 206E0014     L.12.11	 MOVEA.L   20(A6),A0			         $14
+00001B7A 2C48			 MOVEA.L   A0,A6
+00001B7C 4EF900000000		 JMP	   S.14
+00001B82	      L.12.12
+		      *							       LINE 3/51
+		      *							       LINE 3/52
+00001B82 7003	      L.12.13	 MOVEQ	   #3,D0			         $3
+00001B84 2F00			 MOVE.L	   D0,-(A7)
+00001B86 2F0E			 MOVE.L	   A6,-(A7)
+00001B88 6100FD50		 BSR.L	   B.13(PC)			         GT_LEVEL_3 = CODE.+$1
+		      *							       LINE 3/53
+		      *							       LINE 3/54
+00001B8C 202D0000     L.12.14	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00001B90 4A80			 TST.L	   D0
+00001B92 6606			 BNE.S	   X.12.6(PC)
+00001B94 4EB900000000		 JSR	   E.FILE
+00001B9A 7228	      X.12.6	 MOVEQ	   #40,D1			         $28
+00001B9C 3F01			 MOVE.W	   D1,-(A7)
+00001B9E 7204			 MOVEQ	   #4,D1			         $4
+00001BA0 3F01			 MOVE.W	   D1,-(A7)
+00001BA2 487AFE2A		 PEA	   K.52(PC)			         CODE.+$19CE
+00001BA6 2F00			 MOVE.L	   D0,-(A7)
+00001BA8 4EB900000000		 JSR	   T.WRITE
+00001BAE 2F00			 MOVE.L	   D0,-(A7)
+00001BB0 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 3/55
+00001BB6 4EB900000000		 JSR	   M.STOP
+00001BBC	      L.12.15
+		      *							       LINE 3/58
+		      *							       LINE 3/59
+00001BBC 7004	      L.12.16	 MOVEQ	   #4,D0			         $4
+00001BBE 2F00			 MOVE.L	   D0,-(A7)
+00001BC0 2F0E			 MOVE.L	   A6,-(A7)
+00001BC2 6100FD16		 BSR.L	   B.13(PC)			         GT_LEVEL_3 = CODE.+$1
+		      *							       LINE 3/60
+		      *							       LINE 3/61
+00001BC6 202D0000     L.12.17	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00001BCA 4A80			 TST.L	   D0
+00001BCC 6606			 BNE.S	   X.12.7(PC)
+00001BCE 4EB900000000		 JSR	   E.FILE00001BD4 7228	      X.12.7	 MOVEQ	   #40,D1			         $28
+00001BD6 3F01			 MOVE.W	   D1,-(A7)
+00001BD8 7204			 MOVEQ	   #4,D1			         $4
+00001BDA 3F01			 MOVE.W	   D1,-(A7)
+00001BDC 487AFE18		 PEA	   K.53(PC)			         CODE.+$19F6
+00001BE0 2F00			 MOVE.L	   D0,-(A7)
+00001BE2 4EB900000000		 JSR	   T.WRITE
+00001BE8 2F00			 MOVE.L	   D0,-(A7)
+00001BEA 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 3/62
+00001BF0 4EB900000000		 JSR	   M.STOP
+00001BF6 4EB900000000 L.12.18	 JSR	   E.CASE
+00001BFC	      L.12.19
+00001BFC	      L.12.20
+00001BFC 2E6EFFF8     S.16	 MOVEA.L   ST.12(A6),A7			         -8
+		      *							       LINE 3/65
+		      *							       LINE 3/67
+		      *							       LINE 3/68
+00001C00 7020	      L.12.21	 MOVEQ	   #32,D0			         $20
+00001C02 B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         SEQUENCE
+00001C06 6742			 BEQ.S	   L.12.23(PC)
+		      *							       LINE 3/69
+00001C08 202D0000     L.12.22	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00001C0C 4A80			 TST.L	   D0
+00001C0E 6606			 BNE.S	   X.12.8(PC)
+00001C10 4EB900000000		 JSR	   E.FILE
+00001C16 7226	      X.12.8	 MOVEQ	   #38,D1			         $26
+00001C18 3F01			 MOVE.W	   D1,-(A7)
+00001C1A 7204			 MOVEQ	   #4,D1			         $4
+00001C1C 3F01			 MOVE.W	   D1,-(A7)
+00001C1E 487AFDFE		 PEA	   K.54(PC)			         CODE.+$1A1E
+00001C22 2F00			 MOVE.L	   D0,-(A7)
+00001C24 4EB900000000		 JSR	   T.WRITE
+00001C2A 222D8000		 MOVE.L	   STATIC.+0-32768(A5),D1	         SEQUENCE
+00001C2E 5381			 SUBQ.L	   #1,D1			         $1
+00001C30 4267			 CLR.W	   -(A7)
+00001C32 2D41FFFC		 MOVE.L	   D1,-4(A6)			         $FFFFFFFC
+00001C36 486EFFFC		 PEA	   -4(A6)			         $FFFFFFFC
+00001C3A 2F00			 MOVE.L	   D0,-(A7)
+00001C3C 4EB900000000		 JSR	   T.WRITE
+00001C42 2F00			 MOVE.L	   D0,-(A7)
+00001C44 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 3/75
+00001C4A 7021	      L.12.23	 MOVEQ	   #33,D0			         $21
+00001C4C 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         SEQUENCE		      *							       LINE 3/76
+		      *							       LINE 3/77
+00001C50 4EB900000000		 JSR	   M.RETURN
+		      *
+		      *		 Constant area for subroutine GT_LEVEL_1
+		      *
+00001C56 53657175656E K.55	 DC.B	   'Sequence error: point 29 follows point'
+00001C7C 53657175656E K.56	 DC.B	   'Sequence error: point 33 follows point'
+00001CA2 53657175656E K.57	 DC.B	   'Sequence error: point 36 follows point'
+00001CC8 436F6E74726F K.58	 DC.B	   'Control has reached inaccessible point 4'
+00001CF0 53657175656E K.59	 DC.B	   'Sequence error: point 37 follows point'
+00001D16 436F6E74726F K.60	 DC.B	   'Control has reached inaccessible point 5'
+00001D3E 53657175656E K.61	 DC.B	   'Sequence error: point 38 follows point'
+00001D64 436F6E74726F K.62	 DC.B	   'Control has reached inaccessible point 6'
+		      *
+		      *		 Begin subroutine GT_LEVEL_1
+		      *
+00001D8C 7014	      B.11	 MOVEQ	   #20,D0			         $14
+00001D8E 2F00			 MOVE.L	   D0,-(A7)
+00001D90 6112			 BSR.S	   X.11.1(PC)
+00001D92 00000000		 DC.L	   C.1
+00001D96 0000			 DC.W	   0				         $0
+00001D98 000A			 DC.W	   10				       String length word
+00001D9A 47545F4C4556		 DC.B	   'GT_LEVEL_1'
+00001DA4 203CFFFFFFF4 X.11.1	 MOVE.L	   #T.11-4,D0			         -8
+00001DAA 4EB900000000		 JSR	   M.ENTRY
+00001DB0 2D4FFFF8		 MOVE.L	   A7,ST.11(A6)			         -8
+		      *							       LINE 3/79
+		      *							       LINE 3/80
+00001DB4 202E0014     L.11.1	 MOVE.L	   20(A6),D0			         N
+00001DB8 5380			 SUBQ.L	   #1,D0			         $1
+00001DBA 6D000162		 BLT.L	   L.11.17(PC)
+00001DBE 0C8000000002		 CMPI.L	   #2,D0			         $2
+00001DC4 6E000158		 BGT.L	   L.11.17(PC)
+00001DC8 D040			 ADD.W	   D0,D0
+00001DCA 303B0006		 MOVE.W	   X.11.2(PC,D0.W),D0
+00001DCE 4EFB0002		 JMP	   X.11.2(PC,D0.W)
+00001DD2 0000	      X.11.2	 DC.W	   L.11.2-*
+00001DD4 0000			 DC.W	   L.11.10+2-*
+00001DD6 0000			 DC.W	   L.11.11+4-*
+00001DD8	      L.11.2
+00001DD8	      L.11.3
+		      *							       LINE 3/81
+		      *							       LINE 3/82
+		      *							       LINE 3/8300001DD8 701D	      L.11.4	 MOVEQ	   #29,D0			         $1D
+00001DDA B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         SEQUENCE
+00001DDE 6742			 BEQ.S	   L.11.6(PC)
+		      *							       LINE 3/84
+00001DE0 202D0000     L.11.5	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00001DE4 4A80			 TST.L	   D0
+00001DE6 6606			 BNE.S	   X.11.3(PC)
+00001DE8 4EB900000000		 JSR	   E.FILE
+00001DEE 7226	      X.11.3	 MOVEQ	   #38,D1			         $26
+00001DF0 3F01			 MOVE.W	   D1,-(A7)
+00001DF2 7204			 MOVEQ	   #4,D1			         $4
+00001DF4 3F01			 MOVE.W	   D1,-(A7)
+00001DF6 487AFE5E		 PEA	   K.55(PC)			         CODE.+$1C56
+00001DFA 2F00			 MOVE.L	   D0,-(A7)
+00001DFC 4EB900000000		 JSR	   T.WRITE
+00001E02 222D8000		 MOVE.L	   STATIC.+0-32768(A5),D1	         SEQUENCE
+00001E06 5381			 SUBQ.L	   #1,D1			         $1
+00001E08 4267			 CLR.W	   -(A7)
+00001E0A 2D41FFFC		 MOVE.L	   D1,-4(A6)			         $FFFFFFFC
+00001E0E 486EFFFC		 PEA	   -4(A6)			         $FFFFFFFC
+00001E12 2F00			 MOVE.L	   D0,-(A7)
+00001E14 4EB900000000		 JSR	   T.WRITE
+00001E1A 2F00			 MOVE.L	   D0,-(A7)
+00001E1C 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 3/90
+00001E22 701E	      L.11.6	 MOVEQ	   #30,D0			         $1E
+00001E24 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         SEQUENCE
+		      *							       LINE 3/91
+		      *							       LINE 3/92
+00001E28 7001			 MOVEQ	   #1,D0			         $1
+00001E2A 2F00			 MOVE.L	   D0,-(A7)
+00001E2C 2F0E			 MOVE.L	   A6,-(A7)
+00001E2E 6100FC14		 BSR.L	   B.12(PC)			         GT_LEVEL_2 = CODE.+$1
+		      *							       LINE 3/93
+		      *							       LINE 3/94
+00001E32 7021	      L.11.7	 MOVEQ	   #33,D0			         $21
+00001E34 B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         SEQUENCE
+00001E38 6742			 BEQ.S	   L.11.9(PC)
+		      *							       LINE 3/95
+00001E3A 202D0000     L.11.8	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00001E3E 4A80			 TST.L	   D0
+00001E40 6606			 BNE.S	   X.11.4(PC)
+00001E42 4EB900000000		 JSR	   E.FILE
+00001E48 7226	      X.11.4	 MOVEQ	   #38,D1			         $26
+00001E4A 3F01			 MOVE.W	   D1,-(A7)00001E4C 7204			 MOVEQ	   #4,D1			         $4
+00001E4E 3F01			 MOVE.W	   D1,-(A7)
+00001E50 487AFE2A		 PEA	   K.56(PC)			         CODE.+$1C7C
+00001E54 2F00			 MOVE.L	   D0,-(A7)
+00001E56 4EB900000000		 JSR	   T.WRITE
+00001E5C 222D8000		 MOVE.L	   STATIC.+0-32768(A5),D1	         SEQUENCE
+00001E60 5381			 SUBQ.L	   #1,D1			         $1
+00001E62 4267			 CLR.W	   -(A7)
+00001E64 2D41FFFC		 MOVE.L	   D1,-4(A6)			         $FFFFFFFC
+00001E68 486EFFFC		 PEA	   -4(A6)			         $FFFFFFFC
+00001E6C 2F00			 MOVE.L	   D0,-(A7)
+00001E6E 4EB900000000		 JSR	   T.WRITE
+00001E74 2F00			 MOVE.L	   D0,-(A7)
+00001E76 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 3/101
+00001E7C 7022	      L.11.9	 MOVEQ	   #34,D0			         $22
+00001E7E 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         SEQUENCE
+		      *							       LINE 3/102
+		      *							       LINE 3/103
+00001E82 4EB900000000		 JSR	   M.RETURN
+		      *							       LINE 3/105
+00001E88 207C00000000 L.11.10	 MOVEA.L   #S.9,A0
+00001E8E 4EB900000000		 JSR	   M.GOMAIN
+00001E94	      L.11.11
+00001E94	      L.11.12
+		      *							       LINE 3/106
+		      *							       LINE 3/107
+		      *							       LINE 3/108
+00001E94 7024	      L.11.13	 MOVEQ	   #36,D0			         $24
+00001E96 B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         SEQUENCE
+00001E9A 6742			 BEQ.S	   L.11.15(PC)
+		      *							       LINE 3/109
+00001E9C 202D0000     L.11.14	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00001EA0 4A80			 TST.L	   D0
+00001EA2 6606			 BNE.S	   X.11.5(PC)
+00001EA4 4EB900000000		 JSR	   E.FILE
+00001EAA 7226	      X.11.5	 MOVEQ	   #38,D1			         $26
+00001EAC 3F01			 MOVE.W	   D1,-(A7)
+00001EAE 7204			 MOVEQ	   #4,D1			         $4
+00001EB0 3F01			 MOVE.W	   D1,-(A7)
+00001EB2 487AFDEE		 PEA	   K.57(PC)			         CODE.+$1CA2
+00001EB6 2F00			 MOVE.L	   D0,-(A7)
+00001EB8 4EB900000000		 JSR	   T.WRITE
+00001EBE 222D8000		 MOVE.L	   STATIC.+0-32768(A5),D1	         SEQUENCE
+00001EC2 5381			 SUBQ.L	   #1,D1			         $100001EC4 4267			 CLR.W	   -(A7)
+00001EC6 2D41FFFC		 MOVE.L	   D1,-4(A6)			         $FFFFFFFC
+00001ECA 486EFFFC		 PEA	   -4(A6)			         $FFFFFFFC
+00001ECE 2F00			 MOVE.L	   D0,-(A7)
+00001ED0 4EB900000000		 JSR	   T.WRITE
+00001ED6 2F00			 MOVE.L	   D0,-(A7)
+00001ED8 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 3/115
+00001EDE 7025	      L.11.15	 MOVEQ	   #37,D0			         $25
+00001EE0 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         SEQUENCE
+		      *							       LINE 3/116
+		      *							       LINE 3/117
+00001EE4 7002			 MOVEQ	   #2,D0			         $2
+00001EE6 2F00			 MOVE.L	   D0,-(A7)
+00001EE8 2F0E			 MOVE.L	   A6,-(A7)
+00001EEA 6100FB58		 BSR.L	   B.12(PC)			         GT_LEVEL_2 = CODE.+$1
+		      *							       LINE 3/118
+		      *							       LINE 3/119
+00001EEE 202D0000     L.11.16	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00001EF2 4A80			 TST.L	   D0
+00001EF4 6606			 BNE.S	   X.11.6(PC)
+00001EF6 4EB900000000		 JSR	   E.FILE
+00001EFC 7228	      X.11.6	 MOVEQ	   #40,D1			         $28
+00001EFE 3F01			 MOVE.W	   D1,-(A7)
+00001F00 7204			 MOVEQ	   #4,D1			         $4
+00001F02 3F01			 MOVE.W	   D1,-(A7)
+00001F04 487AFDC2		 PEA	   K.58(PC)			         CODE.+$1CC8
+00001F08 2F00			 MOVE.L	   D0,-(A7)
+00001F0A 4EB900000000		 JSR	   T.WRITE
+00001F10 2F00			 MOVE.L	   D0,-(A7)
+00001F12 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 3/120
+00001F18 4EB900000000		 JSR	   M.STOP
+00001F1E 4EB900000000 L.11.17	 JSR	   E.CASE
+00001F24	      L.11.18
+00001F24	      L.11.19
+00001F24 2E6EFFF8     S.14	 MOVEA.L   ST.11(A6),A7			         -8
+		      *							       LINE 3/123
+		      *							       LINE 3/125
+		      *							       LINE 3/126
+00001F28 7025	      L.11.20	 MOVEQ	   #37,D0			         $25
+00001F2A B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         SEQUENCE
+00001F2E 6742			 BEQ.S	   L.11.22(PC)
+		      *							       LINE 3/127
+00001F30 202D0000     L.11.21	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT00001F34 4A80			 TST.L	   D0
+00001F36 6606			 BNE.S	   X.11.7(PC)
+00001F38 4EB900000000		 JSR	   E.FILE
+00001F3E 7226	      X.11.7	 MOVEQ	   #38,D1			         $26
+00001F40 3F01			 MOVE.W	   D1,-(A7)
+00001F42 7204			 MOVEQ	   #4,D1			         $4
+00001F44 3F01			 MOVE.W	   D1,-(A7)
+00001F46 487AFDA8		 PEA	   K.59(PC)			         CODE.+$1CF0
+00001F4A 2F00			 MOVE.L	   D0,-(A7)
+00001F4C 4EB900000000		 JSR	   T.WRITE
+00001F52 222D8000		 MOVE.L	   STATIC.+0-32768(A5),D1	         SEQUENCE
+00001F56 5381			 SUBQ.L	   #1,D1			         $1
+00001F58 4267			 CLR.W	   -(A7)
+00001F5A 2D41FFFC		 MOVE.L	   D1,-4(A6)			         $FFFFFFFC
+00001F5E 486EFFFC		 PEA	   -4(A6)			         $FFFFFFFC
+00001F62 2F00			 MOVE.L	   D0,-(A7)
+00001F64 4EB900000000		 JSR	   T.WRITE
+00001F6A 2F00			 MOVE.L	   D0,-(A7)
+00001F6C 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 3/133
+00001F72 7026	      L.11.22	 MOVEQ	   #38,D0			         $26
+00001F74 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         SEQUENCE
+		      *							       LINE 3/134
+		      *							       LINE 3/135
+00001F78 7003			 MOVEQ	   #3,D0			         $3
+00001F7A 2F00			 MOVE.L	   D0,-(A7)
+00001F7C 2F0E			 MOVE.L	   A6,-(A7)
+00001F7E 6100FAC4		 BSR.L	   B.12(PC)			         GT_LEVEL_2 = CODE.+$1
+		      *							       LINE 3/136
+		      *							       LINE 3/137
+00001F82 202D0000     L.11.23	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00001F86 4A80			 TST.L	   D0
+00001F88 6606			 BNE.S	   X.11.8(PC)
+00001F8A 4EB900000000		 JSR	   E.FILE
+00001F90 7228	      X.11.8	 MOVEQ	   #40,D1			         $28
+00001F92 3F01			 MOVE.W	   D1,-(A7)
+00001F94 7204			 MOVEQ	   #4,D1			         $4
+00001F96 3F01			 MOVE.W	   D1,-(A7)
+00001F98 487AFD7C		 PEA	   K.60(PC)			         CODE.+$1D16
+00001F9C 2F00			 MOVE.L	   D0,-(A7)
+00001F9E 4EB900000000		 JSR	   T.WRITE
+00001FA4 2F00			 MOVE.L	   D0,-(A7)
+00001FA6 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 3/138
+00001FAC 4EB900000000		 JSR	   M.STOP00001FB2	      L.11.24
+00001FB2 2E6EFFF8     S.15	 MOVEA.L   ST.11(A6),A7			         -8
+		      *							       LINE 3/141
+		      *							       LINE 3/142
+00001FB6 7026	      L.11.25	 MOVEQ	   #38,D0			         $26
+00001FB8 B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         SEQUENCE
+00001FBC 6742			 BEQ.S	   L.11.27(PC)
+		      *							       LINE 3/143
+00001FBE 202D0000     L.11.26	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00001FC2 4A80			 TST.L	   D0
+00001FC4 6606			 BNE.S	   X.11.9(PC)
+00001FC6 4EB900000000		 JSR	   E.FILE
+00001FCC 7226	      X.11.9	 MOVEQ	   #38,D1			         $26
+00001FCE 3F01			 MOVE.W	   D1,-(A7)
+00001FD0 7204			 MOVEQ	   #4,D1			         $4
+00001FD2 3F01			 MOVE.W	   D1,-(A7)
+00001FD4 487AFD68		 PEA	   K.61(PC)			         CODE.+$1D3E
+00001FD8 2F00			 MOVE.L	   D0,-(A7)
+00001FDA 4EB900000000		 JSR	   T.WRITE
+00001FE0 222D8000		 MOVE.L	   STATIC.+0-32768(A5),D1	         SEQUENCE
+00001FE4 5381			 SUBQ.L	   #1,D1			         $1
+00001FE6 4267			 CLR.W	   -(A7)
+00001FE8 2D41FFFC		 MOVE.L	   D1,-4(A6)			         $FFFFFFFC
+00001FEC 486EFFFC		 PEA	   -4(A6)			         $FFFFFFFC
+00001FF0 2F00			 MOVE.L	   D0,-(A7)
+00001FF2 4EB900000000		 JSR	   T.WRITE
+00001FF8 2F00			 MOVE.L	   D0,-(A7)
+00001FFA 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 3/149
+00002000 7027	      L.11.27	 MOVEQ	   #39,D0			         $27
+00002002 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         SEQUENCE
+		      *							       LINE 3/150
+		      *							       LINE 3/151
+00002006 7004			 MOVEQ	   #4,D0			         $4
+00002008 2F00			 MOVE.L	   D0,-(A7)
+0000200A 2F0E			 MOVE.L	   A6,-(A7)
+0000200C 6100FA36		 BSR.L	   B.12(PC)			         GT_LEVEL_2 = CODE.+$1
+		      *							       LINE 3/152
+		      *							       LINE 3/153
+00002010 202D0000     L.11.28	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00002014 4A80			 TST.L	   D0
+00002016 6606			 BNE.S	   X.11.10(PC)
+00002018 4EB900000000		 JSR	   E.FILE
+0000201E 7228	      X.11.10	 MOVEQ	   #40,D1			         $28
+00002020 3F01			 MOVE.W	   D1,-(A7)00002022 7204			 MOVEQ	   #4,D1			         $4
+00002024 3F01			 MOVE.W	   D1,-(A7)
+00002026 487AFD3C		 PEA	   K.62(PC)			         CODE.+$1D64
+0000202A 2F00			 MOVE.L	   D0,-(A7)
+0000202C 4EB900000000		 JSR	   T.WRITE
+00002032 2F00			 MOVE.L	   D0,-(A7)
+00002034 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 3/154
+0000203A 4EB900000000		 JSR	   M.STOP
+		      *
+		      *		 Constant area for program EXE016
+		      *
+00002040 23434E	      K.63	 DC.B	   '#CN'
+00002043 00000001		 DS.B	   1
+00002044 426567696E20 K.64	 DC.B	   'Begin EXE016'
+00002050 53657175656E K.65	 DC.B	   'Sequence error: point 0 follows point'
+00002075 00000001		 DS.B	   1
+00002076 53657175656E K.66	 DC.B	   'Sequence error: point 28 follows point'
+0000209C 00000000     K.67	 DC.L	   0				         $0
+000020A0 00000384		 DC.L	   900				         $384
+000020A4 00000385		 DC.L	   901				         $385
+000020A8 00000386		 DC.L	   902				         $386
+000020AC 00000387		 DC.L	   903				         $387
+000020B0 00000388		 DC.L	   904				         $388
+000020B4 000002C6     K.68	 DC.L	   710				         $2C6
+000020B8 000002C7		 DC.L	   711				         $2C7
+000020BC 000002C8		 DC.L	   712				         $2C8
+000020C0 000002C9		 DC.L	   713				         $2C9
+000020C4 000002CA		 DC.L	   714				         $2CA
+000020C8 53657175656E K.69	 DC.B	   'Sequence error: point 34 follows point'
+000020EE 436F6E74726F K.70	 DC.B	   'Control has reached inaccessible point 7'
+00002116 53657175656E K.71	 DC.B	   'Sequence error: point 35 follows point'
+0000213C 436F6E74726F K.72	 DC.B	   'Control has reached inaccessible point 8'
+00002164 53657175656E K.73	 DC.B	   'Sequence error: point 39 follows point'
+0000218A 456E64204558 K.74	 DC.B	   'End EXE016'
+		      *
+		      *		 Begin program EXE016
+		      *
+				 XDEF	   M.START 
+00002194	      M.START 
+00002194 7010	      B.1	 MOVEQ	   #16,D0			         $10
+00002196 2F00			 MOVE.L	   D0,-(A7)
+00002198 610E			 BSR.S	   X.1.1(PC)
+0000219A 00000000		 DC.L	   C.1
+0000219E 0000			 DC.W	   0				         $0000021A0 0006			 DC.W	   6				       String length word
+000021A2 455845303136		 DC.B	   'EXE016'
+000021A8 203CFFFFFFF4 X.1.1	 MOVE.L	   #T.1-4,D0			         -8
+000021AE 4EB900000000		 JSR	   M.ENTRY
+000021B4 2D4FFFF8		 MOVE.L	   A7,ST.1(A6)			         -8
+		      *							       LINE 4/2
+		      *							       LINE 4/3
+000021B8 487AFE86     L.1.1	 PEA	   K.63(PC)			         CODE.+$2040
+000021BC 7003			 MOVEQ	   #3,D0			         $3
+000021BE 3F00			 MOVE.W	   D0,-(A7)
+000021C0 7032			 MOVEQ	   #50,D0			         $32
+000021C2 3F00			 MOVE.W	   D0,-(A7)
+000021C4 4EB900000000		 JSR	   T.REWRIT
+000021CA 2B5F0000		 MOVE.L	   (A7)+,TTYOUTPUT-32768(A5)	         TTYOUTPUT
+		      *							       LINE 4/4
+000021CE 202D0000		 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+000021D2 4A80			 TST.L	   D0
+000021D4 6606			 BNE.S	   X.1.2(PC)
+000021D6 4EB900000000		 JSR	   E.FILE
+000021DC 720C	      X.1.2	 MOVEQ	   #12,D1			         $C
+000021DE 3F01			 MOVE.W	   D1,-(A7)
+000021E0 7204			 MOVEQ	   #4,D1			         $4
+000021E2 3F01			 MOVE.W	   D1,-(A7)
+000021E4 487AFE5E		 PEA	   K.64(PC)			         CODE.+$2044
+000021E8 2F00			 MOVE.L	   D0,-(A7)
+000021EA 4EB900000000		 JSR	   T.WRITE
+000021F0 2F00			 MOVE.L	   D0,-(A7)
+000021F2 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 4/8
+000021F8 7000			 MOVEQ	   #0,D0			         $0
+000021FA 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         SEQUENCE
+		      *							       LINE 4/9
+		      *							       LINE 4/10
+000021FE 4AAD8000     L.1.2	 TST.L	   STATIC.+0-32768(A5)		         SEQUENCE
+00002202 6742			 BEQ.S	   L.1.4(PC)
+		      *							       LINE 4/11
+00002204 202D0000     L.1.3	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00002208 4A80			 TST.L	   D0
+0000220A 6606			 BNE.S	   X.1.3(PC)
+0000220C 4EB900000000		 JSR	   E.FILE
+00002212 7225	      X.1.3	 MOVEQ	   #37,D1			         $25
+00002214 3F01			 MOVE.W	   D1,-(A7)
+00002216 7204			 MOVEQ	   #4,D1			         $4
+00002218 3F01			 MOVE.W	   D1,-(A7)
+0000221A 487AFE34		 PEA	   K.65(PC)			         CODE.+$20500000221E 2F00			 MOVE.L	   D0,-(A7)
+00002220 4EB900000000		 JSR	   T.WRITE
+00002226 222D8000		 MOVE.L	   STATIC.+0-32768(A5),D1	         SEQUENCE
+0000222A 5381			 SUBQ.L	   #1,D1			         $1
+0000222C 4267			 CLR.W	   -(A7)
+0000222E 2D41FFFC		 MOVE.L	   D1,-4(A6)			         $FFFFFFFC
+00002232 486EFFFC		 PEA	   -4(A6)			         $FFFFFFFC
+00002236 2F00			 MOVE.L	   D0,-(A7)
+00002238 4EB900000000		 JSR	   T.WRITE
+0000223E 2F00			 MOVE.L	   D0,-(A7)
+00002240 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 4/17
+00002246 7001	      L.1.4	 MOVEQ	   #1,D0			         $1
+00002248 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         SEQUENCE
+		      *							       LINE 4/18
+		      *							       LINE 4/19
+0000224C 42A7			 CLR.L	   -(A7)
+0000224E 6100E9DE		 BSR.L	   B.4(PC)			         CT_LEVEL_1 = CODE.+$C
+		      *							       LINE 4/20
+		      *							       LINE 4/21
+00002252 701C	      L.1.5	 MOVEQ	   #28,D0			         $1C
+00002254 B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         SEQUENCE
+00002258 6742			 BEQ.S	   L.1.7(PC)
+		      *							       LINE 4/22
+0000225A 202D0000     L.1.6	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+0000225E 4A80			 TST.L	   D0
+00002260 6606			 BNE.S	   X.1.4(PC)
+00002262 4EB900000000		 JSR	   E.FILE
+00002268 7226	      X.1.4	 MOVEQ	   #38,D1			         $26
+0000226A 3F01			 MOVE.W	   D1,-(A7)
+0000226C 7204			 MOVEQ	   #4,D1			         $4
+0000226E 3F01			 MOVE.W	   D1,-(A7)
+00002270 487AFE04		 PEA	   K.66(PC)			         CODE.+$2076
+00002274 2F00			 MOVE.L	   D0,-(A7)
+00002276 4EB900000000		 JSR	   T.WRITE
+0000227C 222D8000		 MOVE.L	   STATIC.+0-32768(A5),D1	         SEQUENCE
+00002280 5381			 SUBQ.L	   #1,D1			         $1
+00002282 4267			 CLR.W	   -(A7)
+00002284 2D41FFFC		 MOVE.L	   D1,-4(A6)			         $FFFFFFFC
+00002288 486EFFFC		 PEA	   -4(A6)			         $FFFFFFFC
+0000228C 2F00			 MOVE.L	   D0,-(A7)
+0000228E 4EB900000000		 JSR	   T.WRITE
+00002294 2F00			 MOVE.L	   D0,-(A7)
+00002296 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 4/280000229C 701D	      L.1.7	 MOVEQ	   #29,D0			         $1D
+0000229E 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         SEQUENCE
+		      *							       LINE 4/29
+		      *							       LINE 4/33
+000022A2 4CFA003FFDF8		 MOVEM.L   K.67(PC),#63			         CODE.+$209C  $3F
+000022A8 48ED003F8004		 MOVEM.L   #63,STATIC.+4-32768(A5)	         $3F  A_R_0
+		      *							       LINE 4/34
+000022AE 7001			 MOVEQ	   #1,D0			         $1
+000022B0 2F00			 MOVE.L	   D0,-(A7)
+000022B2 487AFE00		 PEA	   K.68(PC)			         CODE.+$20B4
+000022B6 6100F4DA		 BSR.L	   B.8(PC)			         DT_LEVEL_1 = CODE.+$1
+		      *							       LINE 4/38
+000022BA 7001			 MOVEQ	   #1,D0			         $1
+000022BC 2F00			 MOVE.L	   D0,-(A7)
+000022BE 6100FACC		 BSR.L	   B.11(PC)			         GT_LEVEL_1 = CODE.+$1
+		      *							       LINE 4/39
+		      *							       LINE 4/40
+000022C2 7022	      L.1.8	 MOVEQ	   #34,D0			         $22
+000022C4 B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         SEQUENCE
+000022C8 6742			 BEQ.S	   L.1.10(PC)
+		      *							       LINE 4/41
+000022CA 202D0000     L.1.9	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+000022CE 4A80			 TST.L	   D0
+000022D0 6606			 BNE.S	   X.1.5(PC)
+000022D2 4EB900000000		 JSR	   E.FILE
+000022D8 7226	      X.1.5	 MOVEQ	   #38,D1			         $26
+000022DA 3F01			 MOVE.W	   D1,-(A7)
+000022DC 7204			 MOVEQ	   #4,D1			         $4
+000022DE 3F01			 MOVE.W	   D1,-(A7)
+000022E0 487AFDE6		 PEA	   K.69(PC)			         CODE.+$20C8
+000022E4 2F00			 MOVE.L	   D0,-(A7)
+000022E6 4EB900000000		 JSR	   T.WRITE
+000022EC 222D8000		 MOVE.L	   STATIC.+0-32768(A5),D1	         SEQUENCE
+000022F0 5381			 SUBQ.L	   #1,D1			         $1
+000022F2 4267			 CLR.W	   -(A7)
+000022F4 2D41FFFC		 MOVE.L	   D1,-4(A6)			         $FFFFFFFC
+000022F8 486EFFFC		 PEA	   -4(A6)			         $FFFFFFFC
+000022FC 2F00			 MOVE.L	   D0,-(A7)
+000022FE 4EB900000000		 JSR	   T.WRITE
+00002304 2F00			 MOVE.L	   D0,-(A7)
+00002306 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 4/47
+0000230C 7023	      L.1.10	 MOVEQ	   #35,D0			         $23
+0000230E 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         SEQUENCE
+		      *							       LINE 4/48		      *							       LINE 4/49
+00002312 7002			 MOVEQ	   #2,D0			         $2
+00002314 2F00			 MOVE.L	   D0,-(A7)
+00002316 6100FA74		 BSR.L	   B.11(PC)			         GT_LEVEL_1 = CODE.+$1
+		      *							       LINE 4/50
+		      *							       LINE 4/51
+0000231A 202D0000     L.1.11	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+0000231E 4A80			 TST.L	   D0
+00002320 6606			 BNE.S	   X.1.6(PC)
+00002322 4EB900000000		 JSR	   E.FILE
+00002328 7228	      X.1.6	 MOVEQ	   #40,D1			         $28
+0000232A 3F01			 MOVE.W	   D1,-(A7)
+0000232C 7204			 MOVEQ	   #4,D1			         $4
+0000232E 3F01			 MOVE.W	   D1,-(A7)
+00002330 487AFDBC		 PEA	   K.70(PC)			         CODE.+$20EE
+00002334 2F00			 MOVE.L	   D0,-(A7)
+00002336 4EB900000000		 JSR	   T.WRITE
+0000233C 2F00			 MOVE.L	   D0,-(A7)
+0000233E 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 4/52
+00002344 4EB900000000		 JSR	   M.STOP
+0000234A	      L.1.12
+0000234A 2E6EFFF8     S.9	 MOVEA.L   ST.1(A6),A7			         -8
+		      *							       LINE 4/55
+		      *							       LINE 4/56
+0000234E 7023	      L.1.13	 MOVEQ	   #35,D0			         $23
+00002350 B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         SEQUENCE
+00002354 6742			 BEQ.S	   L.1.15(PC)
+		      *							       LINE 4/57
+00002356 202D0000     L.1.14	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+0000235A 4A80			 TST.L	   D0
+0000235C 6606			 BNE.S	   X.1.7(PC)
+0000235E 4EB900000000		 JSR	   E.FILE
+00002364 7226	      X.1.7	 MOVEQ	   #38,D1			         $26
+00002366 3F01			 MOVE.W	   D1,-(A7)
+00002368 7204			 MOVEQ	   #4,D1			         $4
+0000236A 3F01			 MOVE.W	   D1,-(A7)
+0000236C 487AFDA8		 PEA	   K.71(PC)			         CODE.+$2116
+00002370 2F00			 MOVE.L	   D0,-(A7)
+00002372 4EB900000000		 JSR	   T.WRITE
+00002378 222D8000		 MOVE.L	   STATIC.+0-32768(A5),D1	         SEQUENCE
+0000237C 5381			 SUBQ.L	   #1,D1			         $1
+0000237E 4267			 CLR.W	   -(A7)
+00002380 2D41FFFC		 MOVE.L	   D1,-4(A6)			         $FFFFFFFC
+00002384 486EFFFC		 PEA	   -4(A6)			         $FFFFFFFC00002388 2F00			 MOVE.L	   D0,-(A7)
+0000238A 4EB900000000		 JSR	   T.WRITE
+00002390 2F00			 MOVE.L	   D0,-(A7)
+00002392 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 4/63
+00002398 7024	      L.1.15	 MOVEQ	   #36,D0			         $24
+0000239A 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         SEQUENCE
+		      *							       LINE 4/64
+		      *							       LINE 4/65
+0000239E 7003			 MOVEQ	   #3,D0			         $3
+000023A0 2F00			 MOVE.L	   D0,-(A7)
+000023A2 6100F9E8		 BSR.L	   B.11(PC)			         GT_LEVEL_1 = CODE.+$1
+		      *							       LINE 4/66
+		      *							       LINE 4/67
+000023A6 202D0000     L.1.16	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+000023AA 4A80			 TST.L	   D0
+000023AC 6606			 BNE.S	   X.1.8(PC)
+000023AE 4EB900000000		 JSR	   E.FILE
+000023B4 7228	      X.1.8	 MOVEQ	   #40,D1			         $28
+000023B6 3F01			 MOVE.W	   D1,-(A7)
+000023B8 7204			 MOVEQ	   #4,D1			         $4
+000023BA 3F01			 MOVE.W	   D1,-(A7)
+000023BC 487AFD7E		 PEA	   K.72(PC)			         CODE.+$213C
+000023C0 2F00			 MOVE.L	   D0,-(A7)
+000023C2 4EB900000000		 JSR	   T.WRITE
+000023C8 2F00			 MOVE.L	   D0,-(A7)
+000023CA 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 4/68
+000023D0 4EB900000000		 JSR	   M.STOP
+000023D6	      L.1.17
+000023D6 2E6EFFF8     S.10	 MOVEA.L   ST.1(A6),A7			         -8
+		      *							       LINE 4/71
+		      *							       LINE 4/72
+000023DA 7027	      L.1.18	 MOVEQ	   #39,D0			         $27
+000023DC B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         SEQUENCE
+000023E0 6742			 BEQ.S	   L.1.20(PC)
+		      *							       LINE 4/73
+000023E2 202D0000     L.1.19	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+000023E6 4A80			 TST.L	   D0
+000023E8 6606			 BNE.S	   X.1.9(PC)
+000023EA 4EB900000000		 JSR	   E.FILE
+000023F0 7226	      X.1.9	 MOVEQ	   #38,D1			         $26
+000023F2 3F01			 MOVE.W	   D1,-(A7)
+000023F4 7204			 MOVEQ	   #4,D1			         $4
+000023F6 3F01			 MOVE.W	   D1,-(A7)000023F8 487AFD6A		 PEA	   K.73(PC)			         CODE.+$2164
+000023FC 2F00			 MOVE.L	   D0,-(A7)
+000023FE 4EB900000000		 JSR	   T.WRITE
+00002404 222D8000		 MOVE.L	   STATIC.+0-32768(A5),D1	         SEQUENCE
+00002408 5381			 SUBQ.L	   #1,D1			         $1
+0000240A 4267			 CLR.W	   -(A7)
+0000240C 2D41FFFC		 MOVE.L	   D1,-4(A6)			         $FFFFFFFC
+00002410 486EFFFC		 PEA	   -4(A6)			         $FFFFFFFC
+00002414 2F00			 MOVE.L	   D0,-(A7)
+00002416 4EB900000000		 JSR	   T.WRITE
+0000241C 2F00			 MOVE.L	   D0,-(A7)
+0000241E 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 4/79
+00002424 7028	      L.1.20	 MOVEQ	   #40,D0			         $28
+00002426 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         SEQUENCE
+		      *							       LINE 4/80
+		      *							       LINE 4/82
+0000242A 202D0000		 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+0000242E 4A80			 TST.L	   D0
+00002430 6606			 BNE.S	   X.1.10(PC)
+00002432 4EB900000000		 JSR	   E.FILE
+00002438 720A	      X.1.10	 MOVEQ	   #10,D1			         $A
+0000243A 3F01			 MOVE.W	   D1,-(A7)
+0000243C 7204			 MOVEQ	   #4,D1			         $4
+0000243E 3F01			 MOVE.W	   D1,-(A7)
+00002440 487AFD48		 PEA	   K.74(PC)			         CODE.+$218A
+00002444 2F00			 MOVE.L	   D0,-(A7)
+00002446 4EB900000000		 JSR	   T.WRITE
+0000244C 2F00			 MOVE.L	   D0,-(A7)
+0000244E 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 4/83
+00002454 4EB900000000		 JSR	   M.STOP
+				 XREF	   M.ENTRY
+				 XREF	   TTYOUTPU
+				 XREF	   E.FILE
+				 XREF	   T.WRITE
+				 XREF	   T.WRTLN
+				 XREF	   E.CASE
+				 XREF	   M.RETURN
+				 XREF	   M.GOMAIN
+				 XREF	   M.STOP
+				 XREF	   T.REWRIT
+		      *
+		      *		 Code area:      00001948 bytes (6472 decimal)
+		      *		 Constant area:  00000B12 bytes (2834 decimal)		      *		 Static area:    0000001C bytes (28 decimal)
+		      *
+	 00000000		 END
+ [`Fu

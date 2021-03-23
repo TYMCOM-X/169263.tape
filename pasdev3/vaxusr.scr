@@ -1,0 +1,1075 @@
+$num off
+$cen
+&MDSI PASCAL VAX PROGRAMMER&'&S GUIDE&
+$ski
+&Table of contents&
+$ski 2 $ver $tab 12,52
+1.0	Introduction	. . . . . . .  2
+
+2.0	Using the PAXCAL System	. . . . . . .  2
+2.1	  Compilation	. . . . . . .  2
+2.2	  Transferring Object Files	. . . . . . .  3
+2.3	  Linking	. . . . . . .  3
+2.4	  Example Program	. . . . . . .  3
+
+3.0	Implementation Dependencies	. . . . . . .  5
+3.1	  Language Restrictions	. . . . . . .  5
+3.2	  Filename Interpretation	. . . . . . .  5
+3.3	  Textfile I/O	. . . . . . .  7
+3.3.1	    ASCII Textfile Option	. . . . . . .  7
+3.3.2	    CONTROL Textfile Option	. . . . . . .  7
+3.4	  Typed File I/O	. . . . . . .  8
+3.5	  Binary File I/O	. . . . . . .  8
+3.6	  I/O Errors	. . . . . . .  8
+
+4.0	Debugging Facilities	. . . . . . .  9
+4.1	  PAXCAL Debugging Facilities	. . . . . . .  9
+4.1.1	    The TRACE Option	. . . . . . . 10
+4.1.2	    The DEBUG Option	. . . . . . . 10
+4.1.3	    The CHECK Option	. . . . . . . 11
+4.2	  The VAX Debugger	. . . . . . . 12
+4.2.1	    Basic Debugger Concepts	. . . . . . . 12
+4.2.2	    Using the VAX Debugger	. . . . . . . 14
+4.2.3	    Advanced Debugger Features	. . . . . . . 16
+4.3	  The PATCH Utility	. . . . . . . 18
+
+$ski 2 $cen
+&Appendices&
+$ski 2 $ver
+A	Stack Frames	. . . . . . . 19
+B	Data Formats for PAXCAL Types	. . . . . . . 21
+C	Errors and Conditions	. . . . . . . 22
+$jus $tab
+$title right 'MDSI PASCAL VAX Programmer''s Guide/\' right 'February 5, 1981'
+$page
+$ver
+1.0 -- &Introduction&
+$ski $jus
+The MDSI VAX PASCAL (PAXCAL) system comprises the PAXCAL cross-compiler, the
+VAXFER transfer programs, and the PAXCAL libraries.
+The system implements the MDSI PASCAL language, as defined in
+the &MDSI PASCAL Report&.
+The VAX compiler uses the same "front end" pass (scanning, parsing, and error
+detection) as the PDP-10 compiler, with parameter adjustments to describe
+the target machine.
+Both compilers use the same listing pass.
+The code generation pass produces VAX-11 native object code in a format
+suitable for transferring to a VAX/VMS system by the VAXFER transfer programs.
+$ski
+The emitted binary code is linked with the PAXCAL libraries to produce an
+executable image to be run under VAX/VMS.
+The PAXCAL libraries (PAXRTL and PAXLIB) perform various functions for
+the program for which the emission of inline code is impractical.
+Such functions include I/O, certain set and string operations, error
+reporting, dynamic memory allocation, and program initialization.
+The PAXCAL runtime support defines and implements an interface
+between compiled programs and available system software.
+The runtime routines (and PAXCAL procedures) follow the VAX procedure
+calling conventions, and generally conform to the standards described
+in the &Modular Libraries& manual from DEC.
+$ski
+The languages for which the PDP-10 and VAX compilers produce code are
+very similar, in keeping with the goal of program portability.
+At the moment, there are a few restrictions in the VAX language;
+Section 3 below details these limitations.
+Initial testing of the system, however, demonstrates a high degree
+of portability using PASCAL programs which avoid excessive use of features
+documented in the &MDSI PASCAL Report& as implementation dependent.
+$ski 2 $ver
+2.0 -- &Using the PAXCAL System&
+$ski $jus
+The conversion of a PASCAL program into an executable VAX/VMS image
+involves three major phases: compilation, transfer, and linking.
+Each phase is discussed below.
+$ski 2 $ver
+2.1 -- &Compilation&
+$ski $jus
+The PAXCAL compiler is located in the file NEWPAS.EXE[52250,227],
+and is invoked using the immediate command ":TARGET VAX".
+The compiler actually comprises five distinct executable programs which
+invoke each other as appropriate.
+The use of the compiler is detailed in the &MDSI PASCAL User&'&s Guide&;
+all options discussed therein are available except for
+ALLOC, OPTIMIZE, OVERLAY, STANDARD, QBLOCKS, and STORAGE, which are ignored.
+The default extension for the emitted binary code is ".OBJ", as it is
+on the VAX itself.
+The various restrictions on the language and available options are described
+in Section 3 below.
+$ski 2 $ver
+2.2 -- &Transferring Object Files&
+$ski $jus
+Once the user has compiled all the modules of the program, the resultant
+object code must be transported from the PDP-10 to the VAX.
+The VAXFER programs, which are documented in the &VAXFER User&'&s Guide&,
+provide a convenient means to transfer either PAXCAL object files or
+normal PDP-10 textfiles to a VAX.
+The VAXFER programs use two terminal ports from the VAX and one from the
+PDP-10; the user first runs VAXFER on the VAX, which uses the second
+line as a port into the PDP-10, running the PDP-10 counterpart program.
+Files are then transported across the established line, with full
+error checking and packet retransmission.
+When all the object code has been transferred to the VAX, the user may
+stop the VAXFER programs and disconnect the line from VAX to PDP-10.
+$ski 2 $ver
+2.3 -- &Linking&
+$ski $jus
+At this point, the user must link the object files with the PAXCAL
+runtime libraries.
+The format of the command for producing simple executable images is:
+$ski $ind left +4 $ver
+\$ link [/deb] [/map[=foo][/full]] f1, f2, ..., fn, plink/opt
+\$ run f1
+$ski $ind left -4 $jus
+PLINK is a logical name assigned to the link option file appropriate for
+an executable link.
+The "/DEB" switch makes symbols available to the VAX debugger, and transfers
+control to the debugger when the program is started.
+The "/MAP" switch generates a map, in file f1.MAP (or foo.MAP if specified),
+detailing the link and showing allocated virtual addresses in the final
+executable image.
+The "/FULL" suboption with /MAP provides extra information and is recommended.
+$ski 2 $ver
+2.4 -- &Example program&
+$ski $jus
+A sample compilation of a small test program is shown below.
+User input is underlined.
+Commentary lines are preceded by semicolons.
+$ski $ind left +2 $ver
+\.&type\test.pas&
+\program test options nocheck, trace;
+
+\begin
+\  rewrite (ttyoutput);
+\  writeln (tty, 'Oh boy, here we go.')
+\end.
+
+\.&r\newpas[52250,227]&
+
+\MDSI Pascal, Version 1A(1)-1
+
+\*&:tar\vax&
+\[VAX 11 initial environment]
+\*&/nosource,stat&
+\*&test&
+\[Pass 1:    0.147 seconds, 42+112P]
+\[Pass 4:    0.182 seconds, 43+105P]
+\[Code area:        5B bytes (91 decimal)]
+\[Constant area:    17 bytes (23 decimal)]
+\[Static area:       0 bytes (0 decimal)]
+
+\*&<cr>&
+
+\EXIT
+
+\. ;back to the monitor, all compilations done.
+$ski $ind left -2 $jus
+At this point, it is assumed that all modules of the program have been
+compiled successfully on the PDP-10.
+It is now time to transfer these object files to the VAX.
+It is assumed that the user is logged into the VAX and has set
+the default to the directory in which VAXFER is to place the files.
+$ski $ind left +1 $ver
+\$ &vaxfer&
+\VAXFER, version 1.0
+
+
+\VAXFER:  &connect&
+\_System:  &2&
+\_PPN:  &52250,267&
+\_Password:  &baloney&
+\_Project ID:  &feh&
+
+\Job 13  Sys #2  17:26 EST (22:26 GMT)  Fri 18-Jan-80
+
+\VAXFER:  &get\test.obj&
+\TEST.OBJ --> TEST.OBJ, PAXCAL object, 2 blocks, 68 secs to complete.
+
+\VAXFER:  &quit&
+\%VAXFER-I-Issued disconnect.
+\Job 13 CYPHERNET SYSTEM #2  Line 9561
+\User [52250,267] off at 17:29 EST (22:29 GMT)  18-Jan-80
+\74 CRU's used   Connected 0.044 hours
+
+
+\$ ; at this point, all the object files have been transferred.
+\$ &link\test,plink/opt&
+\$ &r\test&
+\Oh boy, here we go.
+\$ ; it worked
+$page $ver $ind left -1
+3.0 -- &Implementation Dependencies&
+$ski $jus
+This section discusses the details of the VAX implementation with respect
+to items mentioned in the &MDSI PASCAL Report& as being implementation defined.
+Also, specific limitations in the PAXCAL system are listed.
+$ski 2 $ver
+3.1 -- &Language Restrictions&
+$ski $jus
+The language compiled by PAXCAL compiler is not precisely that language
+defined in the &Report&.
+Certain features of MDSI PASCAL, which are
+extensions to standard PASCAL, were not implemented in PAXCAL.
+$ski
+Values of scalar types are restricted to a maximum of 32 bits in size.
+Real types are limited to &prec& 16, which uses the VAX double floating
+hardware data type.
+Generic array types are not implemented.
+$skip
+The predefined function RUNTIME returns cumulative 
+process CPU time in milliseconds,
+but is accurate only to 10 milliseconds.
+The predefined routines MARK, RELEASE, GETCHANNEL, and FREECHANNEL are
+not available, and are flagged at compile time.
+All public symbols are significant to 31 characters at link time.
+$skip
+The MDSI Pascal exception handling mechanism is not available on the VAX.
+However, the ONESCAPE package of routines for handling Control-C's
+and the ON_HEAP_OVERFLOW package for handling heap overflows are
+available.
+$ski 2 $ver
+3.2 -- &Filename Interpretation&
+$ski $jus
+The VMS logical name facility creates quite a problem for interpreting
+file names in the manner to which MDSI PASCAL users are accustomed.
+Readers are urged to read Section 2.2 (Logical Names) in the
+&VAX&/&VMS Command Language User&'&s Guide& from DEC before continuing
+this section of the &MDSI PASCAL VAX Programmer&'&s Guide&.
+$ski
+As in the PDP-10 implementation, the filename string is canonicalized
+before processing.
+In other words, the filename is separated into its separate components --
+device, directory, filename, extension, and version number -- which are
+then reassembled in the order acceptable to VAX.
+Note that version numbers must be preceded by a semicolon, and not a
+period, since a period denotes an extension, and components can
+occur in any order.
+This permits default and/or overriding file specifications,
+since the last occurrence of a component in a string is the one used
+when reassembling the string.
+For example, the string ".REL " |||| ST will default the extension of the
+file described by ST to .REL, if ST has no extension specification.
+If ST includes an extension, it will be used, since it is the last occurrence.
+$ski
+In order to recognize the terminal when associating a file variable,
+any logical names in the filename string must be completely and recursively
+translated.
+The resultant string is compared with the completely translated result
+from "PAX$INPUT" and "PAX$OUTPUT" to detect the terminal.
+Note that the two strings above represent the proper ways to associate
+the terminal, but that any string translating to the same result will
+be recognized as the controlling terminal.
+Also, to detect the terminal, the input string is translated only to the
+colon following the device specification, if one is present.
+Therefore, "PAX$OUTPUT:FOO.TMP", which might result from filename parsing,
+will be identified correctly as the controlling terminal.
+$ski
+If no filename string is given to one of the association procedures,
+a default file name is taken from the name of the file reference used in
+the call, as follows.
+First, the file reference must be a simple variable.
+The text of its name is given to the runtime for the call.
+The runtime first attempts to translate the name of the variable as a
+logical name.
+If this succeeds, the variable name is given to RMS without modification.
+Otherwise, it is truncated to nine characters, and the extension ".PAX" is
+concatenated.
+Therefore, a "standard" PASCAL program using the predefined file identifiers
+INPUT and OUTPUT will work using arbitrary files or devices, if the names
+INPUT and OUTPUT are placed in one of the logical name tables; the files
+INPUT.PAX and OUTPUT.PAX will be used otherwise.
+$ski
+When associated without an explicit filename string, the predefined file
+identifiers TTY and TTYOUTPUT are associated with the filename strings
+"PAX$INPUT" and "PAX$OUTPUT" respectively, and not with "TTY:"
+as on the PDP-10.
+Note, however, that only the predefined identifiers will do this; a
+user-declared variable TTY of type TEXT, for example, will associate
+with the string "TTY", as with INPUT above.
+As in the PDP-10 implementation, any and all file variables associated
+with the interactive terminal for input are &equal&, whether they
+were associated separately or assigned.
+This is also true for the interactive terminal for output.
+For example, opening TTY, and opening F with the string "PAX$INPUT", 
+leaves TTY and F equal, as would opening TTY and then assigning F\:=\TTY.
+$ski
+The SUP option to RMS is used when opening a file for output;
+this causes version numbers to be handled in the following manner.
+If an explicit version is given in the filename string, that file &with that
+version number& is either created or superseded.
+If no explicit version is given, or if version zero is specified, no
+superseding will occur, and the version created will be one greater
+than the highest existing version before the creation.
+On input, an explicit non-zero version number will succeed or fail depending
+on the existence of the particular version requested.
+With no version number specified, or version zero, the highest version
+will be opened.
+$page $ver
+3.3 -- &Textfile I&/&O&
+$ski $jus
+The MDSI PASCAL textfile model differs considerably from the model
+implemented by the operating system, VMS, on the VAX.
+Under normal circumstances these differences are transparent to the user,
+because the runtime library interfaces the PASCAL model to the VAX files.
+It is possible, however, to write programs which behave quite differently
+when run on the PDP-10 and on the VAX on the basis of the appearance of
+text files; this section explains the interface between PASCAL and VAX files.
+$ski
+The VAX/VMS textfile is a variable length record file, with optional control
+information (line numbers) for each record.
+The lines of the file are its records, which have an intrinsic length and
+can contain any ASCII character.
+A page mark is a record containing a single form feed character, which is
+considered to be the first record of the new page.
+The records in the disk file are word aligned, preceded by a length word.
+Finally, terminal I/O is handled on a record by record basis, exactly
+like the disk files.
+In contrast, the PAXCAL model for a textfile consists of a stream of
+characters which contains distinct punctuation marks for end of line, end
+of page, and end of file.
+The essential function performed by the runtime library with respect
+to textfiles is a lookahead to recognize end of line, page, and file
+by observing the starting of lines and pages in the VAX/VMS model.
+$ski 2 $ver
+3.3.1 -- &ASCII Textfile Option&
+$ski $jus
+The ASCII option inhibits all character conversion on input.
+On the VAX, this is limited to the expansion of tabs and the removal of
+all other control characters, since a disk textfile contains no explicit
+punctuation marks as recognized by PASCAL.
+When any of EOF, EOLN, or EOPAGE are true, F^^ still contains a blank.
+The only effect of the ASCII option in connection with disk files
+is to make control characters within the file available to the program.
+$ski
+Line terminator characters are available from input textfiles associated
+with the interactive terminal.
+This does &not& necessarily mean that TTY with the ASCII option will
+always return non-blank characters when EOLN is true, since the
+program's input stream may be taken from a command file.
+However, F^^ will contain a line terminator character when the &terminal&
+is associated with the ASCII option.
+$ski 2 $ver
+3.3.2 -- &CONTROL Textfile Option&
+$ski $jus
+RMS provides a file attribute which recognizes the first character of each
+record as a carriage control character.
+Unfortunately, RMS uses the "standard" FORTRAN interpretation, which differs
+from the "standard" MDSI PASCAL interpretation.
+FORTRAN removes the first character from each line, whether it is interpretable
+as a carriage control character or not; PASCAL removes the first character
+only if it is one of the four recognized control characters.
+This difference in interpretation is handled by the runtime.
+It should be remembered that reading a file which was written with the
+CONTROL option is implementation defined.
+The CONTROL option is invalid on input.
+$ski 2 $ver $need 4
+3.4 -- &Typed File I&/&O&
+$ski $jus
+The essence of typed file I/O on VAX is the manipulation of &fixed length
+record& files.
+Strictly speaking, a &file& &of& CHAR is &not& a textfile, for which special 
+provisions are made.
+Note that the record length may be any integral number of bytes.
+$ski
+The workings of typed files on the VAX require little documentation, since
+they work almost exactly as one would suspect from reading the &Report&.
+A BREAK on a typed file performs an RMS $FLUSH service.
+A SEEK to a position beyond the end of a file 
+which is open for output extends the
+file with zero bytes.
+For typed files, it must be noted that EXTENT is obtained
+from RMS; the value returned may &not& reflect changes made to the file
+if a $FLUSH has not been performed.
+Therefore, EXTENT performs a $FLUSH service.
+$ski 2 $ver
+3.5 -- &Binary File I&/&O&
+$ski $jus
+Binary file operations permit the reading or writing of an arbitrary
+number of bytes to or from any position in the file.
+The file is classified as a variable-length record file, to permit
+maximum flexibility in interfacing with other system programs.
+The PAXCAL programmer is responsible for writing the lengths of records
+when creating a binary file for use by a program expecting a true
+variable-length record file.
+Records should be padded so that the length word for the next
+record falls on a word boundary in the file.
+$ski
+Note that CURSOR, as defined in the &Report&, is a one-based byte value.
+For example, the first byte of the file is 1, the first byte of the second
+block is 513 (201 hex), and so on.
+Therefore, odd cursor values indicate word boundaries.
+$ski
+A double buffering scheme is used to implement binary I/O.
+In order to update RMS information so that EXTENT will be accurate,
+the PAXCAL runtime's buffers must be flushed to the file.
+Therefore, EXTENT performs a BREAK, which flushes the buffers
+and performs the RMS $FLUSH service.
+$ski 2 $ver
+3.6 -- &I&/&O Errors&
+$ski $jus
+alues returned by the function EXTSTATUS are RMS error codes, in general.
+Notice that the value RMS$_SUCCESS, which is 10001 (16), will never be
+returned by EXTSTATUS, but a zero return indicates no error.
+$ski
+Certain runtime I/O errors are "expected" in the sense they represent
+a failure in the external environment which should be reported and recoverable.
+An example would be an operator pressing the "write-lock" on a disk to which
+a PAXCAL program was performing output.
+In this case, the normal method of setting IO_STATUS (f) to IO_OUTF (output
+failure) is used; the error is deferred if the RETRY option was specified
+when the file variable was associated.
+However, error codes can be returned from RMS in unexpected places.
+Such codes indicate a loss of integrity (or a bug) in the runtime support,
+and are immediately signalled (Section 4.1), regardless of the attributes
+of the file on which the error occured.
+The address given on the error report is the address in the runtime system
+at which the error was detected.
+$ski 2 $ver
+4.0 -- &Debugging Facilities&
+$ski $jus
+The conversion of the PASCAL debugger for the VAX is a formidable project,
+and will probably not be undertaken in the immediate future.
+The only interactive debugging facility available for users which is
+transparent to the user program is the VAX debugger; this can be compared
+to using DDT to debug programs on the PDP-10.
+The comparison is somewhat unfair, since the VAX debugger is
+considerably more flexible and easier to use than DDT.
+However, users should understand the basic architectural features of
+the VAX family before attempting a debugging session.
+A cursory reading of chapters 4-9 of DEC's &VAX11 Architecture Handbook& is
+suggested; users who are inexperienced with DEC's -11 family computers
+are urged to pay extra attention to the implications of PC addressing,
+and may wish to consult an experienced VAX programmer.
+$ski
+Unfortunately, the DEC debugger &Reference Manual& is exactly that, not
+at all designed for a beginner's reading.
+Section 4.2 presents an introduction to the VAX debugger which should
+be sufficient to render the &Reference Manual& usable.
+In addition, certain non-interactive debugging facilities are incorporated in
+the PAXCAL system, through both the compiler and the runtime.
+These are discussed in Section 4.1.
+$ski
+In general, the proper use of cross-compiler systems suggests
+that the user attempt to
+minimize the number of recompilations required during program development.
+In the absence of an interactive symbolic debugger, the user should include
+source code diagnostic aids in the program.
+Advanced users may modify executable images to correct errors, thus further
+reducing the need for recompilations.
+The PATCH utility, described in Section 4.3, provides the means to modify
+an image permanently, using debugger commands to modify the file.
+$ski 2 $ver
+4.1 -- &PAXCAL Debugging Facilities&
+$ski $jus
+The PAXCAL system provides runtime facilities for debugging.
+These are non-interactive, automatic, and controlled at compile time.
+Compiler options generate inline code which, together
+with the runtime, support these facilities.
+Since most of these features add overhead to program execution,
+the suggested option set for production programs is TRACE, NODEBUG, NOCHECK.
+$ski 2 $ver $need 4
+4.1.1 -- &The TRACE Option&
+$ski $jus
+The TRACE block option incorporates information necessary to associate
+a routine name with an active stack frame.
+This information is used by the runtime routine PAX$MON.TRACE to print
+a symbolic stack traceback on the interactive output file or device.
+The TRACE facility uses the "trace link" component of a stack frame (Appendix
+A).
+The overhead for this option is slight, since NOTRACE routines must push
+a zero trace link to be identified as an "unknown" block.
+There is a potentially large saving in 
+program size using NOTRACE, however,
+since a NOTRACE routine does not contain a TRACE block.
+The size of the routine is thus decreased by the size of the block,
+which is 4 bytes plus 1 byte per character in the routine's name.
+$ski
+The predefined external procedure TRACE may be called from the user
+program to print a symbolic stack traceback at any time.
+The trace is provided automatically when a runtime error is signalled
+(Appendix C).
+$ski 2 $ver
+4.1.2 -- &The DEBUG Option&
+$ski $jus
+The DEBUG option causes the emission of "statement blocks" throughout
+the executable code.
+These blocks provide the statement ID of the PAXCAL statement for which
+the code following it was generated.
+Preceding each statement block is a call to a runtime routine which stores
+the address of the block.
+This routine is called once per execution of the statement.
+Thus, the most recently executed statements can be recorded by the runtime.
+In addition, the statement block identifies the "kind" of the statement,
+such as "while statement header", "assignment statement", etc.
+This can help avoid errors caused by out-of-date program listings.
+Finally, during the symbolic stack traceback, any routine return addresses
+which are in DEBUG modules are printed as statement IDs instead
+of hexadecimal addresses.
+$ski
+The predefined external procedure SPY may be called from the user
+program to print a list of the most recently executed statements, with
+their statement IDs and their kinds.
+SPY is called when a runtime error is signalled, if
+at least one module of the program was compiled with the DEBUG option.
+Notice that only statements executed within the DEBUG module(s) will
+appear in the spy list.
+$ski
+The number of statements recorded for the spy list
+can be modified at link time.
+The inclusion of the module STMT1 (using the INCLUDE link directive) will
+cause the recording of only the most recently executed PAXCAL statement.
+The default, STMT30, records the 30 most recent statement IDs.
+STMT1 uses one-third the number of instructions used by STMT30
+per PAXCAL statement executed.
+Either routine, however, adds considerable overhead to the program.
+$ski 2 $ver
+$need 4
+4.1.3 -- &The CHECK Option&
+$ski $jus
+The CHECK block option causes the emission of runtime checks of program
+assertions, either implicit or explicit.
+Program errors which violate the rules of PASCAL can be detected in
+a consistent manner at runtime by use of the CHECK option.
+This option has several suboptions, which control the emission of checking
+code for different violations.
+Such a violation causes a runtime error, with stack traceback and statement
+spy if possible.
+$ski
+The suboptions available under CHECK are:
+$ski $ind left +10 $par -5
+ASSERTIONS -- causes parameter evaluation for the predefined pseudoprocedure
+ASSERT (boolean). If the expression is false, a runtime error is signalled.
+If this check is off, the ASSERT call generates no code.
+$ski $par -5
+CASES -- causes a runtime error if a case statement contains no OTHERS
+case, and no statement within the case can be selected.
+&Notice& that this check changes the semantics of the case statement, which
+normally does nothing when no statement can be selected.
+$ski $par -5
+COMPATIBILITY -- enforces rules concerning the assignment of
+flexible arrays to fixed arrays.  When a flexible array actual parameter
+is bound to a fixed array formal parameter, the size of the flexible array
+must match the formal size. 
+Similarly, the sizes of flexible arrays are checked
+when assigned to fixed size arrays, and vice versa.
+Notice that both fixed length and varying length strings are considered
+arrays by this check when bound as &var& parameters, but that the
+value compatibility of varying and fixed
+length strings obeys other rules which supersede this checking operation.
+$ski $par -5
+FILES -- detects attempts to reference file variables whose values
+are zero (uninitialized) or &nilf& (not associated).
+$ski $par -5
+POINTERS -- detects attempts to dereference pointers whose values
+are zero (uninitialized) or &nil&.
+$ski $par -5
+STRINGS -- insures that substring references within varying length
+strings are within the actual length of the string.
+$ski $par -5
+SUBSCRIPTS -- insures that subscript expressions are within the legal
+subscript range of the array. The range may be flexible.
+$ski $par -5
+VALUES -- insures that the values of subrange variables are within the
+bounds of the subrange.
+Note that this check is performed at the time of an assignment or
+parameter binding to a subrange variable.
+$ski $ind left -10
+$ski 2 $ver
+$need 4
+4.2 -- &The VAX Debugger&
+$ski $jus
+The VAX debugger is a general purpose debugging program, suitable for
+both system work and casual debugging.
+By its use of the condition handling facility, the trace and breakpoint
+hardware traps, and the shared system address space, it is almost completely
+transparent to the user program.
+Its somewhat verbose command language is simple and usually consistent.
+$ski
+Unfortunately, it knows nothing of PAXCAL programs, viewing them as having
+been produced by the MACRO assembler.
+The manipulation of structured data types by the debugger is limited to
+those supported directly by the VAX hardware.
+Even then, the debugger is incapable of reading or writing a floating
+point number of either single or double precision as a floating point number.
+$ski 2 $ver
+4.2.1 -- &Basic Debugger Concepts&
+$ski $jus
+The debugger has display and entry &modes&, which can be modified either
+permanently by the SET MODE command, or temporarily by command switches.
+Such modes include DECIMAL, HEXADECIMAL, INSTRUCTION, LONG, WORD, BYTE,
+SYMBOLIC, and ASCII.
+The defaults are: SYMBOLIC, which uses symbolic addresses when possible;
+NOINSTRUCTION, which does not try to interpret a byte stream as an
+instruction; NOASCII, which does not print a byte stream as characters;
+ HEXADECIMAL, which expects
+and displays data as base 16 numbers; LONG, which displays and expects
+data in longword lengths; and SCOPE, which qualifies a symbolic entry with
+the name of the module containing it.
+$ski
+Angle brackets "<>" are used for forming arithmetic expressions.
+The "@" character is both a binary operator,
+ signifying a left arithmetic shift,
+and a unary operator, signifying indirection.
+The binary operators "+", "-", "*", and "/" have their usual meanings.
+Finally, the unary radix operators "^^x", "^^d", and "^^o" signify hexadecimal,
+decimal, and octal numbers respectively.
+Notice that a hex number whose first digit is "A" through "F" must
+be prefixed with a zero.
+This is to distinguish such numbers from identifiers, which cannot
+begin with a digit.
+$ski
+$need 6
+A few examples of arithmetic expressions:
+$ski $ind left +5 $ver
+<<3+4>*5>                       equals 35(10) or 23(16)
+<<^^d10+^^o10>*^^x10>              equals 288(10) or 120(16)
+0a+0b                           equals 21(10) or 15(16)
+1b+^^d14                         equals 41(10) or 29(16)
+$ski $ind left -5 $jus
+An address expression is used in certain commands to indicate memory or
+register locations in the VAX.
+It is strongly recommended that all addresses be computed in hexadecimal.
+The character "." indicates the most recently displayed or modified address.
+The symbols "R0", "R1", ..., "R11", "AP", "FP", "SP", and "PC" are known
+to the debugger as registers.
+The unary indirection operator "@" becomes very useful in computing addresses.
+$ski
+$need 7
+A few examples of address expressions:
+$ski $ind left +5 $ver
+r3                         hardware register 3
+@r3                        location pointed to by R3
+0c+@r3                     12(R3), 12 bytes past above example
+@<0c+@r3>                  uses above example as address cell
+@fp-2c                     a local stack variable -44(FP)
+$ski $ind left -5 $jus
+Notice that address and arithmetic expressions are not necessarily disjoint.
+A strong distinction in usage must be made, as everywhere in the VAX,
+between an address and its contents.
+The use of an address usually (but not always) references the contents of
+that address in some way;
+invalid address references are flagged by the debugger.
+$ski
+The two commands used for manipulating memory locations and registers are
+EXAMINE and DEPOSIT.
+EXAMINE and DEPOSIT both take an address as argument.
+EXAMINE can take a range of addresses, signified by a colon, such as
+".:.+100" to examine the next 256 bytes.
+DEPOSIT needs an equal sign, followed by expressions to evaluate and deposit.
+Several DEPOSIT expressions, separated by commas, are deposited in sequence.
+Both DEPOSIT and EXAMINE can take mode switches, which temporarily change
+the display mode for that command.
+$ski
+Some examples of manipulating memory using the debugger:
+$ski $ind left +5 $ver
+ex 4004                      display longword at 4004(16)
+ex r3                        display contents of register 3
+ex @r3                       display longword at addr pointed
+                               to by R3
+ex/ascii @r3                 display 4 chars at above addr
+ex/ascii @r3:@r3+100         display 100(16) chars at above addr
+ex/long @r3+0c               display 4 bytes longword, 12(R3)
+ex/word @r3+0c               should display two bytes of above
+                               example, but a quirk in the VAX
+                               debugger makes this use only the
+                               low order word of R3 in comput-
+                               ing the address
+ex/ins 4004                  interpret bytes starting at 4004
+                                as instruction
+ex/ins @pc                   display current instruction
+ex @sp                       display top of system stack
+dep 4004=1                   sets 4004:4007 to the longword 1
+dep 4004=1,2,3               sets same above, 4008:400B to 2, and
+                               400C:400F to 3
+dep/byte 4004=1,2,3,4        sets 4004 to longword 4030201(16)
+dep/ins @pc='movl #10,r2'    modify the current instruction
+dep/by @pc=1,1,1             creates a 3 byte no-op (opcode 1)
+dep/ins @pc='nop','nop','nop'  equivalent to above command
+dep @sp=@sp+4                add 4 to the top of the stack
+dep/asc @r2='abcdefg'        7 bytes starting at 0(R2)
+$ski $ind left -5 $jus
+$need 3
+Breakpoints are set using the SET BREAK addr command.
+Additional parameters are available, such as an ignore count.
+Notice that the debugger replaces the instruction at that address
+with a BPT (breakpoint trap), so the user must have "write access"
+to that address.
+Write access in this context means "an existing address", since the debugger
+runs in supervisor mode and can modify read-only code.
+$ski
+Remember that routines called by the standard VAX CALL instruction use
+the first two bytes of the routine as a register save mask.
+Therefore, setting a break at that address will &not& cause a break.
+Rather, the break must be set two bytes beyond that address.
+The command SET BRE 41A2 sets a break at the first instruction of the
+routine whose entry mask is at 41A0.
+The debugger knows about public entry points, however, and the command
+SET BREAK QEDCL will actually set the break at QEDCL+2.
+$skip
+Routines called with a JSB, BSBW, or BSBB do &not& have an
+entry mask; to set a break, use just the routine name.
+PAXCAL compiled routines are &never& called with any of these instructions,
+so this information is useful only for tracing the runtime.
+$ski
+A parenthesized list of commands delimited by semicolons
+can be associated with a breakpoint, and will be automatically performed
+when that breakpoint is encountered.
+For example, the command SET BREAK FOO DO (EX @AP+4;G) will examine the
+location 4(AP) upon arriving at the breakpoint, and then proceed.
+Breakpoints can be removed by the CANCEL BREAK addr or CANCEL BREAK
+/ALL command.
+$ski
+Finally, the GO command starts or resumes the execution of the program.
+The location of the next instruction to be executed is in the contents
+of general register PC; the debugger command EX/INST @PC will display
+that instruction.
+The EXIT command terminates the program and returns to DCL.
+From DCL, the debugger may be entered for the first time either by
+RUN/DEBUG xxx, where xxx is a program linked without the debugger, or
+RUN xxx when the debugger was linked in.
+Similarly, RUN/NODEBUG xxx will not enter the debugger, but will
+start program execution.
+The debugger may also be entered asynchronously; the next section
+details the implications of using this mechanism.
+$ski 2 $ver
+4.2.2 -- &Using the VAX Debugger&
+$ski $jus
+Armed with the above basic debugger expertise, the user may make a reasonable
+attempt to debug a program interactively, without delving too deeply into
+the internals of the compiled code and runtime.
+&Public var&s and &const&s are available to be displayed (and modified)
+simply by using their names.
+Appendix B gives the data formats for PAXCAL types.
+Breakpoints may be set at routinename + 2, to catch calls to procedures.
+$ski
+Calls to PAXCAL procedures and functions generally conform to the DEC
+procedure calling convention as documented in the &Common Run Time& manual.
+PAXCAL routines use the CALLS instruction, passing parameters on the stack.
+&Var& parameters always pass the address of the datum.
+Value parameters pass the actual value for one longword data, and for two
+longword reals (violating DEC conventions), and pass the address
+of all other data.
+An exception here is that structured arguments
+(arrays, strings, sets, and records)
+are &always& passed by address, regardless of size.
+Function values are returned in R0, or R0 and R1, if they
+would be passed by value as above.
+Other data are returned through a cell allocated by the caller, whose
+address is passed as a first &var& parameter.
+$ski
+The debugger may be entered asynchronously by typing a control-y break
+character, and then typing DEBUG to the DCL prompt.
+If the debugger has not been entered previously (either RUN/NODEBUG or
+linked without the /DEB switch), a program exception is signalled.
+The condition causes the PAXCAL condition handler to call TRACE and SPY,
+and then resignal (see Appendix C for more information).
+The resignal is intercepted by the system last chance handler, which invokes
+the debugger.
+If the debugger has been entered previously, however,
+the control-y DEBUG sequence
+places the user at the debug prompt without any condition signalled.
+At this point, the PAXCAL stack and statement list may be dumped by
+the debugger using the CALL command.
+It is therefore advisable to enter the debugger before program execution
+begins if one anticipates using the control-Y and DEBUG method, so
+that the program exception is not signalled.
+$ski
+The debugger CALL command takes an address, and effects a CALLS instruction
+to that address.
+Optionally, CALL takes a parenthesized parameter list following the
+address of the routine, such as CALL S(X,Y).
+Such parameters are passed by value (Appendix B).
+Thus, the trace routine can be called from the debugger by the command
+CALL PAX$MON.TRACE, and the spy routine by CALL PAX$MON.SPY.
+These routines can &not& be called if their respective control information
+is being updated.
+For trace, this means that a CALL has just been executed, but the first
+two instructions of the called routine (the second of which sets the
+trace link) have not been executed.
+For spy, this means that the routine PAX$MON.STMT has not returned.
+$ski
+Notice that if the program was linked without the debugger, then no symbols
+are available to the programmer at run time.
+The routines PAX$MON.TRACE and PAX$MON.SPY are then available at fixed
+offsets from the PAXRTL transfer vector, whose address can be determined
+from a program map as the first byte of PAXRTL.
+The offset for TRACE is 0F (hex), and for SPY, 0A (hex).
+For example, if PAXRTL starts at 200 (hex), TRACE can be called using the
+debugger command CALL 20F.
+$ski
+The real usefulness of the CALL instruction is for user-written display
+and/or diagnostic routines.
+Assuming that such a routine has only deliberate side effects, it can be
+CALLed to display or modify difficult-to-reach locations, such as heap
+variables, components of a structured type, and local stack variables.
+Since the debugger does not know about real numbers, this method
+can be used to display and modify them.
+Unless the interactive terminal is used in the user program to read or
+write partial lines, TTY and TTYOUTPUT can be used in such a routine to
+communicate with the user.
+A routine like FIX (&var& x: real) can be called with the address of a
+real variable to examine and modify:
+$ski $ind left +5 $ver
+public procedure fix (var x: real);
+  begin
+  writeln (tty, 'Variable is: ', x);
+  write (tty, 'New value? ');
+  break (tty);
+  readln (tty);
+  if not eoln (tty) then read (tty, x)
+  end;
+$ski $ind left -5 $jus
+Notice that if a blank line is typed to the 'New value? ' prompt, the
+variable X is not modified.
+Thus the debugger command CALL FIX (Q) will examine and modify the public
+variable Q, and the command CALL FIX (7FFE7414) will examine and modify
+some local stack variable whose address was determined by the programmer.
+$ski
+Do &not& use the CALL command to call the main program,
+or to call procedures at lexical level 2 or more (Appendix A).
+$ski 2 $ver
+4.2.3 -- &Advanced Debugger Features&
+$ski $jus
+Several VAX debugger features are available for detailed tracing of
+program execution.
+All degrade program performance severely, and thus should be used
+judiciously.
+$ski
+The STEP command causes the execution of a specific number of instructions,
+returning to the debugger afterwards.
+The command takes a &decimal& integer specifying the number of instructions
+to execute; STEP without an integer executes one instruction.
+The debugger has several step modes, which affect the way certain
+instructions are counted during the step.
+These modes can be specified temporarily on the command line, or defined
+permanently by the SET STEP command and examined by SHOW STEP.
+When specified on a STEP command line, each type must be preceded by
+a slash, to make them modifiers of the STEP command.
+The INTO mode steps into routines called by any of the calling instructions
+(CALLS, CALLG, JSB, BSBW, and BSBB).
+Its converse, the OVER mode, treats the call as one instruction.
+The SYSTEM mode counts instructions executed in the system space (addresses
+above 80000000), while NOSYSTEM does not.
+Finally, LINE steps in increments of lines for languages which provide
+the debugger with information about lines in the program.
+PAXCAL does not, so the converse mode INSTRUCTION should be used.
+$ski
+This command degrades program performance because the debugger
+is reentered via a trace trap after
+the completion of every instruction executed in the range.
+It is extremely useful, however, in examining the workings of the code.
+When stepping through a DEBUG module, frequent calls to the debugger
+statement count routine are encountered.
+This routine can &not& be stepped over, since the five bytes following
+the JSB instruction are control information, while the STEP command
+assumes a return to the byte following the call.
+Therefore, to step through a DEBUG module while skipping this routine,
+step through it once to count the number of instructions executed,  n,
+and then use the command STEP/INTO n.
+Normal runtime calls, however, do not take skip returns, and therefore
+the STEP/OVER is sufficient.
+$ski
+Instruction tracing reports the execution of a specific
+instruction or type of instruction.
+This is &not& like a breakpoint in that
+the program continues after the report.
+Specific instructions can be traced by the command SET TRACE addr, where
+addr is the first byte of the instruction.
+This is equivalent to SET BREAK ADDR DO (G), but degrades performance more
+severely.
+All branch instructions (conditional and unconditional) can be traced
+with the SET TRACE /BRANCH command, and call type instructions 
+and their returns (both CALL and JSB) with the SET TRACE /CALL command.
+Note that this will trace calls within the runtime support, also.
+A program map should be used to determine which calls are within the
+runtime.  The strange instruction JSB\@(SP)+ is used extensively
+within the runtime for character I/O operations. This instruction
+does &not& have a return (RSB) associated with it.
+Tracing can be turned off with the CANCEL TRACE command, specifying an
+address, /BRANCH, /CALL, or /ALL.
+$ski
+A watchpoint specifies the address of four bytes which are monitored
+for modification by the program.
+The debugger is entered whenever a watchpoint location is written, displaying
+the old and the new values.
+Unlike a breakpoint,
+the instruction performing the write has been executed when the debugger
+is entered.
+The command to set a watchpoint is SET WATCH addr.
+Watchpoints should never be placed on the stack unless it is definitely
+known that the watchpoint will remain below the top of the stack (at
+a higher address than (SP)) during all subsequent execution when the
+watchpoint is in effect.
+To cancel a watchpoint, use the CANCEL WATCH addr or CANCEL WATCH /ALL command.
+$ver
+$page
+4.3 -- &The PATCH Utility&
+$ski $jus
+The PATCH utility is invoked by the PATCH <filename> command to DCL.
+This program looks just like the VAX debugger in terms of the EXAMINE
+and DEPOSIT commands, and has the same symbols available.
+However, the additional UPDATE command causes the writing of the next version
+of the executable image file, with any changes made during the session
+incorporated.
+Advanced users may wish to use PATCH to perform program fixes without
+returning to the PDP-10 to go through the compile, transfer, and link sequence.
+No "patch areas" are provided in programs, in the sense of allocating
+memory for patch instructions to be placed.
+However, since all image sections are rounded up to a page boundary, the map
+may be consulted to find the last executable byte of the image.
+The remainder of that page is available for a patch area.
+Remember that VAX instructions are of different lengths, thus patches
+must be made carefully, and padded with NOPs (opcode 1) whenever necessary.
+$page
+$ver
+Appendix A -- &Stack Frames&
+$ski $jus
+A principal concept in the VAX architecture is that of a stack frame.
+Briefly, a stack frame is a block of memory reserved for an activation
+of a procedure.
+The system stack is thus a stack of stack frames.
+At any time, the memory locations between (FP) and (SP) (that is, between
+the addresses in registers FP and SP) 
+comprise the stack frame of the current procedure.
+Stack frames are used for storage of variables and other information
+local to that particular activation of the procedure.
+For example, an activation's return address is stored within the stack
+frame.
+All stack frame addressing is performed relative to FP, which remains
+fixed during the execution of a particular activation.
+$ski
+Stack frames are linked by the register save mechanism associated with
+the CALL instructions.
+The saving of register FP provides a link to the previous stack frame.
+This is considered the "backwards" direction, as in "back three frames".
+To add to the confusion, the VAX hardware expects stack frames to
+increase in address as one moves "backwards".
+A CALL instruction always &decreases& the value of FP when it creates
+a new topmost stack frame.
+At any time, a procedure may create new local storage for itself by
+subtracting from SP, which is called "extending" the stack frame.
+The CALL mechanism preserves this storage across procedure calls by
+using the current value of SP as the base for the called procedure's
+(new) stack frame.
+PAXCAL procedures allocate their local storage by extending the frame
+upon entry to the procedure.
+Addresses which are arithmetically less than (SP) are &undefined&,
+since asynchronous events such as ASTs can occur between instructions,
+and effectively simulate a CALL instruction.
+$ski
+VAX procedures can use locations addressed by a negative offset from FP
+as local variables, assuming SP has been adjusted.
+Certain locations addressed by non-negative offsets from FP are reserved
+by system convention.
+Thus, the PAXCAL stack frame looks like this:
+$ski $ind left +10 $ver
+$con off $need 23
+$trans '%' '\'
+        ^                    ^  (stack grows this way)
+        |                    |
+        +--------------------+  (SP)  stack pointer
+        |                    |
+        |                    |
+        | locals             |  -24(FP)  *
+        |--------------------|
+        | quadword funct val |  -20(FP)  *
+        |--------------------|
+  h     | longword funct val |  -16(FP)  *
+  i     |--------------------|
+  g     | this frame's AP    |  -12(FP)  *
+  h     |--------------------|
+  e     | trace link, or 0   |  -8(FP)
+  r     |--------------------|
+        | static link, or 0  |  -4(FP)
+  a     |--------------------|
+  d     | cond handler addr  |  0(FP)
+  d     |--------------------|
+  r     | caller's saved PSW |  4(FP)
+  s     |--------------------|
+        | caller's saved AP  |  8(FP)
+  |     |--------------------|
+ _|_    | caller's saved FP  |  12(FP)
+ %|/    |--------------------|
+  v     | caller's saved PC  |  16(FP)
+        +--------------------+
+                                         * -- optional
+$trans
+$ski 3 $jus $ind left -10
+Notice that the saved FP and PC are referred to as the "dynamic link" and
+the "return address" respectively.
+The "current AP" is saved in the stack frame to permit non-local
+references to parameters of parent routines.
+This value is saved for routines which have children, and have either
+a parameter list or a structured function value (passed as 4(AP)).
+Non-local references to stack variables are made using the static link,
+which is the frame pointer of a level 2 or above routine's most recent
+parent activation.
+This pointer is passed to the routine in R0, and is set up by all callers.
+The trace link points to the TRACE block of a TRACE routine, associating
+a name with a stack frame.
+A zero trace link value indicates a NOTRACE routine.
+$page $ver
+Appendix B -- &Data Formats for PAXCAL Types&
+$ski $jus
+All memory allocation is in an integral number of bytes, words, longwords,
+or quadwords (for example, a datum requiring 3 bytes is allocated 4).
+Longword and word alignment is maintained for static, stack, and heap
+storage.
+Heap blocks are an integral number of longword aligned longwords.
+$ski $ver $ind left +2 $tab 20,35,53
+&Data type&	&alignment&	&size unpacked&	&size packed&
+
+boolean	byte	byte	byte
+integer	long	long	byte/word/long
+real	long	long/quad	long/quad
+char	byte	byte	byte
+pointer	long	long	long
+file variable	long	long	long
+enumerated types	byte/word/long	byte/word/long	byte/word/long
+set	byte	n bytes	n bytes
+record	depends upon the sub-fields of the record
+array	depends upon the type of the array
+varying string	word	(upb+2) bytes	(upb+2) bytes
+fixed string	byte	upb bytes	upb bytes
+proc/funct	long	quad	quad
+$ski $jus $ind left -2 $tab
+&Notes&:
+$ski
+Integer subranges appearing as components of packed arrays or records
+are allocated either a byte, word, or longword.
+The smallest unit capable of representing the subrange (with sign bit
+only if the lower bound of the range is negative) will be used
+for both signed and unsigned subranges.
+Single and double precision floating point data are stored in a longword
+and quadword respectively.
+Enumerated types are always (i.e., even when not a component of a packed
+structure) stored in the smallest unit (byte, word, or longword) possible.
+Varying string lengths are stored in the first word of the string.
+Procedure and function variables are represented by two longwords.
+The first is the address of the routine's entry mask, and the second
+is its parent stack frame pointer (to store as the static link), or zero
+if the routine is level 1.
+$page $ver
+Appendix C -- &Errors and Conditions&
+$ski $jus
+The PAXCAL runtime provides a condition handler for the stack frame
+from which the mainline is called.
+Thus, any block, including the program,
+can install a handler to be invoked before
+the default handler.
+The default handler prints a message and a trace,
+calls SPY if any module is in DEBUG mode, and then resignals.
+More information about the VAX condition handling mechanism is available
+in the &Architecture Handbook& and the &Common Run&-&time& manual.
+$ski
+Runtime errors fall into 3 classes: machine instruction errors, unexpected
+interface errors, and program detected errors.
+Machine instruction errors, such as floating overflow, cause a hardware signal
+which is intercepted by the PAXCAL handler.
+Unexpected interface errors are usually caused by a bug in the runtime or by
+a loss of integrity in some critical data structure (e.\g., a file block).
+Such errors are signalled by a runtime routine, and thus appear to the
+condition handler as machine instruction errors.
+Program detected errors are programmer errors, such as scalar out of range
+or dereference of &nil& pointers.
+A message is prepared, to be printed by the default handler.
+    @L"

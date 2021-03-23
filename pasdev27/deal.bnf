@@ -1,0 +1,170 @@
+PARSER
+    DECLARATION		{ procedure parse;
+
+			  var pl : pred_list; }
+    READER		{ getsymbol }
+    INTOKEN		insymbol
+    INVALUE		invalue
+    STACKSIZE		40
+    SYMTYPE		token_type
+    SEMTYPE		sym_value
+    ERROR		{ writeln (tty, '? Command error.  Type HELP for help.');
+			  return }
+
+NAMES
+    'EXIT'		exitsy
+    'HELP'		helpsy
+    'DISTR'		distrsy
+    'DEFINE'		definesy
+    'HANDS'		handssy
+    'DEALS'		dealssy
+    'PAIRS'		pairssy
+    'integer'		integersy
+    'name'		namesy
+    ','			commasy
+    '|'			orsy
+    '&'			andsy
+    '('			lparensy
+    ')'			rparensy
+    '~'			notsy
+    'code'		codesy
+    'relation'		relsy
+    EOF			eofsy
+
+    <command>		command_nt
+    <distr command>	distr_cmd_nt
+    <define head>	def_head_nt
+    <optional number>	opt_num_nt
+    <predicates>	preds_nt
+    <optional predicate> opt_pred_nt
+    <predicate>		pred_nt
+
+    'dummy1'		nosymbol
+
+OPERATORS
+    '|' prec 1 assoc left
+    '&' prec 2 assoc left
+    '~' prec 3
+
+GRAMMAR
+
+<command> =
+
+    'EXIT'
+      { stop }  |
+
+    'HELP'
+      { helpmessage }  |
+
+    'HELP' 'DISTR'
+      { helpdistrmessage }  |
+
+    'HELP' 'DEFINE'
+      { helpdefinemessage }  |
+
+    'HELP' 'HANDS'
+      { helphandmessage }  |
+
+    'HELP' 'DEALS'
+      { helpdealmessage }  |
+
+    'HELP' 'PAIRS'
+      { helppairmessage }  |
+
+    <distr command>  |
+
+    <define head> <predicate>
+      { $1.plist^.pred := $2.pred;
+	$1.plist^.next := named_predicates;
+	named_predicates := $1.plist }  |
+
+    <optional number> 'HANDS' <predicates>
+      { dohands ($1.numval, $3.plist) }  |
+
+    <optional number> 'PAIRS' <predicates>
+      { dopairs ($1.numval, $3.plist) }  |
+
+    <optional number> 'DEALS' <predicates>
+      { dodeals ($1.numval, $3.plist) }  ;
+
+<distr command> =
+
+    'DISTR' 'integer'
+      { dist_list[0] := $2.numval div 2;
+	$.numval := 0 }  |
+
+    <distr command> 'integer'
+      { $.numval := $1.numval + 1;
+	if $.numval <= 13 then
+	  dist_list[$.numval] := $2.numval div 2 }  ;
+
+<define head> =
+
+    'name' 'DEFINE'
+      { new ($.plist, length (namestring));
+	$.plist^.name := namestring }  ;
+
+<optional number> =
+
+    'integer'
+      { $.numval := $1.numval div 2 }  |
+
+    ''
+      { $.numval := 1 }  ;
+
+<predicates> =
+
+    <optional predicate>
+      { new ($.plist, 0);
+	$.plist^.next := nil;
+	$.plist^.pred := $1.pred }  |
+
+    <predicates> ',' <optional predicate>
+      { new ($.plist, 0);
+	$.plist^.next := $1.plist;
+	$.plist^.pred := $3.pred }  ;
+
+<optional predicate> =
+
+    <predicate>
+      copy  |
+
+    ''
+      { $.pred := nil }  ;
+
+<predicate> =
+
+    'name'
+      { pl := named_predicates;
+	while (pl <> nil) andif (pl^.name <> namestring) do
+	  pl := pl^.next;
+	if pl = nil then begin
+	  writeln (tty, '? Undefined rule ', namestring, '.  Type HELP for help.');
+	  return;
+	end;
+	$.pred := pl^.pred }  |
+
+    'code' 'relation' 'integer'
+      { new ($.pred, rel_op);
+	$.pred^.code := $1.code;
+	$.pred^.rel := $2.rel;
+	if $1.code = quick_tricks
+	  then $.pred^.val := $3.numval
+	  else $.pred^.val := $3.numval div 2 }  |
+
+    '~' <predicate>
+      { new ($.pred, not_op);
+	$.pred^.arg := $2.pred }  |
+
+    <predicate> '&' <predicate>
+      { new ($.pred, and_op);
+	$.pred^.arg1 := $1.pred;
+	$.pred^.arg2 := $3.pred }  |
+
+    <predicate> '|' <predicate>
+      { new ($.pred, or_op);
+	$.pred^.arg1 := $1.pred;
+	$.pred^.arg2 := $3.pred }  |
+
+    '(' <predicate> ')'
+      { $ := $2 }  ;

@@ -1,0 +1,324 @@
+        File DSK:GETEXT.PAS[31024,320156]   Compiled 08-Jan-82 13:49   Pascal, Version 2A(401)
+
+        File DSK:GETEXT.PAS[31024,320156]   Compiled 08-Jan-82 13:49   Pascal, Version 2A(401)
+
+        File DSK:GETEXT.PAS[31024,320156]   Compiled 08-Jan-82 13:49   Pascal, Version 2A(401)
+
+        File DSK:GETEXT.PAS[31024,320156]   Compiled 08-Jan-82 13:49   Pascal, Version 2A(401)
+
+
+
+
+
+			     $$$$   $$$$$   $$$$$   $$$$$   $   $   $$$$$
+			    $       $         $     $       $   $     $  
+			    $       $         $     $        $ $      $  
+			    $ $$$   $$$       $     $$$       $       $  
+			    $   $   $         $     $        $ $      $  
+			    $   $   $         $     $       $   $     $  
+			     $$$    $$$$$     $     $$$$$   $   $     $  
+
+
+		   GETEXT - Program to get public declarations from a source file
+
+
+Options in effect: 
+
+	CHECK, NOSPECIAL, NOMAP, NOSYMBOLS, NOCALLS, NOASSEMBLY, NOXREF, TRACE, QBLOCKS, NOOPTIMIZE, 
+	CODE, NODEBUG, FINISH, NOGLOBAL, NOMAINSEG, NOOVERLAY, AUTOQUICK, SOURCE, NOSTANDARD, 
+	LENGTH (45), WIDTH (102), STORAGE (2048), ALLOC (0), ENABLE(P10)
+
+
+
+
+        File DSK:GETEXT.PAS[31024,320156]   Compiled 08-Jan-82 13:49   Pascal, Version 2A(401)
+
+        File DSK:GETEXT.PAS[31024,320156]   Compiled 08-Jan-82 13:49   Pascal, Version 2A(401)
+
+        File DSK:GETEXT.PAS[31024,320156]   Compiled 08-Jan-82 13:49   Pascal, Version 2A(401)
+
+        File DSK:GETEXT.PAS[31024,320156]   Compiled 08-Jan-82 13:49   Pascal, Version 2A(401)
+        File DSK:GETEXT.PAS[31024,320156]   Compiled 08-Jan-82 13:49   Pascal, Version 2A(401)
+
+        File DSK:GETEXT.PAS[31024,320156]   Compiled 08-Jan-82 13:49   Pascal, Version 2A(401)
+
+        File DSK:GETEXT.PAS[31024,320156]   Compiled 08-Jan-82 13:49   Pascal, Version 2A(401)
+
+        File DSK:GETEXT.PAS[31024,320156]   Compiled 08-Jan-82 13:49   Pascal, Version 2A(401)
+
+
+
+
+
+			     $$$$   $$$$$   $$$$$   $$$$$   $   $   $$$$$
+			    $       $         $     $       $   $     $  
+			    $       $         $     $        $ $      $  
+			    $ $$$   $$$       $     $$$       $       $  
+			    $   $   $         $     $        $ $      $  
+			    $   $   $         $     $       $   $     $  
+			     $$$    $$$$$     $     $$$$$   $   $     $  
+
+
+		   GETEXT - Program to get public declarations from a source file
+
+
+Options in effect: 
+
+	CHECK, NOSPECIAL, NOMAP, NOSYMBOLS, NOCALLS, NOASSEMBLY, NOXREF, TRACE, QBLOCKS, NOOPTIMIZE, 
+	CODE, NODEBUG, FINISH, NOGLOBAL, NOMAINSEG, NOOVERLAY, AUTOQUICK, SOURCE, NOSTANDARD, 
+	LENGTH (45), WIDTH (102), STORAGE (2048), ALLOC (0), ENABLE(P10)
+
+
+
+
+        File DSK:GETEXT.PAS[31024,320156]   Compiled 08-Jan-82 13:49   Pascal, Version 2A(401)
+
+        File DSK:GETEXT.PAS[31024,320156]   Compiled 08-Jan-82 13:49   Pascal, Version 2A(401)
+
+        File DSK:GETEXT.PAS[31024,320156]   Compiled 08-Jan-82 13:49   Pascal, Version 2A(401)
+
+        File DSK:GETEXT.PAS[31024,320156]   Compiled 08-Jan-82 13:49   Pascal, Version 2A(401)
+MODULE  GETEXT       GETEXT - Program to get public declarations from a source file    08-Jan-82 13:49
+SECTION 0                                                                                       PAGE 1
+
+    1	$TITLE GETEXT - Program to get public declarations from a source file
+    2	
+    3	program getext;
+    4	
+    5	$SYSTEM (pasdev27)getiof
+    6	$SYSTEM (pasdev2)cmdutlMODULE  GETEXT       GETEXT - Program to get public declarations from a source file    08-Jan-82 13:49
+SECTION 1            global variables                                                           PAGE 2
+
+    2	var token : string;             (* the current token -- '' => EOF *)
+    3	    spacing : integer;          (* # of spaces preceding it *)
+    4	    new_line : boolean;         (* true => first token on line *)
+    5	    first : boolean;            (* nothing written yet *)
+    6	
+    7	    (*  GET TOKEN private variables.  *)
+    8	
+    9	    tline : string [256];
+   10	    tlidx : integer;
+   11	
+   12	exception
+   13	    error;MODULE  GETEXT       GETEXT - Program to get public declarations from a source file    08-Jan-82 13:49
+SECTION 2            get_token                                                                  PAGE 3
+
+    2	(*  GET TOKEN will read the next token from the source file.  A token is a
+    3	    special character, alphanumeric string, or quoted string.  The text of
+    4	    the token is stored into the global string TOKEN.  If the token was the
+    5	    first on a line, then the global counter SPACING will be set to the
+    6	    number of leading spaces plus two; otherwise, SPACING will be set to
+    7	    zero.  When EOF becomes true, TOKEN and SPACING will be undefined.  *)
+    8	
+    9	procedure get_token;
+   10	
+   11	var cmt_level : integer;
+   12	    oldidx : integer;
+   13	
+   14	begin
+   15	  token := '';
+   16	  spacing := 0;
+   17	  new_line := false;
+   18	  cmt_level := 0;
+   19	  while (token = '') and (not eof) do begin
+   20	    oldidx := tlidx;
+   21	    if cmd_eol (tline, tlidx) then begin
+   22	      readln (tline);
+   23	      tline := uppercase (tline);
+   24	      if (length (tline) <> 0) andif (tline[1] = '$') then
+   25	        tline := '';
+   26	      tlidx := 1;
+   27	      spacing := 2;
+   28	      new_line := true;
+   29	    end
+   30	    else if cmt_level = 0 then begin
+   31	      spacing := spacing + tlidx - oldidx;
+   32	      if (tlidx < length (tline)) andif (substr (tline, tlidx, 2) = '(*') then begin
+   33	        cmt_level := 1;
+   34	        tlidx := tlidx + 1;
+   35	      end
+   36	      else if cmd_token (tline, tlidx, ['A'..'Z', '0'..'9', '.', '$', '#'], token) then
+   37	        (* success *)
+   38	      else if cmd_check_punct (tline, tlidx, '''') then begin
+   39	        if cmd_dqstring (tline, tlidx, '''', token) then
+   40	          token := '''' || token || ''''
+   41	        else begin
+   42	          writeln (tty, 'Unterminated string:', tline);
+   43	          signal (error);MODULE  GETEXT       GETEXT - Program to get public declarations from a source file    08-Jan-82 13:49
+SECTION 2            get_token                                                                  PAGE 4
+
+   44	        end;
+   45	      end
+   46	      else if cmd_check_punct (tline, tlidx, ':') then begin
+   47	        if (tlidx <= length (tline)) andif (tline[tlidx] = '=') then begin
+   48	          token := ':=';
+   49	          tlidx := tlidx + 1;
+   50	        end
+   51	        else
+   52	          token := ':';
+   53	      end
+   54	      else begin
+   55	        token := tline[tlidx];
+   56	        tlidx := tlidx + 1;
+   57	      end;
+   58	    end
+   59	    else (* cmt_level <> 0 *) begin
+   60	      tlidx := tlidx + search (substr (tline, tlidx), ['(', '*'],
+   61	                               length (tline) - tlidx + 2) - 1;
+   62	      if (tlidx < length (tline)) then begin
+   63	        if substr (tline, tlidx, 2) = '(*' then begin
+   64	          cmt_level := cmt_level + 1;
+   65	          tlidx := tlidx + 2;
+   66	        end
+   67	        else if substr (tline, tlidx, 2) = '*)' then begin
+   68	          cmt_level := cmt_level - 1;
+   69	          tlidx := tlidx + 2;
+   70	        end
+   71	        else
+   72	          tlidx := tlidx + 1;
+   73	      end
+   74	      else
+   75	        tlidx := tlidx + 1;
+   76	    end;
+   77	  end;
+   78	  if cmt_level <> 0 then begin
+   79	    writeln ('Unterminated comment');
+   80	    signal (error);
+   81	  end;
+   82	end;MODULE  GETEXT       GETEXT - Program to get public declarations from a source file    08-Jan-82 13:49
+SECTION 3            delimiter                                                                  PAGE 5
+
+    2	(*  DELIMITER is the predicate which tests whether a token string would
+    3	    indicate the end of a preceding declaration.  *)
+    4	
+    5	function delimiter : boolean;
+    6	
+    7	begin
+    8	  delimiter := (token = 'PROCEDURE') or
+    9	               (token = 'FUNCTION') or
+   10	               (token = 'VAR') or
+   11	               (token = 'TYPE') or
+   12	               (token = 'CONST') or
+   13	               (token = 'LABEL') or
+   14	               (token = 'EXCEPTION') or
+   15	               (token = 'BEGIN');
+   16	end;MODULE  GETEXT       GETEXT - Program to get public declarations from a source file    08-Jan-82 13:49
+SECTION 4            write_token                                                                PAGE 6
+
+    2	(*  WRITE TOKEN will write the token string to the output file, allowing
+    3	    preliminary spacing for a preceding end-of-line.  *)
+    4	
+    5	procedure write_token;
+    6	
+    7	begin
+    8	  if new_line and not first then
+    9	    writeln;
+   10	  first := false;
+   11	  if token = 'PUBLIC' then begin
+   12	    token := 'EXTERNAL';
+   13	    if new_line then
+   14	      spacing := spacing - 2;
+   15	  end;
+   16	  write ('':spacing, lowercase (token));
+   17	end;MODULE  GETEXT       GETEXT - Program to get public declarations from a source file    08-Jan-82 13:49
+SECTION 5            scan_source_file                                                           PAGE 7
+
+    2	(*  SCAN SOURCE FILE will copy all the public declarations from the INPUT
+    3	    file to the OUTPUT file, changing 'PUBLIC' to 'EXTERNAL'.  *)
+    4	
+    5	procedure scan_source_file;
+    6	
+    7	var copy : (yes, no, scan, skip_to_semi);
+    8	    paren_level : integer;
+    9	
+   10	begin
+   11	  copy := no;
+   12	  paren_level := 0;
+   13	  first := true;
+   14	  tline := '';
+   15	  tlidx := 1;
+   16	  get_token;
+   17	  while token <> '' do begin
+   18	    case copy of
+   19	
+   20	      no :
+   21	        if token = 'PUBLIC' then begin
+   22	          write_token;
+   23	          copy := yes;
+   24	        end;
+   25	
+   26	      yes :
+   27	        begin
+   28	          write_token;
+   29	          copy := scan;
+   30	        end;
+   31	
+   32	      scan :
+   33	        begin
+   34	          if token = '(' then
+   35	            paren_level := paren_level + 1;
+   36	          if token = ')' then
+   37	            paren_level := paren_level - 1;
+   38	          if (paren_level = 0) and delimiter then
+   39	            copy := no
+   40	          else if token = 'PUBLIC' then begin
+   41	            write_token;
+   42	            copy := yes;
+   43	          endMODULE  GETEXT       GETEXT - Program to get public declarations from a source file    08-Jan-82 13:49
+SECTION 5            scan_source_file                                                           PAGE 8
+
+   44	          else if (token = '=') or (token = ':=') or (token = 'OPTIONS') then
+   45	            copy := skip_to_semi
+   46	          else
+   47	            write_token;
+   48	        end;
+   49	
+   50	      skip_to_semi:
+   51	        if token = ';' then begin
+   52	          copy := scan;
+   53	          write_token;
+   54	        end;
+   55	
+   56	    end;
+   57	    get_token;
+   58	  end;
+   59	  if copy <> no then begin
+   60	    writeln (tty, 'Incomplete declaration');
+   61	    signal (error);
+   62	  end;
+   63	  writeln;
+   64	  close (input);
+   65	  close (output);
+   66	
+   67	exception
+   68	  error: begin
+   69	    close (input);
+   70	    scratch (output);
+   71	  end;
+   72	end;MODULE  GETEXT       GETEXT - Program to get public declarations from a source file    08-Jan-82 13:49
+SECTION 6            getext - main program                                                      PAGE 9
+
+    2	begin
+    3	  rewrite (tty);
+    4	  open (tty);
+    5	  while getiofiles (input, 'PAS', output, 'INC') do
+    6	    scan_source_file;
+    7	end.
+
+File   level   on page     name
+
+  0	 0	    1	DSK:GETEXT.PAS[31024,320156]
+  1	 1	    1	DSK:GETIOF.INC[31024,320226]
+  2	 1	    1	DSK:CMDUTL.INC[31024,320156]
+
+
+
+Section   in file   on page     title
+
+     3	      0	         5    delimiter
+     6	      0	         9    getext - main program
+     2	      0	         3    get_token
+     1	      0	         2    global variables
+     5	      0	         7    scan_source_file
+     4	      0	         6    write_token
+   

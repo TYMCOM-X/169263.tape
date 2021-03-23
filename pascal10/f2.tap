@@ -1,0 +1,452 @@
+{
+**********************************************************************
+*								     *
+* This skeleton program is provided to process the file of test      *
+* programs in the validation suite.  As supplied, it simply lists    *
+* the test programs in a suitable format, but it is provided with    *
+* stubs which can be modified by users of the suite to select	     *
+* individual test programs, classes of programs, or particular	     *
+* sub-classes, and to write these to named files or initiate them    *
+* in a job stream.						     *
+*								     *
+* The particular stubs of interest are: 			     *
+*     newsuite							     *
+*	 newprogram						     *
+*	    processline 					     *
+*	 endprogram						     *
+*     endsuite							     *
+* As supplied these are practically only dummy routines.	     *
+*								     *
+* This program is written in Standard Pascal according to the	     *
+* ISO Standard.  It should compile and run without error if	     *
+* its lexical representation is acceptable to your processor.	     *
+*								     *
+* (C) Copyright 1979 A.H.J.Sale, University of Tasmania.	     *
+*								     *
+**********************************************************************
+ }
+
+program skeleton(input,output);
+
+label 999; { used for disaster exits }
+
+const
+
+   maxnamesize= 	20;
+			{ size of field in name record }
+   nameoverflow=	21;
+			{ maxnamesize + 1 }
+   maxlinesize= 	72;
+			{ size of line array }
+   lineoverflow=	73;
+			{ maxlinesize + 1 }
+
+type
+
+   namesize=		1..maxnamesize;
+
+   linesize=		1..maxlinesize;
+
+   statustype=		(dormant,active,terminated);
+			{ Is program being processed? }
+
+   charvectype= 	packed array[namesize] of char;
+			{ names }
+
+   nametype=		record
+			   charvec:    charvectype;
+			   length:     0..maxnamesize;
+			   version:    (digitized,alphabetized)
+			end;
+			{ used to hold program names }
+
+   natural=		0..maxint;
+			{ very common type }
+
+   linetype=		array[linesize] of char;
+			{ used for line buffers }
+
+   loopcontrol= 	(scanning,found,notfound);
+			{ for controlling scan loops }
+
+   classtype=		(conformance,deviance,implementationdefined,
+			   errorhandling,quality,other);
+			{ category of test }
+var
+
+   name:		nametype;
+			{ name of current program }
+
+   class:		classtype;
+			{ category of current program }
+
+   status:		statustype;
+			{ current status }
+
+   count:		natural;
+			{ program sequence number }
+
+   line:		linetype;
+			{ the line buffer }
+
+   linelength:		0..maxlinesize;
+			{ holds actual number of chars in line }
+
+
+
+
+   procedure readaline;
+
+   { Reads an input line }
+
+   var
+      i :   0..lineoverflow;
+      ch:   char;
+   begin
+      if eof(input) then begin
+	 writeln(output);
+	 writeln(output,' ****ERROR IN READALINE - HIT EOF');
+	 goto 999
+      end else begin
+	 i:=0;
+	 while not eoln(input) do begin
+	    i:=i+1;
+	    if (i > maxlinesize) then begin
+	       writeln(output);
+	       writeln(output,' ****ERROR IN READALINE, LONG LINE');
+	       goto 999
+	    end;
+	    read(input,line[i])
+	 end;
+	 read(input,ch); { disposing of the line marker }
+	 linelength:=i
+	 { Textfiles must have eoln before eof }
+      end
+   end; { of procedure readaline }
+
+
+
+
+
+
+   procedure convert(var name:nametype);
+
+   { This procedure exchanges the representation of the name
+     between digitized (eg 6.2-1) and alphabetized (eg t6p2d1).
+     It inspects the version code and reverses it. }
+
+   var
+      i :   linesize;
+      ch:   char;
+   begin
+
+      if (name.version = digitized) then begin
+	 { We need to alphabetize the name }
+	 { Extract assures that digitized length never exceeds
+	   maxnamesize-1, so leaving one char expansion space. }
+	 for i:= name.length downto 1 do begin
+	    case name.charvec[i] of
+	       '.': ch:='p';
+	       '-': ch:='d';
+	       '0','1','2','3','4','5','6','7','8','9':
+		     ch:=name.charvec[i]
+	    end;
+	    name.charvec[i+1]:=ch
+	 end;
+	 name.charvec[1]:='t';
+	 { Name is converted }
+	 name.length:=name.length+1;
+	 name.version:=alphabetized
+
+      end else begin { version = alphabetized }
+	 { We need to digitize the name }
+	 for i:=2 to name.length do begin
+	    case name.charvec[i] of
+	       'p': ch:='.';
+	       'd': ch:='-';
+	       '0','1','2','3','4','5','6','7','8','9':
+		  ch:=name.charvec[i]
+	    end;
+	    name.charvec[i-1]:=ch
+	 end;
+	 name.charvec[name.length]:=' ';
+	 { Name is converted }
+	 name.length:=name.length-1;
+	 name.version:=digitized
+
+      end { of if }
+   end; { of procedure convert }
+
+
+
+
+   procedure extract;
+
+   { This procedure extracts the program-number and class from the
+     header comment of a test program.	It sets global parameters
+     name and class.  There is some simple error-handling in the
+     procedure, but it is generally assumed that the header
+     comments conform to the syntax.  The error-handling is just
+     in case. }
+
+   var
+      i,		      { used to scan the line }
+      isave: 1..lineoverflow; { used to save value of i }
+      lengthofname,	      { holds length of name found }
+      k:     namesize;	      { used to fill name }
+
+
+
+      procedure scan(lowch,highch:char);
+
+      { Scan moves the index i along the line until it finds
+	a character lying between lowch and highch inclusive.
+	It includes some simple error-handling which terminates
+	the program. }
+
+      var
+	 state : loopcontrol;
+
+      begin
+	 { Set loop to scan forwards }
+	 state:=scanning;
+	 { Loop invariant R1 =
+	   "characters from line[initial i] to line[i-1] are
+	    not in the desired subrange." }
+	 while (state = scanning) do begin
+	    if (i > linelength) then begin
+	       { No more to go, so get out }
+	       state:=notfound
+	    end else if (line[i] >= lowch) and (line[i] <= highch)
+	       then begin
+	       state:=found
+	    end else begin { Char is not in range }
+	       i:=i+1
+	    end { of if }
+	 end; { of while }
+
+	 if (state = notfound) then begin
+	    writeln(output);
+	    writeln(output,' ****ERROR IN SCAN - REACHED LINE END');
+	    goto 999  { in outer block and give up }
+	 end;
+
+	 { Return, leaving i at found character }
+
+      end; { of procedure scan }
+
+
+
+   begin { of extract }
+
+      { Start scanning at 1 even though we know it begins '{T' }
+      i:=1;
+      { Scan until we find a digit }
+      scan('0','9');
+      { Now assured of a digit so save the index, and look for
+	the closing comma }
+      isave:=i;
+      scan(',',',');
+      { In case spaces between number and comma }
+      while (line[i-1] = ' ') do i:=i-1;
+      { Fill in the discovered name }
+      lengthofname:=i-isave;
+      if (lengthofname >= maxnamesize) then begin
+	 lengthofname:=maxnamesize-1
+      end;
+      for k:=1 to lengthofname do begin
+	 name.charvec[k]:=line[isave+k-1]
+      end;
+      { Space-fill so as to allow string comparisons }
+      for k:=(lengthofname+1) to maxnamesize do begin
+	 name.charvec[k]:=' '
+      end;
+      { And fill in the rest of the record }
+      name.length:=lengthofname;
+      name.version:=digitized;
+
+      { Now scan for the '=' sign that precedes the class }
+      scan('=','=');
+      { And an alphabetic character following. The test may
+	also let through some non-alphabetics, but no matter. }
+      scan('A','Z');
+      { Identify the class by its first letter.  It is always
+	upper-case. }
+      if (line[i] = 'C') then class:=conformance
+      else if (line[i] = 'D') then class:=deviance
+      else if (line[i] = 'E') then class:=errorhandling
+      else if (line[i] = 'I') then class:=implementationdefined
+      else if (line[i] = 'Q') then class:=quality
+      else begin
+	 { Error, not recognized }
+	 writeln(output);
+	 writeln(output,' ****ERROR IN EXTRACT - WHAT CLASS?');
+	 class:=other	 { default }
+      end;
+
+      { Now we have established the desired values, so return }
+
+   end; { of procedure extract }
+
+
+
+
+
+   procedure newsuite;
+
+   { This procedure may be used to initialize the run somehow, or to
+     read in some parameters for the process. }
+
+   begin
+      writeln(output,' THIS IS AN EXECUTION OF THE SKELETON ',
+	 'VALIDATION SUITE PROCESSOR');
+      writeln(output,' -------------------------------------',
+	 '--------------------------');
+      page(output)
+   end; { of procedure newsuite }
+
+
+
+   procedure endsuite;
+
+   { This procedure may be used to initiate a global job, or
+     to check correct completion. }
+
+   begin
+      writeln(output,' SKELETON VALIDATION SUITE PROCESSOR END',
+	 ' (',count:4,' TESTS READ)')
+   end; { of procedure endsuite }
+
+
+
+   procedure newprogram(name :	    nametype;
+			class:	    classtype;
+			count:	    natural;
+		    var status:     statustype);
+
+   { This procedure is called at the recognition of a header
+     comment while in dormant status.  The first two parameters
+     are derived from the header comment, while the third is
+     simply the ordinal number of the test met in processing.
+     The final parameter is the status of the search.
+
+     The user's version has the responsibility of deciding what
+     to do about this program by setting status to active or
+     leaving it passive.  In the first case all lines are processed
+     by processline later, and the user may set up any headers,
+     JCL statements, etc, beforehand.  In the latter case the
+     driver resumes searching for a header comment.
+
+     The name may be in digitized or alphabetized version - see
+     procedure convert.  Searching for a particular program can
+     be done with a string comparison, for example:
+	 name.charvec = '6.2-1		     '
+     Searching for a subsection can be done with string comparisons
+     if care is taken with collating sequence.	On ASCII machines,
+     space collates lower than anything else, so that
+	 (name.charvec >= '6.2		       ') and
+	 (name.charvec <  '6.3		       ')
+     will determine all tests relevant to section 6.2 and its
+     subsections.
+
+     The class may also be used in selection.
+
+     The count may be used to parcel up say 20 tests and run them
+     in a batch, rather than the whole shebang at one go.  An
+     appropriate test is
+	 if ((count mod 20) = 0) then ...
+     although this may be more appropriately used in endprogram.
+   }
+
+   var
+      i :   linesize;
+   begin
+      write(output,' TEST PROGRAM ');
+      if (name.version = alphabetized) then convert(name);
+      for i:=1 to name.length do write(output,name.charvec[i]);
+      write(output,' (ALIAS ');
+      convert(name);
+      for i:=1 to name.length do write(output,name.charvec[i]);
+      writeln(output,'),  NO',count:4);
+      writeln(output);
+      writeln(output);
+
+      status:=active { forcing print of all }
+
+   end; { of procedure newprogram }
+
+
+
+   procedure endprogram(name:	 nametype;
+			class:	 classtype;
+			count:	 natural);
+
+   { See the comments for newprogram.
+     Endprogram can do exactly the same tests, but it has no
+     responsibility for status which will automatically
+     become dormant afterwards. }
+
+   begin
+      page(output)
+   end; { of procedure endprogram }
+
+
+
+   procedure processline;
+
+   { This procedure processes a source line of text, whatever
+     that implies.  Here we just print it. }
+
+   var
+      i :   linesize;
+   begin
+      write(output,'	  ');
+      for i:=1 to linelength do write(output,line[i]);
+      writeln(output)
+   end; { of procedure processline }
+
+
+
+begin { of Main Program }
+
+   count:=0;
+   status:=dormant;
+
+   newsuite;	     { Call in case user needs prologue }
+
+   repeat begin { until status = terminated }
+      readaline;
+      if (status = dormant) then begin
+	 { We only look for header comments }
+	 if (linelength >= 2) then begin
+	    if (line[1] = '{') and (line[2] = 'T') then begin
+	       extract;
+	       if (name.charvec = '999		       ') then begin
+		  status:=terminated
+	       end else begin
+		  count:=count+1;
+		  { Newprogram may alter status too }
+		  newprogram(name,class,count,status)
+	       end
+	    end
+	 end
+      end; { having possibly processed a header }
+      { If dormant we won't do anything now }
+      if (status = active) then begin
+	 processline;
+	 if (linelength >= 4) then begin
+	    if (line[1] = 'e') and
+	       (line[2] = 'n') and
+	       (line[3] = 'd') and
+	       (line[4] = '.') then begin
+	       endprogram(name,class,count);
+	       status:=dormant
+	    end
+	 end
+      end
+   end until (status = terminated);
+
+   endsuite;	      { Call in case user needs epilogue }
+
+999:
+end.  

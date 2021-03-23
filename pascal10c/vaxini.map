@@ -1,0 +1,1172 @@
+		LINK symbol map of	VAXINI		page 1
+	Produced by LINK version 4A(1220)-3 on  4-Oct-82 at 18:45:30
+
+	Low  segment starts at	     0 ends at	  2773 length	  2774 = 3P
+	High segment starts at	400000 ends at	425433 length	 25434 = 22P
+	4 words free in Low segment, 228 words free in high segment
+	516 Global symbols loaded, therefore min. hash size is 574
+	Start address is 402312, located in program PASINI
+
+		*************
+
+JOBDAT-INITIAL-SYMBOLS
+
+	Zero length module
+
+		*************
+
+PASINI	from DSK:PASINI.REL[31024,320155]	created by Unknown on 24-Jan-71 at 21:48:00
+	High segment starts at	400010 ends at	403512 length	  3503 (octal),  1859. (decimal)
+
+	PASINI	      402312	Global	Relocatable 		START.	      402312	Global	Relocatable 	
+	PREDEF	      400351	Entry	Relocatable 		STT%CO	      400306	Entry	Relocatable 	
+	PRTYP2	      400120	Entry	Relocatable 		PRTYP1	      400054	Entry	Relocatable 	
+	PRTYP0	      400017	Entry	Relocatable 	
+
+		*************
+
+VAXIMD	from DSK:VAXIMD.REL[31024,320155]	created by Unknown on 24-Jan-71 at 21:49:00
+	Low  segment starts at	   140 ends at	   525 length	   366 (octal),   246. (decimal)
+	High segment starts at	403513 ends at	405504 length	  1772 (octal),  1018. (decimal)
+
+	MWORD%	      405166	Entry	Relocatable 		MAX%RE	      405167	Entry	Relocatable 	
+	MAX%CH	      405171	Entry	Relocatable 		FNAMSI	      405172	Entry	Relocatable 	
+	FNAMEX	      405173	Entry	Relocatable 		TRNAME	      405177	Entry	Relocatable 	
+	EXNAME	      405201	Entry	Relocatable 		CONDNA	      405205	Entry	Relocatable 	
+	DCL%SC	      404244	Entry	Relocatable 		TM%CON	      404146	Entry	Relocatable 	
+	SYS%PP	      403522	Entry	Relocatable 	
+
+		*************
+
+PASUTL	from DSK:PASUTL.REL[31024,320155]	created by Unknown on 24-Jan-71 at 21:51:00
+	High segment starts at	405505 ends at	411036 length	  3332 (octal),  1754. (decimal)
+
+	CK%UNI	      410265	Entry	Relocatable 		MAKE%L	      410160	Entry	Relocatable 	
+	DCL%RT	      410005	Entry	Relocatable 		DECLAR	      407675	Entry	Relocatable 	
+	POP%SC	      407644	Entry	Relocatable 		CHAIN%	      407617	Entry	Relocatable 	
+	DCL%AR	      407541	Entry	Relocatable 		DCL%FI	      407515	Entry	Relocatable 	
+	DCL%ST	      407467	Entry	Relocatable 		DCL%PO	      407446	Entry	Relocatable 	
+	DCL%SE	      407424	Entry	Relocatable 		DCL%RE	      407375	Entry	Relocatable 	
+	DCL%CH	      407355	Entry	Relocatable 		DCL%IN	      407335	Entry	Relocatable 	
+	DCL%SU	      407306	Entry	Relocatable 		NEW%PR	      407205	Entry	Relocatable 	
+	NEW%TY	      406666	Entry	Relocatable 		NEW%SY	      406431	Entry	Relocatable 	
+	NEW%BL	      406164	Entry	Relocatable 		CST%NI	      406150	Entry	Relocatable 	
+	CST%ST	      406121	Entry	Relocatable 		CST%RE	      406037	Entry	Relocatable 	
+	CST%IN	      405650	Entry	Relocatable 		ENTERN	      405546	Entry	Relocatable 	
+
+		LINK symbol map of	VAXINI		page 2
+
+		*************
+
+PASDAT	from DSK:PASDAT.REL[31024,320155]	created by Unknown on 24-Jan-71 at 23:17:00
+	Low  segment starts at	   526 ends at	  1412 length	   665 (octal),   437. (decimal)
+	High segment starts at	411037 ends at	411326 length	   270 (octal),   184. (decimal)
+
+	ALC%TA	        1411	Entry	Relocatable 		TAL%TA	        1410	Entry	Relocatable 	
+	AUTO%S	        1407	Entry	Relocatable 		LAST%C	        1406	Entry	Relocatable 	
+	CMD%LI	        1405	Entry	Relocatable 		CMD%NA	        1404	Entry	Relocatable 	
+	CH%COU	        1403	Entry	Relocatable 		CH%LAS	        1402	Entry	Relocatable 	
+	CH%IND	        1401	Entry	Relocatable 		QBL%AL	        1400	Entry	Relocatable 	
+	INT%PR	        1377	Entry	Relocatable 		BYTE%S	        1376	Entry	Relocatable 	
+	SET%UB	        1375	Entry	Relocatable 		SET%LB	        1374	Entry	Relocatable 	
+	SET%UQ	        1373	Entry	Relocatable 		SET%LQ	        1372	Entry	Relocatable 	
+	SET%SI	        1371	Entry	Relocatable 		SET%UP	        1370	Entry	Relocatable 	
+	SET%LW	        1367	Entry	Relocatable 		STR%LE	        1366	Entry	Relocatable 	
+	ARR%LE	        1365	Entry	Relocatable 		SREALP	        1364	Entry	Relocatable 	
+	ADR%WI	        1363	Entry	Relocatable 		RADIX	        1362	Entry	Relocatable 	
+	HAVE%O	        1361	Entry	Relocatable 		HAVE%C	        1360	Entry	Relocatable 	
+	REL%EX	        1357	Entry	Relocatable 		TTYONA	        1346	Entry	Relocatable 	
+	TTYINA	        1335	Entry	Relocatable 		TMPREF	        1334	Entry	Relocatable 	
+	LOG%RE	        1314	Entry	Relocatable 		LISTFB	        1262	Entry	Relocatable 	
+	DUMPFB	        1230	Entry	Relocatable 		ELF%ST	        1227	Entry	Relocatable 	
+	LF%STA	        1226	Entry	Relocatable 		DF%STA	        1225	Entry	Relocatable 	
+	PAGE%T	        1204	Entry	Relocatable 		GLOBAL	        1163	Entry	Relocatable 	
+	MAIN%T	        1142	Entry	Relocatable 		SRC%SE	        1141	Entry	Relocatable 	
+	END%OF	        1140	Entry	Relocatable 		LN%ENA	        1137	Entry	Relocatable 	
+	SRC%ON	        1136	Entry	Relocatable 		LITERA	        1052	Entry	Relocatable 	
+	LINE	         766	Entry	Relocatable 		FIN%SO	         765	Entry	Relocatable 	
+	NO%FIL	         764	Entry	Relocatable 		FILE%L	         763	Entry	Relocatable 	
+	LIST%E	         762	Entry	Relocatable 		REL%FI	         741	Entry	Relocatable 	
+	LIST%F	         720	Entry	Relocatable 		MAIN%F	         677	Entry	Relocatable 	
+	SIZE%C	         676	Entry	Relocatable 		SIZE%U	         675	Entry	Relocatable 	
+	SIZE%I	         674	Entry	Relocatable 		FILETT	         673	Entry	Relocatable 	
+	FILE%T	         672	Entry	Relocatable 		FILE%O	         671	Entry	Relocatable 	
+	FILE%I	         670	Entry	Relocatable 		STAT%S	         667	Entry	Relocatable 	
+	STAT%M	         666	Entry	Relocatable 		STAT%P	         665	Entry	Relocatable 	
+	STAT%I	         664	Entry	Relocatable 		TYPE%O	         663	Entry	Relocatable 	
+	TYPE%T	         662	Entry	Relocatable 		TYPE%P	         661	Entry	Relocatable 	
+	TYPE%R	         660	Entry	Relocatable 		TYPE%C	         657	Entry	Relocatable 	
+	TYPE%B	         656	Entry	Relocatable 		TYPE%N	         655	Entry	Relocatable 	
+	TYPE%F	         654	Entry	Relocatable 		TYPE%I	         653	Entry	Relocatable 	
+	VLL%BA	         652	Entry	Relocatable 		VL%LIS	         651	Entry	Relocatable 	
+	NVL%BA	         650	Entry	Relocatable 		SYM%NV	         647	Entry	Relocatable 	
+	VL%BAS	         646	Entry	Relocatable 		SYM%VL	         645	Entry	Relocatable 	
+	CTIMES	         644	Entry	Relocatable 		CDATES	         643	Entry	Relocatable 	
+	IO%OPS	         642	Entry	Relocatable 		FILE%C	         641	Entry	Relocatable 	
+	HEAP%C	         640	Entry	Relocatable 		MAX%LE	         637	Entry	Relocatable 	
+	BLK%NU	         636	Entry	Relocatable 		LEX%BL	         635	Entry	Relocatable 	
+	EXT%BL	         634	Entry	Relocatable 		CUR%BL	         633	Entry	Relocatable 	
+	ROOT%B	         632	Entry	Relocatable 		ENV%DT	         631	Entry	Relocatable 	
+	ENV%NA	         630	Entry	Relocatable 		ROOT%N	         627	Entry	Relocatable 	
+	ALLC%R	         626	Entry	Relocatable 		OPTS%L	         625	Entry	Relocatable 	
+	ALL%OP	         624	Entry	Relocatable 		PROG%O	         572	Entry	Relocatable 	
+		LINK symbol map of	VAXINI		page 3
+PASDAT
+	DEFAUL	         540	Entry	Relocatable 		QUICK	         537	Entry	Relocatable 	
+	FINISH	         536	Entry	Relocatable 		WARNIN	         535	Entry	Relocatable 	
+	ERR%CO	         534	Entry	Relocatable 		MAX%SE	         533	Entry	Relocatable 	
+	INCLCT	         532	Entry	Relocatable 		LINECT	         531	Entry	Relocatable 	
+	CUR%SO	         530	Entry	Relocatable 		DAT%GE	      411226	Entry	Relocatable 	
+	DAT%SA	      411153	Entry	Relocatable 		HP%GET	      411115	Entry	Relocatable 	
+	HP%PUT	      411046	Entry	Relocatable 	
+
+		*************
+
+PASTAL	from DSK:PASTAL.REL[31024,320155]	created by Unknown on 24-Jan-71 at 23:45:00
+	Low  segment starts at	  1413 ends at	  1671 length	   257 (octal),   175. (decimal)
+	High segment starts at	411327 ends at	413640 length	  2312 (octal),  1226. (decimal)
+
+	ALC%SU	      413603	Entry	Relocatable 		ALLOC%	      413254	Entry	Relocatable 	
+	PASSED	      412137	Entry	Relocatable 		P%B%AD	      412100	Entry	Relocatable 	
+	SIZE%O	      411533	Entry	Relocatable 		ALC%DA	      411513	Entry	Relocatable 	
+	TAL%IN	      411336	Entry	Relocatable 	
+
+		*************
+
+PASVAL	from DSK:PASVAL.REL[31024,320155]	created by Unknown on 24-Jan-71 at 23:46:00
+	High segment starts at	413641 ends at	414110 length	   250 (octal),   168. (decimal)
+
+	MKREAL	      414057	Entry	Relocatable 		CST%SC	      414040	Entry	Relocatable 	
+	MAKERE	      414006	Entry	Relocatable 		MAKEAR	      413754	Entry	Relocatable 	
+	MAKESE	      413705	Entry	Relocatable 		MAKEST	      413650	Entry	Relocatable 	
+
+		*************
+
+PASERR	from DSK:PASERR.REL[31024,320155]	created by Unknown on 24-Jan-71 at 23:48:00
+	Low  segment starts at	  1672 ends at	  1673 length	     2 (octal),     2. (decimal)
+	High segment starts at	414111 ends at	415061 length	   751 (octal),   489. (decimal)
+
+	ABORT	        1673	Entry	Relocatable 		ERR%TA	      414453	Entry	Relocatable 	
+	ELF%CL	      414442	Entry	Relocatable 		ELF%OP	      414375	Entry	Relocatable 	
+	ERR%OP	      414343	Entry	Relocatable 		ERR%TE	      414324	Entry	Relocatable 	
+	ERR%NO	      414307	Entry	Relocatable 		ERR%TO	      414253	Entry	Relocatable 	
+	ERROR	      414233	Entry	Relocatable 		ERR%PR	      414120	Entry	Relocatable 	
+
+		*************
+
+PASMTH	from DSK:PASMTH.REL[31024,320155]	created by Unknown on 24-Jan-71 at 23:48:00
+	High segment starts at	415062 ends at	415213 length	   132 (octal),    90. (decimal)
+
+	INT%BI	      415160	Entry	Relocatable 		GCD	      415124	Entry	Relocatable 	
+	NLM	      415107	Entry	Relocatable 		NGM	      415070	Entry	Relocatable 	
+
+		*************
+
+TEMPNA	from DSK:PASASM.REL[31024,320155]	created by MACRO on 23-Jun-70 at 14:12:00
+	High segment starts at	415214 ends at	415246 length	    33 (octal),    27. (decimal)
+
+	TEMPNA	      415214	Entry	Relocatable 	
+		LINK symbol map of	VAXINI		page 4
+TEMPNA
+
+		*************
+
+COROUT	from DSK:COROUT.REL[31024,320156]	created by MACRO on 31-Mar-70 at 12:54:00
+	Low  segment starts at	  1674 ends at	  1701 length	     6 (octal),     6. (decimal)
+	High segment starts at	415247 ends at	415321 length	    53 (octal),    43. (decimal)
+
+	CALL	      415313	Entry	Relocatable 		CREATE	      415255	Entry	Relocatable 	
+	DETACH	      415276	Entry	Relocatable 		RESUME	      415304	Entry	Relocatable 	
+	HSTRT.	       25000	Global	Absolute    	
+
+		*************
+
+MODFIT	from DSK:RDLIB.REL[31024,274427]	created by MACRO on 12-Jun-70 at 19:28:00
+	High segment starts at	415322 ends at	416042 length	   521 (octal),   337. (decimal)
+
+	ALC0.	           0	Global	Absolute    		DSPOS.	      415611	Global	Relocatable 	
+	HPLOAD	      415544	Entry	Relocatable 		HPREAD	      415442	Entry	Relocatable 	
+	HPSAVE	      415435	Entry	Relocatable 		HPWRIT	      415345	Entry	Relocatable 	
+	I.MODF	           0	Global	Absolute    Suppressed	NEW.	      415546	Global	Relocatable 	
+	S.MODF	           7	Global	Absolute    Suppressed	X.MODF	           0	Global	Absolute    Suppressed
+
+		*************
+
+DUMPIO	from DSK:RDLIB.REL[31024,274427]	created by MACRO on 12-Jun-70 at 19:28:00
+	High segment starts at	416043 ends at	416361 length	   317 (octal),   207. (decimal)
+
+	CLOS$F	      416312	Entry	Relocatable 		I.DUMP	           0	Global	Absolute    Suppressed
+	OPN$FI	      416111	Entry	Relocatable 		READ$P	      416250	Entry	Relocatable 	
+	S.DUMP	          20	Global	Absolute    Suppressed	WRIT$P	      416217	Entry	Relocatable 	
+	X.DUMP	           0	Global	Absolute    Suppressed
+
+		*************
+
+PASMON	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	Low  segment starts at	  1702 ends at	  1702 length	     1 (octal),     1. (decimal)
+	High segment starts at	416362 ends at	416725 length	   344 (octal),   228. (decimal)
+
+	DDT.AC	           0	Global	Absolute    		DIE.	      416521	Entry	Relocatable 	
+	END.	      416503	Global	Relocatable 		EXIT.	      416503	Global	Relocatable 	
+	INIT0.	      416362	Entry	Relocatable 		INITP.	      416362	Entry	Relocatable 	
+	REE.AC	      416525	Global	Relocatable 		TRACE	      416626	Global	Relocatable 	
+	WRTDC.	      416565	Global	Relocatable 		WRTPC.	      416555	Entry	Relocatable 	
+
+		*************
+
+STACK	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+		LINK symbol map of	VAXINI		page 5
+
+
+MFX	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	416726 ends at	416744 length	    17 (octal),    15. (decimal)
+
+	M.FX	      416726	Entry	Relocatable 	
+
+		*************
+
+MFF	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	416745 ends at	416764 length	    20 (octal),    16. (decimal)
+
+	M.FF	      416745	Entry	Relocatable 	
+
+		*************
+
+MFFP	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	416765 ends at	417004 length	    20 (octal),    16. (decimal)
+
+	MP.FF	      416765	Entry	Relocatable 	
+
+		*************
+
+MRF	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	417005 ends at	417021 length	    15 (octal),    13. (decimal)
+
+	M.RF	      417005	Entry	Relocatable 	
+
+		*************
+
+CSPFF	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	417022 ends at	417031 length	    10 (octal),     8. (decimal)
+
+	CSP.FF	      417022	Entry	Relocatable 	
+
+		*************
+
+MSP	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	417032 ends at	417036 length	     5 (octal),     5. (decimal)
+
+	MS.P	      417032	Entry	Relocatable 	
+
+		*************
+
+MS	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	417037 ends at	417046 length	    10 (octal),     8. (decimal)
+
+	MS.	      417037	Entry	Relocatable 	
+
+		*************
+
+MSFIN	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	417047 ends at	417052 length	     4 (octal),     4. (decimal)
+
+	MS.FIN	      417047	Entry	Relocatable 	
+		LINK symbol map of	VAXINI		page 6
+MSFIN
+
+		*************
+
+MSTR	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	417053 ends at	417054 length	     2 (octal),     2. (decimal)
+
+	MSTR.	      417053	Entry	Relocatable 	
+
+		*************
+
+CSP	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	417055 ends at	417110 length	    34 (octal),    28. (decimal)
+
+	CSP.F	      417055	Entry	Relocatable 		CSP.X	      417057	Entry	Relocatable 	
+
+		*************
+
+O.TTY	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	Low  segment starts at	  1703 ends at	  1703 length	     1 (octal),     1. (decimal)
+	High segment starts at	417111 ends at	417122 length	    12 (octal),    10. (decimal)
+
+	I.OTTY	      417111	Global	Relocatable Suppressed	S.OTTY	           0	Global	Absolute    Suppressed
+	TTYOUT	        1703	Entry	Relocatable 		X.OTTY	           0	Global	Absolute    Suppressed
+
+		*************
+
+IORWR	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	417123 ends at	417263 length	   141 (octal),    97. (decimal)
+
+	REWRT.	      417123	Entry	Relocatable 	
+
+		*************
+
+IOBIN	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	417264 ends at	417452 length	   167 (octal),   119. (decimal)
+
+	CLSTB.	      417447	Entry	Relocatable 		DB$OPE	      417314	Entry	Relocatable 	
+	OPNBN.	      417332	Entry	Relocatable 		OPNTP.	      417264	Entry	Relocatable 	
+
+		*************
+
+IOCLS	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	417453 ends at	417600 length	   126 (octal),    86. (decimal)
+
+	CLOSA.	      417476	Entry	Relocatable 		CLOSD.	      417455	Entry	Relocatable 	
+	CLOSE.	      417453	Entry	Relocatable 		I.IOCL	           0	Global	Absolute    Suppressed
+	S.IOCL	           0	Global	Absolute    Suppressed	X.IOCL	      417476	Global	Relocatable Suppressed
+
+		*************
+
+IOTXH	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	417601 ends at	417654 length	    54 (octal),    44. (decimal)
+
+	DODEC.	      417601	Entry	Relocatable 		DOTXT.	      417621	Entry	Relocatable 	
+		LINK symbol map of	VAXINI		page 7
+IOTXH
+
+		*************
+
+IOICM	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	417655 ends at	420101 length	   225 (octal),   149. (decimal)
+
+	FARGX.	      420015	Entry	Relocatable 		FFRBF.	      417737	Entry	Relocatable 	
+	FGTBF.	      417724	Entry	Relocatable 		FLCHN.	      417770	Entry	Relocatable 	
+	FLUCH.	      417775	Entry	Relocatable 		FMTCH.	      420006	Entry	Relocatable 	
+	GTIFN.	      417700	Entry	Relocatable 		I.IOIC	      417747	Global	Relocatable Suppressed
+	IOFAK.	      420071	Entry	Relocatable 		P.FID.	      417655	Entry	Relocatable 	
+	S.IOIC	          23	Global	Absolute    Suppressed	X.IOIC	           0	Global	Absolute    Suppressed
+
+		*************
+
+DBFBFK	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	420102 ends at	420117 length	    16 (octal),    14. (decimal)
+
+	DB.FBL	      420102	Entry	Relocatable 	
+
+		*************
+
+IOCNNL	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	420120 ends at	420171 length	    52 (octal),    42. (decimal)
+
+	FRCHN.	      420170	Entry	Relocatable 		FRECN.	      420153	Entry	Relocatable 	
+	GETCN.	      420120	Entry	Relocatable 		GTCHN.	      420165	Entry	Relocatable 	
+	I.IOCN	      420162	Global	Relocatable Suppressed	S.IOCN	           1	Global	Absolute    Suppressed
+	X.IOCN	           0	Global	Absolute    Suppressed
+
+		*************
+
+IOWRB	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	segment starts at	420172 ends at	420234 length	    43 (octal),    35. (decimal)
+
+	WRBIN.	      420172	Entry	Relocatable 	
+
+		*************
+
+IOGET	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	420235 ends at	420277 length	    43 (octal),    35. (decimal)
+
+	GET.	      420235	Entry	Relocatable 	
+
+		*************
+
+IOFSZ	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	420300 ends at	420316 length	    17 (octal),    15. (decimal)
+
+	FILSZ.	      420300	Entry	Relocatable 	
+
+		*************
+
+		LINK symbol map of	VAXINI		page 8
+
+
+IOMS1	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	420317 ends at	420330 length	    12 (octal),    10. (decimal)
+
+	CKEOF.	      420317	Entry	Relocatable 	
+
+		*************
+
+IOMS2	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	420331 ends at	420341 length	    11 (octal),     9. (decimal)
+
+	FILLC.	      420331	Entry	Relocatable 	
+
+		*************
+
+IOMS3	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	420342 ends at	420361 length	    20 (octal),    16. (decimal)
+
+	NTXDI.	      420360	Entry	Relocatable 		NTXER.	      420342	Entry	Relocatable 	
+
+		*************
+
+IORLR	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	420362 ends at	420667 length	   306 (octal),   198. (decimal)
+
+	REAL.R	      420362	Entry	Relocatable 		SRL.R	      420403	Entry	Relocatable 	
+
+		*************
+
+IORLC	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	420670 ends at	421006 length	   117 (octal),    79. (decimal)
+
+	ENDRN.	      421000	Entry	Relocatable 		REA.C1	      420670	Entry	Relocatable 	
+	REA.C2	      420726	Entry	Relocatable 		REA.C3	      420754	Entry	Relocatable 	
+	TENE.	      420767	Entry	Relocatable 		TENF.	      420771	Entry	Relocatable 	
+	TENP.	      420764	Entry	Relocatable 	
+
+		*************
+
+IOSTR	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	421007 ends at	421177 length	   171 (octal),   121. (decimal)
+
+	BOOL.X	      421017	Entry	Relocatable 		CSTR.R	      421143	Entry	Relocatable 	
+	CSTR.W	      421074	Entry	Relocatable 		FSTR.R	      421113	Entry	Relocatable 	
+	FSTR.W	      421066	Entry	Relocatable 		STRV.R	      421123	Entry	Relocatable 	
+	STRV.W	      421104	Entry	Relocatable 		XSTR.R	      421107	Entry	Relocatable 	
+	XSTR.W	      421007	Entry	Relocatable 	
+
+		*************
+
+IOCHAR	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	421200 ends at	422346 length	  1147 (octal),   615. (decimal)
+
+	BREAK.	      421711	Entry	Relocatable 		GETCH.	      421200	Entry	Relocatable 	
+		LINK symbol map of	VAXINI		page 9
+IOCHAR
+	GETCR.	      421207	Entry	Relocatable 		I.IOCH	      421557	Global	Relocatable Suppressed
+	PUTCH.	      421505	Entry	Relocatable 		PUTCR.	      421514	Entry	Relocatable 	
+	PUTPG.	      421660	Entry	Relocatable 		RD.FDN	      422036	Entry	Relocatable 	
+	RD.FDR	      422033	Entry	Relocatable 		RD.FSN	      422317	Entry	Relocatable 	
+	RD.LNN	      421757	Entry	Relocatable 		RD.LNR	      421754	Entry	Relocatable 	
+	RD.SSN	      422273	Entry	Relocatable 		RD.SSR	      422270	Entry	Relocatable 	
+	S.IOCH	          10	Global	Absolute    Suppressed	WR.DNN	      422250	Entry	Relocatable 	
+	WR.DNR	      422245	Entry	Relocatable 		WR.FDN	      422073	Entry	Relocatable 	
+	WR.FDR	      422070	Entry	Relocatable 		WR.FSN	      422237	Entry	Relocatable 	
+	WR.LNN	      422006	Entry	Relocatable 		WR.LNR	      422003	Entry	Relocatable 	
+	WR.SSN	      422205	Entry	Relocatable 		WR.SSR	      422202	Entry	Relocatable 	
+	WR.SVN	      422132	Entry	Relocatable 		WR.SVR	      422127	Entry	Relocatable 	
+	X.IOCH	           0	Global	Absolute    Suppressed
+
+		*************
+
+TWAIT	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	422347 ends at	422366 length	    20 (octal),    16. (decimal)
+
+	TWAIT.	      422347	Entry	Relocatable 	
+
+		*************
+
+.MAIN	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+.MAIN	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+.MAIN	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+.MAIN	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+.MAIN	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+		LINK symbol map of	VAXINI		page 10
+
+
+IOCHER	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	422367 ends at	422371 length	     3 (octal),     3. (decimal)
+
+	IOSYM.	      422367	Entry	Relocatable 	
+
+		*************
+
+IOSTT	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	422372 ends at	422422 length	    31 (octal),    25. (decimal)
+
+	EXTST.	      422400	Entry	Relocatable 		IOSTA.	      422402	Entry	Relocatable 	
+	IOSTL.	      422372	Entry	Relocatable 	
+
+		*************
+
+TENIO	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	422423 ends at	423724 length	  1302 (octal),   706. (decimal)
+
+	COSEF.	      422657	Global	Relocatable 		FOSVC.	      423651	Global	Relocatable 	
+	FUSHF.	      423662	Global	Relocatable 		IOUUO.	      422423	Entry	Relocatable 	
+	NAMEF.	      423627	Global	Relocatable 		NOTEF.	      423607	Global	Relocatable 	
+	OPENF.	      422423	Global	Relocatable 		PINTF.	      423641	Global	Relocatable 	
+	RBLKR.	      423153	Global	Relocatable 		RDBLK.	      423121	Global	Relocatable 	
+	RDWRD.	      423161	Global	Relocatable 		RET14.	      422726	Entry	Relocatable 	
+	RET16.	      423405	Entry	Relocatable 		RWRDR.	      423174	Global	Relocatable 	
+	TENIO.	      422423	Entry	Relocatable 		TUNCF.	      423013	Global	Relocatable 	
+	WBLK.	      423442	Global	Relocatable 		WBLKR.	      423463	Global	Relocatable 	
+	WRWRD.	      423471	Global	Relocatable 		WWRDR.	      423502	Global	Relocatable 	
+
+		*************
+
+DISPAT	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	423725 ends at	424016 length	    72 (octal),    58. (decimal)
+
+	APOIN.	      423756	Global	Relocatable 		I.TENI	      423725	Global	Relocatable Suppressed
+	LEAVE.	      423751	Global	Relocatable 		LUD.AC	      423733	Global	Relocatable 	
+	LUOAD.	          40	Global	Absolute    		PASUO.	          41	Entry	Absolute    	
+	S.TENI	         161	Global	Absolute    Suppressed	SKIP1.	      423747	Global	Relocatable 	
+	SKIP2.	      423745	Global	Relocatable 		TNAB.	      423740	Global	Relocatable 	
+	X.TENI	           0	Global	Absolute    Suppressed	ZILCH.	      423757	Global	Relocatable 	
+
+		*************
+
+DECOD.	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424017 ends at	424236 length	   220 (octal),   144. (decimal)
+
+	DECOD.	      424017	Entry	Relocatable 		STRTD.	      424024	Entry	Relocatable 	
+
+		*************
+
+		LINK symbol map of	VAXINI		page 11
+
+
+BUFGET	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+PPGRB.	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424237 ends at	424245 length	     7 (octal),     7. (decimal)
+
+	I.PPGR	      424244	Global	Relocatable Suppressed	PPGRB.	      424237	Global	Relocatable 	
+	PPGRG.	      424244	Entry	Relocatable 		S.PPGR	           1	Global	Absolute    Suppressed
+	X.PPGR	           0	Global	Absolute    Suppressed
+
+		*************
+
+TERFAK	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+FAK33	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+FAK34	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+FAK35	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+FAK36	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+FAK37	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+		LINK symbol map of	VAXINI		page 12
+
+
+SGLEXP	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424246 ends at	424271 length	    24 (octal),    20. (decimal)
+
+	II.EXP	      424246	Entry	Relocatable 		RI.EXP	      424250	Entry	Relocatable 	
+	RR.EXP	      424252	Entry	Relocatable 	
+
+		*************
+
+SFOR	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424272 ends at	424323 length	    32 (octal),    26. (decimal)
+
+	I.SGLF	      424316	Global	Relocatable Suppressed	S.SGLF	           5	Global	Absolute    Suppressed
+	SFOR.	      424272	Entry	Relocatable 		SFOR.1	      424302	Entry	Relocatable 	
+	SFOR.2	      424305	Global	Relocatable 		X.SGLF	           0	Global	Absolute    Suppressed
+
+		*************
+
+FSAVE	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424324 ends at	424330 length	     5 (octal),     5. (decimal)
+
+	FSAVE.	      424324	Entry	Relocatable 	
+
+		*************
+
+ASSER	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424331 ends at	424332 length	     2 (octal),     2. (decimal)
+
+	ASSER.	      424331	Entry	Relocatable 	
+
+		*************
+
+PRFID	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424333 ends at	424545 length	   213 (octal),   139. (decimal)
+
+	PRFID.	      424333	Entry	Relocatable 	
+
+		*************
+
+SZOVL	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+EXIO	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424546 ends at	424547 length	     2 (octal),     2. (decimal)
+
+	EX.IO	      425403	Global	Relocatable Suppressed	IOERR.	      424546	Entry	Relocatable 	
+
+		*************
+
+		LINK symbol map of	VAXINI		page 13
+
+
+EXUSR	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424550 ends at	424551 length	     2 (octal),     2. (decimal)
+
+	EX.USR	      425404	Global	Relocatable Suppressed	USERR.	      424550	Entry	Relocatable 	
+
+		*************
+
+ESCAP	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424552 ends at	424552 length	     1 (octal),     1. (decimal)
+
+	ESCAP.	      424552	Entry	Relocatable 	
+
+		*************
+
+M21	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424553 ends at	424562 length	    10 (octal),     8. (decimal)
+
+	M2.1	      424553	Entry	Relocatable 	
+
+		*************
+
+M22	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424563 ends at	424567 length	     5 (octal),     5. (decimal)
+
+	M2.2	      424563	Entry	Relocatable 	
+
+		*************
+
+M23	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424570 ends at	424574 length	     5 (octal),     5. (decimal)
+
+	M2.3	      424570	Entry	Relocatable 	
+
+		*************
+
+M24	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424575 ends at	424601 length	     5 (octal),     5. (decimal)
+
+	M2.4	      424575	Entry	Relocatable 	
+
+		*************
+
+M25	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424602 ends at	424606 length	     5 (octal),     5. (decimal)
+
+	M2.5	      424602	Entry	Relocatable 	
+
+		*************
+
+M26	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424607 ends at	424613 length	     5 (octal),     5. (decimal)
+
+	M2.6	      424607	Entry	Relocatable 	
+		LINK symbol map of	VAXINI		page 14
+M26
+
+		*************
+
+M27	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424614 ends at	424622 length	     7 (octal),     7. (decimal)
+
+	M2.7	      424614	Entry	Relocatable 	
+
+		*************
+
+M210	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424623 ends at	424627 length	     5 (octal),     5. (decimal)
+
+	M2.10	      424623	Entry	Relocatable 	
+
+		*************
+
+M211	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424630 ends at	424635 length	     6 (octal),     6. (decimal)
+
+	M2.11	      424630	Entry	Relocatable 	
+
+		*************
+
+M31	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424636 ends at	424641 length	     4 (octal),     4. (decimal)
+
+	M3.1	      424636	Entry	Relocatable 	
+
+		*************
+
+EXINIT	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424642 ends at	424662 length	    21 (octal),    17. (decimal)
+
+	EX.RST	      424642	Entry	Relocatable 		EX.SET	      424646	Entry	Relocatable 	
+	I.EXIN	      424655	Global	Relocatable Suppressed	S.EXIN	         217	Global	Absolute    Suppressed
+	X.EXIN	           0	Global	Absolute    Suppressed
+
+		*************
+
+EXCPT	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424663 ends at	425371 length	   507 (octal),   327. (decimal)
+
+	EX.TBL	      425314	Entry	Relocatable 		EXC.AC	      425107	Global	Relocatable 	
+	EXCPT.	      424672	Entry	Relocatable 		RTEXC.	      424663	Entry	Relocatable 	
+
+		*************
+
+ATNACN	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+		LINK symbol map of	VAXINI		page 15
+
+
+PNRET	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	425372 ends at	425401 length	    10 (octal),     8. (decimal)
+
+	PNTRY.	      425372	Entry	Relocatable 		PRTRN.	      425377	Entry	Relocatable 	
+
+		*************
+
+N11	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+N12	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+N13	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+N14	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+N15	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+N16	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+N32	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+N33	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		LINK symbol map of	VAXINI		page 16
+
+		*************
+
+N34	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+N35	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+N36	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+N37	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+N310	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+N311	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+N40	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+N50	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+N61	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		LINK symbol map of	VAXINI		page 17
+
+		*************
+
+N62	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+N63	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+N64	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+N65	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+N66	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+N70	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+NUSER	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+RTREG	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	425402 ends at	425402 length	     1 (octal),     1. (decimal)
+
+	RT.REG	      425402	Entry	Relocatable 	
+
+		*************
+
+		LINK symbol map of	VAXINI		page 18
+
+
+RXIO	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	425403 ends at	425403 length	     1 (octal),     1. (decimal)
+
+	RX.IO	      425403	Entry	Relocatable Suppressed
+
+		*************
+
+RXUSR	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	425404 ends at	425404 length	     1 (octal),     1. (decimal)
+
+	RX.USR	      425404	Entry	Relocatable Suppressed
+
+		*************
+
+PSARQ1	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+PEXINI	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	425405 ends at	425406 length	     2 (octal),     2. (decimal)
+
+	P.EXIN	      425405	Entry	Relocatable 	
+
+		*************
+
+PSGLFO	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	425407 ends at	425410 length	     2 (octal),     2. (decimal)
+
+	P.SGLF	      425407	Entry	Relocatable 	
+
+		*************
+
+PIOCHA	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	425411 ends at	425412 length	     2 (octal),     2. (decimal)
+
+	P.IOCH	      425411	Entry	Relocatable 	
+
+		*************
+
+PIOCNN	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	425413 ends at	425414 length	     2 (octal),     2. (decimal)
+
+	P.IOCN	      425413	Entry	Relocatable 	
+
+		*************
+
+PMODFI	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	425415 ends at	425416 length	     2 (octal),     2. (decimal)
+
+	P.MODF	      425415	Entry	Relocatable 	
+
+		LINK symbol map of	VAXINI		page 19
+
+		*************
+
+PPPGRB	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	425417 ends at	425420 length	     2 (octal),     2. (decimal)
+
+	P.PPGR	      425417	Entry	Relocatable 	
+
+		*************
+
+PTENIO	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	425421 ends at	425422 length	     2 (octal),     2. (decimal)
+
+	P.TENI	      425421	Entry	Relocatable 	
+
+		*************
+
+PIOCLS	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	425423 ends at	425424 length	     2 (octal),     2. (decimal)
+
+	P.IOCL	      425423	Entry	Relocatable 	
+
+		*************
+
+PIOICM	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	425425 ends at	425426 length	     2 (octal),     2. (decimal)
+
+	P.IOIC	      425425	Entry	Relocatable 	
+
+		*************
+
+PDUMPI	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	425427 ends at	425430 length	     2 (octal),     2. (decimal)
+
+	P.DUMP	      425427	Entry	Relocatable 	
+
+		*************
+
+POTTY	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	425431 ends at	425432 length	     2 (octal),     2. (decimal)
+
+	P.OTTY	      425431	Entry	Relocatable 	
+
+		*************
+
+PSARQ2	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+.MAIN	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		LINK symbol map of	VAXINI		page 20
+
+		*************
+
+.MAIN	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+.MAIN	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+.MAIN	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+.MAIN	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+SFVFY	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	425433 ends at	425433 length	     1 (octal),     1. (decimal)
+
+	SF$VFY	      425433	Entry	Relocatable 	
+
+		*************
+
+EXP1	from DSK:FORLIB.REL[31024,320155]	created by MACRO on  6-Feb-69 at 15:55:00
+	Low  segment starts at	  1704 ends at	  1761 length	    56 (octal),    46. (decimal)
+
+	EXP1.	        1705	Entry	Relocatable 	
+
+		*************
+
+EXP3	from DSK:FORLIB.REL[31024,320155]	created by MACRO on  6-Feb-69 at 15:55:00
+	Low  segment starts at	  1762 ends at	  2046 length	    65 (octal),    53. (decimal)
+
+	EXP3.	        1763	Entry	Relocatable 		EXP3..	        1765	Entry	Relocatable 	
+
+		*************
+
+EXP2	from DSK:FORLIB.REL[31024,320155]	created by MACRO on  6-Feb-69 at 15:55:00
+	Low  segment starts at	  2047 ends at	  2165 length	   117 (octal),    79. (decimal)
+
+	EXP2.	        2050	Entry	Relocatable 		EXP2..	        2052	Entry	Relocatable 	
+
+		*************
+
+		LINK symbol map of	VAXINI		page 21
+
+
+EXP.	from DSK:FORLIB.REL[31024,320155]	created by MACRO on  6-Feb-69 at 15:55:00
+	Low  segment starts at	  2166 ends at	  2257 length	    72 (octal),    58. (decimal)
+
+	EXP.	        2167	Entry	Relocatable 	
+
+		*************
+
+ALOG.	from DSK:FORLIB.REL[31024,320155]	created by MACRO on  6-Feb-69 at 15:55:00
+	Low  segment starts at	  2260 ends at	  2364 length	   105 (octal),    69. (decimal)
+
+	ALG10.	        2261	Entry	Relocatable 		ALOG.	        2275	Entry	Relocatable 	
+
+		*************
+
+FORDUM	from DSK:FORLIB.REL[31024,320155]	created by MACRO on  6-Feb-69 at 15:55:00
+	Low  segment starts at	  2365 ends at	  2773 length	   407 (octal),   263. (decimal)
+
+	FORER%	        2405	Entry	Relocatable 		FORER.	        2405	Entry	Relocatable 	
+
+		*************
+
+
+	Index to LINK symbol map of	VAXINI		page 22
+
+	Name	Page	Name	Page	Name	Page	Name	Page
+
+	ALOG.	21	IOICM	 7	N15	15	PIOICM	19
+	ASSER	12	IOMS1	 8	N16	15	PMODFI	18
+	ATNACN	14	IOMS2	 8	N310	16	PNRET	15
+	BUFGET	11	IOMS3	 8	N311	16	POTTY	19
+	COROUT	 4	IORLC	 8	N32	15	PPGRB.	11
+	CSP	 6	IORLR	 8	N33	15	PPPGRB	19
+	CSPFF	 5	IORWR	 6	N34	16	PRFID	12
+	DBFBFK	 7	IOSTR	 8	N35	16	PSARQ1	18
+	DECOD.	10	IOSTT	10	N36	16	PSARQ2	19
+	DISPAT	10	IOTXH	 6	N37	16	PSGLFO	18
+	DUMPIO	 4	IOWRB	 7	N40	16	PTENIO	19
+	ESCAP	13	M21	13	N50	16	RTREG	17
+	EXCPT	14	M210	14	N61	16	RXIO	18
+	EXINIT	14	M211	14	N62	17	RXUSR	18
+	EXIO	12	M22	13	N63	17	SFOR	12
+	EXP.	21	M23	13	N64	17	SFVFY	20
+	EXP1	20	M24	13	N65	17	SGLEXP	12
+	EXP2	20	M25	13	N66	17	STACK	 4
+	EXP3	20	M26	13	N70	17	SZOVL	12
+	EXUSR	13	M27	14	NUSER	17	TEMPNA	 3
+	FAK33	11	M31	14	O.TTY	 6	TENIO	10
+	FAK34	11	MFF	 5	PASDAT	 2	TERFAK	11
+	FAK35	11	MFFP	 5	PASERR	 3	TWAIT	 9
+	FAK36	11	MFX	 5	PASINI	 1	VAXIMD	 1
+	FAK37	11	MODFIT	 4	PASMON	 4	.MAIN	 9
+	FORDUM	21	MRF	 5	PASMTH	 3	.MAIN	 9
+	FSAVE	12	MS	 5	PASTAL	 3	.MAIN	 9
+	IOBIN	 6	MSFIN	 5	PASUTL	 1	.MAIN	 9
+	IOCHAR	 8	MSP	 5	PASVAL	 3	.MAIN	 9
+	IOCHER	10	MSTR	 6	PDUMPI	19	.MAIN	19
+	IOCLS	 6	N11	15	PEXINI	18	.MAIN	20
+	IOCNNL	 7	N12	15	PIOCHA	18	.MAIN	20
+	IOFSZ	 7	N13	15	PIOCLS	19	.MAIN	20
+	IOGET	 7	N14	15	PIOCNN	18	.MAIN	20
+
+	[End of LINK map of	VAXINI]
+    P	'‘

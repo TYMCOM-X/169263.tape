@@ -1,0 +1,9 @@
+find/ssave=
+find
+fndpat
+fndrea
+fndreu
+fndrec
+autoru[,320155]
+rdlib[,320156]/s
+/g

@@ -1,0 +1,697 @@
+double precision error: function ARCTAN2
+   arg1            =  7.000000000000000 [+03  +E000000000000000]
+   arg2            =  0.000000000000000 [+00  +0000000000000000]
+   expected result =  1.570796326794897 [+01  +C90FDAA22168C1E0]
+   result          =  1.428899272190733 [+01  +B6E62BDDAB2FE5AC]
+
+single precision error: function ARCTAN2
+   arg1            =  3.592558 [+02  +E5EC780000000000]
+   arg2            = -5.601833 [+03  -B342370000000000]
+   expected result = -0.5702479 [+00  -91FBC37DADAEC624]
+   result          =  2.571345 [+02  +A490E9C000000000]
+
+double precision error: function ARCTAN2
+   arg1            =  3.592557907104492 [+02  +E5EC780000000000]
+   arg2            = -5.601832866668701 [+03  -B342370000000000]
+   expected result = -0.5702478582222127 [+00  -91FBC37DADAEC624]
+   result          =  2.571344795367581 [+02  +A490E9C2B5FD10AC]
+
+single precision error: function ARCTAN2
+   arg1            =  3.030498 [+02  +C1F3AE0000000000]
+   arg2            = -6.481545 [+03  -CF68D10000000000]
+   expected result = -0.4373588 [-01  -DFED7ED868F302D4]
+   result          =  2.704234 [+02  +AD122AC000000000]
+
+double precision error: function ARCTAN2
+   arg1            =  3.030498027801514 [+02  +C1F3AE0000000000]
+   arg2            = -6.481544971466064 [+03  -CF68D10000000000]
+   expected result = -0.4373588217899620 [-01  -DFED7ED868F302D4]
+   result          =  2.704233831799831 [+02  +AD122AC7144A61DC]
+
+double precision error: function ARCTAN2
+   arg1            =  6.246590614318848 [+03  +C7E4120000000000]
+   arg2            =  5.832108259201050 [+03  +BAA0A18000000000]
+   expected result =  0.8196998531660064 [+00  +D1D7D97DE24DCA59]
+   result          =  0.8196998531660064 [+00  +D1D7D97DE24DCA14]
+
+single precision error: function ARCTAN2
+   arg1            = -2.051928 [+02  -8352CA0000000000]
+   arg2            = -4.605162 [+03  -935D7D0000000000]
+   expected result =  0.4191649 [-01  +D69CC88293400121]
+   result          = -2.722428 [+02  -AE3C41A000000000]
+
+double precision error: function ARCTAN2
+   arg1            = -2.051928043365479 [+02  -8352CA0000000000]
+   arg2            = -4.605162143707275 [+03  -935D7D0000000000]
+   expected result =  0.4191649112123059 [-01  +D69CC88293400121]
+   result          = -2.722427742377487 [+02  -AE3C4191CF00C210]
+
+single precision error: function ARCTAN2
+   arg1            =  6.058791 [+03  +C1E19D0000000000]
+   arg2            = -5.368897 [+03  -ABCE008000000000]
+   expected result = -0.8456954 [+00  -D87F7DF1A486D2CE]
+   result          =  2.295897 [+02  +92EFFB2000000000]
+
+double precision error: function ARCTAN2
+   arg1            =  6.058790683746338 [+03  +C1E19D0000000000]
+   arg2            = -5.368896722793579 [+03  -ABCE008000000000]
+   expected result = -0.8456953730533557 [+00  -D87F7DF1A486D2CE]
+   result          =  2.295897280536438 [+02  +92EFFB25B8470E34]
+
+double precision error: function ARCTAN2
+   arg1            = -5.306514501571655 [+03  -A9CEF78000000000]
+   arg2            =  4.391058683395386 [+03  +8C838D8000000000]
+   expected result = -0.8795197442205172 [+00  -E12834B99D0835D1]
+   result          = -0.8795197442205175 [+00  -E12834B99D084B30]
+
+single precision error: function ARCTAN2
+   arg1            =  7.095784 [+03  +E310A98000000000]
+   arg2            = -1.228963 [+01  -9D4EAA0000000000]
+   expected result = -1.399301 [+01  -B31C4E81F045D259]
+   result          =  1.742291 [+01  +DF0366A000000000]
+
+double precision error: function ARCTAN2
+   arg1            =  7.095783948898315 [+03  +E310A98000000000]
+   arg2            = -1.228963136672974 [+01  -9D4EAA0000000000]
+   expected result = -1.399301351019445 [+01  -B31C4E81F045D259]
+   result          =  1.742291302570349 [+01  +DF0366C2528BB1F8]
+
+single precision error: function ARCTAN2
+   arg1            = -3.174802 [+02  -CB2FF50000000000]
+   arg2            = -0.3710151 [-01  -BDF5B00000000000]
+   expected result =  1.454462 [+01  +BA2BCBFDBE600448]
+   result          = -1.687131 [+01  -D7F3E94000000000]
+
+double precision error: function ARCTAN2
+   arg1            = -3.174802064895630 [+02  -CB2FF50000000000]
+   arg2            = -0.3710150718688965 [-01  -BDF5B00000000000]
+   expected result =  1.454461573503750 [+01  +BA2BCBFDBE600448]
+   result          = -1.687131080086044 [+01  -D7F3E94684718020]
+
+single precision error: function ARCTAN2
+   arg1            = -5.583714 [+03  -B2ADC98000000000]
+   arg2            = -1.547731 [+01  -C61C0E0000000000]
+   expected result =  1.300398 [+01  +A67373C98D8F44B5]
+   result          = -1.841194 [+01  -EBAC416000000000]
+
+double precision error: function ARCTAN2
+   arg1            = -5.583714246749878 [+03  -B2ADC98000000000]
+   arg2            = -1.547731161117554 [+01  -C61C0E0000000000]
+   expected result =  1.300398324408088 [+01  +A67373C98D8F44B5]
+   result          = -1.841194329181706 [+01  -EBAC417AB5424058]
+
+single precision error: function ARCTAN2
+   arg1            = -9.653352 [+04  -9A7421C000000000]
+   arg2            = -7.390246 [+03  -EC7CE60000000000]
+   expected result =  0.9174093 [+00  +EADB559B409A4EF6]
+   result          = -2.224183 [+02  -8E59054000000000]
+
+double precision error: function ARCTAN2
+   arg1            = -9.653352499008179 [+04  -9A7421C000000000]
+   arg2            = -7.390246391296387 [+03  -EC7CE60000000000]
+   expected result =  0.9174092773469990 [+00  +EADB559B409A4EF6]
+   result          = -2.224183376242794 [+02  -8E59053B51422E3C]
+
+double precision error: function ARCTAN2
+   arg1            =  3.124424219131470 [+02  +C7F6910000000000]
+   arg2            =  0.9001314640045166 [+00  +E66F040000000000]
+   expected result =  1.290296878410027 [+01  +A52872B77373341A]
+   result          =  1.290296878410027 [+01  +A52872B7737333D8]
+
+single precision error: function ARCTAN2
+   arg1            = -8.744974 [+04  -8BEB6A0000000000]
+   arg2            = -6.570380 [+03  -D2408D0000000000]
+   expected result =  0.9264432 [+00  +ED2B620E494ADD4C]
+   result          = -2.215149 [+02  -8DC5022000000000]
+
+double precision error: function ARCTAN2
+   arg1            = -8.744974136352539 [+04  -8BEB6A0000000000]
+   arg2            = -6.570379734039307 [+03  -D2408D0000000000]
+   expected result =  0.9264432225111636 [+00  +ED2B620E494ADD4C]
+   result          = -2.215149431078630 [+02  -8DC5021E8F160AC8]
+
+single precision error: function ARCTAN2
+   arg1            = -9.547881 [+04  -98C41EC000000000]
+   arg2            = -2.516868 [+02  -A1145E0000000000]
+   expected result =  1.313055 [+01  +A8122C698AFD5BB6]
+   result          = -1.828538 [+01  -EA0D88C000000000]
+
+double precision error: function ARCTAN2
+   arg1            = -9.547880887985229 [+04  -98C41EC000000000]
+   arg2            = -2.516868114471436 [+02  -A1145E0000000000]
+   expected result =  1.313054610762246 [+01  +A8122C698AFD5BB6]
+   result          = -1.828538042827547 [+01  -EA0D88DAB7D42A9C]
+
+double precision error: function ARCTAN2
+   arg1            =  2.499561309814453 [+02  +9FF8D00000000000]
+   arg2            =  2.262502908706665 [+02  +90CCD90000000000]
+   expected result =  0.8351377011519699 [+00  +D5CB959A1AB5823B]
+   result          =  0.8351377011519699 [+00  +D5CB959A1AB58118]
+
+single precision error: function ARCTAN2
+   arg1            =  8.842669 [+04  +8D7B920000000000]
+   arg2            = -5.655028 [+03  -B4F5FC8000000000]
+   expected result = -1.001827 [+01  -803BDAA51920C245]
+   result          =  2.139766 [+02  +88F1ED4000000000]
+
+double precision error: function ARCTAN2
+   arg1            =  8.842668533325195 [+04  +8D7B920000000000]
+   arg2            = -5.655027627944946 [+03  -B4F5FC8000000000]
+   expected result = -1.001826601614317 [+01  -803BDAA51920C245]
+   result          =  2.139766051975476 [+02  +88F1ED4F94D86114]
+
+double precision error: function ARCTAN2
+   arg1            = -7.072037458419800 [+03  -E24E218000000000]
+   arg2            =  1.500747203826904 [+01  +C0187C0000000000]
+   expected result = -1.361689755519600 [+01  -AE4BD993A0A124EA]
+   result          = -1.361689755519600 [+01  -AE4BD993A0A12768]
+
+single precision error: function ARCTAN2
+   arg1            = -4.863398 [+03  -9BA0F50000000000]
+   arg2            = -9.986330 [+04  -9FC8024000000000]
+   expected result =  0.4531981 [-01  +E80994C0D4966623]
+   result          = -2.688395 [+02  -AC0EA80000000000]
+
+double precision error: function ARCTAN2
+   arg1            = -4.863398075103760 [+03  -9BA0F50000000000]
+   arg2            = -9.986330270767212 [+04  -9FC8024000000000]
+   expected result =  0.4531980977429100 [-01  +E80994C0D4966623]
+   result          = -2.688394555846883 [+02  -AC0EA80A06D5F570]
+
+single precision error: function ARCTAN2
+   arg1            = -5.784684 [+03  -B91C228000000000]
+   arg2            = -2.339233 [+02  -95B5FF0000000000]
+   expected result =  1.186516 [+01  +97DFC5793A455ADF]
+   result          = -1.955076 [+01  -FA3FEFC000000000]
+
+double precision error: function ARCTAN2
+   arg1            = -5.784684419631958 [+03  -B91C228000000000]
+   arg2            = -2.339233160018921 [+02  -95B5FF0000000000]
+   expected result =  1.186516460602926 [+01  +97DFC5793A455ADF]
+   result          = -1.955076192986867 [+01  -FA3FEFCB088C2988]
+
+single precision error: function ARCTAN2
+   arg1            = -8.489019 [+04  -87D3054000000000]
+   arg2            = -8.013107 [+04  -8035AF4000000000]
+   expected result =  0.8142296 [+00  +D0715A1E1899A4A1]
+   result          = -2.327363 [+02  -94F3842000000000]
+
+double precision error: function ARCTAN2
+   arg1            = -8.489018678665161 [+04  -87D3054000000000]
+   arg2            = -8.013106584548950 [+04  -8035AF4000000000]
+   expected result =  0.8142296145893853 [+00  +D0715A1E1899A4A1]
+   result          = -2.327363039000408 [+02  -94F3841A9B425914]
+
+single precision error: function ARCTAN2
+   arg1            =  0.9322810 [+00  +EEA9F80000000000]
+   arg2            = -8.239962 [+04  -83D6E24000000000]
+   expected result = -0.1126623 [-03  -E6BB8138759873B9]
+   result          =  3.028930 [+02  +C1D9FEA000000000]
+
+double precision error: function ARCTAN2
+   arg1            =  0.9322810173034668 [+00  +EEA9F80000000000]
+   arg2            = -8.239961862564087 [+04  -83D6E24000000000]
+   expected result = -0.1126623244624165 [-03  -E6BB8138759873B9]
+   result          =  3.028930329127377 [+02  +C1D9FE985DBBFE98]
+
+single precision error: function ARCTAN2
+   arg1            = -5.300884 [+03  -A9A0D80000000000]
+   arg2            = -6.727730 [+03  -D749908000000000]
+   expected result =  0.6673289 [+00  +AAD611729D0AD39D]
+   result          = -2.474264 [+02  -9E5A564000000000]
+
+double precision error: function ARCTAN2
+   arg1            = -5.300884246826172 [+03  -A9A0D80000000000]
+   arg2            = -6.727730035781860 [+03  -D749908000000000]
+   expected result =  0.6673289208238587 [+00  +AAD611729D0AD39D]
+   result          = -2.474263732765935 [+02  -9E5A56457A260E18]
+
+double precision error: function ARCTAN2
+   arg1            =  2.440209388732910 [+02  +9C2C640000000000]
+   arg2            =  2.893670797348022 [+02  +B931E70000000000]
+   expected result =  0.7005868015412903 [+00  +B359A818A10BAA3D]
+   result          =  0.7005868015412906 [+00  +B359A818A10BBE2C]
+
+single precision error: function ARCTAN2
+   arg1            =  3.012305 [+02  +C0C99D0000000000]
+   arg2            = -3.041961 [+02  -C2AF7E0000000000]
+   expected result = -0.7804999 [+00  -C7CED73B06468E7B]
+   result          =  2.361093 [+02  +971C24E000000000]
+
+double precision error: function ARCTAN2
+   arg1            =  3.012305498123169 [+02  +C0C99D0000000000]
+   arg2            = -3.041961193084717 [+02  -C2AF7E0000000000]
+   expected result = -0.7804998892882173 [+00  -C7CED73B06468E7B]
+   result          =  2.361092764301576 [+02  +971C24D35FD71E94]
+
+double precision error: function ARCTAN2
+   arg1            = -5.162004232406616 [+03  -A52F238000000000]
+   arg2            =  5.574055910110474 [+03  +B25EAA8000000000]
+   expected result = -0.7470368345224639 [+00  -BF3DCE552E6CB2E7]
+   result          = -0.7470368345224639 [+00  -BF3DCE552E6CB34C]
+
+single precision error: function ARCTAN2
+   arg1            = -5.490212 [+03  -AFAFD20000000000]
+   arg2            = -3.408436 [+02  -DA23CF0000000000]
+   expected result =  1.015208 [+01  +81F2581367CFF434]
+   result          = -2.126384 [+02  -8816AEA000000000]
+
+double precision error: function ARCTAN2
+   arg1            = -5.490212440490723 [+03  -AFAFD20000000000]
+   arg2            = -3.408435583114624 [+02  -DA23CF0000000000]
+   expected result =  1.015208253360128 [+01  +81F2581367CFF434]
+   result          = -2.126384400229665 [+02  -8816AE986D80C81C]
+
+double precision error: function ARCTAN2
+   arg1            =  5.703877210617065 [+03  +B686298000000000]
+   arg2            =  1.111783981323242 [+01  +8E4EF00000000000]
+   expected result =  1.378292782598356 [+01  +B06BE5DCC950C2E1]
+   result          =  1.378292782598356 [+01  +B06BE5DCC950C37C]
+
+single precision error: function ARCTAN2
+   arg1            =  8.328128 [+04  +8540030000000000]
+   arg2            = -4.532264 [+03  -91084F8000000000]
+   expected result = -1.072408 [+01  -8944AA2BA6184596]
+   result          =  2.069185 [+02  +846D858000000000]
+
+double precision error: function ARCTAN2
+   arg1            =  8.328127861022949 [+04  +8540030000000000]
+   arg2            = -4.532264471054077 [+03  -91084F8000000000]
+   expected result = -1.072407981217284 [+01  -8944AA2BA6184596]
+   result          =  2.069184672372510 [+02  +846D858C4E5C9F68]
+
+single precision error: function ARCTAN2
+   arg1            =  1.042938 [+01  +857F000000000000]
+   arg2            = -5.295366 [+03  -A973A38000000000]
+   expected result = -0.1944640 [-02  -C7219509982F3426]
+   result          =  2.947129 [+02  +BC9DC16000000000]
+
+double precision error: function ARCTAN2
+   arg1            =  1.042938232421875 [+01  +857F000000000000]
+   arg2            = -5.295366048812866 [+03  -A973A38000000000]
+   expected result = -0.1944640433412552 [-02  -C7219509982F3426]
+   result          =  2.947128610248538 [+02  +BC9DC15187E5CF4C]
+
+single precision error: function ARCTAN2
+   arg1            =  4.902523 [+03  +9CE1770000000000]
+   arg2            = -7.620145 [+03  -F3D83A8000000000]
+   expected result = -0.5716956 [+00  -925AA5014EFCC44E]
+   result          =  2.569897 [+02  +A479316000000000]
+
+double precision error: function ARCTAN2
+   arg1            =  4.902522563934326 [+03  +9CE1770000000000]
+   arg2            = -7.620145082473755 [+03  -F3D83A8000000000]
+   expected result = -0.5716956260866822 [+00  -925AA5014EFCC44E]
+   result          =  2.569897027503111 [+02  +A4793161CDA99120]
+
+single precision error: function ARCTAN2
+   arg1            =  4.258800 [+03  +8848160000000000]
+   arg2            = -8.961458 [+04  -8F62220000000000]
+   expected result = -0.4436401 [-01  -E324CD17EAC3C703]
+   result          =  2.697953 [+02  +ACAB410000000000]
+
+double precision error: function ARCTAN2
+   arg1            =  4.258799552917480 [+03  +8848160000000000]
+   arg2            = -8.961458206176758 [+04  -8F62220000000000]
+   expected result = -0.4436401454635255 [-01  -E324CD17EAC3C703]
+   result          =  2.697952508126268 [+02  +ACAB40FF24104954]
+
+single precision error: function ARCTAN2
+   arg1            =  1.078857 [+01  +8A17FE0000000000]
+   arg2            = -4.339865 [+03  -8AE02D8000000000]
+   expected result = -0.2436533 [-02  -F98042F9CFB269A7]
+   result          =  2.897939 [+02  +B977D68000000000]
+
+double precision error: function ARCTAN2
+   arg1            =  1.078857183456421 [+01  +8A17FE0000000000]
+   arg2            = -4.339865446090698 [+03  -8AE02D8000000000]
+   expected result = -0.2436533417675712 [-02  -F98042F9CFB269A7]
+   result          =  2.897939311822222 [+02  +B977D672846D98A0]
+
+single precision error: function ARCTAN2
+   arg1            =  9.221996 [+04  +938D4BC000000000]
+   arg2            = -5.876323 [+03  -BC0AD68000000000]
+   expected result = -1.003467 [+01  -80719A2F32E3602E]
+   result          =  2.138126 [+02  +88D70D8000000000]
+
+double precision error: function ARCTAN2
+   arg1            =  9.221996068954468 [+04  +938D4BC000000000]
+   arg2            = -5.876322984695435 [+03  -BC0AD68000000000]
+   expected result = -1.003466866537361 [+01  -80719A2F32E3602E]
+   result          =  2.138125787052432 [+02  +88D70D8A87F7121C]
+
+single precision error: function ARCTAN2
+   arg1            =  8.263530 [+04  +84376AC000000000]
+   arg2            = -6.258323 [+03  -C8442F0000000000]
+   expected result = -0.9226125 [+00  -EC3054C047941DD8]
+   result          =  2.218980 [+02  +8E03C56000000000]
+
+double precision error: function ARCTAN2
+   arg1            =  8.263529539108276 [+04  +84376AC000000000]
+   arg2            = -6.258323192596436 [+03  -C8442F0000000000]
+   expected result = -0.9226124734337451 [+00  -EC3054C047941DD8]
+   result          =  2.218980180156048 [+02  +8E03C5720F83BA98]
+
+single precision error: function ARCTAN2
+   arg1            =  5.431544 [+03  +ADCF348000000000]
+   arg2            = -8.688217 [+04  -8B02F04000000000]
+   expected result = -0.5587158 [+00  -8F07FFFCD24125B3]
+   result          =  2.582877 [+02  +A54DDAA000000000]
+
+double precision error: function ARCTAN2
+   arg1            =  5.431543588638306 [+03  +ADCF348000000000]
+   arg2            = -8.688217401504517 [+04  -8B02F04000000000]
+   expected result = -0.5587158195724028 [+00  -8F07FFFCD24125B3]
+   result          =  2.582876834017390 [+02  +A54DDAA2ECD878C8]
+
+single precision error: function ARCTAN2
+   arg1            = -6.415982 [+03  -CD4FBA0000000000]
+   arg2            = -5.430176 [+03  -ADC4010000000000]
+   expected result =  0.8684242 [+00  +DE510CA950BCDF10]
+   result          = -2.273168 [+02  -917B976000000000]
+
+double precision error: function ARCTAN2
+   arg1            = -6.415982246398926 [+03  -CD4FBA0000000000]
+   arg2            = -5.430176258087158 [+03  -ADC4010000000000]
+   expected result =  4242165916092 [+00  +DE510CA950BCDF10]
+   result          = -2.273168436998184 [+02  -917B9777CD398EC8]
+
+single precision error: function ARCTAN2
+   arg1            =  3.198806 [+02  +CCB93D0000000000]
+   arg2            = -1.623298 [+01  -CFC83A0000000000]
+   expected result = -1.101191 [+01  -8CF3D091D64EFD36]
+   result          =  2.040402 [+02  +8295F26000000000]
+
+double precision error: function ARCTAN2
+   arg1            =  3.198806047439575 [+02  +CCB93D0000000000]
+   arg2            = -1.623297929763794 [+01  -CFC83A0000000000]
+   expected result = -1.101190634927313 [+01  -8CF3D091D64EFD36]
+   result          =  2.040402018662480 [+02  +8295F25936414398]
+
+single precision error: function ARCTAN2
+   arg1            =  7.164323 [+03  +E542230000000000]
+   arg2            = -7.316546 [+03  -EA21260000000000]
+   expected result = -0.7748865 [+00  -C65EF6CB5F842F7C]
+   result          =  2.366706 [+02  +97781D0000000000]
+
+double precision error: function ARCTAN2
+   arg1            =  7.164323329925537 [+03  +E542230000000000]
+   arg2            = -7.316546440124512 [+03  -EA21260000000000]
+   expected result = -0.7748865362659820 [+00  -C65EF6CB5F842F7C]
+   result          =  2.366706117323811 [+02  +97781CEF4987B654]
+
+double precision error: function ARCTAN2
+   arg1            =  7.629890441894531 [+03  +F428100000000000]
+   arg2            =  8.911292552947998 [+04  +8E94A78000000000]
+   expected result =  0.7080851932670039 [+00  +B545123BDD16445C]
+   result          =  0.7080851932670040 [+00  +B545123BDD164F90]
+
+single precision error: function ARCTAN2
+   arg1            = -6.207206 [+03  -C6A16F0000000000]
+   arg2            = -5.485331 [+03  -AF87D48000000000]
+   expected result =  0.8470580 [+00  +D8D8CBA5A55D9190]
+   result          = -2.294535 [+02  -92D9A7A000000000]
+
+double precision error: function ARCTAN2
+   arg1            = -6.207206249237061 [+03  -C6A16F0000000000]
+   arg2            = -5.485330820083618 [+03  -AF87D48000000000]
+   expected result =  0.8470580367478447 [+00  +D8D8CBA5A55D9190]
+   result          = -2.294534616841949 [+02  -92D9A7B8B8115E9C]
+
+double precision error: function ARCTAN2
+   arg1            = -6.289004087448120 [+03  -C93F858000000000]
+   arg2            =  4.798554182052612 [+03  +998DC18000000000]
+   expected result = -0.9190225729279879 [+00  -EB45103702F08F9B]
+   result          = -0.9190225729279880 [+00  -EB45103702F0906C]
+
+single precision error: function ARCTAN2
+   arg1            = -8.623570 [+04  -89FA24C000000000]
+   arg2            = -1.313156 [+01  -A8157E0000000000]
+   expected result =  1.419682 [+01  +B5B823B1B6372BEF]
+   result          = -1.721911 [+01  -DC67918000000000]
+
+double precision error: function ARCTAN2
+   arg1            = -8.623570203781128 [+04  -89FA24C000000000]
+   arg2            = -1.313155889511108 [+01  -A8157E0000000000]
+   expected result =  1.419681989453630 [+01  +B5B823B1B6372BEF]
+   result          = -1.721910664136163 [+01  -DC6791928C9A5878]
+
+single precision error: function ARCTAN2
+   arg1            =  1.680573 [+01  +D71D060000000000]
+   arg2            = -4.462191 [+03  -8ECA448000000000]
+   expected result = -0.3601947 [-01  -B86B6FF608E122AE]
+   result          =  2.781398 [+02  +B2026CA000000000]
+
+double precision error: function ARCTAN2
+   arg1            =  1.680573225021362 [+01  +D71D060000000000]
+   arg2            = -4.462190866470337 [+03  -8ECA448000000000]
+   expected result = -0.3601946819148359 [-01  -B86B6FF608E122AE]
+   result          =  2.781397971674957 [+02  +B2026CA3604C9DE0]
+
+single precision error: function ARCTAN2
+   arg1            =  0.9445107 [+00  +F1CB740000000000]
+   arg2            = -3.539761 [+02  -E28B730000000000]
+   expected result = -0.2607539 [-01  -8581880196BCF0EA]
+   result          =  2.880839 [+02  +B85FA9A000000000]
+
+double precision error: function ARCTAN2
+   arg1            =  0.9445106983184814 [+00  +F1CB740000000000]
+   arg2            = -3.539761304855347 [+02  -E28B730000000000]
+   expected result = -0.2607538701953390 [-01  -8581880196BCF0EA]
+   result          =  2.880838783394454 [+02  +B85FA9A1EE912358]
+
+double precision error: function ARCTAN2
+   arg1            = -7.730145454406738 [+03  -F75D5A0000000000]
+   arg2            =  6.592614650726318 [+03  +D2F6B30000000000]
+   expected result = -0.8646530040858790 [+00  -DD59E636EFDF8BB3]
+   result          = -0.8646530040858788 [+00  -DD59E636EFDF7EAC]
+
+single precision error: function ARCTAN2
+   arg1            =  5.336368 [+03  +AAC3870000000000]
+   arg2            = -2.369009 [+02  -979DD90000000000]
+   expected result = -1.152996 [+01  -9395608E4EDD9223]
+   result          =  1.988597 [+01  +FE8A54A000000000]
+
+double precision error: function ARCTAN2
+   arg1            =  5.336368083953857 [+03  +AAC3870000000000]
+   arg2            = -2.369009256362915 [+02  -979DD90000000000]
+   expected result = -1.152996129499780 [+01  -9395608E4EDD9223]
+   result          =  1.988596524090013 [+01  +FE8A54B5F3F3F244]
+
+single precision error: function ARCTAN2
+   arg1            = -5.078779 [+03  -A2855C8000000000]
+   arg2            = -6.164421 [+03  -C542EF8000000000]
+   expected result =  0.6891368 [+00  +B06B44951B28FB4E]
+   result          = -2.452456 [+02  -9CF5098000000000]
+
+double precision error: function ARCTAN2
+   arg1            = -5.078779458999634 [+03  -A2855C8000000000]
+   arg2            = -6.164420843124390 [+03  -C542EF8000000000]
+   expected result =  0.6891367782620001 [+00  +B06B44951B28FB4E]
+   result          = -2.452455875327793 [+02  -9CF5097CDA9E87EC]
+
+single precision error: function ARCTAN2
+   arg1            =  9.666272 [+04  +9AA90D4000000000]
+   arg2            = -0.1530027 [-02  -9CACC00000000000]
+   expected result = -1.554969 [+01  -C7093A830E2882E7]
+   result          =  1.586624 [+01  +CB167AA000000000]
+
+double precision error: function ARCTAN2
+   arg1            =  9.666272401809692 [+04  +9AA90D4000000000]
+   arg2            = -0.1530027389526367 [-02  -9CACC00000000000]
+   expected result = -1.554969133369301 [+01  -C7093A830E2882E7]
+   result          =  1.586623520220492 [+01  +CB167AC134A90180]
+
+single precision error: function ARCTAN2
+   arg1            = -2.425134 [+02  -9B35660000000000]
+   arg2            = -1.527203 [+01  -C37B660000000000]
+   expected result =  1.008796 [+01  +8120399EE2CDFFA1]
+   result          = -2.132797 [+02  -887FBDC000000000]
+
+double precision error: function ARCTAN2
+   arg1            = -2.425134181976318 [+02  -9B35660000000000]
+   arg2            = -1.527203321456909 [+01  -C37B660000000000]
+   expected result =  1.008795931416543 [+01  +8120399EE2CDFFA1]
+   result          = -2.132796722173250 [+02  -887FBDD2B001C264]
+
+single precision error: function ARCTAN2
+   arg1            = -2.376299 [+02  -9815480000000000]
+   arg2            = -8.549792 [+04  -88CBF24000000000]
+   expected result =  0.2710942 [-01  +8ACCDAE90751079A]
+   result          = -2.870498 [+02  -B7B63F4000000000]
+
+double precision error: function ARCTAN2
+   arg1            = -2.376298904418945 [+02  -9815480000000000]
+   arg2            = -8.549791574478149 [+04  -88CBF24000000000]
+   expected result =  0.2710941705187527 [-01  +8ACCDAE90751079A]
+   result          = -2.870498483071041 [+02  -B7B63F45007EA0F4]
+
+single precision error: function ARCTAN2
+   arg1            =  9.975100 [+04  +9F9A020000000000]
+   arg2            = -9.774268 [+04  -9C63668000000000]
+   expected result = -0.7955668 [+00  -CBAA44C0255165C2]
+   result          =  2.346026 [+02  +9625496000000000]
+
+double precision error: function ARCTAN2
+   arg1            =  9.975099563598633 [+04  +9F9A020000000000]
+   arg2            = -9.774267673492432 [+04  -9C63668000000000]
+   expected result = -0.7955668419938938 [+00  -CBAA44C0255165C2]
+   result          =  2.346025811595899 [+02  +96254972181468C4]
+
+single precision error: function ARCTAN2
+   arg1            =  1.121175 [+01  +8F82AC0000000000]
+   arg2            = -1.491207 [+01  -BEDFDE0000000000]
+   expected result = -0.6446889 [+00  -A50A559450961F22]
+   result          =  2.496904 [+02  +9FCD454000000000]
+
+double precision error: function ARCTAN2
+   arg1            =  1.121175289154053 [+01  +8F82AC0000000000]
+   arg2            = -1.491206884384155 [+01  -BEDFDE0000000000]
+   expected result = -0.6446889388176591 [+00  -A50A559450961F22]
+   result          =  2.496903714772134 [+02  +9FCD453D0D433A88]
+
+double precision error: function ARCTAN2
+   arg1            =  8.234512805938721 [+04  +83C0908000000000]
+   arg2            =  9.621598720550537 [+04  +99F2118000000000]
+   expected result =  0.7078725553531241 [+00  +B53722C2FA4526C5]
+   result          =  0.7078725553531242 [+00  +B53722C2FA453228]
+
+single precision error: function ARCTAN2
+   arg1            = -5.720459 [+03  -B70E008000000000]
+   arg2            = -6.316366 [+03  -CA1FAC0000000000]
+   expected result =  0.7359316 [+00  +BC6602C794204392]
+   result          = -2.405661 [+02  -99F65A0000000000]
+
+double precision error: function ARCTAN2
+   arg1            = -5.720459222793579 [+03  -B70E008000000000]
+   arg2            = -6.316366195678711 [+03  -CA1FAC0000000000]
+   expected result =  0.7359315621616825 [+00  +BC6602C794204392]
+   result          = -2.405661091428111 [+02  -99F659F03C60B108]
+
+single precision error: function ARCTAN2
+   arg1            = -5.063642 [+03  -A2095B8000000000]
+   arg2            = -0.6676102 [+00  -AAE8800000000000]
+   expected result =  1.439709 [+01  +B8485E7E7E12A446]
+   result          = -1.701884 [+01  -D9D756C000000000]
+
+double precision error: function ARCTAN2
+   arg1            = -5.063642263412476 [+03  -A2095B8000000000]
+   arg2            = -0.6676101684570313 [+00  -AAE8800000000000]
+   expected result =  1.439708530200865 [+01  +B8485E7E7E12A446]
+   result          = -1.701884123388928 [+01  -D9D756C5C4BEE020]
+
+single precision error: function ARCTAN2
+   arg1            =  8.858039 [+04  +8DBA878000000000]
+   arg2            = -4.023447 [+03  -80C0140000000000]
+   expected result = -1.144443 [+01  -927D1F403082D9F8]
+   result          =  1.997149 [+01  +FFA295E000000000]
+
+double precision error: function ARCTAN2
+   arg1            =  8.858039379119873 [+04  +8DBA878000000000]
+   arg2            = -4.023447036743164 [+03  -80C0140000000000]
+   expected result = -1.144443422644165 [+01  -927D1F403082D9F8]
+   result          =  1.997149230945629 [+01  +FFA29604124EAA70]
+
+single precision error: function ARCTAN2
+   arg1            =  4.547876 [+03  +9188338000000000]
+   arg2            = -2.741722 [+02  -AF785F0000000000]
+   expected result = -1.028278 [+01  -839E9F4FCA90EB6C]
+   result          =  2.113314 [+02  +87408B0000000000]
+
+double precision error: function ARCTAN2
+   arg1            =  4.547876119613647 [+03  +9188338000000000]
+   arg2            = -2.741721868515015 [+02  -AF785F0000000000]
+   expected result = -1.028278268776496 [+01  -839E9F4FCA90EB6C]
+   result          =  2.113314384813297 [+02  +87408AFA3C204C80]
+
+single precision error: function ARCTAN2
+   arg1            =  7.833827 [+03  +FAAEB50000000000]
+   arg2            = -5.413351 [+03  -AD3A2C0000000000]
+   expected result = -0.9661209 [+00  -F753B35740D50C33]
+   result          =  2.175472 [+02  +8B3AEDC000000000]
+
+double precision error: function ARCTAN2
+   arg1            =  7.833826541900635 [+03  +FAAEB50000000000]
+   arg2            = -5.413351058959961 [+03  -AD3A2C0000000000]
+   expected result = -0.9661209190388329 [+00  -F753B35740D50C33]
+   result          =  2.175471734550960 [+02  +8B3AEDCC51337F28]
+
+single precision error: function ARCTAN2
+   arg1            =  5.326145 [+03  +AA6FC70000000000]
+   arg2            = -8.481166 [+04  -87B2DB8000000000]
+   expected result = -0.5607514 [+00  -8F8D66B6ADBA0463]
+   result          =  2.580841 [+02  +A52C810000000000]
+
+double precision error: function ARCTAN2
+   arg1            =  5.326144695281982 [+03  +AA6FC70000000000]
+   arg2            = -8.481166362762451 [+04  -87B2DB8000000000]
+   expected result = -0.5607513614647602 [+00  -8F8D66B6ADBA0463]
+   result          =  2.580841292125033 [+02  +A52C80F475FA411C]
+
+single precision error: function ARCTAN2
+   arg1            = -7.995830 [+03  -FFDDD60000000000]
+   arg2            = -3.939263 [+02  -FC1CE10000000000]
+   expected result =  1.113034 [+01  +8E77E78BC939D0E9]
+   result          = -2.028558 [+02  -81D3E6E000000000]
+
+double precision error: function ARCTAN2
+   arg1            = -7.995829582214355 [+03  -FFDDD60000000000]
+   arg2            = -3.939262628555298 [+02  -FC1CE10000000000]
+   expected result =  1.113034194235708 [+01  +8E77E78BC939D0E9]
+   result          = -2.028558459354085 [+02  -81D3E6DC3CCBD9C0]
+
+double precision error: function ARCTAN2
+   arg1            =  9.750647544860840 [+04  +9C02A70000000000]
+   arg2            =  7.534455060958862 [+03  +F11A418000000000]
+   expected result =  0.9129164691949880 [+00  +E9B4E4CB2C19904B]
+   result          =  0.9129164691949881 [+00  +E9B4E4CB2C1991B4]
+
+single precision error: function ARCTAN2
+   arg1            = -2.694770 [+02  -AC771D0000000000]
+   arg2            = -5.053366 [+03  -A1B52D8000000000]
+   expected result =  0.4899021 [-01  +FAD4719C8F51B552]
+   result          = -2.651691 [+02  -A9B54C8000000000]
+
+double precision error: function ARCTAN2
+   arg1            = -2.694770097732544 [+02  -AC771D0000000000]
+   arg2            = -5.053366422653198 [+03  -A1B52D8000000000]
+   expected result =  0.4899020675290190 [-01  +FAD4719C8F51B552]
+   result          = -2.651690586060774 [+02  -A9B54C6E8F7E8B8C]
+
+single precision error: function ARCTAN2
+   arg1            = -6.491544 [+03  -CFBABB0000000000]
+   arg2            = -4.432908 [+03  -8DDA628000000000]
+   expected result =  0.9716569 [+00  +F8BE813B72C3077C]
+   result          = -2.169936 [+02  -8AE03A4000000000]
+
+double precision error: function ARCTAN2
+   arg1            = -6.491544246673584 [+03  -CFBABB0000000000]
+   arg2            = -4.432908296585083 [+03  -8DDA628000000000]
+   expected result =  0.9716568727624343 [+00  +F8BE813B72C3077C]
+   result          = -2.169935780827359 [+02  -8AE03A5344B80054]
+
+single precision error: function ARCTAN2
+   arg1            = -1.997492 [+01  -FFADD40000000000]
+   arg2            = -4.766361 [+03  -9886068000000000]
+   expected result =  0.3968467 [-01  +CB2F7F408B3734DB]
+   result          = -2.744746 [+02  -AFA9EAC000000000]
+
+double precision error: function ARCTAN2
+   arg1            = -1.997492313385010 [+01  -FFADD40000000000]
+   arg2            = -4.766360521316528 [+03  -9886068000000000]
+   expected result =  0.3968467489518005 [-01  +CB2F7F408B3734DB]
+   result          = -2.744745904637993 [+02  -AFA9EABA1001DB98]
+
+single precision error: function ARCTAN2
+   arg1            = -7.732012 [+03  -F76CA50000000000]
+   arg2            = -2.284849 [+02  -923AF60000000000]
+   expected result =  1.283468 [+01  +A448B17972F4F7F2]
+   result          = -1.858124 [+01  -EDD703C000000000]
+
+double precision error: function ARCTAN2
+   arg1            = -7.732012271881104 [+03  -F76CA50000000000]
+   arg2            = -2.284848690032959 [+02  -923AF60000000000]
+   expected result =  1.283468422223372 [+01  +A448B17972F4F7F2]
+   result          = -1.858124231366422 [+01  -EDD703CACFDC8C98]
+
+   @#¿

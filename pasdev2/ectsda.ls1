@@ -1,0 +1,27 @@
+
+
+    5	module ec_tsdate options nocheck, nolibrary;
+					  ^
+Warning 15: Invalid option "". The options supported are: check, debug, info, source, map, symbols, 
+	    list, verbose, terse, overlay, optimize, storage, width, length, enable, disable. 
+
+File 1:  DSK:IDTIME.TYP[31024,320156]
+
+   11	    D_T_RECORD = PACKED RECORD D, T: 0 .. 777777B END;
+							^
+Warning 14: Please replace the octal constant "777777B" by "#O777777". 
+
+   17	   DEC_DATE = 0..77777B;        (* 15 BIT DEC DATE *)
+			      ^
+Warning 14: Please replace the octal constant "77777B" by "#O77777". 
+
+   18	   TYM_DATE = 0..77777B;        (* 15 BIT TYMSHARE DATE *)
+			      ^
+Warning 14: Please replace the octal constant "77777B" by "#O77777". 
+
+
+   12	  ec_tsdate.d := ts_date + 112773b;
+					 ^
+Warning 14: Please replace the octal constant "112773B" by "#O112773". 
+
+5 warnings

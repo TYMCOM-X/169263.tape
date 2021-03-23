@@ -1,0 +1,1369 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   BLISS-36 Compiler Version 4(210)
+
+
+                          Installation Notes
+                         Date: September-1983
+
+
+
+
+
+
+                               SUMMARY
+
+               This document describes the  process  by
+               which  a  BLISS-36 compiler is installed
+               on (made available to the  users  of)  a
+               TOPS-10 or TOPS-20 system.  It should be
+               read   before   the   installation    is
+               attempted.
+
+
+
+
+
+ORDER NUMBER:                      AA-J937C-TK
+
+
+OPERATING SYSTEM AND VERSION:      TOPS-10 V7.01, TOPS-20 V5.1
+
+SOFTWARE VERSION:                  BLISS-36 4(210) implementing BLISS
+                                   language V4.0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                  i
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+First Printing:  May 1980
+
+Revised, December 1980, November 1981, March 1982, September 1983
+
+
+The information in this document is subject to change  without  notice
+and  should  not  be  construed  as  a commitment by Digital Equipment
+Corporation.  Digital Equipment Corporation assumes no  responsibility
+for any errors that may appear in this document.
+
+The software described in this document is furnished under  a  license
+and  may  be  only used or copied in accordance with the terms of such
+license.
+
+No responsibility is assumed for the use or reliability of software on
+equipment that is not supplied by DIGITAL or its affiliated companies.
+
+
+
+Copyright c 1980, 1981, 1982, 1983 by Digital Equipment Corporation
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                  ii
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                         P L E A S E  R E A D
+                        *********************
+
+
+The attached document describes how to install BLISS-36  on  either  a
+TOPS-20  or a TOPS-10 system.  You can perform a standard installation
+by simply copying the installation tape to disk using DUMPER or BACKUP
+and  by  submitting  the batch file INS36.CTL with a time limit of ten
+minutes.
+
+BUT...
+
+
+     1.  If you do not  wish  to  make  a  standard  installation  (to
+         devices SYS:, BLI:, DOC:, and HLP:):
+
+     2.  Or, if the installation fails:
+
+     3.  Or, if you need help:
+
+
+read the introduction to this document and  the  installation  control
+file (INS36.CTL).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                 iii
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                          Table Of Contents
+
+
+
+
+
+CHAPTER 1       INTRODUCTION -- START READING HERE
+
+
+CHAPTER 2       INSTALLATION PROCEDURES FOR TOPS-20
+
+        2.1     NORMAL INSTALLATION PROCEDURES . . . . . . . . . . . 6
+        2.2     WHAT TO DO IF SOMETHING GOES WRONG . . . . . . . . . 8
+        2.3     VARIATIONS IN INSTALLATION PROCEDURES. . . . . . . . 8
+        2.4     AFTER INSTALLATION . . . . . . . . . . . . . . . . . 9
+        2.5     DIRECTORY OF TAPE  . . . . . . . . . . . . . . . .  10
+        2.6     INSTALLATION DIRECTORY . . . . . . . . . . . . . .  11
+        2.7     SOME IMPORTANT FILES . . . . . . . . . . . . . . .  12
+
+
+CHAPTER 3       INSTALLATION PROCEDURES FOR TOPS-10
+
+        3.1     NORMAL INSTALLATION PROCEDURES . . . . . . . . . .  13
+        3.2     WHAT TO DO IF SOMETHING GOES WRONG . . . . . . . .  15
+        3.3     VARIATIONS IN INSTALLATION PROCEDURES. . . . . . .  15
+        3.4     AFTER INSTALLATION . . . . . . . . . . . . . . . .  16
+        3.5     DIRECTORY OF TAPE  . . . . . . . . . . . . . . . .  17
+        3.6     INSTALLATION DIRECTORY . . . . . . . . . . . . . .  18
+        3.7     SOME IMPORTANT FILES . . . . . . . . . . . . . . .  19
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                  iv
+
+
+
+
+
+
+
+
+
+
+
+
+                              CHAPTER 1
+
+                  INTRODUCTION -- START READING HERE
+
+
+
+
+
+
+
+This document is designed to  help  you  install  BLISS-36  on  either
+TOPS-10  or  TOPS-20.   In  most cases, all you have to do is copy the
+release tape to disk and submit the batch file INS36.CTL with  a  time
+limit  of ten minutes.  This will cause BLISS-36 to be installed using
+devices SYS:, BLI:, DOC:  and HLP:.  It assumes that these devices are
+available  and  may  be  written  to,  and  that the latest version of
+LINK(V4A(1220) - TOPS-10, V5A(2030) - TOPS-20) is  available  on  your
+system area.
+
+
+     1.  If you are not sure how to do the above  procedure  and  your
+         system is:
+
+          o  TOPS-20 -- Read section 2.1.
+
+          o  TOPS-10 -- Read section 3.1.
+
+
+     2.  If you want to vary the standard  installation,  for  example
+         making  the  installation to other than the standard devices,
+         and your system is:
+
+          o  TOPS-20 -- Read section 2.3.
+
+          o  TOPS-10 -- Read section 3.3.
+
+
+     3.  If the installation procedure failed, and your system is:
+
+          o  TOPS-20 -- Read section 2.2.
+
+          o  TOPS-10 -- Read section 3.2.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                 1-1
+
+
+
+
+
+
+
+
+
+
+
+
+                              CHAPTER 2
+
+                 INSTALLATION PROCEDURES FOR TOPS-20
+
+
+
+2.1  NORMAL INSTALLATION PROCEDURES
+
+Here we describe the installation procedures that can be used  in  the
+majority  of  cases.  A later section describes variations for special
+problems.
+
+The installation procedure assumes that  four  areas  with  the  names
+SYS:,  BLI:, DOC:, and HLP:  exist and may be written to by the person
+doing the installation.  If this is not the case on your system, or if
+you  simply wish to install the BLISS system elsewhere, then go to the
+section on non-standard installations.
+
+Start by logging into an account which allows write and delete  access
+to  the areas SYS:, BLI:, DOC:  and HLP:.  Then connect to a directory
+which has at least 2400 free pages of working  storage.   It  is  most
+convenient  if  it  is empty when you start.  We will assume here that
+the directory is  called  <USER-DEFINED  AREA>  on  device  DSKX.   To
+connect, type to the EXEC:
+
+        @CONNECT DSKX:<USER-DEFINED AREA>
+
+(the "@" is a prompt supplied by the EXEC).
+
+The next step is to transfer the release kit files from  the  tape  to
+the  directory.   The  tape  has  four  save sets.  The first save set
+contains the documentation files while the second  save  set  contains
+the  remaining  files  needed for the installation procedure.  We also
+provide duplicate save sets in case of garbled files.  As a first step
+you must make sure that the proper tape parameters are used.  Type the
+following:
+
+        @SET TAPE DENSITY 1600
+        @SET TAPE RECORD-LENGTH 512
+
+Now mount the tape.  There may be some variation between  systems  but
+this will probably work:
+
+        (on TOPS-20 Version 5.1)
+        @MOUNT TAPE BLSTP:  /LABEL:UNLABELED/READ-ONLY
+
+Now run DUMPER to transfer the contents of the tape to the disk area:
+
+        @DUMPER
+        DUMPER>TAPE BLSTP:
+        DUMPER>SUPERSEDE ALWAYS
+        DUMPER>REWIND
+        DUMPER>ACCOUNT SYSTEM-DEFAULT
+        DUMPER>FILES
+        DUMPER>RESTORE PS:<*>*.*.* DSKX:<USER-DEFINED AREA>*.*.-1
+        DUMPER>RESTORE PS:<*>*.*.* DSKX:<USER-DEFINED AREA>*.*.-1
+
+
+
+                                 2-1
+                 INSTALLATION PROCEDURES FOR TOPS-20
+
+
+(The "DUMPER>" is the DUMPER program's prompt).  You should substitute
+your  own  device  and  directory in the RESTORE command.  This should
+cause the files to be transfered from the tape to  the  the  specified
+area.   As  the  transfer  is made each file name will be displayed on
+your terminal.
+
+Do not type anything until you receive a prompt.  Then type:
+
+        DUMPER>EXIT
+
+This should return you to the EXEC.  We recommend that you  keep  your
+tape  mounted  until the BLISS system is completely installed, in case
+there are problems.  If there is a need for the  drive,  however,  you
+may dismount the tape by typing to the exec:
+
+        @DISMOUNT BLSTP:
+
+Now you are all ready to install BLISS.   We  have  provided  a  BATCH
+command  file  to  do the work for you.  If the account you are logged
+onto requires capabilities to be enabled before  it  can  write-access
+the  areas  on  which  the  BLISS-36  system will be installed, add an
+"ENABLE" command to BATCH.CMD temporarily.  To  run  the  installation
+batch control file simply type to the EXEC:
+
+        @SUBMIT INS36.CTL/TIME:00:30:00
+
+You should receive another prompt from the EXEC almost immediately.
+
+Wait for the batch job to complete.  You can check to  see  if  it  is
+still running by typing to the EXEC:
+
+        @INFORMATION BATCH
+
+On most systems this can be abbreviated to:
+
+        @I B
+
+When INS36 no longer appears in the batch queue  listing,  you  should
+examine the resulting log file.  On most systems the above SUBMIT will
+have  caused  the  log  file  to  be  automatically  spooled  to   the
+line-er.  In any case the file will be called "INS36.LOG".
+
+Look first at the last few lines  of  the  log  file.   If  a  message
+something like:
+
+**********************************************************************
+*                                                                    *
+*              INSTALLATION OF BLISS-36 FAILED                       *
+*                                                                    *
+**********************************************************************
+
+appears then something has gone wrong with the installation procedure,
+and  you  should  read  the next section.  Otherwise, you will get the
+message:
+
+**********************************************************************
+*                                                                    *
+*             SUCCESSFUL INSTALLATION OF BLISS-36                    *
+*                                                                    *
+**********************************************************************
+
+and you should skip to the section entitled "After Installation".
+
+
+
+
+
+
+                                 2-2
+                 INSTALLATION PROCEDURES FOR TOPS-20
+
+
+2.2  WHAT TO DO IF SOMETHING GOES WRONG
+
+The variety of things which might go wrong is quite large,  though  if
+you follow the directions you probably won't run into any of them.
+
+If you run out of space at any point you must find more, and there  is
+not  much  we  can  suggest to help.  One thing which sometimes helps,
+though, is to delete and expunge any previous versions  of  the  files
+being transfered.
+
+In case files on the tape are garbled, we provide duplicate save  sets
+on  the  tape.  To get to it, follow the directions above for mounting
+and initializing DUMPER.  After typing the FILES  command  to  DUMPER,
+however, type:
+
+        DUMPER>SKIP 2
+
+This will get you to the start of the duplicate save  sets.   Now  you
+can  use the RESTORE command to dump either the entire set of files or
+individual files which were garbled on the first save set.
+
+If the INS36 batch job failed to complete, read up the  listing  until
+you  find the last statement which executed.  There should be an error
+message (starting with a question mark) just after it.  We have  tried
+to  put comments in the file to give you some idea of what went wrong,
+but it is very hard to anticipate all that  might  happen  on  systems
+configured  differently from the ones we have had experience with.  Do
+your best in figuring it out.  If you need help, contact  your  system
+manager.
+
+There are three types of corrective action you can take.
+     1.  You can replace a file, possibly from the duplicate save sets
+         as described above.
+
+     2.  You can modify INS36.  We have attempted  to  provide  enough
+         comments to make this possible.
+
+     3.  You can modify the release files.  Generally this should  not
+         be done.  You're likely to cause yourself more headaches than
+         you fix.
+
+In any case, you should delete the previous copy of  INS36.LOG  before
+running  the  batch  job  again.   If  you  do  not, the files will be
+concatenated by the batch  spooler,  which  can  be  confusing.   Some
+installations  include a /BATCH-LOG:SUPERSEDE switch on a SUBMIT which
+will cause the previous log file, if any, to be superseded rather than
+concatenated to.  If available, you probably should use this.
+
+
+
+2.3  VARIATIONS IN INSTALLATION PROCEDURES.
+
+No installation procedure  is  going  to  be  exactly  right  for  all
+systems.   You  can  produce  your own variation by editing INS36.CTL.
+Comments in that file should help.
+
+The most common variation is to install  the  BLISS  system  on  other
+devices  than  the standard ones.  Many systems have a policy that new
+software is first installed in a temporary area  until  all  concerned
+are  satisfied  with  its  reliability.  Development Methods expends a
+great deal of effort trying to guarantee that  every  release  of  our
+software  is  at  least  as  reliable  as  any  previous release.  We,
+therefore, wish to encourage you to install BLISS-36 directly on SYS:,
+since  we  feel that our users are best served this way.  If, however,
+you still wish to make this modification, read on.
+
+
+
+                                 2-3
+                 INSTALLATION PROCEDURES FOR TOPS-20
+
+
+There are several ways you can redirect  the  installation  procedure.
+The  simplest  is  to use the file BLISS.CMD.  The INS36.CTL will look
+for BLISS.CMD and execute the commands from this file.You can  add  to
+this  file  some  alternate  definitions for devices SYS:, BLI:, DOC:,
+HLP:.  For example:
+
+        DEFINE SYS:  NEW:,SYS:
+
+This will cause any writes to device  SYS:   to  go  to  device  NEW:,
+though  any  reads  from SYS:  can find the file there if it is not on
+NEW:.
+
+Another way is to change the definitions  appearing  on  page  two  of
+INS36.CTL.   These  definitions  give  finer  control  as to what goes
+where.  Comments appearing with the device  definitions  explain  what
+each logical device name means.
+
+The last way involves finding the place in INS36.CTL where the file(s)
+in  question  are  transfered  and  modify that line as desired.  This
+allows the finest control but requires the most work.
+
+A link-time constant has been added  which  enables  the  compiler  to
+generate  indirect  through  memory  instructions.   The default is to
+disable this capability.
+
+To change the default, modify BLISS.LNK where it defines the link-time
+constant, INDIR.  The link commands have the following meaning:
+
+        /DEFINE:INDIR:0 - No indirect through memory instructions
+        /DEFINE:INDIR:1 - Indirect through memory instructions
+
+
+
+2.4  AFTER INSTALLATION
+
+After installation is completed  there  is  only  a  small  amount  of
+cleanup to be done.
+
+The most important thing is to  place  a  note  in  the  system  login
+messages.  The procedures for doing this vary so widely from system to
+system that we did not try to include this in the  installation  batch
+file.   The  file "BLISS.NTC" supplied with the kit contains a typical
+message.
+
+We recommend that the installation area to which you dumped  the  tape
+be kept intact.  This makes updates and modifications easier.
+
+If, however, disk space is at a premium on your system, you can delete
+these files in either of two ways.
+
+If the area was empty when you started, then:
+
+        @DELETE *.*,
+        @@EXPUNGE
+
+should work.  If there were files on the area which you wish to  keep,
+then saying:
+
+        @SUBMIT DEL36.CTL/TIME:00:10:00
+
+will delete most of the files.  After it has completed enter:
+
+        @DELETE DEL36.*,
+        @@EXPUNGE
+
+to get the rest.
+
+
+                                 2-4
+                 INSTALLATION PROCEDURES FOR TOPS-20
+
+
+2.5  DIRECTORY OF TAPE
+
+The following is a list of the files included on the first save set of
+the installation tape.
+
+         BLISS.DOC
+         BLISS.HLP
+         BLISS.INS
+         CVT10.DOC
+         CVT10.HLP
+         DEL36.CTL
+         DMPREL.HLP
+         INS36.CTL
+         MONINT.DOC
+         SIX12.HLP
+         SIX12.MEM
+         TUTIO.HLP
+
+The following is a list of the files included on the second  save  set
+of the installation tape.
+
+         B361AB.REL
+         B361AT.REL
+         B361LB.REL
+         B361LT.REL
+         B362LB.REL
+         B362PB.REL
+         BLISS.CMD
+         BLISS.LNK
+         BLISS.NTC
+         BLISS.REL
+         BLSOTS.MAC
+         CHKC2L.B36
+         CHKEXT.B36
+         CHKMKL.EXE
+         CHKMT2.EXE
+         CVT10.EXE
+         CVT10.SNO
+         DEB36.LNK
+         DEB36.REL
+         DMPREL.EXE
+         ERROR.BNR
+         EZIO10.B36
+         EZIO10.REL
+         EZIO20.B36
+         EZIO20.REL
+         FLDDB.R36
+         LSTCHK.BLI
+         MONINT.EXE
+         MONSYM.L36
+         MONSYM.R36
+         NORMAL.BNR
+         PSI20.B36
+         REG1AB.MAC
+         REG1AT.MAC
+         REG1LB.MAC
+         REG1LT.MAC
+         REG2LB.MAC
+         REG2PB.MAC
+         SIX12.B36
+         TENDEF.L36
+         TENDEF.R36
+         TUTIO.R36
+         UUOSYM.L36
+         UUOSYM.R36
+         XDUMP.REL
+
+
+                                 2-5
+                 INSTALLATION PROCEDURES FOR TOPS-20
+
+
+         XPORT.L36
+         XPORT.REQ
+         XPOT10.DBG
+         XPOT10.REL
+         XPOT20.DBG
+         XPOT20.REL
+
+
+
+2.6  INSTALLATION DIRECTORY
+
+The following is a list of the files  which  this  procedure  actually
+installs.   The  device  name given with each is the default device to
+which it is transfered.  Those files which go to device NUL:  are  not
+installed anywhere by default.
+
+         SYS:B361AB.REL
+         SYS:B361AT.REL
+         SYS:B361LB.REL
+         SYS:B361LT.REL
+         SYS:B362LB.REL
+         SYS:B362PB.REL
+         DOC:BLISS.DOC
+         SYS:BLISS.EXE
+         HLP:BLISS.HLP
+         NUL:BLISS.REL
+         BLI:BLSOTS.MAC
+         DOC:CVT10.DOC
+         SYS:CVT10.EXE
+         HLP:CVT10.HLP
+         BLI:CVT10.SNO
+         SYS:DEB36.EXE
+         NUL:DEB36.REL
+         SYS:DMPREL.EXE
+         HLP:DMPREL.HLP
+         BLI:EZIO10.B36
+         BLI:EZIO10.REL
+         BLI:EZIO20.B36
+         BLI:EZIO20.REL
+         BLI:FLDDB.R36
+         DOC:MONINT.DOC
+         SYS:MONINT.EXE
+         BLI:MONSYM.L36
+         BLI:MONSYM.R36
+         BLI:REG1AB.MAC
+         BLI:REG1AT.MAC
+         BLI:REG1LB.MAC
+         BLI:REG1LT.MAC
+         BLI:REG2LB.MAC
+         BLI:REG2PB.MAC
+         BLI:SIX12.B36
+         HLP:SIX12.HLP
+         DOC:SIX12.MEM
+         BLI:TENDEF.L36
+         BLI:TENDEF.R36
+         HLP:TUTIO.HLP
+         BLI:TUTIO.R36
+         BLI:UUOSYM.L36
+         BLI:UUOSYM.R36
+         SYS:XDUMP.EXE
+         BLI:XDUMP.REL
+         BLI:XPORT.DBG
+         BLI:XPORT.L36
+         BLI:XPORT.REL
+         BLI:XPORT.REQ
+         BLI:XPOT10.DBG
+
+
+                                 2-6
+                 INSTALLATION PROCEDURES FOR TOPS-20
+
+
+         BLI:XPOT10.REL
+         BLI:XPOT20.DBG
+         BLI:XPOT20.REL
+
+
+
+2.7  SOME IMPORTANT FILES
+
+Below is some important files in the installation kit which the person
+installing  the BLISS-36 system should know about.  These files may be
+found in one or both of the two previous sections.
+
+      o  B36*.REL -- Various versions of the BLISS runtime system.
+
+      o  BLISS.DOC -- A brief description of this version of BLISS-36
+         for users and potential users of BLISS.
+
+      o  BLISS.EXE -- The BLISS-36 compiler itself.
+
+      o  BLISS.HLP -- A help file informing users how to run BLISS.
+
+      o  BLISS.NTC -- A sample login message informing users that
+         BLISS-36 has been installed.
+
+      o  DEL36.CTL -- Cleans out the installation area.
+
+      o  INS36.CTL  --  Installs  the   BLISS-36   system   from   the
+         installation area.
+
+      o  BLISS.INS -- This document.
+
+      o  XPOT10.DBG -- Special TOPS-10 XPORT debug object file for use
+         with the SIX12 debugger.
+
+      o  XPOT10.REL -- Standard TOPS-10 XPORT object file.
+
+      o  XPOT20.DBG -- Special TOPS-20 XPORT debug object file for use
+         with the SIX12 debugger.
+
+      o  XPOT20.REL -- Standard TOPS-20 XPORT object file.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                 2-7
+
+
+
+
+
+
+
+
+
+
+
+
+                              CHAPTER 3
+
+                 INSTALLATION PROCEDURES FOR TOPS-10
+
+
+
+3.1  NORMAL INSTALLATION PROCEDURES
+
+
+Here we describe the installation procedures that can be used  in  the
+majority  of  cases.  A later section describes variations for special
+problems.
+
+The installation procedure assumes that  four  areas  with  the  names
+SYS:,  BLI:, DOC:, and HLP:  exist and may be written to by the person
+doing the installation.  If this is not the case on your system, or if
+you  simply wish to install the BLISS system elsewhere, then go to the
+section on non-standard installations.
+
+Start by logging into an account which allows write and delete  access
+to  the  areas SYS:, BLI:, DOC:  and HLP:  and which has at least 8000
+blocks of free storage.  It is most convenient if it is empty when you
+start.
+
+The next step is to transfer the release kit files from  the  tape  to
+the  directory.   The  tape  has  four  save sets.  The first save set
+contains the documentation files while the second  save  set  contains
+the  remaining  files  needed for the installation procedure.  We also
+provide duplicate save sets in case of garbled  files.   First,  mount
+the  tape.   There may be some variation between systems but this will
+probably work:
+
+        .MOUNT MTA:  BTP:  /RONLY /REELID:BLISS
+
+(the "." is a prompt supplied by the monitor).   Next,  set  the  tape
+parameters:
+
+        .SET BLOCKSIZE BTP:  512
+
+Check the label printed on the tape and type either:
+
+        .SET DENSITY BTP:  800
+
+or
+
+        .SET DENSITY BTP:  1600
+
+depending on which it specifies.
+
+Now run BACKUP:
+
+        .R BACKUP
+        /TAPE BTP:
+        /REWIND
+        /INTERCHANGE
+        /SUPERSEDE ALWAYS
+        /FILES
+
+
+                                 3-1
+                 INSTALLATION PROCEDURES FOR TOPS-10
+
+
+        /RESTORE DSK:*.*[-] = ALL:*.*[*,*]
+        /RESTORE DSK:*.*[-] = ALL:*.*[*,*]
+
+(the "/" is a prompt supplied by BACKUP).  This should cause the files
+to  be  transfered  from  the  tape to the the specified area.  As the
+transfer is made each file name will be displayed on your terminal.
+
+Do not type anything until you receive a prompt.  Then type:
+
+        /REWIND
+        /CHECK DSK:*.*[-]
+        /CHECK DSK:*.*[-]
+
+This will cause the program to check each file on the disk against the
+file  on the tape.  As each file is checked its name will be displayed
+on your terminal.  An error message will be displayed if the files are
+not identical.
+
+Wait for this process to complete then type:
+
+        /EXIT
+
+This should return you to the monitor.  We  recommend  that  you  keep
+your  tape  mounted until the BLISS system is completely installed, in
+case there are problems.  If there is a need for the  drive,  however,
+you may dismount the tape by typing:
+
+        .DISMOUNT BTP:
+
+to the monitor.
+
+Now you are all ready to install BLISS.   We  have  provided  a  BATCH
+command  file to do the work for you.  On some (non-standard) systems,
+accounting information must be included  at  the  beginning  of  BATCH
+files.   If  this  is  the  case  on your system, you should edit that
+information into INS36.CTL.  To run  the  installation  batch  control
+file simply type to the monitor:
+
+        .SUBMIT INS36.CTL/TIME:00:30:00
+
+You should receive another prompt from the monitor almost immediately.
+
+Wait for the batch job to complete.  You can check to  see  if  it  is
+still running by typing:
+
+        .SUBMIT
+
+When INS36 no longer appears in the batch queue  listing,  you  should
+examine the resulting log file.  On most systems the above SUBMIT will
+have  caused  the  log  file  to  be  automatically  spooled  to   the
+line-printer.  In any case the file will be called "INS36.LOG".
+
+Look first at the last few lines  of  the  log  file.   If  a  message
+something like:
+
+**********************************************************************
+*                                                                    *
+*              INSTALLATION OF BLISS-36 FAILED                       *
+*                                                                    *
+**********************************************************************
+
+appears then something has gone wrong with the installation procedure,
+and  you  should  read  the next section.  Otherwise, you will get the
+message:
+
+
+
+
+                                 3-2
+                 INSTALLATION PROCEDURES FOR TOPS-10
+
+
+**********************************************************************
+*                                                                    *
+*             SUCCESSFUL INSTALLATION OF BLISS-36                    *
+*                                                                    *
+**********************************************************************
+
+and you should skip to the section entitled "After Installation".
+
+
+
+3.2  WHAT TO DO IF SOMETHING GOES WRONG
+
+The variety of things which might go wrong is quite large,  though  if
+you follow the directions you probably won't run into any of them.
+
+If you run out of space at any point you must find more, and there  is
+not  much  we  can  suggest to help.  One thing which sometimes helps,
+though, is  to  delete  any  previous  versions  of  the  files  being
+transfered.
+
+In case files on the tape are garbled, we provide duplicate save  sets
+on  the  tape.  To get to it, follow the directions above for mounting
+and initializing BACKUP.  After typing the FILES  command  to  BACKUP,
+however, type:
+
+        /SKIP 2
+
+This will get you to the start of the duplicate save  sets.   Now  you
+can  use the RESTORE command to dump either the entire set of files or
+individual files which were garbled on the first save set.
+
+If the INS36 batch job failed to complete, read up the  listing  until
+you  find the last statement which executed.  There should be an error
+message (starting with a question mark) just after it.  We have  tried
+to  put comments in the file to give you some idea of what went wrong,
+but it is very hard to anticipate all that  might  happen  on  systems
+configured  differently from the ones we have had experience with.  Do
+your best in figuring it out.  If you need help, contact  your  system
+manager.
+
+There are three types of corrective action you can take.
+
+     1.  You can replace a file, possibly from the duplicate save sets
+         as described above.
+
+     2.  You can modify INS36.  We have attempted  to  provide  enough
+         comments to make this possible.
+
+     3.  You can modify the release files.  Generally this should  not
+         be done.  You're likely to cause yourself more headaches than
+         you fix.
+
+In any case, you should delete the previous copy of  INS36.LOG  before
+running  the  batch  job  again.   If  you  do  not, the files will be
+concatenated by the batch spooler, which can be confusing.
+
+
+
+3.3  VARIATIONS IN INSTALLATION PROCEDURES.
+
+No installation procedure  is  going  to  be  exactly  right  for  all
+systems.   You  can  produce  your own variation by editing INS36.CTL.
+Comments in that file should help.
+
+
+
+
+
+                                 3-3
+                 INSTALLATION PROCEDURES FOR TOPS-10
+
+
+The most common variation is to install  the  BLISS  system  on  other
+devices  than  the standard ones.  Many systems have a policy that new
+software is first installed in a temporary area  until  all  concerned
+are  satisfied  with  its  reliability.  Development Methods expends a
+great deal of effort trying to guarantee that  every  release  of  our
+software  is  at  least  as  reliable  as  any  previous release.  We,
+therefore, wish to encourage you to install BLISS-36 directly on SYS:,
+since  we  feel that our users are best served this way.  If, however,
+you still wish to make this modification, read on.
+
+There are several ways you can redirect  the  installation  procedure.
+One  way  is  to  change  the  definitions  appearing  on  page two of
+INS36.CTL.  Comments appearing with  the  device  definitions  explain
+what each logical device name means.
+
+A second way involves finding the place in INS36.CTL where the file(s)
+in  question  are  transfered  and  modify that line as desired.  This
+allows finer control but requires considerably more work.
+
+A link-time constant has been added  which  enables  the  compiler  to
+generate  indirect  through  memory  instructions.   The default is to
+disable this capability.
+
+To  change  the  default,  modify  SEGCMN.LNK  where  it  defines  the
+link-time  constant,  INDIR.   The  link  commands  have the following
+meaning:
+
+        /DEFINE:INDIR:0 - No indirect through memory instructions
+        /DEFINE:INDIR:1 - Indirect through memory instructions
+
+A link-time constant has been added to specify the  default  processor
+model  of  the  target  system for which code is to be generated.  The
+default is currently set to KL10/KS10.
+
+To  change  the  default,  modify  SEGCMN.LNK  where  it  defines  the
+link-time  constant,  CPUTYP.   The  link  commands have the following
+meaning:
+
+        /DEFINE:CPUTYP:0 - Target system is a KA10
+        /DEFINE:CPUTYP:1 - Target system is a KI10
+        /DEFINE:CPUTYP:2 - Target system is a KL10 or KS10
+
+
+
+3.4  AFTER INSTALLATION
+
+After installation is completed  there  is  only  a  small  amount  of
+cleanup to be done.
+
+The most important thing is to  place  a  note  in  the  system  login
+messages.  The procedures for doing this vary so widely from system to
+system that we did not try to include this in the  installation  batch
+file.   The  file "BLISS.NTC" supplied with the kit contains a typical
+message.
+
+We recommend that the installation area to which you dumped  the  tape
+be kept intact.  This makes updates and modifications easier.
+
+If, however, disk space is at a premium on your system, you can delete
+these files in either of two ways.
+
+If the area was empty when you started, then:
+
+        .DELETE *.*
+
+should work.  If there were files on the area which you wish to  keep,
+
+
+                                 3-4
+                 INSTALLATION PROCEDURES FOR TOPS-10
+
+
+then saying:
+
+        .SUBMIT DEL36.CTL/TIME:00:10:00
+
+will delete most of the files.  After it has completed enter:
+
+        .DELETE DEL36.*
+
+to get the rest.
+
+
+
+3.5  DIRECTORY OF TAPE
+
+The following is a list of the files included on the first save set of
+the installation tape.
+
+         BLISS.DOC
+         BLISS.HLP
+         BLISS.INS
+         CVT10.DOC
+         CVT10.HLP
+         DEL36.CTL
+         DMPREL.HLP
+         INS36.CTL
+         MONINT.DOC
+         SIX12.HLP
+         SIX12.MEM
+         TUTIO.HLP
+
+The following is a list of the files included on the second  save  set
+of the installation tape.
+
+         B361AB.REL
+         B361AT.REL
+         B361LB.REL
+         B361LT.REL
+         BLISS.NTC
+         BLISS.REL
+         BLSOTS.MAC
+         CVT10.EXE
+         CVT10.SNO
+         DEB36.LNK
+         DEB36.REL
+         DMPREL.EXE
+         ERROR.BNR
+         EZIO10.B36
+         EZIO10.REL
+         LSTCHK.BLI
+         MONINT.EXE
+         NORMAL.BNR
+         REG1AB.MAC
+         REG1AT.MAC
+         REG1LB.MAC
+         REG1LT.MAC
+         SEG1.LNK
+         SEG2.LNK
+         SEG3.LNK
+         SEG4.LNK
+         SEGCMN.LNK
+         SIX12.B36
+         TENDEF.L36
+         TENDEF.R36
+         TUTIO.R36
+         UUOSYM.L36
+         UUOSYM.R36
+
+
+                                 3-5
+                 INSTALLATION PROCEDURES FOR TOPS-10
+
+
+         XDUMP.REL
+         XPORT.L36
+         XPORT.REQ
+         XPOT10.DBG
+         XPOT10.REL
+
+
+
+3.6  INSTALLATION DIRECTORY
+
+The following is a list of the files  which  this  procedure  actually
+installs.   The  device  name given with each is the default device to
+which it is transfered.  Those files which go to device DSK:  are  not
+installed anywhere by default.
+
+         SYS:B361AB.REL
+         SYS:B361AT.REL
+         SYS:B361LB.REL
+         SYS:B361LT.REL
+         DOC:BLISS.DOC
+         HLP:BLISS.HLP
+         DSK:BLISS.REL
+         SYS:BLISS.EXE
+         BLI:BLSOTS.MAC
+         SYS:BLSSG2.EXE
+         SYS:BLSSG3.EXE
+         SYS:BLSSG4.EXE
+         DOC:CVT10.DOC
+         SYS:CVT10.EXE
+         HLP:CVT10.HLP
+         BLI:CVT10.SNO
+         SYS:DEB36.EXE
+         DSK:DEB36.REL
+         SYS:DMPREL.EXE
+         HLP:DMPREL.HLP
+         BLI:EZIO10.B36
+         BLI:EZIO10.REL
+         DOC:MONINT.DOC
+         SYS:MONINT.EXE
+         BLI:REG1AB.MAC
+         BLI:REG1AT.MAC
+         BLI:REG1LB.MAC
+         BLI:REG1LT.MAC
+         BLI:SIX12.B36
+         HLP:SIX12.HLP
+         DOC:SIX12.MEM
+         BLI:TENDEF.L36
+         BLI:TENDEF.R36
+         HLP:TUTIO.HLP
+         BLI:TUTIO.R36
+         BLI:UUOSYM.L36
+         BLI:UUOSYM.R36
+         SYS:XDUMP.EXE
+         BLI:XDUMP.REL
+         BLI:XPORT.DBG
+         BLI:XPORT.L36
+         BLI:XPORT.REL
+         BLI:XPORT.REQ
+         BLI:XPOT10.DBG
+         BLI:XPOT10.REL
+
+
+
+
+
+
+
+
+                                 3-6
+                 INSTALLATION PROCEDURES FOR TOPS-10
+
+
+3.7  SOME IMPORTANT FILES
+
+Below is some important files in the installation kit which the person
+installing  the BLISS-36 system should know about.  These files may be
+found in one or both of the two previous sections.
+
+      o  B36*.REL -- Various versions of the BLISS runtime system.
+
+      o  BLISS.DOC -- An brief description of this version of BLISS-36
+         for users and potential users of BLISS.
+
+      o  BLISS.HLP -- A help file informing users how to run BLISS.
+
+      o  BLISS.NTC -- A sample  login  message  informing  users  that
+         BLISS-36 has been installed.
+
+      o  BLISS.EXE -- The  BLISS-36  compiler  low  segment  and  high
+         segment overlay 1.
+
+      o  BLSSG2.EXE -- The BLISS-36 compiler high segment overlay 2.
+
+      o  BLSSG3.EXE -- The BLISS-36 compiler high segment overlay 3.
+
+      o  BLSSG4.EXE -- The BLISS-36 compiler high segment overlay 4.
+
+      o  DEL36.CTL -- Cleans out the installation area.
+
+      o  INS36.CTL  --  Installs  the   BLISS-36   system   from   the
+         installation area.
+
+      o  BLISS.INS -- This document.
+
+      o  XPOT10.DBG -- Special TOPS-10 XPORT debug object file for use
+         with the SIX12 debugger.
+
+      o  XPOT10.REL -- Standard TOPS-10 XPORT object file.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                 3-7
+   c@%

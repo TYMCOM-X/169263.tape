@@ -1,0 +1,21 @@
+do xref
+qedvax.xrf=qedenv,
+qed,
+qedcl,
+qld,
+qjoin,
+qsplit,
+qedtyp,
+qsubst,
+qederr,
+qmark,
+qprint,
+qedln,
+qopen,
+editre,
+qlabel,
+qread,
+qspred,
+qspat,
+qquery
+VAXQED

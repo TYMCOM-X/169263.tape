@@ -1,0 +1,270 @@
+$NUM OFF
+$PAGE
+$ver
+\\\\\\\Package:\DUMPIO\\\\\\\\\\\\\\\\\\\\\\\\\\\\Author:\J.\D.\Rosen
+\\\\\\\Version:\1.0\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\Date:\June\5,\1978
+$ski
+\\\\\\\Approved by:
+$cen
+$ski 6
+DUMPIO
+&ABSTRACT&
+$SKI 3
+$jus
+It is well known that the disk I/O functions provided by the DECsystem10
+are not oriented towards simplicity, but can provide random disk block
+access. The PASCAL I/O primitives are exactly that, and do not provide
+random access to files at all. A few random I/O packages exist on our
+system, namely TENIO and PASIO, but in some cases they are too general,
+and for small programs, or in packages where space is critical, their
+use is a bit of overkill.
+$ski
+DUMPIO is a set of PASCAL-callable routines, written in MACRO-10, to
+provide PASCAL users with random-block disk I/O in a very quick and
+dirty manner.  They occupy less than one-half page of high-segment
+memory, and use the dump I/O mode (bufferless) for greater efficiency.
+Since the error diagnostic facilities are very limited, their best usage
+would be in established programs which perform disk I/O in blocks, and
+which need only the basic functions of opening and closing files, and
+reading and writing blocks.
+$title right 'DUMPIO routines/\' right 'June 5, 1978'
+$page
+$ski 2
+$cen
+&DETAILS OF IMPLEMENTATION&
+$ski
+$jus
+$par 5
+Dump-mode I/O works exclusively in blocks of 128 36-bit words. The user
+of DUMPIO is similarly limited, since unlike TENIO, DUMPIO provides no
+buffers. The user must provide the address of an appropriately sized
+block in storage as the target address for the transfer. The size of
+the transfer may be any &integral& number of disk blocks (each 128 words).
+$ski
+$par 5
+DUMPIO, again unlike TENIO, provides no massaging of file protection codes.
+For example, if the user opens a file for which he/she has write but not
+rename or delete access, and then closes the file with the DELETE option,
+the file will be closed but not deleted with no error indication given.
+Similarly, if the user tries to open a file for read/write,
+and he/she has only read access, the open will fail. This will occur
+even if the file is on the user's account, meaning that the user has
+rename access (and the file could be renamed with an appropriate
+protection code, as TENIO does automatically).
+$ski
+$par 5
+DUMPIO works in the so-called 'synchronous' mode, in which errors in
+a read or write operation will appear in subsequent read/write attempts,
+until the error condition has been cleared through a SETSTS monitor
+call.  DUMPIO will return a code indicating the occurence of an error
+on all cases except an end-of-file on a read. The user should be aware
+that upon an error return, DUMPIO will reset the error condition then
+and there, and another attempt can be made. No indication is given
+of why an error has occurred (hardware, etc.).
+$ski
+$par 5
+The only static storage used by DUMPIO is 20b words of LOOKUP and ENTER
+argument blocks, dump-mode I/O command lists, and execute cells. The user
+must provide storage for the read/write buffer and the channel number.
+As is standard in I/O packages, the user must not fool around with an
+allocated channel number, unless he/she wants to see the message:
+$ver
+$ski
+?I/O to unassigned channel at user PC <whatever>
+$ski
+$jus
+Note that DUMPIO makes no attempt whatever to intercept such errors.
+$ski
+$par 5
+To perform reads or writes, the routines need the core address of the
+block(s) of data to be transferred. This address is a value parameter,
+thus there are two different ways to supply it. The first is to define
+such an address parameter as an integer subrange, and use
+$ski
+ord(address(DATACELL)) or ord(DATACELLPOINTER)
+$SKI
+to get the actual address. The second is to define a separate routine
+for each record type to be read or written, and to extend the name of
+the routine beyond the six significant characters. PASCAL will keep them
+separate, but LINK-10 will not. Thus, each definition can have the
+address parameter defined for a specific type of pointer, and no
+coercions are needed.
+$ski
+$par 5
+DUMPIO uses the PASCAL run-time channel allocation routines GETCN.\and
+FRECN., so there is no danger of mysterious interaction when the
+user has files open by using OPEN or RESET(REWRITE). The filename
+parsing routine GETIFN from RND:IOLIB is used.
+$page
+$VER
+&Entry&: OPENFILE
+$SKI
+$JUS
+This routine opens a user-specified file. A new channel number will be
+returned. OPENFILE must be called prior to any other calls to the package.
+$ski 3
+$ver
+&Usage&:
+   external procedure OPENFILE(
+      FN: packed array[1..30] of char;
+      var CHN: 0..15;
+      var AOK: boolean;
+      INPUTONLY,
+      DELETECON: boolean);
+$ski 2
+Input arguments:
+$ski
+$jus
+$ind left +12
+$par -10
+FN\\\\\\\\is the name of the file to be opened.
+$ski
+$par -10
+INPUTONLY\is set by the user to indicate whether the file should
+be opened for input only (true) or for input/output (false). The file
+must exist to be opened for input only.
+$ski
+$par -10
+DELETECON\is set by the user to indicate whether the contents of 
+a file opened for input/output should be deleted (true). OPENFILE 
+returns with an error if both DELETECON and INPUTONLY are true.
+$ski 2
+$par -12
+Output arguments:
+$ski
+$par -10
+AOK\\\\\\\is true if the open was successful, false otherwise. Possible
+false returns are file not found (INPUTONLY true), INPUTONLY and DELETECON
+both true, or an operating system error.
+$ski
+$par -10
+CHN\\\\\\\returns the new channel number to be associated with the
+file. When a file is open, its channel number should never be modified
+by the user.
+$ind left -12
+$page
+&Entry&: WRITEPAGE
+$ski
+$jus
+This routine performs a write operation. No buffers are used, and the
+user must supply the core address of the data to be written.
+In addition, OPENFILE must have been called prior to WRITEPAGE, and
+the file must have been opened for input/output.
+$ski 3
+$ver
+&Usage&:
+$ski
+   external procedure WRITEPAGE(
+      ADDR: SOME_TYPE;
+      LEN: 1..?;
+      BLOCKNUM: 0..?;
+      CHN: 0..15;
+      var IOOK: boolean);
+$ski 2
+Input arguments:
+$ski
+$jus
+$ind left +12
+$par -10
+ADDR\\\\\\is the core address of the data to be written. Either the
+pointer coercion or alternate procedure declarations, mentioned above,
+can be used to provide an appropriate address. 
+$ski
+$par -10
+LEN\\\\\\\is the length in 128-word units (disk blocks) of the write
+to be performed.
+$ski
+$par -10
+BLOCKNUM\\is the block address in the file to which the transfer
+is to be performed. The user should remember that disk block indices
+are zero-based.
+$ski
+$par -10
+CHN\\\\\\\is the channel number associated (via OPENFILE) with the
+file to which the write is to be performed. If CHN does not contain
+an open channel number, the monitor will print an 'I/O to unassigned
+channel' message.
+$ski 2
+$par -12
+Output arguments:
+$ski
+$par -10
+IOOK\\\\\\returns true if the write was successfully performed, false
+otherwise. Since the monitor will trap errors like writing to an unassigned
+channel, or to a file which was opened for input only, IOOK returning
+false is indicative of a &very strange error&. However, the error 
+condition is reset, and the user may try again.
+$ind left -12
+$page
+$jus
+&Entry&: READPAGE
+$SKI
+This routine performs a read operation. As with WRITEPAGE, no buffer
+is supplied, and the user must indicate the core address to which the
+data will be read. No partial reads are performed, and if the combination
+of disk block address and length of read extends across the end-of-file,
+the entire buffer is zeroed.
+$ski 3
+$ver
+&Usage&:
+   external procedure READPAGE(
+      ADDR: SOME_TYPE;
+      LEN: 1..?;
+      BLOCKNUM: 0..?;
+      CHN: 0..15;
+      var IOOK: boolean);
+$jus
+$ski 2
+Input arguments:
+$ski
+$ind left +12
+$par -10
+ADDR\\\\\\is the core address to which to perform the read.
+$ski
+$par -10
+LEN\\\\\\\is the length in disk blocks (128 words) of the transfer.
+$ski
+$par -10
+BLOCK\\\\\is the disk address from which to perform the read. Again,
+disk block addresses are zero-based.
+$ski
+$par -10
+CHN\\\\\\\is the channel number associated (via OPENFILE) with the
+file from which to perform the read. The monitor will trap an attempt
+to read from an unassigned channel.
+$ski 2
+$par -12
+Output arguments:
+$ski
+$par -10
+IOOK\\\\\\returns true if the read was performed successfully, false
+otherwise. Like WRITEPAGE, if IOOK is false, then a strange error has
+occurred, and has been reset.
+$ind left -12
+$page
+&Entry&: CLOSEFILE
+$SKI
+$JUS
+This routine closes a file, and is the complement of OPENFILE. The
+user has the option of deleting the file.
+$ski 3
+$ver
+&Usage&:
+   external procedure CLOSEFILE(
+      CHN: 0..15;
+      DELETE: boolean);
+$ski 2
+$jus
+$ind left +12
+$par -12
+Input arguments:
+$ski
+$par -10
+CHN\\\\\\\is the channel number associated with the file to be closed.
+$ski
+$par -10
+DELETE\\\\is set to true by the user to request deletion of the file.
+There is no error code, however, and the file is deleted only if the
+user has appropriate access to it.
+$ind left -12
+  

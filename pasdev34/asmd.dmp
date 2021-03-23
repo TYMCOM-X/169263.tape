@@ -1,0 +1,166 @@
+	INTERMEDIATE FORM AFTER MAKE_BASIC_BLOCKS FOR BLOCK 1 AT LEVEL 1:  PROGRAM ASMD_TEST
+	------------ ---- ----- ----------------- --- ----- - -- ----- --  ------- ---------
+
+     1      BLOCK   1 AT LEVEL 1:  PROGRAM ASMD_TEST
+
+     2    1 LABEL   
+
+     3      STMT    1: BEGIN ON LINE 7
+
+     4      STMT    1: <FUNCTION QUALIFIER> ON LINE 8
+     5      =       IDENT   TTY			       1 TEXT: FILE 32
+     6      =       CONST   '#CN'		       1 STRING 3
+     7      =       GEN SET 			       1 SET 0,0
+     8      =       OPEN    '#CN', ~, $7	       1 TEXT: FILE 32
+     9      ASSIGN  TTY := $8
+
+    10      STMT    1: <FUNCTION QUALIFIER> ON LINE 9
+    11      =       IDENT   TTYOUTPUT		       1 TEXT: FILE 32
+    12      =       CONST   '#CN'		       1 STRING 3
+    13      =       GEN SET 			       1 SET 0,0
+    14      =       REWRITE '#CN', ~, $13	       1 TEXT: FILE 32
+    15      ASSIGN  TTYOUTPUT := $14
+
+    16      STMT    1: <IO STATEMENT> ON LINE 10
+    17      =       IDENT   TTYOUTPUT		       5 TEXT: FILE 32
+    18      FILECHK TTYOUTPUT$17
+    19      STARTIO TTYOUTPUT$17
+    20      =       CONST   'ASMD TEST'		       1 STRING 9
+    21      WRITE   RIGHT 'ASMD TEST' TO TTYOUTPUT$17
+    22      WRITELN TTYOUTPUT$17
+    23      END IO  TTYOUTPUT$17
+    24      JUMP    TO 2 @ 25
+
+    25    2 LABEL   
+
+    26      STMT    1: REPEAT ON LINE 12
+
+    27      STMT    1: <IO STATEMENT> ON LINE 13
+    28      =       IDENT   TTYOUTPUT		       5 TEXT: FILE 32
+    29      FILECHK TTYOUTPUT$28
+    30      STARTIO TTYOUTPUT$28
+    31      =       CONST   125			       1 CHAR 7
+    32      =       BUFFER  TTYOUTPUT$28	       1 CHAR 7
+    33      ASSIGN  $32 := 125INTERMEDIATE FORM AFTER MAKE_BASIC_BLOCKS FOR BLOCK 1 AT LEVEL 1:  PROGRAM ASMD_TEST	      PAGE 2
+
+    34      PUT     TTYOUTPUT$28
+    35      END IO  TTYOUTPUT$28
+
+    36      STMT    1: <FUNCTION QUALIFIER> ON LINE 14
+    37      =       IDENT   TTYOUTPUT		       4 TEXT: FILE 32
+    38      FILECHK TTYOUTPUT$37
+    39      STARTIO TTYOUTPUT$37
+    40      BREAK   TTYOUTPUT$37
+    41      END IO  TTYOUTPUT$37
+
+    42      STMT    1: <IO STATEMENT> ON LINE 15
+    43      =       IDENT   TTY			       4 TEXT: FILE 32
+    44      FILECHK TTY$43
+    45      STARTIO TTY$43
+    46      READLN  TTY$43
+    47      END IO  TTY$43
+
+    48      STMT    1: <IO STATEMENT> ON LINE 16
+    49      =       IDENT   TTY			       7 TEXT: FILE 32
+    50      FILECHK TTY$49
+    51      STARTIO TTY$49
+    52      =       IDENT   ARG1		       1 @052434: REAL 16
+    53      =       CONST   16			       1 INTEGER 5
+    54      READ    REAL ARG1: ~: 16 FROM TTY$49
+    55      =       IDENT   OPERATION		       1 CHAR 7
+    56      =       BUFFER  TTY$49		       1 CHAR 7
+    57      ASSIGN  OPERATION := $56
+    58      GET     TTY$49
+    59      =       IDENT   ARG2		       1 @052434: REAL 16
+    60      =       CONST   16			       1 INTEGER 5
+    61      READ    REAL ARG2: ~: 16 FROM TTY$49
+    62      END IO  TTY$49
+
+    63      STMT    1: <SIMPLE STATEMENT> ON LINE 17
+    64      =       IDENT   CORD		       1 INTEGER 32S
+    65      =       IDENT   OPERATION		       1 CHAR 7
+    66      =       SCLCVT  OPERATION		       1 MACHINE_WORD: INTEGER 32S
+    67      ASSIGN  CORD := $66
+
+    68      STMT    1: <CASE HEAD> ON LINE 18
+    69      =       IDENT   CORD		       1 INTEGER 32S
+    70      CASE    CORD IN 42 .. 47 ELSE JUMP TO 7 @ 127INTERMEDIATE FORM AFTER MAKE_BASIC_BLOCKS FOR BLOCK 1 AT LEVEL 1:  PROGRAM ASMD_TEST	      PAGE 3
+
+    71      JUMP    TO 5 @ 101 IF ~ IN 42 .. 42
+    72      JUMP    TO 3 @ 75 IF ~ IN 43 .. 43
+    73      JUMP    TO 4 @ 88 IF ~ IN 45 .. 45
+    74      JUMP    TO 6 @ 114 IF ~ IN 47 .. 47
+
+    75    3 LABEL   
+
+    76      STMT    1: <IO STATEMENT> ON LINE 19
+    77      =       IDENT   TTYOUTPUT		       5 TEXT: FILE 32
+    78      FILECHK TTYOUTPUT$77
+    79      STARTIO TTYOUTPUT$77
+    80      =       IDENT   ARG1		       1 @052434: REAL 16
+    81      =       IDENT   ARG2		       1 @052434: REAL 16
+    82      =       RADD    ARG1, ARG2		       1 REAL 16
+    83      =       CONST   16			       1 INTEGER 5
+    84      WRITE   REAL $82: ~: 16 TO TTYOUTPUT$77
+    85      WRITELN TTYOUTPUT$77
+    86      END IO  TTYOUTPUT$77
+    87      JUMP    TO 7 @ 127
+
+    88    4 LABEL   
+
+    89      STMT    1: <IO STATEMENT> ON LINE 20
+    90      =       IDENT   TTYOUTPUT		       5 TEXT: FILE 32
+    91      FILECHK TTYOUTPUT$90
+    92      STARTIO TTYOUTPUT$90
+    93      =       IDENT   ARG1		       1 @052434: REAL 16
+    94      =       IDENT   ARG2		       1 @052434: REAL 16
+    95      =       RSUB    ARG1, ARG2		       1 REAL 16
+    96      =       CONST   16			       1 INTEGER 5
+    97      WRITE   REAL $95: ~: 16 TO TTYOUTPUT$90
+    98      WRITELN TTYOUTPUT$90
+    99      END IO  TTYOUTPUT$90
+   100      JUMP    TO 7 @ 127
+
+   101    5 LABEL   
+
+   102      STMT    1: <IO STATEMENT> ON LINE 21
+   103      =       IDENT   TTYOUTPUT		       5 TEXT: FILE 32
+   104      FILECHK TTYOUTPUT$103
+   105      STARTIO TTYOUTPUT$103
+   106      =       IDENT   ARG1		       1 @052434: REAL 16INTERMEDIATE FORM AFTER MAKE_BASIC_BLOCKS FOR BLOCK 1 AT LEVEL 1:  PROGRAM ASMD_TEST	      PAGE 4
+
+   107      =       IDENT   ARG2		       1 @052434: REAL 16
+   108      =       RMUL    ARG1, ARG2		       1 REAL 16
+   109      =       CONST   16			       1 INTEGER 5
+   110      WRITE   REAL $108: ~: 16 TO TTYOUTPUT$103
+   111      WRITELN TTYOUTPUT$103
+   112      END IO  TTYOUTPUT$103
+   113      JUMP    TO 7 @ 127
+
+   114    6 LABEL   
+
+   115      STMT    1: <IO STATEMENT> ON LINE 22
+   116      =       IDENT   TTYOUTPUT		       5 TEXT: FILE 32
+   117      FILECHK TTYOUTPUT$116
+   118      STARTIO TTYOUTPUT$116
+   119      =       IDENT   ARG1		       1 @052434: REAL 16
+   120      =       IDENT   ARG2		       1 @052434: REAL 16
+   121      =       RDIV    ARG1, ARG2		       1 REAL 16
+   122      =       CONST   16			       1 INTEGER 5
+   123      WRITE   REAL $121: ~: 16 TO TTYOUTPUT$116
+   124      WRITELN TTYOUTPUT$116
+   125      END IO  TTYOUTPUT$116
+   126      JUMP    TO 7 @ 127
+
+   127    7 LABEL   
+   128      =       CONST   0			       1 BOOLEAN 1
+   129      JUMP    TO 2 @ 25 IF NOT 0
+   130      JUMP    TO 8 @ 131 IF 0
+
+   131    8 LABEL   
+
+   132      STMT    1: <UNTIL CLAUSE> ON LINE 25
+
+   133      STMT    1: END ON LINE 26
+   134      STOP    
+   135      END     

@@ -1,0 +1,80 @@
+.if ($A="") .goto start
+.goto 'A
+start::
+.ru odms[,220]
+*use scribe
+*build resident using scribe,doscri,/s rdlib[,220],paslib[,234]
+*build reader using reader
+*build writer using writer
+*build scan using scan
+*build justfy using justfy
+*build getlin using getlin
+*exit
+.r qed
+*l reader.sym
+*3a
+*reloc 0
+*0
+*.
+*w
+*
+*l writer.sym
+*3a
+*reloc 0
+*0
+*.
+*w
+*
+*l scan.sym
+*3a
+*reloc 0
+*0
+*.
+*w
+*
+*l justfy.sym
+*3a
+*reloc 0
+*0
+*.
+*w
+*
+*l getlin.sym
+*3a
+*reloc 0
+*0
+*.
+*w
+*
+*q
+.r macro
+*scribe.srl,=scribe.sym
+*reader.srl,=reader.sym
+*writer.srl,=writer.sym
+*scan.srl,=scan.sym
+*justfy.srl,=justfy.sym
+*getlin.srl,=getlin.sym
+*^Z
+link::
+.r link
+*@scribe
+./ovlink reader
+./ovlink writer
+./ovlink scan
+./ovlink justfy
+./ovlink getlin
+.ru fixlow[,220]
+*reader
+*writer
+*scan
+*justfy
+*getlin
+*
+.ru odms[,220]
+*use scribe
+*update reader
+*update writer
+*update scan
+*update justfy
+*update getlin
+*exit

@@ -1,0 +1,263 @@
+        File DSK:NEWTYP.PAS[31024,320156]   Compiled 07-Oct-81 11:49   Pascal, Version 2(345)
+
+        File DSK:NEWTYP.PAS[31024,320156]   Compiled 07-Oct-81 11:49   Pascal, Version 2(345)
+
+        File DSK:NEWTYP.PAS[31024,320156]   Compiled 07-Oct-81 11:49   Pascal, Version 2(345)
+
+        File DSK:NEWTYP.PAS[31024,320156]   Compiled 07-Oct-81 11:49   Pascal, Version 2(345)
+
+
+
+
+
+			    $$$$    $   $   $   $   $$$$$   $   $   $$$$ 
+			     $  $   $   $   $$ $$     $     $   $   $   $
+			     $  $   $   $   $ $ $     $      $ $    $   $
+			     $  $   $   $   $ $ $     $       $     $$$$ 
+			     $  $   $   $   $   $     $       $     $    
+			     $  $   $   $   $   $     $       $     $    
+			    $$$$     $$$    $   $     $       $     $    
+
+
+			      DUMTYP -- File Typing Program for ADM-3A
+
+
+Options in effect: 
+
+	CHECK, SPECIAL, NOMAP, NOSYMBOLS, NOCALLS, NOASSEMBLY, NOXREF, TRACE, QBLOCKS, NOOPTIMIZE, 
+	NOCODE, NODEBUG, FINISH, NOGLOBAL, NOMAINSEG, NOOVERLAY, AUTOQUICK, AUTOSOURCE, NOSTANDARD, 
+	LENGTH (45), WIDTH (102), STORAGE (2048), ALLOC (0), ENABLE(P10)
+
+
+
+
+        File DSK:NEWTYP.PAS[31024,320156]   Compiled 07-Oct-81 11:49   Pascal, Version 2(345)
+
+        File DSK:NEWTYP.PAS[31024,320156]   Compiled 07-Oct-81 11:49   Pascal, Version 2(345)
+
+        File DSK:NEWTYP.PAS[31024,320156]   Compiled 07-Oct-81 11:49   Pascal, Version 2(345)
+
+        File DSK:NEWTYP.PAS[31024,320156]   Compiled 07-Oct-81 11:49   Pascal, Version 2(345)
+        File DSK:NEWTYP.PAS[31024,320156]   Compiled 07-Oct-81 11:49   Pascal, Version 2(345)
+
+        File DSK:NEWTYP.PAS[31024,320156]   Compiled 07-Oct-81 11:49   Pascal, Version 2(345)
+
+        File DSK:NEWTYP.PAS[31024,320156]   Compiled 07-Oct-81 11:49   Pascal, Version 2(345)
+
+        File DSK:NEWTYP.PAS[31024,320156]   Compiled 07-Oct-81 11:49   Pascal, Version 2(345)
+
+
+
+
+
+			    $$$$    $   $   $   $   $$$$$   $   $   $$$$ 
+			     $  $   $   $   $$ $$     $     $   $   $   $
+			     $  $   $   $   $ $ $     $      $ $    $   $
+			     $  $   $   $   $ $ $     $       $     $$$$ 
+			     $  $   $   $   $   $     $       $     $    
+			     $  $   $   $   $   $     $       $     $    
+			    $$$$     $$$    $   $     $       $     $    
+
+
+			      DUMTYP -- File Typing Program for ADM-3A
+
+
+Options in effect: 
+
+	CHECK, SPECIAL, NOMAP, NOSYMBOLS, NOCALLS, NOASSEMBLY, NOXREF, TRACE, QBLOCKS, NOOPTIMIZE, 
+	NOCODE, NODEBUG, FINISH, NOGLOBAL, NOMAINSEG, NOOVERLAY, AUTOQUICK, AUTOSOURCE, NOSTANDARD, 
+	LENGTH (45), WIDTH (102), STORAGE (2048), ALLOC (0), ENABLE(P10)
+
+
+
+
+        File DSK:NEWTYP.PAS[31024,320156]   Compiled 07-Oct-81 11:49   Pascal, Version 2(345)
+
+        File DSK:NEWTYP.PAS[31024,320156]   Compiled 07-Oct-81 11:49   Pascal, Version 2(345)
+
+        File DSK:NEWTYP.PAS[31024,320156]   Compiled 07-Oct-81 11:49   Pascal, Version 2(345)
+
+        File DSK:NEWTYP.PAS[31024,320156]   Compiled 07-Oct-81 11:49   Pascal, Version 2(345)
+MODULE  DUMTYP       DUMTYP -- File Typing Program for ADM-3A                          07-Oct-81 11:49
+SECTION 0                                                                                       PAGE 1
+
+    1	$TITLE DUMTYP -- File Typing Program for ADM-3A
+    2	program dumtyp
+    3	  options special;
+    4	
+    5	$SYSTEM uuocalMODULE  DUMTYP       DUMTYP -- File Typing Program for ADM-3A                          07-Oct-81 11:49
+SECTION 1            auto_cr_lf                                                                 PAGE 2
+
+    2	(*  AUTO CR LF will turn on or off the operating system switch which
+    3	    controls the automatic generation of a cr-lf following the 80-th
+    4	    character of each line.  It returns the old value of the switch.  *)
+    5	
+    6	function auto_cr_lf ( on: boolean ): boolean;
+    7	
+    8	type
+    9	    characteristics =
+   10	      ( lc_dm1, lc_dm2, lc_ecs, lc_pss, lc_obs, lc_hdx, lc_esc, lc_crd, lc_dfr,
+   11	        lc_nop, lc_nfc, lc_brk, lc_axc, lc_ncm, lc_hht, lc_lcp, lc_ptm, lc_hff );
+   12	    char_set = set of characteristics;
+   13	
+   14	    line_char_record = packed record
+   15	      case boolean of
+   16	        false: ( bits: char_set;
+   17	                 port: 0 .. #o777777 );
+   18	        true:  ( value: machine_word );
+   19	    end;
+   20	
+   21	var chars: line_char_record;
+   22	    x: machine_word;
+   23	
+   24	begin
+   25	  chars.value := -1;
+   26	  if uuo_call (#o51, 6, 0, address (chars), x) then ;
+   27	  auto_cr_lf := not (lc_nfc in chars.bits);
+   28	  if auto_cr_lf <> on then begin
+   29	    if on
+   30	      then chars.bits := chars.bits - [lc_nfc]
+   31	      else chars.bits := chars.bits + [lc_nfc];
+   32	    if uuo_call (#o51, 7, 0, address (chars), x) then ;
+   33	  end;
+   34	end;MODULE  DUMTYP       DUMTYP -- File Typing Program for ADM-3A                          07-Oct-81 11:49
+SECTION 2            dumtyp - main program                                                      PAGE 3
+
+    2	const
+    3	  cr = chr(13);
+    4	  lf = chr(10);
+    5	  bs = chr(8);
+    6	  esc = chr(27);
+    7	  maxlinelen = 256;
+    8	
+    9	var
+   10	  old_auto_cr_lf: boolean;
+   11	  f: text;      (* the file to be typed *)
+   12	  fname: file_name;     (* its name *)
+   13	  line: string[maxlinelen];     (* a line of file f *)
+   14	  startstring: string[maxlinelen];      (* string appearing in first line typed *)
+   15	  started: boolean;     (* whether we've seen startstring yet *)
+   16	  linepart: string[80]; (* a chunk of a file line that fits *)
+   17	  firstcol,lastcol: 1..maxlinelen;      (* user-specified range of file columns *)
+   18	  startcol,endcol,curcol: 0..81;        (* terminal columns *)
+   19	  skippoint: 1..maxlinelen;     (* index of next piece of linepart to do *)
+   20	
+   21	exception
+   22	  finished;
+   23	
+   24	
+   25	procedure set_column (col: 1 .. 80);
+   26	const
+   27	  escseq = esc||'=7';
+   28	begin
+   29	  write (tty, escseq, chr (col + 31));
+   30	end;
+   31	
+   32	
+   33	begin
+   34	  old_auto_cr_lf := auto_cr_lf (false);
+   35	  open(tty); rewrite(tty);
+   36	  loop  (* command loop *)
+   37	    write(tty,'File: '); break; readln(tty);
+   38	    IF EOLN (TTY) THEN
+   39	      SIGNAL (FINISHED);
+   40	    read(tty,fname);
+   41	    repeat      (* get good column values *)
+   42	      firstcol := 1; lastcol := maxlinelen;
+   43	      write(tty,'Columns: '); break; readln(tty);MODULE  DUMTYP       DUMTYP -- File Typing Program for ADM-3A                          07-Oct-81 11:49
+SECTION 2            dumtyp - main program                                                      PAGE 4
+
+   44	      while (not eoln(tty)) andif (tty^ = ' ') do get(tty);
+   45	      if not eoln(tty) then begin
+   46	        read(tty,firstcol);
+   47	        while (not eoln(tty)) andif (tty^ = ' ') do get(tty);
+   48	        if not eoln(tty) then read(tty,lastcol)
+   49	        end
+   50	      until firstcol <= lastcol;
+   51	
+   52	    write(tty,'Start string: '); break; readln(tty); read(tty,startstring);
+   53	    started := false;
+   54	    reset(f,'.TXT '||fname);
+   55	
+   56	    curcol := 1;
+   57	    set_column (1); break;
+   58	    while not eof(f) do begin   (* loop once per line *)
+   59	      readln(f,line);
+   60	      started := started or (index(line,startstring) <> 0);
+   61	      if started then begin
+   62	        line := substr(line,min(firstcol,length(line)+1),       (* get desired slice of line *
+	)
+   63	                        min(length(line),lastcol) -
+   64	                        min(firstcol,length(line)+1) + 1);
+   65	        repeat  (* loop once per 80-char chunk of line *)
+   66	          endcol := min(length(line),80);
+   67	          linepart := substr(line,1,endcol);
+   68	          line := substr(line,endcol+1);
+   69	
+   70	          startcol := verify(linepart,[' ']);
+   71	          if startcol > 0 then begin    (* there's a nonblank char in this chunk *)
+   72	            while linepart[endcol] = ' ' do endcol := endcol-1; (* kill trailers *)
+   73	            linepart := substr(linepart,startcol,endcol-startcol+1);
+   74	            if startcol < curcol then begin     (* move cursor back fastest way *)
+   75	              if (startcol <= 4) and (startcol <= (curcol div 2))
+   76	              then write(tty,cr,'   ':startcol-1)
+   77	              else begin
+   78	                if (curcol-startcol) <= 4
+   79	                then write(tty,(bs||bs||bs||bs):curcol-startcol)
+   80	                else set_column (startcol)
+   81	                end
+   82	              end
+   83	            else begin  (* move cursor forward fastest way *)
+   84	              if (startcol-curcol) <= 4MODULE  DUMTYP       DUMTYP -- File Typing Program for ADM-3A                          07-Oct-81 11:49
+SECTION 2            dumtyp - main program                                                      PAGE 5
+
+   85	              then write(tty,'    ':startcol-curcol)
+   86	              else set_column (startcol)
+   87	              end;
+   88	
+   89	            curcol := startcol;
+   90	            loop        (* output text,blanks,text,...,text *)
+   91	              skippoint := index(linepart,'     ',length(linepart)+1);
+   92	              curcol := curcol + skippoint - 1;
+   93	              write(tty,substr(linepart,1,skippoint-1));
+   94	              linepart := substr(linepart,skippoint);
+   95	            exit if length(linepart) = 0;
+   96	              skippoint := verify(linepart,[' ']);
+   97	              curcol := curcol + skippoint - 1;
+   98	              set_column (curcol);
+   99	              linepart := substr(linepart,skippoint)
+  100	              end;
+  101	
+  102	            assert(curcol=endcol+1)
+  103	
+  104	            end;        (* chunk is done *)
+  105	          write(tty,lf); break  (* kick line and break *)
+  106	          until length(line) = 0        (* iterate until line is done *)
+  107	          end   (* line is done *)
+  108	      end;      (* iterate until file is done *)
+  109	
+  110	    write(tty,cr)
+  111	
+  112	    end (* command loop *)
+  113	
+  114	  exception
+  115	    attention, finished:
+  116	      BEGIN
+  117	        CLEAR (TTYOUTPUT);
+  118	        if auto_cr_lf (old_auto_cr_lf) then ;
+  119	      END
+  120	
+  121	  end.
+
+File   level   on page     name
+
+  0	 0	    1	DSK:NEWTYP.PAS[31024,320156]
+  1	 1	    1	DSK:UUOCAL.INC[31024,320156]
+
+
+
+Section   in file   on page     title
+
+     1	      0	         2    auto_cr_lf
+     2	      0	         3    dumtyp - main program
+   

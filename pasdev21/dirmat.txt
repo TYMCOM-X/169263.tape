@@ -1,0 +1,56 @@
+
+
+
+                                     PASDIR Directory Manipulation Routines
+                                                                   10/30/78
+
+
+
+     Entry: DIR_MATCH     _____
+
+     This routine matches a string to a wild card pattern,  returning  true
+     if the string matches the pattern.
+
+     Usage:
+
+          external function DIR_MATCH
+            ( FNAME: DIR_FNAME;
+              PATTERN: DIR_M_STR ) : boolean;
+
+     Input arguments:
+
+       FNAME   is the string to match.
+
+       PATTERN is the pattern to which to match the string FNAME.
+
+     Output arguments:
+
+       <Function value>
+               is set TRUE if FNAME matches PATTERN, FALSE otherwise.
+
+     Requirements:
+
+       none.
+
+     Notes:
+
+       The  characters  "*" and "?" are wild card characters, and cannot be
+       matched literally.  Asterisk matches any string, including the  null
+       string.  Question  mark  matches  any  single character, or the null
+       string.  For example, a string of five question  marks  matches  any
+       string  of  length  less than or equal to five.  A wild field within
+       the pattern containing an asterisk is effectively  replaced  with  a
+       single  asterisk,  i.e. the  pattern  "Q??*"  is  equivalent  to the
+       pattern "Q*".
+
+       The null pattern matches only the null string; the  null  string  is
+       matched by a pattern containing only wild card characters, or by the
+       null pattern.
+
+     INCLUDE files required:
+
+       DTIME.TYP
+       PASDIR.TYP
+       PASDIR.INC
+
+

@@ -1,0 +1,481 @@
+$page
+$ver
+12.\\POINTERS
+$ski $jus
+Named variables in Pascal generally have a lifetime equal to that of their
+containing block.
+A variable local to a recursive procedure may
+have several instantiations, each of which
+may be referenced at different depths through the same name.
+Variables immediately enclosed by the program/module
+blocks (and specially declared static variables)
+are created once, and exist throughout
+the run of the Pascal program.
+&Dynamic variables&, however, may be created under direct program control,
+and have lifetimes independent of any block's activation.
+They are created and destroyed in a runtime storage area called the &heap&
+through the use of standard functions.
+Dynamic variables have no names, and are instead referenced through
+&pointers&.
+$ski
+Pointer types are bound by their declaration to a single &target type&.
+When a dynamic variable is created, its type is the target
+type of the pointer which references it.
+For example, when creating dynamic variables of type integer, one
+uses items of type "\^\integer\" to reference them.
+Pointer expressions yield references to dynamic variables through
+the &dereference& operator "^".
+For example, if "foo" is a pointer variable (or a pointer
+expression), "foo\^\" is a dynamic variable reference
+of the target type.
+$ski
+As mentioned in Section 8.3, pointer types are identical only if their
+target types are identical.
+This is the only kind of implicit compatibility for pointers, although several
+means exist for deliberate violation of this strong typing (Section 12.5).
+The predefined pointer constant &nil& is compatible with all pointer
+types, and is used to indicate &no reference&.
+If a pointer variable does not point to a dynamic variable, but will be
+examined, its value should be set to &nil&.
+A pointer expression equal to &nil& may not be dereferenced.
+$ski
+&Recursive data structures& may be easily defined in Pascal through
+the use of an aggregate type containing pointers to itself.
+Records are typically used here, with a field or fields containing
+the datum for each node, and pointer fields linking the node to its
+neighbors in the network.
+Special cases of the network are the tree and the list.
+$ski $ind +5 $ver
+type
+  net_pointer = ^ net_node;
+  net_node = record
+    data1, data2, ... , datan: data_type;
+    link1, link2, ... , linkm: net_pointer
+    end;
+
+  b_tree_element = record
+    key: b_tree_key;
+    next_leaf:  ^ b_tree_node
+    end;
+
+  b_tree_node =
+    array [1 .. ((b_tree_order + 1) div 2)] of b_tree_element;
+$ski 2 $ind -5 $jus
+The use of "net_node" in the definition of "net_pointer" occurs
+before its definition, since the definition of "net_node" requires
+the definition of "net_pointer".
+The definition of field "next_leaf" in the second example uses
+a similar reference to type "b_tree_node".
+Such &forward references& are permitted in Pascal for pointer types
+to permit construction of self-referent types.
+Further, if no pointer of a given pointer type is ever
+dereferenced, then its target type need not be defined.
+Thus, a routine may pass and assign pointers without
+knowledge of the pointer's target type (see Section 8.3).
+$ski 2 $ver
+12.1\\Allocation and Deallocation of Pointers
+$ski $jus
+The lifetime of a dynamic variable is completely under program control.
+Standard functions are used to create and destroy dynamic variables,
+whose existence is independent of scope.
+$ski 2 $ver
+12.1.1\\Allocation
+$ski $jus
+The predefined function NEW (p) is used to create a dynamic variable
+of pointer p's target type.
+Here, p must be a pointer reference; p is assigned such that it points
+to the new dynamic variable (i.e.\"\p\^\" is a reference to
+the new variable).
+After a NEW operation, p points to a &distinct& dynamic variable of its
+target type, independent of any previous NEW operations.
+The variable "\p\^\" is, generally, &not& initialized, so the
+programmer should take pains to do so properly.
+It is strongly suggested that any pointer fields in the NEW record be
+set to &nil& immediately.
+$ski 2 $ver
+12.1.2\\Deallocation
+$ski $jus
+The predefined function DISPOSE (px) is used to destroy a dynamic
+variable.
+Here, px is a pointer expression.
+The dynamic variable "\px\^\" is deallocated and invalidated.
+Any and all dynamic variables may be deallocated by a DISPOSE call
+using expressions of their pointer type.
+Any subsequent references to "\px\^\" are undefined, and
+any pointers whose value is px should be set to &nil&.
+$ski
+One of the subtleties of Pascal programming is the proper use of NEW
+and DISPOSE for manipulating dynamic structures.
+NEW recycles storage in the heap, so failing to DISPOSE each node of
+a network may result in sub-optimal performance as the heap becomes
+full of unused, forgotten dynamic variables.
+On the other hand, a dynamic variable must not be referenced once
+it has been DISPOSEd (including a second DISPOSE).
+All pointers to it must be reassigned; failure to do so creates a
+"dangling reference".
+Dereference of a dangling pointer may be detected by the
+implementation as an error, but the programmer should insure that
+such references are eliminated after a DISPOSE.
+$ski
+In the example below, type "bin" is a binary tree, with fields "left"
+and "right" as self-referent pointers.
+The subroutine KILL_BRANCH prunes a branch from such a tree.
+$ski $ind left +5 $ver
+procedure kill_branch (
+  var p: ^ bin);
+
+  begin
+  if p <> nil then
+    with p^ do begin
+      kill_branch (left);
+      kill_branch (right);
+      dispose (p);
+      p := nil
+      end
+  end;
+$ski $ind left -5 $jus
+Notice that the nodes of the binary tree are DISPOSEd in a post-order
+walk (that is, the children of a node are DISPOSEd before the node).
+The only dangling pointers in this routine exist between the
+DISPOSE operation and the assignment of p. 
+At all other points in the routine, the original
+subtree is a valid tree.
+$ski 2 $ver
+12.2\\Operations on Pointers
+$ski $jus
+As suggested by the above example,
+pointers may be assigned, dereferenced, and passed
+as parameters to predefined functions or user routines.
+The comparison operators "=" and "<>" may also be used with pointers.
+$ski
+The with statement (see Section 11.2.2), when used with a pointer type
+whose target type is a record, provides a convenient way of walking
+without using extra temporary variables.
+Remembering that the &with& reference is evaulated once, at the
+start of the statement, using a reference such as "\p\^\" frees
+the pointer p for use in operations within the with statement.
+Using such a statement within an iterative construct, p may be
+assigned to the next operand at any time during the iteration
+without affecting the &with& reference.
+At the start of the next iteration, the &with& reference will
+be evaluated again, using the new value of p.
+$ski
+The logical operators &andif& and &orif& (see Section 10.1.4)
+are useful in manipulating recursive structures.
+For example, in structures where a &nil& pointer indicates the
+end of a subchain, a search for a desired value may be performed
+easily by:
+$ski $ver $ind left +5
+p := first;
+while (p <> nil) andif (p^.value <> desired) do
+  p := p^.next;
+(* if p = nil then failure else success;  *)
+$ski $jus $ind left -5
+The &andif& prevents the dereference to examine "value" if p is &nil&,
+and terminates the loop at the end of the list.
+The above example would be considerably more complex without it, and
+indeed would require a &goto& or a boolean flag to indicate success.
+$ski 2
+$ver
+12.3\\Pointers to Records with Variants
+$ski $jus
+Many typical applications require more flexibility in creating list
+structures than can be obtained by using identical list nodes.
+For example, if nodes on a list structure can contain one of several
+disjoint sets of data, it is wasteful to allocate sufficient space
+for each node to hold all data sets simultaneously.
+MDSI Pascal provides &variant record& types, which permit records
+of a single type to have different structures.
+$ski
+$ind left +5 $ver
+<record type> ::= [&packed&] &record& <field list> &end&
+
+<field list> ::=
+   [ <fixed part> [ ';' <variant part> ] ] |
+     <variant part>
+
+<fixed part> ::=
+   <field definition> [ ';' <field definition> ]
+
+<field definition> ::= <identifier list> ':' <type>
+
+<variant part> ::=
+   &case& [ <identifier> ':' ] <type identifier> &of&
+      <variant> [ ';' <variant> ] ^1a*
+
+<variant> ::=
+   <case label list> ':' '(' <field list> ')'
+$ski $just $ind left -5
+A list of scalar constants may be specified on a call to NEW
+in order to create a record with the substructure specified by
+the constants.
+The &tag fields& (the <identifier> in the definition of <variant part>
+above) will be initialized by NEW if and only if they are specified
+on the call.
+NEW will allocate only as much space as is required by the variant
+requested; if a tag field is unspecified, the size of the largest
+variant will be allocated.
+$ski $ind left +5 $ver
+type
+  foo = record
+    a, b: integer;
+    case c: boolean of
+      true:  ();     (* the null variant *)
+      false: (
+        d, e: integer;
+        f: char;
+        case integer of
+          0..4: (g: integer);
+          5,7,9:(h, i: integer);
+          6,8:  (j, k: char);
+          10:   (l: real);
+          others: ()    (* null *)
+  end (* of record definition *);
+$ski $ind left -5 $jus
+Every record of type foo contains fields a, b, and c.
+A value for the tag field c may be specified to NEW as a constant
+following the pointer variable reference, which both initializes
+c and selects the substructure for the rest of the record.
+Selecting &true& creates no additional fields, and limits the
+size of the record to that required for a, b, and c.
+Every record for which c is &false& contains fields d, e, and f.
+A second nested variant part follows, which may also be specified
+on the call to NEW to indicate the allocation size; if none is
+specified, the "5,7,9" variant will be chosen as it is the largest.
+Notice that the &case& for the second variant has a type but
+not a field name.
+This is the so-called &undiscriminated union& of types in a record
+definition.
+No tag field is allocated in the record, and the integer used in the
+call to NEW is lost.
+This prohibits run time checking of the tag field in record
+references; in fact, the alternatives of an undiscriminated union
+represent a FORTRAN-type equivalence in which a single area of
+memory may be referenced by multiple names with different data types.
+Notice in the example above that field g may reference its part
+of the record as an integer, while field l may reference the same
+part of the record as a real.
+No run time check can enforce use of the variant given to NEW upon
+creation of the record; the programmer must ensure that any references
+made to fields within an undiscriminated union actually exist.
+(For example, the call "\NEW (P, false, 3) " would create a P^ for
+which field "i" would not exist; a reference to "i" is semantically
+legal but invalid at run time, and would not be detected as an error).
+$ski
+The Pascal I/O system (see Section 14) requires fixed length entities
+in its typed files.
+For example, the data type "file of foo" (using the above example)
+would contain constant size records whose size corresponds to
+the "false, 5" variant list.
+However, variable length entities may be written efficiently to a file
+using the EXTENT (p) function in conjunction with Pascal binary files.
+If the programmer records the size of each record immediately before
+the record itself, the file contains enough information to reconstruct
+the records.
+EXTENT (p) returns the size of the record p^ only if p^ is on the heap,
+and is not a subrecord of another record.
+Therefore,
+$ski $ind left +5 $ver
+write (f, extent (p), p^: extent (p))
+$ski $ind left -5 $jus
+will first write out the size of the record p^, and then the
+actual record p^.
+Notice that the size specification for the write of p^ is necessary,
+since its real size is not known at compile time.
+$ski
+To reconstruct records from such a file, the ALLOCATE function is used.
+NEW cannot be used simply, since the programmer must somehow determine
+the tag fields of the record being read in, and then use a &case&
+statement to select an appropriate NEW call (since NEW must be passed
+constants to select tag fields).
+ALLOCATE (p, n) will create a record of size n as p^.
+No initialization is performed by ALLOCATE, but in our case, none is
+needed since the entire record will be read into p^.
+Thus, to reconstruct p^ from a binary file, we need an integer i:
+$ski $ind left +5 $ver
+$need 3
+read (f, i);
+allocate (p, i);
+read (f, p^: i);
+$ski $ind left -5 $jus
+suffices to reconstruct the record.
+$ski
+Users are strongly cautioned that when writing linked networks in
+this manner, any pointer which was unmodified when the file was written
+will be invalid when the file is read.
+All pointers must be "fixed up" in some manner, perhaps by
+numbering the nodes in the network and writing them out to the
+file in numerical order.
+Given a network with n nodes which may be traversed in order n,
+an efficient numbering exists which requires one extra integer element
+per record, and requires m pointer coercions, where m is the total number
+of inter-network pointers.
+Users are invited to exploit special properties of their data structures
+in order to reduce this overhead.
+$ski
+The following restrictions exist for records with variant structures:
+$ski $ind left +6 $par -3
+1.\The program should not change tag fields in a record whose values
+were specified on the call to NEW which created the record.
+$par -3
+2.\Aggregate assignments to records created on the heap with variants
+may be unsafe, since the maximum length known at compile time is copied.
+If the record on the heap is smaller than this, locations outside
+the record may be modified, with undeterminable results.
+$ind left -6 $ski 2
+$ver
+12.4\\Pointers to Flexible Arrays
+$ski $jus
+Variant record types (see Section 12.3) can be used to allocate variable
+length records.
+In the same spirit, &flexible arrays& can be used to allocate variable
+length arrays.
+The declaration of an array type whose index specification gives an upper
+bound of "*" is a flexible array declaration.
+Flexible arrays, records whose last field is a flexible
+array, and variants whose last field is a flexible array all can
+be created by calls to NEW with user-specified upper bounds for
+the flexible items.
+Since the flexible item is always last, an integer-compatible
+expression follows the (optional) variant list in the NEW call,
+indicating the upper bound for the flexible item.
+If no size specification is given, the upper bound defaults to
+the declared lower bound; the size of the flexible item is 1.
+Notice that the upper bound specification may be a run time
+variable expression, and thus is a more general mechanism than
+variant record allocation.
+$ski
+The upper bound of a flexible item may be accessed after its
+creation by UPPERBOUND (p^ [.a]).
+The actual size of such an item may therefore be acccessed using
+a special form of the SIZE function (see Section 15.7) which
+takes the lower and upper bounds of an array as parameters.
+$ski
+The EXTENT and ALLOCATE functions may be used in a manner analogous
+to that used for variable length records for writing and restoring
+flexible array items to or from a binary file.
+$ski $ind left +5 $ver
+type
+  flex = array [1..*] of integer;
+  flexptr = ^ flex;
+  flexrec = record
+    a: integer;
+    case b: boolean of
+      true:  (c: integer);
+      false: (d: flex)
+    end;
+
+var
+  f: flexptr;
+  g: ^ flexrec;
+$ski $ind left -5 $jus
+Given the above declarations, the following NEW calls are allowed:
+$ski $ind left +5 $ver
+new (f, 100);         (* allocates 100 element array *)
+new (g, true);        (* fields a, b, and c only *)
+new (g, false);       (* fields a, b, d with upperbound = 1 *)
+new (g);              (* identical to above *)
+new (g, false, 30);   (* fields a, b, d with upperbound = 30 *)
+$ski $ind left -5 $jus
+The following restrictions exist for flexible array items:
+$ind left +6 $ski $par -3
+1.\The upper bound of a flexible array cannot be changed once it
+is created.
+$par -3
+2.\Aggregate assignment of (records with) flexible items is safe only
+if the lower and upper bounds are the same. This is a more liberal
+rule than that for variant records.
+$ind left -6 $ski 2
+$ver
+12.5\\Pointer Coercions
+$ski $jus
+Pointer types are compatible (and identical) only if their base
+types are identical.
+Given the existence of variant record and flexible array types, this
+compatibility rule is suitable for most applications,
+since it partitions the set of dynamic
+variables by type, detecting all references across types.
+In some cases, however, bending this strong compatibility rule is necessary
+or desirable for reasons of efficiency or simplicity.
+Also, in certain cases, it becomes necessary to form pointers to variables
+which were not created on the heap, or to perform "pointer arithmetic".
+The creation of a pointer value by any means other than the predefined
+function NEW or the predefined constant &nil& is called a
+&pointer coercion&.
+MDSI Pascal provides explicit conversion functions which permit the
+programmer to coerce pointers in a straightforward manner.
+It should be noted that, in general, &careful& use of these functions
+does not compromise machine independence of programs, although relatively
+simple operations can easily do so.
+Also, the integrity of Pascal run time support routines can be
+destroyed by incautious assignments to memory.
+Since pointer coercions are explicit, it is completely the
+programmer's responsibility to use coerced pointers correctly.
+$ski
+The most general pointer coercion function is 
+$ski $ind left +5 $ver
+pointer_type_name (p)    or    pointer_type_name (n)
+$ski $ind left -5 $jus
+where p is an expression of any pointer type, and n is an integer-compatible
+expression.
+This constructions forms a pointer compatible withpointer
+type identified by pointer_type_name whose value equals the value of
+p or n.
+For example,
+$ski $ind left +5 $ver $need 7
+type
+  foo = ^ integer;
+  bar = ^ foo;
+
+var
+  a: foo;
+  b: bar;
+$ski $ind left -5 $jus
+creates the functions "foo" and "bar", which are available for pointer
+coercions such as:
+$ski $ind left +5 $ver $need 2
+a := foo (b);      (* convert a bar to a foo *)
+b := bar (1923);   (* integer constant *)
+$ski $ind left -5 $jus
+The predefined function ORD (x) returns an integer-compatible value
+corresponding to the integer value of a pointer if x is of a pointer type,
+or the zero-based ordinal of a scalar if x is of a scalar type.
+Using ORD permits construction of pointer arithmetic expressions,
+such as:
+$ski $ind left +5 $need 2 $ver
+a := foo ( ord (b) + 13 );    (* dangerous!! *)
+a := foo (ord (b) + size (b)) (* better form *)
+$ski $ind left -5 $jus
+Using integer constants in such pointer expressions is the primary
+cause of machine dependence in pointer coercions.
+Use of the SIZE function will usually eliminate all such integer
+constants except in specifically machine-dependent routines.
+$ski
+The predefined type PTR is a pointer type which is compatible with all
+other pointer types.
+This type is especially useful as a parameter type for routines which
+perform some function independent of the type of the pointer (such as
+writing the record out to a binary file).
+Note that this also defines the function PTR (p) or PTR (n), as for
+all other pointer types.
+$ski
+The predefined function ADDRESS (x) returns an integer-compatible
+value which is the machine address of the reference x.
+The ADDRESS function can be used to form pointers to items not on
+the heap, and to aid in pointer arithmetic operations.
+Again, careful use of ADDRESS and SIZE will not compromise machine
+independence.
+$ski
+The following restrictions exist for arguments to ADDRESS:
+$ski $ind left +6 $par -3
+1.\The argument must be a valid reference.
+$par -3
+2.\The argument cannot be a packed component (that is, a component
+of a packed array or packed record which is not itself a record,
+array, or string).
+$par -3
+3.\The argument cannot be a substring.
+$ski $ind left -6
+Notice that it is possible to form pointers to subrecords within
+a record by using the ADDRESS function.
+   a*3%

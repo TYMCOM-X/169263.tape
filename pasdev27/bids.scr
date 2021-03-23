@@ -1,0 +1,343 @@
+$width 80 $top 4 $bot 4 $num off
+$cen
+&HIGH-CARD POINTS&
+$ski 2 $ver
+Ace   - 4 points
+King  - 3 points
+Queen - 2 points
+Jack  - 1 point
+$ski 3 $cen
+&DISTRIBUTION POINTS&
+$ski 2 $ver
+0 cards         - 2 points
+1 card          - 1 point
+6 cards         - 1 point
+7 cards or more - 2 points
+$ski 3 $cen
+&DISTRIBUTION POINTS FOR A RAISE&
+$ski 2 $ver
+- add 1 point for five trumps
+- subtract 1 point for three trumps
+- add 1 point for a doubleton
+- add 3 points for a singleton
+- add 5 points for a void
+$ski 3 $cen
+&QUICK TRICKS&
+$ski 2 $ver
+Ace-King   - 2 Quick Tricks
+Ace-Queen  - 1-1/2 Quick Tricks
+Ace        - 1 Quick Trick
+King-Queen - 1 Quick Trick
+King       - 1/2 Quick Trick
+$ski 3 $cen
+&DISTRIBUTIONS&
+$ski 2 $ver
+Balanced     - no suit has less than 2 cards or more than 4 cards
+             - distribution is 4-3-3-3 or 4-4-3-2
+
+Unbalanced   - has a void, singleton, or 6-card or longer suit
+             - counts for distribution points
+
+Semibalanced - has a 5-card suit and no distribution points
+             - distribution is 5-3-3-2 or 5-4-2-2
+$pag $cen
+&KINDS OF HANDS&
+$ski 2 $ver
+BAL - balanced hand
+MAJ - unbalanced hand, 5-card major suit
+MIN - unbalanced hand, no 5-card major hand
+
+Semibalanced hands:
+
+- with 5-card major, treat as MAJ
+    . unless suit is truly worthless
+
+- with 5-3-3-2 distribution, no 5-card major, treat as BAL
+    . unless suit is very strong, other suits very weak, near 14 points
+
+- with 5-4-2-2 distribution, no 5-card major, treat as MIN
+    . unless long suits are worthless, all strength is in doubletons
+$ski 3 $cen
+&ONE-LEVEL OPENING BIDS&
+$ski $ver
+BAL - 11 pts or less, pass
+    - 12-14 pts, open 1 No Trump
+    - 15 pts or more, open 1 in longer minor suit
+        . with equal-length minors, open 1 Club, unless no honors
+
+MAJ - 11 pts or less, pass
+    - 12 points or more, open 1 in longer major suit
+        . with equal-length majors, prefer 1 Spade
+
+MIN - 13 pts or less, pass
+      14 pts or more, open 1 in longer major suit
+        . with two 5-card minors, open 1 Diamond
+        . with 4-4-4-1 distribution, open 1 in lowest 4-card suit
+$ski 3 $cen
+&POINT ADJUSTMENTS&
+$ski 2 $ver
+Quick Tricks:
+   - with 1 QT or less, pass
+   - with 1-1/2 QT, do not open a minor; open a major or no-trump
+     optionally, and only with an extra point
+   - with 2 QT, open normally
+   - with 2-1/2 QT, open with one point less
+   - with 3 QT, always open
+
+For an unbalanced minor opening:
+   - count one point extra for a 4-card spade suit
+
+For a no-trump opening:
+   - opening is optional with 12 points, particularly if vulnerable
+   - disregard the quick trick requirement in third or fourth hand
+$pag $cen
+&AFTER A ONE-BID IN A MAJOR -- WEAK AND MEDIUM RESPONSES&
+$ski 2 $ver
+2 or fewer trumps, 5-11 points, bid 1 No Trump
+   . opener's rebids are:
+
+       - with a 5-card suit, bid a lower-ranking suit
+           . bid a 4-card heart suit or a 3-card minor
+           . with equal-length clubs and diamonds, bid clubs
+           . responder's rebids are:
+               - 5-9 points, no good suit, doubleton in major, raise to 2
+                   . opener continues as after single raise (see below)
+               - 5-9 points, singleton in major, no good suit, pass
+               - 6-card or strong 5-card suit, bid new suit
+                   . opener tries for game with 16 points and a fit
+               - 8-11 points and support, raise opener's second suit
+                   . support is four hearts, five in a minor
+                   . opener goes to game with 16 points
+               - 9-11 points, balanced hand, bid 2 No Trump
+                   . opener goes to game with 16 points or more
+
+       - with a 6-card suit, rebid major
+           . responder's rebids are:
+               - 8 points or less, pass
+               - 9-11 points, good suit, bid new suit
+                   . opener goes to game with 16 points and a fit
+               - 9-11 points, no long suit, invite to game
+                   . bid 2 No Trump with well-balanced hand
+                   . raise major with outside doubleton or poor fillers
+                   . opener goes to game with 14 points or more
+
+
+3 or more trumps, 5-9 points (with distribution), raise major to 2
+   . opener's rebids are:
+
+       - 16 points or less, pass
+       - 17-19 points, raise to 3 or bid 2 No Trump
+             . responder goes to game with 7-9 points
+       - 20 points or more, bid game
+  
+
+3 or more trumps, 10-12 points (with distribution), bid 1 No Trump
+   . opener's rebids are the same as above
+   . responder rebids 3 in major
+   . opener goes to game with 14 points or more
+
+
+after 1 Heart, with a very weak hand and good spades,
+respond 1 No Trump, then rebid 2 Spades
+$pag $cen
+&AFTER A ONE-BID IN A MAJOR -- STRONG RESPONSES&
+$ski 2 $ver
+12-14 points, balanced or semi-balanced hand, all suits stopped,
+doubleton suppport or 4-3-3-3 distribution, bid 2 No Trump
+   . forcing to game
+   . opener's rebids:
+      - flat distribution, bid 3 No Trump
+      - unbalanced distribution, bid 4 in major
+      - or bid 3 in a new suit
+
+13-15 points in support, 4-card support, bid 3 in major
+   . forcing to game
+   . opener simply bids 4 with a normal hand
+
+12-14 points, all suits stopped, singleton in major, bid a new suit
+   . bid No Trump on the next bid
+
+13-15 points in support, only 3-card support, bid a new suit
+   . support the major on the next bid
+
+with about 10 high-card points and a good suit, bid two of a new suit
+   . if planning to bid another suit, requires about 13 high-card points
+   . hand should make game against a minimum opening with a fit
+   . one-round force
+   . promises a rebid
+   . game force if either supports partner's suit or bids No Trump
+   . opener's rebids
+      - rebid major to limit hand
+      - bid new suit with good distribution or 15 or more points
+      - with 4 hearts, always bid 2 Hearts after 1 Spade - 2 in minor
+      - bid 2 No Trump with 5-3-3-2 distribution, 15-17 points,
+        stoppers, some fit (doubleton honor) with partner's suit
+      - raise responder with 15 or more points and 4-card support
+        to a Jack or 3 cards to a high honor
+$pag $cen
+&STRONG REBIDS AFTER ONE IN A MAJOR& - &ONE NO TRUMP&
+$ski 2 $ver
+18-20 points, semi-balanced hand, bid 2 No Trump
+   - responder bids 3 No Trump with 7-8 points, or with
+     a good 6-card (or very good 5-card) suit
+   - with a long, weak suit, responder bids 3 in it
+      . opener may bid game with support for the suit
+   - if making a delayed raise, responder bids 3 in major
+
+With enough tricks, bid 3 No Trump
+
+6-card major, 18-19 points, bid 3 in major
+   - doubleton support and 6-7 points, responder raises to 4
+   - singleton and 8 points, responder bids 3 No Trump
+
+With enough tricks, jump to 4
+
+20 points or more, jump shift
+   . forces to game
+   . may be legitimate two-suiter
+   . may be contrived if too strong for jump raise
+   . may simply be high point-count
+$pag $cen
+&ONE HEART& - &ONE SPADE&
+$ski 2 $ver
+requires 4 spades and:
+   . 9 points supporting hearts
+      . can bid 2 Hearts after opener's rebid, like delayed raise
+   . poor hand, singleton heart
+      . can pass rebid in either minor by opener
+   . poor hand with rebiddable spades
+   . fair-to-good hand
+
+
+opener's responses:
+   . with 12-14 points:
+      - balanced hand, bid 1 No Trump
+      - unbalanced, 3-card spade support, bid 2 Spades
+      - unbalanced, no spade support, bid 2 Hearts
+         . even with only 5 hearts
+
+   . 14 points or more, bid 2 in a minor
+      . may be contrived, to show strength
+
+   . strong rebids are as after 1 No Trump response
+      - 2 or 3 No Trump
+      - 3 or 4 Hearts
+      - 3 in minor
+
+   . with 4 spades and 17 points supporting spades, bid 3 Spades
+
+
+responder's rebids:
+   - 2 No Trump is a game invitation
+   - bid game directly with enough points
+   - may pass
+   - 2 in a new suit is weak
+$page
+$center
+&AFTER ONE NO TRUMP& -- &11 POINTS OR LESS&
+$skip 2 $verb
+5-card major, bid 2 in major
+   . opener normally passes
+   . opener may raise to 3 with strong 4-card support (preemptive)
+   . opener may bid a new suit as a short-suit try for game
+
+unbalanced hand, long minor suit, bid 3 in minor
+   . opener passes
+
+poor hand, diamond suit, bid 2 Diamonds
+   . to induce opponents to bid
+
+5-11 points, balanced hand, pass
+
+disastrous hand, bid some suit to escape from no-trump
+   . no decent suit, bid 2 Clubs
+   . if already doubled:
+      . bid a 5-card suit
+      . no 5-card suit, 5 points or more, pass
+      . no 5-card suit, less than 5 points, bid some suit
+$skip 3 $center
+&AFTER ONE NO TRUMP& -- &12 POINTS OR MORE&
+$skip 2 $verb
+balanced hand, bid 3 No Trump
+
+6-card major, bid 4 in major
+
+5-card major, want game with 3-card support, bid 3 in major
+   . opener raises to 4 with 3-card support
+   . opener bids 3 No Trump with 2-card support
+
+5-card major, want partner to choose, bid 2 Clubs
+   . if opener bids major, raise to 4
+   . otherwise, bid 3 in major
+      . opener may raise to 4 or bid 3 No Trump
+
+one or two 4-card majors, bid 2 Clubs
+   . if opener bids major, raise to 4
+   . otherwise, bid 3 No Trump
+
+strong unbalanced hand with minor suit, bid 2 Clubs, then 3 in minor
+   . partner may bid 3 No Trump, 4 in minor, or new suit to
+     show strength and stopper
+$page $center
+&AFTER ONE NO TRUMP& -- &BORDERLINE HANDS&
+$skip 2 $verb
+12-point hands with:
+   . long weak suits
+   . points in short suits
+
+11-point hands with:
+   . 4-card major
+   . good long suit
+
+balanced hand, bid 2 No Trump
+   . opener bids 3 No Trump with 13 or 14 points
+
+4-card major, bid 2 Clubs
+   . if opener bids major, raise to 3
+      . opener may raise to 4 with extra points or ruffing values
+   . otherwise, bid 2 No Trump
+      . opener bids 3 No Trump with 14 points
+
+5-card major, bid 2 Clubs
+   . if opener bids major, raise to 3
+   . otherwise, bid 2 in major (or 2 No Trump, if impossible)
+      . opener raises to 4 with strong hand and support
+      . opener raises to 3 with weaker hand and support
+      . opener bids 2 No Trump with strong hand, no support
+$skip 3 $center
+&AFTER ONE NO TRUMP OVERCALLED&
+$skip 2 $verb
+11 points or less, unbalanced, bid 2 in a suit or pass
+
+12 points or more, bid 3 in a suit or 3 No Trump
+
+double with:
+   . 9 points and 4 good trumps (optional)
+   . 10 points and 4 trumps
+   . 11 points or more and 3 trumps to an honor
+   . be careful when points are in queens and jacks
+   . be careful with a long side suit
+   . be careful with too many points when overcall was voluntary
+     (consider bidding game instead)
+
+9-11 points, balanced hand, can't double, bid 2 No Trump
+   . opener may pass with overcalled suit stopped
+   . otherwise, opener bids his best suit
+      . responder may then bid a preferred suit
+
+
+treat a double like an overcall
+
+if responder passes after an overcall or a double, then
+opener must pass, too
+$page $center
+&STAYMAN&
+$skip 2 $verb
+when responder bids 2 Clubs over 1 No Trump
+   . opener bids 2 Spades with 4-card spades
+   . opener bids 2 Hearts with 4-card hearts, shorter spades
+   . opener bids 2 Diamonds otherwise
+   . if opener bids 2 Spades and responder then bids No Trump, then
+     opener knows that responder was interested in hearts, and may
+     bid them with a 4-card suit
+    

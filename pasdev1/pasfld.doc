@@ -1,0 +1,25 @@
+#system (Pascal Compiler)
+#module (PASFLD,11/7/78)
+This module contains the constant expression folding module.
+Actually, two distinct modules are compiled from PASFLD.
+If $X1 is enabled, then PA1FLD is generated.
+The version of FOLD in this module is recursive, and will fold all the
+operands of an expression before attempting to fold the expression itself.
+If $X2 is enabled, the PA2FLD is generated.
+This version of FOLD is non-recursive.
+It assumes that the operands of an expression will already have been folded
+when FOLD is called.
+#entry (fold)&
+takes an expression tree, applies any applicable constant folding operations
+to it, and returns the folded expression tree.
+The pass 1 version of Fold also takes the parse tree for the expression, and
+the pass 2 version takes the source id of the statement containing the
+expression.
+If an error is detected in an expression being folded, a warning message
+is printed on the indicated parse node or line, and the expression is not
+folded.
+Only a warning message is printed because there is the possibility that the
+expression will not be evaluated at run time, so an actual error may not
+occur.
+#responsible (Compiler Group)
+#end

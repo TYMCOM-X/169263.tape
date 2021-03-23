@@ -1,0 +1,148 @@
+        File DSK:EXPMOD.PAS[31024,332212]   Compiled 14-Sep-81 17:18   Pascal, Version 2(330)
+
+        File DSK:EXPMOD.PAS[31024,332212]   Compiled 14-Sep-81 17:18   Pascal, Version 2(330)
+
+        File DSK:EXPMOD.PAS[31024,332212]   Compiled 14-Sep-81 17:18   Pascal, Version 2(330)
+
+        File DSK:EXPMOD.PAS[31024,332212]   Compiled 14-Sep-81 17:18   Pascal, Version 2(330)
+
+
+
+
+
+		    $$$$    $$$$     $$$     $$$$           $$$$    $$$$    $$$$$
+		    $   $   $   $   $   $   $               $   $   $   $     $  
+		    $   $   $   $   $   $   $               $   $   $   $     $  
+		    $$$$    $$$$    $   $   $ $$$           $$$$    $$$$      $  
+		    $       $ $     $   $   $   $           $ $     $         $  
+		    $       $  $    $   $   $   $           $  $    $         $  
+		    $       $   $    $$$     $$$    $$$$$   $   $   $         $  
+
+
+				  EXPENSE REPORT PROGRAM JULY 1981
+
+
+Options in effect: 
+
+	CHECK, NOSPECIAL, NOMAP, NOSYMBOLS, NOCALLS, NOASSEMBLY, XREF, TRACE, QBLOCKS, NOOPTIMIZE, 
+	CODE, DEBUG, FINISH, NOGLOBAL, NOMAINSEG, NOOVERLAY, AUTOQUICK, AUTOSOURCE, NOSTANDARD, 
+	LENGTH (45), WIDTH (102), STORAGE (2048), ALLOC (0), ENABLE(P10)
+
+
+
+
+        File DSK:EXPMOD.PAS[31024,332212]   Compiled 14-Sep-81 17:18   Pascal, Version 2(330)
+
+        File DSK:EXPMOD.PAS[31024,332212]   Compiled 14-Sep-81 17:18   Pascal, Version 2(330)
+
+        File DSK:EXPMOD.PAS[31024,332212]   Compiled 14-Sep-81 17:18   Pascal, Version 2(330)
+
+        File DSK:EXPMOD.PAS[31024,332212]   Compiled 14-Sep-81 17:18   Pascal, Version 2(330)
+        File DSK:EXPMOD.PAS[31024,332212]   Compiled 14-Sep-81 17:18   Pascal, Version 2(330)
+
+        File DSK:EXPMOD.PAS[31024,332212]   Compiled 14-Sep-81 17:18   Pascal, Version 2(330)
+
+        File DSK:EXPMOD.PAS[31024,332212]   Compiled 14-Sep-81 17:18   Pascal, Version 2(330)
+
+        File DSK:EXPMOD.PAS[31024,332212]   Compiled 14-Sep-81 17:18   Pascal, Version 2(330)
+
+
+
+
+
+		    $$$$    $$$$     $$$     $$$$           $$$$    $$$$    $$$$$
+		    $   $   $   $   $   $   $               $   $   $   $     $  
+		    $   $   $   $   $   $   $               $   $   $   $     $  
+		    $$$$    $$$$    $   $   $ $$$           $$$$    $$$$      $  
+		    $       $ $     $   $   $   $           $ $     $         $  
+		    $       $  $    $   $   $   $           $  $    $         $  
+		    $       $   $    $$$     $$$    $$$$$   $   $   $         $  
+
+
+				  EXPENSE REPORT PROGRAM JULY 1981
+
+
+Options in effect: 
+
+	CHECK, NOSPECIAL, NOMAP, NOSYMBOLS, NOCALLS, NOASSEMBLY, XREF, TRACE, QBLOCKS, NOOPTIMIZE, 
+	CODE, DEBUG, FINISH, NOGLOBAL, NOMAINSEG, NOOVERLAY, AUTOQUICK, AUTOSOURCE, NOSTANDARD, 
+	LENGTH (45), WIDTH (102), STORAGE (2048), ALLOC (0), ENABLE(P10)
+
+
+
+
+        File DSK:EXPMOD.PAS[31024,332212]   Compiled 14-Sep-81 17:18   Pascal, Version 2(330)
+
+        File DSK:EXPMOD.PAS[31024,332212]   Compiled 14-Sep-81 17:18   Pascal, Version 2(330)
+
+        File DSK:EXPMOD.PAS[31024,332212]   Compiled 14-Sep-81 17:18   Pascal, Version 2(330)
+
+        File DSK:EXPMOD.PAS[31024,332212]   Compiled 14-Sep-81 17:18   Pascal, Version 2(330)
+Pascal, Version 2(330) Symbol Table Dump   14-Sep-81 17:18 Module: PROG_RPT Page 1
+
+
+
+
+Program PROG_RPT
+
+  SYMBOLS:
+     1				    53D		  66M
+     AIR_FARE			    1-3D	  1-10V
+     BADC			    1-1D	  64V
+     BADC_PROC			    26D		  64V
+     BREAKFAST			    1-4D
+     CAR_RENTAL			    1-3D
+     CATEGORIES_AND_TOT		    1-2D
+     CATEGORY			    1-10D	  1-20R
+     CATEGORY_CO_PAID		    1-6D
+     CATEGORY_EMP_PAID		    1-6D
+     CATEGORY_TOTAL		    1-6D
+     COMMAND			    18D		  53V
+     COMPANY_PAID		    1-12D
+     CONVERSION_FACTOR		    17D		  32M
+     DATA_SAVE			    15D		  30M
+     DAYS			    1-11D	  1-20R
+     DAYS_AND_TOTALS		    1-7D
+     DAY_CO_PAID		    1-9D
+     DAY_EMP_PAID		    1-9D
+     DAY_TOTAL			    1-9D
+     DINNER			    1-5D
+     DIRECTIVE			    1-1D	  18R
+     EMPLOYEE_PAID		    1-12D
+     ENTERTAINMENT		    1-5D
+     ENTR			    1-1D	  55V
+     ENTR_PROC			    20D		  55V
+     EXP_RECORD			    1-13D
+     FRI			    1-8D
+     HELP			    1-1D	  63V
+     HELP_PROC			    25D		  63V
+     INIT			    1-1D	  54V
+     INIT_PROC			    19D		  54V
+     LOAD			    1-1D	  58V
+     LOAD_PROC			    23D		  58V
+     LOCAL_TRANSPORTATI		    1-4D
+     LODGING			    1-4D
+     LUNCH			    1-4DPascal, Version 2(330) Symbol Table Dump   14-Sep-81 17:18 Module: PROG_RPT Page 2
+Program PROG_RPT (continued)
+
+
+     METHOD_OF_PAYMENT		    1-12D	  1-22R
+     MISCELLANEOUS		    1-5D	  1-10V		1-10V
+     MON			    1-8D
+     OK				    27D		  60P		61V
+     PARKING			    1-3D
+     PERSONAL_AUTO_MILA		    1-3D
+     PRNT			    1-1D	  56V
+     PRNT_PROC			    21D		  56V
+     QUIT			    1-1D	  59V
+     QUIT_PROC			    24D		  60V
+     RATE_PER_MILE		    16D		  31M
+     SAT			    1-8D	  1-11V		1-11V
+     SAVE			    1-1D	  57V
+     SAVE_PROC			    22D		  57V
+     SUN			    1-8D	  1-11V
+     TELEPHONE			    1-5D
+     TIPS			    1-5D
+     TUE			    1-8D
+     TUR			    1-8D
+     WED			    1-8D

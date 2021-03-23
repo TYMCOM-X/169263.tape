@@ -1,0 +1,2090 @@
+IORES	MACRO %53A(1155) 18:32  4-Oct-82 Page 1
+IOFILE	MAC	28-May-71 22:32	
+
+						search	RTSYM
+						search	IOSYM
+						sall
+	400000'					$MODULE	IORES
+
+						entry	RESET.
+						extern	OPEN.,GETCH.
+
+					; RESET. -- reset for a text file.  To make RESET an indivisible operation
+					;   with respect to errors, we call OPEN. to open the file, then if and
+					;   only if everything went well, we do the GET.  Increase the library size
+					;   by a bit, incidentally reduce inline code by 3 words per RESET.
+
+	400000'	350 00 0 15 000000 	RESET.:	$MASK
+	400001'	261 17 0 00 000014 		PUSH	TOP,PSA		; combination FRAME and SAVE
+	400002'	201 14 0 00 000004 		MOVEI	PSA,4		; get an address for passing parameters
+	400003'	273 14 0 17 777777 		ADDB	PSA,-1(TOP)	;   in the usual style.
+	400004'	135 01 0 00 400034'		LDB	R1,[point 4,-4(PSA),12]	; pick up specified AC bits
+	400005'	602 01 0 00 000001 		TRNE	R1,1		; we're interested in internal file name bit
+	400006'	254 00 0 00 400015'		JRST	RESINT		;   it's internal
+
+	400007'	260 17 0 00 000000*		PUSHJ	TOP,OPEN.	; do it
+	400010'	000 00 1 14 777774 		  ARG	0,@-4(PSA)	; we have addr of word past original
+	400011'	000 00 1 14 777775 		  ARG	0,@-3(PSA)	;   parameter list, so use it to get
+	400012'	000 00 1 14 777776 		  ARG	0,@-2(PSA)	;   OPEN. set up on the original list
+	400013'	000 00 1 14 777777 		  ARG	0,@-1(PSA)	;   (assuming it doesn't use PSA!!).
+	400014'	254 00 0 00 400022'		JRST	RESETT		; we're in business
+
+	400015'	260 17 0 00 400007*	RESINT:	PUSHJ	TOP,OPEN.	; do it
+	400016'	000 01 1 14 777774 		  ARG	1,@-4(PSA)	;   only difference is the int. filename bit
+	400017'	000 00 1 14 777775 		  ARG	0,@-3(PSA)
+	400020'	000 00 1 14 777776 		  ARG	0,@-2(PSA)
+	400021'	000 00 1 14 777777 		  ARG	0,@-1(PSA)
+
+	400022'	333 00 0 01 000005 	RESETT:	SKIPLE	0,ERRORS(R1)	; did the OPEN succeed?
+	400023'	254 00 0 00 400030'		JRST	RSTOUT		;   no, just return now
+	400024'	201 14 0 01 000000 		MOVEI	PSA,0(R1)	; it did -- pass and save file block addr
+	400025'	260 17 0 00 000000*		PUSHJ	TOP,GETCH.	;   while we fill the component
+	400026'	000 00 0 14 000000 		  ARG	0,0(PSA)
+	400027'	201 01 0 14 000000 		MOVEI	R1,0(PSA)	; but remember, we return FB in R1
+IORES	MACRO %53A(1155) 18:32  4-Oct-82 Page 1-1
+IOFILE	MAC	28-May-71 22:32	
+
+
+	400030'	262 17 0 00 000014 	RSTOUT:	POP	TOP,PSA		; restore our sequestered R14
+	400031'	377 00 0 15 000000 		$UNMASK			; all clear
+	400032'	260 17 0 00 000000*
+	400033'	263 17 0 00 000000 		POPJ	TOP,0
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400035
+PROGRAM BREAK IS 000000
+CPU TIME USED 04:45.426
+
+22P CORE USED
+IORES	MACRO %53A(1155) 18:32  4-Oct-82 Page S-1
+IOFILE	MAC	28-May-71 22:32		SYMBOL TABLE
+
+ARG		000000		
+ERRORS		000005		
+ESCAP.		400032'	ext	
+GETCH.		400025'	ext	
+OPEN.		400015'	ext	
+PDA		000015	spd	
+PSA		000014	spd	
+R1		000001	spd	
+RESET.		400000'	ent	
+RESETT		400022'		
+RESINT		400015'		
+RSTOUT		400030'		
+TOP		000017	spd	
+$ABSLO		000000	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MASKI		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+
+IOCLR	MACRO %53A(1155) 18:32  4-Oct-82 Page 1-2
+IOFILE	MAC	28-May-71 22:32	
+
+						search	RTSYM
+						search	IOSYM
+						search	OPDEFS
+						sall
+	400000'					$MODULE	IOCLR
+
+						entry	CLEAR.
+
+					; CLEAR. -- discard terminal input/output.  If it's either of TTY or
+					;   TTYOUTPUT, zero out the count and reset the byte pointer.
+
+	400000'	201 01 0 00 000001 	CLEAR.:	MOVEI	R1,1		; get the arg
+	400001'	273 01 0 17 000000 		ADDB	R1,0(TOP)
+	400002'	201 01 1 01 777777 		MOVEI	R1,@-1(R1)
+	400003'	201 00 0 00 000300 		MOVEI	R0,ISTTYI+ISTTYO
+	400004'	616 00 0 01 000010 		TDNN	R0,STATUS(R1)	; are any set?
+	400005'	263 17 0 00 000000 		POPJ	TOP,0		;   no, split
+	400006'	402 00 0 01 000004 		SETZM	0,CURSOR(R1)	; clear cursor
+	400007'	402 00 0 01 000017 		SETZM	0,BUFCNT(R1)	;   and buffer counter
+	400010'	541 00 0 01 000024 		HRRI	R0,BUFFER(R1)	; compute new byte pointer
+	400011'	505 00 0 00 440700 		HRLI	R0,440700
+	400012'	202 00 0 01 000016 		MOVEM	R0,BUFPTR(R1)	; and install
+	400013'	201 00 0 00 000040 		MOVEI	R0," "		; reset component to blank
+	400014'	202 00 1 01 000000 		MOVEM	R0,@COMPTR(R1)
+	400015'	263 17 0 00 000000 		POPJ	TOP,0		; toodles
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400016
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:04.287
+
+22P CORE USED
+IOCLR	MACRO %53A(1155) 18:32  4-Oct-82 Page S-2
+IOFILE	MAC	28-May-71 22:32		SYMBOL TABLE
+
+BUFCNT		000017		
+BUFFER		000024		
+BUFPTR		000016		
+CLEAR.		400000'	ent	
+COMPTR		000000		
+CURSOR		000004		
+ISTTYI		000100		
+ISTTYO		000200		
+R0		000000	spd	
+R1		000001	spd	
+STATUS		000010		
+TOP		000017	spd	
+$ABSLO		000000	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+
+IOEMY	MACRO %53A(1155) 18:32  4-Oct-82 Page 1-3
+IOFILE	MAC	28-May-71 22:32	
+
+						search	RTSYM
+						search	IOSYM
+						search	OPDEFS
+						sall
+	400000'					$MODULE	IOEMY
+						$TEMP	BREEZE,1	; for pushj
+						$TEMP	LARGS,4		; where to explode args
+						$TEMP	JCELL,1		; RA for nested routines
+						$TEMP	ARGBLK,^o11	; argument block for monitor
+						$TEMP	FBLOCK,5+MAXSFD	;   and for TENIO file parser
+
+						$LOCAL	REGSAV,3	; must frame for call to FNAME.
+						$LOCAL	FNSTR,^o21	; string[80]
+
+						entry	EMPTY.
+						extern	FNAME.,IOERR.,TENIO.,PASUO.,BUF.0
+
+					; EMPTY. -- empty non-text file.  Close the file via TENIO, and then
+					;   reopen, using the duplicate set of bits saved in IOINST in the
+					;   file block.  Must check to see if output is permitted.
+
+	400000'	201 01 0 00 000001 	EMPTY.:	MOVEI	R1,1		; one arg
+	400001'	273 01 0 17 000000 		ADDB	R1,0(TOP)
+	400002'	201 01 1 01 777777 		MOVEI	R1,@-1(R1)	;   a file block addr
+	400003'	105 17 0 00 000024 		$FRAME
+	400004'	124 02 0 17 777755 		$SAVE	REGSAV,EXP1,EXP3
+	400005'	202 04 0 17 777757 
+	400006'	350 00 0 15 000000 		$MASK
+	400007'	333 00 0 01 000005 		SKIPLE	0,ERRORS(R1)	; any errors?
+	400010'	254 00 0 00 400066'		JRST	EMPTNO		;   yes, go throw up.
+	400011'	402 00 0 01 000005 		SETZM	0,ERRORS(R1)	;   else reset error codes
+	400012'	402 00 0 15 000027 		SETZM	0,$IOERR(PDA)
+	400013'	402 00 0 15 000030 		SETZM	0,$EXTST(PDA)
+	400014'	201 02 0 01 000000 		MOVEI	EXP1,0(R1)	; pars for FNAME.
+	400015'	201 03 0 17 777760 		MOVEI	EXP2,FNSTR	;   file block and string
+	400016'	260 17 0 00 000000*		PUSHJ	TOP,FNAME.
+	400017'	336 00 0 03 000000 		SKIPN	0,0(EXP2)	; did we get anything?
+	400020'	254 00 0 00 400055'		JRST	NOEMPT		;   no, forget it
+	400021'	201 00 0 00 000020 		MOVEI	R0,OPNOUT	; check for being open for output
+	400022'	616 00 0 02 000010 		TDNN	R0,STATUS(EXP1)
+IOEMY	MACRO %53A(1155) 18:32  4-Oct-82 Page 1-4
+IOFILE	MAC	28-May-71 22:32	
+
+	400023'	254 00 0 00 400055'		JRST	NOEMPT		;   no, fail now
+	400024'	400 01 0 00 000000 		SETZ	R1,0		; close without deleting
+	400025'	006 01 0 02 000002 		CLOSEF	R1,CHNUM(EXP1)	;   do it
+	400026'	254 00 0 00 400053'		JRST	NOEMP1
+	400027'	201 04 0 02 000000 		MOVEI	EXP3,0(EXP1)	; load file block addr
+	400030'	500 00 0 04 000007 		HLL	R0,IOINST(EXP3)	; get old bits
+	400031'	621 00 0 00 100000 		TLZ	R0,^o100000	; clear bit to force deletion of contents
+	400032'	661 00 0 00 002000 		TLO	R0,^o2000	; set bit for string file name
+	400033'	540 00 0 17 777760 		HRR	R0,FNSTR	; the string length
+	400034'	201 01 0 04 000015 		MOVEI	R1,TENBUF(EXP3)	; buffer whether we need it or not
+	400035'	541 02 0 17 777761 		HRRI	EXP1,1+FNSTR	; compose a byte pointer to file name
+	400036'	505 02 0 00 440700 		HRLI	EXP1,440700
+	400037'	005 00 0 04 000002 		OPENF	R0,CHNUM(EXP3)	; do it, dick
+	400040'	254 00 0 00 400055'		JRST	NOEMPT		; hell with it
+	400041'	505 00 0 00 400000 		HRLI	R0,EOFBIT	; set EOF true
+	400042'	541 00 0 00 000001 		HRRI	R0,EOFCNT
+	400043'	202 00 0 04 000003 		MOVEM	R0,EOFWRD(EXP3)
+	400044'	402 00 0 04 000004 		SETZM	0,CURSOR(EXP3)	; reinit cursor
+	400045'	120 02 0 17 777755 	EMPOUT:	$RESTOR	REGSAV,EXP1,EXP3
+	400046'	200 04 0 17 777757 
+	400047'	377 00 0 15 000000 		$UNMASK
+	400050'	260 17 0 00 000000*
+	400051'	105 17 0 00 777754 		$UNFRAME
+	400052'	263 17 0 00 000000 		POPJ	TOP,0
+
+	400053'	201 04 0 02 000000 	NOEMP1:	MOVEI	EXP3,0(EXP1)	; load EXP3 with file block addr
+	400054'	200 01 0 00 000000 		MOVE	R1,R0		; load error code in R1
+	400055'	202 01 0 15 000030 	NOEMPT:	MOVEM	R1,$EXTST(PDA)	; record extended status
+	400056'	201 01 0 00 000010 		LDERR	R1,EMPERR	;   and load the error code.
+	400057'	202 01 0 04 000005 		MOVEM	R1,ERRORS(EXP3)
+	400060'	202 01 0 15 000027 		MOVEM	R1,$IOERR(PDA)	; also install in global cell.
+	400061'	515 00 0 00 010000 		HRLZI	R0,ETRAP	; must see if file is trapping
+	400062'	612 00 0 04 000010 		TDNE	R0,STATUS(EXP3)	; well?
+	400063'	254 00 0 00 400045'		JRST	EMPOUT		;   ok
+	400064'	200 00 0 17 000000 		MOVE	R0,0(TOP)	; pop return addr
+	400065'	254 00 0 00 000000*		JRST	IOERR.		;   and go die
+
+	400066'	200 01 0 01 000005 	EMPTNO:	MOVE	R1,ERRORS(R1)	; load whatever error code it was
+	400067'	200 00 0 17 000000 		MOVE	R0,0(TOP)	;   and return addr
+	400070'	254 00 0 00 400065*		JRST	IOERR.		;   and die.
+IOEMY	MACRO %53A(1155) 18:32  4-Oct-82 Page 1-5
+IOFILE	MAC	28-May-71 22:32	
+
+						$END	IOEMY
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400071
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:26.304
+
+22P CORE USED
+IOEMY	MACRO %53A(1155) 18:32  4-Oct-82 Page S-3
+IOFILE	MAC	28-May-71 22:32		SYMBOL TABLE
+
+ADJSP	105000	000000		$LAST		000004	spd	
+BUF.0		000000	ext	$LEN		000002	spd	
+CHNUM		000002		$LOC	777777	777777	spd	
+CLOSEF	006000	000000		$LOLOC		000000	spd	
+CURSOR		000004		$MASKI		000000	spd	
+EMPERR		000010		$MAXLO		000024	spd	
+EMPOUT		400045'		$MAXST		000000	spd	
+EMPTNO		400066'		$MAXTE		000031	spd	
+EMPTY.		400000'	ent	$NEEDP		000000	spd	
+EOFBIT		400000		$STATS		000000	spd	
+EOFCNT		000001		.ARGBL		000007	spd	
+EOFWRD		000003		.BREEZ		000001	spd	
+ERRORS		000005		.FBLOC		000020	spd	
+ESCAP.		400050'	ext	.FNSTR		000004	spd	
+ETRAP		010000		.JCELL		000006	spd	
+EXP1		000002	spd	.LARGS		000002	spd	
+EXP2		000003	spd	.REGSA		000001	spd	
+EXP3		000004	spd	
+FNAME.		400016'	ext	
+IOERR.		400070'	ext	
+IOINST		000007		
+MAXSFD		000005		
+NOEMP1		400053'		
+NOEMPT		400055'		
+OPENF	005000	000000		
+OPNOUT		000020		
+PASUO.		000000	ext	
+PDA		000015	spd	
+R0		000000	spd	
+R1		000001	spd	
+STATUS		000010		
+TENBUF		000015		
+TENIO.		000000	ext	
+TOP		000017	spd	
+$ABSLO		000000	spd	
+$EXTST		000030	spd	
+$FALSE		000000	spd	
+$FIRST		000002	spd	
+$HILOC		400000	spd	
+$IOERR		000027	spd	
+IOEMX	MACRO %53A(1155) 18:32  4-Oct-82 Page 1-6
+IOFILE	MAC	28-May-71 22:32	
+
+						search	RTSYM
+						search	IOSYM
+						sall
+	400000'					$MODULE	IOEMX
+						$TEMP	BREEZE,1	; for pushj
+						$TEMP	LARGS,4		; where to explode args
+						$TEMP	JCELL,1		; RA for nested routines
+						$TEMP	ARGBLK,^o11	; argument block for monitor
+						$TEMP	FBLOCK,5+MAXSFD	;   and for TENIO file parser
+
+						$LOCAL	REGSAV,^o13	; must frame for call to fname.
+						$LOCAL	FNSTR,^o21	; string[80] for file name
+
+						entry	EMPTX.		; empty for text files
+						extern	FNAME.,GTIFN.,IOERR.,DODEC.
+
+					; EMPTX. -- empty text file.  Get the full file name, manually close the
+					;   file, and try for an ENTER on the file name.   It's a fatal error if
+					;   this one fails, so don't worry about clean-up.
+
+	400000'	201 01 0 00 000001 	EMPTX.:	MOVEI	R1,1		; one arg
+	400001'	273 01 0 17 000000 		ADDB	R1,0(TOP)
+	400002'	201 01 1 01 777777 		MOVEI	R1,@-1(R1)	; get the file block addr
+	400003'	105 17 0 00 000034 		$FRAME
+	400004'	515 00 0 00 000002 		$SAVE	REGSAV,EXP1,PSA
+	400005'	541 00 0 17 777745 
+	400006'	251 00 0 17 777757 
+	400007'	350 00 0 15 000000 		$MASK
+	400010'	333 00 0 01 000005 		SKIPLE	0,ERRORS(R1)	; any deferred errors?
+	400011'	254 00 0 00 400103'		JRST	EMPTNO		;   yes
+	400012'	402 00 0 01 000005 		SETZM	0,ERRORS(R1)	; no, clear error cells
+	400013'	402 00 0 15 000027 		SETZM	0,$IOERR(PDA)
+	400014'	402 00 0 15 000030 		SETZM	0,$EXTST(PDA)
+	400015'	201 02 0 01 000000 		MOVEI	EXP1,0(R1)	; params for FNAME -- file block addr
+	400016'	201 03 0 17 777760 		MOVEI	EXP2,FNSTR	;   and string variable addr
+	400017'	260 17 0 00 000000*		PUSHJ	TOP,FNAME.
+	400020'	336 00 0 03 000000 		SKIPN	0,0(EXP2)	; did we get anything?
+	400021'	254 00 0 00 400071'		JRST	NOEMPT		;   zero length string -- error.
+	400022'	201 04 0 02 000000 		MOVEI	EXP3,0(EXP1)	; put block addr in EXP3 for safe keeping
+	400023'	201 00 0 00 000020 		MOVEI	R0,OPNOUT	; see if file was open for output
+IOEMX	MACRO %53A(1155) 18:32  4-Oct-82 Page 1-7
+IOFILE	MAC	28-May-71 22:32	
+
+	400024'	616 00 0 04 000010 		TDNN	R0,STATUS(EXP3)
+	400025'	254 00 0 00 400071'		JRST	NOEMPT		; no, forget it
+	400026'	515 01 0 00 070000 		HRLZI	R1,(close)	; set up CLOSE skeleton
+	400027'	200 03 0 04 000002 		MOVE	EXP2,CHNUM(EXP3)	; standard channel trick
+	400030'	242 03 0 00 000027 		LSH	EXP2,^o27	; into AC field
+	400031'	434 01 0 00 000003 		OR	R1,EXP2		;   and into instr.
+	400032'	256 00 0 00 000001 		$DOUUO	XCT,0,R1,EMPOK	; no skip return
+	400033'	254 01 0 00 400034'
+	400034'	201 01 0 17 777761 	EMPOK:	MOVEI	R1,1+FNSTR	; compose byte pointer to file name
+	400035'	505 01 0 00 440700 		HRLI	R1,440700	;   for tenio file name parser
+	400036'	202 01 0 17 000003 		MOVEM	R1,1+LARGS
+	400037'	200 01 0 17 777760 		MOVE	R1,FNSTR	; string length
+	400040'	202 01 0 17 000004 		MOVEM	R1,2+LARGS
+	400041'	265 06 0 00 000000*		JSP	CO1,GTIFN.	; go ahead
+	400042'	254 00 0 00 400071'		JRST	NOEMPT		; huh?
+	400043'	254 00 0 00 400071'		JRST	NOEMPT		;   TTY can't be emptied!
+	400044'	265 06 0 00 000000*		JSP	CO1,DODEC.	; OK, set up dec-style lookup bloc
+	400045'	200 01 0 00 400106'		MOVE	R1,[enter 0,ARGBLK]	; and the instr
+	400046'	434 01 0 00 000003 		OR	R1,EXP2
+	400047'	256 00 0 00 000001 		$DOUUO	XCT,0,R1,NOEMPT,EMPOK2
+	400050'	254 01 0 00 400071'
+	400051'	254 01 0 00 400052'
+	400052'	505 01 0 00 400000 	EMPOK2:	HRLI	R1,EOFBIT	; initialize to end of file
+	400053'	541 01 0 00 000001 		HRRI	R1,EOFCNT
+	400054'	202 01 0 04 000003 		MOVEM	R1,EOFWRD(EXP3)
+	400055'	402 00 0 04 000004 		SETZM	0,CURSOR(EXP3)	; reinit cursor
+	400056'	402 00 0 04 000017 		SETZM	0,BUFCNT(EXP3)	;   and buffer count
+	400057'	541 00 0 04 000024 		HRRI	R0,BUFFER(EXP3)	; reinit byte pointer to start
+	400060'	505 00 0 00 440700 		HRLI	R0,440700	;   of buffer
+	400061'	202 00 0 04 000016 		MOVEM	R0,BUFPTR(EXP3)
+	400062'	515 00 0 17 777745 	EMPOUT:	$RESTOR	REGSAV,EXP1,PSA
+	400063'	541 00 0 00 000002 
+	400064'	251 00 0 00 000014 
+	400065'	377 00 0 15 000000 		$UNMASK
+	400066'	260 17 0 00 000000*
+	400067'	105 17 0 00 777744 		$UNFRAM
+	400070'	263 17 0 00 000000 		POPJ	TOP,0
+
+	400071'	550 01 0 17 000010 	NOEMPT:	HRRZ	R1,1+ARGBLK	; get error code from monitor
+	400072'	202 01 0 15 000030 		MOVEM	R1,$EXTST(PDA)	;   and call it extended status.
+IOEMX	MACRO %53A(1155) 18:32  4-Oct-82 Page 1-8
+IOFILE	MAC	28-May-71 22:32	
+
+	400073'	201 01 0 00 000010 		LDERR	R1,EMPERR	; record error code in block
+	400074'	202 01 0 04 000005 		MOVEM	R1,ERRORS(EXP3)
+	400075'	202 01 0 15 000027 		MOVEM	R1,$IOERR(PDA)	; also install in global cell.
+	400076'	515 00 0 00 010000 		HRLZI	R0,ETRAP	; find out if this guy traps
+	400077'	612 00 0 04 000010 		TDNE	R0,STATUS(EXP3)
+	400100'	254 00 0 00 400062'		JRST	EMPOUT		;   yes, go ahead
+	400101'	200 00 0 17 000000 		MOVE	R0,0(TOP)	; must die -- put return addr in R0
+	400102'	254 00 0 00 000000*		JRST	IOERR.		; pontiatello!
+						$END	IOEMX
+
+	400103'	200 01 0 01 000005 	EMPTNO:	MOVE	R1,ERRORS(R1)	; load whatever error it was
+	400104'	200 00 0 17 000000 		MOVE	R0,0(TOP)	; and the return addr
+	400105'	254 00 0 00 400102*		JRST	IOERR.		;   and die
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400107
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:28.001
+
+22P CORE USED
+IOEMX	MACRO %53A(1155) 18:32  4-Oct-82 Page S-4
+IOFILE	MAC	28-May-71 22:32		SYMBOL TABLE
+
+ADJSP	105000	000000		$HILOC		400000	spd	
+BUFCNT		000017		$IOERR		000027	spd	
+BUFFER		000024		$LAST		000014	spd	
+BUFPTR		000016		$LEN		000012	spd	
+CHNUM		000002		$LOC	777777	777777	spd	
+CO1		000006		$LOLOC		000000	spd	
+CURSOR		000004		$MASKI		000000	spd	
+DODEC.		400044'	ext	$MAXLO		000034	spd	
+EMPERR		000010		$MAXST		000000	spd	
+EMPOK		400034'		$MAXTE		000031	spd	
+EMPOK2		400052'		$NEEDP		000000	spd	
+EMPOUT		400062'		$OFFSE		000000	spd	
+EMPTNO		400103'		$STATS		000000	spd	
+EMPTX.		400000'	ent	.ARGBL		000007	spd	
+EOFBIT		400000		.BREEZ		000001	spd	
+EOFCNT		000001		.FBLOC		000020	spd	
+EOFWRD		000003		.FNSTR		000014	spd	
+ERRORS		000005		.JCELL		000006	spd	
+ESCAP.		400066'	ext	.LARGS		000002	spd	
+ETRAP		010000		.REGSA		000001	spd	
+EXP1		000002	spd	
+EXP2		000003	spd	
+EXP3		000004	spd	
+FNAME.		400017'	ext	
+GTIFN.		400041'	ext	
+IOERR.		400105'	ext	
+MAXSFD		000005		
+NOEMPT		400071'		
+OPNOUT		000020		
+PDA		000015	spd	
+PORTAL	254040	000000		
+PSA		000014	spd	
+R0		000000	spd	
+R1		000001	spd	
+STATUS		000010		
+TOP		000017	spd	
+$ABSLO		000000	spd	
+$EXTST		000030	spd	
+$FALSE		000000	spd	
+$FIRST		000002	spd	
+IOPEN	MACRO %53A(1155) 18:32  4-Oct-82 Page 1-9
+IOFILE	MAC	28-May-71 22:32	
+
+						search	RTSYM
+						search	IOSYM
+						sall
+	400000'					$MODULE	IOPEN
+						$TEMP	BREEZE,1	; for pushj
+						$TEMP	LARGS,4		; where to explode args
+						$TEMP	JCELL,1		; RA for nested routines
+						$TEMP	ARGBLK,^o11	; argument block for monitor
+						$TEMP	FBLOCK,5+MAXSFD	;   and for TENIO file parser
+						$TEMP	REGSAV,^o13	; good old register save area
+						$TEMP	TENSAV,^o16	;   one for TENIO parser too
+
+						entry	OPEN.
+						extern	FRECN.,FMTCH.,FLCHN.,IOFAK.,FFRBF.,CLOSA.
+						extern	FARGX.,GTIFN.,DOTXT.,.JBFF,DODEC.
+
+					; OPEN. -- initialize text file for input.  We explode the args, parse
+					;   the file name.  If it looks like 'TTY:', we see if TTY has already
+					;   been created via FMTCH., otherwise we create one.
+
+	400000'	265 01 0 00 000000*	OPEN.:	JSP	R1,FARGX.	; explode on top of stack
+	400001'	660 10 0 00 000040 		TRO	OPBITS,OPNINP	; remember we're open for input!
+	400002'	265 06 0 00 000000*		JSP	CO1,GTIFN.	; parse the file name
+	400003'	254 00 0 00 400065'		JRST	OPNER0		;   nonsense
+	400004'	254 00 0 00 400067'		JRST	OPNTTY		;   looks like TTY
+
+	400005'	265 06 0 00 000000*	DOTEXT:	JSP	CO1,DOTXT.	; common code for text files
+	400006'	254 00 0 00 400065'		JRST	OPNER0		; something wrong?
+	400007'	201 01 0 11 000015 		MOVEI	R1,RINGHD(FBL)	; address of ring header
+	400010'	202 01 0 17 000011 		MOVEM	R1,2+ARGBLK	;   in right half for input
+	400011'	256 00 0 00 000000 		$DOUUO	XCT,0,R0,OPNER2,DOINIT
+	400012'	254 01 0 00 400056'
+	400013'	254 01 0 00 400014'
+						; do the open, get rid of channel and block if no good
+
+	400014'	515 00 0 00 064000 	DOINIT:	HRLZI	R0,(inbuf)	; make an input buffer
+	400015'	434 00 0 00 000007 		OR	R0,CO2		; install channel number
+	400016'	271 00 0 00 000001 		ADDI	R0,1		; make only one buffer
+	400017'	201 01 0 11 000021 		MOVEI	R1,BUFFHD(FBL)	; where the header is
+	400020'	250 01 0 00 000000*		EXCH	R1,.JBFF	; make it work right
+IOPEN	MACRO %53A(1155) 18:32  4-Oct-82 Page 1-10
+IOFILE	MAC	28-May-71 22:32	
+
+	400021'	256 00 0 00 000000 		$DOUUO	XCT,0,R0,JBREST	; no error
+	400022'	254 01 0 00 400023'
+	400023'	202 01 0 00 400020*	JBREST:	MOVEM	R1,.JBFF	; restore .JBFF
+	400024'	602 10 0 00 000100 		TRNE	OPBITS,ISTTYI	; if it's tty for input
+	400025'	254 00 0 00 400034'		JRST	OPNXIT		;   then skip lookup jazz
+	400026'	265 06 0 00 000000*		JSP	CO1,DODEC.	; set up DEC style block for LOOKUP
+	400027'	200 00 0 00 400076'		MOVE	R0,[lookup 0,ARGBLK]
+	400030'	434 00 0 00 000007 		OR	R0,CO2		; the instruction with channel number
+	400031'	256 00 0 00 000000 		$DOUUO	XCT,0,R0,OPNER3,OPNXIT
+	400032'	254 01 0 00 400054'
+	400033'	254 01 0 00 400034'
+
+	400034'	265 06 0 00 000000*	OPNXIT:	JSP	CO1,FLCHN.	; chain file block on
+	400035'	515 00 0 00 200000 		HRLZI	R0,EOLBIT	; EOL for all input files
+	400036'	202 00 0 11 000003 		MOVEM	R0,EOFWRD(FBL)
+	400037'	515 00 0 00 056000 		HRLZI	R0,(in)		; I/O transfer instruction for input files
+	400040'	434 00 0 00 000007 		OR	R0,CO2		; install channel number
+	400041'	202 00 0 11 000007 		MOVEM	R0,IOINST(FBL)
+	400042'	202 10 0 11 000010 		MOVEM	OPBITS,STATUS(FBL)
+	400043'	200 00 0 00 400077'		MOVE	R0,[ascii/-----/]	; funny init val for linenr
+	400044'	202 00 0 11 000011 		MOVEM	R0,LINENR(FBL)
+	400045'	201 01 0 11 000000 	OPNDON:	MOVEI	R1,0(FBL)	; always return file block addr in R1
+	400046'	515 00 0 17 000032 		$RESTOR	REGSAV,EXP1,PSA
+	400047'	541 00 0 00 000002 
+	400050'	251 00 0 00 000014 
+	400051'	377 00 0 15 000000 		$UNMASK
+	400052'	260 17 0 00 000000*
+	400053'	263 17 0 00 000000 		POPJ	TOP,0
+
+	400054'	550 06 0 17 000010 	OPNER3:	HRRZ	CO1,1+ARGBLK	; get monitor's error code from LOOKUP
+	400055'	202 06 0 15 000030 		MOVEM	CO1,$EXTST(PDA)	;   and call it extended status.
+
+	400056'	200 06 0 00 400100'	OPNER2:	MOVE	CO1,[release 0,0]	; must release the channel
+	400057'	434 06 0 00 000007 		OR	CO1,CO2
+	400060'	256 00 0 00 000006 		$DOUUO	XCT,0,CO1,OPNER1
+	400061'	254 01 0 00 400062'
+	400062'	200 00 0 11 000002 	OPNER1:	MOVE	R0,CHNUM(FBL)	; return channel to free pool
+	400063'	260 17 0 00 000000*		PUSHJ	TOP,FRECN.
+	400064'	265 06 0 00 000000*		JSP	CO1,FFRBF.	; return file block to pool
+
+IOPEN	MACRO %53A(1155) 18:32  4-Oct-82 Page 1-11
+IOFILE	MAC	28-May-71 22:32	
+
+	400065'	265 06 0 00 000000*	OPNER0:	JSP	CO1,IOFAK.	; return fake block
+	400066'	254 00 0 00 400045'		JRST	OPNDON		;   and split
+
+	400067'	201 02 0 00 000100 	OPNTTY:	MOVEI	PR2,ISTTYI	; set search bit
+	400070'	434 10 0 00 000002 		OR	OPBITS,PR2	; remember if we have to make one
+	400071'	265 06 0 00 000000*		JSP	CO1,FMTCH.	; match it
+	400072'	254 00 0 00 400005'		JRST	DOTEXT		; not found, make one
+					;
+					; Use caller supplied options.
+					;
+	400073'	500 10 0 17 000005 		HLL	OPBITS,3+LARGS
+	400074'	502 10 0 11 000010 		HLLM	OPBITS,STATUS(FBL)
+	400075'	254 00 0 00 400045'		JRST	OPNDON
+						$END	IOPEN
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400101
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:26.887
+
+22P CORE USED
+IOPEN	MACRO %53A(1155) 18:32  4-Oct-82 Page S-5
+IOFILE	MAC	28-May-71 22:32		SYMBOL TABLE
+
+BUFFHD		000021		R0		000000	spd	
+CHNUM		000002		R1		000001	spd	
+CLOSA.		000000	ext	RINGHD		000015		
+CO1		000006		STATUS		000010		
+CO2		000007		TOP		000017	spd	
+DODEC.		400026'	ext	$ABSLO		000000	spd	
+DOINIT		400014'		$EXTST		000030	spd	
+DOTEXT		400005'		$FALSE		000000	spd	
+DOTXT.		400005'	ext	$FIRST		000002	spd	
+EOFWRD		000003		$HILOC		400000	spd	
+EOLBIT		200000		$LAST		000014	spd	
+ESCAP.		400052'	ext	$LEN		000012	spd	
+EXP1		000002	spd	$LOC	777777	777777	spd	
+FARGX.		400000'	ext	$LOLOC		000000	spd	
+FBL		000011		$MASKI		000000	spd	
+FFRBF.		400064'	ext	$MAXLO		000000	spd	
+FLCHN.		400034'	ext	$MAXST		000000	spd	
+FMTCH.		400071'	ext	$MAXTE		000062	spd	
+FRECN.		400063'	ext	$NEEDP		000000	spd	
+GTIFN.		400002'	ext	$OFFSE		000000	spd	
+IOFAK.		400065'	ext	$STATS		000000	spd	
+IOINST		000007		.ARGBL		000007	spd	
+ISTTYI		000100		.BREEZ		000001	spd	
+JBREST		400023'		.FBLOC		000020	spd	
+LINENR		000011		.JBFF		400023'	ext	
+MAXSFD		000005		.JCELL		000006	spd	
+OPBITS		000010		.LARGS		000002	spd	
+OPEN.		400000'	ent	.REGSA		000032	spd	
+OPNDON		400045'		.TENSA		000045	spd	
+OPNER0		400065'		
+OPNER1		400062'		
+OPNER2		400056'		
+OPNER3		400054'		
+OPNINP		000040		
+OPNTTY		400067'		
+OPNXIT		400034'		
+PDA		000015	spd	
+PORTAL	254040	000000		
+PR2		000002		
+PSA		000014	spd	
+IORWR	MACRO %53A(1155) 18:32  4-Oct-82 Page 1-12
+IOFILE	MAC	28-May-71 22:32	
+
+						search	RTSYM
+						search	IOSYM
+						sall
+	400000'					$MODULE	IORWR
+						$TEMP	BREEZE,1	; for pushj
+						$TEMP	LARGS,4		; where to explode args
+						$TEMP	JCELL,1		; RA for nested routines
+						$TEMP	ARGBLK,^o11	; argument block for monitor
+						$TEMP	FBLOCK,5+MAXSFD	;   and for TENIO file parser
+						$TEMP	REGSAV,^o13	; good old register save area
+						$TEMP	TENSAV,^o16	;   one for TENIO parser too
+
+						entry	REWRT.
+						extern	FRECN.,FMTCH.,FLCHN.,IOFAK.,FFRBF.,CLOSA.
+						extern	FARGX.,GTIFN.,DOTXT.,.JBFF,DODEC.
+
+					; REWRT. -- initialize text file for output.  Explode args, parse the
+					;   file name.  Same TTY hack as with OPEN.
+
+	400000'	265 01 0 00 000000*	REWRT.:	JSP	R1,FARGX.	; explode args on top of stack
+	400001'	660 10 0 00 000020 		TRO	OPBITS,OPNOUT	; remember we're open for output!
+	400002'	265 06 0 00 000000*		JSP	CO1,GTIFN.	; parse the file name
+	400003'	254 00 0 00 400123'		JRST	OPNER0		;   nonsense
+	400004'	254 00 0 00 400125'		JRST	REWTTY		;   looks like TTY
+
+	400005'	265 06 0 00 000000*	DOTEXT:	JSP	CO1,DOTXT.	; common code for text files
+	400006'	254 00 0 00 400123'		JRST	OPNER0		; something wrong?
+	400007'	201 01 0 11 000015 		MOVEI	R1,RINGHD(FBL)	; address of ring header
+	400010'	516 01 0 17 000011 		HRLZM	R1,2+ARGBLK	;   in right half for output
+	400011'	256 00 0 00 000000 		$DOUUO	XCT,0,R0,REWER2,DOINIT
+	400012'	254 01 0 00 400114'
+	400013'	254 01 0 00 400014'
+						; do the open, get rid of channel and block if no good
+
+	400014'	515 00 0 00 065000 	DOINIT:	HRLZI	R0,(outbuf)	; make an output buffer
+	400015'	434 00 0 00 000007 		OR	R0,CO2		; install channel number
+	400016'	271 00 0 00 000001 		ADDI	R0,1		; make only one buffer
+	400017'	201 01 0 11 000021 		MOVEI	R1,BUFFHD(FBL)	; where the header is
+	400020'	250 01 0 00 000000*		EXCH	R1,.JBFF	; make it work right
+	400021'	256 00 0 00 000000 		$DOUUO	XCT,0,R0,JBREST	; no error
+IORWR	MACRO %53A(1155) 18:32  4-Oct-82 Page 1-13
+IOFILE	MAC	28-May-71 22:32	
+
+	400022'	254 01 0 00 400023'
+	400023'	202 01 0 00 400020*	JBREST:	MOVEM	R1,.JBFF	; restore .JBFF
+	400024'	602 10 0 00 000200 		TRNE	OPBITS,ISTTYO	; if it's tty for output
+	400025'	254 00 0 00 400070'		JRST	REWXIT		;   then skip lookup jazz
+	400026'	265 06 0 00 000000*		JSP	CO1,DODEC.	; set up DEC style block for LOOKUP
+	400027'	607 10 0 00 040000 		TLNN	OPBITS,PRESBI	; is preserve option specified?
+	400030'	254 00 0 00 400056'		JRST	DONTR		;   no, just do the enter
+	400031'	200 00 0 00 400134'		MOVE	R0,[lookup 0,ARGBLK]
+	400032'	434 00 0 00 000007 		OR	R0,CO2		; set up the ENTER
+	400033'	256 00 0 00 000000 		$DOUUO	XCT,0,R0,DOENTR,DOPRES
+	400034'	254 01 0 00 400055'
+	400035'	254 01 0 00 400036'
+						; do it, if failure, just do enter else enter and USETO
+
+	400036'	265 06 0 00 400026*	DOPRES:	JSP	CO1,DODEC.	; reset arg block
+	400037'	200 00 0 00 400135'		MOVE	R0,[enter 0,ARGBLK]
+	400040'	434 00 0 00 000007 		OR	R0,CO2		; set up the enter
+	400041'	256 00 0 00 000000 		$DOUUO	XCT,0,R0,REWER3,DOECCH
+	400042'	254 01 0 00 400112'
+	400043'	254 01 0 00 400044'
+						; do it, if fails, whole thing fails, else do USETO
+
+	400044'	515 00 0 00 057000 	DOECCH:	HRLZI	R0,(out)	; must do phony output before useto
+	400045'	434 00 0 00 000007 		OR	R0,CO2
+	400046'	256 00 0 00 000000 		$DOUUO	XCT,0,R0,DOCURS,REWER3
+	400047'	254 01 0 00 400051'
+	400050'	254 01 0 00 400112'
+						; noskip is ok, else error
+
+	400051'	200 00 0 00 400136'	DOCURS:	MOVE	R0,[useti 0,-1]	; you guessed it
+	400052'	434 00 0 00 000007 		OR	R0,CO2		; position to end of file
+	400053'	256 00 0 00 000000 		$DOUUO	XCT,0,R0,REWXIT
+	400054'	254 01 0 00 400070'
+						; no error, split after this
+
+	400055'	265 06 0 00 400036*	DOENTR:	JSP	CO1,DODEC.	; must reset block
+	400056'	200 00 0 00 400135'	DONTR:	MOVE	R0,[enter 0,ARGBLK]
+	400057'	434 00 0 00 000007 		OR	R0,CO2		; set up enter
+	400060'	256 00 0 00 000000 		$DOUUO	XCT,0,R0,REWER3,DOPHON
+	400061'	254 01 0 00 400112'
+IORWR	MACRO %53A(1155) 18:32  4-Oct-82 Page 1-14
+IOFILE	MAC	28-May-71 22:32	
+
+	400062'	254 01 0 00 400063'
+						; either it errors, or we're all set.
+
+	400063'	515 00 0 00 057000 	DOPHON:	HRLZI	R0,(out)	; must do phohy output for monitor
+	400064'	434 00 0 00 000007 		OR	R0,CO2
+	400065'	256 00 0 00 000000 		$DOUUO	XCT,0,R0,REWXIT,REWER3
+	400066'	254 01 0 00 400070'
+	400067'	254 01 0 00 400112'
+
+	400070'	265 06 0 00 000000*	REWXIT:	JSP	CO1,FLCHN.	; chain file block on
+	400071'	515 00 0 00 400000 		HRLZI	R0,EOFBIT	; EOF for all output files
+	400072'	602 10 0 00 100000 		TRNE	OPBITS,CONTRB	; open with control option?
+	400073'	661 00 0 00 200000 		TLO	R0,EOLBIT	;   yes, set EOLN too
+	400074'	202 00 0 11 000003 		MOVEM	R0,EOFWRD(FBL)
+	400075'	515 00 0 00 057000 		HRLZI	R0,(out)	; I/O transfer instruction for output files
+	400076'	434 00 0 00 000007 		OR	R0,CO2		; install channel number
+	400077'	202 00 0 11 000007 		MOVEM	R0,IOINST(FBL)
+	400100'	202 10 0 11 000010 		MOVEM	OPBITS,STATUS(FBL)
+	400101'	200 00 0 00 400137'		MOVE	R0,[ascii/-----/]	; funny init val for linenr
+	400102'	202 00 0 11 000011 		MOVEM	R0,LINENR(FBL)
+	400103'	201 01 0 11 000000 	REWDON:	MOVEI	R1,0(FBL)	; always return file block addr in R1
+	400104'	515 00 0 17 000032 		$RESTOR	REGSAV,EXP1,PSA
+	400105'	541 00 0 00 000002 
+	400106'	251 00 0 00 000014 
+	400107'	377 00 0 15 000000 		$UNMASK
+	400110'	260 17 0 00 000000*
+	400111'	263 17 0 00 000000 		POPJ	TOP,0
+
+	400112'	550 06 0 17 000010 	REWER3:	HRRZ	CO1,1+ARGBLK	; get lookup/enter error code
+	400113'	202 06 0 15 000030 		MOVEM	CO1,$EXTST(PDA)	;   and call it extended status.
+
+	400114'	200 06 0 00 400140'	REWER2:	MOVE	CO1,[release 0,0]	; must release the channel
+	400115'	434 06 0 00 000007 		OR	CO1,CO2
+	400116'	256 00 0 00 000006 		$DOUUO	XCT,0,CO1,REWER1
+	400117'	254 01 0 00 400120'
+	400120'	200 00 0 11 000002 	REWER1:	MOVE	R0,CHNUM(FBL)	; return channel to free pool
+	400121'	260 17 0 00 000000*		PUSHJ	TOP,FRECN.
+	400122'	265 06 0 00 000000*		JSP	CO1,FFRBF.	; return file block to pool
+
+	400123'	265 06 0 00 000000*	OPNER0:	JSP	CO1,IOFAK.	; return fake block
+IORWR	MACRO %53A(1155) 18:32  4-Oct-82 Page 1-15
+IOFILE	MAC	28-May-71 22:32	
+
+	400124'	254 00 0 00 400103'		JRST	REWDON		;   and split
+
+	400125'	201 02 0 00 000200 	REWTTY:	MOVEI	PR2,ISTTYO	; set search bit
+	400126'	434 10 0 00 000002 		OR	OPBITS,PR2	; in case we have to make one
+	400127'	265 06 0 00 000000*		JSP	CO1,FMTCH.	; match it
+	400130'	254 00 0 00 400005'		JRST	DOTEXT		; not found, make one
+					;
+					; Use caller supplied options.
+					;
+	400131'	500 10 0 17 000005 		HLL	OPBITS,3+LARGS
+	400132'	502 10 0 11 000010 		HLLM	OPBITS,STATUS(FBL)
+	400133'	254 00 0 00 400103'		JRST	REWDON
+						$END	IORWR
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400141
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:31.789
+
+22P CORE USED
+IORWR	MACRO %53A(1155) 18:32  4-Oct-82 Page S-6
+IOFILE	MAC	28-May-71 22:32		SYMBOL TABLE
+
+BUFFHD		000021		PRESBI		040000		
+CHNUM		000002		PSA		000014	spd	
+CLOSA.		000000	ext	R0		000000	spd	
+CO1		000006		R1		000001	spd	
+CO2		000007		REWDON		400103'		
+CONTRB		100000		REWER1		400120'		
+DOCURS		400051'		REWER2		400114'		
+DODEC.		400055'	ext	REWER3		400112'		
+DOECCH		400044'		REWRT.		400000'	ent	
+DOENTR		400055'		REWTTY		400125'		
+DOINIT		400014'		REWXIT		400070'		
+DONTR		400056'		RINGHD		000015		
+DOPHON		400063'		STATUS		000010		
+DOPRES		400036'		TOP		000017	spd	
+DOTEXT		400005'		$ABSLO		000000	spd	
+DOTXT.		400005'	ext	$EXTST		000030	spd	
+EOFBIT		400000		$FALSE		000000	spd	
+EOFWRD		000003		$FIRST		000002	spd	
+EOLBIT		200000		$HILOC		400000	spd	
+ESCAP.		400110'	ext	$LAST		000014	spd	
+EXP1		000002	spd	$LEN		000012	spd	
+FARGX.		400000'	ext	$LOC	777777	777777	spd	
+FBL		000011		$LOLOC		000000	spd	
+FFRBF.		400122'	ext	$MASKI		000000	spd	
+FLCHN.		400070'	ext	$MAXLO		000000	spd	
+FMTCH.		400127'	ext	$MAXST		000000	spd	
+FRECN.		400121'	ext	$MAXTE		000062	spd	
+GTIFN.		400002'	ext	$NEEDP		000000	spd	
+IOFAK.		400123'	ext	$OFFSE		000000	spd	
+IOINST		000007		$STATS		000000	spd	
+ISTTYO		000200		.ARGBL		000007	spd	
+JBREST		400023'		.BREEZ		000001	spd	
+LINENR		000011		.FBLOC		000020	spd	
+MAXSFD		000005		.JBFF		400023'	ext	
+OPBITS		000010		.JCELL		000006	spd	
+OPNER0		400123'		.LARGS		000002	spd	
+OPNOUT		000020		.REGSA		000032	spd	
+PDA		000015	spd	.TENSA		000045	spd	
+PORTAL	254040	000000		
+PR2		000002		
+IOBIN	MACRO %53A(1155) 18:32  4-Oct-82 Page 1-16
+IOFILE	MAC	28-May-71 22:32	
+
+						search	RTSYM
+						search	IOSYM
+						search	OPDEFS
+						sall
+	400000'					$MODULE	IOBIN
+
+						$TEMP	BREEZE,1	; to permit PUSHJ for free
+						$TEMP	LARGS,4		; where to explode args
+						$TEMP	JCELL,1		; RA for nested routines
+						$TEMP	ARGBLK,^o11	; argument block for monitor
+						$TEMP	FBLOCK,5+MAXSFD	;   and for TENIO file parser
+						$TEMP	REGSAV,^o13	; good old register save area
+						$TEMP	TENSAV,^o16	;   one for TENIO parser too
+
+						entry	OPNTP.,OPNBN.,DB$OPE,CLSTB.
+						extern	FARGX.,FGTBF.,FLCHN.,CLOSA.,GTIFN.
+						extern	FFRBF.,GETCN.,FRECN.,IOFAK.,GET.
+						extern	TENIO.,FILSZ.,BUF.0,PASUO.,PPGRG.
+
+						extern	DB.FBL
+
+					; OPNTP. -- open typed file.  The setup for the TENIO open mostly involves
+					;   the initializtion of the file block.  Notice that the component of
+					;   a file whose base type is an integral multiple of 128 words is used
+					;   as the "buffer" for that file, and in fact the transfers are done
+					;   with buffering forbidden.
+
+	400000'	265 01 0 00 000000*	OPNTP.:	JSP	R1,FARGX.	; explode the args
+	400001'	660 10 0 00 000001 		TRO	OPBITS,TYPFIL	; describe the file
+	400002'	200 05 0 17 000002 		MOVE	CLEN,LARGS	; load component length from arg list
+	400003'	201 01 0 05 000015 		MOVEI	R1,TENBUF(CLEN)	; size of block plus component (no buff)
+	400004'	602 05 0 00 000177 		TRNE	CLEN,^o177	; is comp. size even mult. of 128?
+	400005'	254 00 0 00 400012'		JRST	OPNTNB		;   no, must add on one buffer
+	400006'	265 06 0 00 000000*		JSP	CO1,FGTBF.	; otherwise just get block + component
+	400007'	201 03 0 11 000015 		MOVEI	NAME,TENBUF(FBL)	; component addr is buffer addr
+	400010'	515 00 0 00 004000 		HRLZI	R0,^o4000	; set bit to supress buffering
+	400011'	254 00 0 00 400016'		JRST	OPNTYP		;   and hit common code
+
+	400012'	271 01 0 00 000200 	OPNTNB:	ADDI	R1,^o200	; not even -- add 128 words for buffer
+	400013'	265 06 0 00 400006*		JSP	CO1,FGTBF.	; get the block
+IOBIN	MACRO %53A(1155) 18:32  4-Oct-82 Page 1-17
+IOFILE	MAC	28-May-71 22:32	
+
+	400014'	201 03 0 11 000215 		MOVEI	NAME,TENBUF+^o200(FBL)	; load component addr
+	400015'	400 00 0 00 000000 		SETZ	R0,0		; ok for buffering
+
+	400016'	200 05 0 17 000002 	OPNTYP:	MOVE	CLEN,LARGS	; common code -- reload comp size
+	400017'	265 06 0 00 400076'		JSP	CO1,OPNCOM	; common code for binary/typed
+
+	400020'	402 00 0 11 000004 		SETZM	0,CURSOR(FBL)	; was for input -- make it an open.
+	400021'	402 00 0 11 000003 		SETZM	0,EOFWRD(FBL)	; set everything up now
+	400022'	202 10 0 11 000010 		MOVEM	OPBITS,STATUS(FBL)
+	400023'	105 17 0 00 000062 		ADJSP	TOP,$MAXTEMP	; save our stack
+	400024'	260 17 0 00 000000*		PUSHJ	TOP,GET.	; load it up
+	400025'	000 00 0 11 000000 		  ARG	0,0(FBL)
+	400026'	105 17 0 00 777716 		ADJSP	TOP,-$MAXTEMP	; ok
+	400027'	254 00 0 00 400067'		JRST	OPNZM2	; don't stomp bits if GET changed them??
+
+					; EXTERNAL PROCEDURE DB$OPEN ( VAR F: FILE OF <128-WORD ARRAY>;
+					;			       NAME: PACKED ARRAY [1..*] OF CHAR;
+					;			       OPTS: SET OF IO_OPTIONS );
+					;
+					;   is a special debugger entry point to open a typed file.  It works
+					;   the same as OPNTP., except that the file block is stored at a
+					;   special debugger static location (obtained from the debugger support
+					;   routine DB.FBL).
+
+	400030'	260 17 0 00 400037'	DB$OPE:	PUSHJ	TOP,OPNDB1	; fake a runtime open call
+	400031'	000 10 0 00 000200 		Z	10,200		; input, 128-word buffer
+	400032'	000 00 0 00 000004 		Z	4		; the string byte pointer
+	400033'	000 00 0 03 000000 		Z	0(3)		; the string length word
+	400034'	000 00 0 00 000005 		Z	5		; the option set word
+	400035'	202 01 0 02 000000 		MOVEM	R1,0(2)		; save the file block address
+	400036'	263 17 0 00 000000 		POPJ	TOP,
+
+	400037'	265 01 0 00 400000*	OPNDB1:	JSP	R1,FARGX.	; explode the (fake) args
+	400040'	660 10 0 00 000401 		TRO	OPBITS,TYPFIL+DEBFBL	; typed file, debugger file block
+	400041'	260 17 0 00 000000*		PUSHJ	TOP,DB.FBL	; get the file block address
+	400042'	200 11 0 00 000001 		MOVE	FBL,R1
+	400043'	201 03 0 11 000015 		MOVEI	NAME,TENBUF(FBL)	; component addr is buffer addr
+	400044'	515 00 0 00 004000 		HRLZI	R0,^o4000	; suppress buffering
+	400045'	254 00 0 00 400016'		JRST	OPNTYP		; now treat like ordinary typed file
+
+IOBIN	MACRO %53A(1155) 18:32  4-Oct-82 Page 1-18
+IOFILE	MAC	28-May-71 22:32	
+
+					; OPNBN. -- open binary file.  We share a bit of code with the typed
+					;   open case, but we always must call FILSZ. to determine EOF.  Note
+					;   that from the user's point of view, there is no OPEN for binary files,
+					;   only RESET, which 'gets the first component'.  Actually, this is
+					;   done to make READ work correctly.
+
+	400046'	265 01 0 00 400037*	OPNBN.:	JSP	R1,FARGX.	; get them args
+	400047'	660 10 0 00 000002 		TRO	OPBITS,BINFIL	; we is a binary file!
+	400050'	201 01 0 00 000215 		MOVEI	R1,TENBUF+^o200	; always need a buffer, never a component
+	400051'	265 06 0 00 400013*		JSP	CO1,FGTBF.
+	400052'	201 03 0 00 377777 		MOVEI	NAME,$NIL	; component pointer is nil
+	400053'	201 05 0 00 000001 		MOVEI	CLEN,1		; for cursor computation, size is 1 word
+	400054'	400 00 0 00 000000 		SETZ	R0,0		; ok
+	400055'	265 06 0 00 400076'		JSP	CO1,OPNCOM	; hit common code
+
+	400056'	201 01 0 00 000001 		MOVEI	R1,1		; it worked, get cursor initial value
+	400057'	202 01 0 11 000004 		MOVEM	R1,CURSOR(FBL)
+	400060'	105 17 0 00 000062 		ADJSP	TOP,$MAXTEMP	; call filsz. while saving temps
+	400061'	260 17 0 00 000000*		PUSHJ	TOP,FILSZ.
+	400062'	000 00 0 11 000000 		  ARG	0,0(FBL)
+	400063'	105 17 0 00 777716 		ADJSP	TOP,-$MAXTEMP
+	400064'	254 00 0 00 400066'		JRST	OPNZOM		; EOF is set, we're all done!
+
+	400065'	402 00 0 11 000003 	OPNDON:	SETZM	0,EOFWRD(FBL)	; some people don't set EOF
+	400066'	202 10 0 11 000010 	OPNZOM:	MOVEM	OPBITS,STATUS(FBL)	; must set status now
+	400067'				OPNZM2:
+	400067'	201 01 0 11 000000 		MOVEI	R1,0(FBL)	; return file block addr in R1
+	400070'	515 00 0 17 000032 		$RESTOR	REGSAV,EXP1,PSA
+	400071'	541 00 0 00 000002 
+	400072'	251 00 0 00 000014 
+	400073'	377 00 0 15 000000 		$UNMASK
+	400074'	260 17 0 00 000000*
+	400075'	263 17 0 00 000000 		POPJ	TOP,0
+
+					; OPNCOM -- common code for opening typed and binary files.  Just set up
+					;   the call to tenio's OPENF and do it.  We handle errors simply by
+					;   hitting the IOFAK. helper in IOICM.
+
+	400076'	202 03 0 11 000000 	OPNCOM:	MOVEM	NAME,COMPTR(FBL)	; set component pointer
+	400077'	202 05 0 11 000006 		MOVEM	CLEN,XRFWRD(FBL)	;   and component size
+IOBIN	MACRO %53A(1155) 18:32  4-Oct-82 Page 1-19
+IOFILE	MAC	28-May-71 22:32	
+
+	400100'	202 06 0 17 000006 		MOVEM	CO1,JCELL	; ok, save our return addr
+	400101'	540 00 0 17 000004 		HRR	R0,2+LARGS	; length of file name
+	400102'	460 06 0 00 000010 		SETCM	CO1,OPBITS	; pick up complement of AC
+	400103'	606 06 0 00 000060 		TRNN	CO1,OPNINP+OPNOUT	; to see if an update file
+	400104'	661 10 0 00 060000 		TLO	OPBITS,PRESBI+RANDOM	;   if so, set default options
+	400105'	602 10 0 00 000040 		TRNE	OPBITS,OPNINP	; is input allowed?
+	400106'	661 00 0 00 400000 		TLO	R0,^o400000	;   yes, tell tenio so
+	400107'	602 10 0 00 000020 		TRNE	OPBITS,OPNOUT	; how about output?
+	400110'	661 00 0 00 200000 		TLO	R0,^o200000	;   ok
+	400111'	603 10 0 00 040000 		TLNE	OPBITS,PRESBI	; preserve option?
+	400112'	661 00 0 00 100000 		TLO	R0,^o100000	;   yes
+	400113'	202 00 0 11 000007 		MOVEM	R0,IOINST(FBL)	; save it across GETCN.
+	400114'	265 06 0 00 000000*		JSP	CO1,GTIFN.	; parse the file name
+	400115'	254 00 0 00 400154'		JRST	IOBNFG		;   no good
+	400116'	254 00 0 00 400154'		JRST	IOBNFG		;   TTY no good either
+	400117'	120 00 0 17 000021 		DMOVE	R0,1+FBLOCK	; internal file name and extension
+	400120'	124 00 0 11 000012 		DMOVEM	R0,FILENM(FBL)	; initialize it
+	400121'	260 17 0 00 000000*		PUSHJ	TOP,GETCN.	; we know GETCN. uses no regs or temps
+	400122'	202 00 0 11 000002 		MOVEM	R0,CHNUM(FBL)	; store it
+	400123'	200 00 0 11 000007 		MOVE	R0,IOINST(FBL)	; fetch up TENIO word
+	400124'	201 01 0 11 000015 		MOVEI	R1,TENBUF(FBL)	; buffer addr whether we use it or not
+	400125'	200 02 0 17 000003 		MOVE	EXP1,1+LARGS	; the byte pointer
+	400126'	661 00 0 00 002000 		TLO	R0,^o2000	; set bit for length
+	400127'	105 17 0 00 000062 		ADJSP	TOP,$MAXTEMP	; protect our temps from TENIO
+	400130'	005 00 0 11 000002 		OPENF	R0,CHNUM(FBL)	; channel number in memory
+	400131'	254 00 0 00 400153'		JRST	IONFG1		; NFG
+	400132'	105 17 0 00 777716 		ADJSP	TOP,-$MAXTEMP	;   it worked -- fix local stack
+	400133'	606 10 0 00 000400 		TRNN	OPBITS,DEBFBL	; if not the debugger file block,
+	400134'	265 06 0 00 000000*		JSP	CO1,FLCHN.	;   then chain it
+	400135'	602 10 0 00 000040 		TRNE	OPBITS,OPNINP	; if input allowed
+	400136'	254 00 1 17 000006 		JRST	@JCELL		; then let caller handle it
+	400137'	201 01 0 00 000001 		MOVEI	R1,1		; else init cursor to one
+	400140'	202 01 0 11 000004 		MOVEM	R1,CURSOR(FBL)	;   and set EOF via EXTENT(F)
+	400141'	105 17 0 00 000062 		ADJSP	TOP,$MAXTEMP
+	400142'	260 17 0 00 400061*		PUSHJ	TOP,FILSZ.	; get size
+	400143'	000 00 0 11 000000 		  ARG	0,0(FBL)	;   of this file
+	400144'	105 17 0 00 777716 		ADJSP	TOP,-$MAXTEMP
+	400145'	607 10 0 00 040000 		TLNN	OPBITS,PRESBI	; is preserve option specified?
+	400146'	254 00 0 00 400066'		JRST	OPNZOM		;   no, we're done
+	400147'	272 01 0 11 000004 		ADDM	R1,CURSOR(FBL)	; else set cursor to extent+1
+IOBIN	MACRO %53A(1155) 18:32  4-Oct-82 Page 1-20
+IOFILE	MAC	28-May-71 22:32	
+
+	400150'	200 01 0 00 400166'		MOVE	R1,[EOFBIT,,EOFCNT]	;   and set EOF by hand
+	400151'	202 01 0 11 000003 		MOVEM	R1,EOFWRD(FBL)
+	400152'	254 00 0 00 400066'		JRST	OPNZOM
+
+	400153'	105 17 0 00 777716 	IONFG1:	ADJSP	TOP,-$MAXTEMP	; fix the stack again
+
+	400154'	202 00 0 15 000030 	IOBNFG:	MOVEM	R0,$EXTST(PDA)	; store TENIO error return
+	400155'	200 00 0 11 000002 		MOVE	R0,CHNUM(FBL)
+	400156'	260 17 0 00 000000*		PUSHJ	TOP,FRECN.	; FRECN doesn't use regs or temps either
+	400157'	606 10 0 00 000400 		TRNN	OPBITS,DEBFBL	; if not the debugger file block,
+	400160'	265 06 0 00 000000*		JSP	CO1,FFRBF.	;   then get rid of it
+	400161'	265 06 0 00 000000*		JSP	CO1,IOFAK.	; set up the fake return
+	400162'	254 00 0 00 400067'		JRST	OPNZM2	;   and take it (leave status alone)
+
+
+					; CLSTB. -- close typed and binary.  If this module is pulled, then the
+					;   call to CLSTB in the IOCLS module will come here, and we will do the
+					;   TENIO close (because we know tenio is around).  But if this module is
+					;   not pulled, then CLSTB. will be faked up at the end of IOFILE by
+					;   a call to the error routine (instead of an illegal LUUO).
+
+	400163'	006 06 0 11 000002 	CLSTB.:	CLOSEF	CO1,CHNUM(FBL)	; just do it
+	400164'	254 00 0 01 000000 		JRST	0(R1)		;   error return
+	400165'	254 00 0 01 000001 		JRST	1(R1)		; natural return
+
+
+						$END	IOBIN
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400167
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:44.229
+
+22P CORE USED
+IOBIN	MACRO %53A(1155) 18:32  4-Oct-82 Page S-7
+IOFILE	MAC	28-May-71 22:32		SYMBOL TABLE
+
+ADJSP	105000	000000		OPNCOM		400076'		$STATS		000000	spd	
+ARG		000000		OPNDB1		400037'		.ARGBL		000007	spd	
+BINFIL		000002		OPNDON		400065'		.BREEZ		000001	spd	
+BUF.0		000000	ext	OPNINP		000040		.FBLOC		000020	spd	
+CHNUM		000002		OPNOUT		000020		.JCELL		000006	spd	
+CLEN		000005		OPNTNB		400012'		.LARGS		000002	spd	
+CLOSA.		000000	ext	OPNTP.		400000'	ent	.REGSA		000032	spd	
+CLOSEF	006000	000000		OPNTYP		400016'		.TENSA		000045	spd	
+CLSTB.		400163'	ent	OPNZM2		400067'		
+CO1		000006		OPNZOM		400066'		
+COMPTR		000000		PASUO.		000000	ext	
+CURSOR		000004		PDA		000015	spd	
+DB$OPE		400030'	ent	PPGRG.		000000	ext	
+DB.FBL		400041'	ext	PRESBI		040000		
+DEBFBL		000400		PSA		000014	spd	
+EOFBIT		400000		R0		000000	spd	
+EOFCNT		000001		R1		000001	spd	
+EOFWRD		000003		RANDOM		020000		
+ESCAP.		400074'	ext	STATUS		000010		
+EXP1		000002	spd	TENBUF		000015		
+FARGX.		400046'	ext	TENIO.		000000	ext	
+FBL		000011		TOP		000017	spd	
+FFRBF.		400160'	ext	TYPFIL		000001		
+FGTBF.		400051'	ext	XRFWRD		000006		
+FILENM		000012		$ABSLO		000000	spd	
+FILSZ.		400142'	ext	$EXTST		000030	spd	
+FLCHN.		400134'	ext	$FALSE		000000	spd	
+FRECN.		400156'	ext	$FIRST		000002	spd	
+GET.		400024'	ext	$HILOC		400000	spd	
+GETCN.		400121'	ext	$LAST		000014	spd	
+GTIFN.		400114'	ext	$LEN		000012	spd	
+IOBNFG		400154'		$LOC	777777	777777	spd	
+IOFAK.		400161'	ext	$LOLOC		000000	spd	
+IOINST		000007		$MASKI		000000	spd	
+IONFG1		400153'		$MAXLO		000000	spd	
+MAXSFD		000005		$MAXST		000000	spd	
+NAME		000003		$MAXTE		000062	spd	
+OPBITS		000010		$NEEDP		000000	spd	
+OPENF	005000	000000		$NIL		377777	spd	
+OPNBN.		400046'	ent	$OFFSE		000000	spd	
+IOCLS	MACRO %53A(1155) 18:32  4-Oct-82 Page 1-21
+IOFILE	MAC	28-May-71 22:32	
+
+						search	RTSYM
+						search	IOSYM
+						sall
+	400000'					$MODULE	IOCLS
+						$LOCAL	BREEZE,1	; for pushj
+						$LOCAL	LARGS,4		; where to explode args
+						$LOCAL	JCELL,1		; RA for nested routines
+						$LOCAL	ARGBLK,^o11	; argument block for monitor
+						$LOCAL	FBLOCK,5+MAXSFD	;   and for TENIO file parser
+						$LOCAL	REGSAV,^o13	; good old register save area
+						$LOCAL	TENSAV,^o16	;   one for TENIO parser too
+
+						entry	CLOSE.,CLOSD.,CLOSA.
+						extern	FFRBF.,FLUCH.,CLSTB.,BREAK.,FRECN.,IOERR.
+
+					; CLOSE., CLOSD., and CLOSA. -- the file closing routines.  Set up R1
+					;   zero if no delete, non-zero to delete.   Hit common code CLFILE with
+					;   a JSP PR1.  For CLOSA., walk the file block chain.
+
+	400000'	400 01 0 00 000000 	CLOSE.:	SETZ	R1,0		; don't delete
+	400001'	254 00 0 00 400003'		JRST	CLSFIL
+
+	400002'	201 01 0 00 000001 	CLOSD.:	MOVEI	R1,1		; yes, delete (the scratch function)
+
+	400003'	504 01 0 17 000000 	CLSFIL:	HRL	R1,0(TOP)	; get addr of arg word
+	400004'	350 00 0 17 000000 		AOS	0,0(TOP)	;   and tick return addr
+	400005'	350 00 0 15 000000 		$MASK			; now take standard entry seq
+	400006'	105 17 0 00 000062 		$FRAME
+	400007'	515 00 0 00 000002 		$SAVE	REGSAV,EXP1,PSA
+	400010'	541 00 0 17 777750 
+	400011'	251 00 0 17 777762 
+	400012'	200 14 0 15 000023 		MOVE	PSA,$IOICM(PDA)	; load up our data pointer
+	400013'	554 11 0 00 000001 		HLRZ	FBL,R1		; get addr of arg word
+	400014'	201 11 1 11 000000 		MOVEI	FBL,@0(FBL)	; get addr of file block
+	400015'	551 06 0 01 000000 		HRRZI	CO1,0(R1)	; keep only right half of R1
+	400016'	265 10 0 00 400050'		JSP	PR1,CLFILE	; get rid of it
+	400017'	551 00 0 00 001700 		HRRZI	R0,DEBFBL+PHOFBL+ISTTYI+ISTTYO; if not a phony or debugger or tty
+	400020'	616 00 0 11 000010 		TDNN	R0,STATUS(FBL)	; static file block, then
+	400021'	265 06 0 00 000000*		JSP	CO1,FLUCH.	; unchain single file
+	400022'	254 00 0 00 400041'		JRST	CLSDON		; take "standard" return
+IOCLS	MACRO %53A(1155) 18:32  4-Oct-82 Page 1-22
+IOFILE	MAC	28-May-71 22:32	
+
+
+	400023'	350 00 0 15 000000 	CLOSA.:	$MASK			; our own entry seq
+	400024'	105 17 0 00 000062 		$FRAME
+	400025'	515 00 0 00 000002 		$SAVE	REGSAV,EXP1,PSA
+	400026'	541 00 0 17 777750 
+	400027'	251 00 0 17 777762 
+	400030'	200 14 0 15 000023 		MOVE	PSA,$IOICM(PDA)	; load up data pointer
+	400031'	200 04 0 14 000000 		MOVE	NLEN,0(PSA)	; get first block on list
+	400032'	322 04 0 00 400041'		JUMPE	NLEN,CLSDON	; nothing to do
+	400033'	402 00 0 14 000000 		SETZM	0,0(PSA)	; kill list then
+
+	400034'	201 11 0 04 000000 	CLALOO:	MOVEI	FBL,0(NLEN)	; load up block addr
+	400035'	550 04 0 11 000001 		HRRZ	NLEN,FLINKS(FBL)	; remember where we are
+	400036'	400 06 0 00 000000 		SETZ	CO1,0		; don't delete
+	400037'	265 10 0 00 400050'		JSP	PR1,CLFILE	; hit common code
+	400040'	326 04 0 00 400034'		JUMPN	NLEN,CLALOO	; go back if more to do
+
+	400041'	515 00 0 17 777750 	CLSDON:	$RESTOR	REGSAV,EXP1,PSA
+	400042'	541 00 0 00 000002 
+	400043'	251 00 0 00 000014 
+	400044'	377 00 0 15 000000 		$UNMASK
+	400045'	260 17 0 00 000000*
+	400046'	105 17 0 00 777716 		$UNFRAME
+	400047'	263 17 0 00 000000 		POPJ	TOP,0
+
+					; CLFILE -- common code for closing files.  When we think we have a file
+					;   block pointer, either use TENIO to close a binary or typed file, or
+					;   do the jazz ourselves.  Then get rid of the block.  We have to unchain
+					;   it from the list.
+
+	400050'				CLFILE:;	CAML	FBL,$BFPNT(PDA)	; semi-test for legality
+					;	CAML	FBL,$STACK(PDA)	; within buffer space?
+					;	JRST	1(PR1)		;   no, skip return and forget it
+
+	400050'	551 00 0 00 001000 		HRRZI	R0,PHOFBL	; don't close a phony file
+	400051'	612 00 0 11 000010 		TDNE	R0,STATUS(FBL)
+	400052'	254 00 0 10 000000 		JRST	0(PR1)
+	400053'	551 00 0 00 000003 		HRRZI	R0,TEXTFI	; see if it's a text file
+	400054'	612 00 0 11 000010 		TDNE	R0,STATUS(FBL)	; if it's not
+	400055'	254 00 0 00 400117'		JRST	CLTEN		;   then do a TENIO close
+IOCLS	MACRO %53A(1155) 18:32  4-Oct-82 Page 1-23
+IOFILE	MAC	28-May-71 22:32	
+
+	400056'	551 01 0 00 000020 		HRRZI	R1,OPNOUT	; if output text file, must do break
+	400057'	616 01 0 11 000010 		TDNN	R1,STATUS(FBL)	; how about it?
+	400060'	254 00 0 00 400063'		JRST	CLFNOT		;   no, not output
+	400061'	260 17 0 00 000000*		PUSHJ	TOP,BREAK.	; do the break (we did a frame already)
+	400062'	000 00 0 11 000000 		ARG	0,0(FBL)	; this file, please
+	400063'				CLFNOT:
+	400063'	551 00 0 00 000300 		HRRZI	R0,ISTTYI+ISTTYO	; don't close tty's
+	400064'	612 00 0 11 000010 		TDNE	R0,STATUS(FBL)
+	400065'	254 00 0 10 000000 		JRST	0(PR1)
+	400066'	200 00 0 11 000002 		MOVE	R0,CHNUM(FBL)	; get channel number
+	400067'	242 00 0 00 000027 		LSH	R0,^o27		; shift into AC field
+	400070'	322 06 0 00 400102'		JUMPE	CO1,CLOSEF	; jump if we're not deleting file
+	400071'	200 01 0 00 400125'		MOVE	R1,[rename 0,ARGBLK]	; else load up rename skeleton
+	400072'	402 00 0 17 777725 		SETZM	0,ARGBLK	; with zero as first word of block
+	400073'	434 01 0 00 000000 		OR	R1,R0		; install channel number
+	400074'	256 00 0 00 000001 		$DOUUO	XCT,0,R1,CLNOGO,CLFREE
+	400075'	254 01 0 00 400077'
+	400076'	254 01 0 00 400105'
+						; do it, no error, then release the channel and free block
+
+	400077'	201 01 0 00 000010 	CLNOGO:	LDERR	R1,EMPERR
+	400100'	202 01 0 15 000027 		MOVEM	R1,$IOERR(PDA)
+	400101'	254 00 0 00 400105'		JRST	CLFREE
+
+	400102'	515 01 0 00 070000 	CLOSEF:	HRLZI	R1,(CLOSE)	; load up close 0,0 instead of rename
+	400103'	256 00 0 00 000001 		$DOUUO	XCT,0,R1,CLFREE	;   and execute it
+	400104'	254 01 0 00 400105'
+
+	400105'	515 01 0 00 071000 	CLFREE:	HRLZI	R1,(RELEAS)	; load up releas 0,0
+	400106'	434 01 0 00 000000 		OR	R1,R0		; slap in channel number
+	400107'	256 00 0 00 000001 		$DOUUO	XCT,0,R1,CLFBUF
+	400110'	254 01 0 00 400111'
+						; do it, no error possible, then free the block
+
+	400111'	200 00 0 11 000002 	CLFBUF:	MOVE	R0,CHNUM(FBL)	; load up channel
+	400112'	260 17 0 00 000000*		PUSHJ	TOP,FRECN.	; free channel, we already did a $frame
+
+	400113'	551 00 0 00 000400 	CLDONE:	HRRZI	R0,DEBFBL	; if not the debugger static
+	400114'	616 00 0 11 000010 		TDNN	R0,STATUS(FBL)	; file block, then
+	400115'	265 06 0 00 000000*		JSP	CO1,FFRBF.	; free it.
+IOCLS	MACRO %53A(1155) 18:32  4-Oct-82 Page 1-24
+IOFILE	MAC	28-May-71 22:32	
+
+	400116'	254 00 0 10 000000 		JRST	0(PR1)		; go home
+
+	400117'	265 01 0 00 000000*	CLTEN:	JSP	R1,CLSTB.	; hit the alleged close routine
+	400120'	254 00 0 00 400122'		JRST	CLTERR		; oops
+	400121'	254 00 0 00 400111'		JRST	CLFBUF
+
+	400122'	201 01 0 00 000010 	CLTERR:	LDERR	R1,EMPERR
+	400123'	202 01 0 15 000027 		MOVEM	R1,$IOERR(PDA)
+	400124'	254 00 0 00 400111'		JRST	CLFBUF
+	400125'					$LIT
+	400125'	055 00 0 17 777725 
+			400023'			$END	IOCLS,0,CLOSA.
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400126
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:35.509
+
+22P CORE USED
+IOCLS	MACRO %53A(1155) 18:32  4-Oct-82 Page S-8
+IOFILE	MAC	28-May-71 22:32		SYMBOL TABLE
+
+ADJSP	105000	000000		PORTAL	254040	000000		
+ARG		000000		PR1		000010		
+BREAK.		400061'	ext	PSA		000014	spd	
+CHNUM		000002		R0		000000	spd	
+CLALOO		400034'		R1		000001	spd	
+CLDONE		400113'		S.IOCL		000000	sin	
+CLFBUF		400111'		STATUS		000010		
+CLFILE		400050'		TEXTFI		000003		
+CLFNOT		400063'		TOP		000017	spd	
+CLFREE		400105'		X.IOCL		400023'	sin	
+CLNOGO		400077'		$ABSLO		000000	spd	
+CLOSA.		400023'	ent	$FALSE		000000	spd	
+CLOSD.		400002'	ent	$FIRST		000002	spd	
+CLOSE.		400000'	ent	$HILOC		400000	spd	
+CLOSEF		400102'		$IOERR		000027	spd	
+CLSDON		400041'		$IOICM		000023	spd	
+CLSFIL		400003'		$LAST		000014	spd	
+CLSTB.		400117'	ext	$LEN		000012	spd	
+CLTEN		400117'		$LOC	777777	777777	spd	
+CLTERR		400122'		$LOLOC		000000	spd	
+CO1		000006		$MASKI		000000	spd	
+DEBFBL		000400		$MAXLO		000062	spd	
+EMPERR		000010		$MAXST		000000	spd	
+ESCAP.		400045'	ext	$MAXTE		000000	spd	
+EXP1		000002	spd	$NEEDP		000001	spd	
+FBL		000011		$OFFSE		000000	spd	
+FFRBF.		400115'	ext	$STATS		000000	spd	
+FLINKS		000001		$TRUE		000001	spd	
+FLUCH.		400021'	ext	.ARGBL		000007	spd	
+FRECN.		400112'	ext	.BREEZ		000001	spd	
+I.IOCL		000000	sin	.FBLOC		000020	spd	
+IOERR.		000000	ext	.JCELL		000006	spd	
+ISTTYI		000100		.LARGS		000002	spd	
+ISTTYO		000200		.REGSA		000032	spd	
+MAXSFD		000005		.TENSA		000045	spd	
+NLEN		000004		
+OPNOUT		000020		
+P.IOCL		000000	ext	
+PDA		000015	spd	
+PHOFBL		001000		
+IOTXH	MACRO %53A(1155) 18:32  4-Oct-82 Page 1-25
+IOFILE	MAC	28-May-71 22:32	
+
+						search	RTSYM
+						search	IOSYM
+						sall
+	400000'					$MODULE	IOTXH
+
+						$TEMP	BREEZE,1	; for pushj
+						$TEMP	LARGS,4		; where to explode args
+						$TEMP	JCELL,1		; RA for nested routines
+						$TEMP	ARGBLK,^o11	; argument block for monitor
+						$TEMP	FBLOCK,5+MAXSFD	;   and for TENIO file parser
+						$TEMP	REGSAV,^o13	; good old register save area
+						$TEMP	TENSAV,^o16	;   one for TENIO parser too
+
+						entry	DODEC.,DOTXT.
+						extern	GETCN.,FGTBF.,FMTCH.
+
+					; DODEC. -- set up DEC file name argument.  This routine prepares an
+					;   argument block for LOOKUP and ENTER.  SFD's are handled here.
+
+	400000'	200 02 0 17 000021 	DODEC.:	MOVE	PR2,1+FBLOCK	; file name
+	400001'	202 02 0 17 000007 		MOVEM	PR2,ARGBLK
+	400002'	200 02 0 17 000022 		MOVE	PR2,2+FBLOCK	; extension
+	400003'	512 02 0 17 000010 		HLLZM	PR2,1+ARGBLK
+	400004'	405 02 0 00 777000 		ANDI	PR2,777000	; isolate parsed prot. code
+	400005'	515 02 0 02 000000 		HRLZI	PR2,0(PR2)	; put in high order nine bits
+	400006'	202 02 0 17 000011 		MOVEM	PR2,2+ARGBLK	;   of third word.
+	400007'	200 02 0 17 000023 		MOVE	PR2,3+FBLOCK	; pick up PPN parsed
+	400010'	201 01 0 00 000777 		MOVEI	R1,777		; pick up number of SFD's parsed
+	400011'	404 01 0 17 000022 		AND	R1,2+FBLOCK
+	400012'	322 01 0 00 400016'		JUMPE	R1,DOLOK1	; zero -- just put down PPN
+	400013'	271 01 0 17 000024 		ADDI	R1,4+FBLOCK	; since wagman didn't initialize SFD
+	400014'	402 00 0 01 000000 		SETZM	0,0(R1)		;   section, zero word after last one
+	400015'	201 02 0 17 000021 		MOVEI	PR2,1+FBLOCK	; get addr of PATHlike block
+	400016'	202 02 0 17 000012 	DOLOK1:	MOVEM	PR2,3+ARGBLK	; whatever
+	400017'	254 00 0 06 000000 		JRST	0(CO1)		; split
+
+					; DOTXT. -- common code for text files.  Get size of buffer needed for
+					;   device, allocate a block, get a channel, set up OPEN call and split.
+
+	400020'	201 01 0 17 000007 	DOTXT.:	MOVEI	R1,ARGBLK	; where the device block is
+IOTXH	MACRO %53A(1155) 18:32  4-Oct-82 Page 1-26
+IOFILE	MAC	28-May-71 22:32	
+
+	400021'	402 00 0 01 000000 		SETZM	0,0(R1)		; ASCII mode
+	400022'	200 00 0 17 000020 		MOVE	R0,FBLOCK	; pick up device name
+	400023'	202 00 0 17 000010 		MOVEM	R0,1+ARGBLK	;   and install in block
+	400024'	047 01 0 00 000101 		DEVSIZ	R1,0		; get it
+	400025'	254 00 0 06 000000 		JRST	0(CO1)		;   no good
+	400026'	202 06 0 17 000007 		MOVEM	CO1,ARGBLK	; must save our return addr
+	400027'	201 07 0 01 000000 		MOVEI	CO2,0(R1)	; save device size
+	400030'	201 01 0 01 000025 		MOVEI	R1,BUFFER+1(R1)	; load size of file block needed
+	400031'	265 06 0 00 000000*		JSP	CO1,FGTBF.	; get the block
+	400032'	271 07 0 11 000024 		ADDI	CO2,BUFFER(FBL)	; buffer addr + buffer size = comp. addr
+	400033'	552 07 0 11 000000 		HRRZM	CO2,COMPTR(FBL)	;   install
+
+	400034'	260 17 0 00 000000*		PUSHJ	TOP,GETCN.	; get a channel
+	400035'	202 00 0 11 000002 		MOVEM	R0,CHNUM(FBL)	;   and install
+	400036'	200 07 0 00 000000 		MOVE	CO2,R0		; copy channel num
+	400037'	242 07 0 00 000027 		LSH	CO2,^o27	; shift into AC field
+	400040'	200 06 0 17 000007 		MOVE	CO1,ARGBLK	; restore our return addr
+	400041'	200 00 0 17 000021 		MOVE	R0,1+FBLOCK	; get the sixbit filename
+	400042'	202 00 0 11 000012 		MOVEM	R0,FILENM(FBL)	;   and save it in the file block
+	400043'	510 00 0 17 000022 		HLLZ	R0,2+FBLOCK	;   along with the extension.
+	400044'	202 00 0 11 000013 		MOVEM	R0,FILEXT(FBL)
+	400045'	402 00 0 17 000007 		SETZM	0,ARGBLK	; set up OPEN block -- no status bits
+	400046'	200 00 0 17 000020 		MOVE	R0,FBLOCK	; device name
+	400047'	202 00 0 17 000010 		MOVEM	R0,1+ARGBLK
+	400050'	200 00 0 00 400053'		MOVE	R0,[open 0,ARGBLK]	; load skeleton instr
+	400051'	434 00 0 00 000007 		OR	R0,CO2		; install channel number
+	400052'	254 00 0 06 000001 		JRST	1(CO1)		; return to let caller set direction
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400054
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:18.886
+
+22P CORE USED
+IOTXH	MACRO %53A(1155) 18:32  4-Oct-82 Page S-9
+IOFILE	MAC	28-May-71 22:32		SYMBOL TABLE
+
+BUFFER		000024		
+CHNUM		000002		
+CO1		000006		
+CO2		000007		
+COMPTR		000000		
+DEVSIZ	047000	000101		
+DODEC.		400000'	ent	
+DOLOK1		400016'		
+DOTXT.		400020'	ent	
+FBL		000011		
+FGTBF.		400031'	ext	
+FILENM		000012		
+FILEXT		000013		
+FMTCH.		000000	ext	
+GETCN.		400034'	ext	
+MAXSFD		000005		
+PR2		000002		
+R0		000000	spd	
+R1		000001	spd	
+TOP		000017	spd	
+$ABSLO		000000	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000062	spd	
+$STATS		000000	spd	
+.ARGBL		000007	spd	
+.BREEZ		000001	spd	
+.FBLOC		000020	spd	
+.JCELL		000006	spd	
+.LARGS		000002	spd	
+.REGSA		000032	spd	
+.TENSA		000045	spd	
+
+IOICM	MACRO %53A(1155) 18:32  4-Oct-82 Page 1-27
+IOFILE	MAC	28-May-71 22:32	
+
+						search	RTSYM
+						search	IOSYM
+						sall
+	400000'					$MODULE	IOICM
+						$TEMP	BREEZE,1	; for pushj
+						$TEMP	LARGS,4		; where to explode args
+						$TEMP	JCELL,1		; RA for nested routines
+						$TEMP	ARGBLK,^o11	; argument block for monitor
+						$TEMP	FBLOCK,5+MAXSFD	;   and for TENIO file parser
+						$TEMP	REGSAV,^o13	; good old register save area
+						$TEMP	TENSAV,^o16	;   one for TENIO parser too
+
+						entry	FARGX.,FGTBF.,FFRBF.,FLCHN.,FLUCH.,GTIFN.
+						entry	IOFAK.,FMTCH.,P.FID.
+						extern	IOERR.		; for tenio
+						extern	PPGRG.,DECOD.
+						$STATIC	FBLIST,1
+						$STATIC	INPHON,STATUS+1
+						$STATIC	OUTPHO,STATUS+1
+
+					; P.FID. -- decently callable hook into TENIO's file name parser.  After
+					;   fooling around with the arguments (EXP1 has addr of fn string, EXP2
+					;   has addr of pseudo-LOOKUP block to fill), just hit it.  Do NOT call
+					;   this guy from within the I/O system -- for various utility hacks
+					;   only.  PS -- we cream several words on top of TOP.
+
+	400000'	515 00 0 00 000002 	P.FID.:	$SAVE	REGSAV,EXP1,PDA
+	400001'	541 00 0 17 000032 
+	400002'	251 00 0 17 000045 
+	400003'	200 01 0 02 000000 		MOVE	R1,0(EXP1)	; store str length in arg block
+	400004'	202 01 0 17 000004 		MOVEM	R1,2+LARGS	;   for GTIFN.
+	400005'	201 01 0 02 000001 		MOVEI	R1,1(EXP1)	; compose byte pointer for 1st char
+	400006'	505 01 0 00 440700 		HRLI	R1,^o440700
+	400007'	202 01 0 17 000003 		MOVEM	R1,1+LARGS	;   and store it
+	400010'	265 06 0 00 400023'		JSP	CO1,GTIFN.	; do it now
+	400011'	254 00 0 00 400017'		JRST	PRFNFG		; no good parse
+	400012'	300 00 0 00 000000 		CAI	0,0		; no-op if TTY
+	400013'	505 01 0 17 000020 		HRLI	R1,FBLOCK	; BLT the parsed block into caller's
+	400014'	541 01 0 03 000000 		HRRI	R1,0(EXP2)	;   area
+	400015'	251 01 0 03 000012 		BLT	R1,5+MAXSFD(EXP2)
+IOICM	MACRO %53A(1155) 18:32  4-Oct-82 Page 1-28
+IOFILE	MAC	28-May-71 22:32	
+
+	400016'	350 00 0 17 000000 		AOS	0,0(TOP)	;   and take a skip return
+
+	400017'	515 00 0 17 000032 	PRFNFG:	$RESTOR	REGSAV,EXP1,PDA
+	400020'	541 00 0 00 000002 
+	400021'	251 00 0 00 000015 
+	400022'	263 17 0 00 000000 		POPJ	TOP,0
+
+					; GTIFN. -- parse file name (get internal form).  Make a call to TENIO's
+					;   parser DECOD., after setting up all its arguments.
+
+	400023'	515 00 0 00 000002 	GTIFN.:	$SAVE	TENSAV,EXP1,BASIS	; save every register
+	400024'	541 00 0 17 000045 
+	400025'	251 00 0 17 000061 
+	400026'	200 03 0 00 000017 		MOVE	3,TOP		; remember TOP in 3 (not smashed)
+	400027'	400 02 0 00 000000 		SETZ	2,0		; remember skip return in 2
+	400030'	200 00 0 17 000004 		MOVE	R0,2+LARGS	; load length of string
+	400031'	201 01 0 17 000020 		MOVEI	R1,FBLOCK	; where to put internal form
+	400032'	200 07 0 17 000003 		MOVE	7,1+LARGS	; load byte pointer to name
+	400033'	265 14 0 00 000000*		JSP	14,DECOD.	; do it
+	400034'	340 02 0 00 000000 		AOJ	2,0		; make non-zero, incorrect return
+	400035'	200 17 0 00 000003 		MOVE	TOP,3		; restore top
+	400036'	201 01 0 02 000000 		MOVEI	R1,0(2)		; put code where we can see it after
+	400037'	515 00 0 17 000045 		$RESTOR	TENSAV,EXP1,BASIS
+	400040'	541 00 0 00 000002 
+	400041'	251 00 0 00 000016 
+	400042'	326 01 0 06 000000 		JUMPN	R1,0(CO1)	; take error return
+	400043'	515 00 0 00 646471 		HRLZI	R0,'TTY'	; check for TTY
+	400044'	316 00 0 17 000020 		CAMN	R0,FBLOCK	; well?
+	400045'	254 00 0 06 000001 		JRST	1(CO1)		; yes
+	400046'	254 00 0 06 000002 		JRST	2(CO1)		; no
+
+					; FGTBF. -- file buffer allocation routine.  Assume size block desired
+					;;   in R1, we return proper block in FBL or die trying.  If we need
+					;;   to extend the area, fix up the stack pointer via FIXSP, which is
+					;;   also called by FFRBF.  The allocation algorithm is a best-fit with
+					;;   a size word before each block, positive if free, negative if alloc'd,
+					;;   with the absolute value being the size of the block including the
+					;;   control word.
+					;
+					;FGTBF.:	ADDI	R1,1		; allocate size plus control word
+IOICM	MACRO %53A(1155) 18:32  4-Oct-82 Page 1-29
+IOFILE	MAC	28-May-71 22:32	
+
+					;	HRRZM	CO1,JCELL	; save return address in memory
+					;	MOVE	CO1,$STACK(PDA)	; compute our high bound
+					;	SUBI	CO1,BUFDGE+1	;   which is fudge words off heap
+					;	HRLOI	R0,377777	; init current size to largest int
+					;	SETZ	FBL,0		; we haven't found one yet
+					;	MOVE	NAME,$BFPNT(PDA)	; pick up current top of buffers
+					;
+					;	CAIL	NAME,0(CO1)	; are we over the edge already?
+					;	JRST	GBXTND		; guess so, must extend area
+					;
+					;GBLOOP:	SKIPG	NLEN,0(NAME)	; pick up size word of block
+					;	JRST	GBNEXT		; allocated -- forget it
+					;	CAIL	NLEN,0(R1)	; is block big enuf for us?
+					;	CAIG	R0,0(NLEN)	; is it smaller than our current best?
+					;	JRST	GBNEXT		; no, try next block
+					;
+					;	MOVEI	FBL,0(NAME)	; remember this guy
+					;	MOVEI	R0,0(NLEN)	; size (above) and address too
+					;
+					;GBNEXT:	MOVMS	0,NLEN		; add absolute value
+					;	ADDI	NAME,0(NLEN)	;   to addr to get next block's addr
+					;	CAIGE	NAME,0(CO1)	; are we over the edge?
+					;	JRST	GBLOOP		; not yet
+					;
+					;;
+					;;  at this point, if we found a candidate, FBL has its address and R0
+					;;     its size.  We may have to split it, or extend if none found.
+					;;
+					;
+					;GBDONE:	JUMPE	FBL,GBXTND	; nothing, go extend area
+					;	SUBI	R0,0(R1)	; compute residue size
+					;	CAILE	R0,SMALL	; too small to split
+					;	JRST	GBSPLT		;   no, gotta split it
+					;
+					;GBGOT:	MOVNS	0,0(FBL)	; set size word negative (for alloc'd)
+					;GBGOT1:	ADDI	FBL,1		; return addr of control word + 1
+					;GBZERO:	HRLZI	R0,0(FBL)	; set up BLT reg
+					;	HRRI	R0,1(FBL)	;   to zero out block
+					;	SETZM	0,0(FBL)	; clear first word
+					;	MOVN	R1,-1(FBL)	; get positive size of block
+IOICM	MACRO %53A(1155) 18:32  4-Oct-82 Page 1-30
+IOFILE	MAC	28-May-71 22:32	
+
+					;	ADDI	R1,0(FBL)	; add to addr to get last addr
+					;	BLT	R0,-2(R1)	;   minus two to zero out
+					;	JRST	@JCELL		;   and go home with FBL
+					;
+					;GBSPLT:	MOVE	NLEN,0(FBL)	; pick up size of big block
+					;	MOVNM	R1,0(FBL)	; install alloc'd block size there
+					;	MOVEI	NAME,0(FBL)	; copy addr
+					;	ADDI	NAME,0(R1)	;   to get addr of remnant
+					;	MOVEM	R0,0(NAME)	; drop remnant size
+					;	JRST	GBGOT1		; return, but don't negate size word!
+					;
+					;GBXTND:	MOVE	NAME,$BFPNT(PDA)	; get top of buffer area
+					;	SUBI	NAME,0(R1)	; subtract size desired for new top
+					;	MOVEM	NAME,$BFPNT(PDA)	;   and install new top
+					;	CAIG	NAME,BUFDGE(TOP)	; can we do it (enough room)?
+					;	JRST	GBNOGO		; no, go barf
+					;	MOVNM	R1,0(NAME)	; install neg of desired size
+					;	MOVEI	FBL,1(NAME)	; set up return register
+					;	JSP	CO1,FIXSP	; fix up the stack
+					;	JRST	GBZERO		;   zero block and split
+					;
+					;NOFIL.:	$RTERR	FILMSG
+					;FILMSG:	asciz;
+					;?	No buffer space. Increase S parameter and try again;
+					;GBNOGO:	$ERROR	NOFIL.
+
+					; FFRBF. -- free buffer allocated by FGTBF.  Give buffer address in
+					;;   FBL, return address via JSP CO1.   I use NLEN, NAME, R1,
+					;;   CO1, and JCELL.  First coalesce all free blocks in area.  Then,
+					;;   if the first block is free, return the stolen stack space to the
+					;;   stack by calling FIXSP with a negative correction factor.
+					;
+					;FFRBF.:	MOVMS	0,-1(FBL)	; make size word positive
+					;	HRRZM	CO1,JCELL	; save return addr to get a register
+					;	MOVE	NAME,$BFPNT(PDA)	; get current lowest in area
+					;	MOVE	CO1,$STACK(PDA)	; compute end of area
+					;	SUBI	CO1,BUFDGE+1	; fudge factor off bottom of heap
+					;
+					;FRLOOP:	SKIPG	R1,0(NAME)	; is size word positive?
+					;	JRST	FRNEXT		; no
+IOICM	MACRO %53A(1155) 18:32  4-Oct-82 Page 1-31
+IOFILE	MAC	28-May-71 22:32	
+
+					;	MOVEI	NLEN,0(NAME)	; copy addr of block
+					;	ADDI	NLEN,0(R1)	;   to compute addr of next
+					;	CAIL	NLEN,0(CO1)	; does that take us over the edge?
+					;	JRST	FRDONE		; yes, we're done
+					;	SKIPG	R1,0(NLEN)	; is next block free too?
+					;	JRST	FRNEXT		;   no, sorry
+					;	ADDM	R1,0(NAME)	; yes, fix size of current to incl. next
+					;	JRST	FRLOOP		;   and continue this game
+					;
+					;FRNEXT:	MOVM	R1,0(NAME)	; pick up size to next block
+					;	ADDI	NAME,0(R1)	; compute next block's addr
+					;	CAIGE	NAME,0(CO1)	; does that put us over edge?
+					;	JRST	FRLOOP		;   no, keep checking
+					;
+					;FRDONE:	MOVE	NAME,$BFPNT(PDA)	; get first block's addr again
+					;	SKIPG	R1,0(NAME)	; is it free?
+					;	JRST	@JCELL		;   no, get out
+					;	ADDI	NAME,0(R1)	; yes, compute new first block addr
+					;	MOVEM	NAME,$BFPNT(PDA)	;   and store it
+					;	MOVNS	0,R1		; get negative correction factor
+					;	JSP	CO1,FIXSP	;   for dynamic chain
+					;	JRST	@JCELL		; and we're done.
+
+					; FIXSP -- helper for buffer allocation and deallocation routines.  Call
+					;;   me with a JSP CO1, with R1 containing the adjustment size.   I use
+					;;   NAME and NLEN, and stomp on TOP a little bit, and chase up the
+					;;   dynamic chain fixing stored pointers.
+					;
+					;FIXSP:	HLRE	NLEN,TOP	; get PDL count (negative)
+					;	ADD	NLEN,R1		; adjust (adjustment may be negative)
+					;	HRLI	TOP,0(NLEN)	;   and restore
+					;	MOVE	NAME,BASIS	; chase down to mainline
+					;
+					;FIXSP1:	TLNN	NAME,777777	; are we down to main frame?
+					;	JRST	0(CO1)		;   yes, go home
+					;	HLRE	NLEN,2(NAME)	; pick up PDL count of stored ptr
+					;	ADD	NLEN,R1	; fix up
+					;	HRLM	NLEN,2(NAME)	;   and reinstall
+					;	HLRZ	NAME,1(NAME)	; get next on chain (used to be MOVE)
+					;	JRST	FIXSP1		;   and fix next one
+IOICM	MACRO %53A(1155) 18:32  4-Oct-82 Page 1-32
+IOFILE	MAC	28-May-71 22:32	
+
+
+					; FGTBF. -- the real new file block allocator. Get it off the heap.
+
+	400047'	552 06 0 17 000006 	FGTBF.:	HRRZM	CO1,JCELL	; save return address
+	400050'	105 17 0 00 000062 		ADJSP	TOP,$MAXTEMP	; pad our temps
+	400051'	261 17 0 00 000007 		PUSH	TOP,CO2		; save damn register
+	400052'	200 07 0 00 000001 		MOVE	CO2,R1		; size needed in EXP1
+	400053'	261 17 0 00 000014 		PUSH	TOP,PSA
+	400054'	260 17 0 00 000000*		PUSHJ	TOP,NEW.##	; get it
+	400055'	000 11 0 07 000000 		ARG	FBL,0(CO2)	; get it and put it
+	400056'	262 17 0 00 000014 		POP	TOP,PSA
+	400057'	262 17 0 00 000007 		POP	TOP,CO2		; restore it
+	400060'	105 17 0 00 777716 		ADJSP	TOP,-$MAXTEMP	; fix stack
+	400061'	254 00 1 17 000006 		JRST	@JCELL		; return to caller
+					;
+	400062'	552 06 0 17 000006 	FFRBF.:	HRRZM	CO1,JCELL
+	400063'	105 17 0 00 000062 		ADJSP	TOP,$MAXTEMP
+	400064'	261 17 0 00 000014 		PUSH	TOP,PSA		; best save it
+	400065'	260 17 0 00 000000*		PUSHJ	TOP,DSPOS.##
+	400066'	000 00 0 11 000000 		ARG	0,0(FBL)
+	400067'	262 17 0 00 000014 		POP	TOP,PSA
+	400070'	105 17 0 00 777716 		ADJSP	TOP,-$MAXTEMP
+	400071'	254 00 1 17 000006 		JRST	@JCELL
+
+					; IOFINI -- initialization routine.   Nothing to it.
+
+	400072'	402 00 0 14 000000 	IOFINI:	SETZM	0,FBLIST	; start out with empty file list
+	400073'	505 01 0 14 000000 		HRLI	R1,FBLIST	; zero out phony file blocks
+	400074'	541 01 0 14 000001 		HRRI	R1,INPHON
+	400075'	251 01 0 14 000015 		BLT	R1,EOFWRD+OUTPHO
+	400076'	515 01 0 00 600000 		HRLZI	R1,EOFBIT+EOLBIT	; input phony gets both
+	400077'	541 01 0 00 000001 		HRRI	R1,EOFCNT
+	400100'	202 01 0 14 000004 		MOVEM	R1,EOFWRD+INPHON
+	400101'	201 01 0 00 000011 		LDERR	R1,OPNERR	; the error code in phony FBs
+	400102'	202 01 0 14 000017 		MOVEM	R1,ERRORS+OUTPHO
+	400103'	202 01 0 14 000006 		MOVEM	R1,ERRORS+INPHON
+	400104'	551 01 0 00 001000 		HRRZI	R1,PHOFBL	; mark blocks as phony
+	400105'	202 01 0 14 000022 		MOVEM	R1,STATUS+OUTPHO
+	400106'	202 01 0 14 000011 		MOVEM	R1,STATUS+INPHON
+	400107'	200 01 0 15 000007 		MOVE	R1,$STACK(PDA)	; must initialize start of buffer area
+IOICM	MACRO %53A(1155) 18:32  4-Oct-82 Page 1-33
+IOFILE	MAC	28-May-71 22:32	
+
+	400110'	275 01 0 00 000061 		SUBI	R1,BUFDGE+1	; fudge words before good stuff
+	400111'	202 01 0 15 000006 		MOVEM	R1,$BFPNT(PDA)
+	400112'	263 17 0 00 000000 		POPJ	TOP,0
+
+					; FLCHN. -- chain on file block.  This is here because the static storage
+					;   cell is here also.
+
+	400113'	332 01 0 14 000000 	FLCHN.:	SKIPE	R1,FBLIST	; pick up current first
+	400114'	506 11 0 01 000001 		HRLM	FBL,FLINKS(R1)	; make old first point back to us
+	400115'	552 01 0 11 000001 		HRRZM	R1,FLINKS(FBL)	; make new first point only to old one
+	400116'	202 11 0 14 000000 		MOVEM	FBL,FBLIST	; new first
+	400117'	254 00 0 06 000000 		JRST	0(CO1)		; ta-ta
+
+
+					; FLUCH. -- unchain file block.  This is here for the same reason.
+
+	400120'	550 07 0 11 000001 	FLUCH.:	HRRZ	CO2,FLINKS(FBL)	; get forward block addr
+	400121'	554 01 0 11 000001 		HLRZ	R1,FLINKS(FBL)	;   and backwards
+	400122'	332 00 0 00 000007 		SKIPE	0,CO2		; do we have a forward guy?
+	400123'	506 01 0 07 000001 		HRLM	R1,FLINKS(CO2)	;   yes, point him to our trailer
+	400124'	322 01 0 00 400127'		JUMPE	R1,FL1ST	; no trailer, we were first
+	400125'	542 07 0 01 000001 		HRRM	CO2,FLINKS(R1)	;   else point trailer to forwards
+	400126'	254 00 0 06 000000 		JRST	0(CO1)		; leave
+
+	400127'	552 07 0 14 000000 	FL1ST:	HRRZM	CO2,FBLIST	; new first one
+	400130'	254 00 0 06 000000 		JRST	0(CO1)
+
+					; FMTCH. -- find a block matching bits in PR2.  To find TTY block if any.
+
+	400131'	200 11 0 14 000000 	FMTCH.:	MOVE	FBL,FBLIST	; get first to check
+	400132'	322 11 0 06 000000 		JUMPE	FBL,0(CO1)	;   oops, nothing there!
+
+	400133'	612 02 0 11 000010 	FMTCHL:	TDNE	PR2,STATUS(FBL)	; do you match bits?
+	400134'	254 00 0 06 000001 		JRST	1(CO1)		;   yes, return it
+	400135'	550 11 0 11 000001 		HRRZ	FBL,FLINKS(FBL)	;   no, get next in chain.
+	400136'	326 11 0 00 400133'		JUMPN	FBL,FMTCHL	;   if any
+	400137'	254 00 0 06 000000 		JRST	0(CO1)		;     else go home in disgrace
+
+					; FARGX. -- explode file arguments.  The calling sequence to all file
+					;   opening routines is the same (essentially).  This helper explodes
+IOICM	MACRO %53A(1155) 18:32  4-Oct-82 Page 1-34
+IOFILE	MAC	28-May-71 22:32	
+
+					;   the arguments, saves registers, and masks.
+
+	400140'	135 00 0 00 400222'	FARGX.:	LDB	R0,[point 4,@0(TOP),12]
+	400141'	242 00 0 00 000002 		LSH	R0,2		; load AC bits, make room for 2 more
+	400142'	202 00 0 17 000005 		MOVEM	R0,3+LARGS	;   and store them
+	400143'	202 01 0 17 000006 		MOVEM	R1,JCELL	; store our return addr
+	400144'	201 01 0 00 000004 		MOVEI	R1,4		; explode 4 args
+	400145'	273 01 0 17 000000 		ADDB	R1,0(TOP)
+	400146'	201 00 1 01 777774 		MOVEI	R0,@-4(R1)	; get component length
+	400147'	202 00 0 17 000002 		MOVEM	R0,LARGS
+	400150'	201 00 1 01 777776 		MOVEI	R0,@-2(R1)	; get length of file name
+	400151'	202 00 0 17 000004 		MOVEM	R0,2+LARGS
+	400152'	200 00 1 01 777775 		MOVE	R0,@-3(R1)	; get byte pointer
+	400153'	202 00 0 17 000003 		MOVEM	R0,1+LARGS	; store for now
+	400154'	135 00 0 00 400223'		LDB	R0,[point 4,0,17]	; fetch index bits from addr spec
+	400155'	322 00 0 00 400162'		JUMPE	R0,FD		; no register specified
+	400156'	201 00 1 17 000003 		MOVEI	R0,@1+LARGS	; evaluate EA of byte pointer
+	400157'	542 00 0 17 000003 		HRRM	R0,1+LARGS	; is new EA of byte pointer
+	400160'	515 00 0 00 000017 		HRLZI	R0,^o17		; finally, blot index field of pointer
+	400161'	412 00 0 17 000003 		ANDCAM	R0,1+LARGS	; like so
+
+	400162'	201 01 1 01 777777 	FD:	MOVEI	R1,@-1(R1)	; get addr of option set
+	400163'	510 00 0 01 000000 		HLLZ	R0,0(R1)	;   and the set
+	400164'	502 00 0 17 000005 		HLLM	R0,3+LARGS	;   and store with the AC bits
+	400165'	515 00 0 00 000002 		$SAVE	REGSAV,EXP1,PSA
+	400166'	541 00 0 17 000032 
+	400167'	251 00 0 17 000044 
+	400170'	350 00 0 15 000000 		$MASK
+	400171'	402 00 0 15 000030 		SETZM	0,$EXTST(PDA)	; clear global error cells
+	400172'	402 00 0 15 000027 		SETZM	0,$IOERR(PDA)
+	400173'	200 10 0 17 000005 		MOVE	OPBITS,3+LARGS	; keep option bits in register
+	400174'	200 14 0 15 000023 		MOVE	PSA,$IOICM(PDA)	; load data area pointer
+	400175'	606 10 0 00 000004 		TRNN	OPBITS,4	; was internal filename specified?
+	400176'	254 00 1 17 000006 		JRST	@JCELL		;   no, split
+	400177'	200 01 0 00 400224'		MOVE	R1,[ascii '.PIO ']	; set down the enforced extension
+	400200'	202 01 0 17 000015 		MOVEM	R1,6+ARGBLK	; use ARGBLK, it's safe until after parsing
+	400201'	550 01 0 17 000003 		HRRZ	R1,1+LARGS	; get byte pointer EA
+	400202'	120 00 0 01 000001 		DMOVE	R0,1(R1)	; thru it to get first two words
+	400203'	124 00 0 17 000016 		DMOVEM	R0,7+ARGBLK	;   and store them after ext.
+	400204'	201 01 0 17 000014 		MOVEI	R1,6-1+ARGBLK	; the address of the ponied file name
+IOICM	MACRO %53A(1155) 18:32  4-Oct-82 Page 1-35
+IOFILE	MAC	28-May-71 22:32	
+
+	400205'	542 01 0 17 000003 		HRRM	R1,1+LARGS	; word before, stuff into the byte pointer
+	400206'	200 01 0 17 000004 		MOVE	R1,2+LARGS	; get length sent down
+	400207'	271 01 0 00 000005 		ADDI	R1,5		;   plus five for ext
+	400210'	301 01 0 00 000014 		CAIL	R1,^o14		; did we blow it?
+	400211'	201 01 0 00 000013 		MOVEI	R1,^o13		;   yes, trunc file name to 6 chars
+	400212'	202 01 0 17 000004 		MOVEM	R1,2+LARGS	; replace length
+	400213'	254 00 1 17 000006 		JRST	@JCELL		; go home now
+
+					; IOFAK. -- error return.  Load up the right block and split.
+
+	400214'	201 11 0 00 000011 	IOFAK.:	LDERR	FBL,OPNERR
+	400215'	202 11 0 15 000027 		MOVEM	FBL,$IOERR(PDA)	; set global cell same as local
+	400216'	201 11 0 14 000012 		MOVEI	FBL,OUTPHO
+	400217'	602 10 0 00 000040 		TRNE	OPBITS,OPNINP	; is it input?
+	400220'	201 11 0 14 000001 		MOVEI	FBL,INPHON	; yes
+	400221'	254 00 0 06 000000 		JRST	0(CO1)		; split
+			000000			$END	IOICM,IOFINI
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400225
+PROGRAM BREAK IS 000000
+CPU TIME USED 01:17.142
+
+22P CORE USED
+IOICM	MACRO %53A(1155) 18:32  4-Oct-82 Page S-10
+IOFILE	MAC	28-May-71 22:32		SYMBOL TABLE
+
+ADJSP	105000	000000		PPGRG.		000000	ext	.TENSA		000045	spd	
+ARG		000000		PR2		000002		
+BASIS		000016	spd	PRFNFG		400017'		
+BUFDGE		000060		PSA		000014	spd	
+CO1		000006		R0		000000	spd	
+CO2		000007		R1		000001	spd	
+DECOD.		400033'	ext	S.IOIC		000023	sin	
+DSPOS.		400065'	ext	STATUS		000010		
+EOFBIT		400000		TOP		000017	spd	
+EOFCNT		000001		X.IOIC		000000	sin	
+EOFWRD		000003		$ABSLO		000000	spd	
+EOLBIT		200000		$BFPNT		000006	spd	
+ERRORS		000005		$EXTST		000030	spd	
+EXP1		000002	spd	$FALSE		000000	spd	
+EXP2		000003	spd	$FIRST		000002	spd	
+FARGX.		400140'	ent	$HILOC		400000	spd	
+FBL		000011		$IOERR		000027	spd	
+FD		400162'		$IOICM		000023	spd	
+FFRBF.		400062'	ent	$LAST		000014	spd	
+FGTBF.		400047'	ent	$LEN		000012	spd	
+FL1ST		400127'		$LOC	777777	777777	spd	
+FLCHN.		400113'	ent	$LOLOC		000000	spd	
+FLINKS		000001		$MASKI		000000	spd	
+FLUCH.		400120'	ent	$MAXLO		000000	spd	
+FMTCH.		400131'	ent	$MAXST		000023	spd	
+FMTCHL		400133'		$MAXTE		000062	spd	
+GTIFN.		400023'	ent	$NEEDP		000001	spd	
+I.IOIC		400072'	sin	$OFFSE		000000	spd	
+IOERR.		000000	ext	$STACK		000007	spd	
+IOFAK.		400214'	ent	$STATS		000000	spd	
+IOFINI		400072'		$TRUE		000001	spd	
+MAXSFD		000005		.ARGBL		000007	spd	
+NEW.		400054'	ext	.BREEZ		000001	spd	
+OPBITS		000010		.FBLIS		000000	spd	
+OPNERR		000011		.FBLOC		000020	spd	
+OPNINP		000040		.INPHO		000001	spd	
+P.FID.		400000'	ent	.JCELL		000006	spd	
+P.IOIC		000000	ext	.LARGS		000002	spd	
+PDA		000015	spd	.OUTPH		000012	spd	
+PHOFBL		001000		.REGSA		000032	spd	
+IOBFAK	MACRO %53A(1155) 18:32  4-Oct-82 Page 1-36
+IOFILE	MAC	28-May-71 22:32	
+
+						search	RTSYM
+						search	IOSYM
+						search	OPDEFS
+						sall
+	400000'					$MODULE	IOBFAK
+
+						entry	CLSTB.
+						extern	IOERR.
+
+					; CLSTB. -- close typed and binary.  If the IOBIN module was not pulled via
+					;   OPNTP. or OPNBN., then it is an error to try to close a TENIO file
+					;   with CLSTB (as none could have been opened through pascal).  So we
+					;   take an error dive instead of bombing out on an illegal LUUO.
+
+	400000'	201 01 0 00 000001 	CLSTB.:	LDERR	R1,INTERR
+	400001'	262 17 0 00 000000 		POP	TOP,R0
+	400002'	254 00 0 00 000000*		JRST	IOERR.
+
+						$END	IOBFAK
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400003
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:03.607
+
+22P CORE USED
+IOBFAK	MACRO %53A(1155) 18:32  4-Oct-82 Page S-11
+IOFILE	MAC	28-May-71 22:32		SYMBOL TABLE
+
+CLSTB.		400000'	ent	
+INTERR		000001		
+IOERR.		400002'	ext	
+R0		000000	spd	
+R1		000001	spd	
+TOP		000017	spd	
+$ABSLO		000000	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$NEEDP		000000	spd	
+$STATS		000000	spd	
+
+DBFBFK	MACRO %53A(1155) 18:32  4-Oct-82 Page 1-37
+IOFILE	MAC	28-May-71 22:32	
+
+						search	RTSYM
+	400000'					$MODULE	DBFBFK
+
+						entry	DB.FBL
+
+					; DB.FBL -- debugger file block address.  If the debugger hasn't been
+					;   loaded, then there is no debugger static file block, and no one
+					;   ought to be calling DB$OPEN.  Therefore, if DB$OPEN is called,
+					;   it will hit this routine when it tries to get the debugger static
+					;   file block address, and we can put it out of its misery.
+
+	400000'	260 17 0 00 000000*	DB.FBL:	$FTERROR ERRMSG
+	400001'	051 03 0 00 400005'
+	400002'	200 00 0 17 000000 
+	400003'	260 17 0 00 000000*
+	400004'	254 00 0 00 000000*
+
+	400005'				ERRMSG:	ASCIZ	/
+	400005'	015 012 077 011 103 	?	Call to DB$OPEN in non-debug program/
+	400006'	141 154 154 040 164 
+	400007'	157 040 104 102 044 
+	400010'	117 120 105 116 040 
+	400011'	151 156 040 156 157 
+	400012'	156 055 144 145 142 
+	400013'	165 147 040 160 162 
+	400014'	157 147 162 141 155 
+	400015'	000 000 000 000 000 
+
+						PRGEND
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400016
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:04.574
+
+22P CORE USED
+DBFBFK	MACRO %53A(1155) 18:32  4-Oct-82 Page S-12
+IOFILE	MAC	28-May-71 22:32		SYMBOL TABLE
+
+DB.FBL		400000'	ent	
+DIE.		400004'	ext	
+ERRMSG		400005'		
+R0		000000	spd	
+TOP		000017	spd	
+TWAIT.		400000'	ext	
+WRTPC.		400003'	ext	
+$ABSLO		000000	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+
+IOFNAM	MACRO %53A(1155) 18:32  4-Oct-82 Page 1-38
+IOFILE	MAC	28-May-71 22:32	
+
+						search	RTSYM
+						search	IOSYM
+	400000'					$MODULE	IOFNAM
+
+						entry	FNAME.
+
+						$LOCAL	REGSAV,INDEX1-EXP3+1
+						$LOCAL	DEVICE,1	; looks like a tenio block
+						$LOCAL	FLNAME,1
+						$LOCAL	FEXT,1
+						$LOCAL	PPN,1
+						$LOCAL	SFDS,MAXSFD
+						$LOCAL	STOP,1
+
+					; FNAME. -- return canonical file name in string form.  TENIO doesn't
+					;   mind if we do a PATH. on one of its files, so treat all files the
+					;   same.  Set up a TENIO-ish internal file block and convert to canon-
+					;   ical string form.
+
+	400000'	105 17 0 00 000017 	FNAME.:	$FRAME
+	400001'	124 04 0 17 777762 		$SAVE	REGSAV,EXP3,INDEX1
+	400002'	124 06 0 17 777764 
+	400003'	202 10 0 17 777766 
+	400004'	200 01 0 02 000002 		MOVE	R1,CHNUM(EXP1)	; tell PATH which file to do
+	400005'	202 01 0 17 777770 		MOVEM	R1,FLNAME	; use the block twice
+	400006'	201 01 0 17 777770 		MOVEI	R1,FLNAME	; where the block is
+	400007'	505 01 0 00 000010 		HRLI	R1,.STOP-.FLNAME	; how bit it is
+	400010'	047 01 0 00 000110 		PATH.	R1,0
+	400011'	254 00 0 00 400017'		JRST	FNDEV		; o well, try device name
+	400012'	200 01 0 17 777770 		MOVE	R1,FLNAME	; move the device name up
+	400013'	202 01 0 17 777767 		MOVEM	R1,DEVICE	;   where it belongs
+	400014'	120 00 0 02 000012 		DMOVE	R0,FILENM(EXP1)	; get filename and extension
+	400015'	124 00 0 17 777770 		DMOVEM	R0,FLNAME	;   and set in block
+	400016'	254 00 0 00 400034'		JRST	DOFNAM		; do it
+
+	400017'	200 01 0 02 000002 	FNDEV:	MOVE	R1,CHNUM(EXP1)	; try DEVNAM in case it's a device
+	400020'	047 01 0 00 000064 		DEVNAM	R1,0		; ok?
+	400021'	254 00 0 00 400031'		JRST	FNERR		;   no good, hell with it.
+	400022'	541 04 0 03 000001 		HRRI	EXP3,1(EXP2)	; gotta fake up initialization
+	400023'	505 04 0 00 440700 		HRLI	EXP3,440700
+IOFNAM	MACRO %53A(1155) 18:32  4-Oct-82 Page 1-39
+IOFILE	MAC	28-May-71 22:32	
+
+	400024'	400 05 0 00 000000 		SETZ	EXP4,0
+	400025'	265 06 0 00 400100'		JSP	EXP5,DONAME	; ok, write out the name
+	400026'	201 00 0 00 000072 		MOVEI	R0,":"		;   with a colon
+	400027'	265 06 0 00 400110'		JSP	EXP5,DOCHR
+	400030'	254 00 0 00 400072'		JRST	DVDONE
+
+	400031'	402 00 0 03 000000 	FNERR:	SETZM	0,0(EXP2)	; return null string on errors
+	400032'	254 00 0 00 400073'		JRST	FNDONE		;   not elegant but who cares?
+
+	400033'	254 04 0 00 000000 	FNTEN:	HALT			; oops
+
+	400034'	541 04 0 03 000001 	DOFNAM:	HRRI	EXP3,1(EXP2)	; compose byte pointer to target string
+	400035'	505 04 0 00 440700 		HRLI	EXP3,440700
+	400036'	400 05 0 00 000000 		SETZ	EXP4,0		; our char counter
+
+	400037'	200 01 0 17 777767 		MOVE	R1,DEVICE	; first the device
+	400040'	265 06 0 00 400100'		JSP	EXP5,DONAME
+	400041'	201 00 0 00 000072 		MOVEI	R0,":"		;   and its trailer
+	400042'	265 06 0 00 400110'		JSP	EXP5,DOCHR
+
+	400043'	200 01 0 17 777770 		MOVE	R1,FLNAME	; then the filename
+	400044'	265 06 0 00 400100'		JSP	EXP5,DONAME
+
+	400045'	201 00 0 00 000056 		MOVEI	R0,"."		; now the extension
+	400046'	265 06 0 00 400110'		JSP	EXP5,DOCHR
+	400047'	510 01 0 17 777771 		HLLZ	R1,FEXT
+	400050'	265 06 0 00 400100'		JSP	EXP5,DONAME
+
+	400051'	201 00 0 00 000133 		MOVEI	R0,"["		; now the PPN
+	400052'	265 06 0 00 400110'		JSP	EXP5,DOCHR
+	400053'	554 01 0 17 777772 		HLRZ	R1,PPN
+	400054'	265 06 0 00 400112'		JSP	EXP5,DOOCT
+	400055'	201 00 0 00 000054 		MOVEI	R0,","
+	400056'	265 06 0 00 400110'		JSP	EXP5,DOCHR
+	400057'	550 01 0 17 777772 		HRRZ	R1,PPN
+	400060'	265 06 0 00 400112'		JSP	EXP5,DOOCT
+
+	400061'	201 07 0 17 777773 		MOVEI	EXP6,SFDS	; where to start looking for SFD's
+	400062'	336 01 0 07 000000 	SFLOOP:	SKIPN	R1,0(EXP6)	; well?
+	400063'	254 00 0 00 400070'		JRST	SFDONE		;   nothing
+IOFNAM	MACRO %53A(1155) 18:32  4-Oct-82 Page 1-40
+IOFILE	MAC	28-May-71 22:32	
+
+	400064'	201 00 0 00 000054 		MOVEI	R0,","		; got one, write out a comma
+	400065'	265 06 0 00 400110'		JSP	EXP5,DOCHR
+	400066'	265 06 0 00 400100'		JSP	EXP5,DONAME	;   and the SFD name
+	400067'	344 07 0 00 400062'		AOJA	EXP6,SFLOOP	; on to the next one
+
+	400070'	201 00 0 00 000135 	SFDONE:	MOVEI	R0,"]"		; close the path list
+	400071'	265 06 0 00 400110'		JSP	EXP5,DOCHR
+
+	400072'	202 05 0 03 000000 	DVDONE:	MOVEM	EXP4,0(EXP2)	; install length of path string
+	400073'	120 04 0 17 777762 	FNDONE:	$RESTOR	REGSAV,EXP3,INDEX1
+	400074'	120 06 0 17 777764 
+	400075'	200 10 0 17 777766 
+	400076'	105 17 0 00 777761 		$UNFRAME
+	400077'	263 17 0 00 000000 		POPJ	TOP,0
+
+					; DONAME, DOOCT and DOCHR -- support routines for FNAME.  Really simple
+					;   thingies to write out a sixbit word in chars, stopping at the
+					;   first null char, to write out an octal number starting at the first
+					;   non-zero digit, and to write out a single ascii char.
+
+	400100'	200 10 0 00 400125'	DONAME:	MOVE	INDEX1,[point 6,R1]
+	400101'	134 00 0 00 000010 	DONLOO:	ILDB	R0,INDEX1	; get the char
+	400102'	322 00 0 06 000000 		JUMPE	R0,0(EXP5)	;   zero, we're done
+						ife	R1&1,<TRNE INDEX1,1>	; see if byte pointer has
+	400103'	606 10 0 00 000001 		ifn	R1&1,<TRNN INDEX1,1>	;   gone on to next word
+	400104'	254 00 0 06 000000 		JRST	0(EXP5)		; yes, again we're done
+	400105'	271 00 0 00 000040 		ADDI	R0,^o40		; ok, convert sixbit to sevenbit
+	400106'	136 00 0 00 000004 		IDPB	R0,EXP3		; dump it
+	400107'	344 05 0 00 400101'		AOJA	EXP4,DONLOO	;   and get another
+
+
+	400110'	136 00 0 00 000004 	DOCHR:	IDPB	R0,EXP3		; dump it
+	400111'	344 05 0 06 000000 		AOJA	EXP4,0(EXP5)	;   and split
+
+
+	400112'	200 10 0 00 400126'	DOOCT:	MOVE	INDEX1,[point 3,R1]	; pointer to get octal digits
+	400113'	322 01 0 06 000000 		JUMPE	R1,0(EXP5)	; if zero, split now
+	400114'	134 00 0 00 000010 	DOOLOO:	ILDB	R0,INDEX1	; get a char
+	400115'	322 00 0 00 400114'		JUMPE	R0,DOOLOO	; zero, get another
+	400116'	254 00 0 00 400122'		JRST	DOGOT1		; jump into loop below
+IOFNAM	MACRO %53A(1155) 18:32  4-Oct-82 Page 1-41
+IOFILE	MAC	28-May-71 22:32	
+
+
+	400117'	134 00 0 00 000010 	DOCLOO:	ILDB	R0,INDEX1	; get the char
+						ife	R1&1,<TRNE INDEX1,1>	; skip if byte pointer not
+	400120'	606 10 0 00 000001 		ifn	R1&1,<TRNN INDEX1,1>	;   incremented to next reg
+	400121'	254 00 0 06 000000 		JRST	0(EXP5)		; if it is, we're done
+	400122'	271 00 0 00 000060 	DOGOT1:	ADDI	R0,"0"		; convert into digit
+	400123'	136 00 0 00 000004 		IDPB	R0,EXP3		; deposit it
+	400124'	344 05 0 00 400117'		AOJA	EXP4,DOCLOO	;   increment count and get another
+						end
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400127
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:32.694
+
+22P CORE USED
+IOFNAM	MACRO %53A(1155) 18:32  4-Oct-82 Page S-13
+IOFILE	MAC	28-May-71 22:32		SYMBOL TABLE
+
+ADJSP	105000	000000		$MAXLO		000017	spd	
+CHNUM		000002		$MAXST		000000	spd	
+DEVNAM	047000	000064		$MAXTE		000000	spd	
+DOCHR		400110'		$STATS		000000	spd	
+DOCLOO		400117'		.DEVIC		000006	spd	
+DOFNAM		400034'		.FEXT		000010	spd	
+DOGOT1		400122'		.FLNAM		000007	spd	
+DONAME		400100'		.PPN		000011	spd	
+DONLOO		400101'		.REGSA		000001	spd	
+DOOCT		400112'		.SFDS		000012	spd	
+DOOLOO		400114'		.STOP		000017	spd	
+DVDONE		400072'		
+EXP1		000002	spd	
+EXP2		000003	spd	
+EXP3		000004	spd	
+EXP4		000005	spd	
+EXP5		000006	spd	
+EXP6		000007	spd	
+FILENM		000012		
+FNAME.		400000'	ent	
+FNDEV		400017'		
+FNDONE		400073'		
+FNERR		400031'		
+FNTEN		400033'		
+INDEX1		000010	spd	
+MAXSFD		000005		
+PATH.	047000	000110		
+R0		000000	spd	
+R1		000001	spd	
+SFDONE		400070'		
+SFLOOP		400062'		
+TOP		000017	spd	
+$ABSLO		000000	spd	
+$FALSE		000000	spd	
+$FIRST		000004	spd	
+$HILOC		400000	spd	
+$LAST		000010	spd	
+$LEN		000004	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+ 
+8s,ù

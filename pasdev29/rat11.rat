@@ -1,0 +1,1986 @@
+##========== Ratfor definitions ==========
+ 
+ ## Because some compilers will not compile logical expressions
+ ## of the form (i .ne. -1), we have used positive values for
+ ## some symbolic constants where negative values would be
+ ## a better choice. (EOS, EOF, and so on are examples.)
+ ## These positive values are all greater than 10000.
+ 
+define(commonblocks,"RAT4C.RAT")
+define(VERSION,"Ratfor V2(6)A")
+define(ALPHA,10100)
+define(AMPER,38)   ## ampersand
+define(ARB,200)
+define(ATSIGN,64)
+define(BACKSLASH,92)
+define(BACKSPACE,8)
+define(EXCLAM,33)   ## exclamation mark
+define(BAR,124)
+define(BIGA,65)
+define(BIGB,66)
+define(BIGC,67)
+define(BIGD,68)
+define(BIGE,69)
+define(BIGF,70)
+define(BIGG,71)
+define(BIGH,72)
+define(BIGI,73)
+define(BIGJ,74)
+define(BIGK,75)
+define(BIGL,76)
+define(BIGM,77)
+define(BIGN,78)
+define(BIGO,79)
+define(BIGP,80)
+define(BIGQ,81)
+define(BIGR,82)
+define(BIGS,83)
+define(BIGT,84)
+define(BIGU,85)
+define(BIGV,86)
+define(BIGW,87)
+define(BIGX,88)
+define(BIGY,89)
+define(BIGZ,90)
+define(BLANK,32)
+define(BUFSIZE,300)   ## pushback buffer for ngetch and putbak
+define(CARET,94)
+define(COLON,58)
+define(COMMA,44)
+define(COMOUT,3)
+define(CR,13)
+define(DEFTYPE,10010)
+define(DIG0,48)
+define(DIG1,49)
+define(DIG2,50)
+define(DIG3,51)
+define(DIG4,52)
+define(DIG5,53)
+define(DIG6,54)
+define(DIG7,55)
+define(DIG8,56)
+define(DIG9,57)
+define(DIGIT,2)
+define(DOLLAR,36)
+define(DQUOTE,34)
+define(EOF,10003)
+define(EOS,10002)
+define(EQUALS,61)
+define(ERR,10001)
+define(ERROUT,5) 
+define(FORMFEED,12)
+define(GRAVE,96)
+define(GREATER,62)
+define(LBRACE,123)
+define(LBRACK,91)
+define(LESS,60)
+define(LETA,97)
+define(LETB,98)
+define(LETC,99)
+define(LETD,100)
+define(LETE,101)
+define(LETF,102)
+define(LETG,103)
+define(LETH,104)
+define(LETI,105)
+define(LETJ,106)
+define(LETK,107)
+define(LETL,108)
+define(LETM,109)
+define(LETN,110)
+define(LETO,111)
+define(LETP,112)
+define(LETQ,113)
+define(LETR,114)
+define(LETS,115)
+define(LETT,116)
+define(LETTER,1)
+define(LETU,117)
+define(LETV,118)
+define(LETW,119)
+define(LETX,120)
+define(LETY,121)
+define(LETZ,122)
+define(LEXBREAK,10264)
+define(LEXDIGITS,10260)
+define(LEXDO,10266)
+define(LEXELSE,10262)
+define(LEXEND,10271)
+define(LEXFOR,10268)
+define(LEXIF,10261)
+define(LEXNEXT,10265)
+define(LEXOTHER,10267)
+define(LEXREPEAT,10269)
+define(LEXUNTIL,10270)
+define(LEXWHILE,10263)
+define(LPAREN,40)
+define(MAXCARDI,150)   ## card size
+define(MAXCARDO,80)
+define(MAXCHARS,10)   ## characters for outnum
+define(MAXDEF,MAXTOK)   ## max chars in a defn
+define(MAXFORSTK,300)	## max space for for reinit clauses
+define(MAXLINEI,151)
+define(MAXLINEO,81)   ## must be 1 more than MAXCARD
+define(MAXPTR,300)   ## number of defines in lookup
+define(MAXSTACK,100)   ## max stack depth for parser
+define(MAXTBL,3000)   ## max chars in all definitions
+define(MAXTOK,MAXLINEI)   ## max chars in a token
+define(MINUS,45)
+define(NEWLINE,10)
+define(NFILES,4)   ## max depth of file inclusion
+define(NO,0)
+define(OK,10004)
+define(PERCENT,37)
+define(PERIOD,46)
+define(PLUS,43)
+define(QMARK,63)
+define(RBRACE,125)
+define(RBRACK,93)
+define(READONLY,0)
+define(RPAREN,41)
+define(SEMICOL,59)
+define(SHARP,35)
+define(SLASH,47)
+define(SQUOTE,39)
+define(STAR,42)
+define(STDIN,1)
+define(STDOUT,6)
+define(TERIN,5)  ## unit number for terminal input
+define(TAB,9)
+define(TEROUT,5)  ## unit number for terminal output
+define(TERMINAL,0)   ## input level 0
+define(TILDE,126)
+define(UNDERLINE,95)
+define(WRITEONLY,1)
+define(YES,1)
+define(character,integer)
+define(abs,iabs)
+define(min,min0)
+define(max,max0)
+##========== Ratfor in ratfor ==========
+#
+# ratfor - main program for Ratfor
+#
+   call hello
+   repeat {
+      call opfil
+      call parse
+      call clfil
+      }
+   end
+#
+# alldig - return YES if str is all digits
+#
+   integer function alldig(str)
+   character typsm
+   character str(ARB)
+   integer i
+ 
+   alldig = NO
+   if (str(1) == EOS)
+      return
+   for (i = 1; str(i) != EOS; i = i + 1)
+      if (typsm(str(i)) != DIGIT)
+	 return
+   alldig = YES
+   return
+   end
+#
+# atline - report current line
+#
+   subroutine atline
+   character lc(MAXLINEO)
+   integer itoc
+   integer i, junk
+   include commonblocks
+   ## include cline
+ 
+   if (level > 0)
+      call remark("at line_")
+   for (i = 1; i <= level; i = i + 1) {
+      call putch(BLANK, ERROUT)
+      junk = itoc(linect(i), lc, MAXLINEO)
+      call putlin(lc, ERROUT)
+      }
+   call putch(COLON, ERROUT)
+   return
+   end
+#
+# balpar - copy balanced paren string
+#
+   subroutine balpar
+   character gettok
+   character t, token(MAXTOK)
+   integer islbr, isrbr
+   integer nlpar, bc
+ 
+   if (gettok(token, bc, MAXTOK) != LPAREN) {
+      call synerr("missing left paren.")
+      return
+      }
+   call outstr(token, 0)
+   nlpar = 1
+   repeat {
+      t = gettok(token, bc, MAXTOK)
+      if (t==SEMICOL | islbr(t)==YES | isrbr(t)==YES | t==EOF) {
+	 call pbstr(token, bc)
+	 break
+	 }
+      if (t == NEWLINE) {      # delete newlines
+	 token(1) = EOS
+	 bc = 0
+	 }
+      else if (t == LPAREN)
+	 nlpar = nlpar + 1
+      else if (t == RPAREN)
+	 nlpar = nlpar - 1
+      # else nothing special
+      call outstr(token, bc)
+      } until (nlpar <= 0)
+   if (nlpar != 0)
+      call synerr("missing parenthesis in condition.")
+   return
+   end
+#
+# big - make letter upper case
+#
+   character function big(c)
+   character c
+   # note: works with ascii character set
+
+   if (c >= LETA & c <= LETZ)
+      big = BIGA + (c - LETA)
+   else
+      big = c
+   return
+   end
+#
+# brknxt - generate code for break and next
+#
+   subroutine brknxt(sp, lextyp, labval, token)
+   integer i, labval(MAXSTACK), lextyp(MAXSTACK), sp, token
+ 
+   for (i = sp; i > 0; i = i - 1)
+      if (lextyp(i) == LEXWHILE | lextyp(i) == LEXDO
+	| lextyp(i) == LEXFOR | lextyp(i) == LEXREPEAT) {
+	 if (token == LEXBREAK)
+	    call outgo(labval(i)+1)
+	 else
+	    call outgo(labval(i))
+	 return
+	 }
+   if (token == LEXBREAK)
+      call synerr("illegal break.")
+   else
+      call synerr("illegal next.")
+   return
+   end
+#
+# clfil - close standard input & output files
+#
+   subroutine clfil
+   include commonblocks
+   ## include cdefio
+
+   for ( ; level > 0; level = level - 1)
+      call clsfl(infile(level))
+   call clsfl(STDOUT)
+   return
+   end
+#
+# clsfl - close file
+#
+   subroutine clsfl(fd)
+   integer fd
+
+   call close(fd)
+   return
+   end
+#
+# ctoi - convert string at in(i) to integer, increment i
+#
+   integer function ctoi(in, i)
+   character in(ARB)
+   integer index
+   integer d, i
+#   string digits "0123456789"
+   integer digits(11)
+   data digits(1) /DIG0/
+   data digits(2) /DIG1/
+   data digits(3) /DIG2/
+   data digits(4) /DIG3/
+   data digits(5) /DIG4/
+   data digits(6) /DIG5/
+   data digits(7) /DIG6/
+   data digits(8) /DIG7/
+   data digits(9) /DIG8/
+   data digits(10) /DIG9/
+   data digits(11) /EOS/
+ 
+   while (isblnk(in(i)) == YES)
+      i = i + 1
+   for (ctoi = 0; in(i) != EOS; i = i + 1) {
+      d = index(digits, in(i))
+      if (d == 0)      # non-digit
+	 break
+      ctoi = 10 * ctoi + d - 1
+      }
+   return
+   end
+#
+# dcdsw - decode input switches
+#
+   integer function dcdsw(str)
+   character str(ARB)
+   integer i, switch
+   integer ctoi, big
+   include commonblocks
+   ## include cswtch
+
+   call fold(str)
+   for (i = 1; str(i) != EOS; i = i + 1) {
+      if (str(i) != SLASH | str(i+1) == EOS)
+	 next
+      else {
+	 i = i + 1
+	 switch = str(i)
+	 if (switch == LETQ)
+	    call gdbye
+	 else if (switch == LETU)
+	    pretty = NO
+	 else if (switch == LETL) {
+	    i = i + 1
+	    if (str(i) == SQUOTE | str(i) == DQUOTE
+	      | STR(i) == LETB | str(i) == LETN)
+	       tquot = str(i)
+	    }
+	 else if (switch == LETB) {
+	    i = i + 1
+	    iobuf = min(max(1, ctoi(str, i)), 10)
+	    i = i - 1
+	    }
+	 else if (switch == LETW) {
+	    i = i + 1
+	    inwdth = min(max(20, ctoi(str, i)), MAXCARDI)
+	    i = i - 1
+	    }
+	 else {
+	    call remark("unrecognized switch /_")
+	    call putch(big(switch), ERROUT)
+	    call putch(NEWLINE, ERROUT)
+	    dcdsw = ERR
+	    return
+	    }
+	 }
+      }
+   dcdsw = OK
+   return
+   end
+#
+# deftok - get token; process macro calls and invocations
+#
+   character function deftok(token, bc, toksiz, fd)
+   character gtok
+   integer fd, toksiz, bc
+   character defn(MAXDEF), t, token(toksiz)
+   integer lokup
+ 
+   for (t=gtok(token, bc, toksiz, fd); t!=EOF;
+      t=gtok(token, bc, toksiz, fd)) {
+      if (t != ALPHA)	# non-alpha
+	 break
+      if (lokup(token, defn) == NO)   # undefined
+	 break
+      if (defn(1) == DEFTYPE) {   # get definition
+	 call getdef(token, toksiz, defn, MAXDEF, fd)
+	 call instal(token, defn)
+	 }
+      else
+	 call pbstr(defn, bc)   # push replacement onto input
+      }
+   deftok = t
+   if (deftok == ALPHA)   # convert to single case
+      call fold(token)
+   return
+   end
+#
+# docode - generate code for beginning of do
+#
+   subroutine docode(lab)
+   integer labgen
+   integer lab
+#   string dostr "do"
+   integer dostr(4)
+   data dostr(1), dostr(2), dostr(3),
+      dostr(4)/LETD, LETO, BLANK, EOS/
+ 
+   call outtab
+   call outstr(dostr, 0)
+   lab = labgen(2)
+   call outnum(lab)
+   call eatup
+   call outdon
+   return
+   end
+#
+# dostat - generate code for end of do statement
+#
+   subroutine dostat(lab)
+   integer lab
+ 
+   call outcon(lab)
+   call outcon(lab+1)
+   return
+   end
+#
+# eatup - process rest of statement; interpret continuations
+#
+   subroutine eatup
+   character gettok
+   character ptoken(MAXTOK), t, token(MAXTOK)
+   integer nlpar, bc, bcnxt
+   integer islbr, isrbr
+ 
+   nlpar = 0
+   repeat {
+      t = gettok(token, bc, MAXTOK)
+      if (t == SEMICOL | t == NEWLINE)
+	 break
+      if (isrbr(t)==YES | islbr(t) == YES) {
+	 call pbstr(token, bc)
+	 break
+	 }
+      if (t == EOF) {
+	 call synerr("unexpected EOF.")
+	 call pbstr(token, bc)
+	 break
+	 }
+      if (t == COMMA | t == UNDERLINE) {
+	 if (gettok(ptoken, bcnxt, MAXTOK) != NEWLINE)
+	    call pbstr(ptoken, bcnxt)
+	 if (t == UNDERLINE)
+	    token(1) = EOS
+	 }
+      else if (t == LPAREN)
+	 nlpar = nlpar + 1
+      else if (t == RPAREN)
+	 nlpar = nlpar - 1
+      call outstr(token, bc)
+      } until (nlpar < 0)
+   if (nlpar != 0)
+      call synerr("unbalanced parentheses.")
+   return
+   end
+#
+# elseif - generate code for end of if before else
+#
+   subroutine elseif(lab)
+   integer lab
+ 
+   call outgo(lab+1)
+   call outcon(lab)
+   return
+   end
+#
+# endc - generate corrected "end" statement
+#
+   subroutine endc(lexstr)
+   character lexstr(ARB)
+   include commonblocks
+   ## include coutln
+
+   call outcon(outlab)
+   outlab = 0
+   call otherc(lexstr)
+   return
+   end
+#
+# equal - compare str1 to str2; return YES if equal, NO if not
+#
+   integer function equal(str1, str2)
+   character str1(ARB), str2(ARB)
+   integer i
+ 
+   for (i = 1; str1(i) == str2(i); i = i + 1)
+      if (str1(i) == EOS) {
+	 equal = YES
+	 return
+	 }
+   equal = NO
+   return
+   end
+#
+# fatal - print fatal error message, then die
+#
+   subroutine fatal
+ 
+   call outdon   # flush last line
+   call clfil
+   call remark("compilation terminated.")
+   call gdbye
+   end
+#
+# fold - convert alphabetic token to single case
+#
+   subroutine fold(token)
+   character token(ARB)
+   integer i
+ 
+   # WARNING - this routine depends heavily on the
+   # fact that letters have been mapped into internal
+   # right-adjusted ascii. god help you if you
+   # have subverted this mechanism.
+ 
+   for (i = 1; token(i) != EOS; i = i + 1)
+      if (token(i) >= BIGA & token(i) <= BIGZ)
+	 token(i) = token(i) - BIGA + LETA
+   return
+   end
+#
+# forcod - beginning of for statement
+#
+   subroutine forcod(lab)
+   character gettok
+   character t, token(MAXTOK)
+   integer lngth, labgen
+   integer i, j, k, lab, nlpar, bc
+   include commonblocks
+   ## include cfor
+   integer ifnot(11), dparen(4)
+#   string ifnot "if (.not.("
+#   string dparen ")) "
+      data ifnot(1) /LETI/
+      data ifnot(2) /LETF/
+      data ifnot(3) /BLANK/
+      data ifnot(4) /LPAREN/
+      data ifnot(5) /PERIOD/
+      data ifnot(6) /LETN/
+      data ifnot(7) /LETO/
+      data ifnot(8) /LETT/
+      data ifnot(9) /PERIOD/
+      data ifnot(10) /LPAREN/
+      data ifnot(11) /EOS/
+      data dparen(1) /RPAREN/
+      data dparen(2) /RPAREN/
+      data dparen(3) /BLANK/
+      data dparen(4) /EOS/
+ 
+   lab = labgen(3)
+   call outcon(0)
+   if (gettok(token, bc, MAXTOK) != LPAREN) {
+      call synerr("missing left paren.")
+      return
+      }
+   if (gettok(token, bc, MAXTOK) != SEMICOL) {   # real init clause
+      call pbstr(token, 0)
+      call outtab
+      call eatup
+      call outdon
+      }
+   if (gettok(token, bc, MAXTOK) == SEMICOL)   # empty condition
+      call outcon(lab)
+   else {   # non-empty condition
+      call pbstr(token, 0)
+      call outcon(lab)
+      call outtab
+      call outstr(ifnot, 0)
+      nlpar = 0
+      while (nlpar >= 0) {
+	 t = gettok(token, bc, MAXTOK)
+	 if (t == SEMICOL)
+	    break
+	 if (t == LPAREN)
+	    nlpar = nlpar + 1
+	 else if (t == RPAREN)
+	    nlpar = nlpar - 1
+	 if (t != NEWLINE & t != UNDERLINE)
+	    call outstr(token, bc)
+	 }
+      call outstr(dparen, 0)
+      call outgo(lab+2)
+      if (nlpar < 0)
+	 call synerr("invalid for clause.")
+      }
+   fordep = fordep + 1	 # stack reinit clause
+   j = 1
+   for (i = 1; i < fordep; i = i + 1)	# find end
+      j = j + lngth(forstk(j)) + 1
+   forstk(j) = EOS   # null, in case no reinit
+   nlpar = 0
+   while (nlpar >= 0) {
+      t = gettok(token, bc, MAXTOK)
+      if (t == LPAREN)
+	 nlpar = nlpar + 1
+      else if (t == RPAREN)
+	 nlpar = nlpar - 1
+      if (nlpar >= 0 & t != NEWLINE & t != UNDERLINE) {
+	 if (bc > 0) {
+	    forstk(j) = BLANK
+	    j = j + 1
+	 }
+	 k = j + lngth(token)
+	 if (k >= MAXFORSTK) {
+	    call raterr("for reinit stack overflow.")
+	    call fatal
+	    }
+	 call scopy(token, 1, forstk, j)
+	 j = k
+	 }
+      }
+   lab = lab + 1   # label for next's
+   return
+   end
+#
+# fors - process end of for statement
+#
+   subroutine fors(lab)
+   integer lngth
+   integer i, j, lab, bc
+   include commonblocks
+   ## include cfor
+ 
+   call outcon(lab)
+   j = 1
+   for (i = 1; i < fordep; i = i + 1)
+      j = j + lngth(forstk(j)) + 1
+   for (bc = 0; forstk(j) == BLANK; bc = bc + 1)
+      j = j + 1
+   if (lngth(forstk(j)) > 0) {
+      call outtab
+      call outstr(forstk(j), 0)
+      call outdon
+      }
+   call outgo(lab-1)
+   call outcon(lab+1)
+   fordep = fordep - 1
+   return
+   end
+#
+# gdbye - turn off accounting
+#
+   subroutine gdbye
+
+   stop   # only one in the program
+   end
+#
+# getch - get characters from file
+#
+   integer function getch(c, f)
+   character inmap
+   character bufi(MAXLINEI), c
+   integer f, i, isblnk
+   include commonblocks
+   ## include cline
+   ## include cswtch
+   ## note: MAXLINEI = MAXCARDI + 1
+
+   if (bufi(lastic) == NEWLINE | lastic >= inwdth + 1) {
+      if (level == TERMINAL) {
+	 read(TERIN,1) (bufi(i), i = 1, MAXCARDI)
+	    1 format (MAXCARDI a1)
+	 }
+      else {
+	 read (f, 2, end=10) (bufi(i), i = 1, MAXCARDI)
+	    2 format (MAXCARDI a1)
+	 linect(level) = linect(level) + 1
+	 }
+      for (i = 1; i <= inwdth; i = i + 1)
+	 bufi(i) = inmap(bufi(i))
+      for (i = inwdth; i > 0; i = i - 1)
+	 if (isblnk(bufi(i)) == NO)	# strip trailing blanks
+	    break
+      bufi(i+1) = NEWLINE
+      lastic = 0
+##      for ( ; isblnk(bufi(lastic+1)) == YES; lastic = lastic + 1)
+##	 ;	# strip leading blanks
+      }
+   lastic = lastic + 1
+   c = bufi(lastic)
+   getch = c
+   return
+ 
+ 10   c = EOF
+   getch = EOF
+   return
+   end
+#
+# getdef (for no arguments) - get name and definition
+#
+   subroutine getdef(token, toksiz, defn, defsiz, fd)
+   character gtok, ngetch
+   integer defsiz, fd, i, nlpar, toksiz, bc
+   character c, defn(defsiz), token(toksiz)
+ 
+   if (gtok(token, bc, toksiz, fd) != LPAREN) {
+      call synerr("missing left paren in define.")
+      call pbstr(token, bc)
+      }
+   if (gtok(token, bc, toksiz, fd) != ALPHA) {
+      call synerr("non-alphanumeric name in define: _")
+      call putlin(token, ERROUT)
+      call putch(NEWLINE, ERROUT)
+      }
+   if (gtok(defn, bc, defsiz, fd) != COMMA) {
+      call synerr ("missing comma in define.")
+      call pbstr(defn, bc)
+      }
+   # else got (name,
+   nlpar = 0
+   for (i = 1; nlpar >= 0; i = i + 1) {
+      c = ngetch(defn(i), fd)
+      if (c == NEWLINE | c == EOF) {
+	 call synerr("missing right paren in define.")
+	 call putbak(c)
+	 i = i + 1
+	 break
+	 }
+      else if (i > defsiz) {
+	 call synerr("definition too long: _")
+	 call putlin(token, ERROUT)
+	 call putch(NEWLINE, ERROUT)
+	 i = defsiz + 1
+	 break
+	 }
+      else if (defn(i) == LPAREN)
+	 nlpar = nlpar + 1
+      else if (defn(i) == RPAREN)
+	 nlpar = nlpar - 1
+      # else normal character in defn(i)
+      }
+   defn(i-1) = EOS
+   return
+   end
+#
+# gettok - get token. handles file inclusion and line numbers
+#
+   character function gettok(token, bc, toksiz)
+   integer equal, opnfl
+   integer junk, toksiz, bc
+   character deftok
+   character name(MAXTOK), token(toksiz)
+   include commonblocks
+   ## include cline
+#   string incl "include"
+   integer incl(8)
+   data incl(1) /LETI/
+   data incl(2) /LETN/
+   data incl(3) /LETC/
+   data incl(4) /LETL/
+   data incl(5) /LETU/
+   data incl(6) /LETD/
+   data incl(7) /LETE/
+   data incl(8) /EOS/
+ 
+   for ( ; level > 0; level = level - 1) {
+      for (gettok = deftok(token, bc, toksiz, infile(level)); gettok != EOF;
+	 gettok = deftok(token, bc, toksiz, infile(level))) {
+	 if (equal(token, incl) == NO)
+	    return
+	 junk = deftok(name, bc, MAXTOK, infile(level))
+	 if (level >= NFILES) {
+	    call raterr("includes nested too deeply: _")
+	    call putlin(name, ERROUT)
+	    call putch(NEWLINE, ERROUT)
+	    }
+	 else {
+	    infile(level+1) = opnfl(name, level+1, READONLY)
+	    linect(level+1) = 0
+	    if (infile(level+1) != ERR)
+	  level = level + 1
+	    }
+	 }
+      if (level > 1)
+	 call clsfl(infile(level))
+      }
+   gettok = EOF
+   return
+   end
+#
+# gtok - get token for Ratfor
+#
+   character function gtok(lexstr, bc, toksiz, fd)
+   character ngetch, typsm
+   integer islbr, isrbr, isquot, isnot, isor
+   integer fd, i, toksiz, bc, strip
+   character c, lexstr(toksiz)
+   include commonblocks
+   ## include cline
+ 
+   for (bc = 0; isblnk(ngetch(c, fd)) == YES; bc = bc + 1)
+      ;
+   call putbak(c)
+   for (i = 1; i < toksiz-1; i = i + 1) {
+      gtok = typsm(ngetch(lexstr(i), fd))
+      if (gtok != LETTER & gtok != DIGIT)
+	 break
+      }
+   if (i >= toksiz-1)
+      call synerr("token too long.")
+   if (i > 1) { 	   # some alpha seen
+      call putbak(lexstr(i))	  # went one too far
+      lexstr(i) = EOS
+      gtok = ALPHA
+      }
+   else if (lexstr(1) == DOLLAR) {   # allow $( and $) for { and }
+      if (ngetch(lexstr(2), fd) == LPAREN) {
+	 lexstr(1) = LBRACE
+	 gtok = LBRACE
+	 }
+      else if (lexstr(2) == RPAREN) {
+	 lexstr(1) = RBRACE
+	 gtok = RBRACE
+	 }
+      else
+	 call putbak(lexstr(2))
+      }
+   else if (isquot(lexstr(1))==YES) {
+      for (i = 2; ngetch(lexstr(i), fd) != lexstr(1); i = i + 1)
+	 if (lexstr(i) == NEWLINE | i >= toksiz-1) {
+	    call synerr("missing quote.")
+	    lexstr(i) = lexstr(1)
+	    call putbak(NEWLINE)
+	    break
+	    }
+      }
+   else if (lexstr(1) == SHARP) {   # strip comments
+      strip = ngetch(lexstr(1), fd)
+      call putbak(strip)
+      repeat {
+	 c = ngetch(lexstr(1), fd)
+	 if (pretty == YES & strip != SHARP)
+	    call putch(c, COMOUT)
+	 } until (c == NEWLINE)
+      gtok = NEWLINE
+      }
+   else if (lexstr(1) == GREATER | lexstr(1) == LESS
+      | isnot(lexstr(1)) == YES | lexstr(1) == EQUALS
+      | lexstr(1) == AMPER | isor(lexstr(1)) == YES)
+      call relate(lexstr, i, fd)
+   lexstr(i+1) = EOS
+   return
+   end
+#
+# hello - say hello, turn on accounting
+#
+   subroutine hello
+
+   write(TEROUT,1)
+      1 format (1x, VERSION )
+   return
+   end
+#
+# ifcode - generate initial code for if
+#
+   subroutine ifcode(lab)
+   integer labgen
+   integer lab
+ 
+   lab = labgen(2)
+   call ifgo(lab)
+   return
+   end
+#
+# ifgo - generate "if (.not.(...)) goto lab"
+#
+   subroutine ifgo(lab)
+   integer lab
+#   string ifnot "if (.not."
+   integer ifnot(10)
+      data ifnot(1) /LETI/
+      data ifnot(2) /LETF/
+      data ifnot(3) /BLANK/
+      data ifnot(4) /LPAREN/
+      data ifnot(5) /PERIOD/
+      data ifnot(6) /LETN/
+      data ifnot(7) /LETO/
+      data ifnot(8) /LETT/
+      data ifnot(9) /PERIOD/
+      data ifnot(10) /EOS/
+ 
+   call outtab	       # get to column 7
+   call outstr(ifnot, 0)	   # " if (.not. "
+   call balpar	       # collect and output condition
+   call outch(RPAREN)	   # " ) "
+   call outch(BLANK)
+   call outgo(lab)	# " goto lab "
+   return
+   end
+#
+# index - find character  c  in string	str
+#
+   integer function index(str, c)
+   character c, str(ARB)
+ 
+   for (index = 1; str(index) != EOS; index = index + 1)
+      if (str(index) == c)
+	 return
+   index = 0
+   return
+   end
+#
+# init - initialize global variables
+#
+   subroutine init
+   include commonblocks
+   ## include cdefio
+   ## include cfor
+   ## include clabg
+   ## include cline
+   ## include clook
+   ## include coutln
+
+   outp = 0		# code generation output char. ptr.
+   outlab = 0		# pending label
+   level = TERMINAL	# file control
+   bp = 0		# pushback buffer pointer
+   fordep = 0		# depth of "for" stack
+   lastp = 0		# pointers for definition table
+   lastt = 0
+   lastic = MAXLINEI	# for getch
+   lastoc = 0		# for putch
+   lastcc = 1		# for putcc
+   label = 23000	# init. label generator
+   call initsw		# init. switches
+   return
+   end
+#
+# initkw - install keyword "define" in table
+#
+   subroutine initkw
+#   string defnam "define"
+#   string defbig "DEFINE"
+   integer defnam(7), defbig(7), deftyp(2)
+   data defnam(1) /LETD/, defnam(2) /LETE/, defnam(3) /LETF/
+   data defnam(4) /LETI/, defnam(5) /LETN/, defnam(6) /LETE/
+   data defnam(7) /EOS/
+   data defbig(1) /BIGD/, defbig(2) /BIGE/, defbig(3) /BIGF/
+   data defbig(4) /BIGI/, defbig(5) /BIGN/, defbig(6) /BIGE/
+   data defbig(7) /EOS/
+   data deftyp(1), deftyp(2) /DEFTYPE, EOS/
+ 
+   call instal(defnam, deftyp)
+   call instal(defbig, deftyp)
+   return
+   end
+#
+# initsw - initialize switches
+#
+   subroutine initsw
+   include commonblocks
+   ## include cswtch
+
+   iobuf = 1
+   inwdth = MAXCARDI
+   pretty = YES
+   tquot = DQUOTE
+   return
+   end
+#
+# inmap - convert left adjusted external rep to right adj ascii
+#
+   character function inmap(inchar)
+   integer inchar
+ 
+   inmap = ishft(inchar,-8) .and. 127
+   return
+   end
+#
+# instal - add name and definition to table
+#
+   subroutine instal(name, defn)
+   character defn(MAXTOK), name(MAXDEF)
+   integer lngth
+   integer dlen, nlen
+   include commonblocks
+   ## include clook
+ 
+   nlen = lngth(name) + 1
+   dlen = lngth(defn) + 1
+   if (lastt + nlen + dlen > MAXTBL | lastp >= MAXPTR) {
+      call raterr("too many definitions: _")
+      call putlin(name, ERROUT)
+      call putch(NEWLINE, ERROUT)
+      }
+   lastp = lastp + 1
+   namptr(lastp) = lastt + 1
+   call scopy(name, 1, table, lastt + 1)
+   call scopy(defn, 1, table, lastt + nlen + 1)
+   lastt = lastt + nlen + dlen
+   return
+   end
+#
+# ioerr - report i/o error
+#
+   subroutine ioerr(msg)
+   integer msg(MAXLINEO)
+
+   call remark("***** i/o error_")
+   call atline
+   call remark(msg)
+   return
+   end
+#
+# isblnk - return YES if a character is of type "blank"
+#
+   integer function isblnk(c)
+   character c
+
+   if (c == BLANK | c == TAB | c == CR | c == FORMFEED)
+      isblnk = YES
+   else
+      isblnk = NO
+   return
+   end
+#
+# islbr - return YES if a character is a "left brace"
+#
+   integer function islbr(c)
+   character c
+
+   if (c==LBRACE | c==LBRACK)
+      islbr = YES
+   else
+      islbr = NO
+   return
+   end
+#
+# isrbr - return YES if a character is a "right brace"
+#
+   integer function isrbr(c)
+   character c
+
+   if (c==RBRACE | c==RBRACK)
+      isrbr = YES
+   else
+      isrbr = NO
+   return
+   end
+#
+# isnot - return YES if a character is a .not. operator
+#
+   integer function isnot(c)
+   character c
+
+   if (c==EXCLAM | c==CARET | c==TILDE)
+      isnot = YES
+   else
+      isnot = NO
+   return
+   end
+#
+# isor - return YES if a character is an .or. operator
+#
+   integer function isor(c)
+   character c
+
+   if (c==BACKSLASH | c==BAR)
+      isor = YES
+   else
+      isor = NO
+   return
+   end
+#
+# isquot - return YES if a character is a literal quote
+#
+   integer function isquot(c)
+   character c
+   include commonblocks
+   ## include cswtch
+
+   if ((c == SQUOTE | c == DQUOTE) & (c == tquot | tquot == LETB))
+      isquot = YES
+   else
+      isquot = NO
+   return
+   end
+#
+# itoc - convert integer  int  to char string in  str
+#
+   integer function itoc(int, str, size)
+   integer abs, mod
+   integer d, i, int, intval, j, k, size
+   character str(size)
+#   string digits "0123456789"
+   integer digits(11)
+   data digits(1) /DIG0/
+   data digits(2) /DIG1/
+   data digits(3) /DIG2/
+   data digits(4) /DIG3/
+   data digits(5) /DIG4/
+   data digits(6) /DIG5/
+   data digits(7) /DIG6/
+   data digits(8) /DIG7/
+   data digits(9) /DIG8/
+   data digits(10) /DIG9/
+   data digits(11) /EOS/
+ 
+   intval = abs(int)
+   str(1) = EOS
+   i = 1
+   repeat {	       # generate digits
+      i = i + 1
+      d = mod(intval, 10)
+      str(i) = digits(d+1)
+      intval = intval / 10
+      } until (intval == 0 | i >= size)
+   if (int < 0 & i < size) {	  # then sign
+      i = i + 1
+      str(i) = MINUS
+      }
+   itoc = i - 1
+   for (j = 1; j < i; j = j + 1) {   # then reverse
+      k = str(i)
+      str(i) = str(j)
+      str(j) = k
+      i = i - 1
+      }
+   return
+   end
+#
+# labelc - output statement number
+#
+   subroutine labelc(lexstr)
+   character lexstr(ARB)
+   integer lngth
+   include commonblocks
+   ## include coutln
+ 
+   if (outlab > 0) {
+      call outcon(outlab)
+      outlab = 0
+      }
+   if (lngth(lexstr) == 5)   # warn about 23xxx labels
+      if (lexstr(1) == DIG2 & lexstr(2) == DIG3)
+	 call synerr("warning: possible label conflict.")
+   call outstr(lexstr, 0)
+   call outtab
+   return
+   end
+#
+# labgen - generate  n	consecutive labels, return first one
+#
+   integer function labgen(n)
+   integer n
+   include commonblocks
+   ## include clabg
+ 
+   labgen = label
+   label = label + n
+   return
+   end
+#
+# length - compute length of string
+#
+   integer function lngth(str)
+   integer str(ARB)
+ 
+   for (lngth = 0; str(lngth+1) != EOS; lngth = lngth + 1)
+      ;
+   return
+   end
+#
+# lex - return lexical type of token
+#
+   integer function lex(lexstr, bc)
+   character gettok
+   character lexstr(MAXTOK)
+   integer alldig, equal
+   integer islbr, isrbr
+   integer bc
+ 
+   # keywords:
+   integer sdo(3), sif(3), selse(5), swhile(6), sbreak(6), snext(5)
+   integer sfor(4), srept(7), suntil(6), send(4)
+   integer vdo(2), vif(2), velse(2), vwhile(2), vbreak(2), vnext(2)
+   integer vfor(2), vrept(2), vuntil(2), vend(2)
+ 
+   data sdo(1), sdo(2), sdo(3) /LETD, LETO, EOS/
+   data vdo(1), vdo(2) /LEXDO, EOS/
+ 
+   data sif(1), sif(2), sif(3) /LETI, LETF, EOS/
+   data vif(1), vif(2) /LEXIF, EOS/
+ 
+   data selse(1), selse(2), selse(3), selse(4), selse(5) /LETE,
+      LETL, LETS, LETE, EOS/
+   data velse(1), velse(2) /LEXELSE, EOS/
+ 
+   data swhile(1), swhile(2), swhile(3), swhile(4), swhile(5),
+      swhile(6) /LETW, LETH, LETI, LETL, LETE, EOS/
+   data vwhile(1), vwhile(2) /LEXWHILE, EOS/
+ 
+   data sbreak(1), sbreak(2), sbreak(3), sbreak(4), sbreak(5),
+      sbreak(6) /LETB, LETR, LETE, LETA, LETK, EOS/
+   data vbreak(1), vbreak(2) /LEXBREAK, EOS/
+ 
+   data snext(1), snext(2), snext(3), snext(4), snext(5) /LETN,
+      LETE, LETX, LETT, EOS/
+   data vnext(1), vnext(2) /LEXNEXT, EOS/
+ 
+   data sfor(1), sfor(2), sfor(3), sfor(4) /LETF,
+      LETO, LETR, EOS/
+   data vfor(1), vfor(2) /LEXFOR, EOS/
+ 
+   data srept(1), srept(2), srept(3), srept(4), srept(5), srept(6),
+      srept(7) /LETR, LETE, LETP, LETE, LETA, LETT, EOS/
+   data vrept(1), vrept(2) /LEXREPEAT, EOS/
+ 
+   data suntil(1), suntil(2), suntil(3), suntil(4), suntil(5),
+      suntil(6) /LETU, LETN, LETT, LETI, LETL, EOS/
+   data vuntil(1), vuntil(2) /LEXUNTIL, EOS/
+ 
+   data send(1), send(2), send(3), send(4) /LETE,
+      LETN, LETD, EOS/
+   data vend(1), vend(2) /LEXEND, EOS/
+
+   while (gettok(lexstr, bc, MAXTOK) == NEWLINE)
+      ;
+   lex = lexstr(1)
+   if (lex==EOF | lex==SEMICOL | islbr(lex)==YES | isrbr(lex)==YES)
+      return
+   if (alldig(lexstr) == YES)
+      lex = LEXDIGITS
+   else if (equal(lexstr, sif) == YES)
+      lex = vif(1)
+   else if (equal(lexstr, selse) == YES)
+      lex = velse(1)
+   else if (equal(lexstr, swhile) == YES)
+      lex = vwhile(1)
+   else if (equal(lexstr, sdo) == YES)
+      lex = vdo(1)
+   else if (equal(lexstr, sbreak) == YES)
+      lex = vbreak(1)
+   else if (equal(lexstr, snext) == YES)
+      lex = vnext(1)
+   else if (equal(lexstr, sfor) == YES)
+      lex = vfor(1)
+   else if (equal(lexstr, srept) == YES)
+      lex = vrept(1)
+   else if (equal(lexstr, suntil) == YES)
+      lex = vuntil(1)
+   else if (equal(lexstr, send) == YES)
+      lex = vend(1)
+   else
+      lex = LEXOTHER
+   return
+   end
+#
+# lookup - locate name, extract definition from table
+#
+   integer function lokup(name, defn)
+   character defn(MAXDEF), name(MAXTOK)
+   integer i, j, k
+   include commonblocks
+   ## include clook
+ 
+   for (i = lastp; i > 0; i = i - 1) {
+      j = namptr(i)
+      for (k = 1; name(k) == table(j) & name(k) != EOS; k = k + 1)
+	 j = j + 1
+      if (name(k) == table(j)) {      # got one
+	 call scopy(table, j+1, defn, 1)
+	 lokup = YES
+	 return
+	 }
+      }
+   lokup = NO
+   return
+   end
+#
+# ngetch - get a (possibly pushed back) character
+#
+   character function ngetch(c, fd)
+   character getch
+   character c
+   integer fd
+   include commonblocks
+   ## include cdefio
+ 
+   if (bp > 0)
+      c = buf(bp)
+   else {
+      bp = 1
+      buf(bp) = getch(c, fd)
+      }
+   bp = bp - 1
+   ngetch = c
+   return
+   end
+#
+# opfil - open standard input & output
+#
+   subroutine opfil
+   integer outnam(MAXTOK), innam(MAXTOK), swbuf(MAXTOK)
+   integer dcdsw, opnfl
+   integer junk
+   include commonblocks
+   ## include cdefio
+
+   repeat {
+      call init
+      call rdlin(outnam, innam, swbuf)
+      if (dcdsw(swbuf) == ERR)
+	 next
+      infile(1) = opnfl(innam, 1, READONLY)
+      if (infile(1) == ERR)
+	 next
+      junk = 0
+      if (opnfl(outnam, junk, WRITEONLY) != ERR)
+	 break
+      else
+	 call clsfl(infile(1))
+      }
+   level = 1
+   linect(level) = 0
+   return
+   end
+#
+# opnfl - open a file for input
+#
+   integer function opnfl(name, lev, mode)
+   integer name(MAXTOK), filnam(20)
+   logical*1 tname(MAXTOK)
+   integer isblnk, isquot, lngth, outmap
+   integer lev, mode
+   integer i, j, k
+   include commonblocks
+   ## include cswtch
+
+   j = 1
+   k = lngth(name)
+   if (k >= 2) {
+      if (isquot(name(1))==YES & name(1)==name(k)) {
+	 j = j + 1
+	 k = k - 1
+	 }
+      }
+   while (isblnk(name(j)) == YES)
+      j = j + 1
+   for (i = j; i <= k; i = i + 1)
+      tname(i) = name(i)
+   tname(k+1)=0
+   if (mode == READONLY) {
+      opnfl = STDIN + (lev - 1)
+      call assign(opnfl,tname)
+      call fdbset(opnfl,'R')
+      }
+   else if (mode == WRITEONLY) {
+      opnfl = STDOUT
+      call assign(opnfl,tname)
+      call fdbset(opnfl,'M')
+      }
+   else {
+      call raterr("illegal file mode: _")
+      call putlin(name, ERROUT)
+      call putch(NEWLINE, ERROUT)
+      }
+   return
+
+ 10 opnfl = ERR
+   call ioerr("can't open file _")
+   call putlin(name, ERROUT)
+   call putch(NEWLINE, ERROUT)
+   return
+   end
+#
+# otherc - output ordinary Fortran statement
+#
+   subroutine otherc(lexstr)
+   character lexstr(ARB)
+ 
+   call outtab
+   call outstr(lexstr, 0)
+   call eatup
+   call outdon
+   return
+   end
+#
+# outch - put one character into output buffer
+#
+   subroutine outch(c)
+   character c
+   integer i
+   include commonblocks
+   ## include coutln
+ 
+   if (outp >= 72) {   # continuation card
+      call outdon
+      for (i = 1; i < 6; i = i + 1)
+	 outbuf(i) = BLANK
+      outbuf(6) = STAR
+      outp = 6
+      }
+   outp = outp + 1
+   outbuf(outp) = c
+   return
+   end
+#
+# outcon - output "n   continue"
+#
+   subroutine outcon(n)
+   integer n
+   include commonblocks
+   ## include coutln
+#   string contin "continue"
+   integer contin(9)
+   data contin(1) /LETC/
+   data contin(2) /LETO/
+   data contin(3) /LETN/
+   data contin(4) /LETT/
+   data contin(5) /LETI/
+   data contin(6) /LETN/
+   data contin(7) /LETU/
+   data contin(8) /LETE/
+   data contin(9) /EOS/
+ 
+   if (n > 0) {
+      if (outlab > 0) {
+	 call outnum(outlab)
+	 call outtab
+	 call outstr(contin, 0)
+	 call outdon
+         }
+      outlab = n
+      }
+   return
+   end
+#
+# outdon - finish off an output line
+#
+   subroutine outdon
+   include commonblocks
+   ## include coutln
+ 
+   outbuf(outp+1) = NEWLINE
+   outbuf(outp+2) = EOS
+   call putlin(outbuf, STDOUT)
+   outp = 0
+   return
+   end
+#
+# outgo - output "goto	n"
+#
+   subroutine outgo(n)
+   integer n
+#   string goto "goto"
+   integer goto(6)
+   data goto(1) /LETG/
+   data goto(2) /LETO/
+   data goto(3) /LETT/
+   data goto(4) /LETO/
+   data goto(5) /BLANK/
+   data goto(6) /EOS/
+ 
+   call outtab
+   call outstr(goto, 0)
+   call outnum(n)
+   call outdon
+   return
+   end
+#
+# outmap - convert right adj ascii to left adjusted external rep
+#
+   integer function outmap(inchar)
+   integer inchar
+
+   outmap = ishft(inchar .and. 127, 8)
+   return
+   end
+#
+# outnum - output decimal number
+#
+   subroutine outnum(n)
+   character chars(MAXCHARS)
+   integer itoc
+   integer i, len, n
+ 
+   len = itoc(n, chars, MAXCHARS)
+   for (i = 1; i <= len; i = i + 1)
+      call outch(chars(i))
+   return
+   end
+#
+# outstr - output string
+#
+   subroutine outstr(str, bc)
+   character c, str(ARB)
+   integer i, j, bc
+   integer isquot, big
+   include commonblocks
+   ## include cswtch
+ 
+   if (pretty == YES & bc > 0)
+      call outch(BLANK)
+   for (i = 1; str(i) != EOS; i = i + 1) {
+      c = str(i)
+      if (isquot(c)==NO)
+	 call outch(big(c))
+      else {
+	 i = i + 1
+	 for (j = i; str(j) != c; j = j + 1)   # find end
+	    ;
+	 call outnum(j-i)
+	 call outch(BIGH)
+	 for ( ; i < j; i = i + 1)
+	    call outch(str(i))
+	 }
+      }
+   return
+   end
+#
+# outtab - get past column 6
+#
+   subroutine outtab
+   include commonblocks
+   ## include coutln
+ 
+   if (outp == 0 & outlab > 0) {
+      call outnum(outlab)
+      outlab = 0
+      }
+   while (outp < 6)
+      call outch(BLANK)
+   return
+   end
+#
+# parse - parse Ratfor source program
+#
+   subroutine parse
+   character lexstr(MAXTOK)
+   integer islbr, isrbr
+   integer lex
+   integer bc, bcnxt
+   integer lab, labval(MAXSTACK), lextyp(MAXSTACK), sp, token
+ 
+   call initkw	 # install keywords in table
+   sp = 1
+   lextyp(1) = EOF
+   for (token = lex(lexstr, bc); token != EOF; token = lex(lexstr, bc)) {
+      if (token == LEXIF)
+	 call ifcode(lab)
+      else if (token == LEXDO)
+	 call docode(lab)
+      else if (token == LEXWHILE)
+	 call whilec(lab)
+      else if (token == LEXFOR)
+	 call forcod(lab)
+      else if (token == LEXREPEAT)
+	 call repcod(lab)
+      else if (token == LEXDIGITS)
+	 call labelc(lexstr)
+      else if (token == LEXELSE) {
+	 if (lextyp(sp) == LEXIF)
+	    call elseif(labval(sp))
+	 else
+	    call synerr("illegal else.")
+	 }
+      if (token==LEXIF | token==LEXELSE | token==LEXWHILE
+	| token==LEXFOR | token==LEXREPEAT
+	| token==LEXDO | token==LEXDIGITS | islbr(token)==YES) {
+	 sp = sp + 1	     # beginning of statement
+	 if (sp > MAXSTACK) {
+	    call raterr("stack overflow in parser.")
+	    call fatal
+	    }
+	 lextyp(sp) = token	 # stack type and value
+	 labval(sp) = lab
+	 }
+      else {	  # end of statement - prepare to unstack
+	 if (isrbr(token) == YES) {
+	    if (islbr(lextyp(sp)) == YES)
+	       sp = sp - 1
+	    else
+	       call synerr("illegal right brace.")
+	    }
+	 else if (token == LEXEND)
+	    call endc(lexstr)
+	 else if (token == LEXOTHER)
+	    call otherc(lexstr)
+	 else if (token == LEXBREAK | token == LEXNEXT)
+	    call brknxt(sp, lextyp, labval, token)
+	 token = lex(lexstr, bcnxt)	  # peek at next token
+	 call pbstr(lexstr, bcnxt)
+	 call unstak(sp, lextyp, labval, token)
+	 }
+      }
+   if (sp != 1)
+      call synerr("unexpected EOF.")
+   return
+   end
+#
+# pbstr - push string back onto input
+#
+   subroutine pbstr(in, bc)
+   character in(ARB)
+   integer lngth
+   integer i, bc
+ 
+   for (i = lngth(in); i > 0; i = i - 1)
+      call putbak(in(i))
+   if (bc > 0)
+      call putbak(BLANK)
+   return
+   end
+#
+# prompt - prompt for input from terminal
+#
+   subroutine prompt
+
+   write(TEROUT,1)
+      1 format ('$*')
+   return
+   end
+#
+# putbak - push character back onto input
+#
+   subroutine putbak(c)
+   character c
+   include commonblocks
+   ## include cdefio
+ 
+   bp = bp + 1
+   if (bp > BUFSIZE) {
+      call raterr("too many characters pushed back.")
+      call fatal
+      }
+   buf(bp) = c
+   return
+   end
+#
+# putcc - output comments
+#
+   subroutine putcc(c, f)
+   integer bufc(MAXLINEO)
+   integer outmap
+   integer c, f, i
+   include commonblocks
+   ## include cline
+   ## include coutln
+   ## note: MAXLINEO = MAXCARDO + 1
+
+   if (lastcc >= MAXLINEO | c == NEWLINE) {
+      bufc(1) = outmap(BIGC)
+      if (level > 0) {
+	 write (STDOUT, 1) (bufc(i), i = 1, lastcc)
+	    1 format (MAXCARDO a1)
+	 }
+      if (f == ERROUT & lastcc >= 2) {
+	 type 2, (bufc(i), i = 2, lastcc)
+	    2 format (1x, MAXCARDO a1)
+	 }
+      lastcc = 1
+      }
+   if (c != NEWLINE) {
+      lastcc = lastcc + 1
+      bufc(lastcc) = outmap(c)
+      }
+   return
+   end
+#
+# putch - output characters
+#
+   subroutine putch(c, f)
+   integer bufo(MAXLINEO)
+   integer outmap
+   integer c, f, i
+   include commonblocks
+   ## include cline
+   ## include coutln
+   ## note: MAXLINEO = MAXCARDO + 1
+
+   if (f != STDOUT) {
+      call putcc(c, f)
+      return
+      }
+   if (level <= 0)
+      return
+   if (lastoc >= MAXLINEO | c == NEWLINE) {
+      if (lastoc > 0) {
+	 write (f, 2) (bufo(i), i = 1, lastoc)
+	    2 format (MAXCARDO a1)
+	 }
+      lastoc = 0
+      }
+   if (c != NEWLINE) {
+      lastoc = lastoc + 1
+      bufo(lastoc) = outmap(c)
+      }
+   return
+   end
+#
+# putlin - put out line by repeated calls to putch
+#
+   subroutine putlin(b, f)
+   character b(ARB)
+   integer f, i
+ 
+   for (i = 1; b(i) != EOS; i = i + 1)
+      call putch(b(i), f)
+   return
+   end
+#
+# raterr - report compiler error
+#
+   subroutine raterr(msg)
+   integer msg(MAXLINEO)
+
+   call remark("***** compiler error_")
+   call atline
+   call remark(msg)
+   return
+   end
+#
+# rdlin - read and parse command line
+#
+   subroutine rdlin(outnam, innam, swbuf)
+   character outnam(ARB), innam(ARB), swbuf(ARB)
+   character c, ngetch
+   integer i
+
+   call prompt
+   i = 0
+   repeat {
+      i = i + 1
+      c = ngetch(outnam(i), TERMINAL)
+      } until (c == EQUALS | c == SLASH | c == NEWLINE)
+   outnam(i) = EOS
+   if (c != EQUALS)
+      call putbak(c)
+   i = 0
+   repeat {
+      i = i + 1
+      c = ngetch(innam(i), TERMINAL)
+      } until (c == SLASH | c == NEWLINE)
+   innam(i) = EOS
+   call putbak(c)
+   i = 0
+   repeat {
+      i = i + 1
+      c = ngetch(swbuf(i), TERMINAL)
+      } until (c == NEWLINE)
+   swbuf(i) = EOS
+   return
+   end
+#
+# relate - convert relational shorthands into long form
+#
+   subroutine relate(token, last, fd)
+   character ngetch
+   character token(ARB)
+   integer isnot, isor
+   integer lngth
+   integer fd, last
+#   string dotge ".ge."
+#   string dotgt ".gt."
+#   string dotlt ".lt."
+#   string dotle ".le."
+#   string dotne ".ne."
+#   string dotnot ".not."
+#   string doteq ".eq."
+#   string dotand ".and."
+#   string dotor ".or."
+   integer dotge(5), dotgt(5), dotlt(5), dotle(5)
+   integer dotne(5), dotnot(6), doteq(5), dotand(6), dotor(5)
+   data dotge(1), dotge(2), dotge(3), dotge(4), dotge(5)/ PERIOD,
+      LETG, LETE, PERIOD, EOS/
+   data dotgt(1), dotgt(2), dotgt(3), dotgt(4), dotgt(5)/ PERIOD,
+      LETG, LETT, PERIOD, EOS/
+   data dotle(1), dotle(2), dotle(3), dotle(4), dotle(5)/ PERIOD,
+      LETL, LETE, PERIOD, EOS/
+   data dotlt(1), dotlt(2), dotlt(3), dotlt(4), dotlt(5)/ PERIOD,
+      LETL, LETT, PERIOD, EOS/
+   data dotne(1), dotne(2), dotne(3), dotne(4), dotne(5)/ PERIOD,
+      LETN, LETE, PERIOD, EOS/
+   data doteq(1), doteq(2), doteq(3), doteq(4), doteq(5)/ PERIOD,
+      LETE, LETQ, PERIOD, EOS/
+   data dotor(1), dotor(2), dotor(3), dotor(4), dotor(5)/ PERIOD,
+      LETO, LETR, PERIOD, EOS/
+   data dotand(1), dotand(2), dotand(3), dotand(4), dotand(5),
+      dotand(6) /PERIOD, LETA, LETN, LETD, PERIOD, EOS/
+   data dotnot(1), dotnot(2), dotnot(3), dotnot(4), dotnot(5),
+      dotnot(6) /PERIOD, LETN, LETO, LETT, PERIOD, EOS/
+ 
+   if (ngetch(token(2), fd) != EQUALS)
+      call putbak(token(2))
+   if (token(1) == GREATER) {
+      if (token(2) == EQUALS)
+	 call scopy(dotge, 1, token, 1)
+      else
+	 call scopy(dotgt, 1, token, 1)
+      }
+   else if (token(1) == LESS) {
+      if (token(2) == EQUALS)
+	 call scopy(dotle, 1, token, 1)
+      else
+	 call scopy(dotlt, 1, token, 1)
+      }
+   else if (isnot(token(1)) == YES) {
+      if (token(2) == EQUALS)
+	 call scopy(dotne, 1, token, 1)
+      else
+	 call scopy(dotnot, 1, token, 1)
+      }
+   else if (token(1) == EQUALS) {
+      if (token(2) == EQUALS)
+	 call scopy(doteq, 1, token, 1)
+      else
+	 token(2) = EOS
+      }
+   else if (token(1) == AMPER)
+      call scopy(dotand, 1, token, 1)
+   else if (isor(token(1)) == YES)
+      call scopy(dotor, 1, token, 1)
+   else   # can't happen
+      token(2) = EOS
+   last = lngth(token)
+   return
+   end
+#
+# remark - print warning message
+#
+   subroutine remark(msg)
+   integer c
+   logical*1 msg(MAXTOK)
+   integer inmap, i, j
+
+   call putch(BLANK, ERROUT)
+   for (i = 1; i <= MAXTOK; i = i + 1) {
+         c = msg(i)
+	 if (c == UNDERLINE)
+	    return
+	 else if (c == PERIOD) {
+	    call putch(NEWLINE, ERROUT)
+	    return
+	    }
+	 else
+	    call putch(c, ERROUT)
+      }
+   return
+   end
+#
+# repcod - generate code for beginning of repeat
+#
+   subroutine repcod(lab)
+   integer labgen
+   integer lab
+ 
+   call outcon(0)   # in case there was a label
+   lab = labgen(3)
+   call outcon(lab)
+   lab = lab + 1   # label to go on next's
+   return
+   end
+#
+# scopy - copy string at from(i) to to(j)
+#
+   subroutine scopy(from, i, to, j)
+   character from(ARB), to(ARB)
+   integer i, j, k1, k2
+ 
+   k2 = j
+   for (k1 = i; from(k1) != EOS; k1 = k1 + 1) {
+      to(k2) = from(k1)
+      k2 = k2 + 1
+      }
+   to(k2) = EOS
+   return
+   end
+#
+# synerr - report Ratfor syntax error
+#
+   subroutine synerr(msg)
+   integer msg(MAXLINEO)
+
+   call remark("***** syntax error_")
+   call atline
+   call remark(msg)
+   return
+   end
+#
+# type - return LETTER, DIGIT or character
+#
+   # this one works with ascii alphabet
+   integer function typsm(c)
+   integer c
+ 
+   if( c >= DIG0 & c <= DIG9 )
+      typsm = DIGIT
+   else if( c >= LETA & c <= LETZ )
+      typsm = LETTER
+   else if( c >= BIGA & c <= BIGZ )
+      typsm = LETTER
+   else
+      typsm = c
+   return
+   end
+#
+# unstak - unstack at end of statement
+#
+   subroutine unstak(sp, lextyp, labval, token)
+   integer labval(MAXSTACK), lextyp(MAXSTACK), sp, token
+   integer islbr
+ 
+   for ( ; sp > 1; sp = sp - 1) {
+      if (islbr(lextyp(sp)) == YES)
+	 break
+      if (lextyp(sp) == LEXIF & token == LEXELSE)
+	 break
+      if (lextyp(sp) == LEXIF)
+	 call outcon(labval(sp))
+      else if (lextyp(sp) == LEXELSE) {
+	 if (sp > 2)
+	    sp = sp - 1
+	 call outcon(labval(sp)+1)
+	 }
+      else if (lextyp(sp) == LEXDO)
+	 call dostat(labval(sp))
+      else if (lextyp(sp) == LEXWHILE)
+	 call whiles(labval(sp))
+      else if (lextyp(sp) == LEXFOR)
+	 call fors(labval(sp))
+      else if (lextyp(sp) == LEXREPEAT)
+	 call untils(labval(sp), token)
+      }
+   return
+   end
+#
+# untils - generate code for until or end of repeat
+#
+   subroutine untils(lab, token)
+   character ptoken(MAXTOK)
+   integer lex
+   integer junk, lab, token, bc
+ 
+   call outcon(lab)
+   if (token == LEXUNTIL) {
+      junk = lex(ptoken, bc)
+      call ifgo(lab-1)
+      }
+   else
+      call outgo(lab-1)
+   call outcon(lab+1)
+   return
+   end
+#
+# whilec - generate code for beginning of while
+#
+   subroutine whilec(lab)
+   integer labgen
+   integer lab
+ 
+   call outcon(0)    # unlabeled continue, in case there was a label
+   lab = labgen(2)
+   call outcon(lab)
+   call ifgo(lab+1)
+   return
+   end
+#
+# whiles - generate code for end of while
+#
+   subroutine whiles(lab)
+   integer lab
+ 
+   call outgo(lab)
+   call outcon(lab+1)
+   return
+   end
+    L@x<

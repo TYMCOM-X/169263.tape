@@ -1,0 +1,120 @@
+$Title right 'DTIME - day/time manipulation routines' 
+$skip 2
+The DTIME package is a set of Pascal callable routines 
+for manipulating dates and times.
+The package is based upon a standard internal day/time\-\
+a single word encoding of a date and a time of day.
+In addition standard internal forms are defined for 
+the date only and for the time only.
+All of the routines either convert to or from an internal
+form or manipulate an internal form in some way.
+$skip 1
+Routines are provided for converting these internal forms
+to two other general types of formats: external forms
+(character arrays or strings) and binary records (for example,
+a record with fields for the year, month and day).
+The standard external day/time format is defined to
+be: 'dd-mmm-yy hh:mm:ss'.
+However routines exist to convert to and from non-standard
+external formats also.
+Three binary types are defined: a binary day/time record,
+a binary date record and a binary time record.
+Type definitions for all of these types are in the Pascal $INCLUDE file
+RND:DTIME.TYP.
+$skip 1
+A short description of each routine is given below. 
+The prefix 'EC_' indicates a conversion to an internal form.
+The prefix 'DC_' indicates a conversion from an internal form.
+$skip
+$indent left +10
+$par -5
+DAYTIME\-\returns the current local day/time in internal form.
+$par -5
+DC_EXT\-\converts an internal day/time to standard external
+form.
+$par -5
+EC_EXT\-\converts external dates and/or times in any of
+several formats to internal form.
+$par -5
+EXTR_DATE\-\extracts an internal date from an internal
+day/time.
+$par -5
+EXTR_TIME\-\extracts an internal time from an internal
+day/time.
+$par -5
+DT_COMBINE\-\constructs an internal day/time from an internal
+date and an internal time.
+$par -5
+DAYS_DIFF\-\calculates the number of days between two
+internal day/times.
+$par -5
+SECS_DIFF\-\calculates the number of seconds between
+two internal day/times.
+$par -5
+ADD_DAYS\-\adds a specified number of days to an internal
+day/time.
+$par -5
+ADD_SECS\-\adds a specified number of seconds to an internal
+day/time.
+$par -5
+DAY_OF_WEEK\-\returns the day of the week which an internal
+day/time falls on.
+$par -5
+NS_D1\-\converts an internal date to non-standard external
+date format one: 'mm/dd/yy'.
+$par -5
+NS_D2\-\converts an internal date to non-standard external
+date format two: 'mmm dd, yyyy'.
+$par -5
+NS_T1\-\converts an internal time to non-standard external
+time format one: 'hh:mm:ss [A/P]M'.
+$par -5
+GMDTIME\-\returns the current Greenwich Mean day/time in
+internal form.
+$par -5
+DC_DTIME\-\returns the binary day/time record corresponding
+to a given internal day/time.
+$par -5
+EC_DTIME\-\returns the internal day/time corresponding
+to a given binary day/time record.
+$par -5
+EC_DATE\-\returns the internal date corresponding to a given
+binary date record.
+$par -5
+DC_DATE\-\returns the binary date record corresponding to a
+given internal date.
+$par -5
+EC_TIME\-\returns the internal time corresponding to a
+given binary time record.
+$par -5
+DC_TIME\-\returns the binary time record corresponding to a
+given internal time.
+$par -5
+EC_DCDATE\-\returns the internal date corresponding to a given
+DECSYSTEM-10 date (15 bit integer representing number of days
+since 1964).
+$par -5
+EC_DCTIME\-\returns the internal time corrsponding to a
+given DECSYSTEM-10 time (milliseconds since midnight).
+$indent left -10
+$skip 2
+The format of the internal date is identical to that of an
+internal day/time where the time is midnight.
+This permits overloading functions which take an internal
+day/time as a parameter.  For example, the following computes
+the number of seconds left in the day:
+$skip 1
+$par +5
+SECS_DIFF(EXTR_DATE(ADD_DAYS(DAYTIME,1)),DAYTIME)
+$SKIP 1
+Similiarly an internal time is equivalent to an internal 
+day/time with the same time and a date of DAY_ZERO.
+DAY_ZERO is the earliest date which the internal format
+permits\-\Nov 17, 1858.
+The largest date permitted is in the year 2217.
+$skip 1
+The day/time package resides in RND:RDLIB, a library file
+which should be searched at the end of a build.
+Pascal $INCLUDE files RND:DTIME.TYP
+and RND:DTIME.INC define the necessary types and the
+routines themselves.

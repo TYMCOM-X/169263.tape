@@ -1,0 +1,790 @@
+		LINK symbol map of	SEG2	version 4(210)		page 1
+	Produced by LINK version 4A(1220)-1 on 21-Feb-84 at 17:05:52
+
+	Low  segment starts at	     0 ends at	 37000 length	 37001 = 32P
+	High segment starts at	400000 ends at	504501 length	104502 = 69P
+	511 words free in Low segment, 190 words free in high segment
+	752 Global symbols loaded, therefore min. hash size is 836
+	Start address is  13147, located in program DRIVER
+
+		*************
+
+JOBDAT-INITIAL-SYMBOLS
+
+	Zero length module
+
+		*************
+
+UDDT	from SYS:DDT.REL[1,4]	created by Unknown on 28-Mar-72 at 10:38:00
+	Low  segment starts at	   140 ends at	  7411 length	  7252 (octal),  3754. (decimal)
+
+	DDT	         140	Entry	Relocatable 		DDTCH.	        3276	Entry	Relocatable 	
+	DDTEND	        7405	Global	Relocatable 		HALT	254200000000	Global	Absolute    	
+	JEN	254500000000	Global	Absolute    		JOV	255400000000	Global	Absolute    	
+	$1B	        5304	Global	Relocatable 		$2B	        5310	Global	Relocatable 	
+	$3B	        5314	Global	Relocatable 		$4B	        5320	Global	Relocatable 	
+	$5B	        5324	Global	Relocatable 		$6B	        5330	Global	Relocatable 	
+	$7B	        5334	Global	Relocatable 		$8B	        5340	Global	Relocatable 	
+	$I	        5271	Global	Relocatable 		$M	        5276	Global	Relocatable 	
+
+		*************
+
+JOBDAT	from SYS:JOBDAT.REL[1,4]	created by Unknown on 11-Jun-67 at 17:31:00
+
+	Zero length module
+
+		*************
+
+EFPNT.	from DSK:B361AB.REL[3,700305]	created by MACRO on 10-Jul-72 at 18:50:00
+	Low  segment starts at	  7412 ends at	  7412 length	     1 (octal),     1. (decimal)
+
+	EFPNT.	        7412	Entry	Relocatable 	
+
+		*************
+
+CHPLU%	from DSK:B361AB.REL[3,700305]	created by MACRO on 10-Jul-72 at 18:50:00
+	High segment starts at	400010 ends at	400024 length	    15 (octal),    13. (decimal)
+
+	CHPLU%	      400010	Entry	Relocatable 	
+
+		*************
+
+CHPTR%	from DSK:B361AB.REL[3,700305]	created by MACRO on 10-Jul-72 at 18:50:00
+	High segment starts at	400025 ends at	400037 length	    13 (octal),    11. (decimal)
+
+	CHPTR%	      400025	Entry	Relocatable 	
+
+		LINK symbol map of	SEG2	version 4(210)		page 2
+
+		*************
+
+CHCNP%	from DSK:B361AB.REL[3,700305]	created by MACRO on 10-Jul-72 at 18:50:00
+	High segment starts at	400040 ends at	400054 length	    15 (octal),    13. (decimal)
+
+	CHCNP%	      400040	Entry	Relocatable 	
+
+		*************
+
+CHCNO%	from DSK:B361AB.REL[3,700305]	created by MACRO on 10-Jul-72 at 18:50:00
+	High segment starts at	400055 ends at	400062 length	     6 (octal),     6. (decimal)
+
+	CHCNO%	      400055	Entry	Relocatable 	
+
+		*************
+
+CHCBP%	from DSK:B361AB.REL[3,700305]	created by MACRO on 10-Jul-72 at 18:50:00
+	High segment starts at	400063 ends at	400105 length	    23 (octal),    19. (decimal)
+
+	CHCBP%	      400063	Entry	Relocatable 	
+
+		*************
+
+CHMOV%	from DSK:B361AB.REL[3,700305]	created by MACRO on 10-Jul-72 at 18:50:00
+	High segment starts at	400106 ends at	400115 length	    10 (octal),     8. (decimal)
+
+	CHMOV%	      400106	Entry	Relocatable 	
+
+		*************
+
+CHFIL%	from DSK:B361AB.REL[3,700305]	created by MACRO on 10-Jul-72 at 18:50:00
+	High segment starts at	400116 ends at	400124 length	     7 (octal),     7. (decimal)
+
+	CHFIL%	      400116	Entry	Relocatable 	
+
+		*************
+
+CHCOP%	from DSK:B361AB.REL[3,700305]	created by MACRO on 10-Jul-72 at 18:50:00
+	High segment starts at	400125 ends at	400162 length	    36 (octal),    30. (decimal)
+
+	CHCOP%	      400125	Entry	Relocatable 	
+
+		*************
+
+CHCMP%	from DSK:B361AB.REL[3,700305]	created by MACRO on 10-Jul-72 at 18:50:00
+	High segment starts at	400163 ends at	400240 length	    56 (octal),    46. (decimal)
+
+	CHCMP%	      400163	Entry	Relocatable 	
+
+		*************
+
+		LINK symbol map of	SEG2	version 4(210)		page 3
+
+
+CHSIZ%	from DSK:B361AB.REL[3,700305]	created by MACRO on 10-Jul-72 at 18:50:00
+	High segment starts at	400241 ends at	400305 length	    45 (octal),    37. (decimal)
+
+	B36CHS	      400241	Entry	Relocatable Suppressed	CHSIZ%	      400241	Entry	Relocatable 	
+
+		*************
+
+CRFILE	from DSK:BLISS.REL[3,700305]	created by BLISS-36 on  7-Oct-72 at  1:00:00
+	High segment starts at	  7413 ends at	 10021 length	   407 (octal),   263. (decimal)
+
+	%%PROD	           1	Global	Absolute    Suppressed	CFTE%R	        7413	Global	Relocatable 	
+	C%FILE	        7513	Global	Relocatable 	
+
+		*************
+
+CRGATH	from DSK:BLISS.REL[3,700305]	created by BLISS-36 on  7-Oct-72 at  1:00:00
+	Low  segment starts at	 11004 ends at	 11004 length	     1 (octal),     1. (decimal)
+	High segment starts at	 10022 ends at	 11003 length	   762 (octal),   498. (decimal)
+
+	IWF%DS	       11004	Global	Relocatable 		C%REIN	       10022	Global	Relocatable 	
+	C%MODI	       10052	Global	Relocatable 		C%MODU	       10060	Global	Relocatable 	
+	C%LMOD	       10071	Global	Relocatable 		C%B%BL	       10072	Global	Relocatable 	
+	C%E%BL	       10101	Global	Relocatable 		C%B%DE	       10141	Global	Relocatable 	
+	C%E%DE	       10221	Global	Relocatable 		C%DECL	       10230	Global	Relocatable 	
+	C%UNBO	       10307	Global	Relocatable 		C%ENAB	       10334	Global	Relocatable 	
+	C%REFE	       10356	Global	Relocatable 		C%B%ST	       10546	Global	Relocatable 	
+	C%E%ST	       10557	Global	Relocatable 		C%LIBR	       10565	Global	Relocatable 	
+	C%LOAD	       10620	Global	Relocatable 		C%DEFI	       10717	Global	Relocatable 	
+	C%END%	       10772	Global	Relocatable 	
+
+		*************
+
+DATTIM	from DSK:BLISS.REL[3,700305]	created by BLISS-36 on  7-Oct-72 at  1:00:00
+	Low  segment starts at	 11314 ends at	 11344 length	    31 (octal),    25. (decimal)
+	High segment starts at	 11005 ends at	 11313 length	   307 (octal),   199. (decimal)
+
+	CNV%BS	       11005	Global	Relocatable 		CNVUNV	       11056	Global	Relocatable 	
+	UNVNUM	       11174	Global	Relocatable 	
+
+		*************
+
+DRIVER	from DSK:BLISS.REL[3,700305]	created by BLISS-36 on  7-Oct-72 at  1:00:00
+	Low  segment starts at	 13167 ends at	 17166 length	  4000 (octal),  2048. (decimal)
+	High segment starts at	 11345 ends at	 13166 length	  1622 (octal),   914. (decimal)
+
+	OUTCRL	       11345	Global	Relocatable 		FORCEL	       11373	Global	Relocatable 	
+	ERRPRN	       11560	Global	Relocatable 		WARNEM	       11574	Global	Relocatable 	
+	INFORM	       11604	Global	Relocatable 		FIXLSW	       12047	Global	Relocatable 	
+	GENIT	       12267	Global	Relocatable 	
+
+		*************
+
+		LINK symbol map of	SEG2	version 4(210)		page 4
+
+
+DUMMY	from DSK:BLISS.REL[3,700305]	created by BLISS-36 on  7-Oct-72 at  1:00:00
+
+	Zero length module
+
+		*************
+
+FMTIO	from DSK:BLISS.REL[3,700305]	created by BLISS-36 on  7-Oct-72 at  1:00:00
+	Low  segment starts at	 20014 ends at	 20033 length	    20 (octal),    16. (decimal)
+	High segment starts at	 17167 ends at	 20013 length	   625 (octal),   405. (decimal)
+
+	OUTBLA	       17170	Global	Relocatable 		OUTNUM	       17201	Global	Relocatable 	
+	OUTHEX	       17350	Global	Relocatable 		OUTOCT	       17416	Global	Relocatable 	
+	OUTDEL	       17512	Global	Relocatable 		OUTSTE	       17552	Global	Relocatable 	
+	OUTSWO	       17557	Global	Relocatable 		OUTUSE	       17633	Global	Relocatable 	
+	OUTLIM	       17674	Global	Relocatable 		OUTTIM	       17715	Global	Relocatable 	
+
+		*************
+
+GLODEC	from DSK:BLISS.REL[3,700305]	created by BLISS-36 on  7-Oct-72 at  1:00:00
+	Low  segment starts at	 20055 ends at	 24634 length	  4560 (octal),  2416. (decimal)
+	High segment starts at	 20034 ends at	 20054 length	    21 (octal),    17. (decimal)
+
+	CCLCTL	       20055	Global	Relocatable 		SEGBLK	       20056	Global	Relocatable 	
+	GARBCN	       20064	Global	Relocatable 		GARBLS	       20065	Global	Relocatable 	
+	PRVNOD	       20265	Global	Relocatable 		NOWSEG	       20266	Global	Relocatable 	
+	STSZ	       20267	Global	Relocatable 		NDPASS	       20321	Global	Relocatable 	
+	COMPLX	       20322	Global	Relocatable 		SAVHAS	       20323	Global	Relocatable 	
+	MAXSPA	       20523	Global	Relocatable 		NOWSPA	       20524	Global	Relocatable 	
+	TOPOFT	       20525	Global	Relocatable 		ENDOFS	       20526	Global	Relocatable 	
+	SAVTOP	       20527	Global	Relocatable 		SAVEND	       20530	Global	Relocatable 	
+	SAVFP	       20531	Global	Relocatable 		ENBL%P	       20532	Global	Relocatable 	
+	ENBL%C	       20533	Global	Relocatable 		INDFLG	       20534	Global	Relocatable 	
+	SAVIND	       20535	Global	Relocatable 		CMDSEC	       20536	Global	Relocatable 	
+	SECTIO	       20537	Global	Relocatable 		VFM%I%	       20540	Global	Relocatable 	
+	VFM%O%	       20543	Global	Relocatable 		VFM%EN	       20546	Global	Relocatable 	
+	VFM%FI	       20552	Global	Relocatable 		BEGTIM	       20561	Global	Relocatable 	
+	BEGCPU	       20562	Global	Relocatable 		SFDB	       20563	Global	Relocatable 	
+	FREEVE	       20564	Global	Relocatable 		LEXEME	       20616	Global	Relocatable 	
+	CURBOG	       20617	Global	Relocatable 		CURPRL	       20620	Global	Relocatable 	
+	KILLST	       20622	Global	Relocatable 		ABCBAS	       20623	Global	Relocatable 	
+	ABCOUN	       20625	Global	Relocatable 		GTHASH	       20626	Globaocatable 	
+	MODDON	       20752	Global	Relocatable 		APTN	       20753	Global	Relocatable 	
+	APSTE	       20754	Global	Relocatable 		CHLSSS	       20755	Global	Relocatable 	
+	CHGTRS	       20756	Global	Relocatable 		VADDRS	       20757	Global	Relocatable 	
+	VSPNUM	       20760	Global	Relocatable 		VCFNUM	       20761	Global	Relocatable 	
+	VVRNUM	       20762	Global	Relocatable 		LRMASK	       20763	Global	Relocatable 	
+	TEMPRE	       20764	Global	Relocatable 		LVLCOP	       20765	Global	Relocatable 	
+	LEVEL	       20767	Global	Relocatable 		FLOOR	       20770	Global	Relocatable 	
+	CEILIN	       20772	Global	Relocatable 		LEVELI	       20774	Global	Relocatable 	
+	MMLIST	       20775	Global	Relocatable 		CONDST	       20777	Global	Relocatable 	
+	ROOM	       21000	Global	Relocatable 		LIBSTK	       21213	Global	Relocatable 	
+	LIBPST	       21214	Global	Relocatable 		CURLIB	       21215	Global	Relocatable 	
+	LIBLRU	       21216	Global	Relocatable 		LIBDAT	       21217	Global	Relocatable 	
+		LINK symbol map of	SEG2	version 4(210)		page 5
+GLODEC
+	LIROOM	       21237	Global	Relocatable 		LOROOM	       21242	Global	Relocatable 	
+	FXALST	       21252	Global	Relocatable 		FXPLST	       21253	Global	Relocatable 	
+	PRELST	       21254	Global	Relocatable 		PDSTRU	       21255	Global	Relocatable 	
+	PDLNKG	       21262	Global	Relocatable 		PDCOND	       21267	Global	Relocatable 	
+	PDEXTS	       21273	Global	Relocatable 		LEXALW	       21322	Global	Relocatable 	
+	LEXOTH	       21323	Global	Relocatable 		DLREMA	       21324	Global	Relocatable 	
+	STRUDE	       21325	Global	Relocatable 		SWSTRU	       21326	Global	Relocatable 	
+	DFLTLN	       21327	Global	Relocatable 		BLSLNK	       21330	Global	Relocatable 	
+	OTSLNK	       21331	Global	Relocatable 		OTSLNT	       21332	Global	Relocatable 	
+	B10LNK	       21333	Global	Relocatable 		B36CLN	       21334	Global	Relocatable 	
+	SYM	       21335	Global	Relocatable 		DEL	       21336	Global	Relocatable 	
+	GLOLAB	       21337	Global	Relocatable 		LASTPU	       21340	Global	Relocatable 	
+	ALDON	       21341	Global	Relocatable 		NOTREE	       21342	Global	Relocatable 	
+	CURROU	       21343	Global	Relocatable 		CURLNK	       21344	Global	Relocatable 	
+	ASMLST	       21345	Global	Relocatable 		SYMLST	       21347	Global	Relocatable 	
+	HEXOP	       21351	Global	Relocatable 		HEXGSF	       21352	Global	Relocatable 	
+	CURCEL	       21353	Global	Relocatable 		LPSECT	       21354	Global	Relocatable 	
+	SAVLBL	       21355	Global	Relocatable 		LSTPTR	       21356	Global	Relocatable 	
+	NCBUFF	       21357	Global	Relocatable 		PBUFF	       21360	Global	Relocatable 	
+	BLOCKL	       21361	Global	Relocatable 		RBLOCK	       21362	Global	Relocatable 	
+	STRUCL	       21363	Global	Relocatable 		ROUT%N	       21364	Global	Relocatable 	
+	NESTLE	       21365	Global	Relocatable 		VAL	       21366	Global	Relocatable 	
+	PACCUM	       21367	Global	Relocatable 		DEVICE	       21370	Global	Relocatable 	
+	CBFPTR	       21371	Global	Relocatable 		EOBRTN	       21372	Global	Relocatable 	
+	SCHAR	       21373	Global	Relocatable 		STYPE	       21374	Global	Relocatable 	
+	PURGED	       21375	Global	Relocatable 		NSYM	       21376	Global	Relocatable 	
+	NDEL	       21377	Global	Relocatable 		ERRINF	       21400	Global	Relocatable 	
+	ERRAUX	       21404	Global	Relocatable 		LCBRAC	       21407	Global	Relocatable 	
+	LOBRAC	       21410	Global	Relocatable 		INDECL	       21411	Global	Relocatable 	
+	LASTEN	       21412	Global	Relocatable 		MANYAC	       21413	Global	Relocatable 	
+	SCANCH	       21414	Global	Relocatable 		TOS	       21415	Global	Relocatable 	
+	LASTMA	       21416	Global	Relocatable 		ACCUM	       21417	Global	Relocatable 	
+	DT	       21426	Global	Relocatable 		CS%WCH	       21626	Global	Relocatable 	
+	PF%PNT	       21627	Global	Relocatable 		PF%LNG	       21630	Global	Relocatable 	
+	PF%ERR	       21631	Global	Relocatable 		SAVDFP	       21632	Global	Relocatable 	
+	DTPF	       21633	Global	Relocatable 		HT	       22033	Global	Relocatable 	
+	STK	       22233	Global	Relocatable 		DOPAGE	       22707	Global	Relocatable 	
+	FORCE%	       22710	Global	Relocatable 		BUFF	       22711	Global	Relocatable 	
+	NLINES	       22744	Global	Relocatable 		HORIZP	       22745	Global	Relocatable 	
+	VALIDB	       22746	Global	Relocatable 		LINCNT	       22747	Global	Relocatable 	
+	GTLINE	       22750	Global	Relocatable 		EOFSEE	       22751	Global	Relocatable 	
+	FRTNFL	       22752	Global	Relocatable 		INFOCO	       22753	Global	Relocatable 	
+	WARNIN	       22754	Global	Relocatable 		ERRORF	       22755	Global	Relocatable 	
+	ERRLEV	       22756	Global	Relocatable 		NEXTLO	       22757	Global	Relocatable 	
+	INAPLI	       22760	Global	Relocatable 		PLHEAD	       22761	Global	Relocatable 	
+	LBHEAD	       22770	Global	Relocatable 		PLLBRA	       22777	Global	Relocatable 	
+	MAXPSE	       23000	Global	Relocatable 		PSECTE	       23001	Global	Relocatable 	
+	DLYPAS	       23002	Global	Relocatable 		LON	       23003	Global	Relocatable 	
+	FON	       23004	Global	Relocatable 		SRLST	       23005	Global	Relocatable 	
+	ARLST	       23006	Global	Relocatable 		SLLST	       23007	Global	Relocatable 	
+	ULST	       23010	Global	Relocatable 		LOOPDE	       23014	Global	Relocatable 	
+	NEXTLD	       23015	Global	Relocatable 		NUMPAR	       23016	Global	Relocatable 	
+	SRCHWI	       23017	Global	Relocatable 		SRCHDE	       23020	Global	Relocatable 	
+	MAXKOS	       23021	Global	Relocatable 		MAXFON	       23022	Global	Relocatable 	
+		LINK symbol map of	SEG2	version 4(210)		page 6
+GLODEC
+	LOOPST	       23023	Global	Relocatable 		PREFLS	       23024	Global	Relocatable 	
+	STEMPS	       23025	Global	Relocatable 		DTEMPS	       23026	Global	Relocatable 	
+	REGS	       23027	Global	Relocatable 		REGSCH	       23047	Global	Relocatable 	
+	ERMASK	       23050	Global	Relocatable 		TNCHAI	       23051	Global	Relocatable 	
+	ETNCHA	       23052	Global	Relocatable 		CALLST	       23053	Global	Relocatable 	
+	FONSTK	       23054	Global	Relocatable 		DTDSTK	       23057	Global	Relocatable 	
+	LOOPLF	       23062	Global	Relocatable 		FLOW%S	       23065	Global	Relocatable 	
+	UNAMNO	       23066	Global	Relocatable 		ANYENA	       23067	Global	Relocatable 	
+	PSCURR	       23070	Global	Relocatable 		PSFLAG	       23071	Global	Relocatable 	
+	SWNTE	       23072	Global	Relocatable 		CPLXNT	       23362	Global	Relocatable 	
+	PSHEAD	       23363	Global	Relocatable 		GSTOPF	       23364	Global	Relocatable 	
+	GSBOTF	       23365	Global	Relocatable 		PSCNAM	       23366	Global	Relocatable 	
+	PSONAM	       23367	Global	Relocatable 		PSGNAM	       23370	Global	Relocatable 	
+	PSPNAM	       23371	Global	Relocatable 		PSANAM	       23372	Global	Relocatable 	
+	PSNNAM	       23373	Global	Relocatable 		MAXLOC	       23374	Global	Relocatable 	
+	LIB%FI	       23375	Global	Relocatable 		PUTTIN	       23376	Global	Relocatable 	
+	C%BEGI	       23377	Global	Relocatable 		CL%SYM	       23400	Global	Relocatable 	
+	CSIDT	       23401	Global	Relocatable 		C%NTE%	       23402	Global	Relocatable 	
+	C%DELT	       23403	Global	Relocatable 		C%SYMB	       23404	Global	Relocatable 	
+	C%MAX%	       23405	Global	Relocatable 		C%TOTA	       23406	Global	Relocatable 	
+	C%NABL	       23407	Global	Relocatable 		C%STRU	       23410	Global	Relocatable 	
+	C%REF%	       23411	Global	Relocatable 		C%SE%C	       23412	Global	Relocatable 	
+	C%SE%N	       23413	Global	Relocatable 		CNT	       23414	Global	Relocatable 	
+	CFT%BE	       23415	Global	Relocatable 		CFT%OT	       23416	Global	Relocatable 	
+	CL%LIN	       23417	Global	Relocatable 		C%RL%B	       23420	Global	Relocatable 	
+	C%RL%E	       23421	Global	Relocatable 		C%RL%C	       23422	Global	Relocatable 	
+	C%RT%B	       23423	Global	Relocatable 		C%RT%C	       23424	Global	Relocatable 	
+	VFM%EO	       23425	Global	Relocatable 		VFM%AM	       23426	Global	Relocatable 	
+	VFM%JO	       23427	Global	Relocatable 		VFM%BU	       23430	Global	Relocatable 	
+	VFM%CU	       23431	Global	Relocatable 		C%MAST	       23432	Global	Relocatable 	
+	MAINDE	       23433	Global	Relocatable 		MRTNST	       23434	Global	Relocatable 	
+	MRTNLK	       23435	Global	Relocatable 		MODNTE	       23436	Global	Relocatable 	
+	RESERV	       23437	Global	Relocatable 		IDENTL	       23440	Global	Relocatable 	
+	VERSLE	       23441	Global	Relocatable 		VERSNU	       23442	Global	Relocatable 	
+	TTLLSP	       23443	Global	Relocatable 		SBTLSP	       23444	Global	Relocatable 	
+	EXDMOD	       23445	Global	Relocatable 		NXDMOD	       23446	Global	Relocatable 	
+	FLAGBI	       23447	Global	Relocatable 		LSTCTR	       23452	Global	Relocatable 	
+	OPTLVL	       23453	Global	Relocatable 		VOBJEC	       23454	Global	Relocatable 	
+	VOTSSW	       23455	Global	Relocatable 		VSTACK	       23456	Global	Relocatable 	
+	STKSTE	       23457	Global	Relocatable 		VENTRY	       23460	Global	Relocatable 	
+	BUFDAT	       23461	Global	Relocatable 		CURCHN	       23501	Global	Relocatable 	
+	LMARG	       23502	Global	Relocatable 		SOSPGC	       23506	Global	Relocatable 	
+	PAGCNT	       23507	Global	Relocatable 		ZDATIM	       23510	Global	Relocatable 	
+	ZDAY	       23515	Global	Relocatable 		ZVER	       23517	Global	Relocatable 	
+	SAVFF	       23525	Global	Relocatable 		INPBEG	       23526	Global	Relocatable 	
+	INPEND	       23527	Global	Relocatable 		OUTBEG	       23530	Global	Relocatable 	
+	OUTEND	       23531	Global	Relocatable 		CMDCRF	       23532	Global	Relocatable 	
+	CMDCHK	       23533	Global	Relocatable 		CMDFLG	       23534	Global	Relocatable 	
+	CMDOLV	       23537	Global	Relocatable 		VVARIA	       23540	Global	Relocatable 	
+	VERROR	       23542	Global	Relocatable 		CMDOBJ	       23544	Global	Relocatable 	
+	CMDADR	       23545	Global	Relocatable 		LNPPAG	       23546	Global	Relocatable 	
+	PLSTCN	       23547	Global	Relocatable 		FINRTN	       23550	Global	Relocatable 	
+	BRAK1	       23551	Global	Relocatable 		BRAK2	       23552	Global	Relocatable 	
+	REGSVM	       23553	Global	Relocatable 		NCELL	       23554	Global	Relocatable 	
+		LINK symbol map of	SEG2	version 4(210)		page 7
+GLODEC
+	CODELA	       23555	Global	Relocatable 		CURNOD	       23556	Global	Relocatable 	
+	CURSPD	       23557	Global	Relocatable 		EMITTE	       23560	Global	Relocatable 	
+	CODESI	       23561	Global	Relocatable 		DATASI	       23562	Global	Relocatable 	
+	NUMDLY	       23563	Global	Relocatable 		PDP11%	       23564	Global	Relocatable 	
+	CMD%PD	       23565	Global	Relocatable 		BRAK3	       23566	Global	Relocatable 	
+	BRAK4	       23567	Global	Relocatable 		BRAK5	       23570	Global	Relocatable 	
+	LCELL	       23571	Global	Relocatable 		PR	       23572	Global	Relocatable 	
+	NPR	       23573	Global	Relocatable 		CRGMAS	       23574	Global	Relocatable 	
+	ERGMAS	       23575	Global	Relocatable 		CRGVEC	       23576	Global	Relocatable 	
+	ERGVEC	       23605	Global	Relocatable 		REGVEC	       23614	Global	Relocatable 	
+	REG1AD	       23622	Global	Relocatable 		REG2AD	       23630	Global	Relocatable 	
+	REG3AD	       23636	Global	Relocatable 		REG4AD	       23644	Global	Relocatable 	
+	REG5AD	       23652	Global	Relocatable 		REG6AD	       23660	Global	Relocatable 	
+	SPADN	       23666	Global	Relocatable 		APADN	       23674	Global	Relocatable 	
+	VRADN	       23702	Global	Relocatable 		CFADN	       23710	Global	Relocatable 	
+	DYBLOC	       23716	Global	Relocatable 		STKFOR	       23721	Global	Relocatable 	
+	ADNSTK	       23722	Global	Relocatable 		TOPADN	       24422	Global	Relocatable 	
+	ADNDEP	       24423	Global	Relocatable 		LITLAB	       24424	Global	Relocatable 	
+	IPTRS	       24425	Global	Relocatable 		FINLAB	       24437	Global	Relocatable 	
+	FINLIT	       24440	Global	Relocatable 		REGNAM	       24441	Global	Relocatable 	
+	PREVRE	       24461	Global	Relocatable 		BROOM	       24501	Global	Relocatable 	
+	GLOOM	       24627	Global	Relocatable 		EFDB	       24634	Global	Relocatable 	
+	CMPLXT	       20322	Global	Relocatable 		STRCDE	       21005	Global	Relocatable 	
+	MACRDE	       21005	Global	Relocatable 		STRMTO	       21027	Global	Relocatable 	
+	STRMBE	       21030	Global	Relocatable 		STRUNA	       21033	Global	Relocatable 	
+	MACRNA	       21033	Global	Relocatable 		REMTOP	       21034	Global	Relocatable 	
+	REMBEG	       21035	Global	Relocatable 		STRUAC	       21041	Global	Relocatable 	
+	MACRAC	       21041	Global	Relocatable 		APLBUF	       21050	Global	Relocatable 	
+	WSTBUF	       21113	Global	Relocatable 		MTBUF	       21165	Global	Relocatable 	
+	CURPS	       24501	Global	Relocatable 		MAINPS	       24503	Global	Relocatable 	
+	CURBUF	       24505	Global	Relocatable 		LSTPS	       24627	Global	Relocatable 	
+	CMDLSW	       23536	Global	Relocatable 		HEMPTY	       20034	Global	Relocatable 	
+
+		*************
+
+LOIO	from DSK:BLISS.REL[3,700305]	created by BLISS-36 on  7-Oct-72 at  1:00:00
+	Low  segment starts at	 30351 ends at	 30431 length	    61 (octal),    49. (decimal)
+	High segment starts at	 24635 ends at	 30350 length	  3514 (octal),  1868. (decimal)
+
+	RCTRLO	       24635	Global	Relocatable 		GTIME	       24640	Global	Relocatable 	
+	TIMER1	       24642	Global	Relocatable 		TIMER2	       24650	Global	Relocatable 	
+	NXFILE	       24656	Global	Relocatable 		IOMSG	       25033	Global	Relocatable 	
+	OUTFIL	       25142	Global	Relocatable 		PRSFIL	       25165	Global	Relocatable 	
+	OPNOUT	       25516	Global	Relocatable 		OPNSRC	       25533	Global	Relocatable 	
+	OPNREQ	       25617	Global	Relocatable 		OPNLIB	       25733	Global	Relocatable 	
+	CHECKW	       26016	Global	Relocatable 		FILTIM	       30351	Global	Relocatable 	
+	OPNFIL	       26060	Global	Relocatable 		CLSFIL	       26455	Global	Relocatable 	
+	CLSALL	       26521	Global	Relocatable 		PURFIL	       26531	Global	Relocatable 	
+	TABTO	       26560	Global	Relocatable 		TTYLIS	       26627	Global	Relocatable 	
+	INPUT	       26701	Global	Relocatable 		LINPUT	       27020	Global	Relocatable 	
+	LOUTPU	       27047	Global	Relocatable 		SETIBL	       27063	Global	Relocatable 	
+	SETOBL	       27140	Global	Relocatable 		OUTPUT	       27147	Global	Relocatable 	
+	OUTXST	       27332	Global	Relocatable 		PUNT	       27656	Global	Relocatable 	
+	QUIT	       30061	Global	Relocatable 		FORCE	       30072	Global	Relocatable 	
+		LINK symbol map of	SEG2	version 4(210)		page 8
+LOIO
+	PAGE	       30115	Global	Relocatable 	
+
+		*************
+
+LOWSEG	from DSK:BLISS.REL[3,700305]	created by BLISS-36 on  7-Oct-72 at  1:00:00
+	High segment starts at	 30432 ends at	 30642 length	   211 (octal),   137. (decimal)
+
+	CHECKL	       30432	Global	Relocatable 	
+
+		*************
+
+LSTPKG	from DSK:BLISS.REL[3,700305]	created by BLISS-36 on  7-Oct-72 at  1:00:00
+	High segment starts at	 30643 ends at	 31472 length	   630 (octal),   408. (decimal)
+
+	DELINK	       30643	Global	Relocatable 		LINK	       30655	Global	Relocatable 	
+	JOIN	       30670	Global	Relocatable 		RELINK	       30703	Global	Relocatable 	
+	EMPTY	       30713	Global	Relocatable 		ENLST	       30722	Global	Relocatable 	
+	SORTEN	       30737	Global	Relocatable 		LIFOEN	       30757	Global	Relocatable 	
+	MAKITE	       30761	Global	Relocatable 		MAKHDR	       30776	Global	Relocatable 	
+	MAKINT	       31007	Global	Relocatable 		RELITE	       31052	Global	Relocatable 	
+	RELLST	       31114	Global	Relocatable 		SORTFI	       31213	Global	Relocatable 	
+	PULSEL	       31326	Global	Relocatable 		PULSEA	       31365	Global	Relocatable 	
+
+		*************
+
+MEMMGT	from DSK:BLISS.REL[3,700305]	created by BLISS-36 on  7-Oct-72 at  1:00:00
+	Low  segment starts at	 32202 ends at	 32203 length	     2 (octal),     2. (decimal)
+	High segment starts at	 31473 ends at	 32201 length	   507 (octal),   327. (decimal)
+
+	RELEAS	       31516	Global	Relocatable 		GETSPA	       31731	Global	Relocatable 	
+	GETCOP	       32022	Global	Relocatable 		GARBAG	       32177	Global	Relocatable 	
+
+		*************
+
+PRFPKG	from DSK:BLISS.REL[3,700305]	created by BLISS-36 on  7-Oct-72 at  1:00:00
+	Low  segment starts at	 32475 ends at	 32521 length	    25 (octal),    21. (decimal)
+	High segment starts at	 32204 ends at	 32474 length	   271 (octal),   185. (decimal)
+
+	PERF%I	       32217	Global	Relocatable 		PERF%M	       32236	Global	Relocatable 	
+	PERF%R	       32336	Global	Relocatable 	
+
+		*************
+
+SWAP	from DSK:BLISS.REL[3,700305]	created by BLISS-36 on  7-Oct-72 at  1:00:00
+	Low  segment starts at	 32754 ends at	 32756 length	     3 (octal),     3. (decimal)
+	High segment starts at	 32522 ends at	 32753 length	   232 (octal),   154. (decimal)
+
+	GETSEG	       32560	Global	Relocatable 		SEGCAL	       32636	Global	Relocatable 	
+	SG2CAL	       32704	Global	Relocatable 	
+
+		*************
+
+		LINK symbol map of	SEG2	version 4(210)		page 9
+
+
+TABLES	from DSK:BLISS.REL[3,700305]	created by BLISS-36 on  7-Oct-72 at  1:00:00
+	Low  segment starts at	 34762 ends at	 35161 length	   200 (octal),   128. (decimal)
+	High segment starts at	 32757 ends at	 34761 length	  2003 (octal),  1027. (decimal)
+
+	BLKSTK	       34762	Global	Relocatable 		RSTRTH	       32757	Global	Relocatable 	
+	STINSE	       33026	Global	Relocatable 		SEARCH	       33104	Global	Relocatable 	
+	NTINSE	       33140	Global	Relocatable 		ENTBLO	       33200	Global	Relocatable 	
+	LEAVBL	       33246	Global	Relocatable 		CPXSTE	       33326	Global	Relocatable 	
+	B19CPX	       33361	Global	Relocatable 		CPXREL	       33443	Global	Relocatable 	
+	CPXDUP	       33471	Global	Relocatable 		CPXEQL	       33520	Global	Relocatable 	
+	GENCTR	       33620	Global	Relocatable 		EVALCP	       33674	Global	Relocatable 	
+	LITLEX	       34076	Global	Relocatable 		SYMLEX	       34116	Global	Relocatable 	
+	FIXANC	       34152	Global	Relocatable 		LEXPUR	       34173	Global	Relocatable 	
+	LEXPSY	       34413	Global	Relocatable 		COPYLE	       34421	Global	Relocatable 	
+	BASESY	       34502	Global	Relocatable 		XBASES	       34514	Global	Relocatable 	
+	EQLSTE	       34530	Global	Relocatable 		CREATE	       34654	Global	Relocatable 	
+
+		*************
+
+TNLOW	from DSK:BLISS.REL[3,700305]	created by BLISS-36 on  7-Oct-72 at  1:00:00
+	High segment starts at	 35162 ends at	 35432 length	   251 (octal),   169. (decimal)
+
+	TNREP	       35162	Global	Relocatable 		RELTNR	       35174	Global	Relocatable 	
+	GETTN	       35210	Global	Relocatable 		GETSRT	       35241	Global	Relocatable 	
+	RELALL	       35253	Global	Relocatable 		FREETN	       35337	Global	Relocatable 	
+
+		*************
+
+VERSIO	from DSK:BLISS.REL[3,700305]	created by MACRO on  7-Oct-72 at  1:00:00
+
+	Zero length module
+
+		*************
+
+VFM	from DSK:BLISS.REL[3,700305]	created by BLISS-36 on  7-Oct-72 at  1:00:00
+	High segment starts at	 35433 ends at	 36172 length	   540 (octal),   352. (decimal)
+
+	VFM%IN	       35433	Global	Relocatable 		VFM%WI	       35552	Global	Relocatable 	
+	VFM%AG	       35626	Global	Relocatable 		VFM%RE	       35654	Global	Relocatable 	
+	VFM%WR	       35751	Global	Relocatable 		VFM%CL	       36003	Global	Relocatable 	
+	.JBPFH	         173	Global	Absolute    		INDIR	           0	Global	Absolute    	
+	CPUTYP	           1	Global	Absolute    	
+
+		*************
+
+ENTRY	from DSK:BLISS.REL[3,700305]	created by BLISS-36 on  7-Oct-72 at  1:00:00
+	High segment starts at	400306 ends at	400345 length	    40 (octal),    32. (decimal)
+
+	ENTRY	      400327	Global	Relocatable 		ENTRY2	      400336	Global	Relocatable 	
+
+		*************
+
+		LINK symbol map of	SEG2	version 4(210)		page 10
+
+
+$SCNDC	from DSK:BLISS.REL[3,700305]	created by MACRO on  7-Oct-72 at  1:00:00
+
+	Zero length module
+
+		*************
+
+.SCAN	from DSK:BLISS.REL[3,700305]	created by MACRO on  7-Oct-72 at  1:00:00
+	Low  segment starts at	 36173 ends at	 36775 length	   603 (octal),   387. (decimal)
+
+	F.NAM	       36607	Global	Relocatable 		N.CORE	       36261	Global	Relocatable 	
+	N.EZER	       36260	Global	Relocatable Suppressed	N.OFFS	       36262	Global	Relocatable 	
+	N.ZER	       36237	Global	Relocatable Suppressed	%%%SCN	           7	Global	Absolute    Suppressed
+	%%SCAN	   704000630	Global	Absolute    Suppressed	.LASWD	       36737	Global	Relocatable 	
+	.MYPPN	       36173	Global	Relocatable 		.NMUE	       36736	Global	Relocatable Suppressed
+	.NMUL	       36701	Global	Relocatable 		.NOQTE	       36235	Global	Relocatable 	
+	.OPTN	       36676	Global	Relocatable 		.QUOTE	       36236	Global	Relocatable 	
+	.SCANL	         603	Global	Absolute    Suppressed	.SCANZ	       36173	Global	Relocatable Suppressed
+	.SWDON	           0	Global	Absolute    Suppressed
+
+		*************
+
+.VERBO	from DSK:BLISS.REL[3,700305]	created by MACRO on  7-Oct-72 at  1:00:00
+	Low  segment starts at	 36776 ends at	 36777 length	     2 (octal),     2. (decimal)
+
+	.FLCBF	       36777	Global	Relocatable 		.FLVRB	       36776	Global	Relocatable 	
+	.VRBOL	           2	Global	Absolute    Suppressed	.VRBOZ	       36776	Global	Relocatable Suppressed
+
+		*************
+
+.TNEWL	from DSK:BLISS.REL[3,700305]	created by MACRO on  7-Oct-72 at  1:00:00
+
+	Zero length module
+
+		*************
+
+.TOUTS	from DSK:BLISS.REL[3,700305]	created by MACRO on  7-Oct-72 at  1:00:00
+	Low  segment starts at	 37000 ends at	 37000 length	     1 (octal),     1. (decimal)
+
+	GUIDL.	          12	Global	Absolute    Suppressed	GUIDM.	777777777766	Global	Absolute    Suppressed
+	.TOUTL	           1	Global	Absolute    Suppressed	.TOUTZ	       37000	Global	Relocatable Suppressed
+
+		*************
+
+.STOPB	from DSK:BLISS.REL[3,700305]	created by MACRO on  7-Oct-72 at  1:00:00
+
+	Zero length module
+
+		*************
+
+.CNTDT	from DSK:BLISS.REL[3,700305]	created by MACRO on  7-Oct-72 at  1:00:00
+
+	Zero length module
+
+		LINK symbol map of	SEG2	version 4(210)		page 11
+
+		*************
+
+.GTPUT	from DSK:BLISS.REL[3,700305]	created by MACRO on  7-Oct-72 at  1:00:00
+
+	Zero length module
+
+		*************
+
+.SAVE	from DSK:BLISS.REL[3,700305]	created by MACRO on  7-Oct-72 at  1:00:00
+
+	Zero length module
+
+		*************
+
+CELCOM	from DSK:BLISS.REL[3,700305]	created by BLISS-36 on  7-Oct-72 at  1:00:00
+	High segment starts at	400346 ends at	400447 length	   102 (octal),    66. (decimal)
+
+	GETCEL	      400346	Global	Relocatable 		GETGSH	      400361	Global	Relocatable 	
+	PUTNEX	      400374	Global	Relocatable 		LNKCEL	      400412	Global	Relocatable 	
+	DELNKC	      400423	Global	Relocatable 		EMPTYC	      400433	Global	Relocatable 	
+	RELCEL	      400440	Global	Relocatable 	
+
+		*************
+
+BIF36	from DSK:BLISS.REL[3,700305]	created by BLISS-36 on  7-Oct-72 at  1:00:00
+	High segment starts at	400450 ends at	405346 length	  4677 (octal),  2495. (decimal)
+
+	BIFREG	      400525	Global	Relocatable 		BIFCHA	      400536	Global	Relocatable 	
+	SBIF	      400703	Global	Relocatable 	
+
+		*************
+
+CFLOAT	from DSK:BLISS.REL[3,700305]	created by MACRO on  7-Oct-72 at  1:00:00
+	High segment starts at	405347 ends at	406442 length	  1074 (octal),   572. (decimal)
+
+	CFLOAT	      405347	Entry	Relocatable 	
+
+		*************
+
+CRFLOW	from DSK:BLISS.REL[3,700305]	created by BLISS-36 on  7-Oct-72 at  1:00:00
+	High segment starts at	406443 ends at	410307 length	  1645 (octal),   933. (decimal)
+
+	C%FLOW	      410206	Global	Relocatable 	
+
+		*************
+
+DECLAR	from DSK:BLISS.REL[3,700305]	created by BLISS-36 on  7-Oct-72 at  1:00:00
+	High segment starts at	410310 ends at	421476 length	 11167 (octal),  4727. (decimal)
+
+	DFINFO	      410310	Global	Relocatable 		ERRDEC	      410624	Global	Relocatable 	
+	DCLARE	      410632	Global	Relocatable 		SYMPUR	      411003	Global	Relocatable 	
+	ALLOCA	      411252	Global	Relocatable 		DEFEXT	      411346	Global	Relocatable 	
+	INCRDE	      411400	Global	Relocatable 		DECLAR	      411430	Global	Relocatable 	
+	INITST	      412024	Global	Relocatable 		RULITE	      412145	Global	Relocatable 	
+		LINK symbol map of	SEG2	version 4(210)		page 12
+DECLAR
+	LISTLI	      413067	Global	Relocatable 		EXTCHK	      413205	Global	Relocatable 	
+	FWDCHK	      413404	Global	Relocatable 		PATTRI	      414000	Global	Relocatable 	
+	CALCSI	      415152	Global	Relocatable 		BINDNM	      415327	Global	Relocatable 	
+	GREGNA	      417044	Global	Relocatable 		DOMODU	      417164	Global	Relocatable 	
+
+		*************
+
+DCLNKG	from DSK:BLISS.REL[3,700305]	created by BLISS-36 on  7-Oct-72 at  1:00:00
+	High segment starts at	421477 ends at	423733 length	  2235 (octal),  1181. (decimal)
+
+	COPYLI	      421477	Global	Relocatable 		DELLNK	      421555	Global	Relocatable 	
+	SLINKA	      421633	Global	Relocatable 	
+
+		*************
+
+DCROUT	from DSK:BLISS.REL[3,700305]	created by BLISS-36 on  7-Oct-72 at  1:00:00
+	High segment starts at	423734 ends at	425004 length	  1051 (octal),   553. (decimal)
+
+	SSROUT	      423734	Global	Relocatable 		SROUTI	      424011	Global	Relocatable 	
+
+		*************
+
+DCSWIT	from DSK:BLISS.REL[3,700305]	created by BLISS-36 on  7-Oct-72 at  1:00:00
+	High segment starts at	425005 ends at	430337 length	  3333 (octal),  1755. (decimal)
+
+	SSWITC	      425113	Global	Relocatable 		FINDSW	      425215	Global	Relocatable 	
+	FINDMO	      425304	Global	Relocatable 		SWITCH	      426156	Global	Relocatable 	
+	ESTAB%	      426557	Global	Relocatable 		EESTAB	      426633	Global	Relocatable 	
+	ENTERP	      426675	Global	Relocatable 		SPSECT	      426771	Global	Relocatable 	
+
+		*************
+
+DCPLIT	from DSK:BLISS.REL[3,700305]	created by BLISS-36 on  7-Oct-72 at  1:00:00
+	High segment starts at	430340 ends at	431452 length	  1113 (octal),   587. (decimal)
+
+	NXTCGN	      430340	Global	Relocatable 		SPLIT	      430460	Global	Relocatable 	
+	SPLITA	      430465	Global	Relocatable 		SPLITB	      430656	Global	Relocatable 	
+	DELID	      430711	Global	Relocatable 		SPV2LI	      431317	Global	Relocatable 	
+
+		*************
+
+FLOWAN	from DSK:BLISS.REL[3,700305]	created by BLISS-36 on  7-Oct-72 at  1:00:00
+	High segment starts at	431453 ends at	442443 length	 10771 (octal),  4601. (decimal)
+
+	CH%FET	      437761	Global	Relocatable 		CH%STO	      440007	Global	Relocatable 	
+	CH%KIL	      440035	Global	Relocatable 		MA%FET	      440063	Global	Relocatable 	
+	MA%STO	      440140	Global	Relocatable 		MA%KIL	      440215	Global	Relocatable 	
+	FLOWAN	      442424	Global	Relocatable 	
+
+		*************
+
+		LINK symbol map of	SEG2	version 4(210)		page 13
+
+
+GETSRC	from DSK:BLISS.REL[3,700305]	created by BLISS-36 on  7-Oct-72 at  1:00:00
+	High segment starts at	442444 ends at	443000 length	   335 (octal),   221. (decimal)
+
+	READAL	      442444	Global	Relocatable 	
+
+		*************
+
+KFOLD	from DSK:BLISS.REL[3,700305]	created by BLISS-36 on  7-Oct-72 at  1:00:00
+	High segment starts at	443001 ends at	452315 length	  7315 (octal),  3789. (decimal)
+
+	OBJCOM	      443116	Global	Relocatable 		SUBTRE	      443407	Global	Relocatable 	
+	REPTRE	      443423	Global	Relocatable 		TRANSF	      443636	Global	Relocatable 	
+
+		*************
+
+LEXAN	from DSK:BLISS.REL[3,700305]	created by BLISS-36 on  7-Oct-72 at  1:00:00
+	High segment starts at	452316 ends at	461200 length	  6663 (octal),  3507. (decimal)
+
+	CHARIN	      452316	Global	Relocatable 		UPCASE	      452516	Global	Relocatable 	
+	SKAN1	      452526	Global	Relocatable 		LBRACE	      453036	Global	Relocatable 	
+	RBRACE	      453047	Global	Relocatable 		GETLSS	      453060	Global	Relocatable 	
+	STRMQU	      453241	Global	Relocatable 		STRMEX	      453360	Global	Relocatable 	
+	WINDAP	      453447	Global	Relocatable 		STRMNE	      453616	Global	Relocatable 	
+	STRMTE	      453632	Global	Relocatable 		STRMRE	      453673	Global	Relocatable 	
+	ACTMRE	      453711	Global	Relocatable 		ACTSRE	      453742	Global	Relocatable 	
+	RUND	      454031	Global	Relocatable 		RUNDSA	      454304	Global	Relocatable 	
+	RUNDRE	      454363	Global	Relocatable 		MACRSA	      454410	Global	Relocatable 	
+	MACRRE	      454443	Global	Relocatable 		REQ%FI	      454471	Global	Relocatable 	
+	PUSHFI	      454550	Global	Relocatable 		POPFIL	      454630	Global	Relocatable 	
+	SCANFO	      454736	Global	Relocatable 		LSLITE	      455560	Global	Relocatable 	
+	SCANTO	      456065	Global	Relocatable 		MACRSW	      456225	Global	Relocatable 	
+	ESTRU	      457131	Global	Relocatable 		STRUSC	      457744	Global	Relocatable 	
+	FINDMS	      460003	Global	Relocatable 		OUTSYM	      460034	Global	Relocatable 	
+
+		*************
+
+LEXFUN	from DSK:BLISS.REL[3,700305]	created by BLISS-36 on  7-Oct-72 at  1:00:00
+	High segment starts at	461201 ends at	467021 length	  5621 (octal),  2961. (decimal)
+
+	PUSHCS	      461266	Global	Relocatable 		POPCST	      461277	Global	Relocatable 	
+	SFCONV	      466450	Global	Relocatable 		SFCOND	      466555	Global	Relocatable 	
+	SFEXPA	      467005	Global	Relocatable 	
+
+		*************
+
+LIBARY	from DSK:BLISS.REL[3,700305]	created by BLISS-36 on  7-Oct-72 at  1:00:00
+	High segment starts at	467022 ends at	470736 length	  1715 (octal),   973. (decimal)
+
+	LIBLOA	      467064	Global	Relocatable 		LIBFIN	      467306	Global	Relocatable 	
+
+		*************
+
+		LINK symbol map of	SEG2	version 4(210)		page 14
+
+
+LIBINI	from DSK:BLISS.REL[3,700305]	created by BLISS-36 on  7-Oct-72 at  1:00:00
+	High segment starts at	470737 ends at	472137 length	  1201 (octal),   641. (decimal)
+
+	LIBDEC	      470747	Global	Relocatable 		LIBGET	      471552	Global	Relocatable 	
+	GETCHA	      471614	Global	Relocatable 		WRITEL	      471745	Global	Relocatable 	
+
+		*************
+
+PRESET	from DSK:BLISS.REL[3,700305]	created by BLISS-36 on  7-Oct-72 at  1:00:00
+	High segment starts at	472140 ends at	474226 length	  2067 (octal),  1079. (decimal)
+
+	DYNAMI	      473364	Global	Relocatable 		PREPAR	      474104	Global	Relocatable 	
+
+		*************
+
+SG2DEF	from DSK:BLISS.REL[3,700305]	created by BLISS-36 on  7-Oct-72 at  1:00:00
+
+	Zero length module
+
+		*************
+
+STRENG	from DSK:BLISS.REL[3,700305]	created by BLISS-36 on  7-Oct-72 at  1:00:00
+	High segment starts at	474227 ends at	474501 length	   253 (octal),   171. (decimal)
+
+	STRENG	      474255	Global	Relocatable 	
+
+		*************
+
+SYNTAX	from DSK:BLISS.REL[3,700305]	created by BLISS-36 on  7-Oct-72 at  1:00:00
+	High segment starts at	474502 ends at	504501 length	 10000 (octal),  4096. (decimal)
+
+	SYNINI	      474711	Global	Relocatable 		RUEXPU	      474735	Global	Relocatable 	
+	PUSH	      474752	Global	Relocatable 		PUSH1	      475022	Global	Relocatable 	
+	MARKST	      475077	Global	Relocatable 		DELTOM	      475135	Global	Relocatable 	
+	DELALL	      475163	Global	Relocatable 		UNDOPT	      475220	Global	Relocatable 	
+	UNDORE	      475300	Global	Relocatable 		GENGT	      475476	Global	Relocatable 	
+	FAKECS	      475663	Global	Relocatable 		BINDBI	      475734	Global	Relocatable 	
+	DYNBIN	      476074	Global	Relocatable 		ERRORR	      476123	Global	Relocatable 	
+	SYMERR	      476360	Global	Relocatable 		DELERR	      476367	Global	Relocatable 	
+	RUNDE	      476427	Global	Relocatable 		CHECKU	      476547	Global	Relocatable 	
+	CXPRES	      476701	Global	Relocatable 		DXPRES	      476734	Global	Relocatable 	
+	EXPRES	      476746	Global	Relocatable 		SYMTOA	      500147	Global	Relocatable 	
+	STRUPI	      500316	Global	Relocatable 		SSQOPE	      500740	Global	Relocatable 	
+	PARSE%	      502063	Global	Relocatable 		SENABL	      504252	Global	Relocatable 	
+
+		*************
+
+
+	Index to LINK symbol map of	SEG2	version 4(210)		page 15
+
+	Name	Page	Name	Page	Name	Page	Name	Page
+
+	BIF36	11	CRGATH	 3	JOBDAT	 1	SYNTAX	14
+	CELCOM	11	DATTIM	 3	KFOLD	13	TABLES	 9
+	CFLOAT	11	DCLNKG	12	LEXAN	13	TNLOW	 9
+	CHCBP%	 2	DCPLIT	12	LEXFUN	13	UDDT	 1
+	CHCMP%	 2	DCROUT	12	LIBARY	13	VERSIO	 9
+	CHCNO%	 2	DCSWIT	12	LIBINI	14	VFM	 9
+	CHCNP%	 2	DECLAR	11	LOIO	 7	$SCNDC	10
+	CHCOP%	 2	DRIVER	 3	LOWSEG	 8	.CNTDT	10
+	CHFIL%	 2	DUMMY	 4	LSTPKG	 8	.GTPUT	11
+	CHMOV%	 2	EFPNT.	 1	MEMMGT	 8	.SAVE	11
+	CHPLU%	 1	ENTRY	 9	PRESET	14	.SCAN	10
+	CHPTR%	 1	FLOWAN	12	PRFPKG	 8	.STOPB	10
+	CHSIZ%	 3	FMTIO	 4	SG2DEF	14	.TNEWL	10
+	CRFILE	 3	GETSRC	13	STRENG	14	.TOUTS	10
+	CRFLOW	11	GLODEC	 4	SWAP	 8	.VERBO	10
+
+	[End of LINK map of	SEG2]
+ {@g…

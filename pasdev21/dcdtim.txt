@@ -1,0 +1,32 @@
+
+
+
+                                     DTIME - day/time manipulation routines
+                                                                   11/01/78
+
+
+
+     Entry: DC_DTIME     _____
+
+     Convert an internal day/time to a binary day/time record.
+
+     Usage:
+
+          EXTERNAL FUNCTION DC_DTIME(DTIME: DTIME_INT): DTIMEREC;
+
+     Input arguments:
+
+       DTIME   a day/time in internal form.
+
+     Output arguments:
+
+       <return value>
+               the day/time as a record with integer fields for  the  year,
+               month, day, hours, minutes and seconds.
+
+     INCLUDE files required:
+
+       DTIME.TYP
+       DTIME.INC
+
+

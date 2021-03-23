@@ -1,0 +1,341 @@
+$num off
+$page
+$cen
+ODMS 2.0 Final Specification
+$ski
+April 25, 1980
+$title right 'ODMS 2.0 Final Specification/\' right 'April 25, 1980'
+$jus $ski 2
+This document is an addendum to the &Overlay Manager Conversion Specification
+for Swapping High Segments& dated March 5, 1980.
+The two documents taken together should provide a complete, unambiguous
+specification for the Pascal overlay system, versions 2.0 and 3.0.
+$ski 2
+&User Restrictions and Requirements&
+$ski
+The user may define public vars and consts in overlay compilations,
+as long as those publics are referenced only within the overlay link.
+The MDL will not permit declarations of the form "X VAR IN Y", where
+Y is an overlay module.
+Public vars and constants defined in overlay compilations will contain
+their own "transfer vector" entry by an extra word, defined to be
+the named var or const, which points to the actual var or const.
+In this way, the indirect references made by the other compilations
+composing the link of the overlay, for whom the vars and consts are
+declared "external", will be correct.
+Note that the compilation defining the var or const need not indirect
+for the address of the var or const, but can reference addr+1.
+$ski
+A more succinct restriction for the generation of subroutine values
+in overlaid programs has been made.
+A subroutine value generated within the overlay containing the subroutine
+can be used only within the overlay.
+Note that this is a user restriction, and cannot be enforced by the
+compiler or by ODMS.
+This restriction covers the following cases in which the subroutine
+value is correct: a value of a subroutine in another overlay, which is
+necessarily public and level one, and for which its transfer vector
+address (valid everywhere in the program) is generated;
+any routine within the overlay, invoked when the overlay is in core.
+If the invoker is within the same overlay as the invokee, then that
+overlay is in core at the time of the invocation, and the routine's actual
+address is then usable.
+The incorrect case is also covered: the actual address of a routine
+within an overlay, used when that overlay is not in core.
+Since the actual address can only be generated from within the overlay,
+the prohibition of its use outside the overlay prevents the error.
+$ski
+The above two additions impact the required compiler modifications.
+The OVERLAY (3) or (RESIDENT) option need not be included.
+Additionally, OVERLAY (MAIN) only places externally visible
+constants in the low segment contribution of the emitted code, while
+OVERLAY (NOMAIN) also indirects for all external vars and consts.
+OVERLAY (MAIN) is used to compile code in the MAIN overlay of an
+overlaid program with sharable overlays.
+Note that the public var trick described above applies to publics
+declared in an OVERLAY (NOMAIN) compilation.
+NOMAIN is the default suboption for the OVERLAY option.
+$ski 2
+&Modifications For Using& .&EXE Files&
+$ski
+As stated in the previous document, both the run time overlay manager
+and ODMS will be modified to handle .EXE files.
+The format of .EXE files is documented; essentially they are a sequence
+of 512-word pages for either the low or high segment, as marked
+on a directory page at the beginning of the file.
+The following steps are taken at run time, therefore, to read
+an overlay.
+The disk locations of the pages composing the high segment and low
+segment are obtained by reading the directory block into the
+overlay area to be used.
+At this time, the high segment relocation can be verified, since
+the .EXE directory contains the process page number of the high segment;
+since all overlay areas must start on a page boundary, the address
+for which the .EXE file has been linked can be computed easily.
+If the relocations match, the entire high segment of the overlay
+can now be read into the overlay area by a single read of some
+integral number of pages.
+$ski
+Unfortunately, this simple verification method cannot be used for
+the overlay's static area, which need not lie on a page boundary.
+Therefore, the overlay's high segment must contain, at a known
+location, the addresses of the first and last word of the allocated
+static area for that overlay.
+This can be compared to a similar word in the overlay manager's static
+area, initialized at load time.
+Both words are emitted by ODMS, in the overlays' .SYM files and in 
+the overlay manager's initialized static area.
+If these match, then the relocation is correct, but the overlay
+static area may still overflow.
+Unfortunately, this cannot be detected by LINK-10, so
+a scheme must be devised to determine the extent of the low segment
+as linked by LINK-10.
+This should be available from the vestigial job data area at the start
+of the overlay's high segment, which has already been read in.
+Either .JBHSA or .JBHCR should contain the information needed.
+Therefore, the low segment can be verified before it is read in.
+$ski
+The overlay database format need not change too much from previous
+versions of ODMS.
+The first block of an overlay database file is a bitmap for the
+zero-based blocks in the file.
+The next block is the first directory block, indexed by module number.
+Directory blocks are chained through word zero.
+Each overlay in the file entails three words of overhead: a next pointer,
+a version number, and an timestamp (DTIME should be used here).
+As a first cut, I recommend using the .EXE file format, with our three
+words of overhead coming &after& the .EXE directory information,
+which should be no more than six words in size for normal overlays.
+Thus, we can place our information at 8, 9, and 10 words past
+the start of the .EXE directory.
+The major disadvantage of this scheme is the disk space overhead for
+.EXE file directories, and for .EXE files in general.
+Since .EXE files are allocated in quanta of pages, the average .EXE
+file directory page uses only 6 words out of 512; all code and data
+occupy image pages.
+It would be possible to compress the .EXE file somewhat, but I
+leave this step for future versions of ODMS.
+$ski 2
+&User Entry Points&
+$ski
+The current system permits the DATABASE qualifier on the BUILD RESIDENT
+command to respecify the default database.
+The new system will permit the DATABASE qualifier on the BUILD MAIN
+command, and also a FILES
+qualifier to specify the size of the overlay manager's file table.
+This number represents the maximum number of files, including the default
+database, that the overlay manager can know about at runtime.
+If the default number is used (eight), then seven calls to OVEXTF
+are possible before files must be returned via OVDELF.
+The new runtime manager entry points are detailed below.
+$ski
+The user will be able to control the number of channels used by the
+overlay manager at any time.
+The entry point OVGETC returns the current number of channels allocated
+to the overlay manager, and the entry OVMAXC gives a new maximum.
+The default action of the overlay manager will be to get a new channel
+from the PASCAL runtime for every call to OVEXTF, and to return a
+channel for every call to OVDELF.
+Thus, the PASCAL runtime will cause an error if it runs out of channels.
+A call to OVMAXC will limit the overlay manager to the specified
+number of channels.
+Rather than exceed this maximum, the overlay manager will close and
+reopen the least recently used (LRU) channel.
+$ski 2
+&Other Specification Items&
+$ski
+The previous specification stated that the overlay manager would have
+to reserve PSA storage, and initialize it with a BLT from some code
+emitted by ODMS in the symbol file.
+This is not necessary; if the link of MAIN reserves a block of storage
+large enough for the overlay manager, and initializes it, then the
+overlay manager, in MAIN, can coerce a pointer to this area and store it
+in the PDA.  All subsequent references to this area can be made
+through the pointer in the PDA.
+Note that this area is susceptible to a change in size; by increasing
+the number of overlay files available, or by increasing the number
+of modules, the size of the overlay manager's static area increases.
+It is thus desirable to place this static area as high in the low
+segment as possible.
+It can be placed after all overlay areas and overlay static
+sections easily, since the space for the overlay areas must be
+reserved in the MAIN executable file in any case.
+Thus, the size of this area is invisible to the user program
+with respect to requiring any overlay rebuilds.
+It may change the location of the public storage area, but since
+all overlays reference this area through the MTV, this is immaterial.
+This method requires a unique symbol definition as the address of this
+area, which MAIN references and stores.
+ODMS must define this value as some constant for non-MAIN sharables.
+$ski
+A symbol naming convention is necessary for cases in the run time
+in which the address of a run time routine is placed in the low segment.
+An example is the address of the interrupt handler for ONESCAPE, whose
+address must appear in the interrupt control block, which is pointed
+to by location 134.
+Since the runtime is resident, it is at different addresses in different
+high segments, thus the reference must point to the transfer
+vector location and not the actual location.
+Such symbols must be given three character distinct names; the convention
+is that the symbol xxx.TV is the transfer vector location (if any),
+and xxx.AC is the actual address.
+Thus, the runtime code may reference xxx.TV when it stores the address of the
+routine, and define the symbol xxx.AC as the actual routine.
+Now, in an overlaid program, ODMS knows about, and emits the transfer
+vector for, these symbols, such as "xxx.TV: PORTAL xxx.AC".
+In a non-overlaid program, the symbol xxx.TV is defined by a library
+module which contains xxx.TV as an entry, equating it to xxx.AC.
+The three character names should be available to ODMS from an external file;
+the maintenance program for the debugger should include a facility
+to generate a MMOVFK (overlay fake) module for PASLIB which will equate
+the xxx.TV symbols (if requested) to the xxx.AC symbols.
+ODMS will, in turn, places the transfer vector entry for these symbols
+at the head of the LTV of every sharable overlay.
+Note, however, that the user must include xxx.TV PROCEDURE IN RESIDENT
+in the MDL, to indicate that the routine is used.
+A list of such names, and the functions which require them, will
+be made available when appropriate.
+$ski
+A somewhat similar convention is necessary for the run time symbols
+referenced by the debugger.
+An external file will contain the names of those run time symbols
+needed by the debugger, and their pseudonyms.
+The debugger maintenance program will fix up the debugger .REL files
+as needed, using the names in the pseudonym file.
+ODMS will use this information to emit transfer vector entries at
+the beginning of the LTV of every sharable high segment for these symbols.
+Note that these entries are required only for programs with multiple
+high segments using the debugger,
+and are independent of user declarations.
+$ski
+Of the methods described in the other document to make the debugger work
+with overlaid programs, I recommend the low segment code idea, with
+pseudonyms for any debugger runtime requirements.
+Placing the debugger in its own "overlay area" is a neat idea with
+respect to relocating the code, but the conflict with symbol definitions
+still exists -- the debugger would be linked to symbols in the MAIN high
+segment instead of in the transfer vector.
+Additionally, with the overlay method, an .EXE file must be created
+for every overlaid program, with its own version of the debugger
+relocated to the appropriate place.
+$ski
+To make the ONESCAPE mechanism work when called from overlays,
+a routine in the overlay manager will verify that the overlay (if any)
+associated with the stack frame from which ONESCAPE was called is in core.
+This routine would be called with the ONESCAPE frame pointer value; it
+would go up the stack and, starting with the current overlay, would record
+the module index of any overlay manager return address it encountered.
+When it reaches the frame containing the ONESCAPE call, the recorded
+overlay index indicates the overlay (if any) containing the user handler.
+For a non-overlaid program, this routine can be no-oped by the MMOVFK module.
+$ski
+In the new overlay manager, the concept of "current overlay" is well-defined.
+When the program starts execution, the MAIN high segment is the
+current overlay.
+Whenever an overlay read or GETSEG is performed, that overlay becomes
+the current overlay.
+The significance of the current overlay is that the index of the
+current overlay is placed on the stack along with the return address
+to the overlay manager, just before the current overlay is changed.
+This works because with the addition of user routines in high segments,
+and the restriction that resident routines cannot call overlaid routines,
+all procedure calls across overlays are intercepted by the overlay manager.
+It can therefore be asserted that the program is executing either in
+the current overlay or in the resident (or the debugger).
+$ski 2
+&User Entry Point Definitions&
+$ski $ver
+type OVL_ID = (user_n_shr_OV, ..., user_1_shr_OV, NO_MOD,
+               user_1_noshr_OV, ..., user_m_noshr_OV );
+
+     OVL_CODE = (                    (* codes return from routines *)
+       OV_OK,
+       OV_FILNOTFND,                 (* OVEXTF file not found *)
+       OV_TOOMANFIL,                 (* OVEXTF too many files *)
+       OV_BADFILIND,                 (* invalid file table index *)
+       OV_UNKMODIND,                 (* unknown module index *)
+       OV_BADNSOVL,                  (* OVMODF verification fails *)
+       OV_NOTDB,                     (* OVLVER file is not database *)
+       OV_VERNOTFND,                 (* OVLVER version not found *)
+       OV_BADDBFOR,                  (* OVLVER bad database format *)
+       OV_FILISDB,                   (* OVMODF file is database *)
+       OV_OVLACTIVE                  (* current o'lay in file call *)
+       OV_NOCANDEL,                  (* can't delete defaults *)
+       );
+
+     VERSION = integer;
+     FILEINDEX = integer;
+
+external procedure OVEXTFILE (       (* inform sys of new file *)
+  S: FILE_NAME;                      (* name of file *)
+  DB: boolean;                       (* true if database file *)
+  var F: FILEINDEX;                  (* returned ID for file *)
+  var OK: OVL_CODE );                (* how it went *)
+$ski $jus
+OVEXTF informs the overlay system of a new file.
+It returns the fileindex F, which is used in all subsequent calls
+to the overlay system concerning this file.
+S is a string giving the name of the file to be used, and DB is
+true if the file is an overlay database, and false otherwise.
+OK can return OV_OK if F has been set correctly; other returns
+neither set F nor occupy system table space.
+Other returns for OK are: OV_FILNOTFND, file not found; OV_TOOMANFIL,
+the FILES count on the BUILD MAIN command has been exceeded.
+$ski 2 $ver
+external procedure OVMODFILE (       (* non-shar assoc. w/file *)
+  M: OVL_ID;                       (* the overlay's ID from ODMS *)
+  F: FILEINDEX;                      (* what file to take it from *)
+  var OK: OVL_CODE );                (* several possible returns *)
+$ski $jus
+OVMODF associates a non-sharable overlay with a file in the overlay
+manager's table.
+M is the ODMS-assigned enumerated type value for the overlay concerned,
+and F is the index of the file as returned by OVEXTF.
+In addition, F can equal zero, in which case the default database is
+used by the call.
+The result of the call is that the version of the non-sharable overlay
+is reset to zero, and the overlay will be taken from the given file
+when it is next required.
+&Note& that this call does not examine a database file in any way,
+for example to see if version zero of that module exists.
+If the file is not a database, however, it will be verified by
+reading it in as if a routine in the overlay were being called.
+In either case, it is an error if the overlay has an active routine
+on the stack.
+Possible error returns are: OV_BADFILIND, invalid file table index;
+OV_OVLACTIVE, attempt to change file of current overlay;
+OV_UNKMODIND, unknown module index; and OV_BADNSOVL,
+verification failure for non-sharable overlay.
+$ski 2 $ver
+external procedure OVLVERSION (      (* non-shar version change *)
+  M: OVL_ID;                         (* user overlay ID *)
+  V: VERSION;                        (* the new version to find *)
+  var UPDATETIME: DTIME_INT;         (* time of version update *)
+  var OK: OVL_CODE );                (* OK, not DB, or not found *)
+$ski $jus
+OVLVER changes the version number of a non-sharable overlay which is
+associated with a database file.
+The version can be any integer; the database file is examined and the
+version found and verified.
+If found, the timestamp as installed by ODMS is returned.
+The return codes are OV_UNKMODIND, unknown module index; OV_NOTDB, module
+not associated with database;
+OV_BADNSOVL, verification failure;
+and OV_VERNOTFND, version not found in database.
+$ski 2 $ver
+external procedure OVDELFILE (       (* disassociate a file *)
+  F: FILEINDEX;                      (* this one *)
+  var OK: OVL_CODE );                (* OK or bad file index *)
+$ski $jus
+OVDELF deletes a file from the overlay manager's file table.
+The entry will be reused on subsequent calls to OVEXTF, and any
+channel in use by the file is released to Pascal.
+Any non-sharable overlays which were associated with the file
+are reset to the default database, version zero.
+Any sharable overlays which were associated with the file are
+reset to their respective default file; both sharable and non-sharable
+overlay's static will be reinitialized upon the next usage.
+Possible returns for OK are OV_BADFILIND, invalid file index,
+and OV_NOCANDEL, attempt to delete default database or sharable overlay
+default.
+ 

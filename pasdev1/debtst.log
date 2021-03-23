@@ -1,0 +1,472 @@
+
+
+do pascal
+Pascal, Version 2(244)
+
+*(pasdev3)tst015/deb
+*(pasdev3)tst016/deb
+*(pasdev3)tst021/deb
+
+
+  110     shortarr: parrarr := ((1,2,3,4,5),(2,4,6));
+                               ^            ^
+Warning 157: Too few elements in array expression. 
+Warning 157: Too few elements in array expression. 
+
+  111     shortrec: bigbigrec := (false,('abc',3),('z',true));
+                                 ^      ^
+Warning 159: Trailing field value(s) omitted from record expression. 
+Warning 159: Trailing field value(s) omitted from record expression. 
+
+  112     srec1: srec := ((1),true);
+                          ^
+Warning 157: Too few elements in array expression. 
+
+% 5 warnings
+*  
+
+EXIT
+
+.do link
+*tst015,tst016,tst021
+*@debug
+*/go
+
+EXIT
+
+.sta
+
+Pascal debugger, Version 2.3(NC)
+
+>>.rem A null command:
+>>  
+  
+   ^
+Constant or reference expected.
+>>.rem
+>>.rem Start off by running through the display options:
+>>.rem
+>>.dis iostatus
+IO_OK
+>>.dis extstatus
+000000,,000000
+>>.dis modules
+TST015
+TST016
+TST021
+>>.dis files
+0  TST015
+>>.dis files tst016@
+0  TST016
+>>.dis files tst021@
+.dis files tst021@
+                  ^
+Module contains no executable statements.
+>>.dis pages
+2  tst015
+1  oof
+>>.dis pages tst016@
+2  hab
+1  hab_son
+>>.dis pages tst021@
+.dis pages tst021@
+                  ^
+Module contains no executable statements.
+>>.dis loc
+First statement of main program
+>>.dis b
+No breakpoints set.
+>>.dis scope
+TST015 (HISEG=400010, LOWSEG=140)
+>>.dis stack
+1 TST015 BASIS=7461 LVL=0 LOC=TST015@2/3
+>>.rem
+>>.rem Now help, version, and kind:
+>>.rem
+>>.help
+
+Available commands: 
+
+  OPEN CLEAR DISPLAY STEP SSTEP STOP ABORT PROCEED WITH WHERE COMMANDS 
+  HELP VERSION IF KIND CALL REMARK BREAKPOINT 
+
+Display options: 
+
+  BREAKPOINT IOSTATUS EXTSTATUS STACK LOCATION SCOPE FILES PAGES 
+  MODULES 
+
+>>.com
+
+Available commands: 
+
+  OPEN CLEAR DISPLAY STEP SSTEP STOP ABORT PROCEED WITH WHERE COMMANDS 
+  HELP VERSION IF KIND CALL REMARK BREAKPOINT 
+
+Display options: 
+
+  BREAKPOINT IOSTATUS EXTSTATUS STACK LOCATION SCOPE FILES PAGES 
+  MODULES 
+
+>>.ver
+Version 2.3(NC) of 27-Apr-81
+>>.kind 2/7
+Assignment statement.
+>>.kind 7
+Page 1 (oof) instead?  y
+Line 16 instead?  y
+I/O statement.       
+>>.rem
+>>.rem Open, and some display of data:
+>>.rem
+>>.open tst021@
+>>.dis scope
+TST021 (HISEG=403776, LOWSEG=157)
+>>.dis stack
+1 TST015 BASIS=7461 LVL=0 LOC=TST015@2/3
+>>acolor
+BLUE
+>>an_int
+-3
+>>bool
+TRUE
+>>x
+     2.000000000
+>>ch
+'A'
+>>.rem Abort and continue, then resume display of data:
+>>.abort
+
+.con
+
+>>neg_arr1
+ -3  7 -2 -1  6  0
+>>neg_rec1
+F1: 511
+F2: FALSE
+F3: -2
+F4: BLUE
+>>efg
+'ABCDEFG'
+>>set81
+[2,4,6,8]
+>>brecarr[3].f3
+[2,4,6]
+>>brecarr
+F1: 'ABC'
+F2: 511
+F3: [1..3]
+F4: TRUE
+
+F1: 'xyz'
+F2: 0
+F3: []
+F4: FALSE
+
+F1: 'abc'
+F2: 1
+F3: [2,4,6]
+F4: TRUE
+
+
+>>.w brecarr[2];f4;f3;f2;f1
+FALSE
+[]
+0
+'xyz'
+>>.w shortrec
+>>f2
+F1: 'abc'
+F2: 3
+F3: []
+F4: FALSE
+>>.w f2
+>>f3
+[]
+>>neg_rec1
+F1: 511
+F2: FALSE
+F3: -2
+F4: BLUE
+>>neg_rec1.f1
+511
+>>neg_rec1.f1:o
+000777
+>>neg_rec1.f1:h
+0000001FF
+>>.rem
+>>.rem Try the where command:
+>>.rem
+>>.where acolor
+157
+>>.where neg_rec1
+342
+>>.where neg_rec1.f1
+342 bit 0
+>>.where neg_rec1.f2
+342 bit 9
+>>.rem
+>>.rem restore scope to default
+>>.rem
+>>.o
+>>.dis scope
+TST015 (HISEG=400010, LOWSEG=140)
+>>.rem
+>>.rem Now some stepping:
+>>.rem
+>>.dis loc
+First statement of main program
+>>.s
+ in Main Program at TST015@2/3
+>>.dis loc
+ in Main Program at TST015@2/3
+>>.ss
+ in Main Program at TST015@2/4
+>>.dis loc
+ in Main Program at TST015@2/4
+>>.s 19
+Beginning TST015
+j:  7     k:  11     bool: TRUE
+color:  4
+color_set is empty
+bool: FALSE
+color set ok
+bool: FALSE
+ in Main Program at TST015@2/25
+>>.dis loc
+ in Main Program at TST015@2/25
+>>.ss
+ in routine OOF at TST015@1/60
+>>.dis stack
+2 OOF BASIS=7466 LVL=1 LOC=TST015@1/60 CALL=TST015@2/25
+1 TST015 BASIS=7461 LVL=0 LOC=TST015@2/3
+>>.dis scope
+TST015 (HISEG=400010, LOWSEG=140)
+OOF (BASIS=7466)
+>>.rem
+>>.rem put breakpoints at end of main, and in oof_son:
+>>.rem
+>>.b 2/95
+Break #0 set.
+>>.b 1/18 ".if level > 0 then level"
+Break #1 set.
+>>.dis b
+0 TST015@2/95  
+1 TST015@1/18  .if level > 0 then level
+>>.rem
+>>.rem Proceed:
+>>.rem
+>>.p
+Begin procedure oof
+a:  11
+i:  3
+Begin function OOF_SON
+2
+Breakpoint #1 in routine OOF_SON at TST015@1/18
+>>.p 2
+level:  2
+value_rec:  4    8   000000377777
+flex: 345678
+oof_son:  7 9000000377777
+i:  144
+Begin function OOF_SON
+level:  1
+value_rec:  7    511   000000377777
+flex: abc
+oof_son:  7 9000000377777
+i:  144
+Begin function OOF_SON
+Breakpoint #1 in routine OOF_SON at TST015@1/18
+>>.rem
+>>.rem Play with open of frames
+>>.rem
+>>.dis stack
+5 OOF_SON BASIS=7541 LVL=2 LOC=TST015@1/16 CALL=TST015@1/42
+4 OOF_SON BASIS=7521 LVL=2 LOC=TST015@1/16 CALL=TST015@1/42
+3 OOF_SON BASIS=7501 LVL=2 LOC=TST015@1/16 CALL=TST015@1/72
+2 OOF BASIS=7466 LVL=1 LOC=TST015@1/60 CALL=TST015@2/25
+1 TST015 BASIS=7461 LVL=0 LOC=TST015@2/3
+>>.dis scope
+TST015 (HISEG=400010, LOWSEG=140)
+OOF (BASIS=7466)
+OOF_SON (BASIS=7541)
+>>level
+0
+>>.o 4
+>>level
+1
+>>.dis scope
+TST015 (HISEG=400010, LOWSEG=140)
+OOF (BASIS=7466)
+OOF_SON (BASIS=7521)
+>>.o 3
+>>level
+2
+>>.dis scope
+TST015 (HISEG=400010, LOWSEG=140)
+OOF (BASIS=7466)
+OOF_SON (BASIS=7501)
+>>.o
+>>level
+0
+>>.rem
+>>.rem Try assignment (which will fail):
+>>.rem
+>>level := level + 3
+level := level + 3
+        ^
+Lhs object may not be assigned to.
+>>.p 3
+level:  0
+value_rec:  7    511   000000377777
+flex: abc
+oof_son:  7 9000000377777
+i:  144
+lh:  7
+rh: -1
+i:  3
+End function OOF_SON
+result:  7 9000000377777
+lh:  7
+rh: -1
+i:  3
+End function OOF_SON
+result:  7 9000000377777
+lh:  4
+rh: -1
+i:  6
+End function OOF_SON
+oof_record:  7 9000000377777
+j:  20
+End of procedure OOF
+Begin procedure HAB
+parameter a:  11
+parameter gen1:  3 6 9 12 15 18
+pub_var:  786439
+j:  25
+Begin procedure oof
+a:  25
+i:  3
+Begin function OOF_SON
+level:  2
+value_rec:  4    8   000000377777
+flex: 345678
+oof_son:  7 9000000377777
+i:  326
+Begin function OOF_SON
+level:  1
+value_rec:  7    511   000000377777
+flex: abc
+oof_son:  7 9000000377777
+i:  326
+Begin function OOF_SON
+Breakpoint #1 in routine OOF_SON at TST015@1/18
+>>.b 2/93
+Break #2 set.
+>>.p
+level:  0
+value_rec:  7    511   000000377777
+flex: abc
+oof_son:  7 9000000377777
+i:  326
+lh:  7
+rh: -1
+i:  3
+End function OOF_SON
+result:  7 9000000377777
+lh:  7
+rh: -1
+i:  3
+End function OOF_SON
+result:  7 9000000377777
+lh:  4
+rh: -1
+i:  6
+End function OOF_SON
+oof_record:  7 9000000377777
+j:  34
+End of procedure OOF
+Begin function HAB_SON
+hab_son parameters:  14 1 2 4 8 16 32
+parameter s ok
+i:  28
+hab_son:  28  i:  32
+t is ok
+End function HAB_SON
+a:  28
+i:  15
+j:  2
+End of procedure HAB
+oof_rec_ptr: 000000015605
+oof_rec_ptr^:  5 15000000015610
+oof_rec_ptr^.next^:  22 222000000015613
+oof_rec_ptr^.next^.next^:  33 333000000377777
+neg_rec1: -1 1
+neg_rec2: -131072 131071
+flx_str^: Flextastic 
+k:  11
+x:  0.8414710
+Breakpoint #2 in Main Program at TST015@2/93
+>>.rem
+>>.rem use .with some more, and try assignments:
+>>.rem
+>>.w oof_rec_ptr^
+>>next^
+LHWORD: 22
+RHWORD: 222
+NEXT: 15613
+>>.w next^
+>>next^
+LHWORD: 33
+RHWORD: 333
+NEXT: NIL
+>>next^.lhword := 44
+>>next^.rhword := 444
+>>next^
+LHWORD: 44
+RHWORD: 444
+NEXT: NIL
+>>.o tst021@
+>>x
+     2.000000000
+>>x := 0.00012345678
+>>x
+ 0.0001234567808
+>>x := 999999.8765432
+>>x
+     999999.8750
+>>set81
+[2,4,6,8]
+>>set81 := [1,3,5,7]
+>>set81
+[1,3,5,7]
+>>set81 := [x]
+set81 := [x]
+           ^
+Illegal set element type.
+>>.rem
+>>.rem proceed to final breakpoint
+>>.rem
+>>.p
+j:  32
+End program TST015
+Breakpoint #0 in Main Program at TST015@2/95
+>>.dis b
+0 TST015@2/95  
+1 TST015@1/18  .if level > 0 then level
+2 TST015@2/93  
+>>.clear
+Clear all?  y
+>>.dis b
+No breakpoints set.
+>>.rem
+>>.rem Done.
+>>.rem
+>>.stop
+
+EXIT
+
+.
+.LOG
+494.63 tru
+terminal time: 0:16:03
+   

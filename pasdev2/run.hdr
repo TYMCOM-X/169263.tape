@@ -1,0 +1,62 @@
+(*   +--------------------------------------------------------------+
+     |                                                              |
+     |                            R U N                             |
+     |                            - - -                             |
+     |                                                              |
+     +--------------------------------------------------------------+
+     
+     MDSI, Company Confidential
+     
+     STARTED:  9/11/79
+     
+     PURPOSE:  RUN is a Pascal-callable procedure which will  execute
+        a  program  in  a  specified  file.  It  corresponds  to  the
+        operating system command ".RUN file".
+     
+     USAGE:
+     
+        external procedure run
+             (  filename: packed array [1..*] of char;
+                prompt: boolean );
+     
+     INPUT:
+     
+        FILENAME    is the name of the file containing the program to
+                    be  executed.  The  filename for RUN has the same
+                    assumptions   as   the   filename    in    Pascal
+                    input/output  calls,  as far as defaults, format,
+                    etc. are concerned.
+     
+        PROMPT      indicates whether the  program  is  to  take  its
+                    input from the terminal or from a temporary file.
+                    If PROMPT is false, the program will be run  just
+                    as if it had been executed with a ".RUN filename"
+                    command.  If PROMPT is  true,  the  program  will
+                    look  first  for  a  tmpcor  file named "NNN"; if
+                    there is no such tmpcor file,  the  program  will
+                    look  for  a  disk file named "###NNN.TMP", where
+                    ###  is  the  current  job  number.  "NNN"  is  a
+                    three-character abbreviation of the program name;
+                    for example, PAS for PASCAL, LNK for  LINK,  etc.
+                    The  documentation  of  any program which can use
+                    this feature should specify just  what  "NNN"  is
+                    for   that  program.  Note  that  when  a  Pascal
+                    program writes a file whose name begins with ###,
+                    the  ###  will automatically be replaced with the
+                    job number.
+     
+     EFFECTS:  The current program is terminated  (closing  any  open
+        files),  and  the specified program is run in its place.  RUN
+        may return to the calling program if the file  name  is  bad,
+        there is no such file, etc.  All files will already have been
+        closed in this case, however.
+     
+     ALGORITHM:  Uses the RUN UUO.
+     
+     NOTES:  RUN closes any open Pascal files with the Pascal  "CLOSE
+        ()" call.  Thus, it will not close any non-Pascal files which
+        may happen to be open.
+     
+     RESPONSIBLE:  N.  Faiman
+     
+     ---------------------------------------------------------------- *)

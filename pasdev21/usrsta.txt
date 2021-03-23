@@ -1,0 +1,38 @@
+
+
+
+
+                                                                   10/13/78
+
+
+
+     Entry: USRSTA     _____
+
+
+     Usage:
+
+          EXTERNAL PROCEDURE USRSTAT(VAR USRSTATS: USTATREC);
+
+     Output arguments:
+
+       USRSTATS.CRUS60
+               'HIGH PRECISION' CRUS USED BY USER'S JOB.  DIVIDE BY  60  TO
+               GET INTEGRAL NUMBER OF CRUS.
+
+       USRSTATS.DISKRDS
+               NUMBER OF DISK BLOCKS READ BY USER JOB.
+
+       USRSTATS.DISKWRS
+               NUMBER OF DISK BLOCKS WRITTEN BY USER JOB.
+
+       USRSTATS.RUNTIME
+               CURRENT RUNTIME OF USER'S JOB IN 80 NANOSECOND UNITS.
+
+       USRSTATS.ELAPTIME
+               CURRENT TIME ELAPSED SINCE JOB INITIATION IN SECONDS.
+
+     INCLUDE files required:
+
+       INFPAC.INC
+
+

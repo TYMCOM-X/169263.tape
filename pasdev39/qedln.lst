@@ -1,0 +1,3104 @@
+        File DSK:QEDLN.PAS[31024,332220]   Compiled 05-Nov-82 14:24   Pascal, Version 2A(463)
+
+        File DSK:QEDLN.PAS[31024,332220]   Compiled 05-Nov-82 14:24   Pascal, Version 2A(463)
+
+        File DSK:QEDLN.PAS[31024,332220]   Compiled 05-Nov-82 14:24   Pascal, Version 2A(463)
+
+        File DSK:QEDLN.PAS[31024,332220]   Compiled 05-Nov-82 14:24   Pascal, Version 2A(463)
+
+
+
+
+
+				 $$$ 	$$$$$	$$$$ 	$    	$   $
+				$   $	$    	 $  $	$    	$$  $
+				$   $	$    	 $  $	$    	$ $ $
+				$   $	$$$  	 $  $	$    	$  $$
+				$ $ $	$    	 $  $	$    	$   $
+				$  $ 	$    	 $  $	$    	$   $
+				 $$ $	$$$$$	$$$$ 	$$$$$	$   $
+
+
+				    DSK:QEDLN.PAS[31024,332220]
+
+
+Options in effect: 
+
+	NOCHECK, SPECIAL, NOMAP, NOSYMBOLS, NOCALLS, ASSEMBLY, NOXREF, TRACE, QBLOCKS, NOOPTIMIZE, 
+	CODE, NODEBUG, FINISH, NOGLOBAL, NOMAINSEG, NOOVERLAY, AUTOQUICK, SOURCE, NOSTANDARD, 
+	LENGTH (45), WIDTH (102), NOEXTLENGTH, STORAGE (2048), ALLOC (0), ENABLE(VAX)
+
+
+
+
+        File DSK:QEDLN.PAS[31024,332220]   Compiled 05-Nov-82 14:24   Pascal, Version 2A(463)
+
+        File DSK:QEDLN.PAS[31024,332220]   Compiled 05-Nov-82 14:24   Pascal, Version 2A(463)
+
+        File DSK:QEDLN.PAS[31024,332220]   Compiled 05-Nov-82 14:24   Pascal, Version 2A(463)
+
+        File DSK:QEDLN.PAS[31024,332220]   Compiled 05-Nov-82 14:24   Pascal, Version 2A(463)
+        File DSK:QEDLN.PAS[31024,332220]   Compiled 05-Nov-82 14:24   Pascal, Version 2A(463)
+
+        File DSK:QEDLN.PAS[31024,332220]   Compiled 05-Nov-82 14:24   Pascal, Version 2A(463)
+
+        File DSK:QEDLN.PAS[31024,332220]   Compiled 05-Nov-82 14:24   Pascal, Version 2A(463)
+
+        File DSK:QEDLN.PAS[31024,332220]   Compiled 05-Nov-82 14:24   Pascal, Version 2A(463)
+
+
+
+
+
+				 $$$ 	$$$$$	$$$$ 	$    	$   $
+				$   $	$    	 $  $	$    	$$  $
+				$   $	$    	 $  $	$    	$ $ $
+				$   $	$$$  	 $  $	$    	$  $$
+				$ $ $	$    	 $  $	$    	$   $
+				$  $ 	$    	 $  $	$    	$   $
+				 $$ $	$$$$$	$$$$ 	$$$$$	$   $
+
+
+				    DSK:QEDLN.PAS[31024,332220]
+
+
+Options in effect: 
+
+	NOCHECK, SPECIAL, NOMAP, NOSYMBOLS, NOCALLS, ASSEMBLY, NOXREF, TRACE, QBLOCKS, NOOPTIMIZE, 
+	CODE, NODEBUG, FINISH, NOGLOBAL, NOMAINSEG, NOOVERLAY, AUTOQUICK, SOURCE, NOSTANDARD, 
+	LENGTH (45), WIDTH (102), NOEXTLENGTH, STORAGE (2048), ALLOC (0), ENABLE(VAX)
+
+
+
+
+        File DSK:QEDLN.PAS[31024,332220]   Compiled 05-Nov-82 14:24   Pascal, Version 2A(463)
+
+        File DSK:QEDLN.PAS[31024,332220]   Compiled 05-Nov-82 14:24   Pascal, Version 2A(463)
+
+        File DSK:QEDLN.PAS[31024,332220]   Compiled 05-Nov-82 14:24   Pascal, Version 2A(463)
+
+        File DSK:QEDLN.PAS[31024,332220]   Compiled 05-Nov-82 14:24   Pascal, Version 2A(463)
+MODULE  QEDLN        DSK:QEDLN.PAS[31024,332220]                                       05-Nov-82 14:24
+SECTION 0                                                                                       PAGE 1
+
+    1	module qedln
+    2	  options special;
+    3	(*   +--------------------------------------------------------------+
+    4	     i                                                              i
+    5	     i                        b q e d l n                           i
+    6	     i                        - - - - - -                           i
+    7	     i                                                              i
+    8	     +--------------------------------------------------------------+
+    9	
+   10	     mdsi, company confidential
+   11	
+   12	     started: 21-apr-77
+   13	
+   14	     purpose: this package contains the basic routines which manage a
+   15	        qed text buffer.
+   16	
+   17	     usage:
+   18	        entry points...
+   19	          qinitbuf.....initialize a text buffer.
+   20	                      this routine should only be called once with a
+   21	                      buffer, prior to its first use.
+   22	          qdelbuf......delete (release) the contents of a text buffer.
+   23	                      whenever a buffer is to be reused, this routine
+   24	                      should be called, rather than qinitbuf.
+   25	          qgetline.....return the text of a line.
+   26	          qmodline.....change the text of a line.
+   27	          qaddline.....add a new line to the buffer.
+   28	          qdellines....delete line(s) from the buffer.
+   29	          movelines...move line(s) in the buffer.
+   30	          copylines...copy (duplicate) line(s) in the buffer.
+   31	
+   32	     requirements: this  package  uses  the qed string routines,  and
+   33	        the text returned by these routines  is  in  the  qed  string
+   34	        form.
+   35	
+   36	     algorithm: line  descriptors  are  maintained in a doubly linked
+   37	        list with header information in the passed buffer descriptor.
+   38	        the line descriptors in turn contain qed strings.
+   39	
+   40	     notes: since  any  of  the qed line operations may be broken out
+   41	        of,  care is taken in  the  management  of  the  line  chain.
+   42	        while  storage  may  be  lost  as  the result of breaks,  theMODULE  QEDLN        DSK:QEDLN.PAS[31024,332220]                                       05-Nov-82 14:24
+SECTION 0                                                                                       PAGE 2
+
+   43	        following strategy insures that  these  routines  will  never
+   44	        leave  the line chain in a confused state,  i.e.,  will never
+   45	        partially complete operations.
+   46	
+   47	        1.  lastlineno is always correct.
+   48	
+   49	        2.  getlinep and lastlinep may  not  be  defined  (are  nil),
+   50	        even  if  the  buffer  contains  text.  whenever an operation
+   51	        changes getlineno or lastlineno,  the corresponding  xxxlinep
+   52	        is niled first,  then updated after the xxxlineno is changed.
+   53	
+   54	        3.  the back line chain may be broken,  i.e.,  a qline  other
+   55	        than  the  first  one  may have prevlinep=nil.  however,  the
+   56	        forward chain is always complete.
+   57	
+   58	        4.  the definitive test of an empty buffer  is  lastlineno=0,
+   59	        in  which  case,  the other contents of the buffer are assumed
+   60	        to be arbitrary.
+   61	
+   62	     responsible: a. kortesoja
+   63	
+   64	     changes: 
+   65	        12/11/78 smr changed qfilewrite to check for write errors.
+   66	        12/11/78 smr added parameter to qfilewrite which indicates
+   67	                     whether new/old file prompting is desired.
+   68	
+   69	        7/30/79 P.Lee  Changed QSETBOUNDS & MAP to use an offset in
+   70	                        the buffer for bounded line addressing. Also
+   71	                        the added option of using the entire buffer
+   72	                        or the bounded buffer in bounding .
+   73	
+   74	       10/09/81 djm    Removed the $IF ANC switches from around procedures QTAG,
+   75	                       QTAGSET, and QTAGCLEAR.
+   76	
+   77	       10/12/81 djm    Replaced old MASK/UNMASK/PUSHESCAPE/ESCPOP/FIRESCAPE
+   78	                       attention handling with the new Exception Handling
+   79	                       constructs available in Pascal.
+   80	
+   81	       10/12/81 djm    Changed chr(15b) to cr.
+   82	
+   83	     ---------------------------------------------------------------- *)MODULE  QEDLN        DSK:QEDLN.PAS[31024,332220]                                       05-Nov-82 14:24
+SECTION 1            move                                                                       PAGE 3
+
+    2	(* MOVE is the ultimate procedure for all line manipulations, including
+    3	   additions, deletions, and real moves.  It handles all the bookkeeping
+    4	   for updating the special line numbers and pointers.  It is assumed that
+    5	   all line numbers and pointers passed to this routine are reasonable. *)
+    6	
+    7	
+    8	procedure move
+    9	     (  var buf: qbuffer;                       (* buffer to manipulate *)
+   10	        fln: qlineno;                           (* addr of first line of section to be moved, 
+	if
+   11	                                                   zero, lines are new additions from garblist
+	 *)
+   12	        flp: qlinep;                            (* ptr to above line *)
+   13	        lln: qlineno;                           (* addr of last line to be moved, if fln = 0 t
+	hen
+   14	                                                   this is #lines - 1 to yield proper count *)
+   15	        llp: qlinep;                            (* ptr to above line *)
+   16	        tln: qlineno;                           (* addr of line after which text is to be move
+	d *)
+   17	        tlp: qlinep   );                        (* ptr to above line, if nil, lines are added 
+	to
+   18	                                                   the list of lines to be discarded *)
+   19	
+   20	var cnt: qlineno;
+   21	    tlno: qlineno;                              (* tln adjusted for movements *)
+   22	begin
+   23	 with buf do begin
+   24	  cnt := lln - fln + 1;                         (* count of lines to move *)
+   25	  tlno := tln;
+   26	  mask(attention);
+   27	
+   28	
+   29	  (* slice out source lines from buffer if move or delete *)
+   30	
+   31	  if fln <> 0 then begin                        (* check for lines in buffer *)
+   32	    flp^.prevlinep^.nextlinep := llp^.nextlinep;    (* take off chain *)
+   33	    if llp^.nextlinep <> nil then 
+   34	      llp^.nextlinep^.prevlinep := flp^.prevlinep;
+   35	
+   36	    if fln <= lbound then                       (* adjust special line numbers *)
+   37	      if lbound > lln then lbound := lbound - cnt
+   38	        else begin                              (* lbound in lines moved, new lbound follows *MODULE  QEDLN        DSK:QEDLN.PAS[31024,332220]                                       05-Nov-82 14:24
+SECTION 1            move                                                                       PAGE 4
+
+	)
+   39	          lbound := fln;
+   40	          lboundp := llp^.nextlinep
+   41	        end;
+   42	
+   43	    if fln <= getlineno then
+   44	      if getlineno > lln then getlineno := getlineno - cnt
+   45	        else begin                              (* getlineno in lines move, new before them *)
+   46	          getlineno := fln - 1;
+   47	          getlinep := flp^.prevlinep
+   48	        end;
+   49	
+   50	    if fln <= hbound then
+   51	      if hbound > lln then hbound := hbound - cnt
+   52	        else begin                              (* hbound in lines moved, new before them *)
+   53	          hbound := fln - 1;
+   54	          hboundp := flp^.prevlinep
+   55	        end;
+   56	
+   57	    if fln <= lastlineno then
+   58	      if lastlineno > lln then lastlineno := lastlineno - cnt
+   59	        else begin                              (* last line in lines moved, new at new end of
+	 buffer *)
+   60	          lastlineno := fln - 1;
+   61	          lastlinep := flp^.prevlinep
+   62	        end;
+   63	
+   64	    if fln < tlno then tlno := tlno - cnt       (* addr of target may be affected too *)
+   65	  end
+   66	
+   67	
+   68	  (* if appending new lines, remove from garb list *)
+   69	
+   70	  else if llp = garblinep                       (* quick check to see that line is on list *)
+   71	    then garblinep := flp^.prevlinep;
+   72	
+   73	
+   74	  (* if deleting, add to list to be discarded *)
+   75	
+   76	  if tlp = nil then begin
+   77	    flp^.prevlinep := garblinep;                (* garb chain is backwards *)
+   78	    garblinep := llpMODULE  QEDLN        DSK:QEDLN.PAS[31024,332220]                                       05-Nov-82 14:24
+SECTION 1            move                                                                       PAGE 5
+
+   79	  end
+   80	
+   81	
+   82	  (* if moving or appending, add after target line *)
+   83	
+   84	  else begin
+   85	    llp^.nextlinep := tlp^.nextlinep;           (* thread source to target *)
+   86	    flp^.prevlinep := tlp;
+   87	
+   88	    if tlp^.nextlinep <> nil then               (* thread target to source *)
+   89	      tlp^.nextlinep^.prevlinep := llp;
+   90	    tlp^.nextlinep := flp;
+   91	
+   92	    if lastlineno = tlno then lastlinep := llp; (* adjust special hooks *)
+   93	    lastlineno := lastlineno + cnt;
+   94	    if tlno <= hbound then begin
+   95	      if tlno = hbound then hboundp := llp;
+   96	      hbound := hbound + cnt;
+   97	      if tlno = lbound - 1 then lboundp := flp
+   98	        else if tlno < lbound then lbound := lbound + cnt
+   99	    end
+  100	  end;
+  101	
+  102	  changes := true;
+  103	  unmask(attention);
+  104	 end
+  105	end;MODULE  QEDLN        DSK:QEDLN.PAS[31024,332220]                                       05-Nov-82 14:24
+SECTION 2            cleangarb                                                                  PAGE 6
+
+    2	(* CLEANGARB removes deleted (or unused) lines from the so-called garb list.
+    3	   The list is scanned backwards and one line at a time is deleted. This
+    4	   code runs unmasked; if interrupted, at most one line will be lost (i.e.
+    5	   unchained, but not disposed.) *)
+    6	
+    7	procedure cleangarb ( var buffer: qbuffer );
+    8	 var lp: qlinep;
+    9	 begin
+   10	  with buffer do begin
+   11	   while garblinep <> nil do begin              (* scan list and delete one at a time *)
+   12	     lp := garblinep;                           (* save current ptr in temp *)
+   13	     garblinep := garblinep^.prevlinep;
+   14	     dispose (lp)                               (* now delete, after stepping over it in chain
+	 *)
+   15	   end
+   16	  end
+   17	 end;MODULE  QEDLN        DSK:QEDLN.PAS[31024,332220]                                       05-Nov-82 14:24
+SECTION 3            findlinep                                                                  PAGE 7
+
+    2	(*    internal procedure to find the pointer to a passed lineno    *)
+    3	
+    4	procedure findlinep(var buf: qbuffer; lno: qlineno; var lp: qlinep);
+    5	
+    6	(* assumes that l is a good number *)
+    7	
+    8	
+    9	  procedure setlp(tp: qlinep);                  (* sets findlinep return value *)
+   10	  begin
+   11	    with buf do begin                           (*update buf info first*)
+   12	      mask(attention);
+   13	      getlineno := lno;
+   14	      getlinep := tp;
+   15	      unmask(attention)
+   16	    end (*with*);
+   17	    lp:= tp                                     (*now return pointer*)
+   18	  end (*setlp*);
+   19	
+   20	
+   21	  procedure search(beglineno: qlineno; beglinep: qlinep;
+   22	                   endlineno: qlineno; endlinep: qlinep);
+   23	    var tp: qlinep; i: qlineno; (*used in line search*)
+   24	  begin
+   25	    (*determine search direction*)
+   26	    if ((endlineno - lno) <= (lno - beglineno)) and (endlinep <> nil)
+   27	      then begin (*search backward from endlineno to lno*)
+   28	        tp:= endlinep;
+   29	        for i:= endlineno-1 downto lno do
+   30	          tp:= tp^.prevlinep
+   31	      end
+   32	      else begin (*search forward from beglineno to lno*)
+   33	        tp:= beglinep;
+   34	        for i:= beglineno+1 to lno do
+   35	          tp:= tp^.nextlinep
+   36	      end;
+   37	    setlp(tp) (*update getline information*)
+   38	  end (*search*);
+   39	
+   40	
+   41	begin                                           (*findline*)
+   42	  with buf do
+   43	    if lno < getlinenoMODULE  QEDLN        DSK:QEDLN.PAS[31024,332220]                                       05-Nov-82 14:24
+SECTION 3            findlinep                                                                  PAGE 8
+
+   44	      then if lno < lbound
+   45	        then search (0, firstlinep, getlineno, getlinep)
+   46	        else if lno < hbound
+   47	          then search (lbound, lboundp, getlineno, getlinep)
+   48	          else search (hbound, hboundp, getlineno, getlinep)
+   49	      else if lno < lbound
+   50	        then search (getlineno, getlinep, lbound, lboundp)
+   51	        else if lno <= hbound
+   52	          then search (getlineno, getlinep, hbound, hboundp)
+   53	          else search (getlineno, getlinep, lastlineno, lastlinep)
+   54	end (*findline*);MODULE  QEDLN        DSK:QEDLN.PAS[31024,332220]                                       05-Nov-82 14:24
+SECTION 4            utilities                                                                  PAGE 9
+
+    2	(*********** text buffer manager utility routines ***********)
+    3	
+    4	(* function to transform bounded linenos into absolute ones *)
+    5	
+    6	function map
+    7	(       var buffer: qbuffer;                    (* working buffer *)
+    8	        line: qlineno                           (* line number to transform *)
+    9	                ): qlineno;                     (* mapped result *)
+   10	
+   11	begin
+   12	  map := line + buffer.lbound - buffer.offset
+   13	end;                                            (* map *)
+   14	
+   15	(*    procedure to check a line number    *)
+   16	
+   17	function chkline(var buf: qbuffer; l: qlineno; var err: qerrcode): boolean;
+   18	begin
+   19	  err:= qok;
+   20	  if (l < buf.lbound) or (l > buf.hbound) then err:= qbadln;
+   21	  chkline:= (err=qok)
+   22	end (*chkline*);
+   23	
+   24	
+   25	(*    procedure to check a line range    *)
+   26	
+   27	function chkrange(var buf: qbuffer; f,l: qlineno; var err: qerrcode): boolean;
+   28	begin
+   29	  err:= qok;
+   30	  if f > l then err:= qbadrn
+   31	  else if l > buf.hbound then err:= qbadub
+   32	  else if f < buf.lbound then err:= qbadlb;
+   33	  chkrange:= (err=qok)
+   34	end (*chkrange*);MODULE  QEDLN        DSK:QEDLN.PAS[31024,332220]                                       05-Nov-82 14:24
+SECTION 5            makeline                                                                  PAGE 10
+
+    2	(* procedure to create a qed line record, does not chain it in *)
+    3	
+    4	function makeline (var buf: qbuffer; line: qstring): qlinep;
+    5	 type
+    6	   synlinep = ^synline;                         (* synthetic line *)
+    synline =
+    8	     packed record
+    9	       tag: boolean;            (* ANC's "marked" line marker *)
+   10	       prevlinep, nextlinep: qlinep;
+   11	       strng: packed array[1..*] of char
+   12	     end;
+   13	 var synp: synlinep;
+   14	     np: qlinep;
+   15	 begin
+   16	  new (synp, length (line));                    (* alloc line of appropriate length *)
+   17	  synp^.tag := false;                           (* line is initially unmarked *)
+   18	  synp^.strng[1:length(line)]:=line;            (* copy only to length allocated *)
+   19	  np := address (synp^);                        (* coerce the pointer *)
+   20	  with np^ do begin
+   21	    nextlinep := nil;
+   22	    prevlinep := buf.garblinep;                 (* add to dispose list, in case we lose it *)
+   23	    if buf.garblinep <> nil then
+   24	      buf.garblinep^.nextlinep := np;
+   25	    buf.garblinep := np
+   26	  end;
+   27	  makeline := np
+   28	 end;                                           (* makeline *)MODULE  QEDLN        DSK:QEDLN.PAS[31024,332220]                                       05-Nov-82 14:24
+SECTION 6            qdelbuf                                                                   PAGE 11
+
+    2	
+    3	(*    procedure to delete a buffer    *)
+    4	
+    5	public procedure qdelbuf(var buf: qbuffer);
+    6	  var err: qerrcode;                            (*we need it but we ignore them*)
+    7	begin                                           (*qdelbuf*)
+    8	  with buf do begin
+    9	    if lastlineno>0 then begin                  (*something to release*)
+   10	      move (buf, 1, firstlinep^.nextlinep, lastlineno, lastlinep, 0, nil);  (* move lines to g
+	arb list *)
+   11	      cleangarb (buf);                          (* dispose the lines *)
+   12	    end;
+   13	    dispose (firstlinep);                       (* get rid of zeroth line *)
+   14	    spreddispose (mark);                        (* dispose mark predicate *)
+   15	    mark := nil                                 (* for good measure *)
+   16	  end                                           (*with*)
+   17	end (*qdelbuf*);
+   18	MODULE  QEDLN        DSK:QEDLN.PAS[31024,332220]                                       05-Nov-82 14:24
+SECTION 7            qinitbuf                                                                  PAGE 12
+
+    2	(*    procedure to initialize buffer for first time    *)
+    3	
+    4	public procedure qinitbuf(var buf: qbuffer);
+    5	begin
+    6	  with buf do
+    7	  begin
+    8	    lastlineno := 0;
+    9	    getlineno := 0;
+   10	    lbound := 1;
+   11	    offset := 1;
+   12	    oldoffset := 1;
+   13	    hbound := 0;
+   14	    curlineno := 0;
+   15	    new (firstlinep);                           (* dummy zeroth line to make things easier *)
+   16	    with firstlinep^ do begin
+   17	      prevlinep := nil;
+   18	      nextlinep := nil
+   19	    end;
+   20	    lastlinep := firstlinep;
+   21	    getlinep := firstlinep;
+   22	    lboundp := nil;
+   23	    hboundp := firstlinep;
+   24	    garblinep := nil;
+   25	    curfile := '';
+   26	    curfileok := false;
+   27	    changes := false;
+   28	    mark := nil;
+   29	  end
+   30	end;                                            (* qinitbuf *)MODULE  QEDLN        DSK:QEDLN.PAS[31024,332220]                                       05-Nov-82 14:24
+SECTION 8            qgetline                                                                  PAGE 13
+
+    2	(*    function to return text of line    *)
+    3	
+    4	public function qgetline(var buf: qbuffer; l: qlineno; var err: qerrcode): qstring;
+    5	
+    6	var
+    7	  lp: qlinep;
+    8	  lno: qlineno;
+    9	
+   10	begin
+   11	  lno := map (buf, l);
+   12	  if not chkline(buf, lno, err) then qgetline:= ''
+   13	  else begin
+   14	    findlinep(buf, lno, lp);
+   15	    qgetline := substr (lp^.source, 1, length (lp^.source))
+   16	  end
+   17	end (*qgetline*);
+   18	MODULE  QEDLN        DSK:QEDLN.PAS[31024,332220]                                       05-Nov-82 14:24
+SECTION 9            qmodline                                                                  PAGE 14
+
+    2	
+    3	public procedure qmodline(var buf: qbuffer; l: qlineno; newtext: qstring;
+    4	  var err: qerrcode);
+    5	
+    6	var
+    7	  lp,np: qlinep;
+    8	  lno: qlineno;
+    9	
+   10	begin
+   11	  lno := map (buf, l);
+   12	  if chkline(buf, lno, err) then begin
+   13	    findlinep(buf, lno, lp);
+   14	    np := makeline (buf, newtext);
+   15	    mask(attention);
+   16	    with np^ do begin
+   17	      buf.garblinep := prevlinep;               (* remove new from garb list *)
+   18	      prevlinep := lp^.prevlinep;               (* chain new line to neighbors of old line *)
+   19	      nextlinep := lp^.nextlinep
+   20	    end;
+   21	    with lp^ do begin                           (* chain neighbors to new line *)
+   22	      prevlinep^.nextlinep := np;               (* make forward chain *)
+   23	      if nextlinep <> nil                       (* build backward chain *)
+   24	        then nextlinep^.prevlinep := np
+   25	        else buf.lastlinep := np;
+   26	      if lno = buf.lbound then buf.lboundp := np;   (* if this was special line, reset ptr *)
+   27	      if lno = buf.hbound then buf.hboundp := np;
+   28	      if lno = buf.getlineno then buf.getlinep := np;
+   29	    end;
+   30	    lp^.prevlinep := buf.garblinep;             (* put old on garb list to dispose *)
+   31	    buf.garblinep := lp;
+   32	    buf.changes := true;
+   33	    unmask(attention);
+   34	    cleangarb (buf)                             (* dispose old line *)
+   35	  end
+   36	end (*qmodline*);MODULE  QEDLN        DSK:QEDLN.PAS[31024,332220]                                       05-Nov-82 14:24
+SECTION 10           qaddline                                                                  PAGE 15
+
+    2	(*    procedure to add a line to a buffer    *)
+    3	
+    4	public procedure qaddline(var buf: qbuffer; l: qlineno; text:qstring;
+    5	  var err: qerrcode);
+    6	
+    7	var
+    8	  lno: qlineno;
+    9	  np, lp: qlinep;
+   10	
+   11	begin
+   12	  err := qok;                                   (* assume success *)
+   13	  lno := map (buf, l);
+   14	  if lno > buf.hbound then err := qbadln
+   15	  else begin
+   16	    findlinep (buf, lno, lp);                   (* find line to append to *)
+   17	    np := makeline (buf, text);                 (* create a line with text *)
+   18	    move (buf, 0, np, 0, np, lno, lp);          (* move from garblist to buffer *)
+   19	  end
+   20	end (*qaddline*);MODULE  QEDLN        DSK:QEDLN.PAS[31024,332220]                                       05-Nov-82 14:24
+SECTION 11           qdellines                                                                 PAGE 16
+
+    2	(*    procedure to delete line(s) from buffer    *)
+    3	
+    4	public procedure qdellines (var buf: qbuffer; f,l: qlineno; var err: qerrcode);
+    5	
+    6	var
+    7	  fp,
+    8	  lp: qlinep;
+    9	  fno,
+   10	  lno: qlineno;
+   11	begin
+   12	  fno := map (buf, f);
+   13	  lno := map (buf, l);
+   14	  if chkrange (buf, fno, lno, err) then begin
+   15	    findlinep (buf, fno, fp);                   (* find addressed lines *)
+   16	    findlinep (buf, lno, lp);
+   17	    move (buf, fno, fp, lno, lp, 0, nil);       (* move to garb list *)
+   18	    cleangarb (buf);                            (* and dispose *)
+   19	    err := qok
+   20	  end
+   21	end (*qdellines*);MODULE  QEDLN        DSK:QEDLN.PAS[31024,332220]                                       05-Nov-82 14:24
+SECTION 12           qbuflength                                                                PAGE 17
+
+    2	public function qbuflength ( var buf: qbuffer ): qlineno;
+    3	 begin
+    4	   with buf do begin
+    5	     qbuflength := hbound - lbound + 1
+    6	   end
+    7	 end;
+    8	
+    9	public function qdollar_val ( var buf: qbuffer ): qlineno;
+   10	  begin
+   11	    qdollar_val := qbuflength (buf) + buf.offset - 1
+   12	  end;    (* qdollar_val *)
+   13	
+   14	public function qfirst_val ( var buf: qbuffer ): qlineno;
+   15	  begin
+   16	    qfirst_val := buf.offset
+   17	  end;    (* qfirst_val *)MODULE  QEDLN        DSK:QEDLN.PAS[31024,332220]                                       05-Nov-82 14:24
+SECTION 13           qmovelines                                                                PAGE 18
+
+    2	public procedure qmovelines
+    3	(       var buffer: qbuffer;                    (* working buffer *)
+    4	        first, last: qlineno;                   (* range of lines to be moved *)
+    5	        dest: qlineno;                          (* where to move them to *)
+    6	        var err: qerrcode);                     (* error report *)
+    7	
+    8	var
+    9	  fno,
+   10	  lno,
+   11	  dno:          qlineno;                        (* for line number mapping *)
+   12	  firstp,
+   13	  lastp:        qlinep;                         (* temporary pointers *)
+   14	  destp:        qlinep;                         (* where to re-attach lines *)
+   15	
+   16	begin
+   17	  fno := map (buffer, first);
+   18	  lno := map (buffer, last);
+   19	  dno := map (buffer, dest);
+   20	  if not chkrange (buffer, fno, lno, err) then return;
+   21	  if not ((dno = buffer.lbound - 1) orif (chkline (buffer, dno, err))) then return;
+   22	  if (fno <= dno) and (dno <= lno) then begin   (* target within lines to be moved *)
+   23	    err := qbadmovela;
+   24	    return
+   25	  end;
+   26	  findlinep (buffer, fno, firstp);
+   27	  findlinep (buffer, lno, lastp);
+   28	  findlinep (buffer, dno, destp);
+   29	  move (buffer, fno, firstp, lno, lastp, dno, destp);   (* do it *)
+   30	end;MODULE  QEDLN        DSK:QEDLN.PAS[31024,332220]                                       05-Nov-82 14:24
+SECTION 14           qcopylines                                                                PAGE 19
+
+    2	public procedure qcopylines
+    3	(       var buffer: qbuffer;                    (* working buffer *)
+    4	        first, last: qlineno;                   (* range of lines to copy *)
+    5	        dest: qlineno;                          (* where to copy them to *)
+    6	        var err: qerrcode);                     (* error report *)
+    7	
+    8	var
+    9	  source:       qstring;                        (* to hold text of lines to be copied *)
+   10	  idx:          qlineno;                        (* counter for lines *)
+   11	  fno,
+   12	  lno,
+   13	  dno:          qlineno;                        (* for line number mapping *)
+   14	  firstp,
+   15	  lastp,
+   16	  destp:        qlinep;                         (* working pointers *)
+   17	
+   18	begin
+   19	  fno := map (buffer, first);
+   20	  lno := map (buffer, last);
+   21	  dno := map (buffer, dest);
+   22	  if not chkrange (buffer, fno, lno, err) then return;
+   23	  if not ((dno = buffer.lbound - 1) orif (chkline (buffer, dno, err))) then return;
+   24	
+   25	  (* construct copy of lines to move on garb list *)
+   26	
+   27	  cleangarb (buffer);                           (* not really necessary, but good form *)
+   28	  firstp := nil;                                (* to check if first line copied *)
+   29	  for idx := first to last do begin             (* copy lines, use relative #s with qgetline *
+	)
+   30	    source := qgetline (buffer, idx, err);      (* get text of line *)
+   31	    if err <> qok then return;
+   32	    lastp := makeline (buffer, source);         (* append copy to garb list *)
+   33	    if firstp = nil then firstp := lastp        (* remember start *)
+   34	  end;
+   35	
+   36	  (* move copy of lines into buffer *)
+   37	
+   38	  findlinep (buffer, dno, destp);
+   39	  move (buffer, 0, firstp, lno-fno, lastp, dno, destp)
+   40	
+   41	end;                                            (* qcopylines *)MODULE  QEDLN        DSK:QEDLN.PAS[31024,332220]                                       05-Nov-82 14:24
+SECTION 15           bounding utilities                                                        PAGE 20
+
+    2	(* routine to set the buffer offset for addressing bounded lines *)
+    3	public procedure qsetoffset (newoffset: qlineno; var buffer: qbuffer);
+    4	begin
+    5	  buffer.oldoffset := buffer.offset;
+    6	  buffer.offset := newoffset
+    7	end;
+    8	
+    9	public procedure qsetbounds (var buffer: qbuffer; low, high: qlineno;
+   10	        absolute: boolean; var err: qerrcode);
+   11	
+   12	var
+   13	  tempoffset: qlineno;
+   14	  tempp: qlinep;                                (* temporary storage *)
+   15	  fno,
+   16	  lno: qlineno;                                 (* for bound conversion *)
+   17	
+   18	begin
+   19	  tempoffset := buffer.offset;
+   20	  if absolute then buffer.offset := buffer.lbound
+   21	  else buffer.offset := buffer.oldoffset;
+   22	  fno := map (buffer, low);
+   23	  lno := map (buffer, high);
+   24	  if chkrange (buffer, fno, lno, err) then
+   25	  with buffer do
+   26	  begin
+   27	    mask(attention);
+   28	    findlinep (buffer, fno, tempp);
+   29	    findlinep (buffer, lno, hboundp);
+   30	    lboundp := tempp;
+   31	    lbound := fno - offset + 1;
+   32	    hbound := lno - offset + 1;
+   33	    unmask(attention)
+   34	  end;
+   35	  buffer.offset := tempoffset;
+   36	  buffer.curlineno := qfirst_val (buffer)
+   37	end (* qsetbounds *);
+   38	
+   39	
+   40	
+   41	public procedure qunbound (var buffer: qbuffer; var err: qerrcode);
+   42	begin
+   43	  err := qok;MODULE  QEDLN        DSK:QEDLN.PAS[31024,332220]                                       05-Nov-82 14:24
+SECTION 15           bounding utilities                                                        PAGE 21
+
+   44	  mask(attention);
+   45	  with buffer do
+   46	  begin
+   47	    lbound := 1;
+   48	    lboundp := firstlinep^.nextlinep;
+   49	    hbound := lastlineno;
+   50	    offset := 1;
+   51	    hboundp := lastlinep
+   52	  end;
+   53	  unmask(attention)
+   54	end (* qunbound *);MODULE  QEDLN        DSK:QEDLN.PAS[31024,332220]                                       05-Nov-82 14:24
+SECTION 16           qfileappend                                                               PAGE 22
+
+    2	
+    3	var
+    4	  f: text;                                      (* kludge around brain-damage *)
+    5	
+    6	public procedure qfileappend
+    7	(       var buffer: qbuffer;                    (* working buffer *)
+    8	        fname: file_id;                 (* file to read text from *)
+    9	        where: qlineno;                         (* where to append text *)
+   10	        var cnt: qlineno;                       (* number of lines appended *)
+   11	        var err: qerrcode);                     (* error report *)
+   12	
+   13	
+   14	var
+   15	  idx: qstringidx;
+   16	  ch: char;
+   17	  whereno: qlineno;                             (* mapped address *)
+   18	  tline: qstring;
+   19	  first, last, wherep: qlinep;
+   20	
+   21	begin
+   22	  err := qok;
+   23	  whereno := map (buffer, where);
+   24	  if whereno > buffer.hbound then begin
+   25	    err := qbadln;
+   26	    return
+   27	  end;
+   28	
+   29	  cnt := 0;                                     (* leave cnt of zero, if open fails *)
+   30	  qopenfile (f, fname, '', qinput_mode, [qio_ascii], err);
+   31	  if err = qok then
+   32	  begin
+   33	    first := nil;
+   34	    loop
+   35	      if eoln (f) then readln (f);
+   36	    exit if eof (f) or (err <> qok);
+   37	      read(f,tline);
+   38	      idx:= length(tline);
+   39	      if (idx > 0) andif (tline[idx] = cr) then
+   40	        tline := substr (tline, 1, idx-1);
+   41	      mask(attention);
+   42	      last := makeline (buffer, tline);         (* alloc on garb list *)
+   43	      if first = nil then first := last;        (* remember first *)MODULE  QEDLN        DSK:QEDLN.PAS[31024,332220]                                       05-Nov-82 14:24
+SECTION 16           qfileappend                                                               PAGE 23
+
+   44	      unmask(attention);
+   45	      cnt := cnt + 1
+   46	    end;
+   47	    if cnt > 0 then begin                       (* don't move zero lines *)
+   48	      findlinep (buffer, whereno, wherep);      (* find line at which to insert text *)
+   49	      move (buffer, 0, first, cnt-1, last, whereno, wherep);    (* move lines into buffer *)
+   50	    end;
+   51	    if (buffer.lastlineno = cnt) and (err = qok) then begin     (* append into empty buffer *)
+   52	      buffer.changes := false;
+   53	      buffer.curfile := filename (f);
+   54	      buffer.curfileok := true
+   55	    end;
+   56	    close (f);
+   57	  end;
+   58	  exception
+   59	    others: begin
+   60	              mask(attention);
+   61	              close(f);
+   62	              cleangarb(buffer);
+   63	              unmask(attention);
+   64	              signal();
+   65	            end;
+   66	end;                                            (* qfileappend *)MODULE  QEDLN        DSK:QEDLN.PAS[31024,332220]                                       05-Nov-82 14:24
+SECTION 17           qttyappend                                                                PAGE 24
+
+    2	public procedure qttyappend
+    3	(       var buffer: qbuffer;                    (* working buffer *)
+    4	        where: qlineno;                         (* where to append text *)
+    5	        var cnt: qlineno;                       (* number of lines appended *)
+    6	        var err: qerrcode);                     (* error report *)
+    7	
+    8	var
+    9	  line: qstring;
+   10	  ch: char;
+   11	  linenum: qlineno;
+   12	  done: boolean;
+   13	
+   14	begin
+   15	  ttbrk;
+   16	  linenum := where;
+   17	  err := qok;
+   18	(*if where = 0 then line := ''                  (* get text of previous line to edit *)
+   19	  else line := qgetline (buffer, where, err);
+   20	  if err <> qok then return;    previous line editing deleted! *)
+   21	  done := false;
+   22	  while (err = qok) and (not done) do
+   23	  begin
+   24	    line := qread ;
+   25	    if (length (line) = 1) andif (line [1] = '.') then done := true
+   26	    else
+   27	    begin
+   28	      qaddline (buffer, linenum, line, err);
+   29	      linenum := linenum + 1
+   30	    end;
+   31	  end;
+   32	  if linenum > where then buffer.changes := true;
+   33	  cnt := linenum - where
+   34	end (* qttyappend *);MODULE  QEDLN        DSK:QEDLN.PAS[31024,332220]                                       05-Nov-82 14:24
+SECTION 18           qfilewrite                                                                PAGE 25
+
+    2	
+    3	public procedure qfilewrite                     (* write text to file *)
+    4	(       var buffer: qbuffer;                    (* buffer to write from *)
+    5	        fname: file_id;                 (* file to write to *)
+    6	        fn, ln: qlineno;                        (* range to write *)
+    7	        confirm: boolean;                       (* new/old file prompting? *)
+    8	        var err: qerrcode);                     (* error report *)
+    9	
+   10	var
+   11	  fno, lno: qlineno;
+   12	  flp, llp: qlinep;
+   13	  lineno: qlineno;
+   14	  line: qstring;
+   15	  options_set: qiooption_set;
+   16	
+   17	begin
+   18	  fno := map (buffer, fn);  lno := map (buffer, ln);
+   19	  if not chkrange (buffer, fno, lno, err) then return;
+   20	  if confirm then options_set := [qio_confirm]
+   21	  else options_set := [];
+   22	  qopenfile (f, fname, '', qoutput_mode, options_set, err);
+   23	  if err = qok then
+   24	  begin
+   25	    findlinep (buffer, fno, flp);
+   26	    findlinep (buffer, lno, llp);
+   27	    loop
+   28	      writeln (f, flp^.source);
+   29	    exit if not eof(f) do err := qwrterr;
+   30	    exit if flp = llp;
+   31	      flp := flp^.nextlinep
+   32	    end;
+   33	    if (fno = 1) and (lno = buffer.lastlineno) and (err = qok) then
+   34	    begin
+   35	      buffer.changes := false;
+   36	      buffer.curfile := filename (f);
+   37	      buffer.curfileok := true
+   38	    end;
+   39	    close (f);
+   40	  end
+   41	  else if err = qnofile then err := qok;        (* user said NO to confirm *)
+   42	  exception
+   43	    others: beginMODULE  QEDLN        DSK:QEDLN.PAS[31024,332220]                                       05-Nov-82 14:24
+SECTION 18           qfilewrite                                                                PAGE 26
+
+   44	              mask(attention);
+   45	              close(f);
+   46	              ttwrite (prompt [bad_write]);
+   47	              ttbrk;
+   48	              unmask(attention);
+   49	              signal();
+   50	            end;
+   51	end;                                            (* qfilewrite *)MODULE  QEDLN        DSK:QEDLN.PAS[31024,332220]                                       05-Nov-82 14:24
+SECTION 19           qtag                                                                      PAGE 27
+
+    2	public function qtag (var buf: qbuffer;         (* the buffer *)
+    3	                      line: qlineno ):          (* the line to test *)
+    4	                        boolean;                (* result *)
+    5	(*
+    6	     This function returns TRUE if the specified line is "tagged".
+    7	   The line number is taken to be a line number in the bounded buffer,
+    8	   and out-of-range lines have the default value of FALSE.
+    9	*)
+   10	
+   11	var lp: qlinep;
+   12	
+   13	begin
+   14	  if (line < qfirst_val(buf)) or (line > qdollar_val(buf)) then qtag := false
+   15	  else begin
+   16	    findlinep (buf, map(buf,line), lp);
+   17	    qtag := lp^.tag
+   18	  end
+   19	end;    (* QTAG *)MODULE  QEDLN        DSK:QEDLN.PAS[31024,332220]                                       05-Nov-82 14:24
+SECTION 20           qtagset                                                                   PAGE 28
+
+    2	public procedure qtagset (var buf: qbuffer;     (* the buffer *)
+    3	                          line: qlineno;        (* line to tag *)
+    4	                          tag: boolean;         (* the tag *)
+    5	                          var err: qerrcode);   (* error code *)
+    6	(*
+    7	     Procedure to set/clear a tag on a specified line.  Returns
+    8	   with qerrcode = QBADLN if a non-existent line (or one outside
+    9	   the currently bounded region) is passed.
+   10	*)
+   11	
+   12	var lp: qlinep;
+   13	
+   14	begin
+   15	  if (line < qfirst_val(buf)) or (line > qdollar_val(buf)) then err := qbadln
+   16	  else begin
+   17	    findlinep (buf,map(buf,line),lp);
+   18	    lp^.tag := tag
+   19	  end
+   20	end;            (* QTAGSET *)MODULE  QEDLN        DSK:QEDLN.PAS[31024,332220]                                       05-Nov-82 14:24
+SECTION 21           qtagclear                                                                 PAGE 29
+
+    2	public procedure qtagclear (var buf: qbuffer);
+    3	(*
+    4	     Procedure to clear all of the tags in the bounded buffer.
+    5	*)
+    6	
+    7	var
+    8	  lp: qlinep;
+    9	  line: qlineno;
+   10	
+   11	begin
+   12	  for line := buf.lbound to buf.hbound do begin
+   13	    findlinep (buf,line,lp);
+   14	    lp^.tag := false
+   15	  end (* for *)
+   16	end.            (* QTAGCLEAR *)
+
+File   level   on page     name
+
+  0	 0	    1	DSK:QEDLN.PAS[31024,332220]
+
+
+
+Section   in file   on page     title
+
+    15	      0	        20    bounding utilities
+     2	      0	         6    cleangarb
+     3	      0	         7    findlinep
+     5	      0	        10    makeline
+     1	      0	         3    move
+    10	      0	        15    qaddline
+    12	      0	        17    qbuflength
+    14	      0	        19    qcopylines
+     6	      0	        11    qdelbuf
+    11	      0	        16    qdellines
+    16	      0	        22    qfileappend
+    18	      0	        25    qfilewrite
+     8	      0	        13    qgetline
+     7	      0	        12    qinitbuf
+     9	      0	        14    qmodline
+    13	      0	        18    qmovelines
+    19	      0	        27    qtag
+    21	      0	        29    qtagclear
+    20	      0	        28    qtagset
+    17	      0	        24    qttyappend
+     4	      0	         9    utilities
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   		.TITLE	QEDLN
+	;
+	;	VAX Checkout Code Generator,  Nov 5, 1982   02:25:22 pm
+	;
+
+		.PSECT	PAX_STATIC,LONG,CON,NOEXE,LCL,PIC,NOSHR,RD,WRT,REL
+	STATIC.:
+
+		.BLKB	4
+
+	;
+	;	Begin subroutine MOVE
+	;
+
+		.PSECT	PAX_CODE......B,LONG,CON,EXE,LCL,PIC,SHR,RD,NOWRT,REL
+
+00000	C.1:	.WORD	C.1-C.1
+00002		.WORD	4
+00004		.ASCII	"MOVE"
+
+00008	B.3:	.WORD	^M<R9,R10,R11,IV>
+0000A		CLRL  	-(SP)
+0000C		PUSHAL	C.1
+0000F		SUBL2 	S^#12,SP
+
+00012	L.1:					; LINE 1/22
+						; LINE 1/23
+00012		MOVAB 	@4(AP),R11		;   BUF
+
+00016	L.2:					; LINE 1/23
+						; LINE 1/24
+00016		SUBL3 	8(AP),16(AP),R10	;   FLN  LLN
+0001C		ADDL3 	S^#1,R10,-16(FP)	;   CNT
+						; LINE 1/25
+00021		MOVL  	24(AP),-20(FP)		;   TLN  TLNO
+						; LINE 1/26
+00026		PUSHAL	PAX_EXC.ATTN		;   ATTENTION
+0002C		CALLS 	S^#1,PAX_EXC.MASK
+						; LINE 1/31
+00033		TSTL  	8(AP)			;   FLN
+00036		BNEQ  	.+4
+00038		BRW   	L.32
+
+0003B	L.3:					; LINE 1/31
+						; LINE 1/320003B		MOVAB 	@12(AP),R10		;   FLP
+0003F		MOVAB 	@1(R10),R10
+00043		MOVAB 	@20(AP),R9		;   LLP
+00047		MOVL  	5(R9),5(R10)
+						; LINE 1/33
+0004C		MOVAB 	@20(AP),R10		;   LLP
+00050		CMPL  	5(R10),I^#-268435456
+00058		BEQL  	L.5
+
+0005A	L.4:					; LINE 1/34
+0005A		MOVAB 	@20(AP),R10		;   LLP
+0005E		MOVAB 	@5(R10),R10
+00062		MOVAB 	@12(AP),R9		;   FLP
+00066		MOVL  	1(R9),1(R10)
+
+0006B	L.5:					; LINE 1/36
+0006B		CMPL  	8(AP),28(R11)		;   FLN
+00070		BGTRU 	L.11
+
+00072	L.6:					; LINE 1/37
+00072		CMPL  	28(R11),16(AP)		;   LLN
+00077		BLEQU 	L.8
+
+00079	L.7:					; LINE 1/37
+00079		SUBL3 	-16(FP),28(R11),28(R11)	;   CNT
+00080		BRB   	L.10
+
+00082	L.8:
+	L.9:					; LINE 1/38
+						; LINE 1/39
+00082		MOVL  	8(AP),28(R11)		;   FLN
+						; LINE 1/40
+00087		MOVAB 	@20(AP),R10		;   LLP
+0008B		MOVL  	5(R10),36(R11)
+
+00090	L.10:
+	L.11:					; LINE 1/41
+						; LINE 1/43
+00090		CMPL  	8(AP),12(R11)		;   FLN
+00095		BGTRU 	L.17
+
+00097	L.12:					; LINE 1/44
+00097		CMPL  	12(R11),16(AP)		;   LLN
+0009C		BLEQU 	L.140009E	L.13:					; LINE 1/44
+0009E		SUBL3 	-16(FP),12(R11),12(R11)	;   CNT
+000A5		BRB   	L.16
+
+000A7	L.14:
+	L.15:					; LINE 1/45
+						; LINE 1/46
+000A7		SUBL3 	S^#1,8(AP),12(R11)	;   FLN
+						; LINE 1/47
+000AD		MOVAB 	@12(AP),R10		;   FLP
+000B1		MOVL  	1(R10),8(R11)
+
+000B6	L.16:
+	L.17:					; LINE 1/48
+						; LINE 1/50
+000B6		CMPL  	8(AP),32(R11)		;   FLN
+000BB		BGTRU 	L.23
+
+000BD	L.18:					; LINE 1/51
+000BD		CMPL  	32(R11),16(AP)		;   LLN
+000C2		BLEQU 	L.20
+
+000C4	L.19:					; LINE 1/51
+000C4		SUBL3 	-16(FP),32(R11),32(R11)	;   CNT
+000CB		BRB   	L.22
+
+000CD	L.20:
+	L.21:					; LINE 1/52
+						; LINE 1/53
+000CD		SUBL3 	S^#1,8(AP),32(R11)	;   FLN
+						; LINE 1/54
+000D3		MOVAB 	@12(AP),R10		;   FLP
+000D7		MOVL  	1(R10),40(R11)
+
+000DC	L.22:
+	L.23:					; LINE 1/55
+						; LINE 1/57
+000DC		CMPL  	8(AP),20(R11)		;   FLN
+000E1		BGTRU 	L.29
+
+000E3	L.24:					; LINE 1/58
+000E3		CMPL  	20(R11),16(AP)		;   LLN
+000E8		BLEQU 	L.26
+
+000EA	L.25:					; LINE 1/58000EA		SUBL3 	-16(FP),20(R11),20(R11)	;   CNT
+000F1		BRB   	L.28
+
+000F3	L.26:
+	L.27:					; LINE 1/59
+						; LINE 1/60
+000F3		SUBL3 	S^#1,8(AP),20(R11)	;   FLN
+						; LINE 1/61
+000F9		MOVAB 	@12(AP),R10		;   FLP
+000FD		MOVL  	1(R10),4(R11)
+
+00102	L.28:
+	L.29:					; LINE 1/62
+						; LINE 1/64
+00102		CMPL  	8(AP),-20(FP)		;   FLN  TLNO
+00107		BGEQU 	L.31
+
+00109	L.30:					; LINE 1/64
+00109		SUBL3 	-16(FP),-20(FP),-20(FP)	;   CNT  TLNO  TLNO
+
+00110	L.31:					; LINE 1/65
+00110		BRB   	L.35
+
+00112	L.32:					; LINE 1/70
+00112		CMPL  	20(AP),24(R11)		;   LLP
+00117		BNEQ  	L.34
+
+00119	L.33:					; LINE 1/71
+00119		MOVAB 	@12(AP),R10		;   FLP
+0011D		MOVL  	1(R10),24(R11)
+
+00122	L.34:
+	L.35:					; LINE 1/76
+00122		CMPL  	28(AP),I^#-268435456	;   TLP
+0012A		BNEQ  	L.37
+
+0012C	L.36:					; LINE 1/76
+						; LINE 1/77
+0012C		MOVAB 	@12(AP),R10		;   FLP
+00130		MOVL  	24(R11),1(R10)
+						; LINE 1/78
+00135		MOVL  	20(AP),24(R11)		;   LLP
+						; LINE 1/79
+0013A		BRW   	L.520013D	L.37:
+	L.38:					; LINE 1/84
+						; LINE 1/85
+0013D		MOVAB 	@20(AP),R10		;   LLP
+00141		MOVAB 	@28(AP),R9		;   TLP
+00145		MOVL  	5(R9),5(R10)
+						; LINE 1/86
+0014A		MOVAB 	@12(AP),R10		;   FLP
+0014E		MOVL  	28(AP),1(R10)		;   TLP
+						; LINE 1/88
+00153		MOVAB 	@28(AP),R10		;   TLP
+00157		CMPL  	5(R10),I^#-268435456
+0015F		BEQL  	L.40
+
+00161	L.39:					; LINE 1/89
+00161		MOVAB 	@28(AP),R10		;   TLP
+00165		MOVAB 	@5(R10),R10
+00169		MOVL  	20(AP),1(R10)		;   LLP
+
+0016E	L.40:					; LINE 1/90
+0016E		MOVAB 	@28(AP),R10		;   TLP
+00172		MOVL  	12(AP),5(R10)		;   FLP
+						; LINE 1/92
+00177		CMPL  	20(R11),-20(FP)		;   TLNO
+0017C		BNEQ  	L.42
+
+0017E	L.41:					; LINE 1/92
+0017E		MOVL  	20(AP),4(R11)		;   LLP
+
+00183	L.42:					; LINE 1/93
+00183		ADDL3 	-16(FP),20(R11),20(R11)	;   CNT
+						; LINE 1/94
+0018A		CMPL  	-20(FP),32(R11)		;   TLNO
+0018F		BGTRU 	L.51
+
+00191	L.43:					; LINE 1/94
+						; LINE 1/95
+00191		CMPL  	-20(FP),32(R11)		;   TLNO
+00196		BNEQ  	L.45
+
+00198	L.44:					; LINE 1/95
+00198		MOVL  	20(AP),40(R11)		;   LLP
+
+0019D	L.45:					; LINE 1/96
+0019D		ADDL3 	-16(FP),32(R11),32(R11)	;   CNT						; LINE 1/97
+001A4		SUBL3 	S^#1,28(R11),R10
+001A9		CMPL  	-20(FP),R10		;   TLNO
+001AD		BNEQ  	L.47
+
+001AF	L.46:					; LINE 1/97
+001AF		MOVL  	12(AP),36(R11)		;   FLP
+001B4		BRB   	L.50
+
+001B6	L.47:					; LINE 1/98
+001B6		CMPL  	-20(FP),28(R11)		;   TLNO
+001BB		BGEQU 	L.49
+
+001BD	L.48:					; LINE 1/98
+001BD		ADDL3 	-16(FP),28(R11),28(R11)	;   CNT
+
+001C4	L.49:
+	L.50:
+	L.51:
+	L.52:					; LINE 1/99
+						; LINE 1/100
+						; LINE 1/102
+001C4		MOVB  	S^#1,134(R11)
+						; LINE 1/103
+001C9		PUSHAL	PAX_EXC.ATTN		;   ATTENTION
+001CF		CALLS 	S^#1,PAX_EXC.UNMASK
+						; LINE 1/104
+						; LINE 1/105
+001D6		RET   	
+
+	;
+	;	Begin subroutine CLEANGARB
+	;
+
+001D7	C.2:	.WORD	C.2-C.2
+001D9		.WORD	9
+001DB		.ASCII	"CLEANGARB"
+
+001E4	B.4:	.WORD	^M<R10,R11,IV>
+001E6		CLRL  	-(SP)
+001E8		PUSHAL	C.2
+001EB		SUBL2 	S^#8,SP
+
+001EE	L.1:					; LINE 2/9
+						; LINE 2/10001EE		MOVAB 	@4(AP),R11		;   BUFFER
+
+001F2	L.2:
+	L.3:					; LINE 2/10
+						; LINE 2/11
+001F2		CMPL  	24(R11),I^#-268435456
+001FA		BEQL  	L.5
+
+001FC	L.4:					; LINE 2/11
+						; LINE 2/12
+001FC		MOVL  	24(R11),-16(FP)		;   LP
+						; LINE 2/13
+00201		MOVAB 	@24(R11),R10
+00205		MOVL  	1(R10),24(R11)
+						; LINE 2/14
+0020A		PUSHL 	-16(FP)			;   LP
+0020D		CALLS 	S^#1,PAX_UTL.DSPOS
+						; LINE 2/15
+00214		BRB   	L.3
+
+00216	L.5:					; LINE 2/16
+						; LINE 2/17
+00216		RET   	
+
+	;
+	;	Begin subroutine QDELBUF
+	;
+
+00217	C.3:	.WORD	C.3-C.3
+00219		.WORD	7
+0021B		.ASCII	"QDELBUF"
+
+00222	B.12:	.ENTRY	QDELBUF,^M<R10,R11,IV>
+00224		CLRL  	-(SP)
+00226		PUSHAL	C.3
+00229		SUBL2 	S^#8,SP
+
+0022C	L.1:					; LINE 6/7
+						; LINE 6/8
+0022C		MOVAB 	@4(AP),R11		;   BUF
+
+00230	L.2:					; LINE 6/8
+						; LINE 6/9
+00230		TSTL  	20(R11)
+00233		BLEQU 	L.400235	L.3:					; LINE 6/9
+						; LINE 6/10
+00235		MOVAB 	@0(R11),R10
+00239		PUSHL 	I^#-268435456
+0023F		PUSHL 	S^#0
+00241		PUSHL 	4(R11)
+00244		PUSHL 	20(R11)
+00247		PUSHL 	5(R10)
+0024A		PUSHL 	S^#1
+0024C		PUSHAB	@4(AP)			;   BUF
+0024F		CALLS 	S^#7,B.3
+						; LINE 6/11
+00254		PUSHAB	@4(AP)			;   BUF
+00257		CALLS 	S^#1,B.4
+
+0025C	L.4:					; LINE 6/12
+						; LINE 6/13
+0025C		PUSHL 	0(R11)
+0025E		CALLS 	S^#1,PAX_UTL.DSPOS
+						; LINE 6/14
+00265		PUSHL 	52(R11)
+00268		CALLS 	S^#1,SPREDDISPOSE	;   SPREDDISPOSE
+						; LINE 6/15
+0026F		MOVL  	I^#-268435456,52(R11)
+						; LINE 6/16
+						; LINE 6/17
+00277		RET   	
+
+	;
+	;	Begin subroutine QINITBUF
+	;
+
+00278	C.4:	.WORD	C.4-C.4
+0027A		.WORD	8
+0027C		.ASCII	"QINITBUF"
+
+00284	B.13:	.ENTRY	QINITBUF,^M<R10,R11,IV>
+00286		CLRL  	-(SP)
+00288		PUSHAL	C.4
+
+0028B	L.1:					; LINE 7/5
+						; LINE 7/6
+0028B		MOVAB 	@4(AP),R11		;   BUF
+
+0028F	L.2:					; LINE 7/7						; LINE 7/8
+0028F		CLRL  	20(R11)
+						; LINE 7/9
+00292		CLRL  	12(R11)
+						; LINE 7/10
+00295		MOVL  	S^#1,28(R11)
+						; LINE 7/11
+00299		MOVL  	S^#1,44(R11)
+						; LINE 7/12
+0029D		MOVL  	S^#1,48(R11)
+						; LINE 7/13
+002A1		CLRL  	32(R11)
+						; LINE 7/14
+002A4		CLRL  	16(R11)
+						; LINE 7/15
+002A7		MOVZWL	I^#265,-(SP)		;   ^X109
+002AC		CALLS 	S^#1,PAX_UTL.NEW
+002B3		MOVL  	R0,0(R11)
+						; LINE 7/16
+002B6		MOVAB 	@0(R11),R10
+
+002BA	L.3:					; LINE 7/16
+						; LINE 7/17
+002BA		MOVL  	I^#-268435456,1(R10)
+						; LINE 7/18
+002C2		MOVL  	I^#-268435456,5(R10)
+						; LINE 7/19
+						; LINE 7/20
+002CA		MOVL  	0(R11),4(R11)
+						; LINE 7/21
+002CE		MOVL  	0(R11),8(R11)
+						; LINE 7/22
+002D2		MOVL  	I^#-268435456,36(R11)
+						; LINE 7/23
+002DA		MOVL  	0(R11),40(R11)
+						; LINE 7/24
+002DE		MOVL  	I^#-268435456,24(R11)
+						; LINE 7/25
+002E6		CLRW  	56(R11)
+						; LINE 7/26
+002E9		CLRB  	133(R11)
+						; LINE 7/27
+002ED		CLRB  	134(R11)
+						; LINE 7/28
+002F1		MOVL  	I^#-268435456,52(R11)						; LINE 7/29
+						; LINE 7/30
+002F9		RET   	
+
+	;
+	;	Begin subroutine SETLP
+	;
+
+002FA	C.5:	.WORD	C.5-C.5
+002FC		.WORD	5
+002FE		.ASCII	"SETLP"
+
+00303	B.6:	.WORD	^M<R10,R11,IV>
+00305		PUSHL 	R0
+00307		PUSHAL	C.5
+
+0030A	L.1:					; LINE 3/10
+						; LINE 3/11
+0030A		MOVL  	-4(FP),R11
+0030E		MOVL  	-12(R11),R11
+00312		MOVAB 	@4(R11),R11		;   BUF
+
+00316	L.2:					; LINE 3/11
+						; LINE 3/12
+00316		PUSHAL	PAX_EXC.ATTN		;   ATTENTION
+0031C		CALLS 	S^#1,PAX_EXC.MASK
+						; LINE 3/13
+00323		MOVL  	-4(FP),R10
+00327		MOVL  	-12(R10),R10
+0032B		MOVL  	8(R10),12(R11)		;   LNO
+						; LINE 3/14
+00330		MOVL  	4(AP),8(R11)		;   TP
+						; LINE 3/15
+00335		PUSHAL	PAX_EXC.ATTN		;   ATTENTION
+0033B		CALLS 	S^#1,PAX_EXC.UNMASK
+						; LINE 3/16
+						; LINE 3/17
+00342		MOVL  	-4(FP),R11
+00346		MOVL  	-12(R11),R11
+0034A		MOVL  	4(AP),@12(R11)		;   TP  LP
+						; LINE 3/18
+0034F		RET   	
+
+	;
+	;	Begin subroutine SEARCH	;
+
+00350	C.6:	.WORD	C.6-C.6
+00352		.WORD	6
+00354		.ASCII	"SEARCH"
+
+0035A	B.7:	.WORD	^M<R10,R11,IV>
+0035C		PUSHL 	R0
+0035E		PUSHAL	C.6
+00361		SUBL2 	S^#20,SP		;   ^X14
+
+00364	L.1:					; LINE 3/24
+						; LINE 3/26
+00364		MOVL  	-4(FP),R11
+00368		MOVL  	-12(R11),R11
+0036C		SUBL3 	8(R11),12(AP),R11	;   LNO  ENDLINENO
+00372		MOVL  	-4(FP),R10
+00376		MOVL  	-12(R10),R10
+0037A		SUBL3 	4(AP),8(R10),R10	;   BEGLINENO  LNO
+00380		CMPL  	R11,R10
+00383		BGTR  	L.7
+
+00385	L.2:	CMPL  	16(AP),I^#-268435456	;   ENDLINEP
+0038D		BEQL  	L.7
+
+0038F	L.3:					; LINE 3/27
+						; LINE 3/28
+0038F		MOVL  	16(AP),-16(FP)		;   ENDLINEP  TP
+						; LINE 3/29
+00394		MOVL  	-4(FP),R11
+00398		MOVL  	-12(R11),R11
+0039C		MOVL  	8(R11),-24(FP)		;   LNO  V.16
+003A1		SUBL3 	S^#1,12(AP),R10		;   ENDLINENO
+003A6		CMPL  	R10,8(R11)		;   LNO
+003AA		BLSS  	L.6
+
+003AC	L.4:	MOVL  	R10,-20(FP)		;   I
+
+003B0	L.5:					; LINE 3/30
+003B0		MOVAB 	@-16(FP),R11		;   TP
+003B4		MOVL  	1(R11),-16(FP)		;   TP
+003B9		SUBL3 	S^#1,-20(FP),-20(FP)	;   I  I
+003BF		CMPL  	-20(FP),-24(FP)		;   I  V.16
+003C4		BGEQ  	L.5003C6	L.6:					; LINE 3/31
+003C6		BRB   	L.12
+
+003C8	L.7:
+	L.8:					; LINE 3/32
+						; LINE 3/33
+003C8		MOVL  	8(AP),-16(FP)		;   BEGLINEP  TP
+						; LINE 3/34
+003CD		MOVL  	-4(FP),R11
+003D1		MOVL  	-12(R11),R11
+003D5		MOVL  	8(R11),-28(FP)		;   LNO  V.17
+003DA		ADDL3 	S^#1,4(AP),R10		;   BEGLINENO
+003DF		CMPL  	R10,8(R11)		;   LNO
+003E3		BGTRU 	L.11
+
+003E5	L.9:	MOVL  	R10,-20(FP)		;   I
+
+003E9	L.10:					; LINE 3/35
+003E9		MOVAB 	@-16(FP),R11		;   TP
+003ED		MOVL  	5(R11),-16(FP)		;   TP
+003F2		ADDL3 	S^#1,-20(FP),-20(FP)	;   I  I
+003F8		CMPL  	-20(FP),-28(FP)		;   I  V.17
+003FD		BLEQU 	L.10
+
+003FF	L.11:
+	L.12:					; LINE 3/36
+						; LINE 3/37
+003FF		PUSHL 	-16(FP)			;   TP
+00402		MOVL  	-4(FP),R0
+00406		CALLS 	S^#1,B.6
+						; LINE 3/38
+0040B		RET   	
+
+	;
+	;	Begin subroutine FINDLINEP
+	;
+
+0040C	C.7:	.WORD	C.7-C.7
+0040E		.WORD	9
+00410		.ASCII	"FINDLINEP"
+
+00419	B.5:	.WORD	^M<R11,IV>
+0041B		CLRL  	-(SP)
+0041D		PUSHAL	C.7
+00420		PUSHL 	AP00422	L.1:					; LINE 3/41
+						; LINE 3/42
+00422		MOVAB 	@4(AP),R11		;   BUF
+						; LINE 3/43
+00426		CMPL  	8(AP),12(R11)		;   LNO
+0042B		BGEQU 	L.9
+
+0042D	L.2:					; LINE 3/44
+0042D		CMPL  	8(AP),28(R11)		;   LNO
+00432		BGEQU 	L.4
+
+00434	L.3:					; LINE 3/45
+00434		PUSHL 	8(R11)
+00437		PUSHL 	12(R11)
+0043A		PUSHL 	0(R11)
+0043C		PUSHL 	S^#0
+0043E		MOVL  	FP,R0
+00441		CALLS 	S^#4,B.7
+00446		BRB   	L.8
+
+00448	L.4:					; LINE 3/46
+00448		CMPL  	8(AP),32(R11)		;   LNO
+0044D		BGEQU 	L.6
+
+0044F	L.5:					; LINE 3/47
+0044F		PUSHL 	8(R11)
+00452		PUSHL 	12(R11)
+00455		PUSHL 	36(R11)
+00458		PUSHL 	28(R11)
+0045B		MOVL  	FP,R0
+0045E		CALLS 	S^#4,B.7
+00463		BRB   	L.7
+
+00465	L.6:					; LINE 3/48
+00465		PUSHL 	8(R11)
+00468		PUSHL 	12(R11)
+0046B		PUSHL 	40(R11)
+0046E		PUSHL 	32(R11)
+00471		MOVL  	FP,R0
+00474		CALLS 	S^#4,B.7
+
+00479	L.7:
+	L.8:	BRB   	L.16
+
+0047B	L.9:					; LINE 3/490047B		CMPL  	8(AP),28(R11)		;   LNO
+00480		BGEQU 	L.11
+
+00482	L.10:					; LINE 3/50
+00482		PUSHL 	36(R11)
+00485		PUSHL 	28(R11)
+00488		PUSHL 	8(R11)
+0048B		PUSHL 	12(R11)
+0048E		MOVL  	FP,R0
+00491		CALLS 	S^#4,B.7
+00496		BRB   	L.15
+
+00498	L.11:					; LINE 3/51
+00498		CMPL  	8(AP),32(R11)		;   LNO
+0049D		BGTRU 	L.13
+
+0049F	L.12:					; LINE 3/52
+0049F		PUSHL 	40(R11)
+004A2		PUSHL 	32(R11)
+004A5		PUSHL 	8(R11)
+004A8		PUSHL 	12(R11)
+004AB		MOVL  	FP,R0
+004AE		CALLS 	S^#4,B.7
+004B3		BRB   	L.14
+
+004B5	L.13:					; LINE 3/53
+004B5		PUSHL 	4(R11)
+004B8		PUSHL 	20(R11)
+004BB		PUSHL 	8(R11)
+004BE		PUSHL 	12(R11)
+004C1		MOVL  	FP,R0
+004C4		CALLS 	S^#4,B.7
+
+004C9	L.14:
+	L.15:
+	L.16:					; LINE 3/54
+004C9		RET   	
+
+	;
+	;	Begin subroutine MAP
+	;
+
+004CA	C.8:	.WORD	C.8-C.8
+004CC		.WORD	3
+004CE		.ASCII	"MAP"004D1	B.8:	.WORD	^M<R10,R11,IV>
+004D3		CLRL  	-(SP)
+004D5		PUSHAL	C.8
+004D8		SUBL2 	S^#8,SP
+
+004DB	L.1:					; LINE 4/11
+						; LINE 4/12
+004DB		MOVAB 	@4(AP),R11		;   BUFFER
+004DF		ADDL3 	28(R11),8(AP),R11	;   LINE
+004E5		MOVAB 	@4(AP),R10		;   BUFFER
+004E9		SUBL3 	44(R10),R11,-16(FP)	;   MAP
+						; LINE 4/13
+004EF		MOVL  	-16(FP),R0		;   MAP
+004F3		RET   	
+
+	;
+	;	Begin subroutine CHKLINE
+	;
+
+004F4	C.9:	.WORD	C.9-C.9
+004F6		.WORD	7
+004F8		.ASCII	"CHKLINE"
+
+004FF	B.9:	.WORD	^M<R11,IV>
+00501		CLRL  	-(SP)
+00503		PUSHAL	C.9
+00506		SUBL2 	S^#8,SP
+
+00509	L.1:					; LINE 4/18
+						; LINE 4/19
+00509		CLRB  	@12(AP)			;   ERR
+						; LINE 4/20
+0050C		MOVAB 	@4(AP),R11		;   BUF
+00510		CMPL  	8(AP),28(R11)		;   L
+00515		BLSSU 	L.3
+
+00517	L.2:	MOVAB 	@4(AP),R11		;   BUF
+0051B		CMPL  	8(AP),32(R11)		;   L
+00520		BLEQU 	L.4
+
+00522	L.3:					; LINE 4/20
+00522		MOVB  	S^#2,@12(AP)		;   ERR
+
+00526	L.4:					; LINE 4/21
+00526		CLRL  	R1100528		TSTB  	@12(AP)			;   ERR
+0052B		BNEQ  	X.1
+0052D		INCL  	R11
+0052F	X.1:	MOVB  	R11,-13(FP)		;   CHKLINE
+						; LINE 4/22
+00533		MOVZBL	-13(FP),R0		;   CHKLINE
+00537		RET   	
+
+	;
+	;	Begin subroutine QGETLINE
+	;
+
+00538	C.10:	.WORD	C.10-C.10
+0053A		.WORD	8
+0053C		.ASCII	"QGETLINE"
+
+00544	B.14:	.ENTRY	QGETLINE,^M<R2,R3,R4,R5,R9,R10,R11,IV>
+00546		CLRL  	-(SP)
+00548		PUSHAL	C.10
+0054B		SUBL2 	S^#12,SP
+
+0054E	L.1:					; LINE 8/10
+						; LINE 8/11
+0054E		PUSHL 	12(AP)			;   L
+00551		PUSHAB	@8(AP)			;   BUF
+00554		CALLS 	S^#2,B.8
+00559		MOVL  	R0,-20(FP)		;   LNO
+						; LINE 8/12
+0055D		PUSHAB	@16(AP)			;   ERR
+00560		PUSHL 	-20(FP)			;   LNO
+00563		PUSHAB	@8(AP)			;   BUF
+00566		CALLS 	S^#3,B.9
+0056B		MOVB  	R0,R11
+0056E		TSTB  	R11
+00570		BNEQ  	L.3
+
+00572	L.2:					; LINE 8/12
+00572		CLRW  	@4(AP)			;   QGETLINE
+00575		BRB   	L.5
+
+00577	L.3:
+	L.4:					; LINE 8/13
+						; LINE 8/14
+00577		PUSHAL	-16(FP)			;   LP
+0057A		PUSHL 	-20(FP)			;   LNO0057D		PUSHAB	@8(AP)			;   BUF
+00580		CALLS 	S^#3,B.5
+						; LINE 8/15
+00585		MOVAB 	@-16(FP),R11		;   LP
+00589		MOVAB 	@-16(FP),R10		;   LP
+0058D		MOVW  	9(R10),@4(AP)		;   QGETLINE
+00592		CMPW  	@4(AP),I^#254		;   QGETLINE  ^XFE
+00598		BLEQU 	X.1
+0059A		MOVW  	I^#254,@4(AP)		;   ^XFE  QGETLINE
+005A0	X.1:	MOVAB 	@4(AP),R9		;   QGETLINE
+005A4		MOVC3 	@4(AP),11(R11),2(R9)	;   QGETLINE
+
+005AB	L.5:					; LINE 8/16
+						; LINE 8/17
+005AB		RET   	
+
+	;
+	;	Begin subroutine MAKELINE
+	;
+
+005AC	C.11:	.WORD	C.11-C.11
+005AE		.WORD	8
+005B0		.ASCII	"MAKELINE"
+
+005B8	B.11:	.WORD	^M<R2,R3,R4,R5,R10,R11,IV>
+005BA		CLRL  	-(SP)
+005BC		PUSHAL	C.11
+005BF		SUBL2 	S^#16,SP		;   ^X10
+
+005C2	L.1:					; LINE 5/15
+						; LINE 5/16
+005C2		CVTWL 	@8(AP),R11		;   LINE
+005C6		ADDL3 	S^#11,R11,-(SP)
+005CA		CALLS 	S^#1,PAX_UTL.NEW
+005D1		MOVL  	R0,-20(FP)		;   SYNP
+005D5		MOVAB 	@-20(FP),R11		;   SYNP
+005D9		MOVW  	@8(AP),9(R11)		;   LINE
+						; LINE 5/17
+005DE		CLRB  	@-20(FP)		;   SYNP
+						; LINE 5/18
+005E1		MOVAB 	@-20(FP),R11		;   SYNP
+005E5		MOVAB 	@8(AP),R10		;   LINE
+005E9		MOVC5 	0(R10),2(R10),S^#32,@8(AP),11(R11)
+						;   ^X20  LINE
+						; LINE 5/19005F2		MOVAB 	@-20(FP),R11		;   SYNP
+005F6		MOVL  	R11,-24(FP)		;   NP
+						; LINE 5/20
+005FA		MOVAB 	@-24(FP),R11		;   NP
+
+005FE	L.2:					; LINE 5/20
+						; LINE 5/21
+005FE		MOVL  	I^#-268435456,5(R11)
+						; LINE 5/22
+00606		MOVAB 	@4(AP),R10		;   BUF
+0060A		MOVL  	24(R10),1(R11)
+						; LINE 5/23
+0060F		MOVAB 	@4(AP),R10		;   BUF
+00613		CMPL  	24(R10),I^#-268435456
+0061B		BEQL  	L.4
+
+0061D	L.3:					; LINE 5/24
+0061D		MOVAB 	@4(AP),R10		;   BUF
+00621		MOVAB 	@24(R10),R10
+00625		MOVL  	-24(FP),5(R10)		;   NP
+
+0062A	L.4:					; LINE 5/25
+0062A		MOVAB 	@4(AP),R10		;   BUF
+0062E		MOVL  	-24(FP),24(R10)		;   NP
+						; LINE 5/26
+						; LINE 5/27
+00633		MOVL  	-24(FP),-16(FP)		;   NP  MAKELINE
+						; LINE 5/28
+00638		MOVL  	-16(FP),R0		;   MAKELINE
+0063C		RET   	
+
+	;
+	;	Begin subroutine QMODLINE
+	;
+
+0063D	C.12:	.WORD	C.12-C.12
+0063F		.WORD	8
+00641		.ASCII	"QMODLINE"
+
+00649	B.15:	.ENTRY	QMODLINE,^M<R10,R11,IV>
+0064B		CLRL  	-(SP)
+0064D		PUSHAL	C.12
+00650		SUBL2 	S^#16,SP		;   ^X10
+
+00653	L.1:					; LINE 9/10						; LINE 9/11
+00653		PUSHL 	8(AP)			;   L
+00656		PUSHAB	@4(AP)			;   BUF
+00659		CALLS 	S^#2,B.8
+0065E		MOVL  	R0,-24(FP)		;   LNO
+						; LINE 9/12
+00662		PUSHAB	@16(AP)			;   ERR
+00665		PUSHL 	-24(FP)			;   LNO
+00668		PUSHAB	@4(AP)			;   BUF
+0066B		CALLS 	S^#3,B.9
+00670		MOVB  	R0,R11
+00673		TSTB  	R11
+00675		BNEQ  	.+4
+00677		BRW   	L.14
+
+0067A	L.2:					; LINE 9/12
+						; LINE 9/13
+0067A		PUSHAL	-16(FP)			;   LP
+0067D		PUSHL 	-24(FP)			;   LNO
+00680		PUSHAB	@4(AP)			;   BUF
+00683		CALLS 	S^#3,B.5
+						; LINE 9/14
+00688		PUSHAB	@12(AP)			;   NEWTEXT
+0068B		PUSHAB	@4(AP)			;   BUF
+0068E		CALLS 	S^#2,B.11
+00693		MOVL  	R0,-20(FP)		;   NP
+						; LINE 9/15
+00697		PUSHAL	PAX_EXC.ATTN		;   ATTENTION
+0069D		CALLS 	S^#1,PAX_EXC.MASK
+						; LINE 9/16
+006A4		MOVAB 	@-20(FP),R11		;   NP
+
+006A8	L.3:					; LINE 9/16
+						; LINE 9/17
+006A8		MOVAB 	@4(AP),R10		;   BUF
+006AC		MOVL  	1(R11),24(R10)
+						; LINE 9/18
+006B1		MOVAB 	@-16(FP),R10		;   LP
+006B5		MOVL  	1(R10),1(R11)
+						; LINE 9/19
+006BA		MOVAB 	@-16(FP),R10		;   LP
+006BE		MOVL  	5(R10),5(R11)
+						; LINE 9/20
+						; LINE 9/21
+006C3		MOVAB 	@-16(FP),R11		;   LP006C7	L.4:					; LINE 9/21
+						; LINE 9/22
+006C7		MOVAB 	@1(R11),R10
+006CB		MOVL  	-20(FP),5(R10)		;   NP
+						; LINE 9/23
+006D0		CMPL  	5(R11),I^#-268435456
+006D8		BEQL  	L.6
+
+006DA	L.5:					; LINE 9/24
+006DA		MOVAB 	@5(R11),R10
+006DE		MOVL  	-20(FP),1(R10)		;   NP
+006E3		BRB   	L.7
+
+006E5	L.6:					; LINE 9/25
+006E5		MOVAB 	@4(AP),R10		;   BUF
+006E9		MOVL  	-20(FP),4(R10)		;   NP
+
+006EE	L.7:					; LINE 9/26
+006EE		MOVAB 	@4(AP),R10		;   BUF
+006F2		CMPL  	-24(FP),28(R10)		;   LNO
+006F7		BNEQ  	L.9
+
+006F9	L.8:					; LINE 9/26
+006F9		MOVAB 	@4(AP),R10		;   BUF
+006FD		MOVL  	-20(FP),36(R10)		;   NP
+
+00702	L.9:					; LINE 9/27
+00702		MOVAB 	@4(AP),R10		;   BUF
+00706		CMPL  	-24(FP),32(R10)		;   LNO
+0070B		BNEQ  	L.11
+
+0070D	L.10:					; LINE 9/27
+0070D		MOVAB 	@4(AP),R10		;   BUF
+00711		MOVL  	-20(FP),40(R10)		;   NP
+
+00716	L.11:					; LINE 9/28
+00716		MOVAB 	@4(AP),R10		;   BUF
+0071A		CMPL  	-24(FP),12(R10)		;   LNO
+0071F		BNEQ  	L.13
+
+00721	L.12:					; LINE 9/28
+00721		MOVAB 	@4(AP),R10		;   BUF
+00725		MOVL  	-20(FP),8(R10)		;   NP
+
+0072A	L.13:					; LINE 9/29						; LINE 9/30
+0072A		MOVAB 	@-16(FP),R11		;   LP
+0072E		MOVAB 	@4(AP),R10		;   BUF
+00732		MOVL  	24(R10),1(R11)
+						; LINE 9/31
+00737		MOVAB 	@4(AP),R11		;   BUF
+0073B		MOVL  	-16(FP),24(R11)		;   LP
+						; LINE 9/32
+00740		MOVAB 	@4(AP),R11		;   BUF
+00744		MOVB  	S^#1,134(R11)
+						; LINE 9/33
+00749		PUSHAL	PAX_EXC.ATTN		;   ATTENTION
+0074F		CALLS 	S^#1,PAX_EXC.UNMASK
+						; LINE 9/34
+00756		PUSHAB	@4(AP)			;   BUF
+00759		CALLS 	S^#1,B.4
+
+0075E	L.14:					; LINE 9/35
+						; LINE 9/36
+0075E		RET   	
+
+	;
+	;	Begin subroutine QADDLINE
+	;
+
+0075F	C.13:	.WORD	C.13-C.13
+00761		.WORD	8
+00763		.ASCII	"QADDLINE"
+
+0076B	B.16:	.ENTRY	QADDLINE,^M<R11,IV>
+0076D		CLRL  	-(SP)
+0076F		PUSHAL	C.13
+00772		SUBL2 	S^#16,SP		;   ^X10
+
+00775	L.1:					; LINE 10/11
+						; LINE 10/12
+00775		CLRB  	@16(AP)			;   ERR
+						; LINE 10/13
+00778		PUSHL 	8(AP)			;   L
+0077B		PUSHAB	@4(AP)			;   BUF
+0077E		CALLS 	S^#2,B.8
+00783		MOVL  	R0,-16(FP)		;   LNO
+						; LINE 10/14
+00787		MOVAB 	@4(AP),R11		;   BUF
+0078B		CMPL  	-16(FP),32(R11)		;   LNO00790		BLEQU 	L.3
+
+00792	L.2:					; LINE 10/14
+00792		MOVB  	S^#2,@16(AP)		;   ERR
+00796		BRB   	L.5
+
+00798	L.3:
+	L.4:					; LINE 10/15
+						; LINE 10/16
+00798		PUSHAL	-24(FP)			;   LP
+0079B		PUSHL 	-16(FP)			;   LNO
+0079E		PUSHAB	@4(AP)			;   BUF
+007A1		CALLS 	S^#3,B.5
+						; LINE 10/17
+007A6		PUSHAB	@12(AP)			;   TEXT
+007A9		PUSHAB	@4(AP)			;   BUF
+007AC		CALLS 	S^#2,B.11
+007B1		MOVL  	R0,-20(FP)		;   NP
+						; LINE 10/18
+007B5		PUSHL 	-24(FP)			;   LP
+007B8		PUSHL 	-16(FP)			;   LNO
+007BB		PUSHL 	-20(FP)			;   NP
+007BE		PUSHL 	S^#0
+007C0		PUSHL 	-20(FP)			;   NP
+007C3		PUSHL 	S^#0
+007C5		PUSHAB	@4(AP)			;   BUF
+007C8		CALLS 	S^#7,B.3
+
+007CD	L.5:					; LINE 10/19
+						; LINE 10/20
+007CD		RET   	
+
+	;
+	;	Begin subroutine CHKRANGE
+	;
+
+007CE	C.14:	.WORD	C.14-C.14
+007D0		.WORD	8
+007D2		.ASCII	"CHKRANGE"
+
+007DA	B.10:	.WORD	^M<R11,IV>
+007DC		CLRL  	-(SP)
+007DE		PUSHAL	C.14
+007E1		SUBL2 	S^#8,SP007E4	L.1:					; LINE 4/28
+						; LINE 4/29
+007E4		CLRB  	@16(AP)			;   ERR
+						; LINE 4/30
+007E7		CMPL  	8(AP),12(AP)		;   F  L
+007EC		BLEQU 	L.3
+
+007EE	L.2:					; LINE 4/30
+007EE		MOVB  	S^#5,@16(AP)		;   ERR
+007F2		BRB   	L.9
+
+007F4	L.3:					; LINE 4/31
+007F4		MOVAB 	@4(AP),R11		;   BUF
+007F8		CMPL  	12(AP),32(R11)		;   L
+007FD		BLEQU 	L.5
+
+007FF	L.4:					; LINE 4/31
+007FF		MOVB  	S^#4,@16(AP)		;   ERR
+00803		BRB   	L.8
+
+00805	L.5:					; LINE 4/32
+00805		MOVAB 	@4(AP),R11		;   BUF
+00809		CMPL  	8(AP),28(R11)		;   F
+0080E		BGEQU 	L.7
+
+00810	L.6:					; LINE 4/32
+00810		MOVB  	S^#3,@16(AP)		;   ERR
+
+00814	L.7:
+	L.8:
+	L.9:					; LINE 4/33
+00814		CLRL  	R11
+00816		TSTB  	@16(AP)			;   ERR
+00819		BNEQ  	X.1
+0081B		INCL  	R11
+0081D	X.1:	MOVB  	R11,-13(FP)		;   CHKRANGE
+						; LINE 4/34
+00821		MOVZBL	-13(FP),R0		;   CHKRANGE
+00825		RET   	
+
+	;
+	;	Begin subroutine QDELLINES
+	;
+
+00826	C.15:	.WORD	C.15-C.1500828		.WORD	9
+0082A		.ASCII	"QDELLINES"
+
+00833	B.17:	.ENTRY	QDELLINES,^M<R11,IV>
+00835		CLRL  	-(SP)
+00837		PUSHAL	C.15
+0083A		SUBL2 	S^#20,SP		;   ^X14
+
+0083D	L.1:					; LINE 11/11
+						; LINE 11/12
+0083D		PUSHL 	8(AP)			;   F
+00840		PUSHAB	@4(AP)			;   BUF
+00843		CALLS 	S^#2,B.8
+00848		MOVL  	R0,-24(FP)		;   FNO
+						; LINE 11/13
+0084C		PUSHL 	12(AP)			;   L
+0084F		PUSHAB	@4(AP)			;   BUF
+00852		CALLS 	S^#2,B.8
+00857		MOVL  	R0,-28(FP)		;   LNO
+						; LINE 11/14
+0085B		PUSHAB	@16(AP)			;   ERR
+0085E		PUSHL 	-28(FP)			;   LNO
+00861		PUSHL 	-24(FP)			;   FNO
+00864		PUSHAB	@4(AP)			;   BUF
+00867		CALLS 	S^#4,B.10
+0086C		MOVB  	R0,R11
+0086F		TSTB  	R11
+00871		BEQL  	L.3
+
+00873	L.2:					; LINE 11/14
+						; LINE 11/15
+00873		PUSHAL	-16(FP)			;   FP
+00876		PUSHL 	-24(FP)			;   FNO
+00879		PUSHAB	@4(AP)			;   BUF
+0087C		CALLS 	S^#3,B.5
+						; LINE 11/16
+00881		PUSHAL	-20(FP)			;   LP
+00884		PUSHL 	-28(FP)			;   LNO
+00887		PUSHAB	@4(AP)			;   BUF
+0088A		CALLS 	S^#3,B.5
+						; LINE 11/17
+0088F		PUSHL 	I^#-268435456
+00895		PUSHL 	S^#0
+00897		PUSHL 	-20(FP)			;   LP
+0089A		PUSHL 	-28(FP)			;   LNO0089D		PUSHL 	-16(FP)			;   FP
+008A0		PUSHL 	-24(FP)			;   FNO
+008A3		PUSHAB	@4(AP)			;   BUF
+008A6		CALLS 	S^#7,B.3
+						; LINE 11/18
+008AB		PUSHAB	@4(AP)			;   BUF
+008AE		CALLS 	S^#1,B.4
+						; LINE 11/19
+008B3		CLRB  	@16(AP)			;   ERR
+
+008B6	L.3:					; LINE 11/20
+						; LINE 11/21
+008B6		RET   	
+
+	;
+	;	Begin subroutine QBUFLENGTH
+	;
+
+008B7	C.16:	.WORD	C.16-C.16
+008B9		.WORD	10
+008BB		.ASCII	"QBUFLENGTH"
+
+008C5	B.18:	.ENTRY	QBUFLENGTH,^M<R10,R11,IV>
+008C7		CLRL  	-(SP)
+008C9		PUSHAL	C.16
+008CC		SUBL2 	S^#8,SP
+
+008CF	L.1:					; LINE 12/3
+						; LINE 12/4
+008CF		MOVAB 	@4(AP),R11		;   BUF
+
+008D3	L.2:					; LINE 12/4
+						; LINE 12/5
+008D3		SUBL3 	28(R11),32(R11),R10
+008D9		ADDL3 	S^#1,R10,-16(FP)	;   QBUFLENGTH
+						; LINE 12/6
+						; LINE 12/7
+008DE		MOVL  	-16(FP),R0		;   QBUFLENGTH
+008E2		RET   	
+
+	;
+	;	Begin subroutine QDOLLAR_VAL
+	;
+
+008E3	C.17:	.WORD	C.17-C.17008E5		.WORD	11
+008E7		.ASCII	"QDOLLAR_VAL"
+
+008F2	B.19:	.ENTRY	QDOLLAR_VAL,^M<R10,R11,IV>
+008F4		CLRL  	-(SP)
+008F6		PUSHAL	C.17
+008F9		SUBL2 	S^#8,SP
+
+008FC	L.1:					; LINE 12/10
+						; LINE 12/11
+008FC		PUSHAB	@4(AP)			;   BUF
+008FF		CALLS 	S^#1,B.18
+00904		MOVL  	R0,R11
+00907		MOVAB 	@4(AP),R10		;   BUF
+0090B		ADDL2 	44(R10),R11
+0090F		SUBL3 	S^#1,R11,-16(FP)	;   QDOLLAR_VAL
+						; LINE 12/12
+00914		MOVL  	-16(FP),R0		;   QDOLLAR_VAL
+00918		RET   	
+
+	;
+	;	Begin subroutine QFIRST_VAL
+	;
+
+00919	C.18:	.WORD	C.18-C.18
+0091B		.WORD	10
+0091D		.ASCII	"QFIRST_VAL"
+
+00927	B.20:	.ENTRY	QFIRST_VAL,^M<R11,IV>
+00929		CLRL  	-(SP)
+0092B		PUSHAL	C.18
+0092E		SUBL2 	S^#8,SP
+
+00931	L.1:					; LINE 12/15
+						; LINE 12/16
+00931		MOVAB 	@4(AP),R11		;   BUF
+00935		MOVL  	44(R11),-16(FP)		;   QFIRST_VAL
+						; LINE 12/17
+0093A		MOVL  	-16(FP),R0		;   QFIRST_VAL
+0093E		RET   	
+
+	;
+	;	Begin subroutine QMOVELINES
+	;0093F	C.19:	.WORD	C.19-C.19
+00941		.WORD	10
+00943		.ASCII	"QMOVELINES"
+
+0094D	B.21:	.ENTRY	QMOVELINES,^M<R11,IV>
+0094F		CLRL  	-(SP)
+00951		PUSHAL	C.19
+00954		SUBL2 	S^#28,SP		;   ^X1C
+
+00957	L.1:					; LINE 13/16
+						; LINE 13/17
+00957		PUSHL 	8(AP)			;   FIRST
+0095A		PUSHAB	@4(AP)			;   BUFFER
+0095D		CALLS 	S^#2,B.8
+00962		MOVL  	R0,-16(FP)		;   FNO
+						; LINE 13/18
+00966		PUSHL 	12(AP)			;   LAST
+00969		PUSHAB	@4(AP)			;   BUFFER
+0096C		CALLS 	S^#2,B.8
+00971		MOVL  	R0,-20(FP)		;   LNO
+						; LINE 13/19
+00975		PUSHL 	16(AP)			;   DEST
+00978		PUSHAB	@4(AP)			;   BUFFER
+0097B		CALLS 	S^#2,B.8
+00980		MOVL  	R0,-24(FP)		;   DNO
+						; LINE 13/20
+00984		PUSHAB	@20(AP)			;   ERR
+00987		PUSHL 	-20(FP)			;   LNO
+0098A		PUSHL 	-16(FP)			;   FNO
+0098D		PUSHAB	@4(AP)			;   BUFFER
+00990		CALLS 	S^#4,B.10
+00995		MOVB  	R0,R11
+00998		TSTB  	R11
+0099A		BNEQ  	L.3
+
+0099C	L.2:					; LINE 13/20
+0099C		RET   	
+
+0099D	L.3:					; LINE 13/21
+0099D		MOVAB 	@4(AP),R11		;   BUFFER
+009A1		SUBL3 	S^#1,28(R11),R11
+009A6		CMPL  	-24(FP),R11		;   DNO
+009AA		BEQL  	L.6
+
+009AC	L.4:	PUSHAB	@20(AP)			;   ERR009AF		PUSHL 	-24(FP)			;   DNO
+009B2		PUSHAB	@4(AP)			;   BUFFER
+009B5		CALLS 	S^#3,B.9
+009BA		MOVB  	R0,R11
+009BD		TSTB  	R11
+009BF		BNEQ  	L.6
+
+009C1	L.5:					; LINE 13/21
+009C1		RET   	
+
+009C2	L.6:					; LINE 13/22
+009C2		CMPL  	-16(FP),-24(FP)		;   FNO  DNO
+009C7		BGTRU 	L.9
+
+009C9	L.7:	CMPL  	-24(FP),-20(FP)		;   DNO  LNO
+009CE		BGTRU 	L.9
+
+009D0	L.8:					; LINE 13/22
+						; LINE 13/23
+009D0		MOVB  	S^#34,@20(AP)		;   ^X22  ERR
+						; LINE 13/24
+009D4		RET   	
+
+009D5	L.9:					; LINE 13/26
+009D5		PUSHAL	-28(FP)			;   FIRSTP
+009D8		PUSHL 	-16(FP)			;   FNO
+009DB		PUSHAB	@4(AP)			;   BUFFER
+009DE		CALLS 	S^#3,B.5
+						; LINE 13/27
+009E3		PUSHAL	-32(FP)			;   LASTP
+009E6		PUSHL 	-20(FP)			;   LNO
+009E9		PUSHAB	@4(AP)			;   BUFFER
+009EC		CALLS 	S^#3,B.5
+						; LINE 13/28
+009F1		PUSHAL	-36(FP)			;   DESTP
+009F4		PUSHL 	-24(FP)			;   DNO
+009F7		PUSHAB	@4(AP)			;   BUFFER
+009FA		CALLS 	S^#3,B.5
+						; LINE 13/29
+009FF		PUSHL 	-36(FP)			;   DESTP
+00A02		PUSHL 	-24(FP)			;   DNO
+00A05		PUSHL 	-32(FP)			;   LASTP
+00A08		PUSHL 	-20(FP)			;   LNO
+00A0B		PUSHL 	-28(FP)			;   FIRSTP
+00A0E		PUSHL 	-16(FP)			;   FNO00A11		PUSHAB	@4(AP)			;   BUFFER
+00A14		CALLS 	S^#7,B.3
+						; LINE 13/30
+00A19		RET   	
+
+	;
+	;	Begin subroutine QCOPYLINES
+	;
+
+00A1A	C.20:	.WORD	C.20-C.20
+00A1C		.WORD	10
+00A1E		.ASCII	"QCOPYLINES"
+
+00A28	B.22:	.ENTRY	QCOPYLINES,^M<R2,R3,R4,R5,R11,IV>
+00A2A		CLRL  	-(SP)
+00A2C		PUSHAL	C.20
+00A2F		SUBL2 	I^#548,SP		;   ^X224
+
+00A36	L.1:					; LINE 14/18
+						; LINE 14/19
+00A36		PUSHL 	8(AP)			;   FIRST
+00A39		PUSHAB	@4(AP)			;   BUFFER
+00A3C		CALLS 	S^#2,B.8
+00A41		MOVL  	R0,-276(FP)		;   FNO
+						; LINE 14/20
+00A46		PUSHL 	12(AP)			;   LAST
+00A49		PUSHAB	@4(AP)			;   BUFFER
+00A4C		CALLS 	S^#2,B.8
+00A51		MOVL  	R0,-280(FP)		;   LNO
+						; LINE 14/21
+00A56		PUSHL 	16(AP)			;   DEST
+00A59		PUSHAB	@4(AP)			;   BUFFER
+00A5C		CALLS 	S^#2,B.8
+00A61		MOVL  	R0,-284(FP)		;   DNO
+						; LINE 14/22
+00A66		PUSHAB	@20(AP)			;   ERR
+00A69		PUSHL 	-280(FP)		;   LNO
+00A6D		PUSHL 	-276(FP)		;   FNO
+00A71		PUSHAB	@4(AP)			;   BUFFER
+00A74		CALLS 	S^#4,B.10
+00A79		MOVB  	R0,R11
+00A7C		TSTB  	R11
+00A7E		BNEQ  	L.3
+
+00A80	L.2:					; LINE 14/2200A80		RET   	
+
+00A81	L.3:					; LINE 14/23
+00A81		MOVAB 	@4(AP),R11		;   BUFFER
+00A85		SUBL3 	S^#1,28(R11),R11
+00A8A		CMPL  	-284(FP),R11		;   DNO
+00A8F		BEQL  	L.6
+
+00A91	L.4:	PUSHAB	@20(AP)			;   ERR
+00A94		PUSHL 	-284(FP)		;   DNO
+00A98		PUSHAB	@4(AP)			;   BUFFER
+00A9B		CALLS 	S^#3,B.9
+00AA0		MOVB  	R0,R11
+00AA3		TSTB  	R11
+00AA5		BNEQ  	L.6
+
+00AA7	L.5:					; LINE 14/23
+00AA7		RET   	
+
+00AA8	L.6:					; LINE 14/27
+00AA8		PUSHAB	@4(AP)			;   BUFFER
+00AAB		CALLS 	S^#1,B.4
+						; LINE 14/28
+00AB0		MOVL  	I^#-268435456,-288(FP)	;   FIRSTP
+						; LINE 14/29
+00AB9		MOVL  	12(AP),-300(FP)		;   LAST  V.79
+00ABF		CMPL  	8(AP),12(AP)		;   FIRST  LAST
+00AC4		BGTRU 	L.14
+
+00AC6	L.7:	MOVL  	8(AP),-272(FP)		;   FIRST  IDX
+
+00ACC	L.8:
+	L.9:					; LINE 14/29
+						; LINE 14/30
+00ACC		PUSHAB	@20(AP)			;   ERR
+00ACF		PUSHL 	-272(FP)		;   IDX
+00AD3		PUSHAB	@4(AP)			;   BUFFER
+00AD6		PUSHAB	-556(FP)
+00ADA		CALLS 	S^#4,B.14
+00ADF		MOVW  	-556(FP),-268(FP)	;   SOURCE
+00AE6		MOVC3 	-268(FP),-554(FP),-268+2(FP)
+						;   SOURCE  SOURCE
+						; LINE 14/31
+00AF0		TSTB  	@20(AP)			;   ERR
+00AF3		BEQL  	L.1100AF5	L.10:					; LINE 14/31
+00AF5		RET   	
+
+00AF6	L.11:					; LINE 14/32
+00AF6		PUSHAB	-268(FP)		;   SOURCE
+00AFA		PUSHAB	@4(AP)			;   BUFFER
+00AFD		CALLS 	S^#2,B.11
+00B02		MOVL  	R0,-292(FP)		;   LASTP
+						; LINE 14/33
+00B07		CMPL  	-288(FP),I^#-268435456	;   FIRSTP
+00B10		BNEQ  	L.13
+
+00B12	L.12:					; LINE 14/33
+00B12		MOVL  	-292(FP),-288(FP)	;   LASTP  FIRSTP
+
+00B19	L.13:					; LINE 14/34
+00B19		ADDL3 	S^#1,-272(FP),-272(FP)	;   IDX  IDX
+00B21		CMPL  	-272(FP),-300(FP)	;   IDX  V.79
+00B28		BLEQU 	L.8
+
+00B2A	L.14:					; LINE 14/38
+00B2A		PUSHAL	-296(FP)		;   DESTP
+00B2E		PUSHL 	-284(FP)		;   DNO
+00B32		PUSHAB	@4(AP)			;   BUFFER
+00B35		CALLS 	S^#3,B.5
+						; LINE 14/39
+00B3A		SUBL3 	-276(FP),-280(FP),R11	;   FNO  LNO
+00B42		PUSHL 	-296(FP)		;   DESTP
+00B46		PUSHL 	-284(FP)		;   DNO
+00B4A		PUSHL 	-292(FP)		;   LASTP
+00B4E		PUSHL 	R11
+00B50		PUSHL 	-288(FP)		;   FIRSTP
+00B54		PUSHL 	S^#0
+00B56		PUSHAB	@4(AP)			;   BUFFER
+00B59		CALLS 	S^#7,B.3
+						; LINE 14/41
+00B5E		RET   	
+
+	;
+	;	Begin subroutine QSETOFFSET
+	;
+
+00B5F	C.21:	.WORD	C.21-C.21
+00B61		.WORD	10
+00B63		.ASCII	"QSETOFFSET"00B6D	B.23:	.ENTRY	QSETOFFSET,^M<R10,R11,IV>
+00B6F		CLRL  	-(SP)
+00B71		PUSHAL	C.21
+
+00B74	L.1:					; LINE 15/4
+						; LINE 15/5
+00B74		MOVAB 	@8(AP),R11		;   BUFFER
+00B78		MOVAB 	@8(AP),R10		;   BUFFER
+00B7C		MOVL  	44(R10),48(R11)
+						; LINE 15/6
+00B81		MOVAB 	@8(AP),R11		;   BUFFER
+00B85		MOVL  	4(AP),44(R11)		;   NEWOFFSET
+						; LINE 15/7
+00B8A		RET   	
+
+	;
+	;	Begin subroutine QSETBOUNDS
+	;
+
+00B8B	C.22:	.WORD	C.22-C.22
+00B8D		.WORD	10
+00B8F		.ASCII	"QSETBOUNDS"
+
+00B99	B.24:	.ENTRY	QSETBOUNDS,^M<R10,R11,IV>
+00B9B		CLRL  	-(SP)
+00B9D		PUSHAL	C.22
+00BA0		SUBL2 	S^#20,SP		;   ^X14
+
+00BA3	L.1:					; LINE 15/18
+						; LINE 15/19
+00BA3		MOVAB 	@4(AP),R11		;   BUFFER
+00BA7		MOVL  	44(R11),-16(FP)		;   TEMPOFFSET
+						; LINE 15/20
+00BAC		TSTB  	16(AP)			;   ABSOLUTE
+00BAF		BEQL  	L.3
+
+00BB1	L.2:					; LINE 15/20
+00BB1		MOVAB 	@4(AP),R11		;   BUFFER
+00BB5		MOVAB 	@4(AP),R10		;   BUFFER
+00BB9		MOVL  	28(R10),44(R11)
+00BBE		BRB   	L.4
+
+00BC0	L.3:					; LINE 15/21
+00BC0		MOVAB 	@4(AP),R11		;   BUFFER
+00BC4		MOVAB 	@4(AP),R10		;   BUFFER00BC8		MOVL  	48(R10),44(R11)
+
+00BCD	L.4:					; LINE 15/22
+00BCD		PUSHL 	8(AP)			;   LOW
+00BD0		PUSHAB	@4(AP)			;   BUFFER
+00BD3		CALLS 	S^#2,B.8
+00BD8		MOVL  	R0,-24(FP)		;   FNO
+						; LINE 15/23
+00BDC		PUSHL 	12(AP)			;   HIGH
+00BDF		PUSHAB	@4(AP)			;   BUFFER
+00BE2		CALLS 	S^#2,B.8
+00BE7		MOVL  	R0,-28(FP)		;   LNO
+						; LINE 15/24
+00BEB		PUSHAB	@20(AP)			;   ERR
+00BEE		PUSHL 	-28(FP)			;   LNO
+00BF1		PUSHL 	-24(FP)			;   FNO
+00BF4		PUSHAB	@4(AP)			;   BUFFER
+00BF7		CALLS 	S^#4,B.10
+00BFC		MOVB  	R0,R11
+00BFF		TSTB  	R11
+00C01		BEQL  	L.7
+
+00C03	L.5:					; LINE 15/25
+00C03		MOVAB 	@4(AP),R11		;   BUFFER
+
+00C07	L.6:					; LINE 15/26
+						; LINE 15/27
+00C07		PUSHAL	PAX_EXC.ATTN		;   ATTENTION
+00C0D		CALLS 	S^#1,PAX_EXC.MASK
+						; LINE 15/28
+00C14		PUSHAL	-20(FP)			;   TEMPP
+00C17		PUSHL 	-24(FP)			;   FNO
+00C1A		PUSHAB	@4(AP)			;   BUFFER
+00C1D		CALLS 	S^#3,B.5
+						; LINE 15/29
+00C22		PUSHAL	40(R11)
+00C25		PUSHL 	-28(FP)			;   LNO
+00C28		PUSHAB	@4(AP)			;   BUFFER
+00C2B		CALLS 	S^#3,B.5
+						; LINE 15/30
+00C30		MOVL  	-20(FP),36(R11)		;   TEMPP
+						; LINE 15/31
+00C35		SUBL3 	44(R11),-24(FP),R10	;   FNO
+00C3B		ADDL3 	S^#1,R10,28(R11)
+						; LINE 15/3200C40		SUBL3 	44(R11),-28(FP),R10	;   LNO
+00C46		ADDL3 	S^#1,R10,32(R11)
+						; LINE 15/33
+00C4B		PUSHAL	PAX_EXC.ATTN		;   ATTENTION
+00C51		CALLS 	S^#1,PAX_EXC.UNMASK
+						; LINE 15/34
+
+00C58	L.7:					; LINE 15/35
+00C58		MOVAB 	@4(AP),R11		;   BUFFER
+00C5C		MOVL  	-16(FP),44(R11)		;   TEMPOFFSET
+						; LINE 15/36
+00C61		MOVAB 	@4(AP),R11		;   BUFFER
+00C65		PUSHAB	@4(AP)			;   BUFFER
+00C68		CALLS 	S^#1,B.20
+00C6D		MOVL  	R0,16(R11)
+						; LINE 15/37
+00C71		RET   	
+
+	;
+	;	Begin subroutine QUNBOUND
+	;
+
+00C72	C.23:	.WORD	C.23-C.23
+00C74		.WORD	8
+00C76		.ASCII	"QUNBOUND"
+
+00C7E	B.25:	.ENTRY	QUNBOUND,^M<R10,R11,IV>
+00C80		CLRL  	-(SP)
+00C82		PUSHAL	C.23
+
+00C85	L.1:					; LINE 15/42
+						; LINE 15/43
+00C85		CLRB  	@8(AP)			;   ERR
+						; LINE 15/44
+00C88		PUSHAL	PAX_EXC.ATTN		;   ATTENTION
+00C8E		CALLS 	S^#1,PAX_EXC.MASK
+						; LINE 15/45
+00C95		MOVAB 	@4(AP),R11		;   BUFFER
+
+00C99	L.2:					; LINE 15/46
+						; LINE 15/47
+00C99		MOVL  	S^#1,28(R11)
+						; LINE 15/48
+00C9D		MOVAB 	@0(R11),R10
+00CA1		MOVL  	5(R10),36(R11)						; LINE 15/49
+00CA6		MOVL  	20(R11),32(R11)
+						; LINE 15/50
+00CAB		MOVL  	S^#1,44(R11)
+						; LINE 15/51
+00CAF		MOVL  	4(R11),40(R11)
+						; LINE 15/52
+						; LINE 15/53
+00CB4		PUSHAL	PAX_EXC.ATTN		;   ATTENTION
+00CBA		CALLS 	S^#1,PAX_EXC.UNMASK
+						; LINE 15/54
+00CC1		RET   	
+
+	;
+	;	Begin subroutine QFILEAPPEND
+	;
+
+00CC2	C.24:	.WORD	C.24-C.24
+00CC4		.WORD	11
+00CC6		.ASCII	"QFILEAPPEND"
+
+00CD1	B.26:	.ENTRY	QFILEAPPEND,^M<R2,R3,R4,R5,R11,IV>
+00CD3		CLRL  	-(SP)
+00CD5		PUSHAL	C.24
+00CD8		SUBL2 	I^#420,SP		;   ^X1A4
+
+00CDF	L.1:					; LINE 16/21
+00CDF		PUSHAL	H.22
+00CE5		CALLS 	S^#1,PAX_EXC.SET
+						; LINE 16/22
+00CEC		CLRB  	@20(AP)			;   ERR
+						; LINE 16/23
+00CEF		PUSHL 	12(AP)			;   WHERE
+00CF2		PUSHAB	@4(AP)			;   BUFFER
+00CF5		CALLS 	S^#2,B.8
+00CFA		MOVL  	R0,-24(FP)		;   WHERENO
+						; LINE 16/24
+00CFE		MOVAB 	@4(AP),R11		;   BUFFER
+00D02		CMPL  	-24(FP),32(R11)		;   WHERENO
+00D07		BLEQU 	L.3
+
+00D09	L.2:					; LINE 16/24
+						; LINE 16/25
+00D09		MOVB  	S^#2,@20(AP)		;   ERR
+						; LINE 16/2600D0D		RET   	
+
+00D0E	L.3:					; LINE 16/29
+00D0E		CLRL  	@16(AP)			;   CNT
+						; LINE 16/30
+00D11		MOVB  	S^#4,-301(FP)
+00D16		CLRW  	-304(FP)
+00D1A		PUSHAB	@20(AP)			;   ERR
+00D1D		PUSHAB	-301(FP)
+00D21		PUSHL 	S^#0
+00D23		PUSHAB	-304(FP)
+00D27		PUSHAB	@8(AP)			;   FNAME
+00D2A		PUSHAL	STATIC.+0		;   F
+00D30		CALLS 	S^#6,QOPENFILE		;   QOPENFILE
+						; LINE 16/31
+00D37		TSTB  	@20(AP)			;   ERR
+00D3A		BEQL  	.+4
+00D3C		BRW   	L.21
+
+00D3F	L.4:					; LINE 16/32
+						; LINE 16/33
+00D3F		MOVL  	I^#-268435456,-284(FP)	;   FIRST
+
+00D48	L.5:					; LINE 16/34
+						; LINE 16/35
+00D48		MOVL  	STATIC.+0,R11		;   F
+00D4F		EXTZV 	S^#1,S^#1,34(R11),R11
+00D55		BEQL  	L.7
+
+00D57	L.6:					; LINE 16/35
+00D57		PUSHL 	STATIC.+0		;   F
+00D5D		CALLS 	S^#1,PAX_TXT.RDLN
+
+00D64	L.7:					; LINE 16/36
+00D64		MOVL  	STATIC.+0,R11		;   F
+00D6B		EXTZV 	S^#0,S^#1,34(R11),R11
+00D71		BEQL  	.+4
+00D73		BRW   	L.15
+
+00D76	L.8:	TSTB  	@20(AP)			;   ERR
+00D79		BEQL  	.+4
+00D7B		BRW   	L.15
+
+00D7E	L.9:					; LINE 16/37
+00D7E		PUSHL 	STATIC.+0		;   F00D84		MOVZBL	I^#254,-(SP)		;   ^XFE
+00D88		PUSHAW	-280(FP)		;   TLINE
+00D8C		PUSHL 	I^#720896		;   ^XB0000
+00D92		CALLS 	S^#4,PAX_TXT.READ
+						; LINE 16/38
+00D99		CVTWL 	-280(FP),-16(FP)	;   TLINE  IDX
+						; LINE 16/39
+00D9F		TSTL  	-16(FP)			;   IDX
+00DA2		BLEQU 	L.12
+
+00DA4	L.10:	ADDL3 	S^#1,-16(FP),R11	;   IDX
+00DA9		CMPB  	-280(FP)[R11],S^#13	;   TLINE
+00DAF		BNEQ  	L.12
+
+00DB1	L.11:					; LINE 16/40
+00DB1		SUBL3 	S^#1,-16(FP),R11	;   IDX
+00DB6		MOVW  	R11,-280(FP)		;   TLINE
+00DBB		CMPW  	-280(FP),I^#254		;   TLINE  ^XFE
+00DC2		BLEQU 	X.1
+00DC4		MOVW  	I^#254,-280(FP)		;   ^XFE  TLINE
+00DCB	X.1:	MOVC3 	-280(FP),-280+2(FP),-280+2(FP)
+						;   TLINE  TLINE  TLINE
+
+00DD5	L.12:					; LINE 16/41
+00DD5		PUSHAL	PAX_EXC.ATTN		;   ATTENTION
+00DDB		CALLS 	S^#1,PAX_EXC.MASK
+						; LINE 16/42
+00DE2		PUSHAB	-280(FP)		;   TLINE
+00DE6		PUSHAB	@4(AP)			;   BUFFER
+00DE9		CALLS 	S^#2,B.11
+00DEE		MOVL  	R0,-288(FP)		;   LAST
+						; LINE 16/43
+00DF3		CMPL  	-284(FP),I^#-268435456	;   FIRST
+00DFC		BNEQ  	L.14
+
+00DFE	L.13:					; LINE 16/43
+00DFE		MOVL  	-288(FP),-284(FP)	;   LAST  FIRST
+
+00E05	L.14:					; LINE 16/44
+00E05		PUSHAL	PAX_EXC.ATTN		;   ATTENTION
+00E0B		CALLS 	S^#1,PAX_EXC.UNMASK
+						; LINE 16/45
+00E12		ADDL3 	S^#1,@16(AP),@16(AP)	;   CNT  CNT
+00E18		BRW   	L.500E1B	L.15:					; LINE 16/46
+						; LINE 16/47
+00E1B		TSTL  	@16(AP)			;   CNT
+00E1E		BLEQU 	L.17
+
+00E20	L.16:					; LINE 16/47
+						; LINE 16/48
+00E20		PUSHAL	-292(FP)		;   WHEREP
+00E24		PUSHL 	-24(FP)			;   WHERENO
+00E27		PUSHAB	@4(AP)			;   BUFFER
+00E2A		CALLS 	S^#3,B.5
+						; LINE 16/49
+00E2F		SUBL3 	S^#1,@16(AP),R11	;   CNT
+00E34		PUSHL 	-292(FP)		;   WHEREP
+00E38		PUSHL 	-24(FP)			;   WHERENO
+00E3B		PUSHL 	-288(FP)		;   LAST
+00E3F		PUSHL 	R11
+00E41		PUSHL 	-284(FP)		;   FIRST
+00E45		PUSHL 	S^#0
+00E47		PUSHAB	@4(AP)			;   BUFFER
+00E4A		CALLS 	S^#7,B.3
+
+00E4F	L.17:					; LINE 16/50
+						; LINE 16/51
+00E4F		MOVAB 	@4(AP),R11		;   BUFFER
+00E53		CMPL  	20(R11),@16(AP)		;   CNT
+00E58		BNEQ  	L.20
+
+00E5A	L.18:	TSTB  	@20(AP)			;   ERR
+00E5D		BNEQ  	L.20
+
+00E5F	L.19:					; LINE 16/51
+						; LINE 16/52
+00E5F		MOVAB 	@4(AP),R11		;   BUFFER
+00E63		CLRB  	134(R11)
+						; LINE 16/53
+00E67		PUSHL 	STATIC.+0		;   F
+00E6D		PUSHAB	-427(FP)
+00E71		CALLS 	S^#2,PAX_FIO.FNAME	;   FILENAME
+00E78		MOVAB 	@4(AP),R11		;   BUFFER
+00E7C		MOVW  	-427(FP),56(R11)
+00E82		CMPW  	56(R11),I^#75		;   ^X4B
+00E88		BLEQU 	X.2
+00E8A		MOVW  	I^#75,56(R11)		;   ^X4B
+00E90	X.2:	MOVC3 	56(R11),-425(FP),58(R11)						; LINE 16/54
+00E98		MOVAB 	@4(AP),R11		;   BUFFER
+00E9C		MOVB  	S^#1,133(R11)
+
+00EA1	L.20:					; LINE 16/55
+						; LINE 16/56
+00EA1		PUSHL 	STATIC.+0		;   F
+00EA7		CALLS 	S^#1,PAX_FVM.CLOSE
+
+00EAE	L.21:					; LINE 16/57
+00EAE		BRB   	L.25
+
+00EB0	L.22:					; LINE 16/58
+00EB0		MOVAL 	-428(FP),SP
+00EB5		JMP   	0(R0)
+
+00EB7	H.22:	.WORD	^M<IV>
+00EB9		JSB   	PAX_EXC.VAXCOND
+00EBF	X.3:	.WORD	0
+00EC1		.WORD	-300
+00EC3	X.4:	.WORD	L.22-X.4
+00EC5		.LONG	-1
+00EC9	X.5:	.WORD	L.23-X.5
+
+00ECB	L.23:
+	L.24:					; LINE 16/59
+						; LINE 16/60
+00ECB		PUSHAL	PAX_EXC.ATTN		;   ATTENTION
+00ED1		CALLS 	S^#1,PAX_EXC.MASK
+						; LINE 16/61
+00ED8		PUSHL 	STATIC.+0		;   F
+00EDE		CALLS 	S^#1,PAX_FVM.CLOSE
+						; LINE 16/62
+00EE5		PUSHAB	@4(AP)			;   BUFFER
+00EE8		CALLS 	S^#1,B.4
+						; LINE 16/63
+00EED		PUSHAL	PAX_EXC.ATTN		;   ATTENTION
+00EF3		CALLS 	S^#1,PAX_EXC.UNMASK
+						; LINE 16/64
+00EFA		CALLS 	S^#0,PAX_EXC.RESIGNAL
+						; LINE 16/65
+
+00F01	L.25:	PUSHL 	S^#0
+00F03		CALLS 	S^#1,PAX_EXC.RESTORE
+						; LINE 16/6600F0A		RET   	
+
+	;
+	;	Begin subroutine QTTYAPPEND
+	;
+
+00F0B	C.25:	.WORD	C.25-C.25
+00F0D		.WORD	10
+00F0F		.ASCII	"QTTYAPPEND"
+
+00F19	B.27:	.ENTRY	QTTYAPPEND,^M<R2,R3,R4,R5,R11,IV>
+00F1B		CLRL  	-(SP)
+00F1D		PUSHAL	C.25
+00F20		SUBL2 	I^#528,SP		;   ^X210
+
+00F27	L.1:					; LINE 17/14
+						; LINE 17/15
+00F27		CALLS 	S^#0,TTBRK		;   TTBRK
+						; LINE 17/16
+00F2E		MOVL  	8(AP),-276(FP)		;   WHERE  LINENUM
+						; LINE 17/17
+00F34		CLRB  	@16(AP)			;   ERR
+						; LINE 17/21
+00F37		CLRB  	-277(FP)		;   DONE
+
+00F3B	L.2:					; LINE 17/22
+00F3B		TSTB  	@16(AP)			;   ERR
+00F3E		BNEQ  	L.10
+
+00F40	L.3:	TSTB  	-277(FP)		;   DONE
+00F44		BNEQ  	L.10
+
+00F46	L.4:					; LINE 17/23
+						; LINE 17/24
+00F46		PUSHAB	-536(FP)
+00F4A		CALLS 	S^#1,QREAD		;   QREAD
+00F51		MOVW  	-536(FP),-268(FP)	;   LINE
+00F58		MOVC3 	-268(FP),-534(FP),-268+2(FP)
+						;   LINE  LINE
+						; LINE 17/25
+00F62		CVTWL 	-268(FP),R11		;   LINE
+00F67		CMPL  	R11,S^#1
+00F6A		BNEQ  	L.7
+
+00F6C	L.5:	CMPB  	-268+2(FP),S^#46	;   LINE  ^X2E00F71		BNEQ  	L.7
+
+00F73	L.6:					; LINE 17/25
+00F73		MOVB  	S^#1,-277(FP)		;   DONE
+00F78		BRB   	L.9
+
+00F7A	L.7:
+	L.8:					; LINE 17/27
+						; LINE 17/28
+00F7A		PUSHAB	@16(AP)			;   ERR
+00F7D		PUSHAB	-268(FP)		;   LINE
+00F81		PUSHL 	-276(FP)		;   LINENUM
+00F85		PUSHAB	@4(AP)			;   BUFFER
+00F88		CALLS 	S^#4,B.16
+						; LINE 17/29
+00F8D		ADDL3 	S^#1,-276(FP),-276(FP)	;   LINENUM  LINENUM
+
+00F95	L.9:					; LINE 17/30
+						; LINE 17/31
+00F95		BRB   	L.2
+
+00F97	L.10:					; LINE 17/32
+00F97		CMPL  	-276(FP),8(AP)		;   LINENUM  WHERE
+00F9D		BLEQU 	L.12
+
+00F9F	L.11:					; LINE 17/32
+00F9F		MOVAB 	@4(AP),R11		;   BUFFER
+00FA3		MOVB  	S^#1,134(R11)
+
+00FA8	L.12:					; LINE 17/33
+00FA8		SUBL3 	8(AP),-276(FP),@12(AP)	;   WHERE  LINENUM  CNT
+						; LINE 17/34
+00FB0		RET   	
+
+	;
+	;	Begin subroutine QFILEWRITE
+	;
+
+00FB1	C.26:	.WORD	C.26-C.26
+00FB3		.WORD	10
+00FB5		.ASCII	"QFILEWRITE"
+
+00FBF	B.28:	.ENTRY	QFILEWRITE,^M<R2,R3,R4,R5,R11,IV>
+00FC1		CLRL  	-(SP)
+00FC3		PUSHAL	C.2600FC6		SUBL2 	I^#420,SP		;   ^X1A4
+
+00FCD	L.1:					; LINE 18/17
+00FCD		PUSHAL	H.21
+00FD3		CALLS 	S^#1,PAX_EXC.SET
+						; LINE 18/18
+00FDA		PUSHL 	12(AP)			;   FN
+00FDD		PUSHAB	@4(AP)			;   BUFFER
+00FE0		CALLS 	S^#2,B.8
+00FE5		MOVL  	R0,-16(FP)		;   FNO
+						; LINE 18/18
+00FE9		PUSHL 	16(AP)			;   LN
+00FEC		PUSHAB	@4(AP)			;   BUFFER
+00FEF		CALLS 	S^#2,B.8
+00FF4		MOVL  	R0,-20(FP)		;   LNO
+						; LINE 18/19
+00FF8		PUSHAB	@24(AP)			;   ERR
+00FFB		PUSHL 	-20(FP)			;   LNO
+00FFE		PUSHL 	-16(FP)			;   FNO
+01001		PUSHAB	@4(AP)			;   BUFFER
+01004		CALLS 	S^#4,B.10
+01009		MOVB  	R0,R11
+0100C		TSTB  	R11
+0100E		BNEQ  	L.3
+
+01010	L.2:					; LINE 18/19
+01010		RET   	
+
+01011	L.3:					; LINE 18/20
+01011		TSTB  	20(AP)			;   CONFIRM
+01014		BEQL  	L.5
+
+01016	L.4:					; LINE 18/20
+01016		MOVB  	S^#2,-289(FP)		;   OPTIONS_SET
+0101B		BRB   	L.6
+
+0101D	L.5:					; LINE 18/21
+0101D		CLRB  	-289(FP)		;   OPTIONS_SET
+
+01021	L.6:					; LINE 18/22
+01021		CLRW  	-302(FP)
+01025		PUSHAB	@24(AP)			;   ERR
+01028		PUSHAB	-289(FP)		;   OPTIONS_SET
+0102C		PUSHL 	S^#1
+0102E		PUSHAB	-302(FP)01032		PUSHAB	@8(AP)			;   FNAME
+01035		PUSHAL	STATIC.+0		;   F
+0103B		CALLS 	S^#6,QOPENFILE		;   QOPENFILE
+						; LINE 18/23
+01042		TSTB  	@24(AP)			;   ERR
+01045		BEQL  	.+4
+01047		BRW   	L.17
+
+0104A	L.7:					; LINE 18/24
+						; LINE 18/25
+0104A		PUSHAL	-24(FP)			;   FLP
+0104D		PUSHL 	-16(FP)			;   FNO
+01050		PUSHAB	@4(AP)			;   BUFFER
+01053		CALLS 	S^#3,B.5
+						; LINE 18/26
+01058		PUSHAL	-28(FP)			;   LLP
+0105B		PUSHL 	-20(FP)			;   LNO
+0105E		PUSHAB	@4(AP)			;   BUFFER
+01061		CALLS 	S^#3,B.5
+
+01066	L.8:					; LINE 18/27
+						; LINE 18/28
+01066		MOVAB 	@-24(FP),R11		;   FLP
+0106A		PUSHL 	STATIC.+0		;   F
+01070		MOVZWL	9(R11),-(SP)
+01074		PUSHAB	11(R11)
+01077		PUSHL 	I^#262144		;   ^X40000
+0107D		CALLS 	S^#4,PAX_TXT.WRITE
+01084		PUSHL 	STATIC.+0		;   F
+0108A		CALLS 	S^#1,PAX_TXT.WRLN
+						; LINE 18/29
+01091		MOVL  	STATIC.+0,R11		;   F
+01098		EXTZV 	S^#0,S^#1,34(R11),R11
+0109E		BNEQ  	L.10
+
+010A0	L.9:					; LINE 18/29
+010A0		MOVB  	S^#42,@24(AP)		;   ^X2A  ERR
+010A4		BRB   	L.12
+
+010A6	L.10:					; LINE 18/30
+010A6		CMPL  	-24(FP),-28(FP)		;   FLP  LLP
+010AB		BEQL  	L.12
+
+010AD	L.11:					; LINE 18/31
+010AD		MOVAB 	@-24(FP),R11		;   FLP010B1		MOVL  	5(R11),-24(FP)		;   FLP
+010B6		BRB   	L.8
+
+010B8	L.12:					; LINE 18/32
+						; LINE 18/33
+010B8		CMPL  	-16(FP),S^#1		;   FNO
+010BC		BNEQ  	L.16
+
+010BE	L.13:	MOVAB 	@4(AP),R11		;   BUFFER
+010C2		CMPL  	-20(FP),20(R11)		;   LNO
+010C7		BNEQ  	L.16
+
+010C9	L.14:	TSTB  	@24(AP)			;   ERR
+010CC		BNEQ  	L.16
+
+010CE	L.15:					; LINE 18/34
+						; LINE 18/35
+010CE		MOVAB 	@4(AP),R11		;   BUFFER
+010D2		CLRB  	134(R11)
+						; LINE 18/36
+010D6		PUSHL 	STATIC.+0		;   F
+010DC		PUSHAB	-427(FP)
+010E0		CALLS 	S^#2,PAX_FIO.FNAME	;   FILENAME
+010E7		MOVAB 	@4(AP),R11		;   BUFFER
+010EB		MOVW  	-427(FP),56(R11)
+010F1		CMPW  	56(R11),I^#75		;   ^X4B
+010F7		BLEQU 	X.1
+010F9		MOVW  	I^#75,56(R11)		;   ^X4B
+010FF	X.1:	MOVC3 	56(R11),-425(FP),58(R11)
+						; LINE 18/37
+01107		MOVAB 	@4(AP),R11		;   BUFFER
+0110B		MOVB  	S^#1,133(R11)
+
+01110	L.16:					; LINE 18/38
+						; LINE 18/39
+01110		PUSHL 	STATIC.+0		;   F
+01116		CALLS 	S^#1,PAX_FVM.CLOSE
+						; LINE 18/40
+0111D		BRB   	L.20
+
+0111F	L.17:					; LINE 18/41
+0111F		CMPB  	@24(AP),S^#10		;   ERR
+01123		BNEQ  	L.19
+
+01125	L.18:					; LINE 18/4101125		CLRB  	@24(AP)			;   ERR
+
+01128	L.19:
+	L.20:	BRB   	L.24
+
+0112A	L.21:					; LINE 18/42
+0112A		MOVAL 	-428(FP),SP
+0112F		JMP   	0(R0)
+
+01131	H.21:	.WORD	^M<IV>
+01133		JSB   	PAX_EXC.VAXCOND
+01139	X.2:	.WORD	0
+0113B		.WORD	-300
+0113D	X.3:	.WORD	L.21-X.3
+0113F		.LONG	-1
+01143	X.4:	.WORD	L.22-X.4
+
+01145	L.22:
+	L.23:					; LINE 18/43
+						; LINE 18/44
+01145		PUSHAL	PAX_EXC.ATTN		;   ATTENTION
+0114B		CALLS 	S^#1,PAX_EXC.MASK
+						; LINE 18/45
+01152		PUSHL 	STATIC.+0		;   F
+01158		CALLS 	S^#1,PAX_FVM.CLOSE
+						; LINE 18/46
+0115F		PUSHAB	PROMPT+676		;   PROMPT
+01165		PUSHL 	S^#50			;   ^X32
+01167		CALLS 	S^#2,TTWRITE		;   TTWRITE
+						; LINE 18/47
+0116E		CALLS 	S^#0,TTBRK		;   TTBRK
+						; LINE 18/48
+01175		PUSHAL	PAX_EXC.ATTN		;   ATTENTION
+0117B		CALLS 	S^#1,PAX_EXC.UNMASK
+						; LINE 18/49
+01182		CALLS 	S^#0,PAX_EXC.RESIGNAL
+						; LINE 18/50
+
+01189	L.24:	PUSHL 	S^#0
+0118B		CALLS 	S^#1,PAX_EXC.RESTORE
+						; LINE 18/51
+01192		RET   	
+
+	;
+	;	Begin subroutine QTAG	;
+
+01193	C.27:	.WORD	C.27-C.27
+01195		.WORD	4
+01197		.ASCII	"QTAG"
+
+0119B	B.29:	.ENTRY	QTAG,^M<R11,IV>
+0119D		CLRL  	-(SP)
+0119F		PUSHAL	C.27
+011A2		SUBL2 	S^#12,SP
+
+011A5	L.1:					; LINE 19/13
+						; LINE 19/14
+011A5		PUSHAB	@4(AP)			;   BUF
+011A8		CALLS 	S^#1,B.20
+011AD		MOVL  	R0,R11
+011B0		CMPL  	8(AP),R11		;   LINE
+011B4		BLSSU 	L.3
+
+011B6	L.2:	PUSHAB	@4(AP)			;   BUF
+011B9		CALLS 	S^#1,B.19
+011BE		MOVL  	R0,R11
+011C1		CMPL  	8(AP),R11		;   LINE
+011C5		BLEQU 	L.4
+
+011C7	L.3:					; LINE 19/14
+011C7		CLRB  	-13(FP)			;   QTAG
+011CA		BRB   	L.6
+
+011CC	L.4:
+	L.5:					; LINE 19/15
+						; LINE 19/16
+011CC		PUSHL 	8(AP)			;   LINE
+011CF		PUSHAB	@4(AP)			;   BUF
+011D2		CALLS 	S^#2,B.8
+011D7		MOVL  	R0,R11
+011DA		PUSHAL	-20(FP)			;   LP
+011DD		PUSHL 	R11
+011DF		PUSHAB	@4(AP)			;   BUF
+011E2		CALLS 	S^#3,B.5
+						; LINE 19/17
+011E7		MOVB  	@-20(FP),-13(FP)	;   LP  QTAG
+
+011EC	L.6:					; LINE 19/18
+						; LINE 19/19011EC		MOVZBL	-13(FP),R0		;   QTAG
+011F0		RET   	
+
+	;
+	;	Begin subroutine QTAGSET
+	;
+
+011F1	C.28:	.WORD	C.28-C.28
+011F3		.WORD	7
+011F5		.ASCII	"QTAGSET"
+
+011FC	B.30:	.ENTRY	QTAGSET,^M<R11,IV>
+011FE		CLRL  	-(SP)
+01200		PUSHAL	C.28
+01203		SUBL2 	S^#8,SP
+
+01206	L.1:					; LINE 20/14
+						; LINE 20/15
+01206		PUSHAB	@4(AP)			;   BUF
+01209		CALLS 	S^#1,B.20
+0120E		MOVL  	R0,R11
+01211		CMPL  	8(AP),R11		;   LINE
+01215		BLSSU 	L.3
+
+01217	L.2:	PUSHAB	@4(AP)			;   BUF
+0121A		CALLS 	S^#1,B.19
+0121F		MOVL  	R0,R11
+01222		CMPL  	8(AP),R11		;   LINE
+01226		BLEQU 	L.4
+
+01228	L.3:					; LINE 20/15
+01228		MOVB  	S^#2,@16(AP)		;   ERR
+0122C		BRB   	L.6
+
+0122E	L.4:
+	L.5:					; LINE 20/16
+						; LINE 20/17
+0122E		PUSHL 	8(AP)			;   LINE
+01231		PUSHAB	@4(AP)			;   BUF
+01234		CALLS 	S^#2,B.8
+01239		MOVL  	R0,R11
+0123C		PUSHAL	-16(FP)			;   LP
+0123F		PUSHL 	R11
+01241		PUSHAB	@4(AP)			;   BUF
+01244		CALLS 	S^#3,B.5						; LINE 20/18
+01249		MOVB  	12(AP),@-16(FP)		;   TAG  LP
+
+0124E	L.6:					; LINE 20/19
+						; LINE 20/20
+0124E		RET   	
+
+	;
+	;	Begin subroutine QTAGCLEAR
+	;
+
+0124F	C.29:	.WORD	C.29-C.29
+01251		.WORD	9
+01253		.ASCII	"QTAGCLEAR"
+
+0125C	B.31:	.ENTRY	QTAGCLEAR,^M<R10,R11,IV>
+0125E		CLRL  	-(SP)
+01260		PUSHAL	C.29
+01263		SUBL2 	S^#16,SP		;   ^X10
+
+01266	L.1:					; LINE 21/11
+						; LINE 21/12
+01266		MOVAB 	@4(AP),R11		;   BUF
+0126A		MOVL  	32(R11),-24(FP)		;   V.125
+0126F		MOVAB 	@4(AP),R10		;   BUF
+01273		CMPL  	28(R10),32(R11)
+01278		BGTRU 	L.5
+
+0127A	L.2:	MOVL  	28(R10),-20(FP)		;   LINE
+
+0127F	L.3:
+	L.4:					; LINE 21/12
+						; LINE 21/13
+0127F		PUSHAL	-16(FP)			;   LP
+01282		PUSHL 	-20(FP)			;   LINE
+01285		PUSHAB	@4(AP)			;   BUF
+01288		CALLS 	S^#3,B.5
+						; LINE 21/14
+0128D		CLRB  	@-16(FP)		;   LP
+						; LINE 21/15
+01290		ADDL3 	S^#1,-20(FP),-20(FP)	;   LINE  LINE
+01296		CMPL  	-20(FP),-24(FP)		;   LINE  V.125
+0129B		BLEQU 	L.3
+
+0129D	L.5:					; LINE 21/160129D		RET   	
+
+	;
+	;	Constant Area:
+	;
+	;
+	;	Single and multiple longwords:
+	;
+0129E		.BYTE	0
+0129F		.BYTE	0
+
+012A0	K.1:
+	K.2:
+	K.3:
+	K.4:	.LONG	0
+
+	;
+	;	Public symbol definitions:
+	;
+
+	;
+	;    Code area:      129E bytes (4766 decimal)
+	;    Constant area:  6 bytes (6 decimal)
+	;    Static area:    4 bytes (4 decimal)
+	;
+
+		.END
+ yqf7+

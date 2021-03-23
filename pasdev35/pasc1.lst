@@ -1,0 +1,276 @@
+File DSK:PASC1.PAS[31024,332214]   Mon 14-Jun-82 12:54   MDSI, Company Confidential   FORMAT Version 1.9 
+
+File DSK:PASC1.PAS[31024,332214]   Mon 14-Jun-82 12:54   MDSI, Company Confidential   FORMAT Version 1.9 
+
+File DSK:PASC1.PAS[31024,332214]   Mon 14-Jun-82 12:54   MDSI, Company Confidential   FORMAT Version 1.9 
+
+File DSK:PASC1.PAS[31024,332214]   Mon 14-Jun-82 12:54   MDSI, Company Confidential   FORMAT Version 1.9 
+
+
+
+
+
+               $$$$     $$$     $$$     $$$      $             $$$$     $$$     $$$ 
+               $   $   $   $   $   $   $   $    $$             $   $   $   $   $   $
+               $   $   $   $   $       $         $             $   $   $   $   $    
+               $$$$    $$$$$    $$$    $         $             $$$$    $$$$$    $$$ 
+               $       $   $       $   $         $             $       $   $       $
+               $       $   $   $   $   $   $     $      $$     $       $   $   $   $
+               $       $   $    $$$     $$$     $$$     $$     $       $   $    $$$ 
+
+
+
+
+File DSK:PASC1.PAS[31024,332214]   Mon 14-Jun-82 12:54   MDSI, Company Confidential   FORMAT Version 1.9 
+
+File DSK:PASC1.PAS[31024,332214]   Mon 14-Jun-82 12:54   MDSI, Company Confidential   FORMAT Version 1.9 
+
+File DSK:PASC1.PAS[31024,332214]   Mon 14-Jun-82 12:54   MDSI, Company Confidential   FORMAT Version 1.9 
+
+File DSK:PASC1.PAS[31024,332214]   Mon 14-Jun-82 12:54   MDSI, Company Confidential   FORMAT Version 1.9 
+File DSK:PASC1.PAS[31024,332214]   Mon 14-Jun-82 12:54   MDSI, Company Confidential   FORMAT Version 1.9 
+
+File DSK:PASC1.PAS[31024,332214]   Mon 14-Jun-82 12:54   MDSI, Company Confidential   FORMAT Version 1.9 
+
+File DSK:PASC1.PAS[31024,332214]   Mon 14-Jun-82 12:54   MDSI, Company Confidential   FORMAT Version 1.9 
+
+File DSK:PASC1.PAS[31024,332214]   Mon 14-Jun-82 12:54   MDSI, Company Confidential   FORMAT Version 1.9 
+
+
+
+
+
+               $$$$     $$$     $$$     $$$      $             $$$$     $$$     $$$ 
+               $   $   $   $   $   $   $   $    $$             $   $   $   $   $   $
+               $   $   $   $   $       $         $             $   $   $   $   $    
+               $$$$    $$$$$    $$$    $         $             $$$$    $$$$$    $$$ 
+               $       $   $       $   $         $             $       $   $       $
+               $       $   $   $   $   $   $     $      $$     $       $   $   $   $
+               $       $   $    $$$     $$$     $$$     $$     $       $   $    $$$ 
+
+
+
+
+File DSK:PASC1.PAS[31024,332214]   Mon 14-Jun-82 12:54   MDSI, Company Confidential   FORMAT Version 1.9 
+
+File DSK:PASC1.PAS[31024,332214]   Mon 14-Jun-82 12:54   MDSI, Company Confidential   FORMAT Version 1.9 
+
+File DSK:PASC1.PAS[31024,332214]   Mon 14-Jun-82 12:54   MDSI, Company Confidential   FORMAT Version 1.9 
+
+File DSK:PASC1.PAS[31024,332214]   Mon 14-Jun-82 12:54   MDSI, Company Confidential   FORMAT Version 1.9 
+SECTION    0                                                                     PAGE    1
+
+    1	PROGRAM Widgit_Orders;
+    2	  (* Program                : Widgit_Orders
+    3	    Date                   : May 11, 1982
+    4	    Programmer             : Julie Smith
+    5	
+    6		This program was written to practice using the language PASCAL.
+    7	   The program implements a list of widgit orders for billing and
+    8	   delivery purposes.  Each order consists of a costomer name, an order number,
+    9	   the quantity of widgits ordered, the color ordered, delivery date 
+   10	   requested, and the total amount due.
+   11	
+   12	       The available operations on the order list are:
+   13	   1. Add an order
+   14	   2. Delete an order
+   15	
+   16	       The input for the program is constructed as follows:
+   17	   1. Add
+   18	    A <customer name> <order # > <quantity ordered> <color ordered> <date>
+   19	   2. Delete
+   20	    D <order #>
+   21	
+   22	   Warning...
+   23	     All input is assumed to be valid.  No error checking is done.
+   24	*)SECTION    1      Declarations                                                   PAGE    2
+
+    2	CONST Widgit_Cost  = 2.5;			(*Widgits cost $2.50 each*)
+    3	
+    4	TYPE  Date = RECORD
+    5	
+    6		       Mo : 1..12;
+    7		       Da : 1..31;
+    8		       Yr : 1982..2000
+    9		     END;
+   10	
+   11	     Order = RECORD
+   12	
+   13		       Cust_Name : PACKED ARRAY [1..10] OF Char;
+   14		       Order_Num : 1..1000;
+   15		       Quantity  : Integer;
+   16		       Color     : PACKED ARRAY [1..6] OF Char;
+   17		       Deliv_Date: Date;
+   18		       Amount_Due: Real;
+   19		       Next      : ^Order;
+   20		     END;
+   21	
+   22	VAR First       : ^Order;			(*Points to the first order in the list*)
+   23	    Command     : Char;				(*Holds the command ('A' or 'D') read from the input*)
+   24	    Data        : Text;				(*Data file*)
+   25	    Data_File   : STRING [ 10 ];
+   26	    test_res    : boolean;SECTION    2      Add                                                            PAGE    3
+
+    2	PROCEDURE Add;
+    3	
+    4	  VAR New_Order,				(*Points to newly created order*)
+    5	      Current_Order : ^Order;			(*Pointer travels down the list*)
+    6	
+    7	  BEGIN
+    8	    GET(Data);					(*Skip a space between command and first field*)
+    9	
+   10	    NEW(New_Order);				(*Allocate  space for new order*)
+   11	
+   12	    WITH New_Order ^ DO
+   13	    BEGIN
+   14	      READ(Data,Cust_Name, Order_Num, Quantity, Color);
+   15	      WITH Deliv_Date DO
+   16		READ(Data,Mo, Da, Yr);
+   17	      Amount_Due := Widgit_Cost * Quantity;
+   18	      Next := NIL;
+   19	
+   20	      (*Echo the input command*)
+   21	      WRITELN(TTY,'Add', Cust_Name : 11, Order_Num); BREAK(TTY);
+   22	    END;
+   23	
+   24	
+   25	    (*Insert the new order at the end of the list*)
+   26	    IF First = NIL
+   27	      THEN First := New_Order
+   28	      ELSE BEGIN
+   29		     Current_Order := First;
+   30		     WHILE Current_Order^.Next <> NIL DO
+   31		       Current_Order := Current_Order^.Next;
+   32		     Current_Order^.Next := New_Order
+   33		   END
+   34	  END;SECTION    3      Delete                                                         PAGE    4
+
+    2	PROCEDURE Delete;
+    3	
+    4	  VAR Order_Num       : Integer;
+    5	      Current_Order   : ^Order;
+    6	      Found           : Boolean;
+    7	      Temp            : ^Order;
+    8	
+    9	  BEGIN
+   10	    READ(Data,Order_Num);
+   11	
+   12	    (*Echo the input*)
+   13	    WRITELN(TTY,'Delete', Order_Num); BREAK(TTY);
+   14	
+   15	    Found := FALSE;
+   16	    Current_Order := First;
+   17	
+   18	    (*Delete the order with the given order number, from the list*)
+   19	    IF Order_Num = Current_Order^.Order_Num
+   20	      THEN BEGIN
+   21		     Temp := First^.Next;
+   22		     DISPOSE(First);
+   23		     First := Temp;
+   24		     Found := TRUE
+   25		   END;
+   26	
+   27	    IF NOT Found
+   28	      THEN BEGIN
+   29		     WHILE (Current_Order^.Next <> NIL) AND NOT Found DO
+   30		     BEGIN
+   31		       IF Order_Num = Current_Order^.Next^.Order_Num
+   32			 THEN BEGIN
+   33				(*Delete the order*)
+   34				Temp := Current_Order^.Next^.Next;
+   35				DISPOSE(Current_Order^.Next);
+   36				Current_Order^.Next := Temp;
+   37				Found := TRUE
+   38			      END
+   39			 ELSE Current_Order := Current_Order^.Next
+   40		     END
+   41		   END
+   42	  END;SECTION    4      Print_Order_List                                               PAGE    5
+
+    2	PROCEDURE Print_Order_List;
+    3	
+    4	  VAR   Current_Order : ^Order;
+    5	
+    6	  BEGIN
+    7	    WRITELN(TTY);
+    8	    WRITELN(TTY);
+    9	    WRITELN(TTY,'Customer orders for Acme Widgit Co'); BREAK(TTY);
+   10	    WRITELN(TTY);
+   11	    WRITELN(TTY,'Customer Name Order # Quantity Color Delivery Date Amt Due'); BREAK(TTY);
+   12	
+   13	    Current_Order := First;
+   14	
+   15	    WHILE Current_Order <> NIL DO
+   16	    BEGIN
+   17	      WITH Current_Order^ DO
+   18	      BEGIN
+   19		WRITE(TTY,Cust_name : 13, Order_Num : 8, Quantity : 9, Color : 6); BREAK(TTY);
+   20		WITH Deliv_Date DO
+   21		BEGIN
+   22		  CASE Mo OF
+   23		    1 : WRITE(TTY,'Jan' : 5);
+   24		    2 : WRITE(TTY,'Feb' : 5);
+   25		    3 : WRITE(TTY,'Mar' : 5);
+   26		    4 : WRITE(TTY,'Apr' : 5);
+   27		    5 : WRITE(TTY,'May' : 5);
+   28		    6 : WRITE(TTY,'Jun' : 5);
+   29		    7 : WRITE(TTY,'Jul' : 5);
+   30		    8 : WRITE(TTY,'Aug' : 5);
+   31		    9 : WRITE(TTY,'Sep' : 5);
+   32		    10 : WRITE(TTY,'Oct' : 5);
+   33		    11 : WRITE(TTY,'Nov' : 5);
+   34		    12 : WRITE(TTY,'Dec' : 5);
+   35		  END;
+   36		  BREAK(TTY);
+   37		  WRITE(TTY,Da : 3, ',', Yr : 5); BREAK(TTY);
+   38		END;
+   39	
+   40		WRITELN(TTY,' $', Amount_Due : 7 : 2); BREAK(TTY);
+   41	      END;
+   42	      Current_Order := Current_Order^.Next
+   43	    END
+   44	  END;SECTION    5      Mainline                                                       PAGE    6
+
+    2	(**** MAIN PROGRAM ****)
+    3	
+    4	BEGIN
+    5	  REWRITE(TTY);
+    6	  WRITELN(TTY,'Widgit Program               May 1982');
+    7	  WRITELN(TTY);
+    8	  BREAK(TTY);
+    9	  OPEN(TTY);
+   10	  WRITE(TTY,'Enter data file name:');
+   11	  BREAK(TTY);
+   12	  READLN(TTY);
+   13	  READ(TTY,Data_File);
+   14	  WRITELN(TTY,Data_File); 
+   15	  BREAK(TTY);
+   16	  RESET(Data, Data_File);
+   17	  WRITELN(TTY,'Data has been associated with data_file');
+   18	  BREAK(TTY);
+   19	
+   20	  (*Initialize list of orders to nil*)
+   21	  First := NIL;
+   22	
+   23	
+   24	  WHILE NOT EOF(Data) DO
+   25	    BEGIN
+   26	      READ(Data,Command);      
+   27	      WRITELN(TTY,'Command is ', Command);
+   28	      BREAK(TTY);
+   29	
+   30	      IF Command = 'A'
+   31		THEN Add				(*Add order to list*)
+   32		ELSE Delete;				(*Delete order from the list*)
+   33	
+   34	      READLN(Data)
+   35	    END;
+   36	
+   37	  Print_Order_List
+   38	END.SECTION       TITLE                                                              PAGE
+
+     2    Add                                                                 3
+     1    Declarations                                                        2
+     3    Delete                                                              4
+     5    Mainline                                                            6
+     4    Print_Order_List                                                    5  

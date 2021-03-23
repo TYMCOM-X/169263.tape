@@ -1,0 +1,52 @@
+;    +--------------------------------------------------------------+
+;    |                                                              |
+;    |                          V M O D F                           |
+;    |                          - - - - -                           |
+;    |                                                              |
+;    +--------------------------------------------------------------+
+;    
+;    MDSI, Company Confidential
+;    
+;    SYSTEM:  PASCAL Runtime
+;    
+;    STARTED:  11/17/78
+;    
+;    PURPOSE:  This module provides management of the  virtual  space
+;       for NEW, DISPOSE, and related operations.  It uses a modified
+;       first-fit allocation algorithm.
+;    
+;    USAGE:
+;    
+;          MOVEI  REG, size
+;          PUSHJ  TOPP,VNEW.
+;          returns: (AC1) -- real address of new record
+;                   (REG) -- virtual address of new record
+;    
+;          ANEW. -- same as VNEW., except (AC1) contains area number in which
+;                   the allocation is to be made.
+;    
+;          MOVE   REG,ptr
+;          PUSHJ  TOPP,VDSPS.
+;    
+;          PUSHJ  TOPP,VMARK.
+;          returns: (REG) contains the base heap address of the default area.
+;    
+;          PUSHJ  TOPP,AMARK.
+;          same as VMARK., except explicit area number given in (AC1).
+;    
+;          MOVE   REG,heapmark
+;          PUSHJ  TOPP,VRLES.
+;    
+;          The normal entries NEW., DSPOS., MARK., and RLEAS. cause runtime errors.
+;    
+;    ALGORITHM:  This module uses a version of the modified first-fit
+;       algorithm   from   Knuth  (see  routine  KNUTH  below).  Heap
+;       extensions are done as precisely as  possible  (exact  if  no
+;       page  alignment  is  specified)  to avoid filling the virtual
+;       space with small free  blocks  when  disposes  are  few,  far
+;       between,  and complete.  Of course, random disposes will slow
+;       down any allocation algorithm.
+;    
+;    RESPONSIBLE:  Jerry Rosen -- PASCAL group
+;    
+;    ----------------------------------------------------------------

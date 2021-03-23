@@ -1,0 +1,2312 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                SCRMAC User's Manual
+
+                                     VERSION 2.0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          Prepared by:  S.  M.  Kennedy
+           
+          Last Updated:  November 16, 1981
+           
+
+
+
+
+
+
+
+
+
+
+
+
+          SCRMAC User's Manual                                      Page 1
+          November 16, 1981
+
+
+
+
+
+
+
+          1  Introduction             ____________
+
+
+              The SCRMAC package is a set of PMF macros designed  primarily
+          for  writing section structured documents.  When using the macros
+          PMF is used as a preprocessor to Scribe.
+
+              The SCRMAC package provides  three  advantages  in  preparing
+          documents:
+
+              1.  Key-in  time  is  reduced; SCRMAC macros have the
+                  potential to emit several Scribe commands  for  a
+                  single macro call.
+
+              2.  The  macros  are flexible and permit easy changes
+                  to the controlling parameters to allow variations
+                  in designing documents, and yet
+
+              3.  SCRMAC  provides some standardization to document
+                  design.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          Introduction
+
+
+
+
+
+
+          SCRMAC User's Manual                                      Page 2
+          November 16, 1981
+
+
+          2  General Information             _______ ___________
+
+
+              This section provides an overview of the use and functions of
+          the SCRMAC Package.
+
+
+
+          2.1 Preparing to Use the SCRMAC Package
+
+              When  preparing  a document for use with SCRMAC the #DOCUMENT
+          macro (described fully in Section 4.1.1) must be  called  exactly                                                   ____             _______
+          once  at  the  beginning  of  the  document.  This  will make the
+          necessary initializations to SCRMAC and emit several initializing
+          Scribe  commands which include the setting up of the title, date,
+          page number, margins, page length, and page width.
+
+
+
+          2.2 Available Functions
+
+              SCRMAC is set up  primarily  for  use  in  designing  section
+          structured documents.  #SECT is a macro which is provided to flag
+          and set up a new section of text.
+
+              The macros #BEGINLEVEL and #ENDLEVEL are used in  conjunction
+          with   #SECT  to  "level"  sections  (e.g.,  this  section,  2.2 
+          Available Functions, is one level below, i.e.  contained in,  the
+          section 2. General Information).
+
+              A  macro  #PAR  is  provided  so  that  new paragraphs may be
+          started and spaced properly within sections.
+
+              For text which is desired to  be  put  in  Scribe's  verbatim
+          mode,  the paired macros #BEGINFIGURE and #ENDFIGURE may be used.
+          In addition to emitting Scribe's $VERBATIM command  they  provide
+          indenting and spacing options.
+
+              For  constructing  lists  of  "items"  the macros #BEGINITEM,
+          #ITEM, and #ENDITEM are provided.
+
+              Margins  may  be  easily  changed   and   reset   using   the
+          #BEGINMARGIN and #ENDMARGIN macros.
+
+              A  macro  called  #APPENDIX  is included so appendices may be
+          used in the document neatly.  They are  handled  very  much  like
+          #SECT handles sections.
+
+              A  macro  called #TITLE_PAGE_1 is provided to setup a a title
+          page for documents.
+
+              Level one section titles and appendix titles may be placed as
+          footnotes to the sections text by using the macro #FOOTNOTES.
+
+
+          General Information
+
+
+
+
+
+
+          SCRMAC User's Manual                                      Page 3
+          November 16, 1981
+
+
+              A  table of contents macro, #TOC, emits Scribe commands which
+          set up a table of contents containing entries  for  each  of  the
+          sections and appendices in the document.
+
+              A #MEMO macro is provided to generate a standard memo heading
+          for memos.
+
+
+
+          2.3 Changing Default Values
+
+              #DOCUMENT initializes many SCRMAC values used by other macros
+          in  the  SCRMAC  package.  These  initial  values  are called the
+          default values.  SCRMAC includes several macros which enable  the
+          user to change these default values to suit personal needs if the
+          default values set  in  #DOCUMENT  are  not  convenient.  Default
+          macros  are  provided to change section, paragraph, figure, item,
+          margin, table of contents, and tab default values, and are called
+          #SECT_DEFAULT,   #PAR_DEFAULT,   #FIGURE_DEFAULT,  #ITEM_DEFAULT,
+          #MARGIN_DEFAULT, #TOC_DEFAULT, and #TAB_DEFAULT respectively.
+
+
+
+          2.4 Resetting Default Values
+
+              Once default values have been changed using a  DEFAULT  macro
+          they  may  be  changed  back to the values they had preceding the
+          last DEFAULT macro call.  To do this the POP macro is used  which
+          corresponds   to   the   DEFAULT   macro   used.  (e.g.,  If  the
+          #TAB_DEFAULT was used to change  the  tab  default  values,  then
+          #TAB_POP  macro  will reset the default values to the values they
+          held preceding the last #TAB_DEFAULT call.)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          General Information
+
+
+
+
+
+
+          SCRMAC User's Manual                                      Page 4
+          November 16, 1981
+
+
+          3  Operating Instructions             _________ ____________
+
+
+              This section  describes  the  operating  procedures  for  the
+          SCRMAC Package.
+
+
+
+          3.1 On ADP and TYMSHARE
+
+
+              The  following sections describe how to run SCRMAC on ADP and
+          TYMSHARE.
+
+
+
+          3.1.1 Running SCRMAC
+              Prepare the document using the  SCRMAC  macros.  To  run  the
+          SCRMAC program enter one of the following at the monitor prompt:
+
+              On ADP:         .RUN RND:SCRMAC                               ___ __________
+
+              On TYMSHARE:    .DO SCRMAC                               __ ______
+
+
+              SCRMAC  will  respond  by printing the version number and the
+          version date, and then prompt the user with an asterisk, "*".
+
+          SCRMAC, version-number  version-date
+          *
+
+
+              To exit SCRMAC press the carriage  return  immediately  after
+          the asterisk prompt:
+
+          *<cr>           ____
+
+          EXIT
+
+
+
+
+          3.1.2 SCRMAC Commands
+              The SCRMAC program accepts command lines of the form:
+
+          [<output file> = ] <input file> [/<program>:(<option list>)]*
+
+          If  the <output file> is omitted, the program takes the file name
+          from the input file.  If  input  or  output  extensions  are  not
+          specified,  SCRMAC  assumes ".PMF" for the input file, and ".TXT"
+          for the output file.
+
+
+
+
+          Operating Instructions
+
+
+
+
+
+
+          SCRMAC User's Manual                                      Page 5
+          November 16, 1981
+
+
+              After the command line is entered SCRMAC does some processing
+          and  then  runs  PMF  to preprocess the file for SCRIBE, which is
+          subsequently run to produce  the  final  document  text.  Options
+          other  than  those  used  by SCRMAC may be specified by using the
+          option list form given above, where <program> is either "PMF"  or
+          "SCRIBE"  (either may be abrieviated to one or more letters), and
+          <option list> is a legal option list for the  specified  program.
+          The   default  options  used  by  SCRMAC  when  running  PMF  are
+          "/LIB:SCRMAC/NOPASCAL" .  SCRMAC does not use  any  options  when
+          running SCRIBE.
+
+          NOTE: The  syntax  for  option  lists  is very rigid:  slash (/),
+                <program name>, colon (:), <legal option list> enclosed  in
+                parenthesis.  There  should  not  be any blanks between the
+                slash and the closing parenthesis of the option list.
+
+
+
+
+          3.1.3 SCRMAC Actions
+              After  a  command  line  is  entered,  SCRMAC,   after   some
+          processing, will run PMF to preprocess the input file for SCRIBE.
+
+              PMF  will  print  its  name,  version number and version date
+          after the  user's  command  line.  After  PMF  has  finished  its
+          processing, it will then run SCRIBE to produce the final document
+          text.
+
+              As does PMF, SCRIBE will print its name, version number,  and
+          version  date  after  the  PMF  version information.  When SCRIBE
+          finishes its processing it will then return control to SCRMAC.
+
+              SCRMAC reprints its name, version number, and  version  date,
+          and then prompts the user for another command line.
+
+              After  processing  one  command line the terminal output from
+          SCRMAC will be:
+
+          .SCRMAC, version-number  version-date
+          *<command line>
+          PMF, version-number  version-date
+          SCRIBE, version-number  version date
+
+          SCRMAC, version-number Version-date
+          *
+
+
+
+
+
+
+
+
+
+
+          Operating Instructions
+
+
+
+
+
+
+          SCRMAC User's Manual                                      Page 6
+          November 16, 1981
+
+
+
+
+
+          3.2 On the VAX
+
+
+              The following sections tell how to run SCRMAC on the VAX.
+
+
+
+          3.2.1 Running SCRMAC
+              Prepare the document using the SCRMAC macros and  place  them
+          in a file with the extension ".PMF".  At the monitor prompt, "$",
+          enter
+
+               SCRMAC <filename>               ______ __________
+
+          where <filename> is the name of the file without the extension.                                                   _______
+
+
+
+          3.2.2 SCRMAC Commands
+              There are no SCRMAC commands on the VAX.
+
+
+
+          3.2.3 SCRMAC Actions
+              SCRMAC will run PMF and SCRIBE which will produce  the  final
+          text  file  "<filename>.TXT".  SCRMAC  leaves  the  user  at  the
+          monitor prompt.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          Operating Instructions
+
+
+
+
+
+
+          SCRMAC User's Manual                                      Page 7
+          November 16, 1981
+
+
+          4  Macro Descriptions             _____ ____________
+
+
+              The SCRMAC maros are divided into  two  groups:  1)  function
+          macros  (macros  which emit Scribe commands to perform a specific
+          function), and 2) default  macros  (macros  used  to  change  the
+          default values used by the function macros).
+
+
+
+          4.1 Function Macros
+
+
+              The following is a list of the function macros of SCRMAC.  If
+          the macro has parameters  they  are  listed  and  their  function
+          described.  If  a parameter is omitted in a macro call the action
+          taken is detailed under the macro description and is specific  to
+          that parameter of that macro.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          Macro Descriptions
+
+
+
+
+
+
+          SCRMAC User's Manual                                      Page 8
+          November 16, 1981
+
+
+
+
+
+          4.1.1 The #DOCUMENT Macro
+
+              #DOCUMENT(the_title,date,page_length,left_margin,page_width)
+
+              The #DOCUMENT macro sets several document wide parameters and
+          must be called once at the beginning of the document.  The  first
+          parameter  is  the  title;  the second parameter is the date (see
+          below); the third  parameter  is  the  page  length;  the  fourth
+          parameter  is  the  left  margin size; the fifth parameter is the
+          page width (as would be specified in a Scribe $WIDTH directive).
+
+              PMF text quotes ,'<:' and ':>', should be used to bracket any
+          parameter which includes commas.  For example, the date parameter
+          "June 22, 1981" should be specified in  the  #DOCUMENT  macro  as
+          follows:
+
+              #DOCUMENT(This Is The Title,<:June 22, 1981:>,,5)
+
+              Note  in  the  above example that commas must be used to omit
+          any non-trailing parameters (above:page length is omitted).
+
+              #DOCUMENT emits several Scribe directives which set the  page
+          length,  the  left  margin  size, the page width, the default tab
+          values, and also sets page numbering off (i.e., $NUMBER  OFF).  A
+          title  directive  is  also  emitted  which  places the title left
+          justified and the date left  justified  on  the  line  below  the
+          title.
+
+              Default  values  used by #DOCUMENT for omitted parameters are
+          as follows:
+
+              the title        defaults to the null string;
+              the date         defaults to the null string;
+              the page length  defaults to 66;
+              the left margin  defaults to 10;
+              the page width   defaults to 75.
+
+              Omitting the title parameter causes the  #DOCUMENT  macro  to
+          omit the title, date, and page numbering throughout the document.
+
+
+
+
+
+
+
+
+
+
+
+
+
+          Macro Descriptions
+
+
+
+
+
+
+          SCRMAC User's Manual                                      Page 9
+          November 16, 1981
+
+
+
+
+
+          4.1.2 The #SECT Macro
+
+              #SECT(title)
+
+              The  #SECT  macro  should  be  used  at the beginning of each
+          section.  The title of the section is the only parameter.
+
+              The action of the #SECT macro is generally as follows:  lines
+          are skipped before the section title using a $SKIP directive, the
+          section number and title are then emitted, a  table  of  contents
+          entry  is  emitted,  and  a number of lines are skipped after the
+          title before the section text begins (using a $SKIP directive).
+
+              The number of lines skipped  before  and  after  the  section
+          title  varies  depending  on  the  current  section level.  $SKIP
+          directives are emitted for  skipping  before  and  after  section
+          titles using the current default values.  Initially the #DOCUMENT
+          macro sets the default values as follows:
+
+          Level One     pages before section title  - skips 2 lines after
+          Level Two     skips 3 lines before        - skips 2 lines after
+          Level Three   skips 2 lines before        - skips 1 line after
+          Level Four... same as Level Three
+          (for an explanation of Levels see #BEGINLEVEL macro description)
+
+
+          NOTES:
+
+
+                1. The first line of the first  paragraph  of  the  section
+                   will  be indented according to the current default value
+                   used by the #PAR macro.
+                2. #SECT guarantees that at least two lines of section text                                         __ _____
+                   will be on the same page as the section title.
+                3. To start level one sections at the top of a new page the
+                   default value for  skipping  before  level  one  section
+                   titles must be equal to or greater than the page length.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          Macro Descriptions
+
+
+
+
+
+
+          SCRMAC User's Manual                                      Page 10
+          November 16, 1981
+
+
+
+
+
+          4.1.3 The #BEGINLEVEL Macro
+
+              #BEGINLEVEL
+
+              The  #BEGINLEVEL  macro should be just before any #SECT macro
+          which begins a lower level section.  It emits a Scribe $LEVEL  +1
+          command  and  internally keeps track of the current level for use
+          by other macros.
+
+              In case the idea of levels is still confusing here is a short
+          example:  A  lower level section is one which is contained in the
+          section above it.  For example,  we  have  a  Level  One  section
+          entitled "The Alphabet", i.e.,
+
+              2.  The Alphabet
+
+          Two  sections  in "The Alphabet" may be "The Consonants" and "The
+          Vowels".  They would be  at  Level  Two  (one  level  below  "The
+          Alphabet") and would be titled as follows:
+
+              2.1  Consonants
+              2.2  Vowels
+
+          Two  sections  in  the section "Vowels" may be "The Letter A" and
+          "The Letter E".  These two sections would be Level Three sections
+          and would be titled as follows:
+
+              2.2.1  The Letter A
+              2.2.2  The Letter E
+
+
+              After  the  #DOCUMENT macro the level is automatically set to
+          Level One; therefore, it is not necessary to  use  a  #BEGINLEVEL                                      ___
+          macro  before  Level  One  sections.  Also it should only be used                                                               ____
+          when a new level is started, not before each  lower  level  #SECT
+          call   (i.e.,   a   #BEGINLEVEL   should   be   used  before  the
+          #SECT(Consonants) macro call, but not  before  the  #SECT(Vowels)                                            ___
+          macro call).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          Macro Descriptions
+
+
+
+
+
+
+          SCRMAC User's Manual                                      Page 11
+          November 16, 1981
+
+
+
+
+
+          4.1.4 The #ENDLEVEL Macro
+
+              #ENDLEVEL
+
+              The  #ENDLEVEL  macro  should  be  used whereever the sec
+          level should increase.  The Scribe directive $LEVEL -1 is emitted
+          and internal bookkeeping is done.
+
+              Using  the  example in the #BEGINLEVEL description, after the
+          last section in 2.1 Consonants, say "The Letter Z"  section,  the
+          #ENDLEVEL  macro should be used to return to Level Two from Level
+          Three before the #SECT (Vowels) is used.
+
+
+
+          4.1.5 The #PAR Macro
+
+              #PAR (lines_before, first_line_indentation)
+
+              The #PAR macro should be used at the beginning of a paragraph
+          which is not the first paragraph of a section (i.e., it should be                   ___
+          used to separate pargraphs within sections).  The first parameter
+          is  the  number of spaces to skip before the beginning of the new
+          paragraph text.  The second parameter is the number of spaces  to
+          indent the first line of the paragraph.
+
+              #PAR emits Scribe commands which do the necessary spacing and
+          indenting using the $SKIP and $PARAGRAPH  directives.  #PAR  also
+          assures  that  at least the first two lines of the paragraph will                         __ _____
+          be on the same page.
+
+              If either of the parameters are omitted  #PAR  will  use  the
+          current   #PAR   default   value  corresponding  to  the  omitted
+          parameter.  #DOCUMENT initially sets these default values to skip
+          one  (1)  line before the new paragraph, and not indent the first
+          line (indentation = 0).  These  default  values  may  be  changed
+          using  the  #PAR_DEFAULT  macro.  If the user wishes to omit both
+          parameters #PAR() should be used, thus forcing #PAR to  use  both
+          of the current default values.
+
+
+
+
+
+
+
+
+
+
+
+
+
+          Macro Descriptions
+
+
+
+
+
+
+          SCRMAC User's Manual                                      Page 12
+          November 16, 1981
+
+
+
+
+
+          4.1.6 The #BEGINFIGURE Macro
+
+              #BEGINFIGURE (lines_needed, indentation,
+                                                 lines_before, lines_after)
+
+              The  #BEGINFIGURE  macro  may  be  used before text requiring
+          Scribe's verbatim mode.  The first parameter, if given,  will  be
+          used  as  the  argument  for the $NEED directive to insure enough
+          lines remain for the figure before a page break; if  omitted,  no
+          $NEED  directive  will  be  omitted.  The second parameter is the
+          relative number of spaces the  figure  should  be  indented.  The
+          third parameter is the number of lines to skip before the figure,
+          and the fourth parameter is the number of lines to skip after the
+          figure.
+
+              The   initial   default  values  for  the  second  and  third
+          parameters are 5 and 1, respectively.  The current default values
+          for  these  parameters  will  be  used  if  a  parameter  is  not
+          explicitly  given  in  the  #BEGINLEVEL  call.  If   the   fourth
+          parameter  is  omitted,  but  the  third  parameter is given, the
+          number of lines skipped after the figure  will  be  the  same  as
+          before  the figure; if both parameters are omitted default values
+          will be used.  These default values  may  be  changed  using  the
+          SCRMAC #FIGURE_DEFAULT macro.
+
+
+
+          4.1.7 The #ENDFIGURE Macro
+
+              #ENDFIGURE
+
+              The #ENDFIGURE macro must be used following any verbatim text
+          which was preceded  by  the  #BEGINFIGURE  macro.  There  are  no
+          parameters  required.  #ENDFIGURE emits Scribe directives to skip
+          lines after the verbatim  text,  readjust  the  indentation,  and
+          begin to justify the text again.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          Macro Descriptions
+
+
+
+
+
+
+          SCRMAC User's Manual                                      Page 13
+          November 16, 1981
+
+
+
+
+
+          4.1.8 The #BEGINITEM Macro
+
+              #BEGINITEM( text_indentation, skip_before_each_item,
+                          start_number, skip_before_list, skip_after_list)
+
+              The  #BEGINITEM  macro  is  used  before a section of text in
+          which the #ITEM macro is used to form a list of items.  There are
+          five  possible  parameters  to  the  macro  which all use default
+          values if the parameter is not explicitly given  with  the  macro
+          call.   The   first  parameter  to  #BEGINITEM  is  the  relative
+          indentation of the text of an item.  The second parameter is  the
+          number  of lines to be skipped before each item in the list.  The                                                ____
+          third parameter is the number of the first item of the  list.  If
+          the  user  does  not wish to have the items of the list numbered,
+          then zero (0) should be specified as the parameter.  If the  list
+          to  follow  is a continuation of the last list, then specifying a
+          negative number as the parameter will  continue  the  consecutive
+          numbering  from  the  previous lists last number.  The fourth and
+          fifth parameters specify the number of lines to be skipped before
+          the  first  item of the list, and after the last item of the list
+          respectively.
+
+              The initial default values for the #BEGINITEM parameters  are
+          set  in #DOCUMENT and will perform the following actions if used:
+          the text of an item will be indented four spaces from the current
+          margins;  no  lines  will  be  skipped  before  individual items;
+          numbering of items will be turned on and will begin with one (1);
+          one  line  will be skipped before the first item of the list; one
+          line will be skipped after the  end  of  the  list.  The  default
+          values  for  #BEGINITEM may be changed by using the #ITEM_DEFAULT
+          macro.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          Macro Descriptions
+
+
+
+
+
+
+          SCRMAC User's Manual                                      Page 14
+          November 16, 1981
+
+
+
+
+
+          4.1.9 The #ITEM Macro
+
+                  #ITEM( label )
+
+              The #ITEM macro is used to specify items of a list.  The only
+          parameter  is  a label for the item.  If a label is given it will
+          be placed to the left of the item text following the item  number
+          (if items are being numbered).  Labels will be used only if given
+          explicitly with the macro call; #ITEM()  should  be  used  if  no
+          label is desired.
+
+              When  using  the  #ITEM  macro,  text  for  the  item  should
+          immediately follow the closing parenthesis  of  the  #ITEM  macro
+          call:
+
+              #ITEM()this text immediately follows the macro call
+              #ITEM() this text does not immediately follow the macro call
+
+          If  a  space  is  placed  between the closing parenthesis and the
+          beginning of the item text then the text indentation can  not  be
+          guaranteed to be consistantly correct.
+
+              Four types of lists may be formed using the ITEM macros.  For
+          examples of the different types of  lists  see  "A  Sample  Using
+          SCRMAC" at the end of the User's manual.
+
+
+
+          4.1.10 The #ENDITEM Macro
+
+              #ENDITEM
+
+              The #ENDITEM macro is placed at the end of a list which began
+          with the #BEGINITEM macro.  It will make necessary adjustments to
+          return to normal text justification and save the last item number
+          in case the list numbering is to be continued with the next list.
+          #ENDITEM has no parameters.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          Macro Descriptions
+
+
+
+
+
+
+          SCRMAC User's Manual                                      Page 15
+          November 16, 1981
+
+
+
+
+
+          4.1.11 The #BEGINMARGIN Macro
+
+              #BEGINMARGIN(left indent, right indent,
+                                            skip before, skip after)
+
+              The  #BEGINMARGIN  marco  is  used around blocks of text that
+          should be indented relative to the current margins.  The block of
+          text enclosed between the #BEGINMARGIN and #ENDMARGIN macros will
+          be indented from both the left and right margins according to the
+          user's  specifications  (or  the  current  default  values  if  a
+          parameter is omitted by the user).  The first  parameter  is  the
+          number  of  spaces  from  the  left margin to indent.  The second
+          parameter is the number  of  spaces  from  the  right  margin  to
+          indent.  The  third  parameter  specifies  the number of lines to
+          skip after  the  #BEGINMARGIN  call,  and  the  fourth  parameter
+          specifies the number of lines to skip after the #ENDMARGIN call.
+
+              Any  or  all of the first three parameters may be omitted, in
+          which case  the  current  default  value  for  the  corresponding
+          parameter  will be used.  If the third parameter is given but the
+          fourth omitted, the number of lines skipped after the  #ENDMARGIN
+          call  will  be  the  same as those skipped after the #BEGINMARGIN
+          call.  If both the third and fourth parameters are omitted,  both
+          current  default  values are used.  If all parameters are omitted
+          "#BEGINMARGIN()" should be used.  The default  values,  initially
+          set  in  #DOCUMENT  to  be  5,  5,  1, and 1 respectively, may be
+          changed by using the #MARGIN_DEFAULT macro.
+
+
+
+          4.1.12 The #ENDMARGIN Macro
+
+              #ENDMARGIN
+
+              The #ENDMARGIN macro, pairing with a #BEGINMARGIN call,  will
+          restore  the  margins  to  the  columns  to  which  they were set
+          immediately before its matching #BEGINMARGIN call.  There are  no
+          parameters to #ENDMARGIN.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          Macro Descriptions
+
+
+
+
+
+
+          SCRMAC User's Manual                                      Page 16
+          November 16, 1981
+
+
+
+
+
+          4.1.13 The #APPENDIX Macro
+
+              #APPENDIX (the_title)
+
+              The  #APPENDIX macro is used to generate an appendix heading.
+          Its only paramter is the  appendix  title.  The  Scribe  commands
+          emitted  will  page, skip two lines, write a title, do a table of
+          contents entry, and skip two lines before the appendix text.  The
+          first  line  of the text following the appendix title is indented
+          as it is for the #SECT macro.
+
+              The title used in both the text and in the table of  contents
+          is  the  exact title given as the parameter to #APPENDIX.  If the                   _____
+          user wishes the title to read "Appendix A - Letter Games" it must
+          be stated explicitly as the parameter.
+
+
+
+          4.1.14 The #TITLE_PAGE_1 Macro
+
+              #TITLE_PAGE_1( title1, title2, foot1, foot2, foot3, foot4 )
+
+              The  #TITLE_PAGE_1 macro is used to generate a title page for
+          a document.  There are six possible parameters to the macro,  all
+          of which default to the null string if not given explicitly.  The
+          first and second parameters, if given, will be placed centered on
+          the  page  approximately  one  third  down the page with one line
+          separating them.  The last four parameters will be placed each on
+          separate  lines, left justified, approximately ten lines from the
+          bottom of the page.
+
+              The #TITLE_PAGE_1 macro may be placed in only  two  locations
+          in the original text:  immediately after the #DOCUMENT macro , or                                 ___________
+          as the last line of the text after the #TOC macro.  If it is  not
+          placed  in  one of these two places the page numbers of the final
+          document may not be correct.
+
+              For an example of how the title  page  is  formatted  by  the
+          TITLE_PAGE_1  macro  see  the  example  document  "A Sample Using
+          SCRMAC" at the end of the User's Manual.
+
+
+
+
+
+
+
+
+
+
+
+
+          Macro Descriptions
+
+
+
+
+
+
+          SCRMAC User's Manual                                      Page 17
+          November 16, 1981
+
+
+
+
+
+          4.1.15 The #FOOTNOTES Macro
+
+              #FOOTNOTES( instruction )
+
+
+              The #FOOTNOTES macro is used to have level one section titles
+          and  appendix  titles  placed as footnotes on the bottom of pages
+          containing the section's text.  The only parameter to  the  macro
+          is  an  instruction  to  tell  where to place the footnote on the
+          page.  Possible instructions for #FOOTNOTES are:  "LEFT" to  have
+          the  footnotes  placed  left  justified;  "CENTER"  to  have  the
+          footnotes centered between the  margins;  "RIGHT"  to  place  the
+          footnotes  right  justified.  The instruction "OFF" will turn the
+          printing of footnotes off on subsequent pages.  (Instructions  to
+          #FOOTNOTES may be in either upper or lower case.)
+
+              It  is  recomended  that if the #FOOTNOTES macro is used that
+          all level one sections be  started  on  a  new  page.  This  will
+          insure that the footnotes and the sections on a page correspond.
+
+
+
+          4.1.16 The #TOC Macro
+
+              #TOC
+
+              The  #TOC  macro  is used to generate a table of contents and
+          should be  the  last  line  of  the  document  file.  It  has  no
+          parameters.   It  emits  Scribe  commands  to  generate  a  "nice
+          looking" table of contents.
+
+              Level 3, Level 4,..., Level n table of contents  entries  are
+          indented  to  the  right  relative to section entries of the next
+          lower level.  The initial indentation default value  is  a  three
+          space  quantum  for  each  level over Level 2.  This value may be
+          changed using the #TOC_DEFAULT macro.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          Macro Descriptions
+
+
+
+
+
+
+          SCRMAC User's Manual                                      Page 18
+          November 16, 1981
+
+
+
+
+
+          4.1.17 The #MEMO Macro
+
+              #MEMO ( to, from, date, subject, CC)
+
+              The MEMO macro can  be  used  to  generate  a  standard  memo
+          heading.  The  parameters  above,  from left to right, correspond
+          to:  the person or group the memo is addressed to; the person  or
+          group  sending  the  memo; the date of the memo; the topic of the
+          memo; and, if needed, who gets carbon copies of the memo.
+
+              This is the only SCRMAC  macro  that  does  not  need  to  be                                                          ___
+          preceded by the #DOCUMENT macro as long as no other scrmac macros
+          are used to produce the memo.  The only optional parameter is the
+          "CC"  parameter.  If  omitted  MEMO  will  omit the corresponding
+          heading line on the memo heading.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          Macro Descriptions
+
+
+
+
+
+
+          SCRMAC User's Manual                                      Page 19
+          November 16, 1981
+
+
+
+
+
+          4.2 Default and Pop Macros
+
+
+
+              The DEFAULT macros are used to change the default  values  of
+          macros  which are initially set in #DOCUMENT.  Each DEFAULT macro
+          also has a corresponding POP macro  which  restores  the  default
+          values  back to their values immediately before the last matching
+          DEFAULT call.  A POP macro should never  be  used  without  being
+          preceded by a matching DEFAULT macro.
+
+              If a parameter is omitted in a DEFAULT call the default value
+          for that parameter remains unchanged unless otherwise noted.  POP
+          macros have no parameters.
+
+             NOTE:  A  default  value  is  used by a macro only if two
+                    conditions hold:  1) a parameter is omitted in the
+                    macro   call,   and   2)    the  parameter  has  a
+                    corresponding default value.  If  a  parameter  is
+                    given  explicitly  in a macro call, the given will
+                    always  override  the  default   value   for   the                    ______
+                    parameter.
+
+
+
+          4.2.1 The SECT Default and Pop Macros
+
+              #SECT_DEFAULT(skip before Level 1  section titles,
+                            skip after  Level 1  section titles,
+                            skip before Level 2  section titles,
+                            skip after  Level 2  section titles,
+                            skip before Level 3+ section titles,
+                            skip after  Level 3+ section titles)
+
+              The  #SECT_DEFAULT  macro should be used to reset the default
+          values used by #SECT to space around section titles.  The  first,
+          third,  and  fifth  parameters,  if  specified,  will  change the
+          default values for the number of lines skipped before the section                                                         ______
+          titles  for  Levels  One, Two and Three or greater, respectively.
+          Similarly, the second, fourth and  sixth  parameters,  if  given,
+          will  change the default values for the number of lines specified
+          after the section  titles  for  Levels  One,  Two  and  Three  or          _____
+          greater, respectively.  #SECT_POP is the restoring macro.
+
+
+
+
+
+
+
+
+
+          Macro Descriptions
+
+
+
+
+
+
+          SCRMAC User's Manual                                      Page 20
+          November 16, 1981
+
+
+
+
+
+          4.2.2 The PAR Default and Pop Macros
+
+              #PAR_DEFAULT (skip before, indent first line)
+
+              The  #PAR_DEFAULT macro will set new default values for those
+          used with the #PAR macro.  The first parameter, if given, changes
+          the default value used to skip lines before the paragraph text is
+          started.  The second parameter, if specified, changes the default
+          indentation  for  the  first  line of the paragraph (this default
+          value is also used by #SECT to indent the first line of the first
+          paragraph of the new section).  #PAR_POP is the restoring macro.
+
+
+
+          4.2.3 The FIGURE Default and Pop Macros
+
+              #FIGURE_DEFAULT (new indentation, lines before, lines after)
+
+              The  #FIGURE_DEFAULT  macro sets new default values for those
+          used by #BEGINFIGURE and #ENDFIGURE.  The first parameter changes
+          the  number  of  spaces  the  verbatim  text is indented if it is
+          specified.  The second and third parameters  change  the  default
+          values  for  the  number  of lines skipped after the #BEGINFIGURE
+          call and after the #ENDFIGURE call respectively.  #FIGURE_POP  is
+          the restoring macro.
+
+
+
+          4.2.4 The ITEM Default and Pop Macros
+
+              #ITEM_DEFAULT ( text_indentation, skip before each item,
+                                start number, skip before list, skip after list)
+
+              The  ITEM_DEFAULT macro allows the user to change the default
+          values associated with the ITEM macros.  The first  parameter  to
+          the macro changes the relative indentation of the item text.  The
+          second parameter allows the user to change the  number  of  lines
+          skipped  before  each item of the list.  The third parameter will
+          change the number of the first item  of  the  list;  if  zero  is
+          specified  the  default  value  will be to turn numbering off, if
+          negative list numbering will default to continuing numbering from
+          the last list.  The fourth parameter to #ITEM_DEFAULT changes the
+          number of lines skipped before the first item on  the  list.  The
+          last  parameter  specifies  the number of lines to skip after the
+          list.  #ITEM_POP is the restoring macro.
+
+
+
+
+
+
+
+          Macro Descriptions
+
+
+
+
+
+
+          SCRMAC User's Manual                                      Page 21
+          November 16, 1981
+
+
+          4.2.5 The MARGIN Default and Pop Macros
+
+              #MARGIN_DEFAULT (new_left, new_right,
+                                                lines before, lines after)
+
+              The #MARGIN_DEFAULT macro changes the default values used  by
+          the  #BEGINMARGIN  and  #ENDMARGIN  macros.  The first and second
+          parameters specify the number  of  spaces  the  margins  will  be
+          indented  relative  to the current margins for the left and right
+          margins respectively.  The third parameter, if given, will change
+          the  number of lines to skip after the #BEGINMARGIN call.  If the
+          fourth parameter is given, its value will be used for the  number
+          of  lines  to  skip after a #ENDMARGIN is found.  The #MARGIN_POP
+          macro is the restoring macro.
+
+
+
+          4.2.6 The TAB Default and Pop Macros
+
+              #TAB_DEFAULT (tab 1, tab 2,..., tab 8)
+
+              The #TAB_DEFAULT macro enables the user to change the initial
+          standard  tab  stop settings of 9, 17, 25, 33, 41, 49, 57 and 65.
+          Scribe allows users to set up to eight tab stops, therefore eight
+          parameters  are  possible (tab 1,..., tab 8).  In accordance with
+          Scribe, all tabs encountered after the last  tab  stop  specified
+          will  be  treated  as blanks.  When changing the tab stop default
+          values all eight parameters need not be specified; however,  only
+          trailing parameters may be omitted.  For example, if
+
+               #TAB_DEFAULT (10, 20, 30)
+
+          is specified, the Scribe command emitted will be:
+
+               $TABS    10, 20, 30, 31, 32, 33, 34, 35
+
+          #TAB_POP is the restoring macro.
+
+
+
+          4.2.7 The TOC Default and Pop Macros
+
+              #TOC_DEFAULT ( new level 3...N toc indentation quantum )
+
+              The  #TOC_DEFAULT  macro is used to change the indentation of
+          Level 3 ...  Level N section titles in  the  table  of  contents.
+          Beginning  with  Level  3  section  titles, the table of contents
+          entries are indented to the right  one  indentation  quantum  for
+          each  successive  higher  level section title.  There is only one
+          parameter to this macro and it corresponds to the new indentation
+          quantum  for  these  table  of contents entries.  #TOC_POP is the
+          restoring macro.  (See this document's table of contents  to  see
+          how the indenting works.)
+
+
+          Macro Descriptions
+
+
+
+
+
+
+          SCRMAC User's Manual                                      Page 22
+          November 16, 1981
+
+
+          5  Helpful Hints for Using SCRMAC             _______ _____ ___ _____ ______
+
+
+
+           1. SCRMAC  macros  may  be  used  in upper or lower case, but NO                                                                         __
+              abbreviations are recognized.
+
+           2. When omitting parameters two successive commas should be used
+              for  non-trailing parameters and a right parenthesis used for
+              trailing parameters.
+
+           3. If a parameter contains  a  comma  the  parameter  should  be
+              enclosed in PMF text quotes:  "<:" and ":>".
+
+           4. The ampersand "&" is a special function character used by the
+              PMF processor, and therefore  use  of  ampersands  should  be
+              avoided in the text.  All underlining should be done with the
+              ^u, |u pair (i.e., to underline 'string' enter '^ustring|u').
+              If an ampersand is necessary in the final text it  should  be
+              doubled and enclosed in PMF text quotes ( i.e., <:&&:> ).                      ___
+
+           5. The literals "#title" and "#date" may be used anywhere in the
+              document and when processed they will be  expanded  into  the
+              title  and  date  parameters  of  the #document macro.  These
+              literals are particularly useful as parameters to  the  title
+              page macro.
+
+           6. If  the  user  does  not  wish  to  use the title/date format
+              provided by  SCRMAC  and  likes  another  format  better,  an
+              explicit   Scribe   "$TITLE"   directive   should  be  placed
+              immediatly  following  the  #DOCUMENT  macro  call  with  the
+              prefered format.
+
+           7. If  there  is  ever  a  need to extend a parameter list for a
+              macro over more than one line, an ampersand, "&",  should  be
+              used as the last character of the line to be continued.                          ____
+
+           8. If  the  user wishes to indent lower level sections it may be
+              done using the #BEGINMARGIN macro with the #SECT  macros,  or
+              by  explicitly  putting the Scribe directive $POSITION at the
+              beginning of the original document text.
+
+           9. The use of SCRMAC macros in no way limits  the  user  to  use
+              only  SCRMAC  emitted Scribe commands.  All Scribe directives
+              may be used explicitly by the user if desired, with the  only
+              exceptions being those already noted.
+
+          10. If  there  is  a  need  to  put  a  SCRMAC  macro name into a
+              document, it must be enclosed in PMF text  quotes  if  it  is
+              preceded by a pound sign ('#').
+
+          11. When  usng  QED to edit the ".PMF" file containing the macros
+              it may be convienient to use the
+
+
+          Helpful Hints for Using SCRMAC
+
+
+
+
+
+
+          SCRMAC User's Manual                                      Page 23
+          November 16, 1981
+
+
+                  SET MARK :#SECT(:
+
+              command, and then use the
+
+                  BOUND /<section title>/
+
+              command to bound your  working  area  to  one  section.  (The
+              letter  case  of "#SECT" in the "SET MARK" command must match                                                                 ____
+              the case in your file exactly.  It  is  recommended  that  if
+              this  is used that all "#SECT" macro calls use the same case,
+              either upper or lower.)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          Helpful Hints for Using SCRMAC
+
+
+
+
+
+
+          SCRMAC User's Manual                                      Page 24
+          November 16, 1981
+
+
+
+
+          APPENDIX A - Summary of SCRMAC Macros and Their Defaults          ________ _ _ _______ __ ______ ______ ___ _____ ________
+
+
+              Below is a summary of the macros in the SCRMAC Package.  Each
+          macro  is  listed  with  its  parameters  and the initial default
+          values, as set by #DOCUMENT, below its  corresponding  parameter.
+          For  a complete description of a macro and its parameters see the
+          macro description.
+
+          #document (title, date, page length, margin, page width)
+                    (  '' ,  '' ,     66     ,   10  ,     75    )
+
+          #sect (title)
+                (  '' )
+
+          #beginlevel
+
+          #endlevel
+
+          #par (lines before, first line indent)
+               (      1     ,         0        )
+
+          #beginfigure (lines needed, indentation, line before, lines after)
+                       (     0      ,      5     ,      1     ,      1     )
+
+          #endfigure
+
+          #beginitem ( text_indentation, skip_before_each,
+                     (        4        ,        0        ,
+                       start_number, skip_before_list, skip_after_list)
+                            1      ,        1        ,        1       )
+
+          #item ( label )
+                (   ''  )
+
+          #enditem
+
+          #beginmargin (left_indent, right_indent,
+                       (    5      ,      5      ,
+                                              lines before, lines after)
+                                                   1      ,      1     )
+
+          #endmargin
+
+          #appendix (title)
+                    (  '' )
+
+          #toc
+
+          #memo ( who to, who from, date, subject, cc)
+                (   ''  ,    ''   ,  '' ,   ''   , '')
+
+
+          APPENDIX A - Summary of SCRMAC Macros and Their Defaults
+
+
+
+
+
+
+          SCRMAC User's Manual                                      Page 25
+          November 16, 1981
+
+
+
+
+          #sect_default (before Level 1  titles, after Level 1  titles,
+                         before Level 2  titles, after Level 2  titles,
+                         before Level 3+ titles, after Level 3+ titles)
+
+          #sect_pop
+
+
+          #par_default (new lines before, new first line indent)
+
+          #par_pop
+
+
+          #figure_default (new indention, lines before, lines after)
+
+          #figure_pop
+
+
+          #item_default ( text_indentation, skip_before_each,
+                          start_number, skip_before_list, skip_after_list)
+
+          #item_pop
+
+
+          #margin_default (new left indent, new right indent,
+                           new lines before, new lines after)
+
+          #margin_pop
+
+
+          #tab_default (tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8)
+
+          #tab_pop
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          APPENDIX A - Summary of SCRMAC Macros and Their Defaults
+
+
+
+
+
+
+          SCRMAC User's Manual                                      Page 26
+          November 16, 1981
+
+
+
+
+          A Sample Using SCRMAC - The Original Document          _ ______ _____ ______ _ ___ ________ ________
+
+
+          #DOCUMENT(A Sample Using SCRMAC,<:August 17, 1981:>,,15)
+          #TITLE_PAGE_1(#title,Part of SCRMAC User's Manual,& 
+          SCRMAC Version 1.1,Responsible: Programming Languages,& 
+          Prepared by: S. M. Kennedy,"<:Last Updated: #date:>)
+          #FOOTNOTES(LEFT)
+          #PAR_DEFAULT(,4)
+          #SECT(Explaining Some SCRMAC Macros)
+          In the following document I will try to explain the
+          uses of some of the SCRMAC macros used when preparing 
+          a document.
+          The best way to use this example is to look at the text
+          containing the SCRMAC macro calls while reading this
+          final Scribed text.
+          #PAR()
+          For starters this section is a Level 1 section. The
+          sections to follow (1.1 ... 1.4) are Level two sections
+          and in order to get to Level 2  I must use a
+          #BEGINLEVEL macro. 
+          #BEGINLEVEL
+          #SECT(The DOCUMENT MACRO)
+          The #DOCUMENT macro is used in this document giving
+          a  title and a date (enclosed in PMF text quotes,
+          '<:' and ':>', because the date parameter contains
+          a comma).  The third parameter is omitted and thus the
+          page length will default to 66 lines. The fourth
+          parameter sets the left margin to 15 spaces instead of
+          the default value of 10. Since the last parameter is
+          not given the right paren is used to omit trailing
+          parameters and thus the page width will be set to its
+          default value of 75.
+          #SECT(The TITLE_PAGE_1 Macro)
+          Following the #DOCUMENT  macro is the
+          #TITLE_PAGE_1 macro. There are ^uonly|u two places
+          this macro may be used: immediately following the
+          #DOCUMENT macro, or after the #TOC macro as
+          the last line of the document.
+          #PAR()
+          In this example I have used all six possible parameters
+          to the macro to illustrate how they are all placed on
+          the title page. All the parameters of this macro are
+          optional and if not given will default to the null
+          string - however if null, they ^uwill|u still take up
+          a line on the page.
+          #PAR()
+          Take note of the parameter list of this macro. The
+          first parameter uses the '#title' literal which
+          holds the title of  the document as given to the
+          #DOCUMENT macro. The last parameter uses the
+
+
+          A Sample Using SCRMAC - The Original Document
+
+
+
+
+
+
+          SCRMAC User's Manual                                      Page 27
+          November 16, 1981
+
+
+          '#date' literal for the date of the document.
+          If these literals are used as a parameter or part of a
+          parameter to a macro the ^uvery|u first character of
+          the paramater ^umust|u be a quote, '"', as done in the
+          #TITLE_PAGE_1 macro. Also the parameter list for
+          the macro is spread out over three lines. To do this
+          an ampersand ^umust|u be the last character
+          on the lines that are to be continued.
+          #PAR()
+          Notice in the preceding paragraphs the use of "^^u" and
+          "||u" for  underlining the words "only", "will",
+          "very", and "must". This method ^uis|u necessary.
+          Using ampersands to ^uunderline|u will usually not work
+          correctly because they are a special character used for
+          other purposes by the PMF preprocessor.
+          #SECT(The FOOTNOTES Macro)
+          After the #TITLE_PAGE_1 macro I have used the
+          #FOOTNOTES macro. This will put level one section
+          titles and appendix titles as  footnotes at the bottom
+          of all pages containing text for these sections.
+          I have specified that I want my footnotes to be on the
+          "LEFT"; they may also be "CENTER"ed or
+          put on the "RIGHT".
+          #PAR()
+          It is recommended that if footnotes are used that level
+          one sections are always started on the top of a new
+          page. This will insure that the footnotes will
+          correctly reflect the section on the page. If  level
+          one sections are not started at the top of a new page,
+          footnotes can not be guaranteed to correspond to the
+          section(s) of text on the page.
+          #SECT(The SECT Macro)
+          The #SECT macro is used to begin sections. The
+          section title is printed with the section number and
+          also a table of contents entry is made for the section.
+          Section numbers are handled by SCRMAC and Scribe so the
+          only parameter to the #SECT macro is the title.
+          Spacing around the section titles is handled by
+          #SECT's current default values and may be
+          controlled by the user (Section 2.).
+          #PAR()
+          #SECT(The PAR Macro)
+          Next, notice the use of the #PAR macro. Paragraphs
+          immediatly following section titles will automatically
+          be indented according to the first line indentation
+          default value ( I changed my default value  from zero
+          to four using a DEFAULT macro - explained in
+          Section 2.1 ). Paragraphs not following section titles
+          may be started using the #PAR macro. The one used
+          above with no parameters, #PAR(), will use the
+          current default values to skip one line and indent the
+          first line four spaces.
+          #PAR()
+
+
+          A Sample Using SCRMAC - The Original Document
+
+
+
+
+
+
+          SCRMAC User's Manual                                      Page 28
+          November 16, 1981
+
+
+          Now I am ready to end Section One and return to Level
+          one. To return to Level one I use the #ENDLEVEL
+          macro. Following the end of this section I will begin a
+          new Level one section, Section Two.
+          #ENDLEVEL
+          #SECT(Using Default And Pop Macros)
+          #BEGINLEVEL
+          #SECT(Default Macros)
+          Default macros are used to change the current default
+          values used by a macro. Initially the default values
+          are set by the #DOCUMENT macro, but they may be
+          changed by the user at any point in the document.
+          #PAR()
+          The #PAR_DEFAULT macro used in the beginning of
+          this document changes the default value for the first
+          line indentation of paragraphs used by the #PAR
+          macro. #DOCUMENT initially sets the default values
+          to skip one line before the new paragraph, and to 
+          leave the first line of the paragraph without any
+          indentation (indentation=0). The macro used above will
+          leave the lines skipped unchanged, but changes the
+          indentation to four. Now when #PAR is used with no
+          parameters, #PAR(), it will be the same as using
+          #PAR(1,4).
+          #SECT(The Pop Macros)
+          To change #PAR's default values back to their
+          values before the last #PAR_DEFAULT macro call,
+          the #PAR_POP macro should be used
+          (^uNot|u #PAR_DEFAULT(1,0) !!). I will use the
+          #PAR_POP macro after this paragraph to show the
+          default values are changed back to one and zero.
+          #PAR_POP
+          #PAR()
+          Notice that this is the beginning of the new paragraph,
+          but the default indentation is changed back to zero.
+          I would really like my paragraphs indented so I will
+          use another #PAR_DEFAULT macro call to change the
+          indentation from zero to six.
+          #PAR_DEFAULT(,6)
+          #ENDLEVEL
+          #SECT(Figure and Margin Macros)
+          The Figure and Margin macros can be very useful for
+          handling certain situations encountered while preparing
+          a document.
+          #BEGINLEVEL
+          #SECT(The Figure Macros)
+          The Figure macros,#BEGINFIGURE and ENDFIGURE,
+          are used in pairs around text that should be put in
+          Scribe's verbatim mode (this may include a figure,
+          example command lines, etc. the user does not want
+          incorporated into Scribed paragraphs). To illustrate
+          the use of the Figure macros here is an example:
+          #BEGINFIGURE(14,,,2)
+
+
+          A Sample Using SCRMAC - The Original Document
+
+
+
+
+
+
+          SCRMAC User's Manual                                      Page 29
+          November 16, 1981
+
+
+          *--------------------------------------------------*
+          |                                                  |
+          |   the first parameter guarantees I have 14 lines |
+          |   before the end of the page so my figure is not |
+          |   split between pages.                           |
+          |                                                  |
+          |   the figure will be indented the default of     |
+          |   five spaces from the left margin.              |
+          |                                                  |
+          |   as specified by the fourth parameter of the    |
+          |   macro call, two lines will be skipped after    |
+          |   the #ENDFIGURE call.                           |
+          |                                                  |
+          *--------------------------------------------------*
+          #ENDFIGURE
+          After the #ENDFIGURE call I return to the Scribe
+          justification mode.
+          #SECT(The Margin Macros)
+          The Margin macros, #BEGINMARGIN and #ENDMARGIN,
+          can be useful for indenting sections of text relative
+          to the current margins. The Margin macros have been
+          set up so nesting of the macros is allowed (see below
+          for an example).
+          #BEGINMARGIN()
+          Here we have moved our margins in on both sides five
+          spaces relative to the old margins (five is the
+          default value).
+          #BEGINMARGIN(10,0)
+          Now the left margin is moved in ten more spaces, while
+          the right margin is unchanged. This was done by
+          specifying explicitly in the #BEGINMARGIN call
+          that these indentations were wanted. Also notice a line
+          is skipped after the #BEGINMARGIN call. A line will
+          also be skipped after each #ENDMARGIN call (one
+          skipped line is the default for both after the
+          #BEGINMARGIN, and after the #ENDMARGIN).
+          #ENDMARGIN
+          Now we are back out to the first indentation after
+          using #ENDMARGIN. I would also like to point out
+          that the other macros may be used within the new
+          margins.
+          #PAR()
+          New paragraphs may be started, and anything else that
+          may normally be used with SCRMAC may be used within
+          the new margins.
+          #ENDMARGIN
+          Now that I am back to the original margins I will end
+          my discussion of the Margin macros.
+          #ENDLEVEL
+          #SECT(The ITEM Macros)
+          In this section I would like to illustrate how the ITEM
+          macros can be used to produce four types of lists by
+          varying the parameters to the ITEM macros.
+
+
+          A Sample Using SCRMAC - The Original Document
+
+
+
+
+
+
+          SCRMAC User's Manual                                      Page 30
+          November 16, 1981
+
+
+          #BEGINLEVEL
+          #SECT(Numbered Lists)
+          The first and probably most common type of list is one
+          with a number associated with each item of the list:
+          a numbered list. The following is a simple example of
+          this type of list:
+          #BEGINITEM()
+          #ITEM()the first item
+          #ITEM()the second item
+          #ITEM()the third item
+          #ITEM()this fourth item is very long to show how
+          the second line of an item is handled.
+          #ENDITEM
+          #PAR(0)
+          Notice that all the default values were used in the
+          #BEGINITEM macro call. Also notice that the text of
+          the items ^uimmediately|u follow the closing
+          parenthesis of the #ITEM macro call. This  will
+          insure that the indentation  of the item
+          text is correct.
+          The fourth item shows how multi-line items are indented.
+          Multi-line items are handled similarly for the first three
+          types of lists (Sections 4.1, 4.2, and 4.3).
+          #SECT(Lists With Numbers and Labels)
+          In this section I will show a list with both numbers
+          and labels on items of the list. For this type of list
+          the item text indentation will usually have to be
+          increased to accommodate both the item number and the
+          item label, and not run over into the item text area.
+          #BEGINITEM(10)
+          #ITEM(MDSI)Manufacturing Data Systems, Inc.
+          #ITEM(ANC)Advanced Numerical Control
+          #ITEM(PDT)Product Development and Technology
+          #ENDITEM
+          #SECT(Lists With Labels Only)
+          In this example only labels will be placed before the
+          item text(no  numbers). In order to do this zero must
+          be specified for the  "start number" parameter in the
+          #BEGINITEM macro call to turn off the numbering
+          of items.
+          #BEGINITEM(5,,0)
+          #ITEM(I)Roman numeral one.
+          #ITEM(II)Roman numeral two.
+          #ITEM(III)Roman numeral three.
+          #ITEM(IV)Roman numeral four.
+          #ENDITEM
+          #PAR(0)
+          Notice that the indentaton was again increased to make
+          room for the label. The default indentation is
+          initially set up to accommodate a list with numbers
+          only.
+          #SECT(Lists With No Numbers or Labels)
+          The last type of list is a special case of the ITEM
+
+
+          A Sample Using SCRMAC - The Original Document
+
+
+
+
+
+
+          SCRMAC User's Manual                                      Page 31
+          November 16, 1981
+
+
+          macro. When an item does not have a number or label put
+          before the item text the first line of item text is not
+          indented, but any subsequent lines of text for the same
+          item are indented the specified amount. Here is an
+          example of this type of list:
+          #BEGINITEM(10,1,0)
+          #ITEM()This is the first item of the list.
+          #ITEM()This is the second item of the list which should
+          require more than one line thus showing how these types
+          of items are indented.
+          #ENDITEM
+          #ENDLEVEL
+          #SECT(The Table of Contents Macro)
+          The last macro I would like to show you is the #TOC
+          macro. It is placed  after the last line of document
+          text. For every #SECT title and every #APPENDIX
+          title (of which I have none in this document - see
+          SCRMAC User's Manual for an example) an entry will be
+          put in the table of contents along with the
+          corresponding page number. Upon completion of the
+          document processing, the table of contents may be then
+          taken from the back of the document and placed at the
+          beginning. Following this last sentence I will put in
+          the #TOC macro call.
+          #TOC
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          A Sample Using SCRMAC - The Original Document
+
+
+
+
+
+
+          SCRMAC User's Manual                                      Page 32
+          November 16, 1981
+
+
+
+
+          A Sample Using SCRMAC - The Final Document          _ ______ _____ ______ _ ___ _____ ________
+
+
+              The final text from the previous SCRMAC example begins on the
+          following page:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          A Sample Using SCRMAC - The Final Document
+
+
+
+
+
+
+          SCRMAC User's Manual
+          November 16, 1981
+
+
+
+
+
+                                  Table of Contents                                  _____ __ ________
+
+
+          SECTION                                                    PAGE
+
+          1        INTRODUCTION                                        1
+
+
+          2        GENERAL INFORMATION                                 2
+
+          2.1      Preparing to Use the SCRMAC Package                 2
+          2.2      Available Functions                                 2
+          2.3      Changing Default Values                             3
+          2.4      Resetting Default Values                            3
+
+          3        OPERATING INSTRUCTIONS                              4
+
+          3.1      On ADP and TYMSHARE                                 4
+          3.1.1       Running SCRMAC                                   4
+          3.1.2       SCRMAC Commands                                  4
+          3.1.3       SCRMAC Actions                                   5
+          3.2      On the VAX                                          6
+          3.2.1       Running SCRMAC                                   6
+          3.2.2       SCRMAC Commands                                  6
+          3.2.3       SCRMAC Actions                                   6
+
+          4        MACRO DESCRIPTIONS                                  7
+
+          4.1      Function Macros                                     7
+          4.1.1       The #DOCUMENT Macro                              8
+          4.1.2       The #SECT Macro                                  9
+          4.1.3       The #BEGINLEVEL Macro                            10
+          4.1.4       The #ENDLEVEL Macro                              11
+          4.1.5       The #PAR Macro                                   11
+          4.1.6       The #BEGINFIGURE Macro                           12
+          4.1.7       The #ENDFIGURE Macro                             12
+          4.1.8       The #BEGINITEM Macro                             13
+          4.1.9       The #ITEM Macro                                  14
+          4.1.10      The #ENDITEM Macro                               14
+          4.1.11      The #BEGINMARGIN Macro                           15
+          4.1.12      The #ENDMARGIN Macro                             15
+          4.1.13      The #APPENDIX Macro                              16
+          4.1.14      The #TITLE_PAGE_1 Macro                          16
+          4.1.15      The #FOOTNOTES Macro                             17
+          4.1.16      The #TOC Macro                                   17
+          4.1.17      The #MEMO Macro                                  18
+          4.2      Default and Pop Macros                              19
+          4.2.1       The SECT Default and Pop Macros                  19
+          4.2.2       The PAR Default and Pop Macros                   20
+          4.2.3       The FIGURE Default and Pop Macros                20
+
+
+
+
+
+
+
+
+
+          SCRMAC User's Manual
+          November 16, 1981
+
+
+          4.2.4       The ITEM Default and Pop Macros                  20
+          4.2.5       The MARGIN Default and Pop Macros                21
+          4.2.6       The TAB Default and Pop Macros                   21
+          4.2.7       The TOC Default and Pop Macros                   21
+
+          5        HELPFUL HINTS FOR USING SCRMAC                      22
+
+
+          APPENDIX A - Summary of SCRMAC Macros and Their Defaults     24
+
+
+          A Sample Using SCRMAC - The Original Document                26
+
+
+          A Sample Using SCRMAC - The Final Document                   32
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@|

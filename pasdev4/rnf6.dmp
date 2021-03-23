@@ -1,0 +1,308 @@
+INTERMEDIATE FORM AFTER MAKE_BASIC_BLOCKS FOR BLOCK 4 AT LEVEL 3:  SUBROUTINE IN
+------------ ---- ----- ----------------- --- ----- - -- ----- --  ---------- --
+
+     1      BLOCK   4 AT LEVEL 3:  SUBROUTINE INNER_QUICK
+
+     2    1 LABEL   
+
+     3      STMT    1: BEGIN ON LINE 14
+
+     4      STMT    1: <IF HEAD> ON LINE 15
+     5      =       IDENT   Y			       1 INTEGER 32S
+     6      =       CONST   0			       1 INTEGER 1
+     7      =       IEQ     Y, 0		       1 BOOLEAN 1
+     8      JUMP    TO 3 @ 15 IF NOT $7
+     9      JUMP    TO 2 @ 10 IF $7
+
+    10    2 LABEL   
+
+    11      STMT    1: <FUNCTION QUALIFIER> ON LINE 16
+    12      =       IDENT   EXC1		       1 <UNKNOWN>
+    13      SIGNAL  EXC1
+    14      JUMP    TO 7 @ 37
+
+    15    3 LABEL   
+
+    16      STMT    1: <IF HEAD> ON LINE 17
+    17      =       IDENT   Y			       1 INTEGER 32S
+    18      =       IDENT   X			       1 INTEGER 32S
+    19      =       IEQ     Y, X		       1 BOOLEAN 1
+    20      JUMP    TO 5 @ 27 IF NOT $19
+    21      JUMP    TO 4 @ 22 IF $19
+
+    22    4 LABEL   
+
+    23      STMT    1: <FUNCTION QUALIFIER> ON LINE 18
+    24      =       IDENT   EXC2		       1 <UNKNOWN>
+    25      SIGNAL  EXC2
+    26      JUMP    TO 6 @ 35
+
+    27    5 LABEL   
+
+    28      STMT    1: <SIMPLE STATEMENT> ON LINE 20
+    29      =       IDENT   A			       1 INTEGER 32S
+    30      =       IDENT   X			       1 INTEGER 32S
+    31      =       IDENT   Y			       1 INTEGER 32S
+    32      =       ISUB    X, Y		       1 INTEGER 32S
+    33      ASSIGN  A := $32
+    34      JUMP    TO 6 @ 35
+
+    35    6 LABEL   
+    36      JUMP    TO 7 @ 37
+
+    37    7 LABEL   
+
+    38      STMT    1: END ON LINE 21
+    39      RETURN  
+    40      END     
+
+
+----------------------------------------
+
+
+INTERMEDIATE FORM AFTER MAKE_BASIC_BLOCKS FOR BLOCK 5 AT LEVEL 3:  SUBROUTINE IN
+------------ ---- ----- ----------------- --- ----- - -- ----- --  ---------- --
+
+     1      BLOCK   5 AT LEVEL 3:  SUBROUTINE INNER_NONQUICK
+
+     2    1 LABEL   
+
+     3      STMT    1: BEGIN ON LINE 24
+     4      SET HND 4 @ 24
+
+     5      STMT    1: <IF HEAD> ON LINE 25
+     6      =       IDENT   Y			       1 INTEGER 32S
+     7      =       CONST   0			       1 INTEGER 1
+     8      =       ILT     Y, 0		       1 BOOLEAN 1
+     9      JUMP    TO 3 @ 16 IF NOT $8
+    10      JUMP    TO 2 @ 11 IF $8
+
+    11    2 LABEL   
+
+    12      STMT    1: <FUNCTION QUALIFIER> ON LINE 26
+    13      =       IDENT   EXC1		       1 <UNKNOWN>
+    14      SIGNAL  EXC1
+    15      JUMP    TO 3 @ 16
+
+    16    3 LABEL   
+
+    17      STMT    1: <SIMPLE STATEMENT> ON LINE 27
+    18      =       IDENT   B			       1 INTEGER 32S
+    19      =       IDENT   A			       1 INTEGER 32S
+    20      =       IDENT   Y			       1 INTEGER 32S
+    21      =       ISUB    A, Y		       1 INTEGER 32S
+    22      ASSIGN  B := $21
+    23      JUMP    TO 9 @ 54
+
+    24    4 LABEL   
+    25      =       IDENT   EXC2		       1 <UNKNOWN>
+    26      =       IDENT   EXC1		       1 <UNKNOWN>
+    27      =       IDENT   ATTENTION		       1 <UNKNOWN>
+
+    28      STMT    1: EXCEPTION ON LINE 28
+    29      HANDLER ON OTHERS JUMP TO 8 @ 51
+    30      JUMP    TO 7 @ 45 IF EXC2
+    31      JUMP    TO 6 @ 39 IF EXC1
+    32      JUMP    TO 5 @ 33 IF ATTENTION
+
+    33    5 LABEL   
+
+    34      STMT    1: <SIMPLE STATEMENT> ON LINE 29
+    35      =       IDENT   C			       1 INTEGER 32S
+    36      =       CONST   0			       1 INTEGER 1
+    37      ASSIGN  C := 0
+    38      JUMP    TO 9 @ 54
+
+    39    6 LABEL   
+
+    40      STMT    1: <SIMPLE STATEMENT> ON LINE 30
+    41      =       IDENT   C			       1 INTEGER 32S
+    42      =       CONST   1			       1 INTEGER 1
+    43      ASSIGN  C := 1
+    44      JUMP    TO 9 @ 54
+
+    45    7 LABEL   
+
+    46      STMT    1: <SIMPLE STATEMENT> ON LINE 31
+    47      =       IDENT   C			       1 INTEGER 32S
+    48      =       CONST   2			       1 INTEGER 2
+    49      ASSIGN  C := 2
+    50      JUMP    TO 9 @ 54
+
+    51    8 LABEL   
+    52      RESIGNL 
+    53      JUMP    TO 9 @ 54
+
+    54    9 LABEL   
+    55      RST HND 
+
+    56      STMT    1: END ON LINE 32
+    57      RETURN  
+    58      END     
+
+
+----------------------------------------
+
+
+INTERMEDIATE FORM AFTER MAKE_BASIC_BLOCKS FOR BLOCK 3 AT LEVEL 2:  SUBROUTINE OU
+------------ ---- ----- ----------------- --- ----- - -- ----- --  ---------- --
+
+     1      BLOCK   3 AT LEVEL 2:  SUBROUTINE OUTER
+
+     2    1 LABEL   
+
+     3      STMT    1: BEGIN ON LINE 34
+     4      SET HND 8 @ 47
+
+     5      STMT    1: <FUNCTION QUALIFIER> ON LINE 35
+     6      =       CONST   !INNER_QUICK	       1 @052437: PROCEDURE
+     7      =       IDENT   X			       1 INTEGER 32S
+     8      =       IDENT   A			       1 INTEGER 32S
+     9      =       ISUB    X, A		       1 INTEGER 32S
+    10      CALL    !INNER_QUICK ( $9 )
+    11      JUMP    TO 2 @ 12
+
+    12    2 LABEL   
+
+    13      STMT    1: BEGIN ON LINE 36
+    14      SET HND 3 @ 22
+
+    15      STMT    1: <FUNCTION QUALIFIER> ON LINE 37
+    16      =       CONST   !INNER_NONQUICK	       1 @055342: PROCEDURE
+    17      =       IDENT   X			       1 INTEGER 32S
+    18      =       IDENT   B			       1 INTEGER 32S
+    19      =       ISUB    X, B		       1 INTEGER 32S
+    20      CALL    !INNER_NONQUICK ( $19 )
+    21      JUMP    TO 7 @ 39
+
+    22    3 LABEL   
+    23      =       IDENT   EXC1		       1 <UNKNOWN>
+    24      =       IDENT   ATTENTION		       1 <UNKNOWN>
+
+    25      STMT    1: EXCEPTION ON LINE 38
+    26      HANDLER ON OTHERS JUMP TO 6 @ 36
+    27      JUMP    TO 5 @ 33 IF EXC1
+    28      JUMP    TO 4 @ 29 IF ATTENTION
+
+    29    4 LABEL   
+
+    30      STMT    1: <FUNCTION QUALIFIER> ON LINE 39
+    31      RESIGNL 
+    32      JUMP    TO 7 @ 39
+
+    33    5 LABEL   
+
+    34      STMT    1: <STOP STATEMENT> ON LINE 40
+    35      STOP    
+
+    36    6 LABEL   
+    37      RESIGNL 
+    38      JUMP    TO 7 @ 39
+
+    39    7 LABEL   
+    40      RST HND 8 @ 47
+
+    41      STMT    1: END ON LINE 41
+
+    42      STMT    1: <SIMPLE STATEMENT> ON LINE 42
+    43      =       IDENT   D			       1 INTEGER 32S
+    44      =       IDENT   A			       1 INTEGER 32S
+    45      ASSIGN  D := A
+    46      JUMP    TO 13 @ 74
+
+    47    8 LABEL   
+    48      =       IDENT   EXC2		       1 <UNKNOWN>
+    49      =       IDENT   EXC1		       1 <UNKNOWN>
+    50      =       IDENT   ATTENTION		       1 <UNKNOWN>
+
+    51      STMT    1: EXCEPTION ON LINE 43
+    52      HANDLER ON OTHERS JUMP TO 12 @ 71
+    53      JUMP    TO 11 @ 65 IF EXC2
+    54      JUMP    TO 10 @ 59 IF EXC1
+    55      JUMP    TO 9 @ 56 IF ATTENTION
+
+    56    9 LABEL   
+
+    57      STMT    1: <STOP STATEMENT> ON LINE 44
+    58      STOP    
+
+    59   10 LABEL   
+
+    60      STMT    1: <SIMPLE STATEMENT> ON LINE 45
+    61      =       IDENT   D			       1 INTEGER 32S
+    62      =       IDENT   B			       1 INTEGER 32S
+    63      ASSIGN  D := B
+    64      JUMP    TO 13 @ 74
+
+    65   11 LABEL   
+
+    66      STMT    1: <SIMPLE STATEMENT> ON LINE 46
+    67      =       IDENT   D			       1 INTEGER 32S
+    68      =       IDENT   C			       1 INTEGER 32S
+    69      ASSIGN  D := C
+    70      JUMP    TO 13 @ 74
+
+    71   12 LABEL   
+    72      RESIGNL 
+    73      JUMP    TO 13 @ 74
+
+    74   13 LABEL   
+    75      RST HND 
+
+    76      STMT    1: END ON LINE 47
+    77      RETURN  
+    78      END     
+
+
+----------------------------------------
+
+
+INTERMEDIATE FORM AFTER MAKE_BASIC_BLOCKS FOR BLOCK 1 AT LEVEL 1:  PROGRAM RNF6
+------------ ---- ----- ----------------- --- ----- - -- ----- --  ------- ----
+
+     1      BLOCK   1 AT LEVEL 1:  PROGRAM RNF6
+
+     2    1 LABEL   
+
+     3      STMT    1: BEGIN ON LINE 49
+     4      SET HND 2 @ 12
+
+     5      STMT    1: <FUNCTION QUALIFIER> ON LINE 50
+     6      =       CONST   !OUTER		       1 @050073: PROCEDURE
+     7      =       IDENT   A			       1 INTEGER 32S
+     8      =       IDENT   B			       1 INTEGER 32S
+     9      =       IADD    A, B		       1 INTEGER 32S
+    10      CALL    !OUTER ( $9 )
+    11      JUMP    TO 6 @ 30
+
+    12    2 LABEL   
+    13      =       IDENT   EXC2		       1 <UNKNOWN>
+    14      =       IDENT   EXC1		       1 <UNKNOWN>
+
+    15      STMT    1: EXCEPTION ON LINE 51
+    16      HANDLER ON OTHERS JUMP TO 5 @ 27
+    17      JUMP    TO 4 @ 23 IF EXC2
+    18      JUMP    TO 3 @ 19 IF EXC1
+
+    19    3 LABEL   
+
+    20      STMT    1: <FUNCTION QUALIFIER> ON LINE 52
+    21      EXMSG   
+    22      JUMP    TO 6 @ 30
+
+    23    4 LABEL   
+
+    24      STMT    1: <FUNCTION QUALIFIER> ON LINE 53
+    25      EXMSG   
+    26      JUMP    TO 6 @ 30
+
+    27    5 LABEL   
+    28      RESIGNL 
+    29      JUMP    TO 6 @ 30
+
+    30    6 LABEL   
+    31      RST HND 
+
+    32      STMT    1: END ON LINE 54
+    33      STOP    
+    34      END     

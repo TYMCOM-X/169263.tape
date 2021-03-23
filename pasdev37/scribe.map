@@ -1,0 +1,1477 @@
+		LINK symbol map of	SCRIBE		page 1
+	Produced by LINK version 4A(1220)-1 on  8-Dec-81 at 17:50:04
+
+	Low  segment starts at	     0 ends at	  3333 length	  3334 = 4P
+	High segment starts at	400000 ends at	474065 length	 74066 = 61P
+	292 words free in Low segment, 458 words free in high segment
+	482 Global symbols loaded, therefore min. hash size is 536
+	Start address is 400032, located in program SCRIBE
+
+		*************
+
+JOBDAT-INITIAL-SYMBOLS
+
+	Zero length module
+
+		*************
+
+SCRIBE	from DSK:SCRIBE.REL[31024,332216]	created by Unknown on  9-Jul-70 at 20:34:00
+	Low  segment starts at	   140 ends at	   263 length	   124 (octal),    84. (decimal)
+	High segment starts at	400010 ends at	400751 length	   742 (octal),   482. (decimal)
+
+	SCRIBE	      400032	Global	Relocatable 		START.	      400032	Global	Relocatable 	
+	OPT%NA	         163	Entry	Relocatable 		RUN%PG	         143	Entry	Relocatable 	
+	RUNOFF	         142	Entry	Relocatable 		RUN%FL	         141	Entry	Relocatable 	
+	EXIT%F	         140	Entry	Relocatable 	
+
+		*************
+
+DOSCRI	from DSK:DOSCRI.REL[31024,332216]	created by Unknown on  9-Jun-70 at 14:35:00
+	Low  segment starts at	   264 ends at	  2666 length	  2403 (octal),  1283. (decimal)
+	High segment starts at	400752 ends at	415575 length	 14624 (octal),  6548. (decimal)
+
+	CURREN	         737	Entry	Relocatable 		UNDER%	         736	Entry	Relocatable 	
+	DOCONT	         735	Entry	Relocatable 		NODECA	         734	Entry	Relocatable 	
+	DOUNDE	         733	Entry	Relocatable 		DODECA	         732	Entry	Relocatable 	
+	REPEAT	         731	Entry	Relocatable 		CMDPTR	         730	Entry	Relocatable 	
+	CMDLEN	         727	Entry	Relocatable 		CMDLN	         330	Entry	Relocatable 	
+	INF%DE	         327	Entry	Relocatable 		INF	         317	Entry	Relocatable 	
+	CURPOS	         277	Entry	Relocatable 		CURLEV	         267	Entry	Relocatable 	
+	CLEVEL	         266	Entry	Relocatable 		DO%SCR	      414130	Entry	Relocatable 	
+	ERROR	      401066	Entry	Relocatable 	
+
+		*************
+
+READER	from DSK:READER.REL[31024,332216]	created by Unknown on  9-Jun-70 at 14:36:00
+	Low  segment starts at	  2667 ends at	  2676 length	    10 (octal),     8. (decimal)
+	High segment starts at	415576 ends at	421150 length	  3353 (octal),  1771. (decimal)
+
+	INITRE	      420725	Entry	Relocatable 		GETLNR	      420633	Entry	Relocatable 	
+	READLI	      420377	Entry	Relocatable 	
+
+		*************
+
+		LINK symbol map of	SCRIBE		page 2
+
+
+WRITER	from DSK:WRITER.REL[31024,332216]	created by Unknown on  9-Jun-70 at 14:36:00
+	Low  segment starts at	  2677 ends at	  2706 length	    10 (octal),     8. (decimal)
+	High segment starts at	421151 ends at	423302 length	  2132 (octal),  1114. (decimal)
+
+	WRTLIN	      422140	Entry	Relocatable 	
+
+		*************
+
+JUSTFY	from DSK:JUSTFY.REL[31024,332216]	created by Unknown on  9-Jun-70 at 14:37:00
+	Low  segment starts at	  2707 ends at	  3313 length	   405 (octal),   261. (decimal)
+	High segment starts at	423303 ends at	425007 length	  1505 (octal),   837. (decimal)
+
+	INITJU	      424712	Entry	Relocatable 		JUSTLI	      424145	Entry	Relocatable 	
+
+		*************
+
+GETLIN	from DSK:GETLIN.REL[31024,332216]	created by Unknown on  9-Jun-70 at 14:37:00
+	High segment starts at	425010 ends at	425405 length	   376 (octal),   254. (decimal)
+
+	GETLIN	      425032	Entry	Relocatable 	
+
+		*************
+
+SCAN	from DSK:SCAN.REL[31024,332216]	created by Unknown on  9-Jun-70 at 14:37:00
+	Low  segment starts at	  3314 ends at	  3314 length	     1 (octal),     1. (decimal)
+	High segment starts at	425406 ends at	426471 length	  1064 (octal),   564. (decimal)
+
+	SCAN	      425627	Entry	Relocatable 	
+
+		*************
+
+RUN	from DSK:RDLIB.REL[31024,320156]	created by MACRO on 12-Jun-70 at 19:19:00
+	Low  segment starts at	  3315 ends at	  3327 length	    13 (octal),    11. (decimal)
+	High segment starts at	426472 ends at	426514 length	    23 (octal),    19. (decimal)
+
+	RUN	      426472	Entry	Relocatable 	
+
+		*************
+
+FILUTL	from DSK:RDLIB.REL[31024,320156]	created by Unknown on 12-Jun-70 at 19:19:00
+	High segment starts at	426515 ends at	427634 length	  1120 (octal),   592. (decimal)
+
+	PR%FIL	      427365	Entry	Relocatable 		OPEN%F	      426524	Entry	Relocatable 	
+
+		*************
+
+QUERY	from DSK:RDLIB.REL[31024,320156]	created by Unknown on 12-Jun-70 at 19:19:00
+	High segment starts at	427635 ends at	430117 length	   263 (octal),   179. (decimal)
+
+	QUERY	      427667	Entry	Relocatable 	
+
+		*************
+
+		LINK symbol map of	SCRIBE		page 3
+
+
+TEMPFI	from DSK:RDLIB.REL[31024,320156]	created by Unknown on 12-Jun-70 at 19:19:00
+	High segment starts at	430120 ends at	430171 length	    52 (octal),    42. (decimal)
+
+	TEMP%F	      430130	Entry	Relocatable 	
+
+		*************
+
+JOBNUM	from DSK:RDLIB.REL[31024,320156]	created by MACRO on 12-Jun-70 at 19:19:00
+	High segment starts at	430172 ends at	430207 length	    16 (octal),    14. (decimal)
+
+	JOBNUM	      430172	Entry	Relocatable 	
+
+		*************
+
+DEBMON	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	Low  segment starts at	  3330 ends at	  3330 length	     1 (octal),     1. (decimal)
+	High segment starts at	430210 ends at	430755 length	   546 (octal),   358. (decimal)
+
+	BACK$T	      430673	Global	Relocatable 		BST.AC	      430673	Global	Relocatable 	
+	DDT.AC	      430416	Global	Relocatable 		DEBUG.	      430210	Entry	Relocatable 	
+	DIE.	      430356	Global	Relocatable 		END.	      430340	Global	Relocatable 	
+	EXIT.	      430340	Global	Relocatable 		INIT0.	      430210	Global	Relocatable 	
+	INIT1.	      430210	Entry	Relocatable 		INITP.	      430210	Global	Relocatable 	
+	PNTRY.	      430657	Global	Relocatable 		PRTRN.	      430706	Global	Relocatable 	
+	REE.AC	      430366	Global	Relocatable 		STMT.	      430500	Entry	Relocatable 	
+	TRACE	      430615	Global	Relocatable 		WRTDC.	      430554	Global	Relocatable 	
+	WRTPC.	      430544	Global	Relocatable 	
+
+		*************
+
+DEBUG$	from DSK:PASLIB.REL[31024,320155]	created by Unknown on  7-Aug-70 at 22:05:00
+	High segment starts at	430756 ends at	440150 length	  7173 (octal),  3707. (decimal)
+
+	DEBUG$	      436201	Entry	Relocatable 		QUERY$	      430772	Entry	Relocatable 	
+	A$$ERT	      430760	Entry	Relocatable 	
+
+		*************
+
+DEBIO$	from DSK:PASLIB.REL[31024,320155]	created by Unknown on  7-Aug-70 at 22:05:00
+	High segment starts at	440151 ends at	440471 length	   321 (octal),   209. (decimal)
+
+	WRIT$I	      440266	Entry	Relocatable 		WRIT$N	      440260	Entry	Relocatable 	
+	WRIT$E	      440250	Entry	Relocatable 		WRIT$S	      440224	Entry	Relocatable 	
+	READ$L	      440153	Entry	Relocatable 	
+
+		*************
+
+DEBLE$	from DSK:PASLIB.REL[31024,320155]	created by Unknown on  7-Aug-70 at 22:05:00
+	High segment starts at	440472 ends at	442342 length	  1651 (octal),   937. (decimal)
+
+	LEX$KE	      442115	Entry	Relocatable 		LEX$SC	      440525	Entry	Relocatable 	
+
+		*************
+		LINK symbol map of	SCRIBE		page 4
+
+
+DEBBR$	from DSK:PASLIB.REL[31024,320155]	created by Unknown on  7-Aug-70 at 22:05:00
+	High segment starts at	442343 ends at	443667 length	  1325 (octal),   725. (decimal)
+
+	SET$BR	      443531	Entry	Relocatable 		CLR$BR	      443462	Entry	Relocatable 	
+	CLR$AL	      443434	Entry	Relocatable 		FIND$S	      443330	Entry	Relocatable 	
+	GET$FI	      442634	Entry	Relocatable 		GET$PR	      442606	Entry	Relocatable 	
+	INFO$S	      442474	Entry	Relocatable 		GET$MO	      442345	Entry	Relocatable 	
+
+		*************
+
+DEBRE$	from DSK:PASLIB.REL[31024,320155]	created by Unknown on  7-Aug-70 at 22:05:00
+	High segment starts at	443670 ends at	451065 length	  5176 (octal),  2686. (decimal)
+
+	GET$DE	      450645	Entry	Relocatable 		SET$SI	      445736	Entry	Relocatable 	
+	SET$BO	      445575	Entry	Relocatable 		GET$EL	      445377	Entry	Relocatable 	
+	CHECK$	      445260	Entry	Relocatable 		COMP$T	      445012	Entry	Relocatable 	
+	MAK$SC	      444730	Entry	Relocatable 		SET$KI	      444646	Entry	Relocatable 	
+	SET$FI	      444601	Entry	Relocatable 		INIT$D	      444551	Entry	Relocatable 	
+	STO$ST	      444467	Entry	Relocatable 		EXT$ST	      444370	Entry	Relocatable 	
+	A$$BAC	      444325	Entry	Relocatable 		STO$LE	      444221	Entry	Relocatable 	
+	EXT$LE	      444154	Entry	Relocatable 		EXT$RE	      444117	Entry	Relocatable 	
+	STO$SE	      444065	Entry	Relocatable 		EXT$SE	      444032	Entry	Relocatable 	
+	EXT$AD	      443770	Entry	Relocatable 		STO$SC	      443744	Entry	Relocatable 	
+	EXT$SC	      443672	Entry	Relocatable 	
+
+		*************
+
+DEBAS$	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	451066 ends at	451117 length	    32 (octal),    26. (decimal)
+
+	ABORT$	      451105	Entry	Relocatable 		DEB$CA	      451113	Entry	Relocatable 	
+	EX$TRI	      451115	Entry	Relocatable 		LD$BYT	      451066	Entry	Relocatable 	
+	ST$BYT	      451072	Entry	Relocatable 		TT$IN	      451107	Entry	Relocatable 	
+	TT$OUT	      451111	Entry	Relocatable 	
+
+		*************
+
+DEBDM$	from DSK:PASLIB.REL[31024,320155]	created by Unknown on  7-Aug-70 at 22:05:00
+	High segment starts at	451120 ends at	453034 length	  1715 (octal),   973. (decimal)
+
+	DMP$ST	      452247	Entry	Relocatable 		DMP$SC	      452102	Entry	Relocatable 	
+	DMP$LO	      451645	Entry	Relocatable 		DMP$BR	      451514	Entry	Relocatable 	
+	DMP$PA	      451325	Entry	Relocatable 		DMP$FI	      451220	Entry	Relocatable 	
+	DMP$MO	      451122	Entry	Relocatable 	
+
+		*************
+
+DEBSC$	from DSK:PASLIB.REL[31024,320155]	created by Unknown on  7-Aug-70 at 22:05:00
+	High segment starts at	453035 ends at	455557 length	  2523 (octal),  1363. (decimal)
+
+	OPEN$R	      455346	Entry	Relocatable 		OPEN$F	      454531	Entry	Relocatable 	
+	OPEN$S	      454432	Entry	Relocatable 		LOAD$O	      454200	Entry	Relocatable 	
+	RET$AD	      454051	Entry	Relocatable 		CALL$B	      454033	Entry	Relocatable 	
+		LINK symbol map of	SCRIBE		page 5
+DEBSC$
+	PROC$N	      454003	Entry	Relocatable 		PROC$B	      453774	Entry	Relocatable 	
+	MAIN$F	      453764	Entry	Relocatable 		OPEN$D	      453672	Entry	Relocatable 	
+	OVER$L	      453646	Entry	Relocatable 		SYM$LO	      453571	Entry	Relocatable 	
+	MOD$LO	      453477	Entry	Relocatable 		NEXT$M	      453231	Entry	Relocatable 	
+	FIRST$	      453212	Entry	Relocatable 		R50$AS	      453135	Entry	Relocatable 	
+
+		*************
+
+DEBSY$	from DSK:PASLIB.REL[31024,320155]	created by Unknown on  7-Aug-70 at 22:05:00
+	High segment starts at	455560 ends at	456322 length	   543 (octal),   355. (decimal)
+
+	DEREF$	      456154	Entry	Relocatable 		ST$FIL	      456041	Entry	Relocatable 	
+	ST$OPE	      455701	Entry	Relocatable 		ST$INI	      455614	Entry	Relocatable 	
+
+		*************
+
+DEBPR$	from DSK:PASLIB.REL[31024,320155]	created by Unknown on  7-Aug-70 at 22:05:00
+	High segment starts at	456323 ends at	461566 length	  3244 (octal),  1700. (decimal)
+
+	A$$IGN	      461101	Entry	Relocatable 		PRINT$	      461062	Entry	Relocatable 	
+
+		*************
+
+DEBBO$	from DSK:PASLIB.REL[31024,320155]	created by Unknown on  7-Aug-70 at 22:05:00
+	High segment starts at	461567 ends at	463077 length	  1311 (octal),   713. (decimal)
+
+	EVAL$B	      462770	Entry	Relocatable 	
+
+		*************
+
+STACK	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+
+	Zero length module
+
+		*************
+
+UWRTN	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	463100 ends at	463106 length	     7 (octal),     7. (decimal)
+
+	UW.RTN	      463100	Entry	Relocatable 	
+
+		*************
+
+RTBASE	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	463107 ends at	463114 length	     6 (octal),     6. (decimal)
+
+	I.RTBA	      463112	Global	Relocatable Suppressed	RT$BAS	      463107	Entry	Relocatable 	
+	S.RTBA	          41	Global	Absolute    Suppressed	X.RTBA	           0	Global	Absolute    Suppressed
+
+		*************
+
+		LINK symbol map of	SCRIBE		page 6
+
+
+DBBASE	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	463115 ends at	463117 length	     3 (octal),     3. (decimal)
+
+	DB$BAS	      463115	Entry	Relocatable 		I.DBBA	           0	Global	Absolute    Suppressed
+	S.DBBA	         536	Global	Absolute    Suppressed	X.DBBA	           0	Global	Absolute    Suppressed
+
+		*************
+
+STBASE	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	463120 ends at	463130 length	    11 (octal),     9. (decimal)
+
+	DB.FBL	      463126	Entry	Relocatable 		I.STBA	           0	Global	Absolute    Suppressed
+	S.STBA	        2302	Global	Absolute    Suppressed	ST$BAS	      463120	Entry	Relocatable 	
+	ST$LEN	      463123	Entry	Relocatable 		X.STBA	           0	Global	Absolute    Suppressed
+
+		*************
+
+SR$IOS	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	463131 ends at	463140 length	    10 (octal),     8. (decimal)
+
+	RES$IO	      463136	Entry	Relocatable 		SAV$IO	      463131	Entry	Relocatable 	
+
+		*************
+
+QUICKF	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	463141 ends at	463566 length	   426 (octal),   278. (decimal)
+
+	ALC0.	      463141	Entry	Relocatable 		DSPOS.	      463445	Entry	Relocatable 	
+	I.QFIT	      463141	Global	Relocatable Suppressed	MARK.	      463523	Entry	Relocatable 	
+	NEW.	      463176	Entry	Relocatable 		RLEAS.	      463542	Entry	Relocatable 	
+	S.QFIT	          13	Global	Absolute    Suppressed	X.QFIT	           0	Global	Absolute    Suppressed
+
+		*************
+
+DFLT	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	463567 ends at	463615 length	    27 (octal),    23. (decimal)
+
+	D.FLT	      463567	Entry	Relocatable 	
+
+		*************
+
+DRRND	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	463616 ends at	463646 length	    31 (octal),    25. (decimal)
+
+	DR.RND	      463616	Entry	Relocatable 	
+
+		*************
+
+MFC	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	463647 ends at	463661 length	    13 (octal),    11. (decimal)
+
+	M.FC	      463647	Entry	Relocatable 	
+
+		LINK symbol map of	SCRIBE		page 7
+
+		*************
+
+MFX	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	463662 ends at	463700 length	    17 (octal),    15. (decimal)
+
+	M.FX	      463662	Entry	Relocatable 	
+
+		*************
+
+MFXU	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	463701 ends at	463717 length	    17 (octal),    15. (decimal)
+
+	MU.FX	      463701	Entry	Relocatable 	
+
+		*************
+
+MFF	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	463720 ends at	463737 length	    20 (octal),    16. (decimal)
+
+	M.FF	      463720	Entry	Relocatable 	
+
+		*************
+
+MFFU	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	463740 ends at	463757 length	    20 (octal),    16. (decimal)
+
+	MU.FF	      463740	Entry	Relocatable 	
+
+		*************
+
+MFFP	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	463760 ends at	463777 length	    20 (octal),    16. (decimal)
+
+	MP.FF	      463760	Entry	Relocatable 	
+
+		*************
+
+MRC	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	464000 ends at	464004 length	     5 (octal),     5. (decimal)
+
+	M.RC	      464000	Entry	Relocatable 	
+
+		*************
+
+MRCP	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	464005 ends at	464011 length	     5 (octal),     5. (decimal)
+
+	MP.RC	      464005	Entry	Relocatable 	
+
+		*************
+
+		LINK symbol map of	SCRIBE		page 8
+
+
+MRX	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	464012 ends at	464025 length	    14 (octal),    12. (decimal)
+
+	M.RX	      464012	Entry	Relocatable 	
+
+		*************
+
+MRXU	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	464026 ends at	464041 length	    14 (octal),    12. (decimal)
+
+	MU.RX	      464026	Entry	Relocatable 	
+
+		*************
+
+MRF	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	464042 ends at	464056 length	    15 (octal),    13. (decimal)
+
+	M.RF	      464042	Entry	Relocatable 	
+
+		*************
+
+MRFP	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	464057 ends at	464073 length	    15 (octal),    13. (decimal)
+
+	MP.RF	      464057	Entry	Relocatable 	
+
+		*************
+
+CFC	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	464074 ends at	464112 length	    17 (octal),    15. (decimal)
+
+	C.FC	      464074	Entry	Relocatable 	
+
+		*************
+
+CSPXF	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	464113 ends at	464121 length	     7 (octal),     7. (decimal)
+
+	CSP.XF	      464113	Entry	Relocatable 	
+
+		*************
+
+CSPFC	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	464122 ends at	464150 length	    27 (octal),    23. (decimal)
+
+	CSP.FC	      464122	Entry	Relocatable 	
+
+		*************
+
+CSPFX	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	464151 ends at	464161 length	    11 (octal),     9. (decimal)
+
+	CSP.FX	      464151	Entry	Relocatable 	
+		LINK symbol map of	SCRIBE		page 9
+CSPFX
+
+		*************
+
+CSPFF	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	464162 ends at	464171 length	    10 (o,     8. (decimal)
+
+	CSP.FF	      464162	Entry	Relocatable 	
+
+		*************
+
+IXFC	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	464172 ends at	464213 length	    22 (octal),    18. (decimal)
+
+	IX.FC	      464172	Entry	Relocatable 	
+
+		*************
+
+VFXOU	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	464214 ends at	464242 length	    27 (octal),    23. (decimal)
+
+	VFU.XO	      464214	Entry	Relocatable 	
+
+		*************
+
+SRFD	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	464243 ends at	464264 length	    22 (octal),    18. (decimal)
+
+	SR.FD	      464243	Entry	Relocatable 	
+
+		*************
+
+VFFO	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	464265 ends at	464310 length	    24 (octal),    20. (decimal)
+
+	VF.FO	      464265	Entry	Relocatable 	
+
+		*************
+
+SRFO	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	464311 ends at	464333 length	    23 (octal),    19. (decimal)
+
+	SR.FO	      464311	Entry	Relocatable 	
+
+		*************
+
+MSP	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	464334 ends at	464340 length	     5 (octal),     5. (decimal)
+
+	MS.P	      464334	Entry	Relocatable 	
+
+		*************
+
+		LINK symbol map of	SCRIBE		page 10
+
+
+MSU	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	464341 ends at	464350 length	    10 (octal),     8. (decimal)
+
+	MS.U	      464341	Entry	Relocatable 	
+
+		*************
+
+MS	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	464351 ends at	464360 length	    10 (octal),     8. (decimal)
+
+	MS.	      464351	Entry	Relocatable 	
+
+		*************
+
+MSFIN	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	464361 ends at	464364 length	     4 (octal),     4. (decimal)
+
+	MS.FIN	      464361	Entry	Relocatable 	
+
+		*************
+
+MSTR	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	464365 ends at	464366 length	     2 (octal),     2. (decimal)
+
+	MSTR.	      464365	Entry	Relocatable 	
+
+		*************
+
+MSTRU	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	464367 ends at	464470 length	   102 (octal),    66. (decimal)
+
+	MSTR.U	      464367	Entry	Relocatable 	
+
+		*************
+
+SMSS	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	464471 ends at	464535 length	    45 (octal),    37. (decimal)
+
+	SM.SS	      464472	Entry	Relocatable 	
+
+		*************
+
+RPAD	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	464536 ends at	464542 length	     5 (octal),     5. (decimal)
+
+	R.PAD	      464536	Entry	Relocatable 	
+
+		*************
+
+CSP	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	464543 ends at	464576 length	    34 (octal),    28. (decimal)
+
+	CSP.F	      464543	Entry	Relocatable 		CSP.X	      464545	Entry	Relocatable 	
+		LINK symbol map of	SCRIBE		page 11
+CSP
+
+		*************
+
+SINVL	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	464577 ends at	464616 length	    20 (octal),    16. (decimal)
+
+	IN.VL	      464577	Entry	Relocatable 	
+
+		*************
+
+RSAVE7	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	464617 ends at	464627 length	    11 (octal),     9. (decimal)
+
+	FAIL.7	      464623	Entry	Relocatable 		REST.7	      464624	Entry	Relocatable 	
+	SAVE.7	      464617	Entry	Relocatable 	
+
+		*************
+
+IORES	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	464630 ends at	464664 length	    35 (octal),    29. (decimal)
+
+	RESET.	      464630	Entry	Relocatable 	
+
+		*************
+
+IOCLR	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	464665 ends at	464702 length	    16 (octal),    14. (decimal)
+
+	CLEAR.	      464665	Entry	Relocatable 	
+
+		*************
+
+IOPEN	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	464703 ends at	465003 length	   101 (octal),    65. (decimal)
+
+	OPEN.	      464703	Entry	Relocatable 	
+
+		*************
+
+IORWR	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	465004 ends at	465144 length	   141 (octal),    97. (decimal)
+
+	REWRT.	      465004	Entry	Relocatable 	
+
+		*************
+
+IOBIN	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	465145 ends at	465335 length	   171 (octal),   121. (decimal)
+
+	CLSTB.	      465332	Entry	Relocatable 		DB$OPE	      465175	Entry	Relocatable 	
+	OPNBN.	      465213	Entry	Relocatable 		OPNTP.	      465145	Entry	Relocatable 	
+
+		*************
+
+		LINK symbol map of	SCRIBE		page 12
+
+
+IOCLS	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	465336 ends at	465460 length	   123 (octal),    83. (decimal)
+
+	CLOSA.	      465361	Entry	Relocatable 		CLOSD.	      465340	Entry	Relocatable 	
+	CLOSE.	      465336	Entry	Relocatable 		I.IOCL	           0	Global	Absolute    Suppressed
+	S.IOCL	           0	Global	Absolute    Suppressed	X.IOCL	      465361	Global	Relocatable Suppressed
+
+		*************
+
+IOTXH	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	465461 ends at	465530 length	    50 (octal),    40. (decimal)
+
+	DODEC.	      465461	Entry	Relocatable 		DOTXT.	      465475	Entry	Relocatable 	
+
+		*************
+
+IOICM	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	465531 ends at	465755 length	   225 (octal),   149. (decimal)
+
+	FARGX.	      465671	Entry	Relocatable 		FFRBF.	      465613	Entry	Relocatable 	
+	FGTBF.	      465600	Entry	Relocatable 		FLCHN.	      465644	Entry	Relocatable 	
+	FLUCH.	      465651	Entry	Relocatable 		FMTCH.	      465662	Entry	Relocatable 	
+	GTIFN.	      465554	Entry	Relocatable 		I.IOIC	      465623	Global	Relocatable Suppressed
+	IOFAK.	      465745	Entry	Relocatable 		P.FID.	      465531	Entry	Relocatable 	
+	S.IOIC	          23	Global	Absolute    Suppressed	X.IOIC	           0	Global	Absolute    Suppressed
+
+		*************
+
+IOFNAM	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	465756 ends at	466052 length	    75 (octal),    61. (decimal)
+
+	FNAME.	      465756	Entry	Relocatable 	
+
+		*************
+
+IOCNNL	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	466053 ends at	466124 length	    52 (octal),    42. (decimal)
+
+	FRCHN.	      466123	Entry	Relocatable 		FRECN.	      466106	Entry	Relocatable 	
+	GETCN.	      466053	Entry	Relocatable 		GTCHN.	      466120	Entry	Relocatable 	
+	I.IOCN	      466115	Global	Relocatable Suppressed	S.IOCN	           1	Global	Absolute    Suppressed
+	X.IOCN	           0	Global	Absolute    Suppressed
+
+		*************
+
+IOGET	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	466125 ends at	466167 length	    43 (octal),    35. (decimal)
+
+	GET.	      466125	Entry	Relocatable 	
+
+		*************
+
+		LINK symbol map of	SCRIBE		page 13
+
+
+IOSEE	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	466170 ends at	466233 length	    44 (octal),    36. (decimal)
+
+	SEEK.	      466170	Entry	Relocatable 	
+
+		*************
+
+IOFSZ	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	466234 ends at	466252 length	    17 (octal),    15. (decimal)
+
+	FILSZ.	      466234	Entry	Relocatable 	
+
+		*************
+
+IOMS1	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	466253 ends at	466264 length	    12 (octal),    10. (decimal)
+
+	CKEOF.	      466253	Entry	Relocatable 	
+
+		*************
+
+IOMS2	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	466265 ends at	466275 length	    11 (octal),     9. (decimal)
+
+	FILLC.	      466265	Entry	Relocatable 	
+
+		*************
+
+IOMS3	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	466276 ends at	466315 length	    20 (octal),    16. (decimal)
+
+	NTXDI.	      466314	Entry	Relocatable 		NTXER.	      466276	Entry	Relocatable 	
+
+		*************
+
+IONTR	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	466316 ends at	466444 length	   127 (octal),    87. (decimal)
+
+	INT.R	      466316	Entry	Relocatable 	
+
+		*************
+
+IONTW	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	466445 ends at	466573 length	   127 (octal),    87. (decimal)
+
+	I.IONT	           0	Global	Absolute    Suppressed	INT.W	      466461	Entry	Relocatable 	
+	S.IONT	           2	Global	Absolute    Suppressed	X.IONT	           0	Global	Absolute    Suppressed
+
+		*************
+
+		LINK symbol map of	SCRIBE		page 14
+
+
+IONTC	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	466574 ends at	466647 length	    54 (octal),    44. (decimal)
+
+	INT.C	      466574	Entry	Relocatable 		INT.C1	      466625	Entry	Relocatable 	
+
+		*************
+
+IORLR	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	466650 ends at	467155 length	   306 (octal),   198. (decimal)
+
+	REAL.R	      466650	Entry	Relocatable 		SRL.R	      466671	Entry	Relocatable 	
+
+		*************
+
+IORLW	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	467156 ends at	467601 length	   424 (octal),   276. (decimal)
+
+	REAL.W	      467156	Entry	Relocatable 		SRL.W	      467165	Entry	Relocatable 	
+
+		*************
+
+IORLC	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	467602 ends at	467720 length	   117 (octal),    79. (decimal)
+
+	ENDRN.	      467712	Entry	Relocatable 		REA.C1	      467602	Entry	Relocatable 	
+	REA.C2	      467640	Entry	Relocatable 		REA.C3	      467666	Entry	Relocatable 	
+	TENE.	      467701	Entry	Relocatable 		TENF.	      467703	Entry	Relocatable 	
+	TENP.	      467676	Entry	Relocatable 	
+
+		*************
+
+IOSTR	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	467721 ends at	470111 length	   171 (octal),   121. (decimal)
+
+	BOOL.X	      467731	Entry	Relocatable 		CSTR.R	      470055	Entry	Relocatable 	
+	CSTR.W	      470006	Entry	Relocatable 		FSTR.R	      470025	Entry	Relocatable 	
+	FSTR.W	      470000	Entry	Relocatable 		STRV.R	      470035	Entry	Relocatable 	
+	STRV.W	      470016	Entry	Relocatable 		XSTR.R	      470021	Entry	Relocatable 	
+	XSTR.W	      467721	Entry	Relocatable 	
+
+		*************
+
+IOCHAR	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	470112 ends at	471260 length	  1147 (octal),   615. (decimal)
+
+	BREAK.	      470623	Entry	Relocatable 		GETCH.	      470112	Entry	Relocatable 	
+	GETCR.	      470121	Entry	Relocatable 		I.IOCH	      470471	Global	Relocatable Suppressed
+	PUTCH.	      470417	Entry	Relocatable 		PUTCR.	      470426	Entry	Relocatable 	
+	PUTPG.	      470572	Entry	Relocatable 		RD.FDN	      470750	Entry	Relocatable 	
+	RD.FDR	      470745	Entry	Relocatable 		RD.FSN	      471231	Entry	Relocatable 	
+	RD.LNN	      470671	Entry	Relocatable 		RD.LNR	      470666	Entry	Relocatable 	
+	RD.SSN	      471205	Entry	Relocatable 		RD.SSR	      471202	Entry	Relocatable 	
+	S.IOCH	          10	Global	Absolute    Suppressed	WR.DNN	      471162	Entry	Relocatable 	
+		LINK symbol map of	SCRIBE		page 15
+IOCHAR
+	WR.DNR	      471157	Entry	Relocatable 		WR.FDN	      471005	Entry	Relocatable 	
+	WR.FDR	      471002	Entry	Relocatable 		WR.FSN	      471151	Entry	Relocatable 	
+	WR.LNN	      470720	Entry	Relocatable 		WR.LNR	      470715	Entry	Relocatable 	
+	WR.SSN	      471117	Entry	Relocatable 		WR.SSR	      471114	Entry	Relocatable 	
+	WR.SVN	      471044	Entry	Relocatable 		WR.SVR	      471041	Entry	Relocatable 	
+	X.IOCH	           0	Global	Absolute    Suppressed
+
+		*************
+
+TWAIT	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	471261 ends at	471300 length	    20 (octal),    16. (decimal)
+
+	TWAIT.	      471261	Entry	Relocatable 	
+
+		*************
+
+.MAIN	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+
+	Zero length module
+
+		*************
+
+.MAIN	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	Low  segment starts at	  3331 ends at	  3331 length	     1 (octal),     1. (decimal)
+
+	TTY	        3331	Entry	Relocatable 	
+
+		*************
+
+.MAIN	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	Low  segment starts at	  3332 ends at	  3332 length	     1 (octal),     1. (decimal)
+
+	TTYOUT	        3332	Entry	Relocatable 	
+
+		*************
+
+.MAIN	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	Low  segment starts at	  3333 ends at	  3333 length	     1 (octal),     1. (decimal)
+
+	OUTPUT	        3333	Entry	Relocatable 	
+
+		*************
+
+IOCHER	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	471301 ends at	471303 length	     3 (octal),     3. (decimal)
+
+	IOSYM.	      471301	Entry	Relocatable 	
+
+		*************
+
+IOSTT	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	471304 ends at	471334 length	    31 (octal),    25. (decimal)
+
+	EXTST.	      471312	Entry	Relocatable 		IOSTA.	      471314	Entry	Relocatable 	
+		LINK symbol map of	SCRIBE		page 16
+IOSTT
+	IOSTL.	      471304	Entry	Relocatable 	
+
+		*************
+
+TENIO	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	471335 ends at	472546 length	  1212 (octal),   650. (decimal)
+
+	COSEF.	      471564	Global	Relocatable 		FOSVC.	      472474	Global	Relocatable 	
+	FUSHF.	      472505	Global	Relocatable 		IOUUO.	      471335	Entry	Relocatable 	
+	NAMEF.	      472452	Global	Relocatable 		NOTEF.	      472432	Global	Relocatable 	
+	OPENF.	      471335	Global	Relocatable 		PINTF.	      472464	Global	Relocatable 	
+	RBLKR.	      472003	Global	Relocatable 		RDBLK.	      471751	Global	Relocatable 	
+	RDWRD.	      472011	Global	Relocatable 		RET14.	      471633	Entry	Relocatable 	
+	RET16.	      472230	Entry	Relocatable 		RWRDR.	      472024	Global	Relocatable 	
+	TENIO.	      471335	Entry	Relocatable 		TUNCF.	      471710	Global	Relocatable 	
+	WBLK.	      472265	Global	Relocatable 		WBLKR.	      472306	Global	Relocatable 	
+	WRWRD.	      472314	Global	Relocatable 		WWRDR.	      472325	Global	Relocatable 	
+
+		*************
+
+DISPAT	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	472547 ends at	472640 length	    72 (octal),    58. (decimal)
+
+	APOIN.	      472600	Global	Relocatable 		I.TENI	      472547	Global	Relocatable Suppressed
+	LEAVE.	      472573	Global	Relocatable 		LUD.AC	      472555	Global	Relocatable 	
+	LUOAD.	          40	Global	Absolute    		PASUO.	          41	Entry	Absolute    	
+	S.TENI	         155	Global	Absolute    Suppressed	SKIP1.	      472571	Global	Relocatable 	
+	SKIP2.	      472567	Global	Relocatable 		TNAB.	      472562	Global	Relocatable 	
+	X.TENI	           0	Global	Absolute    Suppressed	ZILCH.	      472601	Global	Relocatable 	
+
+		*************
+
+BUFGET	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+
+	Zero length module
+
+		*************
+
+DECOD.	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	472641 ends at	473075 length	   235 (octal),   157. (decimal)
+
+	DECOD.	      472641	Entry	Relocatable 		STRTD.	      472647	Entry	Relocatable 	
+
+		*************
+
+PPGRB.	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	473076 ends at	473104 length	     7 (octal),     7. (decimal)
+
+	I.PPGR	      473103	Global	Relocatable Suppressed	PPGRB.	      473076	Global	Relocatable 	
+	PPGRG.	      473103	Entry	Relocatable 		S.PPGR	           1	Global	Absolute    Suppressed
+	X.PPGR	           0	Global	Absolute    Suppressed
+
+		*************
+
+		LINK symbol map of	SCRIBE		page 17
+
+
+TERFAK	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+
+	Zero length module
+
+		*************
+
+FAK33	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+
+	Zero length module
+
+		*************
+
+FAK34	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+
+	Zero length module
+
+		*************
+
+FAK35	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+
+	Zero length module
+
+		*************
+
+FAK36	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+
+	Zero length module
+
+		*************
+
+FAK37	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+
+	Zero length module
+
+		*************
+
+FILER	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	473105 ends at	473106 length	     2 (octal),     2. (decimal)
+
+	FILER.	      473105	Entry	Relocatable 	
+
+		*************
+
+SUBER	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	473107 ends at	473110 length	     2 (octal),     2. (decimal)
+
+	INXER.	      473107	Entry	Relocatable 		SUBER.	      473107	Entry	Relocatable 	
+
+		*************
+
+		LINK symbol map of	SCRIBE		page 18
+
+
+STRER	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	473111 ends at	473112 length	     2 (octal),     2. (decimal)
+
+	STRER.	      473111	Entry	Relocatable 	
+
+		*************
+
+VALER	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	473113 ends at	473114 length	     2 (octal),     2. (decimal)
+
+	SRERR.	      473113	Entry	Relocatable 		VALER.	      473113	Entry	Relocatable 	
+
+		*************
+
+CASER	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	473115 ends at	473116 length	     2 (octal),     2. (decimal)
+
+	CASER.	      473115	Entry	Relocatable 	
+
+		*************
+
+RTERR	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	473117 ends at	473117 length	     1 (octal),     1. (decimal)
+
+	RT.ERR	      473117	Entry	Relocatable 	
+
+		*************
+
+SZOVL	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+
+	Zero length module
+
+		*************
+
+EXIO	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	473120 ends at	473121 length	     2 (octal),     2. (decimal)
+
+	EX.IO	      474032	Global	Relocatable Suppressed	IOERR.	      473120	Entry	Relocatable 	
+
+		*************
+
+EXUSR	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	473122 ends at	473123 length	     2 (octal),     2. (decimal)
+
+	EX.USR	      474033	Global	Relocatable Suppressed	USERR.	      473122	Entry	Relocatable 	
+
+		*************
+
+ESCAP	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	473124 ends at	473124 length	     1 (octal),     1. (decimal)
+
+	ESCAP.	      473124	Entry	Relocatable 	
+
+		LINK symbol map of	SCRIBE		page 19
+
+		*************
+
+M21	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	473125 ends at	473134 length	    10 (octal),     8. (decimal)
+
+	M2.1	      473125	Entry	Relocatable 	
+
+		*************
+
+M22	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	473135 ends at	473141 length	     5 (octal),     5. (decimal)
+
+	M2.2	      473135	Entry	Relocatable 	
+
+		*************
+
+M23	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	473142 ends at	473146 length	     5 (octal),     5. (decimal)
+
+	M2.3	      473142	Entry	Relocatable 	
+
+		*************
+
+M24	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	473147 ends at	473153 length	     5 (octal),     5. (decimal)
+
+	M2.4	      473147	Entry	Relocatable 	
+
+		*************
+
+M25	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	473154 ends at	473160 length	     5 (octal),     5. (decimal)
+
+	M2.5	      473154	Entry	Relocatable 	
+
+		*************
+
+M26	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	473161 ends at	473165 length	     5 (octal),     5. (decimal)
+
+	M2.6	      473161	Entry	Relocatable 	
+
+		*************
+
+M27	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	473166 ends at	473174 length	     7 (octal),     7. (decimal)
+
+	M2.7	      473166	Entry	Relocatable 	
+
+		*************
+
+		LINK symbol map of	SCRIBE		page 20
+
+
+M210	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	473175 ends at	473201 length	     5 (octal),     5. (decimal)
+
+	M2.10	      473175	Entry	Relocatable 	
+
+		*************
+
+M211	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	473202 ends at	473207 length	     6 (octal),     6. (decimal)
+
+	M2.11	      473202	Entry	Relocatable 	
+
+		*************
+
+M32	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	473210 ends at	473214 length	     5 (octal),     5. (decimal)
+
+	M3.2	      473210	Entry	Relocatable 	
+
+		*************
+
+M34	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	473215 ends at	473223 length	     7 (octal),     7. (decimal)
+
+	M3.4	      473215	Entry	Relocatable 	
+
+		*************
+
+M36	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	473224 ends at	473233 length	    10 (octal),     8. (decimal)
+
+	M3.6	      473224	Entry	Relocatable 	
+
+		*************
+
+M37	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	473234 ends at	473240 length	     5 (octal),     5. (decimal)
+
+	M3.7	      473234	Entry	Relocatable 	
+
+		*************
+
+M310	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	473241 ends at	473244 length	     4 (octal),     4. (decimal)
+
+	M3.10	      473241	Entry	Relocatable 	
+
+		*************
+
+M40	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	473245 ends at	473247 length	     3 (octal),     3. (decimal)
+
+	M4.0	      473245	Entry	Relocatable 	
+		LINK symbol map of	SCRIBE		page 21
+M40
+
+		*************
+
+M63	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	473250 ends at	473255 length	     6 (octal),     6. (decimal)
+
+	M6.3	      473250	Entry	Relocatable 	
+
+		*************
+
+M64	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	473256 ends at	473262 length	     5 (octal),     5. (decimal)
+
+	M6.4	      473256	Entry	Relocatable 	
+
+		*************
+
+M65	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	473263 ends at	473270 length	     6 (octal),     6. (decimal)
+
+	M6.5	      473263	Entry	Relocatable 	
+
+		*************
+
+M66	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	473271 ends at	473277 length	     7 (octal),     7. (decimal)
+
+	M6.6	      473271	Entry	Relocatable 	
+
+		*************
+
+EXINIT	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	473300 ends at	473321 length	    22 (octal),    18. (decimal)
+
+	EX.RST	      473300	Entry	Relocatable 		EX.SET	      473304	Entry	Relocatable 	
+	I.EXIN	      473313	Global	Relocatable Suppressed	S.EXIN	         217	Global	Absolute    Suppressed
+	X.EXIN	           0	Global	Absolute    Suppressed
+
+		*************
+
+EXCPT	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	473322 ends at	474030 length	   507 (octal),   327. (decimal)
+
+	EX.TBL	      473753	Entry	Relocatable 		EXC.AC	      473546	Global	Relocatable 	
+	EXCPT.	      473331	Entry	Relocatable 		RTEXC.	      473322	Entry	Relocatable 	
+
+		*************
+
+ATNACN	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+
+	Zero length module
+
+		*************
+
+		LINK symbol map of	SCRIBE		page 22
+
+
+N11	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+
+	Zero length module
+
+		*************
+
+N12	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+
+	Zero length module
+
+		*************
+
+N13	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+
+	Zero length module
+
+		*************
+
+N14	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+
+	Zero length module
+
+		*************
+
+N15	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+
+	Zero length module
+
+		*************
+
+N16	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+
+	Zero length module
+
+		*************
+
+N31	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+
+	Zero length module
+
+		*************
+
+N33	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+
+	Zero length module
+
+		*************
+
+N35	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+
+	Zero length module
+
+		*************
+		LINK symbol map of	SCRIBE		page 23
+
+
+N311	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+
+	Zero length module
+
+		*************
+
+N50	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+
+	Zero length module
+
+		*************
+
+N61	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+
+	Zero length module
+
+		*************
+
+N62	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+
+	Zero length module
+
+		*************
+
+N70	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+
+	Zero length module
+
+		*************
+
+NUSER	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+
+	Zero length module
+
+		*************
+
+RTREG	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	474031 ends at	474031 length	     1 (octal),     1. (decimal)
+
+	RT.REG	      474031	Entry	Relocatable 	
+
+		*************
+
+RXIO	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	474032 ends at	474032 length	     1 (octal),     1. (decimal)
+
+	RX.IO	      474032	Entry	Relocatable Suppressed
+
+		*************
+
+		LINK symbol map of	SCRIBE		page 24
+
+
+RXUSR	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	474033 ends at	474033 length	     1 (octal),     1. (decimal)
+
+	RX.USR	      474033	Entry	Relocatable Suppressed
+
+		*************
+
+PSARQ1	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+
+	Zero length module
+
+		*************
+
+PEXINI	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	474034 ends at	474035 length	     2 (octal),     2. (decimal)
+
+	P.EXIN	      474034	Entry	Relocatable 	
+
+		*************
+
+PRTBAS	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	474036 ends at	474037 length	     2 (octal),     2. (decimal)
+
+	P.RTBA	      474036	Entry	Relocatable 	
+
+		*************
+
+PDBBAS	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	474040 ends at	474041 length	     2 (octal),     2. (decimal)
+
+	P.DBBA	      474040	Entry	Relocatable 	
+
+		*************
+
+PSTBAS	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	474042 ends at	474043 length	     2 (octal),     2. (decimal)
+
+	P.STBA	      474042	Entry	Relocatable 	
+
+		*************
+
+PIOCHA	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	474044 ends at	474045 length	     2 (octal),     2. (decimal)
+
+	P.IOCH	      474044	Entry	Relocatable 	
+
+		*************
+
+PIOCNN	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	474046 ends at	474047 length	     2 (octal),     2. (decimal)
+
+	P.IOCN	      474046	Entry	Relocatable 	
+
+		LINK symbol map of	SCRIBE		page 25
+
+		*************
+
+PQFIT	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	474050 ends at	474051 length	     2 (octal),     2. (decimal)
+
+	P.QFIT	      474050	Entry	Relocatable 	
+
+		*************
+
+PPPGRB	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	474052 ends at	474053 length	     2 (octal),     2. (decimal)
+
+	P.PPGR	      474052	Entry	Relocatable 	
+
+		*************
+
+PTENIO	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	474054 ends at	474055 length	     2 (octal),     2. (decimal)
+
+	P.TENI	      474054	Entry	Relocatable 	
+
+		*************
+
+PIOCLS	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	474056 ends at	474057 length	     2 (octal),     2. (decimal)
+
+	P.IOCL	      474056	Entry	Relocatable 	
+
+		*************
+
+PIOICM	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	474060 ends at	474061 length	     2 (octal),     2. (decimal)
+
+	P.IOIC	      474060	Entry	Relocatable 	
+
+		*************
+
+PIONTW	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	474062 ends at	474063 length	     2 (octal),     2. (decimal)
+
+	P.IONT	      474062	Entry	Relocatable 	
+
+		*************
+
+PSARQ2	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+
+	Zero length module
+
+		*************
+
+.MAIN	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+
+	Zero length module
+
+		LINK symbol map of	SCRIBE		page 26
+
+		*************
+
+.MAIN	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+
+	Zero length module
+
+		*************
+
+.MAIN	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+
+	Zero length module
+
+		*************
+
+.MAIN	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+
+	Zero length module
+
+		*************
+
+.MAIN	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+
+	Zero length module
+
+		*************
+
+.MAIN	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+
+	Zero length module
+
+		*************
+
+LDOVL	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	474064 ends at	474064 length	     1 (octal),     1. (decimal)
+
+	LD$OVL	      474064	Entry	Relocatable 	
+
+		*************
+
+SFVFY	from DSK:PASLIB.REL[31024,320155]	created by MACRO on  7-Aug-70 at 22:05:00
+	High segment starts at	474065 ends at	474065 length	     1 (octal),     1. (decimal)
+
+	SF$VFY	      474065	Entry	Relocatable 	
+
+		*************
+
+
+	Index to LINK symbol map of	SCRIBE		page 27
+
+	Name	Page	Name	Page	Name	Page	Name	Page
+
+	ATNACN	21	IOCNNL	12	MFF	 7	PSTBAS	24
+	BUFGET	16	IOFNAM	12	MFFP	 7	PTENIO	25
+	CASER	18	IOFSZ	13	MFFU	 7	QUERY	 2
+	CFC	 8	IOGET	12	MFX	 7	QUICKF	 6
+	CSP	10	IOICM	12	MFXU	 7	READER	 1
+	CSPFC	 8	IOMS1	13	MRC	 7	RPAD	10
+	CSPFF	 9	IOMS2	13	MRCP	 7	RSAVE7	11
+	CSPFX	 8	IOMS3	13	MRF	 8	RTBASE	 5
+	CSPXF	 8	IONTC	14	MRFP	 8	RTERR	18
+	DBBASE	 6	IONTR	13	MRX	 8	RTREG	23
+	DEBAS$	 4	IONTW	13	MRXU	 8	RUN	 2
+	DEBBO$	 5	IOPEN	11	MS	10	RXIO	23
+	DEBBR$	 4	IORES	11	MSFIN	10	RXUSR	24
+	DEBDM$	 4	IORLC	14	MSP	 9	SCAN	 2
+	DEBIO$	 3	IORLR	14	MSTR	10	SCRIBE	 1
+	DEBLE$	 3	IORLW	14	MSTRU	10	SFVFY	26
+	DEBMON	 3	IORWR	11	MSU	10	SINVL	11
+	DEBPR$	 5	IOSEE	13	N11	22	SMSS	10
+	DEBRE$	 4	IOSTR	14	N12	22	SR$IOS	 6
+	DEBSC$	 4	IOSTT	15	N13	22	SRFD	 9
+	DEBSY$	 5	IOTXH	12	N14	22	SRFO	 9
+	DEBUG$	 3	IXFC	 9	N15	22	STACK	 5
+	DECOD.	16	JOBNUM	 3	N16	22	STBASE	 6
+	DFLT	 6	JUSTFY	 2	N31	22	STRER	18
+	DISPAT	16	LDOVL	26	N311	23	SUBER	17
+	DOSCRI	 1	M21	19	N33	22	SZOVL	18
+	DRRND	 6	M210	20	N35	22	TEMPFI	 3
+	ESCAP	18	M211	20	N50	23	TENIO	16
+	EXCPT	21	M22	19	N61	23	TERFAK	17
+	EXINIT	21	M23	19	N62	23	TWAIT	15
+	EXIO	18	M24	19	N70	23	UWRTN	 5
+	EXUSR	18	M25	19	NUSER	23	VALER	18
+	FAK33	17	M26	19	PDBBAS	24	VFFO	 9
+	FAK34	17	M27	19	PEXINI	24	VFXOU	 9
+	FAK35	17	M310	20	PIOCHA	24	WRITER	 2
+	FAK36	17	M32	20	PIOCLS	25	.MAIN	15
+	FAK37	17	M34	20	PIOCNN	24	.MAIN	15
+	FILER	17	M36	20	PIOICM	25	.MAIN	15
+	FILUTL	 2	M37	20	PIONTW	25	.MAIN	15
+	GETLIN	 2	M40	20	PPGRB.	16	.MAIN	25
+	IOBIN	11	M63	21	PPPGRB	25	.MAIN	26
+	IOCHAR	14	M64	21	PQFIT	25	.MAIN	26
+	IOCHER	15	M65	21	PRTBAS	24	.MAIN	26
+	IOCLR	11	M66	21	PSARQ1	24	.MAIN	26
+	IOCLS	12	MFC	 6	PSARQ2	25	.MAIN	26
+
+	[End of LINK map of	SCRIBE]
+    Wi

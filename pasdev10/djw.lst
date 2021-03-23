@@ -1,0 +1,44 @@
+		.TITLE	DJW
+	;
+	;	VAX Checkout Code Generator,  Nov 9, 1982   12:12:15 pm
+	;
+
+		.PSECT	PAX_STATIC,LONG,CON,NOEXE,LCL,PIC,NOSHR,RD,WRT,REL
+	STATIC.:
+
+		.BLKB	16
+
+	;
+	;	Begin program DJW
+	;
+
+		.PSECT	PAX_CODE......B,LONG,CON,EXE,LCL,PIC,SHR,RD,NOWRT,REL
+
+00000	C.1:	.WORD	C.1-C.1
+00002		.WORD	3
+00004		.ASCII	"DJW"
+
+00007	B.1:	.ENTRY	PAX_PROGRAM.,^M<IV>
+00009		CLRL  	-(SP)
+0000B		PUSHAL	C.1
+0000E		SUBL2 	S^#8,SP
+00011		JSB   	PAX_MON.MAINFRA
+
+00017	L.1:					; LINE 8
+						; LINE 9
+00017		MOVW  	STATIC.+0,-16(FP)	;   C
+0001F		MOVW  	I^#270,-14(FP)		;   ^X10E
+00025		MOVAB 	STATIC.+0+2,-12(FP)	;   C
+0002D		PUSHAL	-16(FP)
+00030		CALLS 	S^#1,TEST		;   TEST
+						; LINE 10
+00037		JMP   	PAX_MON.STOP
+
+
+	;
+	;    Code area:      3D bytes (61 decimal)
+	;    Constant area:  0 bytes (0 decimal)
+	;    Static area:    10 bytes (16 decimal)
+	;
+
+		.END

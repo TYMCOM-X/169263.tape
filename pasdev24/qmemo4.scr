@@ -1,0 +1,249 @@
+$TITLE LEFT 'QED MEMO #4 - CONTEXT SEARCHES AND PATTERN MATCHING' LEFT '1/08/79' LEFT 'S. M. Roush'
+$skip 3
+I. &INTRODUCTION&
+$skip 1
+This memo discusses several proposals which have been made 
+concerning pattern matching and context searching.
+QED is a context search oriented editor.
+The ease of use and power of context searches
+and text patterns is critical to such an editor.
+In particular these issues directly impact the substitute
+command.
+$skip 1
+Several extensions to present QED constructs will be discussed.
+These ideas have either been proposed as extensions to QED or
+have been implemented in other editors.
+Three criteria are used in evaluating each concept:
+$ind +5
+$par -3
+1.\Is the construct generally useful, i.e., would it be useful
+in commmon situations rather than rare or unusual situations.
+$par -3
+2.\Is the capability provided otherwise unavailable.
+$par -3
+3.\Is the &overall& ease of use of the editor enhanced.
+$ind -5
+$skip 2
+II. &BACKWARDS SEARCHES&
+$skip 1
+A backwards search capability has been both proposed for QED
+and implemented in similiar editors.
+The syntax of string predicates can be simply extended to
+allow backwards searches:
+$par +5
+<directional search> ::= ^<string predicate> | <string predicate>
+$par
+The uparrow is used to indicate that the search should 
+start with the previous line and proceed backwards.
+This construct could appear anywhere a string predicate
+currently may, except in a FIND command.
+In a FIND commmand, as defined in Pascal QED,
+a backwards search would conflict with the semantics
+of the command.
+A backwards search is of little value in a FIND command
+since all lines within the range of the FIND are examined
+anyway.
+Notice that in line designators constructs such as the following
+are allowed:
+$par +5 
+/(* with *)/^/foo/
+$par
+This could search forward to the end of
+a Pascal WITH statement and then backwards to find the last
+occurrence of 'foo' within the scope of the WITH.
+The semantics of concatenated search predicates can be defined
+as follows. 
+The first predicate in a line designator searches forwards
+(or backwards) until a match is found or the starting line is
+reached, wrapping around the end (or, for a backwards search,
+the beginning) of the buffer if necessary.
+Subsequent searches begin at the last line calculated plus (or minus)
+one and continue until either a match occurs or one of the
+following conditions is met: (1) the beginning (or end)
+of the file is reached, or, (2) the highest (or lowest) numbered
+line which any previous search started at is reached.
+Thus each search is of a progressively narrower range of lines.
+$skip 1
+The primary value of a backwards search capability is in facilitating
+'local' editing.
+The desirability of being able to edit locally has been
+pointed out in earlier memos.
+The ability to search backwards is currently unavailable in
+any of the MDSI QEDs.
+The syntax described above for backwards searches is a
+natural extension of the syntax of present string predicates.
+$skip 2
+III. &Nth OCCURRENCE SEARCHES&
+$skip 1
+A second proposal which has been made is to allow searches for
+the Nth occurrence of a string matching a given
+pattern.
+Several approaches to providing this capability are possible.
+A general approach would be to extend the syntax of string
+predicates in a manner similiar to that done above for backward
+search predicates.
+A natural syntax would be:
+$par +5
+n<string predicate>
+$par
+However this syntax would lead to ambiguities in line designators.
+A slight modification eliminates the ambiguity in line 
+designators, except in the Pascal QED:
+$par +5
+<string predicate>n
+$par
+The Pascal QED would interpret the above as the address
+of the line n lines beyond the line addressed by the
+string predicate.
+All other MDSI QEDs would require a plus sign between
+the string predicate and the integer.
+Thus the above syntax could be used at the expense
+of 'reeducating' Pascal QED users.
+The 'naturalness' of the syntax is open to debate.
+It is somewhat dangerous in that very similiar constructs
+are interpreted very differently, e.g., '/First,/2' and
+'/First,/+2'.
+$skip 1
+A second approach is to modify the FIND command and leave
+the syntax of string predicates alone.
+The FIND command syntax could be extended as follows:
+$par +5
+FIND [n] <string predicate> [commands]
+$par
+The optional 'n' would indicate that the nth occurrence of the
+string should be found and the commands executed for that
+occurrence only.
+A new command where the 'n' parameter was mandantory or defaulted
+to one could also be introduced, rather than overloading
+the FIND command.
+This extension is a natural one syntactically.
+However the first approach is more powerful or at least more
+convenient.
+For example, with the first approach the following will
+execute a set of commands for every third occurrence of a
+string:
+$par +5
+FIND /string/3 [commands]
+$par
+The second approach would require:
+$par +5
+FIND /string/ .+1,$FIND 2 /string/ [commands]
+$skip 1
+A third approach which works well for small values of n
+is already available.
+The line designator '/string/////' finds the third occurrence of the
+given string.
+The task of the above example can be accomplished by:
+$par +5
+FIND /string/ ////[commands]
+$par
+Clearly  this approach does not work well for large n.
+$skip 2
+IV. &WILD CARDS&
+$skip 1
+A third capability which has been proposed
+is a wild card character which will match an arbitrary string.
+The character '?' is currently available to match any single
+character.
+Multi-character matches could be implemented in several ways.
+One approach would be to choose a character which will
+match 0 or more characters.
+The character '*' is often used for purposes similiar
+to this.
+However, any character chosen should be resettable by the
+user.  
+A convention on how much is matched by '*' is necessary.
+For example, the pattern 'a*b' used with the string 'abbddb'
+might match '' (the null string), 'b' or 'bbdd'.
+Two possible rules are: (1) match the longest string consistent
+with the rest of the pattern, or, (2) match the shortest string
+consistent with the rest of the pattern.
+The following examples indicate that the second alternative
+is preferable
+and also show some situations in which '*' is useful.
+$ind +5
+$par -3
+1.\Matching everything from a given character string
+up to the end of the line:
+$par +5
+@The*@
+$par
+In this situation the '@' forces the wild card to match 
+everything up to the end of the line; the two
+alternatives are equivalent.
+$par -3
+2.\The following example assumes a substitute command
+with the APPEND option as described in QED memo #2.
+The intent is to insert a new parameter definition into a
+parameter list after the first two parameters.
+$par +5
+SUBSTITUTE APPEND /;*;/VAR FOO: FOO_TYPE;/
+$par
+Here matching the shortest possible string achieves the
+desired effect.
+$par -3
+3.\The following pattern is intended to match identifiers
+beginning with the letter 'A'.
+$par +5
+!A*!
+$par
+Again matching the shortest possible string would give
+the desired effect.
+$ind -5
+$skip 1
+Another approach would be to interpret '*' as a
+closure operator on a specific character set:
+$par +5
+<character set>*
+$par
+This construct would match any string of characters from the
+specified set.
+This construct is more powerful than the first approach.
+It permits matching strings composed only of digits or only
+of alphanumerics.
+A concise means of specifying character sets within patterns
+is required.
+The following notation illustrates one possibility:
+$par +5
+<A-Za-z0-9>
+$par
+This designates the set of alphanumeric characters.
+Even this shorthand is fairly verbose.
+Another possibility is to designate special characters to
+denote common character classes within patterns.
+A disadvantage of this approach is that it would require
+the introduction of several metacharacters, i.e., several 
+characters would now have special meanings within patterns.
+It is very easy to accidently include such characters
+in a pattern intending them to be taken literally.
+The bracketing characters '[', '(' and '<' occur commonly
+in Pascal programs.
+An escape character and SET options are possible but
+cumbersome, and, are effective only if you remember to
+use them.
+$skip 2
+V. &CONCLUSION&
+$skip 1
+The backward search proposal is well worth including in a
+new QED specification.
+It meets all of the criteria given in the introduction:
+the capability would be very useful, is otherwise unavailable
+and can be included in a manner upwards compatible
+with present QEDs.
+The wild card proposal would be useful, as is demonstrated by
+the examples given.
+It also provides a capability currently unavailable.
+The ease of use criterion favors the first of the two
+approaches described.
+While the second approach is more powerful, its &overall&
+effect on the ease of use of the editor may be negative.
+The picture is less clear on the "nth occurrence search"
+proposal.
+The capability is currently available for small values of
+n.
+The first approach is not upwards compatible with the present Pascal
+QED.
+The second approach is a less general solution.
+Review of the two alternatives by a wider audience would
+be beneficial.
+    

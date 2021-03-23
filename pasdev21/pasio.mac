@@ -1,0 +1,797 @@
+
+	TITLE	PASIO
+	TWOSEG
+	SEARCH	OPDEFS(OPDEFS.UNV[52250,233])
+;    +--------------------------------------------------------------+
+;    |                                                              |
+;    |                          P A S I O                           |
+;    |                          - - - - -                           |
+;    |                                                              |
+;    +--------------------------------------------------------------+
+;    
+;    MDSI, COMPANY CONFIDENTIAL
+;    
+;    STARTED:  10/10/78
+;    
+;    PURPOSE:  THIS PACKAGE OF PASCAL CALLABLE  SUBROUTINES  PROVIDES
+;       THE  PASCAL  USER WITH ACCESS TO THE FILE I/O CAPABILITIES OF
+;       THE PDP-10 FILE I/O PACKAGE TENIO.
+;    
+;    ENTRY POINTS:
+;    
+;       PASOPN      OPEN A FILE FOR I/O.
+;    
+;       PASCLS      CLOSE A FILE.
+;    
+;       PASREN      RENAME AND CLOSE AN OPEN FILE.
+;    
+;       RDRAND      RANDOMLY READ A BLOCK FROM A FILE.
+;    
+;       WRRAND      RANDOMLY WRITE A BLOCK OF A FILE.
+;    
+;       RDNEXT      SEQUENTIAL READ OF THE NEXT BLOCK OF A FILE.
+;    
+;       WRNEXT      SEQUENTIAL WRITE OF THE NEXT BLOCK OF A FILE.
+;    
+;       GETSTA      GET STATUS INFORMATION ON AN OPEN FILE.
+;    
+;       SETSTA      SET THE SEQUENTIAL FILE POINTER OF A FILE.
+;    
+;       FLUSH1      WRITE ANY OUTSTANDING BUFFERS OF A FILE TO DISK.
+;    
+;       FLUSHA      WRITE ANY OUTSTANDING BUFFERS  TO  DISK  FOR  ALL
+;                   FILES.
+;    
+;    EXTERNAL REFERENCES:
+;    
+;       GETCN.
+;       FRECN.
+;       NEW.
+;       DSPOS.
+;       TENIO.
+;       BUF.0
+;    
+;    RESPONSIBLE:  S.  M.  ROUSH
+;    
+;    CHANGES:
+;    
+;       10/10/78 SMR    REMOVED STRUCTURED MACROS AND REVISED FOR USE
+;                       WITH NEW TENIO PACKAGE.
+;    
+;    ----------------------------------------------------------------
+
+
+;  STANDARD TYPE EQUIVALENTS HERE...
+
+;ERRCOD ...
+  NOERR=0
+  ERR=1
+  EOF=2
+;MODE ...
+  IN=0
+  OUT=1
+  INOUT=2
+;CONTENTS ...
+  DEL=0
+  NODEL=1
+
+;  REGISTER EQUATES ...
+
+AC0=0
+AC1=1
+AC2=2
+AC3=3
+AC4=4
+AC5=5
+AC6=6
+AC7=7
+ACB0=10
+ACB1=11
+ACB2=12
+STK=17
+
+;  PARAMETER EQUATES (MACROS) ...
+
+DEFINE ERRADR<-4(STK)>   ;EVERYBODY
+DEFINE FILEID<-3(STK)>   ;EVERYBODY BUT...
+SYN FILEID,IDADR   ;PASOPN
+DEFINE MODE<-2(STK)>   ;PASOPN
+SYN MODE,BLKADR   ;RDRAND,WRRAND,RDNXT.,WRNEXT
+SYN MODE,RENADR	  ;PASREN
+SYN MODE,DELCON   ;PASCLS
+SYN MODE,CURSOR   ;SETTA
+SYN MODE,CURADR   ;GETSTA
+DEFINE CONT<-1(STK)>   ;PASOPN
+SYN CONT,BLKSIZ   ;RDRAND,WRRAND,WRNEXT
+SYN CONT,BSZADR   ;RDNXT.
+SYN CONT,EOFADR   ;GETSTA
+DEFINE NAMADR<0(STK)>   ;PASOPN
+SYN NAMADR,FILPTR   ;RDRAND,WRRAND
+SYN NAMADR,MODADR   ;GETSTA
+
+; LOWSEG DATA STORAGE.
+
+	RELOC	0
+BUFPTR:	BLOCK	^D16		; BUFFER ADDRESSES.
+FNUM:	BLOCK	1		; CHANNEL NUMBER.
+SIZSAV:	BLOCK	1		; WORD COUNT IN 'RDNEXT'.
+FILNAM:	BLOCK	7		; BUFFER FOR FILE NAME.
+SRCBP:	BLOCK	1		; SOURCE BYTE POINTER FOR FILE NAME MOVE.
+DSTBP:	BLOCK	1		; DEST BYTE POINTER FOR FILE NAME MOVE.
+	RELOC	400000
+
+
+;   ENTRY POINTS ...
+
+ENTRY PASOPN
+ENTRY PASCLS
+ENTRY RDRAND
+ENTRY WRRAND
+ENTRY RDNEXT
+ENTRY RDNXT.
+ENTRY WRNEXT
+ENTRY GETSTA
+ENTRY SETSTA
+ENTRY FLUSH1
+ENTRY FLUSHA
+ENTRY PASREN
+
+;  EXTERNAL REFERENCES IN PASCAL RUNTIME
+
+EXTERN GETCN.,FRECN.,NEW.,DSPOS.,TENIO.  ;TO PULL TENIO IN
+
+EXTERN BUF.0	; SO WE DON'T PULL IN TENIO'S BUFFER ALLOCATOR.
+
+
+; SUBROUTINES TO SAVE OR RESTORE AC2 - AC6.
+; IN FACT WE ARE MOVING THE PARAMETERS FROM REGS TO THE STACK.
+
+SAVREG:
+	POP	STK,5(STK)		; SAVE RETURN ADDRESS.
+	PUSH	STK,AC2
+	PUSH	STK,AC3
+	PUSH	STK,AC4
+	PUSH	STK,AC5
+	PUSH	STK,AC6
+	ADDI	STK,1
+	POPJ	STK,
+;
+RESREG:
+	POP	STK,AC6
+	POP	STK,AC5
+	POP	STK,AC4
+	POP	STK,AC3
+	POP	STK,AC2
+	POPJ	STK,			; RETURN TO ORGINAL CALLER.
+
+;  INTERNAL ROUTINE TO MOVE A FILE NAME TO THE PASIO
+;  BUFFER AND INSERT A TERMINATING CONTROL CHARACTER.
+;  ASSUMES AC0 RIGHT CONTAINS SOURCE ADDRESS ON ENTRY.
+
+MOVNAM:
+MAXNAM=^D35
+SP=^O40
+	HLL	AC0,	[BYTE (6)^D29,7,0]
+	MOVEM	AC0,	SRCBP
+	MOVE	AC0,	[BYTE (6)1,7,0(^D18)FILNAM-1]	; INIT DEST B.P.
+	MOVEM	AC0,	DSTBP
+	HRRZI	AC1,	MAXNAM		; AC1 WILL COUNT DOWN BYTES MOVED.
+;
+MLOOP:
+	LDB	AC0,	SRCBP		; GET NEXT BYTE.
+	IBP	   	,SRCBP		; INCR SOURCE B.P.
+	IDPB	AC0,	DSTBP		; MOVE BYTE TO DEST AND INCR B.P.
+	CAIE	AC0,	SP		; IF BLANK, EXIT LOOP.
+	SOJN	AC1,	MLOOP		; IF MOVED MAXNAM BYTES
+					;   THEN EXIT LOOP.
+	SETZ	AC0			; CREATE ASCII 'NUL'.
+	DPB	AC0,	DSTBP		; MOVE TO END OF FILE NAME.
+	POPJ	STK,
+
+
+
+;    +--------------------------------------------------------------+
+;    |                                                              |
+;    |                         P A S O P N                          |
+;    |                         - - - - - -                          |
+;    |                                                              |
+;    +--------------------------------------------------------------+
+;    
+;    MDSI, Company Confidential
+;    
+;    STARTED:  10/10/78
+;    
+;    PURPOSE:  OPEN A FILE FOR INPUT, OUTPUT OR BOTH.
+;    
+;    USAGE:
+;    
+;       EXTERNAL PROCEDURE PASOPN(VAR ERRCODE: IOERRCODE; VAR FILEID: IOFILEID;
+;          MODE: IOMODE; CONT: IOCONT; VAR FILENAME: IOFILE);
+;    
+;    INPUT:
+;    
+;       MODE        ELEMENT OF SCALAR TYPE IOMODE INDICATING  WHETHER
+;                   THE  FILE  IS  TO  BE OPENED FOR INPUT, OUTPUT OR
+;                   BOTH.
+;    
+;       CONT        ELEMENT OF SCALAR TYPE IOCONT INDICATING  WHETHER
+;                   CURRENT  CONTENTS  OF  FILE  ARE TO BE DELETED ON
+;                   OPEN (IF OPENED FOR OUTPUT).
+;    
+;       FILENAME    PACKED ARRAY OF CHAR CONTAINING NAME OF  FILE  TO
+;                   BE OPENED.
+;    
+;    OUTPUT:
+;    
+;       ERRCODE     ELEMENT   OF  SCALAR  TYPE  IOERRCODE  INDICATING
+;                   SUCCESS OR FAILURE OF OPEN.
+;    
+;       FILEID      FILE IDENTIFIER FOR USE IN  SUBSEQUENT  CALLS  TO
+;                   PASIO ROUTINES.
+;    
+;    EFFECTS:   IF  NO  ERRORS  ARE  DETECTED  THE  SPECIFIED FILE IS
+;       OPENED, A CHANNEL IS ALLOCATED AND A BUFFER IS ALLOCATED (OFF
+;       THE HEAP).
+;    
+;    RESPONSIBLE:  S.  M.  ROUSH
+;    
+;    CHANGES:
+;    
+;       10/10/78 SMR    REMOVED  STRUCUTED MACROS AND REVISED FOR USE
+;                       WITH NEW TENIO PACKAGE.
+;    
+;    ----------------------------------------------------------------
+
+PASOPN:
+
+;LOCALS
+  BUFSIZ=^D128
+  INBIT=^O400000000000
+  OUTBIT=^O200000000000
+  NODBIT=^O100000000000
+
+	 PUSHJ	STK,SAVREG
+;  GET A CHANNEL
+	 PUSHJ STK,GETCN.
+	 MOVEM  AC0,FNUM   ;SAVE IT
+;  GET A BUFFER
+	 MOVEI  AC2,BUFSIZ
+	 PUSHJ STK,NEW.
+	 MOVE   AC1,FNUM   ;DON'T ASSUME ANY REGISTER PRESERVATION
+	 MOVEM  AC2,BUFPTR(AC1)   ;SAVE BUFFER ADDRESS
+;  SET UP OPENF REGISTER BITS
+	 HRRZ   ACB1,AC2   ;PUT BUFFER ADDRESS IN RHW
+	 MOVE   AC0,MODE
+	 MOVEI  ACB0,0
+	 CAIN	AC0,IN			; SET MODE BITS.
+	 OR	ACB0,[INBIT]
+	 CAIN	AC0,INOUT
+	 OR	ACB0,[INBIT]
+	 CAIN	AC0,OUT
+	 OR	ACB0,[OUTBIT]
+	 CAIN	AC0,INOUT
+	 OR	ACB0,[OUTBIT]
+	 MOVE   AC0,CONT
+	 CAIN	AC0,NODEL		; SET DELETE BIT.
+	 OR	ACB0,[NODBIT]
+;  COPY USER FILE NAME TO PASIO BUFFER SO WE CAN INSERT
+;  A CONTROL CHARACTER AFTER IT AS A TERMINATOR.
+	 HRR	AC0,NAMADR		; SET UP BLOCK TRANSFER.
+	 PUSHJ	STK,MOVNAM
+	 HRRI	ACB0,FILNAM		; MOVE TO REG FOR TENIO.
+	 OPENF   ACB0,FNUM
+	 JRST OPNE
+	 MOVE   AC0,FNUM   ;RETURN FILE NUMBER
+	 MOVEM  AC0,@IDADR
+	 JRST RETOK
+OPNE:
+	 MOVE   AC2,ERRADR  ;ERROR--CLOSE FILE
+	 MOVE   AC3,FNUM
+	 MOVEI  AC4,DEL
+	 PUSHJ STK,PASCLS
+	 JRST RETERR
+
+
+;    +--------------------------------------------------------------+
+;    |                                                              |
+;    |                  P A S C L S / P A S R E N                   |
+;    |                  - - - - - - - - - - - - -                   |
+;    |                                                              |
+;    +--------------------------------------------------------------+
+;    
+;    MDSI, Company Confidential
+;    
+;    STARTED:  10/10/78
+;    
+;    PURPOSE:  CLOSE OR RENAME AND CLOSE A FILE OPENED BY PASOPN.
+;    
+;    USAGE:
+;    
+;       EXTERNAL PROCEDURE PASCLS(VAR ERRCODE: IOERRCODE; FILEID: IOFILEID;
+;          CONT: IOCONT);
+;       EXTERNAL PROCEDURE PASREN(VAR ERRCODE: IOERRCODE; FILEID: IOFILEID;
+;          VAR NEWNAME: IOFILE);
+;    
+;    INPUT:
+;    
+;       FILEID      FILE IDENTIFIER RETURNED BY PASOPN.
+;    
+;       CONT        ELEMENT OF SCALAR TYPE IOCONT INDICATING  WHETHER
+;                   FILE  SHOULD  BE  DELETED ON CLOSE (IF OPENED FOR
+;                   OUTPUT).
+;    
+;       NEWNAME     PACKED ARRAY OF CHAR CONTAINING NEW FILE NAME.
+;    
+;    OUTPUT:
+;    
+;       ERRCODE     ELEMENT  OF  SCALAR  TYPE  IOERRCODE   INDICATING
+;                   SUCCESS OR FAILURE OF CLOSE.
+;    
+;    EFFECTS:   IF  NO  ERRORS  ARE  DETECTED  THE  SPECIFIED FILE IS
+;       CLOSED, THE ASSOCIATED CHANNEL IS RELEASED AND THE ASSOCIATED
+;       BUFFER   IS   DISPOSED.  THE  FILE  IS  RENAMED  AS  WELL  IF
+;       SPECIFIED.
+;    
+;    RESPONSIBLE:  S.  M.  ROUSH
+;    
+;    CHANGES:
+;    
+;       10/10/78 SMR    REMOVED STRUCTURED MACROS AND REVISED FOR USE
+;                       WITH NEW TENIO PACKAGE.
+;    
+;    ----------------------------------------------------------------
+
+RENAM=3
+PASREN:
+	PUSHJ	STK,SAVREG
+	HRR	AC0,RENADR	; MOVE FILE NAME AND INSERT
+	PUSHJ	STK,MOVNAM	;    TERMINATING CONTROL CHARACTER.
+	HRRI	ACB0,RENAM	; AC RIGHT-CLOSE AND RENAME CODE.
+	HRLI	ACB0,FILNAM	; AC LEFT - PTR TO NEW FILE NAME.
+	JRST	CLOSE		; JUMP TO COMMON CODE.
+
+PASCLS:
+	 PUSHJ	STK,SAVREG
+	 MOVE   AC1,FILEID
+	 SKIPN	BUFPTR(AC1)		; NOP IF FILE NOT OPEN.
+	 JRST	CLSEND
+	 MOVE   AC0,DELCON
+	 MOVEI	ACB0,0		; SET DELETE BIT.
+	 CAIE	AC0,NODEL
+	 MOVEI	ACB0,1
+
+; COMMON CODE FOR PASREN AND PASCLS.
+
+CLOSE:
+	 CLOSEF   ACB0,FILEID
+	 JRST	RETERR
+	 MOVE	AC1,FILEID
+	 MOVE   AC2,BUFPTR(AC1)
+	 SETZM  ,BUFPTR(AC1)
+	 PUSHJ STK,DSPOS.
+	 MOVE   AC0,FILEID
+	 PUSHJ STK,FRECN.
+CLSEND:
+	 JRST RETOK
+
+
+;    +--------------------------------------------------------------+
+;    |                                                              |
+;    |                         R D R A N D                          |
+;    |                         - - - - - -                          |
+;    |                                                              |
+;    +--------------------------------------------------------------+
+;    
+;    MDSI, Company Confidential
+;    
+;    STARTED:  10/10/78
+;    
+;    PURPOSE:  RANDOMLY READ A BLOCK OF WORDS FROM A DISK FILE.
+;    
+;    USAGE:
+;    
+;       EXTERNAL PROCEDURE RDRAND(VAR ERRCODE: IOERRCODE; FILEID: IOFILEID;
+;         VAR BLOCK: IOBLOCK; BLOCKSIZE: IOBLOCKSIZE; VAR FILEPTR: IOFILEPTR);
+;    
+;    INPUT:
+;    
+;       FILEID      FILE IDENTIFIER RETURNED BY PASOPN.
+;    
+;       BLOCKSIZE   BUFFER SIZE IN WORDS.
+;    
+;       FILEPTR     WORD ADDRESS WITHIN FILE  AT  WHICH  READ  IS  TO
+;                   BEGIN.
+;    
+;    OUTPUT:
+;    
+;       ERRCODE     RETURNED AS EITHER 'IONOERR' OR 'IOERR'.
+;    
+;       BLOCK       BUFFER TO CONTAIN DATA READ.
+;    
+;       FILEPTR     UPDATED  TO  ADDRESS  OF  LOCATION FOLLOWING LAST
+;                   LOCATION READ.
+;    
+;    RESPONSIBLE:  S.  M.  ROUSH
+;    
+;    CHANGES:
+;    
+;       10/10/78 SMR    REMOVED STRUCTURED MACROS AND REVISED FOR USE
+;                       WITH NEW TENIO PACKAGE.
+;    
+;    ----------------------------------------------------------------
+
+RDRAND:
+	 PUSHJ	STK,SAVREG
+	 MOVE   ACB0,BLKADR
+	 MOVE   ACB1,BLKSIZ
+	 MOVE   ACB2,@FILPTR
+	 RDBLKR   ACB0,FILEID
+	 JRST RETERR
+	 JFCL
+	 MOVEM  ACB2,@FILPTR
+	 JRST RETOK
+
+
+;    +--------------------------------------------------------------+
+;    |                                                              |
+;    |                         W R R A N D                          |
+;    |                         - - - - - -                          |
+;    |                                                              |
+;    +--------------------------------------------------------------+
+;    
+;    MDSI, Company Confidential
+;    
+;    STARTED:  10/10/78
+;    
+;    PURPOSE:  RANDOMLY WRITE A BLOCK OF WORDS TO A DISK FILE.
+;    
+;    USAGE:
+;    
+;       EXTERNAL PROCEDURE WRRAND(VAR ERRCODE: IOERRCODE; FILEID: IOFILEID;
+;          VAR BLOCK: IOBLOCK; BLOCKSIZE: IOBLOCKSIZE; 
+;          VAR FILEPTR: IOFILEPTR);
+;    
+;    INPUT:
+;    
+;       FILEID      FILE IDENTIFIER RETURNED BY PASOPN.
+;    
+;       BLOCK       BUFFER CONTAINING DATA TO BE WRITTEN.
+;    
+;       BLOCKSIZE   SIZE OF BUFFER IN WORDS.
+;    
+;       FILEPTR     WORD ADDRESS WITHIN FILE  OF  LOCATION  AT  WHICH
+;                   WRITE IS TO BEGIN.
+;    
+;    OUTPUT:
+;    
+;       ERRCODE      RETURNED AS EITHER 'IONOERR' OR 'IOERR'.
+;    
+;       FILEPTR     UPDATED  TO  ADDRESS  OF  LOCATION FOLLOWING LAST
+;                   LOCATION WRITTEN.
+;    
+;    RESPONSIBLE:  S.  M.  ROUSH
+;    
+;    CHANGES:
+;    
+;       10/10/78 SMR    REMOVED STRUCTURED MACROS AND REVISED FOR USE
+;                       WITH NEW TENIO PACKAGE.
+;    
+;    ----------------------------------------------------------------
+
+WRRAND:
+	 PUSHJ	STK,SAVREG
+	 MOVE   ACB0,BLKADR
+	 MOVE   ACB1,BLKSIZ
+	 MOVE   ACB2,@FILPTR
+	 WRBLKR   ACB0,FILEID
+	 JRST RETERR
+	 MOVEM  ACB2,@FILPTR
+	 JRST RETOK
+
+;    +--------------------------------------------------------------+
+;    |                                                              |
+;    |                         R D N E X T                          |
+;    |                         - - - - - -                          |
+;    |                                                              |
+;    +--------------------------------------------------------------+
+;    
+;    MDSI, Company Confidential
+;    
+;    STARTED:  10/10/78
+;    
+;    PURPOSE:  SEQUENTIALLY READ A BLOCK BEGINNING  AT  THE  LOCATION
+;       ADDRESSED BY TENIO'S INTERNAL SEQUENTIAL FILE POINTER.
+;    
+;    USAGE:
+;    
+;       EXTERNAL PROCEDURE RDNEXT(VAR ERRCODE: IOERRCODE;
+;          FILEID: IOFILEID; VAR BLOCK: IOBLOCK;
+;          VAR BLOCKSIZE: IOBLOCKSIZE);
+;    
+;    INPUT:
+;    
+;       FILEID      FILE IDENTIFIER RETURNED BY PASOPN.
+;    
+;       BLOCKSIZE   SIZE OF BUFFER IN WORDS.
+;    
+;    OUTPUT:
+;    
+;       ERRCODE     RETURNED  AS  EITHER  'IONOERR','IOERR' OR, IF AN
+;                   END OF FILE ON INPUT WAS DETECTED, 'IOEOF'.
+;    
+;       BLOCK       BUFFER TO CONTAIN DATA READ.  IF ERRCODE WAS  SET
+;                   TO  'IOERR'  THEN THE CONTENTS OF 'BLOCK' WILL BE
+;                   UNPREDICTABLE.
+;    
+;       BLOCKSIZE   NUMBER OF WORDS ACTUALLY READ.
+;    
+;    EFFECTS:  THE TENIO INTERNAL SEQUENTIAL FILE POINTER IS  UPDATED
+;       BY THE NUMBER OF WORDS READ.
+;    
+;    INCLUDE FILES REQUIRED:
+;    
+;       PASIO.PAS
+;    
+;    RESPONSIBLE:  S.  M.  ROUSH
+;    
+;    CHANGES:
+;    
+;       10/10/78 SMR    REMOVED STRUCTURED MACROS AND REVISED FOR USE
+;                       WITH NEW TENIO PACKAGE.
+;    
+;    ----------------------------------------------------------------
+
+RDNEXT:
+RDNXT.:
+	 PUSHJ	STK,SAVREG
+	 MOVE   ACB0,BLKADR
+	 MOVE   ACB1,@BSZADR
+	 MOVEM  ACB1,SIZSAV   ;SAVE DESIRED WORD COUNT
+	 RDBLK    ACB0,FILEID
+	 JRST RETERR
+	 JRST NXTEOF
+	 JRST RETOK   ;ALL DATA READ, SO COUNT UNCHANGED
+NXTEOF:
+	 MOVE   ACB0,SIZSAV   ;COMPUTE # WDS READ
+	 SUB    ACB0,ACB1
+	 MOVEM  ACB0,@BSZADR
+	 MOVEI  AC0,EOF
+	 MOVEM  AC0,@ERRADR
+	 JRST	RESREG
+
+
+;    +--------------------------------------------------------------+
+;    |                                                              |
+;    |                         W R N E X T                          |
+;    |                         - - - - - -                          |
+;    |                                                              |
+;    +--------------------------------------------------------------+
+;    
+;    MDSI, Company Confidential
+;    
+;    STARTED:  10/10/78
+;    
+;    PURPOSE:  SEQUENTIALLY WRITE A BLOCK BEGINNING AT  THE  LOCATION
+;       ADDRESSED BY TENIO'S INTERNAL FILE POINTER.
+;    
+;    USAGE:
+;    
+;       EXTERNAL PROCEDURE WRNEXT(VAR ERRCODE: IOERRCODE; FILEID: IOFILEID;
+;       VAR BLOCK: IOBLOCK; BLOCKSIZE: IOBLOCKSIZE);
+;    
+;    INPUT:
+;    
+;       FILEID      FILE IDENTIFIER RETURNED BY PASOPN.
+;    
+;       BLOCK       BUFFER CONTAINING DATA TO BE WRITTEN.
+;    
+;       BLOCKSIZE   SIZE IN WORDS OF BUFFER.
+;    
+;    OUTPUT:
+;    
+;       ERRCODE     RETURNED AS EITHER 'IONOERR' OR 'IOERR'.
+;    
+;    EFFECTS:   THE TENIO INTERNAL SEQUENTIAL FILE POINTER IS UPDATED
+;       BY THE NUMBER OF WORDS WRITTEN.
+;    
+;    RESPONSIBLE:  S.  M.  ROUSH
+;    
+;    CHANGES:
+;    
+;       10/10/78 SMR    REMOVED STRUCTURED MACROS AND REVISED FOR USE
+;                       WITH NEW TENIO PACKAGE.
+;    
+;    ----------------------------------------------------------------
+
+WRNEXT:
+	 PUSHJ	STK,SAVREG
+	 MOVE   ACB0,BLKADR
+	 MOVE   ACB1,BLKSIZ
+	 WRBLK    ACB0,FILEID
+	 JRST RETERR
+	 JRST RETOK
+
+
+;    +--------------------------------------------------------------+
+;    |                                                              |
+;    |                         G E T S T A                          |
+;    |                         - - - - - -                          |
+;    |                                                              |
+;    +--------------------------------------------------------------+
+;    
+;    MDSI, Company Confidential
+;    
+;    STARTED:  10/10/78
+;    
+;    PURPOSE:  RETURN STATUS INFORMATION ON A FILE.
+;    
+;    USAGE:
+;    
+;       EXTERNAL PROCEDURE GETSTA(VAR ERRCODE: IOERRCODE; FILEID: IOFILEID;
+;       VAR CURSOR, EOFPTR: IOFILEPTR; VAR MODE: IOMODE);
+;    
+;    INPUT:
+;    
+;       FILEID      FILE IDENTIFIER RETURNED BY PASOPN.
+;    
+;    OUTPUT:
+;    
+;       IOERRCODE   RETURNED AS EITHER 'IONOERR' OR R'.
+;    
+;       CURSOR      CURRENT (INTERNAL TENIO) SEQUENTIAL FILE POINTER.
+;    
+;       EOFPTR      WORD ADDRESS OF CURRENT END OF FILE.
+;    
+;       MODE        RETURNED AS EITHER 'IOIN', 'IOOUT'  OR  'IOINOUT'
+;                   DEPENDING  ON  WHETHER FILE WAS OPENED FOR INPUT,
+;                   OUTPUT OR BOTH.
+;    
+;    RESPONSIBLE:  S.  M.  ROUSH
+;    
+;    CHANGES:
+;    
+;       10/10/78 SMR    REMOVED STRUCTURED MACROS AND REVISED FOR USE
+;                       WITH NEW TENIO PACKAGE.
+;    
+;    ----------------------------------------------------------------
+
+GETSTA:
+	 PUSHJ	STK,SAVREG
+	 NOTEF  ACB0,FILEID
+	 JRST RETERR
+	 CAIN	ACB2,1			; ACB2 IS SET TO MODE.
+	 MOVEI	ACB2,IN
+	 CAIN	ACB2,2
+	 MOVEI	ACB2,OUT
+	 CAIN	ACB2,3
+	 MOVEI	ACB2,INOUT
+	 MOVEM  ACB2,@MODADR
+	 MOVEM  ACB1,@EOFADR
+	 MOVEM  ACB0,@CURADR
+	 JRST RETOK
+
+;    +--------------------------------------------------------------+
+;    |                                                              |
+;    |                         S E T S T A                          |
+;    |                         - - - - - -                          |
+;    |                                                              |
+;    +--------------------------------------------------------------+
+;    
+;    MDSI, Company Confidential
+;    
+;    STARTED:  10/10/78
+;    
+;    PURPOSE:  CHANGE THE SEQUENTIAL FILE POINTER FOR A FILE.
+;    
+;    USAGE:
+;    
+;       EXTERNAL PROCEDURE SETSTA(VAR ERRCODE: IOERRCODE; FILEID: IOFILEID;
+;          CURSOR: IOFILEPTR);
+;    
+;    INPUT:
+;    
+;       FILEID      FILE IDENTIFIER RETURNED BY PASOPN.
+;    
+;       CURSOR      NEW VALUE OF SEQUENTIAL FILE POINTER.
+;    
+;    OUTPUT:
+;    
+;       ERRCODE     RETURNED AS EITHER 'IONOERR' OR 'IOERR'.
+;    
+;    EFFECTS:  IF 'IONOERR' IS  RETURNED  THEN  THE  SEQUENTIAL  FILE
+;       POINTER  IS  UPDATED  TO  THE  VALUE  SUPPLIED  IN  PARAMETER
+;       'CURSOR'.
+;    
+;    RESPONSIBLE:  S.  M.  ROUSH
+;    
+;    CHANGES:
+;    
+;       10/10/78 SMR    REMOVED STRUCTURED MACROS AND REVISED FOR USE
+;                       WITH NEW TENIO PACKAGE.
+;    
+;    ----------------------------------------------------------------
+
+
+SETSTA:
+	PUSHJ	STK,SAVREG
+	MOVE   ACB0,CURSOR
+	HRROI	ACB1,-1
+	POINTF ACB0,FILEID
+	JRST RETERR
+	JRST RETOK
+
+
+;    +--------------------------------------------------------------+
+;    |                                                              |
+;    |                         F L U S H 1                          |
+;    |                         - - - - - -                          |
+;    |                                                              |
+;    +--------------------------------------------------------------+
+;    
+;    MDSI, Company Confidential
+;    
+;    STARTED:  FLUSHA
+;    
+;    PURPOSE:  WRITE ANY  INTERNAL  BUFFERS  TO  DISK  FOR  EITHER  A
+;       SPECIFIC FILE OR FOR ALL OPEN FILES.
+;    
+;    USAGE:
+;    
+;       EXTERNAL PROCEDURE FLUSH1(VAR ERRCODE: IOERRCODE; FILEID: IOFILEID);
+;       EXTERNAL PROCEDURE FLUSHA(VAR ERRCODE: IOERRCODE);
+;    
+;    INPUT:
+;    
+;       FILEID      FILE IDENTIFIER RETURNED BY PASOPN.
+;    
+;    OUTPUT:
+;    
+;       ERRCODE     RETURNED AS EITHER 'IONOERR' OR 'IOERR'.
+;    
+;    EFFECTS:   ANY INTERNAL BUFFERS ASSOCIATED WITH THE FILE OR WITH
+;       ALL OPEN FILES ARE WRITTEN TO DISK.
+;    
+;    RESPONSIBLE:  S.  M.  ROUSH
+;    
+;    CHANGES:
+;    
+;       10/10/78 SMR    REMOVED STRUCTURED MACROS AND REVISED FOR USE
+;                       WITH NEW TENIO PACKAGE.
+;    
+;    ----------------------------------------------------------------
+
+UPRIB=^O000000000001
+FALL=^O000000000002
+
+FLUSHA:
+	PUSHJ	STK,SAVREG
+	MOVEI	ACB0,FALL!UPRIB
+	JRST	FLUSH
+
+FLUSH1:
+	PUSHJ	STK,SAVREG
+	MOVEI	ACB0,UPRIB
+
+; COMMON CODE FOR FLUSHA AND FLUSH1.
+
+FLUSH:
+	FLUSHF	ACB0,FILEID
+	JRST	RETERR
+	JRST	RETOK
+
+
+;    RETURN POINTS
+
+RETERR:
+	MOVEI  AC0,ERR
+	MOVEM  AC0,@ERRADR
+	JRST	RESREG
+
+RETOK:
+	MOVEI  AC0,NOERR
+	MOVEM  AC0,@ERRADR
+	JRST	RESREG
+
+END
+    	@
+Jî

@@ -1,0 +1,245 @@
+#document(ANC MicroEclipse Vehicle Design Notes,<:May 7, 1981:>)
+#sect(Introduction)
+This document describes a mechanism for transporting ANC 
+to a microEclipse.
+The fundamental problem which must be addressed by any such scheme is the
+limited address space (32K 16-bit words) of the Eclipse architecture.
+In the approach described here, the code will be overlaid to fit
+in a subset of the available address space.
+Overlaying the data is not feasible because data items may
+be passed by address to arbitrary subroutines.
+Direct addressing of data would permit extremely fast data
+referencing, but would impose an unacceptably small limit on the size 
+of the data used by the ANC program.
+Extended virtual addresses could be used to address data;
+however, this would require software interpretation of all
+data references.
+#par
+The approach adopted here to the data referencing problem
+is a blend of both approaches.
+MDSI Pascal will be extended to allow users to declare two classes
+of both static storage and heap storage.
+^UDirect static|U and ^Udirect heap|U storage will be directly addressable,
+though very limited in total size.
+^UVirtual static|U and ^Uvirtual heap|U storage must be fetched
+and stored to and from physical memory via subroutines which set
+the memory mapping registers.
+Stack storage, which is assumed to account for a high percentage of
+all data references, will always be directly addressed.
+One of the main benefits of this approach is that it permits ANC
+to optimize performance at the source code level.
+#sect(Memory Management)
+See "Memory Mapping Algorithm", memo dated 5/5/81 by Terry Dollhoff,
+for an overview of the memory management scheme.
+Two modifications to the scheme as described there have been
+incorporated here:
+the whole Pascal runtime stack is kept addressable,
+and two variants of the Pascal NEW call are not required.
+#beginlevel
+#sect(Layout of Physical Memory)
+The following figure shows a sample layout of physical memory
+for the microEclipse.
+256K bytes of memory are shown;
+each column represents 1K bytes.
+Note in particular that stack and static areas are both
+allocated less space than is currently actually used by ANC
+running on the VAX.
+Also note that only 82K bytes of memory are left to hold
+code in main memory after all other segments are allocated.
+This would represent about 12 to 20% of all ANC code.
+#beginfigure(14,0)
+$tab 9,17,25,33,41,49,57,65,73
+$control off
+      8KB    16KB    24KB    32KB    40KB    48KB    56KB    64KB
++-------+-------+-------+-------+-------+-------+-------+-------+
+|			      OZMOS				|
++---------------+-------------------------------+---------------+
+|     Stack	|	  Virtual heap		|Virtual static |
++---------------+---------------+---+---+-----+-+---------------+
+|   In-core overlaid runtime	|RR |DS	| DH  |      Code	|
++-------------------------------+---+---+-----+-----------------+
+|			      Code				|
++---------------------------------------------------------------+
+
+RR = Resident Runtime
+DS = Direct Static
+DH = Direct Heap
+$control on
+#endfigure
+#sect(Allocation of Address Space)
+The following figure shows an example of how the microEclipse
+64K byte address space would be allocated.
+As in the above figure, each column represents 1K bytes;
+therefore the range of each 2K byte mapping window is two columns.
+Note that the code area size is 28K bytes;
+this would comprise 4 to 7% of all ANC code.
+#beginfigure(6,0)
+$control off
+    6KB10KB14KB  20KB			     48KB	     64KB
++-----+---+---+-----+---------------------------+---------------+
+| Scr |RR |DS | DH  |		Code		|     Stack	|
++-----+---+---+-----+---------------------------+---------------+
+
+Scr = Scratch Mapping
+$control on
+#endfigure
+#sect(Virtual Address Format)
+A virtual address may be used to address an arbitrary Pascal variable;
+the variable may be directly addressable or may be in virtual static
+or heap storage.
+Virtual addresses refer to one of three data segments.
+Two virtual segments exist - the ^Uvirtual heap segment|U and
+the ^Uvirtual static segment|U.
+Both of these are segments in OZMOS terminology as well.
+Segments are the units mapped to by the OZMOS memory mapping
+system calls.
+Preliminary OZMOS documentation indicates that they are limited
+in size to 128K words.
+The third data segment is the ^Udirect segment|U.
+This is not an OZMOS segment;
+it merely represents all the directly addressable data areas
+(the stack, the direct heap and direct static storage).
+#par
+A virtual address is a 32-bit object.
+A virtual address of an object in the direct segment consists
+of a zero word followed by a word containing an Eclipse 
+15-bit address (and a zero in bit zero of the word).
+A virtual address of an object in a virtual segment is
+shown below:
+#beginfigure(4)
+ 0      7 8     15 16  21  22     31
++--------+--------+------+----------+
+| segment|  page  | MBZ  |   offset |
++--------+--------+------+----------+
+#endfigure
+The first byte gives the segment number.
+The second byte gives the (1K word) page offset within
+the segment.
+Bits 16 through 21 must be zero and the final 10 bits
+are the word offset within the page.
+#par
+A virtual address (with a non-zero segment and page number) is translated by 
+first selecting a scratch memory mapping register to use.
+This register number together with the segment number and page
+offset are used to map the relevant page of the segment 
+via an OZMOS system call.
+The five bit map register number is then shifted left ten
+bits and inclusively ORed with the offset field of the virtual
+address to yield a direct Eclipse address.
+#sect(Compiler Usage of Address Forms)
+In general the compiler will simply generate direct addresses
+for stack, direct static and direct heap variables.
+Virtual addresses will be used to address virtual static and
+heap variables.
+However, parameters passed by address must always use
+a virtual address.
+This is necessary because variables in both direct and
+virtual segments may be bound to the same formal parameter.
+Note however that a virtual address into the direct segment
+may easily be detected and special cased in a
+runtime routine which accesses virtual memory.
+#endlevel
+#sect(Pascal Language Changes)
+The following changes will be required to the MDSI Pascal language.
+The keywords DIRECT and VIRTUAL will be used to distinguish direct and
+virtual static storage declarations.
+These keywords may be used before either the 'VAR' or 'STATIC VAR'
+keywords which must begin static variable declarations.
+These new keywords may be omitted;
+virtual static will be the default.
+#par
+A second pointer declaration symbol will be introduced to 
+distinguish between direct and virtual pointers.
+^UDirect pointers|U are 16-bit objects which represent the
+address of an object created at execution time on the direct heap.
+^UVirtual pointers|U are full 32-bit virtual addresses and
+may point to objects on either the direct heap or the virtual heap.
+The at-sign ('@') is used to declare direct pointers;
+the standard Pascal uparrow character ('^') is used to declare
+virtual pointers.
+These two pointer types represent incompatible types.
+However, implicit conversions of direct to virtual pointers
+will be permitted in pointer assignments and value
+parameter binding of pointers.
+Dereferencing a direct pointer and a virtual pointer yields
+compatible types only if the
+target types of the two pointers are identical.
+Note that two versions of the intrinsic function NEW are
+not required at the source code level.
+A call to NEW with a direct pointer will allocate an object on
+the direct heap;
+a call with a virtual pointer will allocate an object
+on the virtual heap.
+#sect(Generated Code Format)
+#sect(Overlay System)
+#sect(Link Management)
+#sect(User Parameterization)
+#sect(Discussion and Characteristics)
+Certain characteristics of this approach must be stressed,
+because they represent departures from past thinking
+or because they must be allowed for to use the approach
+successfully.
+This section points out how previous assumptions about
+the "ANC Portability Project" are changed,
+and gives guidelines and caveats for ANC if it uses
+the scheme described here.
+#par
+First of all, this approach is not portable to any
+processor other than those in the Eclipse family.
+It relies on specific characteristics of the Eclipse
+Memory Management Unit which are not shared by other
+16-bit minicomputers, e.g. the PDP-11.
+Since the PDP-11 64K byte address space is divided into only eight
+separately mappable sections,
+no adaptation of this scheme would be possible.
+#par
+Second, this scheme requires widespread syntactic changes
+to ANC source code,
+and probably a great deal of executable code modification as well.
+Each static data item must be classified as virtual or direct,
+and each pointer data type must be classified as virtual or direct.
+Furthermore, since virtual storage will be very slow to access,
+but stack and direct storage will be tightly limited in size,
+a lot of work will be required to achieve a working balance,
+if indeed one can be found.
+The success of this scheme depends on ANC making very heavy use
+of procedure local variables, in preference to any other
+class of storage.
+#par
+The criterion that should be applied in making these classifications
+is to minimize the frequency of access to virtual items.
+Due to the small number of scratch mapping registers available,
+these references will cause memory remapping almost all the time.
+They will also consume more code space.
+Probably a significant amount of copying of virtual items
+into directly addressable storage for processing, and
+copying back when finished, will be justified.
+#par
+The small amount of address space available for code will
+probably necessitate considerable repackaging.
+This is particularly risky since we can not make any good estimate
+of the density of code the compiler will produce at this time.
+We can take the density of VAX code to be about the best
+possible case;
+at this density, about 7% of ANC will fit into addressable memory
+at once.
+Also at this density, 10 of ANC's modules exceed one quarter of
+addressable memory in size.
+In all likelihood, however, code density will be lower than it
+is on the VAX.
+#par
+Furthermore, map register switching at procedure calls
+to implement in-core overlaying may take a substantial
+amount of time.
+Therefore, judicious grouping of procedures into overlays
+may have a great impact on performance.
+#par
+Finally, the diagram of physical memory above points out the
+necessity of providing more than 256K bytes of physical
+memory on the microEclipse.
+The amount of memory available for holding code on a 256K byte
+configuration is too small to avoid overlay thrashing during
+ANC execution.
+In our opinion, this requirement is not unique to this
+proposed ANC vehicle, but a universal requirement of
+any acceptable implementation of ANC on the microEclipse.

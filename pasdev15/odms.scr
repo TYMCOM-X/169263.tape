@@ -1,0 +1,268 @@
+$num off
+$page
+$center
+&MEMORY MANAGEMENT--PHASE THREE&
+&ODMS& Version 1.4 report
+May 16, 1978
+J. D. Rosen
+$justify
+$skip 2
+$spa 1
+$par 5
+This document serves as a supplement to A. Kortesoja's
+&PASCAL Memory Management, Phase 2& of May 27, 1977.  Since that
+time, a number of significant changes have occured in the
+design and operation of the memory management system, &ODMS&, and
+its current version is described herein.
+$title right 'PASCAL Memory Management #3' right '16-May-78' right 'Page \'
+$skip
+$par 5
+ODMS may be found in RND:ODMS, 
+and the source files are maintained on [52250,247].
+The prompt character is a '>'.
+Please notice that version 1.4 is incompatible with any
+previous versions.
+$skip
+$par 5
+The memory description language remains basically the same.
+As a clarification of the Phase 2 report, FILLER may be used to replace
+deleted symbols, modules, or deleted modules' static storage allocation.
+A FILLER entry in the SYMBOLS section, however, refers to a slot on
+the resident tranfer vector, and must be written as:
+$ver
+$skip
+	FILLER			(* for an overlaid symbol *)
+	FILLER IN RESIDENT	(* for a resident symbol  *)
+$skip
+$jus
+The explanation: the resident transfer vector is laid down in the
+exact order that the symbols appear in the SYMBOLS section.  ODMS 1.4
+uses a two-word entry for overlaid symbols, and a one-word entry for
+resident symbols.  To keep the rest of the vector in the same
+location, the appropriate number of blank entries must be laid down.
+FILLER lays down two words; FILLER IN RESIDENT, one word.  Sadists may,
+for their amusement, use two FILLER IN RESIDENT declarations to replace
+one overlaid symbol if they wish\--\ the net
+effect is still that of leaving a two-word hole in the transfer vector.
+Any attempted reference of a
+deleted entry will cause a run-time error.
+$par
+New symbols may be added to the end of the declaration list, of course,
+only affecting the resident module and the module(s) that either 
+contain the new symbols or reference them.
+$skip 2
+$center
+&ODMS COMMANDS&
+$skip
+$jus
+While the commands described in &Phase 2& remain the same in flavor,
+the specific syntax has been altered significantly.  The following
+conventions are used in this description:
+$skip 2
+$ver
+<file>		A standard DEC-10 file descriptor, with maximum length of
+		30 characters (truncated if necessary).  In nearly all
+		cases, a default extension will be provided.
+
+<module>	A module-name declared in the MODULES section, with
+		maximum length of 6 characters.
+
+<number>	A Pascal-type integer constant (B at end for octal is ok).
+
+WORD		A capitalized word is a keyword, and must be entered
+		verbatim.  All commands are upper-cased before processing.
+$skip 2
+$jus
+The USE command remains the same.  A default extension of .MDL is assumed.
+$skip 2
+The BUILD command has a different syntax, and provides for renaming of
+the default database to be used at runtime.  The syntax:
+$skip
+$ver
+BUILD { <module> | RESIDENT [ DATABASE <file>  ] }  USING <text>...
+$skip
+$jus
+Thus the DATABASE option may be used on a resident build; the filename
+is then generated in the overlay manager's file table as the default
+database.  If DATABASE is not specified, the file is taken to be
+<program-name>.ODB on the user's account, where <program-name> is
+the name of the USE file specified.  Specifying a DATABASE parameter
+on a module build will generate an error.
+$par 5
+The text following the keyword USING is put verbatim into the
+appropriate .CMD file.  If the last character on the line is an
+ampersand (&&), ODMS will prompt again, and more text may be entered.
+The lines are concatenated, and the ampersand replaced with a &space&.
+$skip 2
+$par 5
+The CONVERT command now has the following syntax:
+$skip
+$ver
+CONVERT <module> [ [TO] <file> ]
+$skip
+$jus
+Thus, the .HGH and .LOW files (the result of assembling the vector
+package and LINKing with the .CMD file) must be the module-name
+files on the user's account.
+$skip 2
+$par 5
+The UPDATE command is unchanged.
+$skip 2
+$par 5
+The DELETE and PRINT commands will take a parameter to indicate the
+database file to which to apply the command.  The filename may be
+supplied anywhere in the command line after the imperative, with
+the FROM keyword.  For example:
+$skip
+$ver
+DELETE ERROR1 VERSION 20 FROM OVLNCS[,247]
+PRINT LINK1 FROM OVLNCS.TMP[52250,247] VERSIONS
+$skip 2
+$jus
+$par 5
+The PACK and EXIT commands remain unchanged.
+$ski 2
+$par 5
+A new command has been added to change the version number of a
+currently existing version.  The syntax:
+$skip
+$ver
+CHANGE <module> [DATABASE <file>] [VERSION <number>] AS <number>
+$skip
+$jus
+If no DATABASE parameter is given, the default database is assumed
+(please notice that this is <program-name>.ODB, &not& any new
+default database given on the resident BUILD!).  If no version
+is given as the old version, version 0 is assumed.  The command
+will check to insure that the AS version does not already exist,
+that the VERSION version does exist, and then perform the version
+change.  The 'Last Update' timestamp is not changed.  Thus:
+$ski
+$ver
+CHANGE ERROR1 DATABASE OVLNCS[,202] AS 10
+$skip
+$jus
+will rename version 0 in OVLNCS as version 10, assuming that version
+0 exists and version 10 does not.
+$skip
+$ver
+CHANGE ERROR1 VERSION 10 AS 20
+$skip
+$jus
+will rename version 10 as version 20 in the default database.
+$skip 2
+The standard extensions for the various files used by ODMS have
+not been changed.  Default extensions are assumed wherever
+applicable.
+$skip 2
+$par 5
+The database structure has been modified slightly.  Overlay
+records on contiguous blocks now have three word headers\--\
+the first a pointer to the next version, the second this version's
+number, and the third a timestamp of last update.
+$skip 2
+$par 5
+A few words concerning the command scanner may be helpful.  The
+first word on the line is taken to be the command imperative.
+The line is then scanned for occurences of the various keywords
+(TO, DATABASE, VERSION, VERSIONS, SYMBOLS, ALL, AS, RESIDENT,
+and USING).  If these keywords require parameters following
+them (TO, DATABASE, VERSION, AS, and USING), the next token on
+the line is taken to be its parameter.  The line is then scanned
+for remaining tokens, which are taken to be <module> and <file>,
+in that order.  The exception is USING, which of course takes
+the rest of the line (and possibly others) as its parameter.
+Thus, the following commands are OK:
+$skip
+$ver
+CHANGE AS 20 ERROR1 VERSION 10
+UPDATE ERROR1 DATABASE OVLNCS[,207] FOO.OVL VERSION 10
+PRINT ALL FROM OVLNCS ERROR1
+$skip
+$jus
+Please notice, however, that the following will &not& work:
+$skip
+$ver
+CONVERT FOO.OVL ERROR1
+(but CONVERT TO FOO.OVL ERROR1 will)
+$skip
+BUILD RESIDENT USING ECH.REL DATABASE OVLNCS[52210,207]
+(but BUILD RESIDENT DATABASE OVLNCS[52210,207] USING ECH.REL will)
+$skip
+UPDATE OVLNCS ERROR1 VERSION 9
+(but either UPDATE FROM OVLNCS ERROR1 VERSION 9
+	    UPDATE ERROR1 OVLNCS VERSION 9
+	    UPDATE VERSION 9 ERROR1 OVLNCS
+	or  UPDATE VERSION 9 FROM OVLNCS ERROR1
+will)
+$jus
+$page
+$center
+&APPENDIX 1&
+&COMMAND SUMMARY&
+$SKI 3
+$ver
+USE <file>
+$jus
+The USE command indicates the memory description language file 
+describing the program to be overlaid.  The default extension is
+'.MDL'.
+$ski 3
+$VER
+BUILD { <module> | RESIDENT[DATABASE <file>]  } USING <text>...[&&]
+$jus
+The BUILD command will generate appropriate MACRO-10 source files and
+LINK-10 command files for linking a module or the main program to its
+transfer vector.  The <text> is transmitted verbatim to LINK-10 as the
+.REL files to be used in the linking.  The DATABASE file, if specified,
+indicates the overlay database filename to be placed in the overlay
+manager's file table.
+The ampersand (&&) is used to continue the file list onto the next line.
+$ski 3
+CONVERT <module> [ [TO] <file> ]
+$par
+The CONVERT command will prepare an overlay module file, suitable for
+placing into the database via UPDATE, or testing standalone in the
+current overlaid program via the manager's entry point OVEXTFILE.
+$ski 3
+$ver
+UPDATE [DATABASE <file>] <module> 
+   [VERSION <number> ]  [ [FROM] <file> ]
+$jus
+The UPDATE command is used to insert a (new) version of a module into the
+database.  If no DATABASE parameter is specified, the database
+<program-name>.ODB is used.  If no version number is specified, version
+0 is updated.  If a (FROM) file is specified, that file is assumed to
+be the result of a CONVERT to that file, otherwise <module>.HGH and .LOW
+are first converted to overlay format.
+$ski 3
+$ver
+DELETE <module> [FROM <file>] [VERSION <number> | ALL]
+$jus
+The DELETE command is used to delete any or all versions of <module>. If
+no DATABASE is specified, the default database is used. If neither a
+VERSION nor ALL is specified, version 0 is assumed.
+$ski 3
+PRINT <module> [FROM <file>] [VERSIONS | SYMBOLS]
+$PAR
+The PRINT command will give current information from the DATABASE specified,
+or the default database, for the module specified.  The keywords VERSIONS
+and SYMBOLS are used to restrict output to only that item.
+$ski 3
+PACK [<file>]
+$par
+The PACK command will rewrite the database in its most compact form.  If no
+file is specified, the default database is packed.  The file GZRXT4.LFH
+is used as a temporary. It is destroyed upon completion of the PACK.
+$ski 3
+$ver
+CHANGE <module> [DATABASE <file>] [VERSION <number>] AS <number>
+$jus
+The CHANGE command is used to change the version number of a current 
+version.  The timestamp is not changed.  If no original version
+is given, version 0 is assumed.
+$ski 3
+EXIT
+$par
+To leave ODMS.
+ 

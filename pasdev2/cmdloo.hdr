@@ -1,0 +1,103 @@
+(*   +--------------------------------------------------------------+
+     |                                                              |
+     |                     C M D   L O O K U P                      |
+     |                     - - - - - - - - - -                      |
+     |                                                              |
+     +--------------------------------------------------------------+
+     
+     MDSI, Company Confidential
+     
+     SYSTEM:  CMDUTL
+     
+     STARTED:  8/3/80
+     
+     PURPOSE:  This routine finds the next  token  in  a  text  line,
+        looks  it  up in a table of names, and returns the code field
+        from the matching table entry.
+     
+     USAGE:
+     
+        TYPE CMD_LOOKUP_RECORD = RECORD
+                TEXT: PACKED ARRAY [1..10] OF CHAR;
+                ABBREV: 1 .. 10;
+                CODE: INTEGER;
+             END;
+     
+        EXTERNAL FUNCTION CMD_LOOKUP
+              ( LINE: PACKED ARRAY [1..*] OF CHAR;
+                VAR CURSOR: INTEGER;
+                TOKEN_CHARS: SET OF CHAR;
+                LIST: ARRAY [1..*] OF CMD_LOOKUP_RECORD;
+                VAR MATCH: INTEGER): BOOLEAN;
+     
+     INPUT:
+     
+        LINE        is any text string.
+     
+        CURSOR      is the index of a character in the text line.
+     
+        TOKEN_CHARS is the set of characters which may  occur  in  an
+                    "alphabetic" token.
+     
+        LIST        is  an  array  of name description records.  Each
+                    record  contains  either  (1)  the  text  of   an
+                    alphabetic  name  and  the  length of the minimum
+                    possible abbreviation of the  name,  or  (2)  the
+                    text  of  a  special  character  sequence and its
+                    length.  It also contains an integer code.
+     
+     OUTPUT:
+     
+        <return value>
+                    is true if there is a token  in  the  input  line
+                    which  matches  one  of  the  entries in the name
+                    list.
+     
+        MATCH       is unchanged if CMD_LOOKUP returns FALSE.  If  it
+                    returns TRUE, then MATCH is set to the CODE field
+                    from the name list record which matches the input
+                    token.
+     
+        CURSOR      is  advanced to the next non-blank character.  If
+                    CMD_LOOKUP returns TRUE, then it is  advanced  to
+                    the character following the matched token.
+     
+     REQUIREMENTS:  CURSOR must be greater than zero.
+     
+     NOTES:   For the purposes of this routine, a token may be either
+        an  alphabetic  string  or  a   non-alphabetic   string.   An
+        alphabetic string is any string of contiguous characters from
+        the TOKEN_CHARS set.  It is converted to  upper  case  before
+        matching,  and may be an abbreviation of the name list entry.
+        A non-alphabetic string is a string  of  characters  starting
+        with one which is not in TOKEN_CHARS.  It must match the name
+        list entry exactly; the ABBREV field of the name  list  entry
+        specifies its length.
+     
+        If a string might match more than one entry in the name list,
+        then the index of the first matching entry will be returned.
+     
+        If the token characters were ['A'..'Z'], and  the  name  list
+        contained    the    entries   ('ABCDEF',3,1),   ('XYZZ',4,2),
+        ('<=',2,3), and ('<',1,4), then the following behaviour would
+        occur:
+     
+             Before          After           Match
+             ------          -----           -----
+             ABCD < 3        ABCD < 3        1
+             ^                   ^
+             ABCD < 3        ABCD < 3        4
+                 ^                 ^
+             ABCD < 3        ABCD < 3        Failure
+                   ^                ^
+                ABCXYZ+2       ABCXYZ+2      Failure
+             ^                 ^
+             A<>B            A<>B            4
+              ^                ^
+     
+     
+     INCLUDE FILES REQUIRED:
+     
+        CMDUTL.INC
+     
+     ---------------------------------------------------------------- *)

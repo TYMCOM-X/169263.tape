@@ -1,0 +1,20 @@
+.^Ur odms[52250,220]|U
+ODMS Version 3.0
+
+*^Ucompile scribe|U	(recompile modified MDL)
+[System (SCRIBE), compiled 17-Jul-80 09:00:27]
+*^Ubuild scan using scan|U	(rebuild modified MDL)
+*^Ubuild main using scribe,doscri,rdlib[,320156]|U
+*^Uquit|U
+
+EXIT
+
+.^Ur link|U	(relink SCAN AND MAIN)
+*^U@scan|U
+
+EXIT
+
+.^Ur link|U
+*^U@scribe|U
+
+EXIT

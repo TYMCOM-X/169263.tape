@@ -1,0 +1,5982 @@
+nmask	MACRO %53A(1155) 18:31 29-Sep-82 Page 1
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						$module	nmask^
+						$excpt	^	;define it all
+						entry	nmask.
+						intern	mask.
+						intern	unmsk.
+
+	400000'				nmask.:			;merely make MASK and UNMASK no-ops.
+	400000'				mask.:
+	400000'				unmsk.:
+	400000'	350 00 0 17 000000 		aos	0(top)	;bump return address
+	400001'	263 17 0 00 000000 		popj	top,	;and return
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400002
+PROGRAM BREAK IS 000000
+CPU TIME USED 26:35.539
+
+46P CORE USED
+nmask	MACRO %53A(1155) 18:31 29-Sep-82 Page S-1
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+DISMIS	047000	777755		$MAXTE		000000	spd	
+INTACT	047000	777743		$MXCH		000204	spd	
+INTADR	047000	777745		$STATS		000000	spd	
+INTASS	047000	777742		$STDMA		000100	spd	
+INTENB	047000	777744		$STDNU		000010	spd	
+MASK.		400000'	int	$SYS		000001	spd	
+NMASK.		400000'	ent	$TYM		000001	spd	
+R0		000000	spd	.AROVF		000104	spd	
+R1		000001	spd	.CANCO		000033	spd	
+R10		000010	spd	.CELLS		000001	spd	
+R11		000011	spd	.EXLOC		000047	spd	
+R12		000012	spd	.IADDR		000216	spd	
+R13		000013	spd	.INTMA		000000	spd	
+R2		000002	spd	.OTH16		000034	spd	
+R3		000003	spd	.OTHBT		000035	spd	
+R4		000004	spd	.OTHCE		000036	spd	
+R5		000005	spd	.REGS		000011	spd	
+R6		000006	spd	.RESIG		000031	spd	
+R7		000007	spd	.STKOV		000106	spd	
+SETTR1	047000	777740		.TMPAD		000041	spd	
+SETTR2	047000	777737		.VECTO		000110	spd	
+TINASS	047000	777736		.XPAGE		000040	spd	
+TOP		000017	spd	.XSTMT		000037	spd	
+UNMSK.		400000'	int	
+$ABSLO		000000	spd	
+$ADP		000000	spd	
+$CHBT		000003	spd	
+$FALSE		000000	spd	
+$HBTEN		000002	spd	
+$HBTLI		000000	spd	
+$HBTVA		000000	spd	
+$HILOC		400000	spd	
+$HSBFL		000000	spd	
+$HSBOF		000001	spd	
+$HSBXA		000000	spd	
+$HSBXB		000001	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000217	spd	
+mask	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-1
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						$module mask^
+						$excpt	^	;define it all
+						entry	mask.
+						entry	unmsk.
+						$temp	psasave,1^
+
+	400000'				mask.:
+	400000'	202 14 0 17 000001 		movem	psa,psasave^.psasave(top)^
+						$getpsa	exception^
+	400001'	200 14 0 15 000036 		move	psa,$exception(pda)^
+	400002'	350 01 0 17 000000 		aos	r1,0(top)	;bump return address
+	400003'	201 01 1 01 777777 		movei	r1,@-1(r1)	;get std cell addr
+	400004'	550 01 0 01 000000 		hrrz	r1,0(r1)	;may be multiply indirected
+	400005'	301 01 0 00 000100 		cail	r1,$stdmax
+	400006'	254 00 0 00 400004'		jrst	.-2
+	400007'	271 01 0 14 000001 		addi	r1,cells	^.cells(psa)^;now actual cell address
+	400010'	200 00 0 01 000000 		move	r0,0(r1)	;get contents of cell
+	400011'	606 00 0 00 400000 		trnn	r0,400000	;if not maskable then
+	400012'	254 00 0 00 400017'		jrst	return		;just ignore the call
+	400013'	554 00 0 01 000000 		hlrz	r0,0(r1)	;get the masking count
+	400014'	271 00 0 00 000001 		addi	r0,1		;up it by one
+	400015'	603 00 0 00 777777 		tlne	r0,777777	;make sure it didn't overflow 18 bits
+	400016'	254 00 0 00 400022'		jrst	maskerror	;report it if so
+	400017'				return:
+	400017'	506 00 0 01 000000 		hrlm	r0,0(r1)	;update masking count
+	400020'				ret2:
+	400020'	200 14 0 17 000001 		move	psa,psasave^.psasave(top)^
+	400021'	263 17 0 00 000000 		popj	top,
+	400022'				maskerror:
+	400022'	260 17 0 00 000000*		pushj	top,twait.##
+						outstr	[asciz /
+	400023'	051 03 0 00 400055'	?	Too many nested MASK calls/]
+	400024'	254 00 0 00 400052'		jrst	error
+
+	400025'				unmsk.:
+	400025'	202 14 0 17 000001 		movem	psa,psasave^.psasave(top)^
+						$getpsa	exception^
+	400026'	200 14 0 15 000036 		move	psa,$exception(pda)^
+	400027'	350 01 0 17 000000 		aos	r1,0(top)	;bump return address
+mask	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-2
+EXCEPT	MAC	23-May-71 22:31	
+
+	400030'	201 01 1 01 777777 		movei	r1,@-1(r1)	;get condition cell addr
+	400031'	550 01 0 01 000000 		hrrz	r1,0(r1)	;may be multiply indirected
+	400032'	301 01 0 00 000100 		cail	r1,$stdmax
+	400033'	254 00 0 00 400031'		jrst	.-2
+	400034'	271 01 0 14 000001 		addi	r1,cells	^.cells(psa)^;addr of actual cell
+	400035'	554 00 0 01 000000 		hlrz	r0,0(r1)	;get masking count
+	400036'	367 00 0 00 400017'		sojg	r0,return	;ok if still masked
+	400037'	321 00 0 00 400050'		jumpl	r0,unmskerror	;stop if extra unmask
+	400040'	506 00 0 01 000000 		hrlm	r0,0(r1)	;keep count current
+	400041'	201 00 0 00 200000 		movei	r0,200000
+	400042'	616 00 0 01 000000 		tdnn	r0,0(r1)	;if not pending then
+	400043'	254 00 0 00 400020'		jrst	ret2		;  return
+	400044'	412 00 0 01 000000 		andcam	r0,0(r1)	;else clear pending bit
+	400045'	200 00 0 17 000000 		move	r0,0(top)	;and signal it now
+	400046'	135 01 0 00 400064'		ldb	r1,[point 16,0(r1),35];get last subcondition code
+						$rtsignal^
+	400047'	254 00 0 00 000000*		jrst	rtexc.##^
+
+	400050'				unmskerror:
+	400050'	260 17 0 00 400022*		pushj	top,twait.
+						outstr	[asciz /
+	400051'	051 03 0 00 400065'	?	Unmatched UNMASK/]
+	400052'				error:
+	400052'	200 00 0 17 000000 		move	r0,0(top)
+	400053'	260 17 0 00 000000*		pushj	top,wrtpc.##
+	400054'	254 00 0 00 000000*		jrst	die.##
+						$xend	mask^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400072
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:47.899
+
+46P CORE USED
+mask	MACRO %53A(1155) 18:31 29-Sep-82 Page S-2
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+DIE.		400054'	ext	$FALSE		000000	spd	
+DISMIS	047000	777755		$HBTEN		000002	spd	
+ERROR		400052'		$HBTLI		000000	spd	
+EX.SET		000000	ext	$HBTVA		000000	spd	
+INTACT	047000	777743		$HILOC		400000	spd	
+INTADR	047000	777745		$HSBFL		000000	spd	
+INTASS	047000	777742		$HSBOF		000001	spd	
+INTENB	047000	777744		$HSBXA		000000	spd	
+MASK.		400000'	ent	$HSBXB		000001	spd	
+MASKER		400022'		$LOC	777777	777777	spd	
+OUTSTR	051140	000000		$LOLOC		000000	spd	
+PDA		000015	spd	$MAXLO		000000	spd	
+PSA		000014	spd	$MAXST		000217	spd	
+R0		000000	spd	$MAXTE		000001	spd	
+R1		000001	spd	$MXCH		000204	spd	
+R10		000010	spd	$NEEDP		000000	spd	
+R11		000011	spd	$STATS		000000	spd	
+R12		000012	spd	$STDMA		000100	spd	
+R13		000013	spd	$STDNU		000010	spd	
+R2		000002	spd	$SYS		000001	spd	
+R3		000003	spd	$TYM		000001	spd	
+R4		000004	spd	.AROVF		000104	spd	
+R5		000005	spd	.CANCO		000033	spd	
+R6		000006	spd	.CELLS		000001	spd	
+R7		000007	spd	.EXLOC		000047	spd	
+RET2		400020'		.IADDR		000216	spd	
+RETURN		400017'		.INTMA		000000	spd	
+RTEXC.		400047'	ext	.OTH16		000034	spd	
+SETTR1	047000	777740		.OTHBT		000035	spd	
+SETTR2	047000	777737		.OTHCE		000036	spd	
+TINASS	047000	777736		.PSASA		000001	spd	
+TOP		000017	spd	.REGS		000011	spd	
+TWAIT.		400050'	ext	.RESIG		000031	spd	
+UNMSK.		400025'	ent	.STKOV		000106	spd	
+UNMSKE		400050'		.TMPAD		000041	spd	
+WRTPC.		400053'	ext	.VECTO		000110	spd	
+$ABSLO		000000	spd	.XPAGE		000040	spd	
+$ADP		000000	spd	.XSTMT		000037	spd	
+$CHBT		000003	spd	
+$EXCEP		000036	spd	
+masked	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-3
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						$module	masked^
+						$excpt	^	;define it all
+						entry	tsmsk.
+						$temp	psasave,1^
+
+	400000'				tsmsk.:
+	400000'	202 14 0 17 000001 		movem	psa,psasave^.psasave(top)^
+						$getpsa	exception^
+	400001'	200 14 0 15 000036 		move	psa,$exception(pda)^
+	400002'	350 01 0 17 000000 		aos	r1,0(top)
+	400003'	135 00 0 00 000000*		ldb	r0,rt.reg##
+	400004'	201 01 1 01 777777 		movei	r1,@-1(r1)	;get condition cell address
+	400005'	550 01 0 01 000000 		hrrz	r1,0(r1)	;may be multiply indirected
+	400006'	301 01 0 00 000100 		cail	r1,$stdmax
+	400007'	254 00 0 00 400005'		jrst	.-2
+	400010'	271 01 0 14 000001 		addi	r1,cells	^.cells(psa)^;now actual cell address
+	400011'	554 01 0 01 000000 		hlrz	r1,0(r1)	;get masking count
+	400012'	322 01 0 00 400014'		jumpe	r1,.+2		;if zero, it's not masked
+	400013'	201 01 0 00 000001 		movei	r1,$true	;else return true
+	400014'	202 01 1 00 000000 		movem	r1,@r0		;in result reg
+	400015'	200 14 0 17 000001 		move	psa,psasave^.psasave(top)^
+	400016'	263 17 0 00 000000 		popj	top,
+
+						$xend	masked^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400017
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:39.531
+
+46P CORE USED
+masked	MACRO %53A(1155) 18:31 29-Sep-82 Page S-3
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+DISMIS	047000	777755		$MAXLO		000000	spd	
+INTACT	047000	777743		$MAXST		000217	spd	
+INTADR	047000	777745		$MAXTE		000001	spd	
+INTASS	047000	777742		$MXCH		000204	spd	
+INTENB	047000	777744		$NEEDP		000000	spd	
+PDA		000015	spd	$STATS		000000	spd	
+PSA		000014	spd	$STDMA		000100	spd	
+R0		000000	spd	$STDNU		000010	spd	
+R1		000001	spd	$SYS		000001	spd	
+R10		000010	spd	$TRUE		000001	spd	
+R11		000011	spd	$TYM		000001	spd	
+R12		000012	spd	.AROVF		000104	spd	
+R13		000013	spd	.CANCO		000033	spd	
+R2		000002	spd	.CELLS		000001	spd	
+R3		000003	spd	.EXLOC		000047	spd	
+R4		000004	spd	.IADDR		000216	spd	
+R5		000005	spd	.INTMA		000000	spd	
+R6		000006	spd	.OTH16		000034	spd	
+R7		000007	spd	.OTHBT		000035	spd	
+RT.REG		400003'	ext	.OTHCE		000036	spd	
+SETTR1	047000	777740		.PSASA		000001	spd	
+SETTR2	047000	777737		.REGS		000011	spd	
+TINASS	047000	777736		.RESIG		000031	spd	
+TOP		000017	spd	.STKOV		000106	spd	
+TSMSK.		400000'	ent	.TMPAD		000041	spd	
+$ABSLO		000000	spd	.VECTO		000110	spd	
+$ADP		000000	spd	.XPAGE		000040	spd	
+$CHBT		000003	spd	.XSTMT		000037	spd	
+$EXCEP		000036	spd	
+$FALSE		000000	spd	
+$HBTEN		000002	spd	
+$HBTLI		000000	spd	
+$HBTVA		000000	spd	
+$HILOC		400000	spd	
+$HSBFL		000000	spd	
+$HSBOF		000001	spd	
+$HSBXA		000000	spd	
+$HSBXB		000001	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+pending	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-4
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						$module	pending^
+						$excpt	^	;define it all
+						$temp	target,1^
+						entry	pend.
+						$temp	psasave,1^
+
+	400000'				pend.:
+	400000'	202 14 0 17 000002 		movem	psa,psasave^.psasave(top)^
+						$getpsa	exception^
+	400001'	200 14 0 15 000036 		move	psa,$exception(pda)^
+	400002'	350 01 0 17 000000 		aos	r1,0(top)	;bump return addr
+	400003'	135 00 0 00 000000*		ldb	r0,rt.reg##
+	400004'	202 00 0 17 000001 		movem	r0,target	^.target(top)^;save register # for result
+	400005'	201 01 1 01 777777 		movei	r1,@-1(r1)	;addr of std condition cell
+	400006'	550 01 0 01 000000 		hrrz	r1,0(r1)	;may be multiply indirected
+	400007'	301 01 0 00 000100 		cail	r1,$stdmax
+	400010'	254 00 0 00 400006'		jrst	.-2
+	400011'	271 01 0 14 000001 		addi	r1,cells^.cells(psa)^
+	400012'	135 00 0 00 400020'		ldb	r0,[point 1,0(r1),19] ;get pending bit
+	400013'	202 00 1 17 000001 		movem	r0,@target	^.target(top)^;return it
+	400014'	201 00 0 00 200000 		movei	r0,200000
+	400015'	412 00 0 01 000000 		andcam	r0,0(r1)	;clear pending bit
+	400016'	200 14 0 17 000002 		move	psa,psasave^.psasave(top)^
+	400017'	263 17 0 00 000000 		popj	top,		;all done
+						$xend	pending^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400021
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:40.098
+
+48P CORE USED
+pending	MACRO %53A(1155) 18:31 29-Sep-82 Page S-4
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+DISMIS	047000	777755		$MAXLO		000000	spd	
+INTACT	047000	777743		$MAXST		000217	spd	
+INTADR	047000	777745		$MAXTE		000002	spd	
+INTASS	047000	777742		$MXCH		000204	spd	
+INTENB	047000	777744		$NEEDP		000000	spd	
+PDA		000015	spd	$STATS		000000	spd	
+PEND.		400000'	ent	$STDMA		000100	spd	
+PSA		000014	spd	$STDNU		000010	spd	
+R0		000000	spd	$SYS		000001	spd	
+R1		000001	spd	$TYM		000001	spd	
+R10		000010	spd	.AROVF		000104	spd	
+R11		000011	spd	.CANCO		000033	spd	
+R12		000012	spd	.CELLS		000001	spd	
+R13		000013	spd	.EXLOC		000047	spd	
+R2		000002	spd	.IADDR		000216	spd	
+R3		000003	spd	.INTMA		000000	spd	
+R4		000004	spd	.OTH16		000034	spd	
+R5		000005	spd	.OTHBT		000035	spd	
+R6		000006	spd	.OTHCE		000036	spd	
+R7		000007	spd	.PSASA		000002	spd	
+RT.REG		400003'	ext	.REGS		000011	spd	
+SETTR1	047000	777740		.RESIG		000031	spd	
+SETTR2	047000	777737		.STKOV		000106	spd	
+TINASS	047000	777736		.TARGE		000001	spd	
+TOP		000017	spd	.TMPAD		000041	spd	
+$ABSLO		000000	spd	.VECTO		000110	spd	
+$ADP		000000	spd	.XPAGE		000040	spd	
+$CHBT		000003	spd	.XSTMT		000037	spd	
+$EXCEP		000036	spd	
+$FALSE		000000	spd	
+$HBTEN		000002	spd	
+$HBTLI		000000	spd	
+$HBTVA		000000	spd	
+$HILOC		400000	spd	
+$HSBFL		000000	spd	
+$HSBOF		000001	spd	
+$HSBXA		000000	spd	
+$HSBXB		000001	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+stmth - MATHSTATUS function	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-5
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						$module	stmth - MATHSTATUS function^
+						entry	st.mth
+
+	400000'				st.mth:
+	400000'	201 00 0 00 000001 		movei	r0,$exmth
+	400001'	254 00 0 00 000000*		jrst	ex.sta##
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400002
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:03.576
+
+48P CORE USED
+stmth - MATHSTATUS function	MACRO %53A(1155) 18:31 29-Sep-82 Page S-5
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+EX.STA		400001'	ext	
+R0		000000	spd	
+ST.MTH		400000'	ent	
+$ABSLO		000000	spd	
+$EXMTH		000001	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+
+stusr - USERSTATUS function	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-6
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						$module	stusr - USERSTATUS function^
+						entry	st.usr
+
+	400000'				st.usr:
+	400000'	201 00 0 00 000003 		movei	r0,$exusr
+	400001'	254 00 0 00 000000*		jrst	ex.sta##
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400002
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:03.551
+
+48P CORE USED
+stusr - USERSTATUS function	MACRO %53A(1155) 18:31 29-Sep-82 Page S-6
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+EX.STA		400001'	ext	
+R0		000000	spd	
+ST.USR		400000'	ent	
+$ABSLO		000000	spd	
+$EXUSR		000003	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+
+stspc - SPECIALSTATUS function	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-7
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						$module	stspc - SPECIALSTATUS function^
+						entry	st.spc
+
+	400000'				st.spc:
+	400000'	201 00 0 00 000006 		movei	r0,$exspc
+	400001'	254 00 0 00 000000*		jrst	ex.sta##
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400002
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:03.208
+
+48P CORE USED
+stspc - SPECIALSTATUS function	MACRO %53A(1155) 18:31 29-Sep-82 Page S-7
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+EX.STA		400001'	ext	
+R0		000000	spd	
+ST.SPC		400000'	ent	
+$ABSLO		000000	spd	
+$EXSPC		000006	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+
+stio - EXIOSTATUS function	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-8
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						$module	stio - EXIOSTATUS function^
+						entry	st.io
+
+	400000'				st.io:
+	400000'	201 00 0 00 000002 		movei	r0,$exio
+	400001'	254 00 0 00 000000*		jrst	ex.sta##
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400002
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:04.047
+
+48P CORE USED
+stio - EXIOSTATUS function	MACRO %53A(1155) 18:31 29-Sep-82 Page S-8
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+EX.STA		400001'	ext	
+R0		000000	spd	
+ST.IO		400000'	ent	
+$ABSLO		000000	spd	
+$EXIO		000002	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+
+exsta - exception status	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-9
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						$module	exsta - exception status^
+						$excpt^
+						entry	ex.sta
+						extern	ex.set
+						extern	ex.act
+
+						$temp	rtemp,3		^;first used in pushj
+
+					;
+					; EX.STA returns the subcondition code for the most "recently"
+					; activated handler, yielding a runtime error if there is none
+					; or if it is not in the same "class" requested by ST.MTH, ST.USR,
+					; ST.SPC or ST.IO.
+					;
+
+	400000'				ex.sta:
+	400000'	261 17 0 00 000000 		push	top,r0		;save std cell addr
+	400001'	260 17 0 00 000000*		pushj	top,ex.act	;get the active handler
+	400002'	254 00 0 00 400012'		jrst	wrong		;error if none
+	400003'	135 02 0 00 400017'		ldb	r2,[point 26,r1,25];get cond cell addr
+	400004'	312 02 0 17 000000 		came	r2,0(top)	;must be that expected
+	400005'	254 00 0 00 400012'		jrst	wrong
+	400006'	405 01 0 00 000777 		andi	r1,777		;isolate the subcondition code
+	400007'	120 02 0 17 000002 		dmove	r2,1+rtemp	^.rtemp(top)^;restore used regs
+	400010'	262 17 0 00 000000 		pop	top,r0		;clear stack temp
+	400011'	263 17 0 00 000000 		popj	top,
+	400012'				wrong:
+	400012'	262 17 0 00 000000 		pop	top,r0		;clear stack temp
+	400013'	260 17 0 00 000000*		pushj	top,twait.##
+						outstr	[asciz /
+	400014'	051 03 0 00 400020'	?	Invalid STATUS call/]
+	400015'	260 17 0 00 000000*		pushj	top,wrtpc.##
+	400016'	254 00 0 00 000000*		jrst	die.##
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400025
+exsta - exception status	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-10
+EXCEPT	MAC	23-May-71 22:31	
+
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:43.836
+
+48P CORE USED
+exsta - exception status	MACRO %53A(1155) 18:31 29-Sep-82 Page S-9
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+DIE.		400016'	ext	$HSBXB		000001	spd	
+DISMIS	047000	777755		$LOC	777777	777777	spd	
+EX.ACT		400001'	ext	$LOLOC		000000	spd	
+EX.SET		000000	ext	$MAXLO		000000	spd	
+EX.STA		400000'	ent	$MAXST		000217	spd	
+INTACT	047000	777743		$MAXTE		000003	spd	
+INTADR	047000	777745		$MXCH		000204	spd	
+INTASS	047000	777742		$STATS		000000	spd	
+INTENB	047000	777744		$STDMA		000100	spd	
+OUTSTR	051140	000000		$STDNU		000010	spd	
+R0		000000	spd	$SYS		000001	spd	
+R1		000001	spd	$TYM		000001	spd	
+R10		000010	spd	.AROVF		000104	spd	
+R11		000011	spd	.CANCO		000033	spd	
+R12		000012	spd	.CELLS		000001	spd	
+R13		000013	spd	.EXLOC		000047	spd	
+R2		000002	spd	.IADDR		000216	spd	
+R3		000pd	.INTMA		000000	spd	
+R4		000004	spd	.OTH16		000034	spd	
+R5		000005	spd	.OTHBT		000035	spd	
+R6		000006	spd	.OTHCE		000036	spd	
+R7		000007	spd	.REGS		000011	spd	
+SETTR1	047000	777740		.RESIG		000031	spd	
+SETTR2	047000	777737		.RTEMP		000001	spd	
+TINASS	047000	777736		.STKOV		000106	spd	
+TOP		000017	spd	.TMPAD		000041	spd	
+TWAIT.		400013'	ext	.VECTO		000110	spd	
+WRONG		400012'		.XPAGE		000040	spd	
+WRTPC.		400015'	ext	.XSTMT		000037	spd	
+$ABSLO		000000	spd	
+$ADP		000000	spd	
+$CHBT		000003	spd	
+$FALSE		000000	spd	
+$HBTEN		000002	spd	
+$HBTLI		000000	spd	
+$HBTVA		000000	spd	
+$HILOC		400000	spd	
+$HSBFL		000000	spd	
+$HSBOF		000001	spd	
+$HSBXA		000000	spd	
+allconditions	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-11
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						$module	allconditions^
+						$excpt	^	;define it all
+						entry	ex.all
+
+					;
+					; This module is loaded by an ALLCONDITIONS handler and in turn
+					; forces all the exception handlers to be activated.
+					;
+
+						extern	ex.mth
+						extern	ex.io
+						extern	ex.usr
+						extern	ex.atn
+						extern	ex.sto
+						extern	ex.stk
+						extern	ex.spc
+
+			000000		ex.all==0
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400000
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:34.329
+
+48P CORE USED
+allconditions	MACRO %53A(1155) 18:31 29-Sep-82 Page S-10
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+DISMIS	047000	777755		$LOC	777777	777777	spd	
+EX.ALL		000000	sen	$LOLOC		000000	spd	
+EX.ATN		000000	ext	$MAXLO		000000	spd	
+EX.IO		000000	ext	$MAXST		000217	spd	
+EX.MTH		000000	ext	$MAXTE		000000	spd	
+EX.SPC		000000	ext	$MXCH		000204	spd	
+EX.STK		000000	ext	$STATS		000000	spd	
+EX.STO		000000	ext	$STDMA		000100	spd	
+EX.USR		000000	ext	$STDNU		000010	spd	
+INTACT	047000	777743		$SYS		000001	spd	
+INTADR	047000	777745		$TYM		000001	spd	
+INTASS	047000	777742		.AROVF		000104	spd	
+INTENB	047000	777744		.CANCO		000033	spd	
+R0		000000	spd	.CELLS		000001	spd	
+R1		000001	spd	.EXLOC		000047	spd	
+R10		000010	spd	.IADDR		000216	spd	
+R11		000011	spd	.INTMA		000000	spd	
+R12		000012	spd	.OTH16		000034	spd	
+R13		000013	spd	.OTHBT		000035	spd	
+R2		000002	spd	.OTHCE		000036	spd	
+R3		000003	spd	.REGS		000011	spd	
+R4		000004	spd	.RESIG		000031	spd	
+R5		000005	spd	.STKOV		000106	spd	
+R6		000006	spd	.TMPAD		000041	spd	
+R7		000007	spd	.VECTO		000110	spd	
+SETTR1	047000	777740		.XPAGE		000040	spd	
+SETTR2	047000	777737		.XSTMT		000037	spd	
+TINASS	047000	777736		
+$ABSLO		000000	spd	
+$ADP		000000	spd	
+$CHBT		000003	spd	
+$FALSE		000000	spd	
+$HBTEN		000002	spd	
+$HBTLI		000000	spd	
+$HBTVA		000000	spd	
+$HILOC		400000	spd	
+$HSBFL		000000	spd	
+$HSBOF		000001	spd	
+$HSBXA		000000	spd	
+$HSBXB		000001	spd	
+exsk - Stack overflow interception	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-12
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						$module	exsk - Stack overflow interception^
+						$excpt	^	;define it all
+						entry	ex.stk
+						intern	stk.ac
+						extern	stk.tv
+
+			000000*		ex.stk==rx.stk##
+
+	400000'				stkinit:
+						ife	$sys-$tym,<
+	400000'	200 01 0 00 400025'		move	r1,[portal stk.tv]
+	400001'	202 01 0 14 000107 		movem	r1,1+stkovf	^.stkovf(psa)^;link to handler
+	400002'	200 01 0 00 400026'		move	r1,[jsa	pda,0]	;trap instruction
+	400003'	541 01 0 14 000106 		hrri	r1,stkovf	^.stkovf(psa)^;addr for saved register
+	400004'	047 01 0 00 777737 		settr2	r1,		;tell monitor about it>
+
+						ife	$sys-$adp,<
+						movei	r1,stk.tv
+						movem	r1,$newpc+$icbstk+vector
+						move	r1,[xwd 104000,sis.stk]
+						pisys.	r1,>
+
+	400005'	254 04 0 00 400005'		halt	.		;should not happen
+	400006'	263 17 0 00 000000 		popj	top,
+
+	400007'				stk.ac:
+						$pspda	^;get pda and psa regs
+	400007'	202 15 0 00 000000*		movem	pda,.jbcst##	;used as a temp
+	400010'	554 15 0 00 000000*		hlrz	pda,.jbsa##^
+	400011'	202 14 0 15 000016 		movem	psa,$misc(pda)	;another temp
+	400012'	200 14 0 15 000036 		move	psa,$exception(pda)^
+	400013'	124 00 0 14 000011 		dmovem	r0,regs	^.regs(psa)^	;save r0 and r1 as well
+	400014'	200 00 0 15 000016 		move	r0,$misc(pda)	;retrieve original PSA
+	400015'	200 01 0 00 400007*		move	r1,.jbcst	; and PDA
+	400016'	124 00 0 14 000025 		dmovem	r0,psa+regs	^.regs(psa)^;and keep them around
+
+						ife	$sys-$tym,<
+	400017'	200 00 0 14 000106 		move	r0,stkovf	^.stkovf(psa)^;get original PDA
+	400020'	250 00 0 14 000026 		exch	r0,pda+regs	^.regs(psa)^;save it + get addr of fault
+exsk - Stack overflow interception	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-13
+EXCEPT	MAC	23-May-71 22:31	
+
+	400021'	265 01 0 00 400022'		jsp	r1,.+1		;get PC flags
+	400022'	500 00 0 00 000001 		hll	r0,r1>
+
+						ife	$sys-$adp,<
+						movei	r0,stk.cn	;addr to continue after dismissal
+						exch	r0,$oldpc+$icbstk+vector
+						hllzs	$xflags+$icbstk+vector
+						debrk.
+						halt	.
+						halt	.
+					stk.cn:	>
+
+						$errload (r1,$exstk,$none)^
+	400023'	201 01 0 00 012000 		movei	r1,$errcode($exstk,$none,$false)^$exstk*2000+$false*1000+$none^^
+						$signal^
+	400024'	254 00 0 00 000000*		jrst	excpt.##^
+
+						ife	$sys-$adp,<
+					sis.stk:
+						exp	-11	;trap stack overflow
+						xwd	$icbstk,0
+						z	>
+
+						$xend	exsk,stkinit^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400027
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:49.848
+
+48P CORE USED
+exsk - Stack overflow interception	MACRO %53A(1155) 18:31 29-Sep-82 Page S-11
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+DISMIS	047000	777755		$EXSTK		000005	spd	.VECTO		000110	spd	
+EX.SET		000000	ext	$FALSE		000000	spd	.XPAGE		000040	spd	
+EX.STK		000000*	sen	$HBTEN		000002	spd	.XSTMT		000037	spd	
+EXCPT.		400024'	ext	$HBTLI		000000	spd	
+I.EXSK		400000'	sin	$HBTVA		000000	spd	
+INTACT	047000	777743		$HILOC		400000	spd	
+INTADR	047000	777745		$HSBFL		000000	spd	
+INTASS	047000	777742		$HSBOF		000001	spd	
+INTENB	047000	777744		$HSBXA		000000	spd	
+M5.0		000000	ext	$HSBXB		000001	spd	
+P.EXSK		000000	ext	$LOC	777777	777777	spd	
+PDA		000015	spd	$LOLOC		000000	spd	
+PORTAL	254040	000000		$MAXLO		000000	spd	
+PSA		000014	spd	$MAXST		000217	spd	
+R0		000000	spd	$MAXTE		000000	spd	
+R1		000001	spd	$MISC		000016	spd	
+R10		000010	spd	$MXCH		000204	spd	
+R11		000011	spd	$NEEDP		000001	spd	
+R12		000012	spd	$NONE		000000	spd	
+R13		000013	spd	$STATS		000000	spd	
+R2		000002	spd	$STDMA		000100	spd	
+R3		000003	spd	$STDNU		000010	spd	
+R4		000004	spd	$SYS		000001	spd	
+R5		000005	spd	$TRUE		000001	spd	
+R6		000006	spd	$TYM		000001	spd	
+R7		000007	spd	.AROVF		000104	spd	
+RX.STK		000000	ext	.CANCO		000033	spd	
+S.EXSK		000000	sin	.CELLS		000001	spd	
+SETTR1	047000	777740		.EXLOC		000047	spd	
+SETTR2	047000	777737		.IADDR		000216	spd	
+STK.AC		400007'	int	.INTMA		000000	spd	
+STK.TV		400025'	ext	.JBCST		400015'	ext	
+STKINI		400000'		.JBSA		400010'	ext	
+TINASS	047000	777736		.OTH16		000034	spd	
+TOP		000017	spd	.OTHBT		000035	spd	
+X.EXSK		000000	sin	.OTHCE		000036	spd	
+$ABSLO		000000	spd	.REGS		000011	spd	
+$ADP		000000	spd	.RESIG		000031	spd	
+$CHBT		000003	spd	.STKOV		000106	spd	
+$EXCEP		000036	spd	.TMPAD		000041	spd	
+exso - storage overflow handler	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-14
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						$module	exso - storage overflow handler^
+						$excpt	^	;define it all
+						entry	ex.sto
+
+			000000*		ex.sto==rx.sto##
+
+
+						$xend	exso^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400000
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:38.359
+
+48P CORE USED
+exso - storage overflow handler	MACRO %53A(1155) 18:31 29-Sep-82 Page S-12
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+DISMIS	047000	777755		$NEEDP		000000	spd	
+EX.STO		000000*	sen	$STATS		000000	spd	
+INTACT	047000	777743		$STDMA		000100	spd	
+INTADR	047000	777745		$STDNU		000010	spd	
+INTASS	047000	777742		$SYS		000001	spd	
+INTENB	047000	777744		$TYM		000001	spd	
+R0		000000	spd	.AROVF		000104	spd	
+R1		000001	spd	.CANCO		000033	spd	
+R10		000010	spd	.CELLS		000001	spd	
+R11		000011	spd	.EXLOC		000047	spd	
+R12		000012	spd	.IADDR		000216	spd	
+R13		000013	spd	.INTMA		000000	spd	
+R2		000002	spd	.OTH16		000034	spd	
+R3		000003	spd	.OTHBT		000035	spd	
+R4		000004	spd	.OTHCE		000036	spd	
+R5		000005	spd	.REGS		000011	spd	
+R6		000006	spd	.RESIG		000031	spd	
+R7		000007	spd	.STKOV		000106	spd	
+RX.STO		000000	ext	.TMPAD		000041	spd	
+SETTR1	047000	777740		.VECTO		000110	spd	
+SETTR2	047000	777737		.XPAGE		000040	spd	
+TINASS	047000	777736		.XSTMT		000037	spd	
+$ABSLO		000000	spd	
+$ADP		000000	spd	
+$CHBT		000003	spd	
+$FALSE		000000	spd	
+$HBTEN		000002	spd	
+$HBTLI		000000	spd	
+$HBTVA		000000	spd	
+$HILOC		400000	spd	
+$HSBFL		000000	spd	
+$HSBOF		000001	spd	
+$HSBXA		000000	spd	
+$HSBXB		000001	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000217	spd	
+$MAXTE		000000	spd	
+$MXCH		000204	spd	
+exnmth - overflow handler with underflow suppression	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-15
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						$module exnmth - overflow handler with underflow suppression^
+						$excpt	^	;define it all
+						entry	nuflo.
+						intern	ex.mth
+						intern	mth.ac
+						extern	mth.tv
+
+			000000*		ex.mth==rx.mth##
+
+	400000'				nuflo.:
+	400000'				mthinit:
+
+						ife	$sys-$tym,<
+	400000'	200 01 0 00 400106'		move	r1,[portal mth.tv]
+	400001'	202 01 0 14 000105 		movem	r1,1+arovf^.arovf(psa)^
+	400002'	200 01 0 00 400107'		move	r1,[jsa pda,0]
+	400003'	541 01 0 14 000104 		hrri	r1,arovf^.arovf(psa)^
+	400004'	047 01 0 00 777740 		settr1	r1,		;tell monitor to trap them>
+
+						ife	$sys-$adp,<
+						movei	r1,mth.tv
+						movem	r1,$newpc+$icbmth+vector
+						move	r1,[xwd 104000,sis.mth]
+						pisys.	r1,>
+
+	400005'	254 04 0 00 400005'		halt	.		;should not happen
+	400006'	263 17 0 00 000000 		popj	top,
+
+	400007'				mth.ac:		;trapped on overflow or underflow
+						$pspda^
+	400007'	202 15 0 00 000000*		movem	pda,.jbcst##	;used as a temp
+	400010'	554 15 0 00 000000*		hlrz	pda,.jbsa##^
+	400011'	202 14 0 15 000016 		movem	psa,$misc(pda)	;another temp
+	400012'	200 14 0 15 000036 		move	psa,$exception(pda)^
+	400013'	124 00 0 14 000011 		dmovem	r0,regs	^.regs(psa)^	;save r0 and r1 as well
+	400014'	200 00 0 15 000016 		move	r0,$misc(pda)	;retrieve original PSA
+	400015'	200 01 0 00 400007*		move	r1,.jbcst	; and PDA
+	400016'	124 00 0 14 000025 		dmovem	r0,psa+regs	^.regs(psa)^;and keep them around^
+
+exnmth - overflow handler with underflow suppression	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-16
+EXCEPT	MAC	23-May-71 22:31	
+
+						ife	$sys-$tym,<
+	400017'	200 00 0 14 000104 		move	r0,arovf	^.arovf(psa)^;get original PDA reg
+	400020'	250 00 0 14 000026 		exch	r0,pda+regs^.regs(psa)^
+	400021'	275 00 0 00 000001 		subi	r0,1		;since the PC is 2 past the instruction>
+
+						ife	$sys-$adp,<
+						move	r0,$oldpc+$icbmth+vector>
+
+	400022'	336 00 0 15 000037 		skipn	$inrt(pda)	;if in the runtime, ignore it
+	400023'	332 00 0 15 000040 		skipe	$debin(pda)	;also ignore if in debugger
+	400024'	254 00 0 00 400026'		jrst	ignore
+	400025'	254 00 0 00 400033'		jrst	inusercode
+	400026'				ignore:
+
+						ife	$sys-$tym,<
+	400026'	621 00 0 00 027637 		tlz	r0,27637	;clear all but overflow bits
+	400027'	202 00 0 00 400015*		movem	r0,.jbcst	;temp>
+
+	400030'	120 00 0 14 000011 		dmove	r0,regs^.regs(psa)^
+	400031'	120 14 0 14 000025 		dmove	psa,psa+regs	^.regs(psa)^;restore all regs
+
+						ife	$sys-$tym,<
+	400032'	254 02 1 00 400027*		jrstf	@.jbcst		;continue>
+
+						ife	$sys-$adp,<
+						debrk.
+						halt	.
+						halt	.>
+
+	400033'				inusercode:
+
+						ife	$sys-$tym,<
+	400033'	265 01 0 00 400034'		jsp	r1,.+1		;get the PC flags
+	400034'	500 00 0 00 000001 		hll	r0,r1		;copy the PC flags
+	400035'	541 01 0 00 400040'		hrri	r1,flagsok
+	400036'	621 01 0 00 440140 		tlz	r1,440140	;want to clear all the error flags
+	400037'	254 02 1 00 000001 		jrstf	@r1
+	400040'				flagsok:>
+
+	400040'	607 00 0 00 000100 		tlnn	r0,100		;was it underflow?
+exnmth - overflow handler with underflow suppression	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-17
+EXCEPT	MAC	23-May-71 22:31	
+
+	400041'	254 00 0 00 400074'		jrst	notunder	;no
+	400042'	124 02 0 14 000013 		dmovem	r2,r2+regs	^.regs(psa)^;get some working space
+	400043'	200 01 0 00 000000 		move	r1,r0
+	400044'	202 00 0 00 400032*		movem	r0,.jbcst##	;save continue address
+	400045'	200 00 0 01 777777 		move	r0,-1(r1)	;get offending instruction
+	400046'	135 01 0 00 400110'		ldb	r1,[point 4,r0,12];register for result
+	400047'	242 00 0 00 777745 		lsh	r0,-^d27	;isolate the opcode
+	400050'	201 02 0 14 000011 		movei	r2,regs	^.regs(psa)^	;must clear some in saved location
+	400051'	270 02 0 00 000001 		add	r2,r1		;  and some in registers themselves
+	400052'	265 03 0 00 400064'		jsp	r3,clear	;clear first reg
+	400053'	301 00 0 00 000110 		cail	r0,110		;if < DFAD
+	400054'	303 00 0 00 000113 		caile	r0,113		;or > DFDV
+	400055'	254 00 0 00 400060'		jrst	fndone		;then it's not double precision
+	400056'	271 02 0 00 000001 		addi	r2,1		;else clear next reg, too
+	400057'	265 03 0 00 400064'		jsp	r3,clear
+	400060'				fndone:	$restore regs, r0, r3^
+	400060'	120 00 0 14 000011 		dmove	$first,regs^.regs(psa)^
+	400061'	120 02 0 14 000013 		dmove	$first+2,2+regs^.regs(psa)^
+	400062'	120 14 0 14 000025 		dmove	psa,psa+regs^.regs(psa)^
+
+						ife	$sys-$tym,<
+	400063'	254 00 1 00 400044*		jrst	@.jbcst		;and continue user program>
+
+						ife	$sys-$adp,<
+						debrk.
+						halt	.
+						halt	.>
+
+	400064'				clear:
+	400064'	303 01 0 00 000003 		caile	r1,r3		;if reg is <= r3,
+	400065'	301 01 0 00 000014 		cail	r1,psa		;  is psa, or
+	400066'	303 01 0 00 000015 		caile	r1,pda		;  is pda,
+	400067'	254 00 0 00 400072'		jrst	clear2
+	400070'	402 00 0 02 000000 		setzm	0(r2)		;then clear saved reg
+	400071'	344 01 0 03 000000 		aoja	r1,0(r3)	;  and continue
+	400072'	402 00 0 01 000000 	clear2:	setzm	0(r1)		;else clear actual register
+	400073'	344 01 0 03 000000 		aoja	r1,0(r3)	;  and continue
+
+	400074'				notunder:
+
+exnmth - overflow handler with underflow suppression	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-18
+EXCEPT	MAC	23-May-71 22:31	
+
+						ife	$sys-$adp,<
+						movei	r1,mth.cn
+						movem	r1,$oldpc+$icbmth+vector
+						debrk.
+						halt	.
+						halt	.
+					mth.cn:	>
+
+	400074'	607 00 0 00 000040 		tlnn	r0,40		;check no divide flag
+	400075'	254 00 0 00 400100'		jrst	notdzero
+						$errload (r1,$exmth,$mthdz,$true)^
+	400076'	201 01 0 00 003004 		movei	r1,$errcode($exmth,$mthdz,$true)^$exmth*2000+$true*1000+$mthdz^^
+						$signal^
+	400077'	254 00 0 00 000000*		jrst	excpt.##^
+	400100'				notdzero:
+	400100'	607 00 0 00 040000 		tlnn	r0,40000	;check floating overflow flag
+	400101'	254 00 0 00 400104'		jrst	mbarov		;off, must be arith overflow
+						$errload (r1,$exmth,$mthfo,$true)^
+	400102'	201 01 0 00 003002 		movei	r1,$errcode($exmth,$mthfo,$true)^$exmth*2000+$true*1000+$mthfo^^
+						$signal^
+	400103'	254 00 0 00 400077*		jrst	excpt.##^
+	400104'				mbarov:
+						$errload (r1,$exmth,$mthao,$true)^
+	400104'	201 01 0 00 003003 		movei	r1,$errcode($exmth,$mthao,$true)^$exmth*2000+$true*1000+$mthao^^
+						$signal^
+	400105'	254 00 0 00 400103*		jrst	excpt.##^
+
+						ife	$sys-$adp,<
+					sis.mth:
+						exp	-10	;trap arith exceptions
+						xwd	$icbmth,0
+						z	>
+
+						$xend	exmth,mthinit^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400111
+exnmth - overflow handler with underflow suppression	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-19
+EXCEPT	MAC	23-May-71 22:31	
+
+PROGRAM BREAK IS 000000
+CPU TIME USED 01:20.725
+
+48P CORE USED
+exnmth - overflow handler with underflow suppression	MACRO %53A(1155) 18:31 29-Sep-82 Page S-13
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+CLEAR		400064'		R7		000007	spd	$STDNU		000010	spd	
+CLEAR2		400072'		RX.MTH		000000	ext	$SYS		000001	spd	
+DISMIS	047000	777755		S.EXMT		000000	sin	$TRUE		000001	spd	
+EX.MTH		000000*	sin	SETTR1	047000	777740		$TYM		000001	spd	
+EX.SET		000000	ext	SETTR2	047000	777737		.AROVF		000104	spd	
+EXCPT.		400105'	ext	TINASS	047000	777736		.CANCO		000033	spd	
+FLAGSO		400040'		TOP		000017	spd	.CELLS		000001	spd	
+FNDONE		400060'		X.EXMT		000000	sin	.EXLOC		000047	spd	
+I.EXMT		400000'	sin	$ABSLO		000000	spd	.IADDR		000216	spd	
+IGNORE		400026'		$ADP		000000	spd	.INTMA		000000	spd	
+INTACT	047000	777743		$CHBT		000003	spd	.JBCST		400063'	ext	
+INTADR	047000	777745		$DEBIN		000040	spd	.JBSA		400010'	ext	
+INTASS	047000	777742		$EXCEP		000036	spd	.OTH16		000034	spd	
+INTENB	047000	777744		$EXMTH		000001	spd	.OTHBT		000035	spd	
+INUSER		400033'		$FALSE		000000	spd	.OTHCE		000036	spd	
+M1.2		000000	ext	$FIRST		000000	spd	.REGS		000011	spd	
+M1.3		000000	ext	$HBTEN		000002	spd	.RESIG		000031	spd	
+M1.4		000000	ext	$HBTLI		000000	spd	.STKOV		000106	spd	
+MBAROV		400104'		$HBTVA		000000	spd	.TMPAD		000041	spd	
+MTH.AC		400007'	int	$HILOC		400000	spd	.VECTO		000110	spd	
+MTH.TV		400106'	ext	$HSBFL		000000	spd	.XPAGE		000040	spd	
+MTHINI		400000'		$HSBOF		000001	spd	.XSTMT		000037	spd	
+NOTDZE		400100'		$HSBXA		000000	spd	
+NOTUND		400074'		$HSBXB		000001	spd	
+NUFLO.		400000'	ent	$INRT		000037	spd	
+P.EXMT		000000	ext	$LAST		000003	spd	
+PDA		000015	spd	$LEN		000003	spd	
+PORTAL	254040	000000		$LOC	777777	777777	spd	
+PSA		000014	spd	$LOLOC		000000	spd	
+R0		000000	spd	$MAXLO		000000	spd	
+R1		000001	spd	$MAXST		000217	spd	
+R10		000010	spd	$MAXTE		000000	spd	
+R11		000011	spd	$MISC		000016	spd	
+R12		000012	spd	$MTHAO		000003	spd	
+R13		000013	spd	$MTHDZ		000004	spd	
+R2		000002	spd	$MTHFO		000002	spd	
+R3		000003	spd	$MXCH		000204	spd	
+R4		000004	spd	$NEEDP		000001	spd	
+R5		000005	spd	$STATS		000000	spd	
+R6		000006	spd	$STDMA		000100	spd	
+exmth - underflow/overflow handler	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-20
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						$module	exmth - underflow/overflow handler^
+						$excpt	^	;define it all
+						entry	ex.mth
+						intern	mth.ac
+						extern	mth.tv
+
+			000000*		ex.mth==rx.mth##
+
+	400000'				mthinit:
+
+						ife	$sys-$tym,<
+	400000'	200 01 0 00 400056'		move	r1,[portal mth.tv]
+	400001'	202 01 0 14 000105 		movem	r1,1+arovf^.arovf(psa)^
+	400002'	200 01 0 00 400057'		move	r1,[jsa pda,0]
+	400003'	541 01 0 14 000104 		hrri	r1,arovf^.arovf(psa)^
+	400004'	047 01 0 00 777740 		settr1	r1,		;tell monitor to trap them>
+
+						ife	$sys-$adp,<
+						movei	r1,mth.tv
+						movem	r1,$newpc+$icbmth+vector
+						move	r1,[xwd 104000,sis.mth]
+						pisys.	r1,>
+
+	400005'	254 04 0 00 400005'		halt	.		;should not happen
+	400006'	263 17 0 00 000000 		popj	top,
+
+	400007'				mth.ac:		;trapped on overflow or underflow
+						$pspda^
+	400007'	202 15 0 00 000000*		movem	pda,.jbcst##	;used as a temp
+	400010'	554 15 0 00 000000*		hlrz	pda,.jbsa##^
+	400011'	202 14 0 15 000016 		movem	psa,$misc(pda)	;another temp
+	400012'	200 14 0 15 000036 		move	psa,$exception(pda)^
+	400013'	124 00 0 14 000011 		dmovem	r0,regs	^.regs(psa)^	;save r0 and r1 as well
+	400014'	200 00 0 15 000016 		move	r0,$misc(pda)	;retrieve original PSA
+	400015'	200 01 0 00 400007*		move	r1,.jbcst	; and PDA
+	400016'	124 00 0 14 000025 		dmovem	r0,psa+regs	^.regs(psa)^;and keep them around^
+
+						ife	$sys-$tym,<
+	400017'	200 00 0 14 000104 		move	r0,arovf	^.arovf(psa)^;get original PDA reg
+exmth - underflow/overflow handler	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-21
+EXCEPT	MAC	23-May-71 22:31	
+
+	400020'	250 00 0 14 000026 		exch	r0,pda+regs^.regs(psa)^
+	400021'	275 00 0 00 000001 		subi	r0,1		;since the PC is 2 past the instruction>
+
+						ife	$sys-$adp,<
+						move	r0,$oldpc+$icbmth+vector>
+
+	400022'	336 00 0 15 000037 		skipn	$inrt(pda)	;if in the runtime, ignore it
+	400023'	332 00 0 15 000040 		skipe	$debin(pda)	;also ignore if in debugger
+	400024'	254 00 0 00 400026'		jrst	ignore
+	400025'	254 00 0 00 400033'		jrst	inusercode
+	400026'				ignore:
+
+						ife	$sys-$tym,<
+	400026'	621 00 0 00 027637 		tlz	r0,27637	;clear all but overflow bits
+	400027'	202 00 0 00 400015*		movem	r0,.jbcst	;temp>
+
+	400030'	120 00 0 14 000011 		dmove	r0,regs^.regs(psa)^
+	400031'	120 14 0 14 000025 		dmove	psa,psa+regs	^.regs(psa)^;restore all regs
+
+						ife	$sys-$tym,<
+	400032'	254 02 1 00 400027*		jrstf	@.jbcst		;continue>
+
+						ife	$sys-$adp,<
+						debrk.
+						halt	.
+						halt	.>
+
+	400033'				inusercode:
+
+						ife	$sys-$tym,<
+	400033'	265 01 0 00 400034'		jsp	r1,.+1		;get the PC flags
+	400034'	500 00 0 00 000001 		hll	r0,r1		;copy the PC flags
+	400035'	541 01 0 00 400040'		hrri	r1,flagsok
+	400036'	621 01 0 00 440140 		tlz	r1,440140	;want to clear all the error flags
+	400037'	254 02 1 00 000001 		jrstf	@r1
+	400040'				flagsok:>
+
+						ife	$sys-$adp,<
+						movei	r1,mth.cn
+						movem	r1,$oldpc+$icbmth+vector
+exmth - underflow/overflow handler	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-22
+EXCEPT	MAC	23-May-71 22:31	
+
+						debrk.
+						halt	.
+						halt	.
+					mth.cn:	>
+
+	400040'	607 00 0 00 000100 		tlnn	r0,100		;was it underflow?
+	400041'	254 00 0 00 400044'		jrst	notunder	;no
+						$errload (r1,$exmth,$mthfn,$true)^
+	400042'	201 01 0 00 003001 		movei	r1,$errcode($exmth,$mthfn,$true)^$exmth*2000+$true*1000+$mthfn^^
+						$signal^
+	400043'	254 00 0 00 000000*		jrst	excpt.##^
+	400044'				notunder:
+	400044'	607 00 0 00 000040 		tlnn	r0,40		;check no divide flag
+	400045'	254 00 0 00 400050'		jrst	notdzero
+						$errload (r1,$exmth,$mthdz,$true)^
+	400046'	201 01 0 00 003004 		movei	r1,$errcode($exmth,$mthdz,$true)^$exmth*2000+$true*1000+$mthdz^^
+						$signal^
+	400047'	254 00 0 00 400043*		jrst	excpt.##^
+	400050'				notdzero:
+	400050'	607 00 0 00 040000 		tlnn	r0,40000	;check floating overflow flag
+	400051'	254 00 0 00 400054'		jrst	mbarov		;off, must be arith overflow
+						$errload (r1,$exmth,$mthfo,$true)^
+	400052'	201 01 0 00 003002 		movei	r1,$errcode($exmth,$mthfo,$true)^$exmth*2000+$true*1000+$mthfo^^
+						$signal^
+	400053'	254 00 0 00 400047*		jrst	excpt.##^
+	400054'				mbarov:
+						$errload (r1,$exmth,$mthao,$true)^
+	400054'	201 01 0 00 003003 		movei	r1,$errcode($exmth,$mthao,$true)^$exmth*2000+$true*1000+$mthao^^
+						$signal^
+	400055'	254 00 0 00 400053*		jrst	excpt.##^
+
+						ife	$sys-$adp,<
+					sis.mth:
+						exp	-10
+						xwd	$icbmth,0
+						z>
+
+						$xend	exmth,mthinit^
+						prgend
+
+exmth - underflow/overflow handler	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-23
+EXCEPT	MAC	23-May-71 22:31	
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400060
+PROGRAM BREAK IS 000000
+CPU TIME USED 01:17.113
+
+48P CORE USED
+exmth - underflow/overflow handler	MACRO %53A(1155) 18:31 29-Sep-82 Page S-14
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+DISMIS	047000	777755		SETTR1	047000	777740		.CANCO		000033	spd	
+EX.MTH		000000*	sen	SETTR2	047000	777737		.CELLS		000001	spd	
+EX.SET		000000	ext	TINASS	047000	777736		.EXLOC		000047	spd	
+EXCPT.		400055'	ext	TOP		000017	spd	.IADDR		000216	spd	
+FLAGSO		400040'		X.EXMT		000000	sin	.INTMA		000000	spd	
+I.EXMT		400000'	sin	$ABSLO		000000	spd	.JBCST		400032'	ext	
+IGNORE		400026'		$ADP		000000	spd	.JBSA		400010'	ext	
+INTACT	047000	777743		$CHBT		000003	spd	.OTH16		000034	spd	
+INTADR	047000	777745		$DEBIN		000040	spd	.OTHBT		000035	spd	
+INTASS	047000	777742		$EXCEP		000036	spd	.OTHCE		000036	spd	
+INTENB	047000	777744		$EXMTH		000001	spd	.REGS		000011	spd	
+INUSER		400033'		$FALSE		000000	spd	.RESIG		000031	spd	
+M1.1		000000	ext	$HBTEN		000002	spd	.STKOV		000106	spd	
+M1.2		000000	ext	$HBTLI		000000	spd	.TMPAD		000041	spd	
+M1.3		000000	ext	$HBTVA		000000	spd	.VECTO		000110	spd	
+M1.4		000000	ext	$HILOC		400000	spd	.XPAGE		000040	spd	
+MBAROV		400054'		$HSBFL		000000	spd	.XSTMT		000037	spd	
+MTH.AC		400007'	int	$HSBOF		000001	spd	
+MTH.TV		400056'	ext	$HSBXA		000000	spd	
+MTHINI		400000'		$HSBXB		000001	spd	
+NOTDZE		400050'		$INRT		000037	spd	
+NOTUND		400044'		$LOC	777777	777777	spd	
+P.EXMT		000000	ext	$LOLOC		000000	spd	
+PDA		000015	spd	$MAXLO		000000	spd	
+PORTAL	254040	000000		$MAXST		000217	spd	
+PSA		000014	spd	$MAXTE		000000	spd	
+R0		000000	spd	$MISC		000016	spd	
+R1		000001	spd	$MTHAO		000003	spd	
+R10		000010	spd	$MTHDZ		000004	spd	
+R11		000011	spd	$MTHFN		000001	spd	
+R12		000012	spd	$MTHFO		000002	spd	
+R13		000013	spd	$MXCH		000204	spd	
+R2		000002	spd	$NEEDP		000001	spd	
+R3		000003	spd	$STATS		000000	spd	
+R4		000004	spd	$STDMA		000100	spd	
+R5		000005	spd	$STDNU		000010	spd	
+R6		000006	spd	$SYS		000001	spd	
+R7		000007	spd	$TRUE		000001	spd	
+RX.MTH		000000	ext	$TYM		000001	spd	
+S.EXMT		000000	sin	.AROVF		000104	spd	
+exio - io error interception	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-24
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$module	exio - io error interception^
+						$excpt	^	;define it all
+						entry	ex.io
+						entry	ioerr.
+						$ps.op	(extern,M,$exio,interr)^
+						$ps.op	(extern,M,$exio,rewerr)^
+						$ps.op	(extern,M,$exio,eoferr)^
+						$ps.op	(extern,M,$exio,outerr)^
+						$ps.op	(extern,M,$exio,inpopn)^
+						$ps.op	(extern,M,$exio,ranerr)^
+						$ps.op	(extern,M,$exio,illcur)^
+						$ps.op	(extern,M,$exio,emperr)^
+						$ps.op	(extern,M,$exio,opnerr)^
+
+			000000*		ex.io==rx.io##
+
+	400000'				ioerr.:
+	400000'	660 01 0 00 004000 		tro	r1,$exio*2000	;insert cond cell addr
+						$RTSIGNAL^
+	400001'	254 00 0 00 000000*		jrst	rtexc.##^
+
+						$xend	exio^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400002
+PROGRAM BREAK IS 000000
+CPU TIME USED 01:17.838
+
+48P CORE USED
+exio - io error interception	MACRO %53A(1155) 18:31 29-Sep-82 Page S-15
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+DISMIS	047000	777755		SETTR1	047000	777740		.STKOV		000106	spd	
+EMPERR		000010		SETTR2	047000	777737		.TMPAD		000041	spd	
+EOFERR		000003		TINASS	047000	777736		.VECTO		000110	spd	
+EX.IO		000000*	sen	$ABSLO		000000	spd	.XPAGE		000040	spd	
+EX.SET		000000	ext	$ADP		000000	spd	.XSTMT		000037	spd	
+ILLCUR		000007		$CHBT		000003	spd	
+INPOPN		000005		$EXIO		000002	spd	
+INTACT	047000	777743		$FALSE		000000	spd	
+INTADR	047000	777745		$HBTEN		000002	spd	
+INTASS	047000	777742		$HBTLI		000000	spd	
+INTENB	047000	777744		$HBTVA		000000	spd	
+INTERR		000001		$HILOC		400000	spd	
+IOERR.		400000'	ent	$HSBFL		000000	spd	
+M2.1		000000	ext	$HSBOF		000001	spd	
+M2.10		000000	ext	$HSBXA		000000	spd	
+M2.11		000000	ext	$HSBXB		000001	spd	
+M2.2		000000	ext	$LOC	777777	777777	spd	
+M2.3		000000	ext	$LOLOC		000000	spd	
+M2.4		000000	ext	$MAXLO		000000	spd	
+M2.5		000000	ext	$MAXST		000217	spd	
+M2.6		000000	ext	$MAXTE		000000	spd	
+M2.7		000000	ext	$MXCH		000204	spd	
+OPNERR		000011		$NEEDP		000000	spd	
+OUTERR		000004		$STATS		000000	spd	
+R0		000000	spd	$STDMA		000100	spd	
+R1		000001	spd	$STDNU		000010	spd	
+R10		000010	spd	$SYS		000001	spd	
+R11		000011	spd	$TRUE		000001	spd	
+R12		000012	spd	$TYM		000001	spd	
+R13		000013	spd	.AROVF		000104	spd	
+R2		000002	spd	.CANCO		000033	spd	
+R3		000003	spd	.CELLS		000001	spd	
+R4		000004	spd	.EXLOC		000047	spd	
+R5		000005	spd	.IADDR		000216	spd	
+R6		000006	spd	.INTMA		000000	spd	
+R7		000007	spd	.OTH16		000034	spd	
+RANERR		000006		.OTHBT		000035	spd	
+REWERR		000002		.OTHCE		000036	spd	
+RTEXC.		400001'	ext	.REGS		000011	spd	
+RX.IO		000000	ext	.RESIG		000031	spd	
+exusr - User exception trap	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-25
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						$module	exusr - User exception trap^
+						$excpt	^	;define it all
+						entry	ex.usr
+						entry	userr.
+
+			000000*		ex.usr==rx.usr##
+
+					;
+					; USERR. reached with address of the exception in r1 and
+					; the exception block in r0 (since compiler generated
+					; code does a JSP R1,routine).  Merely reverse the regs before
+					; going to the exception manager.
+					;
+
+	400000'	250 00 0 00 000001 	userr.:	exch	r0,r1
+						$rtsignal^
+	400001'	254 00 0 00 000000*		jrst	rtexc.##^
+
+						$xend	exusr^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400002
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:39.476
+
+48P CORE USED
+exusr - User exception trap	MACRO %53A(1155) 18:31 29-Sep-82 Page S-16
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+DISMIS	047000	777755		$MAXST		000217	spd	
+EX.SET		000000	ext	$MAXTE		000000	spd	
+EX.USR		000000*	sen	$MXCH		000204	spd	
+INTACT	047000	777743		$NEEDP		000000	spd	
+INTADR	047000	777745		$STATS		000000	spd	
+INTASS	047000	777742		$STDMA		000100	spd	
+INTENB	047000	777744		$STDNU		000010	spd	
+R0		000000	spd	$SYS		000001	spd	
+R1		000001	spd	$TYM		000001	spd	
+R10		000010	spd	.AROVF		000104	spd	
+R11		000011	spd	.CANCO		000033	spd	
+R12		000012	spd	.CELLS		000001	spd	
+R13		000013	spd	.EXLOC		000047	spd	
+R2		000002	spd	.IADDR		000216	spd	
+R3		000003	spd	.INTMA		000000	spd	
+R4		000004	spd	.OTH16		000034	spd	
+R5		000005	spd	.OTHBT		000035	spd	
+R6		000006	spd	.OTHCE		000036	spd	
+R7		000007	spd	.REGS		000011	spd	
+RTEXC.		400001'	ext	.RESIG		000031	spd	
+RX.USR		000000	ext	.STKOV		000106	spd	
+SETTR1	047000	777740		.TMPAD		000041	spd	
+SETTR2	047000	777737		.VECTO		000110	spd	
+TINASS	047000	777736		.XPAGE		000040	spd	
+USERR.		400000'	ent	.XSTMT		000037	spd	
+$ABSLO		000000	spd	
+$ADP		000000	spd	
+$CHBT		000003	spd	
+$FALSE		000000	spd	
+$HBTEN		000002	spd	
+$HBTLI		000000	spd	
+$HBTVA		000000	spd	
+$HILOC		400000	spd	
+$HSBFL		000000	spd	
+$HSBOF		000001	spd	
+$HSBXA		000000	spd	
+$HSBXB		000001	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+exspc - special error interception	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-26
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						$module	exspc - special error interception^
+						$excpt	^	;define it all
+						entry	ex.spc
+						intern	spc.ac
+						extern	spc.tv
+
+			000000*		ex.spc==rx.spc##
+
+	400000'				spcinit:
+
+						ife	$sys-$tym,<
+	400000'	515 01 0 00 500000 		hrlzi	r1,500000	;1b0+1b2
+	400001'	047 01 0 00 777744 		intenb	r1,		;activate channel 2
+	400002'	254 04 0 00 400002'		halt	.
+	400003'	201 01 0 00 000000*		movei	r1,spc.tv	;addr for ill mem ref trap
+	400004'	202 01 0 14 000113 		movem	r1,3+vector^.vector(psa)^
+	400005'	200 01 0 00 400026'		move	r1,[2,,2]	;cause = 2, channel 2
+	400006'	047 01 0 00 777742 		intass	r1,		;ill mem ref>
+
+						ife	$sys-$adp,<
+						movei	r1,spc.tv
+						movem	r1,$newpc+$icbim+vector
+						move	r1,[xwd 104000,sis.im]
+						pisys.	r1,>
+
+	400007'	254 04 0 00 400007'		halt	.		;should not happen
+	400010'	263 17 0 00 000000 		popj	top,
+
+	400011'				spc.ac:
+						$pspda^
+	400011'	202 15 0 00 000000*		movem	pda,.jbcst##	;used as a temp
+	400012'	554 15 0 00 000000*		hlrz	pda,.jbsa##^
+	400013'	202 14 0 15 000016 		movem	psa,$misc(pda)	;another temp
+	400014'	200 14 0 15 000036 		move	psa,$exception(pda)^
+	400015'	124 00 0 14 000011 		dmovem	r0,regs	^.regs(psa)^	;save r0 and r1 as well
+	400016'	200 00 0 15 000016 		move	r0,$misc(pda)	;retrieve original PSA
+	400017'	200 01 0 00 400011*		move	r1,.jbcst	; and PDA
+	400020'	124 00 0 14 000025 		dmovem	r0,psa+regs	^.regs(psa)^;and keep them around^
+	400021'	201 00 0 00 400024'		movei	r0,im.cn	;addr to continue after dismissal
+exspc - special error interception	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-27
+EXCEPT	MAC	23-May-71 22:31	
+
+
+						ife	$sys-$tym,<
+	400022'	250 00 0 14 000112 		exch	r0,2+vector	^.vector(psa)^;get PC of trap
+	400023'	047 00 0 00 777755 		dismis>			;dismis the interrupt
+
+						ife	$sys-$adp,<
+						exch	r0,$oldpc+$icbim+vector
+						debrk.
+						halt	.
+						halt	.>
+
+	400024'				im.cn:
+						$errload (r1,$exspc,$spcmr)^
+	400024'	201 01 0 00 014001 		movei	r1,$errcode($exspc,$spcmr,$false)^$exspc*2000+$false*1000+$spcmr^^
+						$signal^
+	400025'	254 00 0 00 000000*		jrst	excpt.##^
+
+						ife	$sys-$adp,<
+					sis.im:
+						exp	-6
+						xwd	$icbim,0
+						z>
+
+						$xend	exspc,spcinit^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400027
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:46.045
+
+48P CORE USED
+exspc - special error interception	MACRO %53A(1155) 18:31 29-Sep-82 Page S-17
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+DISMIS	047000	777755		$EXSPC		000006	spd	.VECTO		000110	spd	
+EX.SET		000000	ext	$FALSE		000000	spd	.XPAGE		000040	spd	
+EX.SPC		000000*	sen	$HBTEN		000002	spd	.XSTMT		000037	spd	
+EXCPT.		400025'	ext	$HBTLI		000000	spd	
+I.EXSP		400000'	sin	$HBTVA		000000	spd	
+IM.CN		400024'		$HILOC		400000	spd	
+INTACT	047000	777743		$HSBFL		000000	spd	
+INTADR	047000	777745		$HSBOF		000001	spd	
+INTASS	047000	777742		$HSBXA		000000	spd	
+INTENB	047000	777744		$HSBXB		000001	spd	
+M6.1		000000	ext	$LOC	777777	777777	spd	
+P.EXSP		000000	ext	$LOLOC		000000	spd	
+PDA		000015	spd	$MAXLO		000000	spd	
+PSA		000014	spd	$MAXST		000217	spd	
+R0		000000	spd	$MAXTE		000000	spd	
+R1		000001	spd	$MISC		000016	spd	
+R10		000010	spd	$MXCH		000204	spd	
+R11		000011	spd	$NEEDP		000001	spd	
+R12		000012	spd	$SPCMR		000001	spd	
+R13		000013	spd	$STATS		000000	spd	
+R2		000002	spd	$STDMA		000100	spd	
+R3		000003	spd	$STDNU		000010	spd	
+R4		000004	spd	$SYS		000001	spd	
+R5		000005	spd	$TRUE		000001	spd	
+R6		000006	spd	$TYM		000001	spd	
+R7		000007	spd	.AROVF		000104	spd	
+RX.SPC		000000	ext	.CANCO		000033	spd	
+S.EXSP		000000	sin	.CELLS		000001	spd	
+SETTR1	047000	777740		.EXLOC		000047	spd	
+SETTR2	047000	777737		.IADDR		000216	spd	
+SPC.AC		400011'	int	.INTMA		000000	spd	
+SPC.TV		400003'	ext	.JBCST		400017'	ext	
+SPCINI		400000'		.JBSA		400012'	ext	
+TINASS	047000	777736		.OTH16		000034	spd	
+TOP		000017	spd	.OTHBT		000035	spd	
+X.EXSP		000000	sin	.OTHCE		000036	spd	
+$ABSLO		000000	spd	.REGS		000011	spd	
+$ADP		000000	spd	.RESIG		000031	spd	
+$CHBT		000003	spd	.STKOV		000106	spd	
+$EXCEP		000036	spd	.TMPAD		000041	spd	
+exatn - attention trap	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-28
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						$module	exatn - attention trap^
+						$excpt	^	;define it all
+						entry	ex.atn
+						intern	escap.
+						intern	atn.ac
+						extern	atn.tv
+
+			000000*		ex.atn==rx.atn##
+
+	400000'				atninit:
+	400000'	201 01 0 00 000000*		movei	r1,atn.tv
+
+						ife	$sys-$tym,<
+	400001'	202 01 0 14 000111 		movem	r1,1+vector^.vector(psa)^
+	400002'	525 01 0 00 000001 		hrloi	r1,1		;break on channel 1, current port
+	400003'	047 01 0 00 777736 		tinass	r1,
+	400004'	254 04 0 00 400004'		halt	.
+	400005'	515 01 0 00 600000 		hrlzi	r1,600000	;1b0+1b1
+	400006'	047 01 0 00 777744 		intenb	r1,		;enable channel 1>
+
+						ife	$sys-$adp,<
+						movem	r1,$newpc+$icbatn+vector
+						move	r1,[xwd 104000,sis.atn]
+						pisys.	r1,>
+
+	400007'	254 04 0 00 400007'		halt	.
+	400010'	201 01 0 00 400000 		movei	r1,400000	;set "can be masked" flag
+	400011'	202 01 0 14 000010 		movem	r1,$exatn+cells^.cells(psa)^
+	400012'	263 17 0 00 000000 		popj	top,
+
+					;
+					; There are three entries into this module:
+					;
+					; ESCAP. is reached whenever the runtime unmasks attentions
+					; 	 to check for postponed interrupts.
+					; ATN.AC actually fields interrupts from the monitor.
+					; IGNOR. fields interrupts from the monitor during critical
+					;	 sections of code (both in this module and in the
+					;	 exception manager), ignoring the interrupt with an
+exatn - attention trap	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-29
+EXCEPT	MAC	23-May-71 22:31	
+
+					;	 immediate DISMIS.
+					;
+					; Both ESCAP. and ATN.AC must handle three distinct cases:
+					;
+					; (1) Debugger active.  Exit to the monitor and, if the user
+					;     continues, restore everything and continue execution.
+					; (2) An attention handler is currently active.  Restore state
+					;     and continue, ignoring the interrupt.
+					; (3) Neither of the above apply.  Signal the attention to the
+					;     exception manager.
+					;
+					; In addition, ATN.AC must check if the runtime has masked
+					; interrupts and, if so, record the occurance of the interrupt
+					; for detection in ESCAP. at an appropriate UNMASK.
+					;
+					; Given the different manner in which ESCAP. and ATN.AC are
+					; reached they are coded separately, sharing only a SEARCH
+					; routine which checks for an active attention handler.
+					;
+
+	400013'				ignor.:				;ignores all interrupts
+
+						ife	$sys-$tym,<
+	400013'	047 00 0 00 777755 		dismis
+	400014'	254 04 0 00 400014'		halt	.>		;better not happen
+
+						ife	$sys-$adp,<
+						debrk.
+						halt	.
+						halt	.>
+
+	400015'				escap.:				;check for postponed interrupts
+	400015'	337 00 1 15 000036 		skipg	@$exception(pda);actually .intmask(pda)
+	400016'	263 17 0 00 000000 		popj	top,		;none pending
+	400017'	336 00 0 15 000040 		skipn	$debin(pda)	;if the debugger was running
+	400020'	254 00 0 00 400024'		jrst	escap1
+	400021'	047 01 0 00 000012 		exit	1,		;  then go to the monitor prompt
+	400022'	402 00 1 15 000036 		setzm	@$exception(pda);clear the pending flag
+	400023'	263 17 0 00 000000 		popj	top,		;and continue
+	400024'				escap1:				;debugger not active
+exatn - attention trap	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-30
+EXCEPT	MAC	23-May-71 22:31	
+
+	400024'	402 00 1 15 000036 		setzm	@$exception(pda);clear pending interrupt
+	400025'	202 14 0 15 000016 		movem	psa,$misc(pda)	;save runtime psa reg
+					;
+					; Begin critical section.
+					;
+						$getpsa	exception^
+	400026'	200 14 0 15 000036 		move	psa,$exception(pda)^
+	400027'	124 02 0 14 000013 		dmovem	r2,r2+regs^.regs(psa)^
+	400030'	201 02 0 00 400013'		movei	r2,ignor.	;subsequent interrupts ignored
+
+						ife	$sys-$tym,<
+	400031'	202 02 0 14 000111 		movem	r2,1+vector>^.vector(psa)^
+
+						ife	$sys-$adp,<
+						movem	r2,$newpc+$icbatn+vector>
+
+					;
+					; End critical section.
+					;
+	400032'	124 04 0 14 000015 		dmovem	r4,r4+regs	^.regs(psa)^;save work regs
+	400033'	265 05 0 00 400127'		jsp	r5,search	;look for active attn handler
+	400034'	254 00 0 00 400043'		jrst	esctrp		;none - signal it
+	400035'	120 04 0 14 000015 		dmove	r4,r4+regs	^.regs(psa)^;found one. ignore this one
+	400036'	201 02 0 00 400000*		movei	r2,atn.tv	;restore correct handler
+						ife	$sys-$tym,<
+	400037'	202 02 0 14 000111 		movem	r2,1+vector>^.vector(psa)^
+
+						ife	$sys-$adp,<
+						movem	r2,$newpc+$icbatn+vector>
+
+					;
+					; Begin critical section.
+					;
+	400040'	120 02 0 14 000013 		dmove	r2,r2+regs^.regs(psa)^
+	400041'	200 14 0 15 000016 		move	psa,$misc(pda)	;restore caller's regs
+					;
+					; End critical section.
+					;
+	400042'	263 17 0 00 000000 		popj	top,
+
+exatn - attention trap	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-31
+EXCEPT	MAC	23-May-71 22:31	
+
+	400043'				esctrp:				;signal delayed attention
+	400043'	124 00 0 14 000011 		dmovem	r0,r0+regs	^.regs(psa)^;set up regs as expected
+	400044'	120 02 0 14 000013 		dmove	r2,r2+regs	^.regs(psa)^;by exception manager
+	400045'	120 04 0 14 000015 		dmove	r4,r4+regs^.regs(psa)^
+	400046'	200 00 0 15 000016 		move	r0,$misc(pda)	;caller's psa
+	400047'	202 00 0 14 000025 		movem	r0,psa+regs^.regs(psa)^
+	400050'	202 15 0 14 000026 		movem	pda,pda+regs^.regs(psa)^
+	400051'	262 17 0 00 000000 		pop	top,r0		;caller's return addr
+						$errload (r1,$exatn,$none,$true)^
+	400052'	201 01 0 00 017000 		movei	r1,$errcode($exatn,$none,$true)^$exatn*2000+$true*1000+$none^^
+						$signal^
+	400053'	254 00 0 00 000000*		jrst	excpt.##^
+
+	400054'				atn.ac:				;monitor signalled interrupt
+	400054'	202 15 0 00 000000*		movem	pda,.jbcst##	;don't use $pspda macro since we
+					;
+					; Begin critical section.
+					;
+						$getpda	^		;will go to the dot if in the debugger
+	400055'	554 15 0 00 000000*		hlrz	pda,.jbsa##
+	400056'	336 00 0 15 000000 		skipn	$maski(pda)	;if masked by runtime
+	400057'	254 00 0 00 400064'		jrst	atn1
+	400060'	350 00 1 15 000036 		aos	@$exception(pda);  then flag the interrupt seen
+	400061'	200 15 0 00 400054*		move	pda,.jbcst	;restore state and
+
+						ife	$sys-$tym,<
+	400062'	047 00 0 00 777755 		dismis			;conintue
+	400063'	254 04 0 00 400063'		halt	.>		;just in case
+
+						ife	$sys-$adp,<
+						debrk.
+						halt	.
+						halt	.>
+
+	400064'				atn1:
+	400064'	336 00 0 15 000040 		skipn	$debin(pda)	;if debugger interrupted
+	400065'	254 00 0 00 400072'		jrst	atn2
+	400066'	200 15 0 00 400061*		move	pda,.jbcst	;then restore state and
+	400067'	047 01 0 00 000012 		exit 	1,		;go to the monitor prompt
+
+exatn - attention trap	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-32
+EXCEPT	MAC	23-May-71 22:31	
+
+						ife	$sys-$tym,<
+	400070'	047 00 0 00 777755 		dismis			;continue program
+	400071'	254 04 0 00 400071'		halt	.>		;should not happen
+
+						ife	$sys-$adp,<
+						debrk.
+						halt	.
+						halt	.>
+
+	400072'				atn2:
+	400072'	202 14 0 15 000016 		movem	psa,$misc(pda)	;save psa reg in temp
+						$getpsa	exception^
+	400073'	200 14 0 15 000036 		move	psa,$exception(pda)^
+	400074'	124 02 0 14 000013 		dmovem	r2,r2+regs	^.regs(psa)^;free up work regs
+	400075'	201 02 0 00 400102'		movei	r2,atn3		;to continue on dismissal
+	400076'	201 03 0 00 400013'		movei	r3,ignor.
+
+						ife	$sys-$tym,<
+	400077'	250 02 0 14 000110 		exch	r2,vector	^.vector(psa)^;get interrupted address
+	400100'	202 03 0 14 000111 		movem	r3,1+vector	^.vector(psa)^;subsequent interrupts ignored>
+
+						ife	$sys-$adp,<
+						exch	r2,$oldpc+$icbatn+vector
+						movem	r3,$newpc+$icbatn+vector>
+
+					;
+					; End critical section.
+					;
+
+						ife	$sys-$tym,<
+	400101'	047 00 0 00 777755 		dismis>
+
+						ife	$sys-$adp,<
+						debrk.
+						halt	.
+						halt	.>
+
+	400102'				atn3:
+	400102'	202 02 0 14 000216 		movem	r2,iaddr	^.iaddr(psa)^;save interrupted address
+	400103'	200 02 0 15 000016 		move	r2,$misc(pda)	;original psa
+exatn - attention trap	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-33
+EXCEPT	MAC	23-May-71 22:31	
+
+	400104'	200 03 0 00 400066*		move	r3,.jbcst	;and pda
+	400105'	124 02 0 14 000025 		dmovem	r2,psa+regs	^.regs(psa)^;now saved
+	400106'	124 04 0 14 000015 		dmovem	r4,r4+regs^.regs(psa)^
+	400107'	265 05 0 00 400127'		jsp	r5,search	;check for active attention handler
+	400110'	254 00 0 00 400121'		jrst	atntrp		;none - signal it
+	400111'	120 02 0 14 000013 		dmove	r2,r2+regs	^.regs(psa)^;found one - ignore it
+	400112'	120 04 0 14 000015 		dmove	r4,r4+regs^.regs(psa)^
+	400113'	200 15 0 14 000216 		move	pda,iaddr	^.iaddr(psa)^;get interrupted address
+	400114'	202 15 0 00 400104*		movem	pda,.jbcst	;save in temp
+	400115'	201 15 0 00 400036*		movei	pda,atn.tv	;restore correct handler
+						ife	$sys-$tym,<
+	400116'	202 15 0 14 000111 		movem	pda,1+vector>^.vector(psa)^
+
+						ife	$sys-$adp,<
+						movem	pda,$newpc+$icbatn+vector>
+
+					;
+					; Begin critical section.
+					;
+	400117'	120 14 0 14 000025 		dmove	psa,psa+regs	^.regs(psa)^;restore last two regs
+	400120'	254 00 1 00 400114*		jrst	@.jbcst		;and continue
+					;
+					; End critical section.
+					;
+
+	400121'				atntrp:				;signal an attention interrupt
+	400121'	124 00 0 14 000011 		dmovem	r0,r0+regs^.regs(psa)^
+	400122'	120 02 0 14 000013 		dmove	r2,r2+regs^.regs(psa)^
+	400123'	120 04 0 14 000015 		dmove	r4,r4+regs^.regs(psa)^
+	400124'	200 00 0 14 000216 		move	r0,iaddr^.iaddr(psa)^
+						$errload (r1,$exatn,$none,$true)^
+	400125'	201 01 0 00 017000 		movei	r1,$errcode($exatn,$none,$true)^$exatn*2000+$true*1000+$none^^
+						$signal^
+	400126'	254 00 0 00 400053*		jrst	excpt.##^
+
+					;
+					; SEARCH called via JSP R5, returns:
+					;	+0 if no active attention handler found
+					;	+1 otherwise
+					;
+exatn - attention trap	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-34
+EXCEPT	MAC	23-May-71 22:31	
+
+
+			000002			base==r2	;base of current stack frame
+			000003			hbt==r3		;addr of current hbt
+			000004			hsb==r4		;addr of current hsb
+
+	400127'				search:
+	400127'	200 02 0 15 000042 		move	base,$base(pda)	;basis for current routine
+	400130'				newframe:
+	400130'	554 03 0 02 000003 		hlrz	hbt,$chbt(base)	;addr of current hbt
+	400131'	322 03 0 00 400142'		jumpe	hbt,nextsf	;if none, try previous stack frame
+	400132'				newhbt:
+	400132'	200 04 0 03 000001 		move	hsb,$hsboffset(hbt)
+	400133'	271 04 0 02 000000 		addi	hsb,0(base)	;addr of matching hsb
+	400134'	554 04 0 04 000000 		hlrz	hsb,$hsbflag(hsb);addr of exception block
+	400135'	322 04 0 00 400140'		jumpe	hsb,nxthbt	;try outer hbt if not active
+	400136'	306 04 0 00 000007 		cain	hsb,$exatn	;if for attentions then
+	400137'	254 00 0 05 000001 		jrst	1(r5)		;  do skip return to ignore
+	400140'				nxthbt:
+	400140'	550 03 0 03 000000 		hrrz	hbt,$hbtlink(hbt);check outer hbt
+	400141'	326 03 0 00 400132'		jumpn	hbt,newhbt
+	400142'				nextsf:
+	400142'	200 02 0 02 000001 		move	base,1(base)	;back up one stack frame
+	400143'	326 02 0 00 400130'		jumpn	base,newframe	;and check if not back to main
+	400144'	254 00 0 05 000000 		jrst	0(r5)		;else report no active handler
+
+						ife	$sys-$adp,<
+					sis.atn:
+						exp	-3
+						xwd	$icbatn,0
+						z	>
+
+						$xend	exatn,atninit^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400145
+PROGRAM BREAK IS 000000
+CPU TIME USED 01:34.066
+exatn - attention trap	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-35
+EXCEPT	MAC	23-May-71 22:31	
+
+
+48P CORE USED
+exatn - attention trap	MACRO %53A(1155) 18:31 29-Sep-82 Page S-18
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+ATN.AC		400054'	int	R4		000004	spd	$STDNU		000010	spd	
+ATN.TV		400115'	ext	R5		000005	spd	$SYS		000001	spd	
+ATN1		400064'		R6		000006	spd	$TRUE		000001	spd	
+ATN2		400072'		R7		000007	spd	$TYM		000001	spd	
+ATN3		400102'		RX.ATN		000000	ext	.AROVF		000104	spd	
+ATNINI		400000'		S.EXAT		000000	sin	.CANCO		000033	spd	
+ATNTRP		400121'		SEARCH		400127'		.CELLS		000001	spd	
+BASE		000002	spd	SETTR1	047000	777740		.EXLOC		000047	spd	
+DISMIS	047000	777755		SETTR2	047000	777737		.IADDR		000216	spd	
+ESCAP.		400015'	int	TINASS	047000	777736		.INTMA		000000	spd	
+ESCAP1		400024'		TOP		000017	spd	.JBCST		400120'	ext	
+ESCTRP		400043'		X.EXAT		000000	sin	.JBSA		400055'	ext	
+EX.ATN		000000*	sen	$ABSLO		000000	spd	.OTH16		000034	spd	
+EX.SET		000000	ext	$ADP		000000	spd	.OTHBT		000035	spd	
+EXCPT.		400126'	ext	$BASE		000042	spd	.OTHCE		000036	spd	
+EXIT	047000	000012		$CHBT		000003	spd	.REGS		000011	spd	
+HBT		000003	spd	$DEBIN		000040	spd	.RESIG		000031	spd	
+HSB		000004	spd	$EXATN		000007	spd	.STKOV		000106	spd	
+I.EXAT		400000'	sin	$EXCEP		000036	spd	.TMPAD		000041	spd	
+IGNOR.		400013'		$FALSE		000000	spd	.VECTO		000110	spd	
+INTACT	047000	777743		$HBTEN		000002	spd	.XPAGE		000040	spd	
+INTADR	047000	777745		$HBTLI		000000	spd	.XSTMT		000037	spd	
+INTASS	047000	777742		$HBTVA		000000	spd	
+INTENB	047000	777744		$HILOC		400000	spd	
+M7.0		000000	ext	$HSBFL		000000	spd	
+NEWFRA		400130'		$HSBOF		000001	spd	
+NEWHBT		400132'		$HSBXA		000000	spd	
+NEXTSF		400142'		$HSBXB		000001	spd	
+NXTHBT		400140'		$LOC	777777	777777	spd	
+P.EXAT		000000	ext	$LOLOC		000000	spd	
+PDA		000015	spd	$MASKI		000000	spd	
+PSA		000014	spd	$MAXLO		000000	spd	
+R0		000000	spd	$MAXST		000217	spd	
+R1		000001	spd	$MAXTE		000000	spd	
+R10		000010	spd	$MISC		000016	spd	
+R11		000011	spd	$MXCH		000204	spd	
+R12		000012	spd	$NEEDP		000001	spd	
+R13		000013	spd	$NONE		000000	spd	
+R2		000002	spd	$STATS		000000	spd	
+R3		000003	spd	$STDMA		000100	spd	
+escap	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-36
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						$module	escap^
+						entry	escap.
+
+					;
+					; Default escape check after runtime $UNMASKS.  Merely returns
+					; to the runtime.
+					;
+
+	400000'	263 17 0 00 000000 	escap.:	popj	top,
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400001
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:03.335
+
+48P CORE USED
+escap	MACRO %53A(1155) 18:31 29-Sep-82 Page S-19
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+ESCAP.		400000'	ent	
+TOP		000017	spd	
+$ABSLO		000000	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+
+signal	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-37
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						$module	signal^
+						$excpt	^	;define it all
+						entry	signl.
+						extern	m.user
+
+	400000'				signl.:
+	400000'	350 01 0 17 000000 		aos	r1,0(top)	;bump return address
+						$getpsa	exception^
+	400001'	200 14 0 15 000036 		move	psa,$exception(pda)^
+	400002'	201 01 1 01 777777 		movei	r1,@-1(r1)	;get condition cell addr
+	400003'	242 01 0 00 000012 		lsh	r1,^d10		;form exception block
+	400004'	200 00 0 17 000000 		move	r0,0(top)
+						$rtsignal^
+	400005'	254 00 0 00 000000*		jrst	rtexc.##^
+
+						$xend	signal^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400006
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:38.355
+
+48P CORE USED
+signal	MACRO %53A(1155) 18:31 29-Sep-82 Page S-20
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+DISMIS	047000	777755		$LOC	777777	777777	spd	
+EX.SET		000000	ext	$LOLOC		000000	spd	
+INTACT	047000	777743		$MAXLO		000000	spd	
+INTADR	047000	777745		$MAXST		000217	spd	
+INTASS	047000	777742		$MAXTE		000000	spd	
+INTENB	047000	777744		$MXCH		000204	spd	
+M.USER		000000	ext	$NEEDP		000000	spd	
+PDA		000015	spd	$STATS		000000	spd	
+PSA		000014	spd	$STDMA		000100	spd	
+R0		000000	spd	$STDNU		000010	spd	
+R1		000001	spd	$SYS		000001	spd	
+R10		000010	spd	$TYM		000001	spd	
+R11		000011	spd	.AROVF		000104	spd	
+R12		000012	spd	.CANCO		000033	spd	
+R13		000013	spd	.CELLS		000001	spd	
+R2		000002	spd	.EXLOC		000047	spd	
+R3		000003	spd	.IADDR		000216	spd	
+R4		000004	spd	.INTMA		000000	spd	
+R5		000005	spd	.OTH16		000034	spd	
+R6		000006	spd	.OTHBT		000035	spd	
+R7		000007	spd	.OTHCE		000036	spd	
+RTEXC.		400005'	ext	.REGS		000011	spd	
+SETTR1	047000	777740		.RESIG		000031	spd	
+SETTR2	047000	777737		.STKOV		000106	spd	
+SIGNL.		400000'	ent	.TMPAD		000041	spd	
+TINASS	047000	777736		.VECTO		000110	spd	
+TOP		000017	spd	.XPAGE		000040	spd	
+$ABSLO		000000	spd	.XSTMT		000037	spd	
+$ADP		000000	spd	
+$CHBT		000003	spd	
+$EXCEP		000036	spd	
+$FALSE		000000	spd	
+$HBTEN		000002	spd	
+$HBTLI		000000	spd	
+$HBTVA		000000	spd	
+$HILOC		400000	spd	
+$HSBFL		000000	spd	
+$HSBOF		000001	spd	
+$HSBXA		000000	spd	
+$HSBXB		000001	spd	
+rsignal	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-38
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						$module	rsignal^
+						$excpt	^	;define it all
+						entry	rsgnl.
+						extern	m.user
+						extern	ex.act
+						$temp	rtemp,3		^;first word used in pushj to ex.act
+
+	400000'				rsgnl.:
+	400000'	260 17 0 00 000000*		pushj	top,ex.act	;get active hbt + its hsb
+	400001'	254 04 0 00 400001'		halt	.		;should not happen
+	400002'	550 02 0 02 000000 		hrrz	r2,$hbtlink(r2)	;back up one hbt
+	400003'	506 02 0 16 000003 		hrlm	r2,$chbt(basis)
+			000002			psa==r2			;change base reg temporarily
+						$getpsa	exception^
+	400004'	200 02 0 15 000036 		move	psa,$exception(pda)^
+	400005'	476 00 0 02 000033 		setom	cancontinue	^.cancontinue(psa)^;stay at dot if no handler found
+			000014			psa==pda-1
+	400006'	120 02 0 17 000002 		dmove	r2,1+rtemp^.rtemp(top)^
+						$rtsignal	^	;and do it
+	400007'	254 00 0 00 000000*		jrst	rtexc.##
+
+						$xend	rsignal^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400010
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:41.958
+
+48P CORE USED
+rsignal	MACRO %53A(1155) 18:31 29-Sep-82 Page S-21
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+BASIS		000016	spd	$HSBXA		000000	spd	
+DISMIS	047000	777755		$HSBXB		000001	spd	
+EX.ACT		400000'	ext	$LOC	777777	777777	spd	
+EX.SET		000000	ext	$LOLOC		000000	spd	
+INTACT	047000	777743		$MAXLO		000000	spd	
+INTADR	047000	777745		$MAXST		000217	spd	
+INTASS	047000	777742		$MAXTE		000003	spd	
+INTENB	047000	777744		$MXCH		000204	spd	
+M.USER		000000	ext	$NEEDP		000000	spd	
+PDA		000015	spd	$STATS		000000	spd	
+PSA		000014	spd	$STDMA		000100	spd	
+R0		000000	spd	$STDNU		000010	spd	
+R1		000001	spd	$SYS		000001	spd	
+R10		000010	spd	$TYM		000001	spd	
+R11		000011	spd	.AROVF		000104	spd	
+R12		000012	spd	.CANCO		000033	spd	
+R13		000013	spd	.CELLS		000001	spd	
+R2		000002	spd	.EXLOC		000047	spd	
+R3		000003	spd	.IADDR		000216	spd	
+R4		000004	spd	.INTMA		000000	spd	
+R5		000005	spd	.OTH16		000034	spd	
+R6		000006	spd	.OTHBT		000035	spd	
+R7		000007	spd	.OTHCE		000036	spd	
+RSGNL.		400000'	ent	.REGS		000011	spd	
+RTEXC.		400007'	ext	.RESIG		000031	spd	
+SETTR1	047000	777740		.RTEMP		000001	spd	
+SETTR2	047000	777737		.STKOV		000106	spd	
+TINASS	047000	777736		.TMPAD		000041	spd	
+TOP		000017	spd	.VECTO		000110	spd	
+$ABSLO		000000	spd	.XPAGE		000040	spd	
+$ADP		000000	spd	.XSTMT		000037	spd	
+$CHBT		000003	spd	
+$EXCEP		000036	spd	
+$FALSE		000000	spd	
+$HBTEN		000002	spd	
+$HBTLI		000000	spd	
+$HBTVA		000000	spd	
+$HILOC		400000	spd	
+$HSBFL		000000	spd	
+$HSBOF		000001	spd	
+M11	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-39
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exmth,$mthfn,Floating underflow)^
+	400000'	106 154 157 141 164 	>
+	400001'	151 156 147 040 165 
+	400002'	156 144 145 162 146 
+	400003'	154 157 167 000 000 
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400004
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:13.494
+
+48P CORE USED
+M11	MACRO %53A(1155) 18:31 29-Sep-82 Page S-22
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M1.1		400000'	ent	
+$ABSLO		000000	spd	
+$EXMTH		000001	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$MTHFN		000001	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+M12	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-40
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exmth,$mthfo,Floating overflow)^
+	400000'	106 154 157 141 164 
+	400001'	151 156 147 040 157 
+	400002'	166 145 162 146 154 
+	400003'	157 167 000 000 000 
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400004
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:12.844
+
+48P CORE USED
+M12	MACRO %53A(1155) 18:31 29-Sep-82 Page S-23
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M1.2		400000'	ent	
+$ABSLO		000000	spd	
+$EXMTH		000001	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$MTHFO		000002	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+M13	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-41
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exmth,$mthao,Arithmetic overflow)^
+	400000'	101 162 151 164 150 	/>
+	400001'	155 145 164 151 143 
+	400002'	040 157 166 145 162 
+	400003'	146 154 157 167 000 
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400004
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:12.908
+
+48P CORE USED
+M13	MACRO %53A(1155) 18:31 29-Sep-82 Page S-24
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M1.3		400000'	ent	
+$ABSLO		000000	spd	
+$EXMTH		000001	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$MTHAO		000003	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+M14	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-42
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exmth,$mthdz,Division by zero)^
+	400000'	104 151 166 151 163 	$errlabel($exmth,$mthdz)^$errname(M,\$exmth,\$mthdz,.)^M1.4^^:	asciz	/Division by zero/>
+	400001'	151 157 156 040 142 
+	400002'	171 040 172 145 162 
+	400003'	157 000 000 000 000 
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400004
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:12.504
+
+48P CORE USED
+M14	MACRO %53A(1155) 18:31 29-Sep-82 Page S-25
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M1.4		400000'	ent	
+$ABSLO		000000	spd	
+$EXMTH		000001	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$MTHDZ		000004	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+M15	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-43
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exmth,$mthas,Bad argument to ARCSIN)^
+	400000'	102 141 144 040 141 	SIN/>
+	400001'	162 147 165 155 145 
+	400002'	156 164 040 164 157 
+	400003'	040 101 122 103 123 
+	400004'	111 116 000 000 000 
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400005
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:17.056
+
+48P CORE USED
+M15	MACRO %53A(1155) 18:31 29-Sep-82 Page S-26
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M1.5		400000'	ent	
+$ABSLO		000000	spd	
+$EXMTH		000001	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$MTHAS		000005	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+M16	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-44
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exmth,$mthac,Bad argument to ARCCOS)^
+	400000'	102 141 144 040 141 	COS/>
+	400001'	162 147 165 155 145 
+	400002'	156 164 040 164 157 
+	400003'	040 101 122 103 103 
+	400004'	117 123 000 000 000 
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400005
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:12.561
+
+48P CORE USED
+M16	MACRO %53A(1155) 18:31 29-Sep-82 Page S-27
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M1.6		400000'	ent	
+$ABSLO		000000	spd	
+$EXMTH		000001	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$MTHAC		000006	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+M21	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-45
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exio,interr,IO_INTR Internal error in I-O system)^
+	400000'	111 117 137 111 116 	ror in I-O system/>
+	400001'	124 122 040 111 156 
+	400002'	164 145 162 156 141 
+	400003'	154 040 145 162 162 
+	400004'	157 162 040 151 156 
+	400005'	040 111 055 117 040 
+	400006'	163 171 163 164 145 
+	400007'	155 000 000 000 000 
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400010
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:12.828
+
+48P CORE USED
+M21	MACRO %53A(1155) 18:31 29-Sep-82 Page S-28
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+INTERR		000001		
+M2.1		400000'	ent	
+$ABSLO		000000	spd	
+$EXIO		000002	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+M22	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-46
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exio,rewerr,IO_REWR Rewrite required)^
+	400000'	111 117 137 122 105 	uired/>
+	400001'	127 122 040 122 145 
+	400002'	167 162 151 164 145 
+	400003'	040 162 145 161 165 
+	400004'	151 162 145 144 000 
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400005
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:12.770
+
+48P CORE USED
+M22	MACRO %53A(1155) 18:31 29-Sep-82 Page S-29
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M2.2		400000'	ent	
+REWERR		000002		
+$ABSLO		000000	spd	
+$EXIO		000002	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+M23	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-47
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exio,eoferr,IO_EOF Read beyond EOF)^
+	400000'	111 117 137 105 117 	EOF/>
+	400001'	106 040 122 145 141 
+	400002'	144 040 142 145 171 
+	400003'	157 156 144 040 105 
+	400004'	117 106 000 000 000 
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400005
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:16.502
+
+48P CORE USED
+M23	MACRO %53A(1155) 18:31 29-Sep-82 Page S-30
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+EOFERR		000003		
+M2.3		400000'	ent	
+$ABSLO		000000	spd	
+$EXIO		000002	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+M24	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-48
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exio,outerr,IO_OUTF Output failure)^
+	400000'	111 117 137 117 125 	ure/>
+	400001'	124 106 040 117 165 
+	400002'	164 160 165 164 040 
+	400003'	146 141 151 154 165 
+	400004'	162 145 000 000 000 
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400005
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:13.675
+
+48P CORE USED
+M24	MACRO %53A(1155) 18:31 29-Sep-82 Page S-31
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M2.4		400000'	ent	
+OUTERR		000004		
+$ABSLO		000000	spd	
+$EXIO		000002	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+M25	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-49
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exio,inpopn,IO_INPF Input failure)^
+	400000'	111 117 137 111 116 	re/>
+	400001'	120 106 040 111 156 
+	400002'	160 165 164 040 146 
+	400003'	141 151 154 165 162 
+	400004'	145 000 000 000 000 
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400005
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:12.352
+
+48P CORE USED
+M25	MACRO %53A(1155) 18:31 29-Sep-82 Page S-32
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+INPOPN		000005		
+M2.5		400000'	ent	
+$ABSLO		000000	spd	
+$EXIO		000002	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+M26	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-50
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exio,ranerr,IO_SEEK Non-random file)^
+	400000'	111 117 137 123 105 	file/>
+	400001'	105 113 040 116 157 
+	400002'	156 055 162 141 156 
+	400003'	144 157 155 040 146 
+	400004'	151 154 145 000 000 
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400005
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:12.696
+
+48P CORE USED
+M26	MACRO %53A(1155) 18:31 29-Sep-82 Page S-33
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M2.6		400000'	ent	
+RANERR		000006		
+$ABSLO		000000	spd	
+$EXIO		000002	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+M27	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-51
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exio,illcur,IO_ILLC Non-positive cursor value)^
+	400000'	111 117 137 111 114 	e cursor value/>
+	400001'	114 103 040 116 157 
+	400002'	156 055 160 157 163 
+	400003'	151 164 151 166 145 
+	400004'	040 143 165 162 163 
+	400005'	157 162 040 166 141 
+	400006'	154 165 145 000 000 
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400007
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:18.204
+
+48P CORE USED
+M27	MACRO %53A(1155) 18:31 29-Sep-82 Page S-34
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+ILLCUR		000007		
+M2.7		400000'	ent	
+$ABSLO		000000	spd	
+$EXIO		000002	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+M210	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-52
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exio,emperr,IO_NEMP Can't EMPTY file)^
+	400000'	111 117 137 116 105 	 file/>
+	400001'	115 120 040 103 141 
+	400002'	156 047 164 040 105 
+	400003'	115 120 124 131 040 
+	400004'	146 151 154 145 000 
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400005
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:13.609
+
+48P CORE USED
+M210	MACRO %53A(1155) 18:31 29-Sep-82 Page S-35
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+EMPERR		000010		
+M2.10		400000'	ent	
+$ABSLO		000000	spd	
+$EXIO		000002	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+M211	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-53
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exio,opnerr,IO_OPNF File var not assoc'd)^
+	400000'	111 117 137 117 120 	t assoc'd/>
+	400001'	116 106 040 106 151 
+	400002'	154 145 040 166 141 
+	400003'	162 040 156 157 164 
+	400004'	040 141 163 163 157 
+	400005'	143 047 144 000 000 
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400006
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:12.582
+
+48P CORE USED
+M211	MACRO %53A(1155) 18:31 29-Sep-82 Page S-36
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M2.11		400000'	ent	
+OPNERR		000011		
+$ABSLO		000000	spd	
+$EXIO		000002	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+M31	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-54
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exusr,$usras,Assertion failure)^
+	400000'	101 163 163 145 162 
+	400001'	164 151 157 156 040 
+	400002'	146 141 151 154 165 
+	400003'	162 145 000 000 000 
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400004
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:12.075
+
+48P CORE USED
+M31	MACRO %53A(1155) 18:31 29-Sep-82 Page S-37
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M3.1		400000'	ent	
+$ABSLO		000000	spd	
+$EXUSR		000003	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+$USRAS		000001	spd	
+
+M32	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-55
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exusr,$usrcx,Case index out of bounds)^
+	400000'	103 141 163 145 040 	ounds/>
+	400001'	151 156 144 145 170 
+	400002'	040 157 165 164 040 
+	400003'	157 146 040 142 157 
+	400004'	165 156 144 163 000 
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400005
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:18.027
+
+48P CORE USED
+M32	MACRO %53A(1155) 18:31 29-Sep-82 Page S-38
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M3.2		400000'	ent	
+$ABSLO		000000	spd	
+$EXUSR		000003	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+$USRCX		000002	spd	
+
+M33	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-56
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exusr,$usrag,Aggregate assignment incompatibility)^
+	400000'	101 147 147 162 145 	t incompatibility/>
+	400001'	147 141 164 145 040 
+	400002'	141 163 163 151 147 
+	400003'	156 155 145 156 164 
+	400004'	040 151 156 143 157 
+	400005'	155 160 141 164 151 
+	400006'	142 151 154 151 164 
+	400007'	171 000 000 000 000 
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400010
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:12.621
+
+48P CORE USED
+M33	MACRO %53A(1155) 18:31 29-Sep-82 Page S-39
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M3.3		400000'	ent	
+$ABSLO		000000	spd	
+$EXUSR		000003	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+$USRAG		000003	spd	
+
+M34	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-57
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exusr,$usrnl,NIL or uninitialized file variable)^
+	400000'	116 111 114 040 157 	d file variable/>
+	400001'	162 040 165 156 151 
+	400002'	156 151 164 151 141 
+	400003'	154 151 172 145 144 
+	400004'	040 146 151 154 145 
+	400005'	040 166 141 162 151 
+	400006'	141 142 154 145 000 
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400007
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:12.591
+
+48P CORE USED
+M34	MACRO %53A(1155) 18:31 29-Sep-82 Page S-40
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M3.4		400000'	ent	
+$ABSLO		000000	spd	
+$EXUSR		000003	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+$USRNL		000004	spd	
+
+M35	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-58
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exusr,$usrpt,NIL or uninitialized pointer)^
+	400000'	116 111 114 040 157 	d pointer/>
+	400001'	162 040 165 156 151 
+	400002'	156 151 164 151 141 
+	400003'	154 151 172 145 144 
+	400004'	040 160 157 151 156 
+	400005'	164 145 162 000 000 
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400006
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:13.860
+
+48P CORE USED
+M35	MACRO %53A(1155) 18:31 29-Sep-82 Page S-41
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M3.5		400000'	ent	
+$ABSLO		000000	spd	
+$EXUSR		000003	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+$USRPT		000005	spd	
+
+M36	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-59
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exusr,$usrss,Substring index or length out of bounds)^
+	400000'	123 165 142 163 164 	length out of bounds/>
+	400001'	162 151 156 147 040 
+	400002'	151 156 144 145 170 
+	400003'	040 157 162 040 154 
+	400004'	145 156 147 164 150 
+	400005'	040 157 165 164 040 
+	400006'	157 146 040 142 157 
+	400007'	165 156 144 163 000 
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400010
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:13.767
+
+48P CORE USED
+M36	MACRO %53A(1155) 18:31 29-Sep-82 Page S-42
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M3.6		400000'	ent	
+$ABSLO		000000	spd	
+$EXUSR		000003	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+$USRSS		000006	spd	
+
+M37	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-60
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exusr,$usrsr,Subscript out of bounds)^
+	400000'	123 165 142 163 143 	unds/>
+	400001'	162 151 160 164 040 
+	400002'	157 165 164 040 157 
+	400003'	146 040 142 157 165 
+	400004'	156 144 163 000 000 
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400005
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:12.492
+
+48P CORE USED
+M37	MACRO %53A(1155) 18:31 29-Sep-82 Page S-43
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M3.7		400000'	ent	
+$ABSLO		000000	spd	
+$EXUSR		000003	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+$USRSR		000007	spd	
+
+M310	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-61
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exusr,$usrsc,Scalar out of range)^
+	400000'	123 143 141 154 141 	/>
+	400001'	162 040 157 165 164 
+	400002'	040 157 146 040 162 
+	400003'	141 156 147 145 000 
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400004
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:12.208
+
+48P CORE USED
+M310	MACRO %53A(1155) 18:31 29-Sep-82 Page S-44
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M3.10		400000'	ent	
+$ABSLO		000000	spd	
+$EXUSR		000003	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+$USRSC		000010	spd	
+
+M311	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-62
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exusr,$usrfl,Reference to a field not selected by current tag field val
+					ue)^
+	400000'	122 145 146 145 162 	d not selected by current tag field value/>
+	400001'	145 156 143 145 040 
+	400002'	164 157 040 141 040 
+	400003'	146 151 145 154 144 
+	400004'	040 156 157 164 040 
+	400005'	163 145 154 145 143 
+	400006'	164 145 144 040 142 
+	400007'	171 040 143 165 162 
+	400010'	162 145 156 164 040 
+	400011'	164 141 147 040 146 
+	400012'	151 145 154 144 040 
+	400013'	166 141 154 165 145 
+	400014'	000 000 000 000 000 
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400015
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:13.844
+
+48P CORE USED
+M311	MACRO %53A(1155) 18:31 29-Sep-82 Page S-45
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M3.11		400000'	ent	
+$ABSLO		000000	spd	
+$EXUSR		000003	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+$USRFL		000011	spd	
+
+M40	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-63
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exsto,$none,Heap overflow)^
+	400000'	110 145 141 160 040 	$errlabel($exsto,$none)^$errname(M,\$exsto,\$none,.)^M4.0^^:	asciz	/Heap overflow/>
+	400001'	157 166 145 162 146 
+	400002'	154 157 167 000 000 
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400003
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:11.541
+
+48P CORE USED
+M40	MACRO %53A(1155) 18:31 29-Sep-82 Page S-46
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M4.0		400000'	ent	
+$ABSLO		000000	spd	
+$EXSTO		000004	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$NONE		000000	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+M50	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-64
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exstk,$none,Stack overflow)^
+	400000'	123 164 141 143 153 	$errlabel($exstk,$none)^$errname(M,\$exstk,\$none,.)^M5.0^^:	asciz	/Stack overflow/>
+	400001'	040 157 166 145 162 
+	400002'	146 154 157 167 000 
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400003
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:11.555
+
+48P CORE USED
+M50	MACRO %53A(1155) 18:31 29-Sep-82 Page S-47
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M5.0		400000'	ent	
+$ABSLO		000000	spd	
+$EXSTK		000005	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$NONE		000000	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+M61	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-65
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exspc,$spcmr,Illegal memory reference)^
+	400000'	111 154 154 145 147 	rence/>
+	400001'	141 154 040 155 145 
+	400002'	155 157 162 171 040 
+	400003'	162 145 146 145 162 
+	400004'	145 156 143 145 000 
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400005
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:12.522
+
+48P CORE USED
+M61	MACRO %53A(1155) 18:31 29-Sep-82 Page S-48
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M6.1		400000'	ent	
+$ABSLO		000000	spd	
+$EXSPC		000006	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$SPCMR		000001	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+M62	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-66
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exspc,$spciu,Illegal instruction)^
+	400000'	111 154 154 145 147 	/>
+	400001'	141 154 040 151 156 
+	400002'	163 164 162 165 143 
+	400003'	164 151 157 156 000 
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400004
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:12.114
+
+48P CORE USED
+M62	MACRO %53A(1155) 18:31 29-Sep-82 Page S-49
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M6.2		400000'	ent	
+$ABSLO		000000	spd	
+$EXSPC		000006	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$SPCIU		000002	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+M63	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-67
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exspc,$spcnn,Negative block size in NEW)^
+	400000'	116 145 147 141 164 	 in NEW/>
+	400001'	151 166 145 040 142 
+	400002'	154 157 143 153 040 
+	400003'	163 151 172 145 040 
+	400004'	151 156 040 116 105 
+	400005'	127 000 000 000 000 
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400006
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:12.857
+
+48P CORE USED
+M63	MACRO %53A(1155) 18:31 29-Sep-82 Page S-50
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M6.3		400000'	ent	
+$ABSLO		000000	spd	
+$EXSPC		000006	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$SPCNN		000003	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+M64	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-68
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exspc,$spcbp,Bad pointer in DISPOSE)^
+	400000'	102 141 144 040 160 	OSE/>
+	400001'	157 151 156 164 145 
+	400002'	162 040 151 156 040 
+	400003'	104 111 123 120 117 
+	400004'	123 105 000 000 000 
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400005
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:13.092
+
+48P CORE USED
+M64	MACRO %53A(1155) 18:31 29-Sep-82 Page S-51
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M6.4		400000'	ent	
+$ABSLO		000000	spd	
+$EXSPC		000006	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$SPCBP		000004	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+M65	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-69
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exspc,$spcff,Attempt to free freed block)^
+	400000'	101 164 164 145 155 	ed block/>
+	400001'	160 164 040 164 157 
+	400002'	040 146 162 145 145 
+	400003'	040 146 162 145 145 
+	400004'	144 040 142 154 157 
+	400005'	143 153 000 000 000 
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400006
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:13.117
+
+48P CORE USED
+M65	MACRO %53A(1155) 18:31 29-Sep-82 Page S-52
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M6.5		400000'	ent	
+$ABSLO		000000	spd	
+$EXSPC		000006	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$SPCFF		000005	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+M66	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-70
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exspc,$spcrh,Invalid heap pointer in RELEASE)^
+	400000'	111 156 166 141 154 	r in RELEASE/>
+	400001'	151 144 040 150 145 
+	400002'	141 160 040 160 157 
+	400003'	151 156 164 145 162 
+	400004'	040 151 156 040 122 
+	400005'	105 114 105 101 123 
+	400006'	105 000 000 000 000 
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400007
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:12.530
+
+48P CORE USED
+M66	MACRO %53A(1155) 18:31 29-Sep-82 Page S-53
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M6.6		400000'	ent	
+$ABSLO		000000	spd	
+$EXSPC		000006	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$SPCRH		000006	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+M70	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-71
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exatn,$none,Attention)^
+	400000'	101 164 164 145 156 	$errlabel($exatn,$none)^$errname(M,\$exatn,\$none,.)^M7.0^^:	asciz	/Attention/>
+	400001'	164 151 157 156 000 
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400002
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:11.538
+
+48P CORE USED
+M70	MACRO %53A(1155) 18:31 29-Sep-82 Page S-54
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M7.0		400000'	ent	
+$ABSLO		000000	spd	
+$EXATN		000007	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$NONE		000000	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+m.user	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-72
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						$module	m.user^
+						entry	m.user
+	400000'	125 163 145 162 055 	m.user:	asciz	/User-signalled condition/
+	400001'	163 151 147 156 141 
+	400002'	154 154 145 144 040 
+	400003'	143 157 156 144 151 
+	400004'	164 151 157 156 000 
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400005
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:02.614
+
+48P CORE USED
+m.user	MACRO %53A(1155) 18:31 29-Sep-82 Page S-55
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M.USER		400000'	ent	
+$ABSLO		000000	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+
+exinit	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-73
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						$module	exinit^
+						$excpt	^	;define it all
+						entry	ex.set		;establish handler clause
+						entry	ex.rst		;re-establish handler clause
+
+					;
+					; EXINIT allocates the exception handlers' PSA and initializes
+					; the system.
+
+
+					;
+					; EX.RST is called by the compiler generated code to update
+					; the current handler branch table address in the local stack frame.
+					;
+
+	400000'				ex.rst:
+	400000'	350 01 0 17 000000 		aos	r1,0(top)	;bump return address
+	400001'	201 01 1 01 777777 		movei	r1,@-1(r1)	;get addr of HBT
+	400002'	506 01 0 16 000003 		hrlm	r1,$chbt(basis)	;update current hbt address
+	400003'	263 17 0 00 000000 		popj	top,
+
+	400004'				ex.set:				;push a new HBT
+	400004'	350 01 0 17 000000 		aos	r1,0(top)	;bump return address
+	400005'	201 01 1 01 777777 		movei	r1,@-1(r1)	;get addr of HBT
+	400006'	506 01 0 16 000003 		hrlm	r1,$chbt(basis)	;put addr in stack frame cell
+	400007'	200 01 0 01 000001 		move	r1,$hsboffset(r1);get HSB offset in stack frame
+	400010'	271 01 0 16 000000 		addi	r1,0(basis)
+	400011'	402 00 0 01 000000 		setzm	$hsbflag(r1)	;flag inactive
+	400012'	263 17 0 00 000000 		popj	top,
+
+	400013'	201 01 0 14 000110 	exini:	movei	r1,vector	^.vector(psa)^;addr of trap vector
+
+						ife	$sys-$tym,<
+	400014'	505 01 0 00 000002 		hrli	r1,2		;enable it
+	400015'	047 01 0 00 777745 		intadr	r1,>
+
+						ife	$sys-$adp,<
+						piini.	r1,>
+
+exinit	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-74
+EXCEPT	MAC	23-May-71 22:31	
+
+	400016'	254 04 0 00 400016'		halt	.		;what?
+	400017'	201 01 0 00 000204 		movei	r1,$mxch
+	400020'	202 01 0 14 000047 		movem	r1,exloc	^.exloc(psa)^;max len of flex string
+	400021'	263 17 0 00 000000 		popj	top,
+
+						$end	exinit,exini^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400022
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:42.335
+
+48P CORE USED
+exinit	MACRO %53A(1155) 18:31 29-Sep-82 Page S-56
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+BASIS		000016	spd	$HSBXA		000000	spd	
+DISMIS	047000	777755		$HSBXB		000001	spd	
+EX.RST		400000'	ent	$LOC	777777	777777	spd	
+EX.SET		400004'	ent	$LOLOC		000000	spd	
+EXINI		400013'		$MAXLO		000000	spd	
+I.EXIN		400013'	sin	$MAXST		000217	spd	
+INTACT	047000	777743		$MAXTE		000000	spd	
+INTADR	047000	777745		$MXCH		000204	spd	
+INTASS	047000	777742		$NEEDP		000001	spd	
+INTENB	047000	777744		$STATS		000000	spd	
+P.EXIN		000000	ext	$STDMA		000100	spd	
+PSA		000014	spd	$STDNU		000010	spd	
+R0		000000	spd	$SYS		000001	spd	
+R1		000001	spd	$TRUE		000001	spd	
+R10		000010	spd	$TYM		000001	spd	
+R11		000011	spd	.AROVF		000104	spd	
+R12		000012	spd	.CANCO		000033	spd	
+R13		000013	spd	.CELLS		000001	spd	
+R2		000002	spd	.EXLOC		000047	spd	
+R3		000003	spd	.IADDR		000216	spd	
+R4		000004	spd	.INTMA		000000	spd	
+R5		000005	spd	.OTH16		000034	spd	
+R6		000006	spd	.OTHBT		000035	spd	
+R7		000007	spd	.OTHCE		000036	spd	
+S.EXIN		000217	sin	.REGS		000011	spd	
+SETTR1	047000	777740		.RESIG		000031	spd	
+SETTR2	047000	777737		.STKOV		000106	spd	
+TINASS	047000	777736		.TMPAD		000041	spd	
+TOP		000017	spd	.VECTO		000110	spd	
+X.EXIN		000000	sin	.XPAGE		000040	spd	
+$ABSLO		000000	spd	.XSTMT		000037	spd	
+$ADP		000000	spd	
+$CHBT		000003	spd	
+$FALSE		000000	spd	
+$HBTEN		000002	spd	
+$HBTLI		000000	spd	
+$HBTVA		000000	spd	
+$HILOC		400000	spd	
+$HSBFL		000000	spd	
+$HSBOF		000001	spd	
+excpt - exception manager	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-75
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$module	excpt - exception manager^
+						$excpt	^	;define it all
+
+		777777	777776			$allconditions==-2
+		777777	777777			$othrs==-1
+			000000			cstmt==0
+
+						entry	excpt.
+						entry	ex.tbl
+						entry	rtexc.
+						intern	exc.ac
+						extern	exc.tv
+						extern	atn.tv
+						extern	atn.ac
+						extern	twait.
+
+					;
+					; RTEXC. is just a prelude to EXCPT. and is reached when the
+					; runtime has detected and signalled an error and the PSA has
+					; not yet been set up for the exception manager.
+					;
+
+	400000'				rtexc.:
+	400000'	202 14 0 15 000016 		movem	psa,$misc(pda)
+						$getpsa	exception^
+	400001'	200 14 0 15 000036 		move	psa,$exception(pda)^
+	400002'	202 02 0 14 000013 		movem	r2,r2+regs^.regs(psa)^
+	400003'	200 02 0 15 000016 		move	r2,$misc(pda)
+	400004'	202 02 0 14 000025 		movem	r2,psa+regs^.regs(psa)^
+	400005'	202 15 0 14 000026 		movem	pda,pda+regs^.regs(psa)^
+	400006'	200 02 0 14 000013 		move	r2,r2+regs^.regs(psa)^
+
+					;
+					; EXCPT. is the exception manager which searches the active
+					; handler tables and fires up the appropriate handler, if any,
+					; for this condition.  It receives:
+					;
+					;  (r0) = exception address (e. g., addr of ill mem ref)
+excpt - exception manager	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-76
+EXCEPT	MAC	23-May-71 22:31	
+
+					;  (r1) = exception block, with:
+					;	bits  0..25 = condition cell address
+					;	bit	 26 = "can continue" flag
+					;	bits 27..35 = subcondition code
+					;
+					; R0, r1, psa and pda regs have been saved and the psa and pda
+					; regs set up prior to this point.  All other registers are saved
+					; as necessary.
+					;
+	400007'				excpt.:
+	400007'	476 00 0 15 000041 		setom	$excin(pda)	;flag manager running
+	400010'	350 00 0 14 000033 		aos	cancontinue	^.cancontinue(psa)^;if .gt. 0 on reaching the dot, then
+									;not reached through resignal and
+									;may be able to continue
+	400011'	124 00 0 14 000031 		dmovem	r0,resignal	^.resignal(psa)^;save for next time
+	400012'	124 02 0 14 000013 		dmovem	r2,r2+regs	^.regs(psa)^;free a couple of work registers
+	400013'	135 02 0 00 400472'		ldb	r2,[point 26,r1,25];get the condition cell address
+	400014'	301 02 0 00 000100 		cail	r2,$stdmax	;track down actual cell address
+	400015'	550 02 0 02 000000 		hrrz	r2,0(r2)
+	400016'	301 02 0 00 000100 		cail	r2,$stdmax	;if belongs to user then
+	400017'	550 02 0 02 000000 		hrrz	r2,0(r2)	;always indirect again
+	400020'	301 02 0 00 000100 		cail	r2,$stdmax	;and perhaps again if overlaid
+	400021'	550 02 0 02 000000 		hrrz	r2,0(r2)
+	400022'	301 02 0 00 000100 		cail	r2,$stdmax
+	400023'	254 00 0 00 400043'		jrst	notmasked	;user exceptions are never masked
+	400024'	271 02 0 14 000001 		addi	r2,cells	^.cells(psa)^;addr of cell in PSA
+	400025'	554 03 0 02 000000 		hlrz	r3,0(r2)	;get masked count
+	400026'	322 03 0 00 400042'		jumpe	r3,stdnotmasked
+	400027'	201 03 0 00 200000 		movei	r3,200000
+	400030'	436 03 0 02 000000 		iorm	r3,0(r2)	;set pending bit
+	400031'	137 01 0 00 400473'		dpb	r1,[point 16,0(r2),35];save subcondition code for unmask
+	400032'	552 00 0 00 000000*		hrrzm	r0,.jbcst##	;temp
+	400033'	120 00 0 14 000011 		dmove	r0,r0+regs^.regs(psa)^
+	400034'	201 02 0 00 000000*		movei	r2,atn.tv
+
+						ife	$sys-$tym,<
+	400035'	202 02 0 14 000111 		movem	r2,1+vector>	^.vector(psa)^;reenable attention handler,
+									;in case suppressed
+
+						ife	$sys-$adp,<
+excpt - exception manager	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-77
+EXCEPT	MAC	23-May-71 22:31	
+
+						movem	r2,$newpc+$icbatn+vector>
+
+	400036'	120 02 0 14 000013 		dmove	r2,r2+regs^.regs(psa)^
+	400037'	402 00 0 15 000041 		setzm	$excin(pda)	;flag manager done
+	400040'	120 14 0 14 000025 		dmove	psa,psa+regs^.regs(psa)^
+	400041'	254 00 1 00 400032*		jrst	@.jbcst		;continue
+
+	400042'				stdnotmasked:
+	400042'	275 02 0 14 000001 		subi	r2,cells	^.cells(psa)^;keep original cell addr for std condition
+	400043'				notmasked:	;must search for a handler
+	400043'	124 04 0 14 000015 		dmovem	r4,r4+regs^.regs(psa)^
+	400044'	124 06 0 14 000017 		dmovem	r6,r6+regs^.regs(psa)^
+	400045'	200 03 0 15 000042 		move	r3,$base(pda)	;get current stack frame pointer
+	400046'	402 00 0 14 000034 		setzm	oth16	^.oth16(psa)^	;flag no OTHERS handler yet encountered
+
+					;
+					; Main search loop:
+					;    r2 is condition cell addr
+					;    r3 is current stack frame addr
+					;    r4 is current handler branch table addr
+					;
+
+			000002			ccell==r2
+			000003			base==r3
+			000004			hbt==r4
+
+	400047'				getchb:
+	400047'	554 04 0 03 000003 		hlrz	hbt,$chbt(base)	;get current handler block addr
+	400050'	322 04 0 00 400103'		jumpe	hbt,nextsf	;if none, back one stack frame
+
+					;
+					; Have a handler branch table.  Search it for:
+					;   (1) - an others handler.  Mark it if first seen.
+					;   (2) - an actual handler.  Jump out and do it
+					;   (3) - an ALLCONDITIONS handler.  Same as (2).
+					;
+					; Use registers:
+					;   r5 as addr of current entry in handler branch table
+					;   r6 as condition cell addr from handler branch table
+					;   r7 as handler address for that cell, if necessary.
+excpt - exception manager	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-78
+EXCEPT	MAC	23-May-71 22:31	
+
+					;
+
+			000005			c.hbt==r5
+			000005			c.hsb==r5
+			000006			c.cell==r6
+			000007			h.addr==r7
+
+	400051'				chbsrc:		;search current handler block
+	400051'	200 05 0 04 000001 		move	c.hsb,$hsboffset(hbt)
+	400052'	271 05 0 03 000000 		addi	c.hsb,0(base)	;now addr of HSB
+	400053'	332 00 0 05 000000 		skipe	$hsbflag(c.hsb)	;if already activated
+	400054'	254 00 0 00 400101'		jrst	nxthbt		;then skip it
+	400055'	201 05 0 04 000002 		movei	c.hbt,$hbtentries(hbt);addr of first entry in block
+	400056'				tblchk:
+	400056'	554 06 0 05 000000 		hlrz	c.cell,0(c.hbt)	;get cell addr
+	400057'	306 06 0 00 777777 		cain	c.cell,$othrs	;if others, may be first seen
+	400060'	254 00 0 00 400073'		jrst	is.others
+	400061'	306 06 0 00 777776 		cain	c.cell,$allconditions
+	400062'	254 00 0 00 400106'		jrst	hdrfound	;allconditions gets them all
+	400063'	550 06 0 06 000000 		hrrz	c.cell,0(c.cell);always indirect once
+	400064'	301 06 0 00 000100 		cail	c.cell,$stdmax	;if not standard then
+	400065'	550 06 0 06 000000 		hrrz	c.cell,0(c.cell);  always indirect again
+	400066'	301 06 0 00 000100 		cail	c.cell,$stdmax	;and perhaps again in case overlaid
+	400067'	550 06 0 06 000000 		hrrz	c.cell,0(c.cell)
+	400070'	316 06 0 00 000002 		camn	c.cell,ccell	;if same condition
+	400071'	254 00 0 00 400106'		jrst	hdrfound	;  then done
+	400072'	344 05 0 00 400056'		aoja	c.hbt,tblchk	;  else continue search of table
+	400073'				is.others:
+	400073'	550 07 0 05 000000 		hrrz	h.addr,0(c.hbt)	;get the others handler addr
+	400074'	322 07 0 00 400101'		jumpe	h.addr,nxthbt	;if zero, end of this handler block
+	400075'	332 00 0 14 000034 		skipe	oth16	^.oth16(psa)^	;if first "others" seen
+	400076'	254 00 0 00 400101'		jrst	nxthbt
+	400077'	124 03 0 14 000034 		dmovem	base,oth16	^.oth16(psa)^;then mark its place
+	400100'	202 05 0 14 000036 		movem	c.hbt,othce^.othce(psa)^
+	400101'				nxthbt:
+	400101'	550 04 0 04 000000 		hrrz	hbt,$hbtlink(hbt);back to previous handler block
+	400102'	326 04 0 00 400051'		jumpn	hbt,chbsrc	;if have one, search it
+	400103'				nextsf:
+	400103'	200 03 0 03 000001 		move	base,1(base)	;back up one frame
+	400104'	322 03 0 00 400271'		jumpe	base,gotodot	;end of stack, exit to monitor
+excpt - exception manager	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-79
+EXCEPT	MAC	23-May-71 22:31	
+
+	400105'	254 00 0 00 400047'		jrst	getchb		;search this frame
+
+	400106'				hdrfound:		;here if handler or allconditions handler found
+
+	400106'	336 00 0 14 000034 		skipn	oth16	^.oth16(psa)^	;if an "others" seen, then
+	400107'	254 00 0 00 400112'		jrst	dohdr
+	400110'	120 03 0 14 000034 		dmove	base,oth16	^.oth16(psa)^;restore state for the others handler
+	400111'	200 05 0 14 000036 		move	c.hbt,othce^.othce(psa)^
+
+	400112'				dohdr:
+	400112'	506 04 0 03 000003 		hrlm	hbt,$chbt(base)	;new hbt
+
+					;
+					; Store the required info in the HSB for the handler clause.
+					;
+
+	400113'	200 02 0 04 000001 		move	ccell,$hsboffset(hbt)
+	400114'	271 02 0 03 000000 		addi	ccell,0(base)	;now addr of HSB
+	400115'	202 01 0 02 000001 		movem	r1,$hsbxb(ccell);and save exception block
+	400116'	135 01 0 00 400472'		ldb	r1,[point 26,r1,25];get condition cell address
+	400117'	505 00 0 01 000000 		hrli	r0,0(r1)	;keep around for attention handler
+	400120'	202 00 0 02 000000 		movem	r0,$hsbxaddr(ccell);flags the handler active
+	400121'	550 00 0 05 000000 		hrrz	r0,0(c.hbt)	;handler address
+	400122'	554 01 0 04 000000 		hlrz	r1,$hbtva(hbt)	;header invocation address
+					;
+					; Set up string describing location of exception
+					;
+
+			000002			ch==r2		;char to be added to strng
+			000004			strbp==r4	;byte pointer to expanded string
+			000005			curlen==r5	;current length of that string
+			000006			clink==r6	;JSP link register to ch output routine
+			000007			slink==r7	;JSP link register to other string output routines
+			000010			slen==r10	;string lengths
+			000011			sbp==r11	;string byte pointers
+			000012			trace==r12	;addr of trace block
+			000017			temp==top	;just a temp, here
+			000013			addr==r13	;for octal address output
+			000016			num==basis	;for decimal number output
+			000016			modx50==basis	;for modname radix-50 output
+excpt - exception manager	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-80
+EXCEPT	MAC	23-May-71 22:31	
+
+			000013			stmtx==r13	;addr of cstmt
+			000013			pagex==r13	;addr of page block
+			000013			filex==r13	;addr of file block
+
+					;
+					; If reached through RESIGNAL then don't modify the description
+					; string.  It should still indicate the location of the exception,
+					; not the point of the resignal.
+					;
+
+	400123'	337 00 0 14 000033 		skipg	cancontinue^.cancontinue(psa)^
+	400124'	254 00 0 00 400212'		jrst	ck.ovl
+
+					;
+					; Initialize string byte pointer and length.
+					;
+
+	400125'	200 05 0 14 000047 		move	curlen,exloc	^.exloc(psa)^;count length downward from max to zero
+	400126'	201 04 0 14 000051 		movei	strbp,2+exloc^.exloc(psa)^
+	400127'	505 04 0 00 440700 		hrli	strbp,440700	;bptr to target string
+
+					;
+					; get addr of trace block first, to check if in debug mode.
+					;
+
+	400130'	550 12 0 16 000003 		hrrz	trace,3(basis)
+	400131'	550 17 0 12 000000 		hrrz	temp,0(trace)	;addr of trace block or nil
+	400132'	306 17 0 00 377777 		cain	temp,$nil
+	400133'	254 00 0 00 400234'		jrst	not.debug	;notrace = not debug
+	400134'	554 17 0 17 000001 		hlrz	temp,1(temp)	;addr of program block
+	400135'	336 00 0 17 000000 		skipn	0(temp)		;if zero then
+	400136'	254 00 0 00 400234'		jrst	not.debug	;  not debug
+
+					;
+					; Exception occurred in a debug module. Put out module
+					; name first.
+					;
+
+	400137'	200 16 0 17 777777 		move	modx50,-1(temp)	;radix-50 module name
+	400140'	265 07 0 00 400402'		jsp	slink,put.x50	;place in string
+excpt - exception manager	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-81
+EXCEPT	MAC	23-May-71 22:31	
+
+	400141'	201 02 0 00 000100 		movei	ch,"@"
+	400142'	265 06 0 00 400350'		jsp	clink,put.ch
+
+					;
+					; Now track down page and file blocks and save in PSA locs.
+					;
+
+	400143'	200 13 0 15 000011 		move	stmtx,$rtbase(pda)
+	400144'	550 13 0 13 000000 		hrrz	stmtx,0(stmtx)	;now have CSTMT
+	400145'	202 13 0 14 000037 		movem	stmtx,xstmt	^.xstmt(psa)^;which must be saved for line number
+	400146'				ck.stmt:
+	400146'	550 17 0 13 000000 		hrrz	temp,0(stmtx)	;get line number or bock_id
+	400147'	322 17 0 00 400152'		jumpe	temp,hv.page	;found page block when zero
+	400150'	554 13 0 13 000000 		hlrz	stmtx,0(stmtx)	;else check previous stmt block
+	400151'	254 00 0 00 400146'		jrst	ck.stmt
+	400152'				hv.page:
+	400152'	202 13 0 14 000040 		movem	pagex,xpage	^.xpage(psa)^;save addr of page block for subtitle
+	400153'				ck.page:
+	400153'	550 17 0 13 000000 		hrrz	temp,0(pagex)	;get block_id for page
+	400154'	326 17 0 00 400157'		jumpn	temp,hv.file	;have file block when non-zero
+	400155'	554 13 0 13 000000 		hlrz	pagex,0(pagex)	;else back one page
+	400156'	254 00 0 00 400153'		jrst	ck.page
+	400157'				hv.file:
+	400157'	550 17 0 13 000001 		hrrz	temp,1(filex)	;get file number
+	400160'	322 17 0 00 400166'		jumpe	temp,no.file	;suppress if zero
+	400161'	200 10 0 13 000002 		move	slen,2(filex)	;get length of file name
+	400162'	201 11 0 13 000003 		movei	sbp,3(filex)	;and addr of name
+	400163'	265 07 0 00 400353'		jsp	slink,put.str	;place it
+	400164'	201 02 0 00 000055 		movei	ch,"-"
+	400165'	265 06 0 00 400350'		jsp	clink,put.ch
+	400166'				no.file:
+	400166'	200 13 0 14 000040 		move	pagex,xpage	^.xpage(psa)^;retrieve addr of page block
+	400167'	336 00 0 13 000002 		skipn	2(pagex)	;if null subtitle
+	400170'	254 00 0 00 400175'		jrst	pg.num		;  then just print page number
+	400171'	200 10 0 13 000002 		move	slen,2(pagex)	;else put the subtitle
+	400172'	201 11 0 13 000003 		movei	sbp,3(pagex)
+	400173'	265 07 0 00 400353'		jsp	slink,put.str
+	400174'	254 00 0 00 400200'		jrst	do.lpnum
+	400175'				pg.num:
+	400175'	550 16 0 13 000001 		hrrz	num,1(pagex)	;get page number
+excpt - exception manager	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-82
+EXCEPT	MAC	23-May-71 22:31	
+
+	400176'	322 16 0 00 400202'		jumpe	num,do.lnum	;print it only if non-zero
+	400177'	265 07 0 00 400367'		jsp	slink,put.num
+	400200'				do.lpnum:
+	400200'	201 02 0 00 000057 		movei	ch,"/"
+	400201'	265 06 0 00 400350'		jsp	clink,put.ch
+	400202'				do.lnum:
+	400202'	200 16 0 14 000037 		move	num,xstmt	^.xstmt(psa)^;get back addr of stmt block
+	400203'	200 16 0 16 000000 		move	num,0(num)	;actual block
+	400204'	405 16 0 00 037777 		andi	num,37777	;isolate line number
+	400205'	265 07 0 00 400367'		jsp	slink,put.num	;and place it in string
+	400206'				xdone:
+	400206'	325 05 0 00 400210'		jumpge	curlen,.+2	;calculate actual length of string
+	400207'	201 05 0 00 000000 		movei	curlen,0
+	400210'	274 05 0 14 000047 		sub	curlen,exloc^.exloc(psa)^
+	400211'	216 05 0 14 000050 		movmm	curlen,1+exloc^.exloc(psa)^
+
+					;
+					; Before invoking handler, have overlay manager bring
+					; it in, if necessary.  NOTE: this code assumes r1-r3 and pda are
+					; restored on return.
+					;
+
+	400212'				ck.ovl:
+	400212'	200 16 0 15 000042 		move	basis,$base(pda)
+	400213'	336 17 0 15 000006 		skipn	top,$bfpnt(pda)	;fake stack for PUSH
+	400214'	200 17 0 15 000007 		move	top,$stack(pda)
+	400215'	211 05 0 00 000000#		movni	r5,60+sz.ovl##	;space free at end of stack
+	400216'	270 17 0 00 000005 		add	top,r5
+	400217'	505 17 0 05 000000 		hrli	top,0(r5)
+	400220'	250 01 0 00 000003 		exch	r1,base		;sf$vfy wants it in r1
+	400221'	200 02 0 00 000000 		move	r2,r0		;preserve a reg
+	400222'	261 17 0 00 400474'		push	top,[exp exc.tv]
+	400223'	254 00 0 00 000000*		jrst	sf$vfy##
+	400224'				exc.ac:
+	400224'	200 16 0 00 000001 		move	basis,r1	;handler's basis
+	400225'	202 16 0 15 000042 		movem	basis,$base(pda);keep current
+	400226'	120 00 0 00 000002 		dmove	r0,r2		;saved registers
+
+					;
+					; Finally, flag the manager done and goto the handler.
+excpt - exception manager	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-83
+EXCEPT	MAC	23-May-71 22:31	
+
+					;
+
+	400227'	402 00 0 15 000037 		setzm	$inrt(pda)	;just in case
+	400230'	402 00 0 15 000041 		setzm	$excin(pda)
+	400231'	201 02 0 00 400034*		movei	r2,atn.tv
+
+						ife	$sys-$tym,<
+	400232'	202 02 0 14 000111 		movem	r2,1+vector>	^.vector(psa)^;reenable attention handler,
+									;in case suppressed
+
+						ife	$sys-$adp,<
+						movem	r2,$newpc+$icbatn+vector>
+
+	400233'	254 00 0 01 000000 		jrst	0(r1)
+
+
+					;
+					; Not a debug module.  Put location and/or name of routine/module.
+					;
+
+	400234'				not.debug:
+	400234'	201 10 0 00 000011 		movei	slen,loc.len
+	400235'	201 11 0 00 400422'		movei	sbp,loc.msg
+	400236'	265 07 0 00 400353'		jsp	slink,put.str
+	400237'	200 13 0 14 000031 		move	addr,resignal	^.resignal(psa)^;exception address
+	400240'	265 07 0 00 400360'		jsp	slink,put.addr	;in string
+	400241'	550 17 0 12 000000 		hrrz	temp,0(trace)	;addr of trace block
+	400242'	302 17 0 00 377777 		caie	temp,$nil
+	400243'	254 00 0 00 400252'		jrst	is.trace
+	400244'	201 10 0 00 000014 		movei	slen,rout.len
+	400245'	201 11 0 00 400424'		movei	sbp,rout.msg
+	400246'	265 07 0 00 400353'		jsp	slink,put.str
+	400247'	201 13 0 12 777777 		movei	addr,-1(trace)	;just print entry addr if notrace
+	400250'	265 07 0 00 400360'		jsp	slink,put.addr
+	400251'	254 00 0 00 400206'		jrst	xdone
+
+					;
+					; Non-debug module with trace block. Put module name and routine name.
+					;
+
+excpt - exception manager	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-84
+EXCEPT	MAC	23-May-71 22:31	
+
+	400252'				is.trace:
+	400252'	201 10 0 00 000004 		movei	slen,nr.len
+	400253'	201 11 0 00 400424'		movei	sbp,nr.msg
+	400254'	265 07 0 00 400353'		jsp	slink,put.str
+	400255'	200 10 0 17 000002 		move	slen,2(temp)	;length of routine name
+	400256'	201 11 0 17 000003 		movei	sbp,3(temp)	;and its addr
+	400257'	265 07 0 00 400353'		jsp	slink,put.str
+	400260'	201 10 0 00 000011 		movei	slen,mod.len
+	400261'	201 11 0 00 400427'		movei	sbp,mod.msg
+	400262'	265 07 0 00 400353'		jsp	slink,put.str
+	400263'	554 16 0 17 000001 		hlrz	modx50,1(temp)	;addr of program block or zero
+	400264'	200 16 0 16 777777 		move	modx50,-1(modx50)
+	400265'	265 07 0 00 400402'		jsp	slink,put.x50
+	400266'	254 00 0 00 400206'		jrst	xdone
+
+	400267'				is.user:
+	400267'	201 02 0 00 000000*		movei	r2,m.user##
+	400270'	254 00 0 00 400313'		jrst	do.msg
+	400271'				gotodot:
+	400271'	202 00 0 15 000014 		movem	r0,$retadr(pda)	;address for traceback
+	400272'	260 17 0 00 000000*		pushj	top,twait.
+	400273'	120 00 0 14 000031 		dmove	r0,resignal	^.resignal(psa)^;restore excpt addr and code
+						outstr	[asciz	/
+	400274'	051 03 0 00 400475'	?	/]
+	400275'	135 02 0 00 400472'		ldb	r2,[point 26,r1,25];get cond cell addr
+	400276'	301 02 0 00 000100 		cail	r2,$stdmax	;track down actual cell address
+	400277'	550 02 0 02 000000 		hrrz	r2,0(r2)
+	400300'	301 02 0 00 000100 		cail	r2,$stdmax
+	400301'	550 02 0 02 000000 		hrrz	r2,0(r2)	;may be multiply indirected
+	400302'	301 02 0 00 000100 		cail	r2,$stdmax
+	400303'	550 02 0 02 000000 		hrrz	r2,0(r2)
+	400304'	301 02 0 00 000100 		cail	r2,$stdmax
+	400305'	254 00 0 00 400267'		jrst	is.user
+	400306'	201 02 0 00 400431'		movei	r2,ex.tbl	;search address table if standard
+	400307'				msg.loop:
+	400307'	554 03 0 02 000000 		hlrz	r3,0(r2)
+	400310'	302 03 0 01 000000 		caie	r3,0(r1)
+	400311'	344 02 0 00 400307'		aoja	r2,msg.loop
+	400312'	550 02 0 02 000000 		hrrz	r2,0(r2)	;get address from table
+	400313'				do.msg:
+excpt - exception manager	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-85
+EXCEPT	MAC	23-May-71 22:31	
+
+	400313'	051 03 0 02 000000 		outstr	0(r2)
+	400314'	051 03 0 00 400476'		outstr	[asciz	/ at user PC /]
+	400315'	200 02 0 00 400501'		move	r2,[point 3,r0,17]
+	400316'	201 03 0 00 000006 		movei	r3,6
+	400317'	134 04 0 00 000002 		ildb	r4,r2
+	400320'	271 04 0 00 000060 		addi	r4,"0"
+	400321'	051 01 0 00 000004 		outchr	r4
+	400322'	367 03 0 00 400317'		sojg	r3,.-3
+	400323'				ex.dot:
+	400323'	201 02 0 00 400231*		movei	r2,atn.tv
+
+						ife	$sys-$tym,<
+	400324'	202 02 0 14 000111 		movem	r2,1+vector>	^.vector(psa)^;reenable attention handler,
+									;in case suppressed
+
+						ife	$sys-$adp,<
+						movem	r2,$newpc+$icbatn+vector>
+
+						$restore regs, r0, r7^
+	400325'	515 00 0 14 000012 		hrlzi	r0,$offset+regs^.regs(psa)^
+	400326'	541 00 0 00 000001 		hrri	r0,$first
+	400327'	251 00 0 00 000007 		blt	r0,$last
+	400330'	200 00 0 14 000011 		move	r0,regs>>^.regs(psa)^
+	400331'	402 00 0 15 000041 		setzm	$excin(pda)
+	400332'	120 14 0 14 000025 		dmove	psa,psa+regs^.regs(psa)^
+	400333'	047 01 0 00 000012 		exit	1,
+						$getpda^
+	400334'	554 15 0 00 000000*		hlrz	pda,.jbsa##^
+						$getpsa	exception^
+	400335'	200 14 0 15 000036 		move	psa,$exception(pda)^
+	400336'	120 00 0 14 000031 		dmove	r0,resignal^.resignal(psa)^
+	400337'	332 00 0 14 000033 		skipe	cancontinue	^.cancontinue(psa)^;if came through resignal
+	400340'	606 01 0 00 001000 		trnn	r1,1000		;or if flag not set
+	400341'	254 00 0 00 400346'		jrst	cant		;then stay at dot
+	400342'	202 00 0 00 400041*		movem	r0,.jbcst
+	400343'	120 00 0 14 000011 		dmove	r0,regs^.regs(psa)^
+	400344'	120 14 0 14 000025 		dmove	psa,psa+regs^.regs(psa)^
+	400345'	254 00 1 00 400342*		jrst	@.jbcst		;else do it
+	400346'				cant:
+	400346'	051 03 0 00 400502'		outstr	[asciz	/?	Can't continue./]
+excpt - exception manager	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-86
+EXCEPT	MAC	23-May-71 22:31	
+
+	400347'	254 00 0 00 400323'		jrst	ex.dot
+
+					;
+					; Utilities for location-string construction.
+					;
+
+	400350'				put.ch:
+	400350'	361 05 0 06 000000 		sojl	curlen,0(clink)	;don't overwrite anything
+	400351'	136 02 0 00 000004 		idpb	ch,strbp	;else put character in string
+	400352'	254 00 0 06 000000 		jrst	0(clink)
+
+	400353'				put.str:
+	400353'	505 11 0 00 440700 		hrli	sbp,440700	;make addr into bptr
+	400354'				str.loop:
+	400354'	361 10 0 07 000000 		sojl	slen,0(slink)	;return when string done
+	400355'	134 02 0 00 000011 		ildb	ch,sbp
+	400356'	265 06 0 00 400350'		jsp	clink,put.ch
+	400357'	254 00 0 00 400354'		jrst	str.loop
+
+	400360'				put.addr:			;put 6-digit octal number
+	400360'	200 11 0 00 400506'		move	sbp,[point 3,addr,17]
+	400361'	201 10 0 00 000006 		movei	slen,6
+	400362'				adr.loop:
+	400362'	134 02 0 00 000011 		ildb	ch,sbp
+	400363'	271 02 0 00 000060 		addi	ch,"0"
+	400364'	265 06 0 00 400350'		jsp	clink,put.ch
+	400365'	367 10 0 00 400362'		sojg	slen,adr.loop
+	400366'	254 00 0 07 000000 		jrst	0(slink)
+
+	400367'				put.num:
+	400367'	201 13 0 14 000041 		movei	addr,tmpaddr	^.tmpaddr(psa)^;pseudo-stack
+	400370'				num.loop:
+	400370'	231 16 0 00 000012 		idivi	num,^d10
+	400371'	271 17 0 00 000060 		addi	1+num,"0"	;make ascii character
+	400372'	202 17 0 13 000000 		movem	1+num,0(addr)	;save remainder in stack
+	400373'	322 16 0 00 400375'		jumpe	num,num2.loop	;unpack when quotient zero
+	400374'	364 13 0 00 400370'		soja	addr,num.loop
+	400375'				num2.loop:
+	400375'	200 02 0 13 000000 		move	ch,0(addr)	;get num from stack
+	400376'	265 06 0 00 400350'		jsp	clink,put.ch
+excpt - exception manager	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-87
+EXCEPT	MAC	23-May-71 22:31	
+
+	400377'	302 13 0 14 000041 		caie	addr,tmpaddr	^.tmpaddr(psa)^;done when stack empty
+	400400'	344 13 0 00 400375'		aoja	addr,num2.loop	;else continue unpacking
+	400401'	254 00 0 07 000000 		jrst	0(slink)
+
+	400402'				put.x50:
+	400402'	621 16 0 00 740000 		tlz	modx50,740000	;clear code field
+	400403'	322 16 0 07 000000 		jumpe	modx50,0(slink)	;just in case it's null
+	400404'	201 13 0 14 000041 		movei	addr,tmpaddr^.tmpaddr(psa)^
+	400405'				x50.loop:
+	400405'	231 16 0 00 000050 		idivi	modx50,50
+	400406'	271 17 0 00 000057 		addi	1+modx50,"0"-1	;1-12 = 0-9
+	400407'	303 17 0 00 000071 		caile	1+modx50,"9"
+	400410'	271 17 0 00 000007 		addi	1+modx50,"A"-"9"-1	;13-44 = A-Z
+	400411'	303 17 0 00 000132 		caile	1+modx50,"Z"
+	400412'	275 17 0 00 000067 		subi	1+modx50,"Z"+1-"$"	;46-47 = $,%
+	400413'	306 17 0 00 000043 		cain	1+modx50,"#"
+	400414'	201 17 0 00 000056 		movei	1+modx50,"."		;45 = .
+	400415'	306 17 0 00 000046 		cain	1+modx50,"&"
+	400416'	201 17 0 00 000137 		movei	1+modx50,"_"
+	400417'	202 17 0 13 000000 		movem	1+modx50,0(addr)	;in stack
+	400420'	322 16 0 00 400375'		jumpe	modx50,num2.loop
+	400421'	364 13 0 00 400405'		soja	addr,x50.loop
+
+					;
+					; Various messages and their lengths
+					;
+
+			000011		loc.len==^d9
+	400422'	114 157 143 141 164 	loc.msg: ascii	/Location /
+	400423'	151 157 156 040 000 
+			000014		rout.len==^d12
+	400424'	040 151 156 040 162 	rout.msg: ascii	/ in routine at /
+	400425'	157 165 164 151 156 
+	400426'	145 040 141 164 040 
+			000004		nr.len==^d4
+			400424'		nr.msg==rout.msg
+
+			000011		mod.len==^d9
+	400427'	054 040 155 157 144 	mod.msg: ascii	/, module /
+	400430'	165 154 145 040 000 
+excpt - exception manager	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-88
+EXCEPT	MAC	23-May-71 22:31	
+
+					;
+					; EX.TBL encodes the exception block for each of the standard
+					; conditions with the address of its associated error message.
+					;
+
+	400431'				ex.tbl:
+						$errcell ($exmth,$mthfn,$true)^
+	400431'	003001	000000*		h,$mthfn)^$errname(M,\$exmth,\$mthfn,.)^M1.1^^^
+						$errcell ($exmth,$mthfo,$true)^
+	400432'	003002	000000*		h,$mthfo)^$errname(M,\$exmth,\$mthfo,.)^M1.2^^^
+						$errcell ($exmth,$mthao,$true)^
+	400433'	003003	000000*		h,$mthao)^$errname(M,\$exmth,\$mthao,.)^M1.3^^^
+						$errcell ($exmth,$mthdz,$true)^
+	400434'	003004	000000*		h,$mthdz)^$errname(M,\$exmth,\$mthdz,.)^M1.4^^^
+						$errcell ($exmth,$mthas,$true)^
+	400435'	003005	000000*		h,$mthas)^$errname(M,\$exmth,\$mthas,.)^M1.5^^^
+						$errcell ($exmth,$mthac,$true)^
+	400436'	003006	000000*		h,$mthac)^$errname(M,\$exmth,\$mthac,.)^M1.6^^^
+						$errcell ($exio,interr,$false)^
+	400437'	004001	000000*		,interr)^$errname(M,\$exio,\interr,.)^M2.1^^^
+						$errcell ($exio,rewerr,$false)^
+	400440'	004002	000000*		,rewerr)^$errname(M,\$exio,\rewerr,.)^M2.2^^^
+						$errcell ($exio,eoferr,$false)^
+	400441'	004003	000000*		,eoferr)^$errname(M,\$exio,\eoferr,.)^M2.3^^^
+						$errcell ($exio,outerr,$false)^
+	400442'	004004	000000*		,outerr)^$errname(M,\$exio,\outerr,.)^M2.4^^^
+						$errcell ($exio,inpopn,$false)^
+	400443'	004005	000000*		,inpopn)^$errname(M,\$exio,\inpopn,.)^M2.5^^^
+						$errcell ($exio,ranerr,$false)^
+	400444'	004006	000000*		,ranerr)^$errname(M,\$exio,\ranerr,.)^M2.6^^^
+						$errcell ($exio,illcur,$false)^
+	400445'	004007	000000*		,illcur)^$errname(M,\$exio,\illcur,.)^M2.7^^^
+						$errcell ($exio,emperr,$false)^
+	400446'	004010	000000*		,emperr)^$errname(M,\$exio,\emperr,.)^M2.10^^^
+						$errcell ($exio,opnerr,$false)^
+	400447'	004011	000000*		,opnerr)^$errname(M,\$exio,\opnerr,.)^M2.11^^^
+						$errcell ($exusr,$usras,$true)^
+	400450'	007001	000000*		r,$usras)^$errname(M,\$exusr,\$usras,.)^M3.1^^^
+						$errcell ($exusr,$usrcx,$true)^
+	400451'	007002	000000*		r,$usrcx)^$errname(M,\$exusr,\$usrcx,.)^M3.2^^^
+excpt - exception manager	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-89
+EXCEPT	MAC	23-May-71 22:31	
+
+						$errcell ($exusr,$usrag,$false)^
+	400452'	006003	000000*		usr,$usrag)^$errname(M,\$exusr,\$usrag,.)^M3.3^^^
+						$errcell ($exusr,$usrnl,$false)^
+	400453'	006004	000000*		usr,$usrnl)^$errname(M,\$exusr,\$usrnl,.)^M3.4^^^
+						$errcell ($exusr,$usrpt,$false)^
+	400454'	006005	000000*		usr,$usrpt)^$errname(M,\$exusr,\$usrpt,.)^M3.5^^^
+						$errcell ($exusr,$usrss,$false)^
+	400455'	006006	000000*		usr,$usrss)^$errname(M,\$exusr,\$usrss,.)^M3.6^^^
+						$errcell ($exusr,$usrsr,$false)^
+	400456'	006007	000000*		usr,$usrsr)^$errname(M,\$exusr,\$usrsr,.)^M3.7^^^
+						$errcell ($exusr,$usrsc,$false)^
+	400457'	006010	000000*		usr,$usrsc)^$errname(M,\$exusr,\$usrsc,.)^M3.10^^^
+						$errcell ($exusr,$usrfl,$false)^
+	400460'	006011	000000*		usr,$usrfl)^$errname(M,\$exusr,\$usrfl,.)^M3.11^^^
+						$errcell ($exsto,$none,$false)^
+	400461'	010000	000000*		o,$none)^$errname(M,\$exsto,\$none,.)^M4.0^^^
+						$errcell ($exstk,$none,$false)^
+	400462'	012000	000000*		k,$none)^$errname(M,\$exstk,\$none,.)^M5.0^^^
+						$errcell ($exspc,$spcmr,$false)^
+	400463'	014001	000000*		spc,$spcmr)^$errname(M,\$exspc,\$spcmr,.)^M6.1^^^
+						$errcell ($exspc,$spciu,$false)^
+	400464'	014002	000000*		spc,$spciu)^$errname(M,\$exspc,\$spciu,.)^M6.2^^^
+						$errcell ($exspc,$spcnn,$false)^
+	400465'	014003	000000*		spc,$spcnn)^$errname(M,\$exspc,\$spcnn,.)^M6.3^^^
+						$errcell ($exspc,$spcbp,$false)^
+	400466'	014004	000000*		spc,$spcbp)^$errname(M,\$exspc,\$spcbp,.)^M6.4^^^
+						$errcell ($exspc,$spcff,$false)^
+	400467'	014005	000000*		spc,$spcff)^$errname(M,\$exspc,\$spcff,.)^M6.5^^^
+						$errcell ($exspc,$spcrh,$false)^
+	400470'	014006	000000*		spc,$spcrh)^$errname(M,\$exspc,\$spcrh,.)^M6.6^^^
+						$errcell ($exatn,$none,$true)^
+	400471'	017000	000000*		$none)^$errname(M,\$exatn,\$none,.)^M7.0^^^
+
+						$xend	excpt^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400507
+excpt - exception manager	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-90
+EXCEPT	MAC	23-May-71 22:31	
+
+PROGRAM BREAK IS 000000
+CPU TIME USED 06:13.518
+
+50P CORE USED
+excpt - exception manager	MACRO %53A(1155) 18:31 29-Sep-82 Page S-57
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+ADDR		000013	spd	ILLCUR		000007		M6.2		400464'	ext	R3		000003	spd	
+ADR.LO		400362'		INPOPN		000005		M6.3		400465'	ext	R4		000004	spd	
+ATN.AC		000000	ext	INTACT	047000	777743		M6.4		400466'	ext	R5		000005	spd	
+ATN.TV		400323'	ext	INTADR	047000	777745		M6.5		400467'	ext	R6		000006	spd	
+BASE		000003	spd	INTASS	047000	777742		M6.6		400470'	ext	R7		000007	spd	
+BASIS		000016	spd	INTENB	047000	777744		M7.0		400471'	ext	RANERR		000006		
+C.CELL		000006	spd	INTERR		000001		MOD.LE		000011	spd	REWERR		000002		
+C.HBT		000005	spd	IS.OTH		400073'		MOD.MS		400427'		ROUT.L		000014	spd	
+C.HSB		000005	spd	IS.TRA		400252'		MODX50		000016	spd	ROUT.M		400424'		
+CANT		400346'		IS.USE		400267'		MSG.LO		400307'		RTEXC.		400000'	ent	
+CCELL		000002	spd	LOC.LE		000011	spd	NEXTSF		400103'		SBP		000011	spd	
+CH		000002	spd	LOC.MS		400422'		NO.FIL		400166'		SETTR1	047000	777740		
+CHBSRC		400051'		M.USER		400267'	ext	NOT.DE		400234'		SETTR2	047000	777737		
+CK.OVL		400212'		M1.1		400431'	ext	NOTMAS		400043'		SF$VFY		400223'	ext	
+CK.PAG		400153'		M1.2		400432'	ext	NR.LEN		000004	spd	SLEN		000010	spd	
+CK.STM		400146'		M1.3		400433'	ext	NR.MSG		400424'	spd	SLINK		000007	spd	
+CLINK		000006	spd	M1.4		400434'	ext	NUM		000016	spd	STDNOT		400042'		
+CSTMT		000000	spd	M1.5		400435'	ext	NUM.LO		400370'		STMTX		000013	spd	
+CURLEN		000005	spd	M1.6		400436'	ext	NUM2.L		400375'		STR.LO		400354'		
+DISMIS	047000	777755		M2.1		400437'	ext	NXTHBT		400101'		STRBP		000004	spd	
+DO.LNU		400202'		M2.10		400446'	ext	OPNERR		000011		SZ.OVL		000000	ext	
+DO.LPN		400200'		M2.11		400447'	ext	OUTCHR	051040	000000		TBLCHK		400056'		
+DO.MSG		400313'		M2.2		400440'	ext	OUTERR		000004		TEMP		000017	spd	
+DOHDR		400112'		M2.3		400441'	ext	OUTSTR	051140	000000		TINASS	047000	777736		
+EMPERR		000010		M2.4		400442'	ext	PAGEX		000013	spd	TOP		000017	spd	
+EOFERR		000003		M2.5		400443'	ext	PDA		000015	spd	TRACE		000012	spd	
+EX.DOT		400323'		M2.6		400444'	ext	PG.NUM		400175'		TWAIT.		400272'	ext	
+EX.TBL		400431'	ent	M2.7		400445'	ext	PSA		000014	spd	X50.LO		400405'		
+EXC.AC		400224'	int	M3.1		400450'	ext	PUT.AD		400360'		XDONE		400206'		
+EXC.TV		000000	ext	M3.10		400457'	ext	PUT.CH		400350'		$ABSLO		000000	spd	
+EXCPT.		400007'	ent	M3.11		400460'	ext	PUT.NU		400367'		$ADP		000000	spd	
+EXIT	047000	000012		M3.2		400451'	ext	PUT.ST		400353'		$ALLCO	777777	777776	spd	
+FILEX		000013	spd	M3.3		400452'	ext	PUT.X5		400402'		$BASE		000042	spd	
+GETCHB		400047'		M3.4		400453'	ext	R0		000000	spd	$BFPNT		000006	spd	
+GOTODO		400271'		M3.5		400454'	ext	R1		000001	spd	$CHBT		000003	spd	
+H.ADDR		000007	spd	M3.6		400455'	ext	R10		000010	spd	$EXATN		000007	spd	
+HBT		000004	spd	M3.7		400456'	ext	R11		000011	spd	$EXCEP		000036	spd	
+HDRFOU		400106'		M4.0		400461'	ext	R12		000012	spd	$EXCIN		000041	spd	
+HV.FIL		400157'		M5.0		400462'	ext	R13		000013	spd	$EXIO		000002	spd	
+HV.PAG		400152'		M6.1		400463'	ext	R2		000002	spd	$EXMTH		000001	spd	
+excpt - exception manager	MACRO %53A(1155) 18:31 29-Sep-82 Page S-58
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+$EXSPC		000006	spd	$SPCMR		000001	spd	
+$EXSTK		000005	spd	$SPCNN		000003	spd	
+$EXSTO		000004	spd	$SPCRH		000006	spd	
+$EXUSR		000003	spd	$STACK		000007	spd	
+$FALSE		000000	spd	$STATS		000000	spd	
+$FIRST		000001	spd	$STDMA		000100	spd	
+$HBTEN		000002	spd	$STDNU		000010	spd	
+$HBTLI		000000	spd	$SYS		000001	spd	
+$HBTVA		000000	spd	$TRUE		000001	spd	
+$HILOC		400000	spd	$TYM		000001	spd	
+$HSBFL		000000	spd	$USRAG		000003	spd	
+$HSBOF		000001	spd	$USRAS		000001	spd	
+$HSBXA		000000	spd	$USRCX		000002	spd	
+$HSBXB		000001	spd	$USRFL		000011	spd	
+$INRT		000037	spd	$USRNL		000004	spd	
+$LAST		000007	spd	$USRPT		000005	spd	
+$LEN		000007	spd	$USRSC		000010	spd	
+$LOC	777777	777777	spd	$USRSR		000007	spd	
+$LOLOC		000000	spd	$USRSS		000006	spd	
+$MAXLO		000000	spd	.AROVF		000104	spd	
+$MAXST		000217	spd	.CANCO		000033	spd	
+$MAXTE		000000	spd	.CELLS		000001	spd	
+$MISC		000016	spd	.EXLOC		000047	spd	
+$MTHAC		000006	spd	.IADDR		000216	spd	
+$MTHAO		000003	spd	.INTMA		000000	spd	
+$MTHAS		000005	spd	.JBCST		400345'	ext	
+$MTHDZ		000004	spd	.JBSA		400334'	ext	
+$MTHFN		000001	spd	.OTH16		000034	spd	
+$MTHFO		000002	spd	.OTHBT		000035	spd	
+$MXCH		000204	spd	.OTHCE		000036	spd	
+$NEEDP		000000	spd	.REGS		000011	spd	
+$NIL		377777	spd	.RESIG		000031	spd	
+$NONE		000000	spd	.STKOV		000106	spd	
+$OFFSE		000001	spd	.TMPAD		000041	spd	
+$OTHRS	777777	777777	spd	.VECTO		000110	spd	
+$RETAD		000014	spd	.XPAGE		000040	spd	
+$RTBAS		000011	spd	.XSTMT		000037	spd	
+$SPCBP		000004	spd	
+$SPCFF		000005	spd	
+$SPCIU		000002	spd	
+atnacn - null attention handler	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-91
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						$module	atnacn - null attention handler^
+						entry	atn.ac
+			000000		atn.ac==0
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400000
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:01.969
+
+50P CORE USED
+atnacn - null attention handler	MACRO %53A(1155) 18:31 29-Sep-82 Page S-59
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+ATN.AC		000000	sen	
+$ABSLO		000000	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+
+pnret - Pntry/Prtrn	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-92
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						$module	pnret - Pntry/Prtrn^
+						entry	pntry.
+						entry	prtrn.
+
+	400000'	124 16 0 17 000001 	pntry.:	dmovem	basis,1(top)
+	400001'	552 01 0 17 000003 		hrrzm	r1,3(top)
+	400002'	201 16 0 17 000000 		movei	basis,0(top)
+	400003'	202 16 0 15 000042 		movem	basis,$base(pda)
+	400004'	254 00 0 01 000001 		jrst	1(r1)
+
+	400005'	120 16 0 16 000001 	prtrn.:	dmove	basis,1(basis)
+	400006'	202 16 0 15 000042 		movem	basis,$base(pda)
+	400007'	263 17 0 00 000000 		popj	top,
+
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400010
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:05.470
+
+50P CORE USED
+pnret - Pntry/Prtrn	MACRO %53A(1155) 18:31 29-Sep-82 Page S-60
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+BASIS		000016	spd	
+PDA		000015	spd	
+PNTRY.		400000'	ent	
+PRTRN.		400005'	ent	
+R1		000001	spd	
+TOP		000017	spd	
+$ABSLO		000000	spd	
+$BASE		000042	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+
+exmsg - Exception message printer	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-93
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						$module	exmsg - Exception message printer^
+						$excpt^
+						entry	ex.msg
+						extern	ex.act
+						extern	ex.tbl
+						extern	m.user
+						extern	twait.
+						$temp	rtemp,3		^;first used in pushj
+
+	400000'				ex.msg:
+	400000'	260 17 0 00 000000*		pushj	top,twait.
+	400001'	260 17 0 00 000000*		pushj	top,ex.act	;get active hbt + hsb
+	400002'	254 00 0 00 400033'		jrst	return		;noop if none active
+						outstr	[asciz /
+	400003'	051 03 0 00 400037'	%	/]
+	400004'	135 02 0 00 400040'		ldb	r2,[point 26,r1,25];get cond cell addr
+	400005'	301 02 0 00 000100 		cail	r2,$stdmax	;track down actual cell address
+	400006'	550 02 0 02 000000 		hrrz	r2,0(r2)
+	400007'	301 02 0 00 000100 		cail	r2,$stdmax
+	400010'	550 02 0 02 000000 		hrrz	r2,0(r2)	;may be multiply indirected
+	400011'	301 02 0 00 000100 		cail	r2,$stdmax	;especially if overlaid
+	400012'	550 02 0 02 000000 		hrrz	r2,0(r2)
+	400013'	301 02 0 00 000100 		cail	r2,$stdmax	;if standard, know where to find info
+	400014'	254 00 0 00 400035'		jrst	is.user
+	400015'	201 02 0 00 000000*		movei	r2,ex.tbl	;table to standard messages
+	400016'				msg.loop:
+	400016'	554 03 0 02 000000 		hlrz	r3,0(r2)
+	400017'	302 03 0 01 000000 		caie	r3,0(r1)
+	400020'	344 02 0 00 400016'		aoja	r2,msg.loop
+	400021'	550 02 0 02 000000 		hrrz	r2,0(r2)	;address of asciz message
+	400022'				do.msg:
+	400022'	051 03 0 02 000000 		outstr	0(r2)
+	400023'	051 03 0 00 400041'		outstr	[asciz	/ at user PC /]
+	400024'	200 03 0 00 400044'		move	r3,[point 3,r0,17]
+	400025'	201 01 0 00 000006 		movei	r1,6
+	400026'	134 02 0 00 000003 		ildb	r2,r3
+	400027'	271 02 0 00 000060 		addi	r2,"0"
+	400030'	051 01 0 00 000002 		outchr	r2
+	400031'	367 01 0 00 400026'		sojg	r1,.-3
+exmsg - Exception message printer	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-94
+EXCEPT	MAC	23-May-71 22:31	
+
+						outstr	[asciz /
+	400032'	051 03 0 00 400045'	/]
+	400033'				return:
+	400033'	120 02 0 17 000002 		dmove	r2,1+rtemp^.rtemp(top)^
+	400034'	263 17 0 00 000000 		popj	top,
+	400035'				is.user:
+	400035'	201 02 0 00 000000*		movei	r2,m.user	;special case user exceptions
+	400036'	254 00 0 00 400022'		jrst	do.msg
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400046
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:44.874
+
+50P CORE USED
+exmsg - Exception message printer	MACRO %53A(1155) 18:31 29-Sep-82 Page S-61
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+DISMIS	047000	777755		$HSBFL		000000	spd	
+DO.MSG		400022'		$HSBOF		000001	spd	
+EX.ACT		400001'	ext	$HSBXA		000000	spd	
+EX.MSG		400000'	ent	$HSBXB		000001	spd	
+EX.TBL		400015'	ext	$LOC	777777	777777	spd	
+INTACT	047000	777743		$LOLOC		000000	spd	
+INTADR	047000	777745		$MAXLO		000000	spd	
+INTASS	047000	777742		$MAXST		000217	spd	
+INTENB	047000	777744		$MAXTE		000003	spd	
+IS.USE		400035'		$MXCH		000204	spd	
+M.USER		400035'	ext	$STATS		000000	spd	
+MSG.LO		400016'		$STDMA		000100	spd	
+OUTCHR	051040	000000		$STDNU		000010	spd	
+OUTSTR	051140	000000		$SYS		000001	spd	
+R0		000000	spd	$TYM		000001	spd	
+R1		000001	spd	.AROVF		000104	spd	
+R10		000010	spd	.CANCO		000033	spd	
+R11		000011	spd	.CELLS		000001	spd	
+R12		000012	spd	.EXLOC		000047	spd	
+R13		000013	spd	.IADDR		000216	spd	
+R2		000002	spd	.INTMA		000000	spd	
+R3		000003	spd	.OTH16		000034	spd	
+R4		000004	spd	.OTHBT		000035	spd	
+R5		000005	spd	.OTHCE		000036	spd	
+R6		000006	spd	.REGS		000011	spd	
+R7		000007	spd	.RESIG		000031	spd	
+RETURN		400033'		.RTEMP		000001	spd	
+SETTR1	047000	777740		.STKOV		000106	spd	
+SETTR2	047000	777737		.TMPAD		000041	spd	
+TINASS	047000	777736		.VECTO		000110	spd	
+TOP		000017	spd	.XPAGE		000040	spd	
+TWAIT.		400000'	ext	.XSTMT		000037	spd	
+$ABSLO		000000	spd	
+$ADP		000000	spd	
+$CHBT		000003	spd	
+$FALSE		000000	spd	
+$HBTEN		000002	spd	
+$HBTLI		000000	spd	
+$HBTVA		000000	spd	
+$HILOC		400000	spd	
+exstr - Exception message string	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-95
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						$module	exstr - Exception message string^
+						$excpt^
+						entry	ex.str
+						extern	ex.act
+						extern	ex.tbl
+						extern	m.user
+
+			000000			pc==r0			;pc returned by ex.act
+			000001			char==r1		;temp for transfer of characters
+			000004			addr==r4		;address of string result
+			000005			destbp==r5		;target byte pointer
+			000006			sourcebp==r6		;source byte pointer
+			000007			length==r7		;length of string result
+			000010			xfer==r10		;JSP register
+			000011			count==r11
+
+	400000'				ex.str:
+	400000'	200 04 0 00 000002 		move	addr,r2		;preserve address across ex.act call
+	400001'	201 05 0 04 000001 		movei	destbp,1(addr)	;set up byte pointer to target string
+	400002'	505 05 0 00 440700 		hrli	destbp,440700
+	400003'	201 07 0 00 000000 		movei	length,0
+	400004'	260 17 0 00 000000*		pushj	top,ex.act	;get active hbt + hsb
+	400005'	254 00 0 00 400036'		jrst	done		;noop if none active
+	400006'	135 02 0 00 400052'		ldb	r2,[point 26,r1,25];get cond cell addr
+	400007'	301 02 0 00 000100 		cail	r2,$stdmax	;track down actual cell address
+	400010'	550 02 0 02 000000 		hrrz	r2,0(r2)
+	400011'	301 02 0 00 000100 		cail	r2,$stdmax
+	400012'	550 02 0 02 000000 		hrrz	r2,0(r2)	;may be multiply indirected
+	400013'	301 02 0 00 000100 		cail	r2,$stdmax	;especially if overlaid
+	400014'	550 02 0 02 000000 		hrrz	r2,0(r2)
+	400015'	301 02 0 00 000100 		cail	r2,$stdmax	;if standard, know where to find info
+	400016'	254 00 0 00 400040'		jrst	is.user
+	400017'	201 02 0 00 000000*		movei	r2,ex.tbl	;table to standard messages
+	400020'				msg.loop:
+	400020'	554 03 0 02 000000 		hlrz	r3,0(r2)
+	400021'	302 03 0 01 000000 		caie	r3,0(r1)
+	400022'	344 02 0 00 400020'		aoja	r2,msg.loop
+	400023'	550 06 0 02 000000 		hrrz	sourcebp,0(r2)	;address of asciz message
+	400024'				do.msg:
+exstr - Exception message string	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-96
+EXCEPT	MAC	23-May-71 22:31	
+
+	400024'	265 10 0 00 400042'		jsp	xfer,movestring
+	400025'	201 06 0 00 400047'		movei	sourcebp,userpc
+	400026'	265 10 0 00 400042'		jsp	xfer,movestring
+	400027'	200 06 0 00 400053'		move	sourcebp,[point 3,pc,17]
+	400030'	201 11 0 00 000006 		movei	count,6
+	400031'	134 01 0 00 000006 		ildb	char,sourcebp
+	400032'	271 01 0 00 000060 		addi	char,"0"
+	400033'	136 01 0 00 000005 		idpb	char,destbp
+	400034'	361 11 0 00 400036'		sojl	count,done
+	400035'	344 07 0 00 400031'		aoja	length,.-4
+	400036'				done:
+	400036'	202 07 0 04 000000 		movem	length,0(addr)
+	400037'	263 17 0 00 000000 		popj	top,
+	400040'				is.user:
+	400040'	201 06 0 00 000000*		movei	sourcebp,m.user	;special case user exceptions
+	400041'	254 00 0 00 400024'		jrst	do.msg
+	400042'				movestring:
+	400042'	505 06 0 00 440700 		hrli	sourcebp,440700
+	400043'				moveloop:
+	400043'	134 01 0 00 000006 		ildb	char,sourcebp	;get next character to be moved
+	400044'	322 01 0 10 000000 		jumpe	char,0(xfer)	;done if at end of asciz string
+	400045'	136 01 0 00 000005 		idpb	char,destbp	;else move to destination string
+	400046'	344 07 0 00 400043'		aoja	length,moveloop	;and continue
+
+	400047'	040 141 164 040 165 	userpc:	asciz	/ at user PC /
+	400050'	163 145 162 040 120 
+	400051'	103 040 000 000 000 
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400054
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:50.023
+
+50P CORE USED
+exstr - Exception message string	MACRO %53A(1155) 18:31 29-Sep-82 Page S-62
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+ADDR		000004	spd	$ABSLO		000000	spd	
+CHAR		000001	spd	$ADP		000000	spd	
+COUNT		000011	spd	$CHBT		000003	spd	
+DESTBP		000005	spd	$FALSE		000000	spd	
+DISMIS	047000	777755		$HBTEN		000002	spd	
+DO.MSG		400024'		$HBTLI		000000	spd	
+DONE		400036'		$HBTVA		000000	spd	
+EX.ACT		400004'	ext	$HILOC		400000	spd	
+EX.STR		400000'	ent	$HSBFL		000000	spd	
+EX.TBL		400017'	ext	$HSBOF		000001	spd	
+INTACT	047000	777743		$HSBXA		000000	spd	
+INTADR	047000	777745		$HSBXB		000001	spd	
+INTASS	047000	777742		$LOC	777777	777777	spd	
+INTENB	047000	777744		$LOLOC		000000	spd	
+IS.USE		400040'		$MAXLO		000000	spd	
+LENGTH		000007	spd	$MAXST		000217	spd	
+M.USER		400040'	ext	$MAXTE		000000	spd	
+MOVELO		400043'		$MXCH		000204	spd	
+MOVEST		400042'		$STATS		000000	spd	
+MSG.LO		400020'		$STDMA		000100	spd	
+PC		000000	spd	$STDNU		000010	spd	
+R0		000000	spd	$SYS		000001	spd	
+R1		000001	spd	$TYM		000001	spd	
+R10		000010	spd	.AROVF		000104	spd	
+R11		000011	spd	.CANCO		000033	spd	
+R12		000012	spd	.CELLS		000001	spd	
+R13		000013	spd	.EXLOC		000047	spd	
+R2		000002	spd	.IADDR		000216	spd	
+R3		000003	spd	.INTMA		000000	spd	
+R4		000004	spd	.OTH16		000034	spd	
+R5		000005	spd	.OTHBT		000035	spd	
+R6		000006	spd	.OTHCE		000036	spd	
+R7		000007	spd	.REGS		000011	spd	
+SETTR1	047000	777740		.RESIG		000031	spd	
+SETTR2	047000	777737		.STKOV		000106	spd	
+SOURCE		000006	spd	.TMPAD		000041	spd	
+TINASS	047000	777736		.VECTO		000110	spd	
+TOP		000017	spd	.XPAGE		000040	spd	
+USERPC		400047'		.XSTMT		000037	spd	
+XFER		000010	spd	
+exact - find active handler	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-97
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						$module	exact - find active handler^
+						$excpt^
+						entry	ex.act
+						$temp	rtemp,2^
+
+					;
+					; EX.ACT searches for an active handler.  If none is found it simply returns.
+					; If one is found it does a skip return with:
+					;	(r0) = exception address
+					;	(r1) = exception block
+					;	(r2) = addr of its HBT
+					;
+
+			000001			base==r1
+			000002			hbt==r2
+			000003			hsb==r3
+
+	400000'				ex.act:
+	400000'	124 02 0 17 000001 		dmovem	hbt,rtemp^.rtemp(top)^
+	400001'	200 01 0 00 000016 		move	base,basis	;start search with current frame
+	400002'				act.loop:
+	400002'	554 02 0 01 000003 		hlrz	hbt,$chbt(base)	;get addr of current hbt
+	400003'	322 02 0 00 400015'		jumpe	hbt,nextsf	;back a frame when no hbt's left in this one
+	400004'				act.check:
+	400004'	200 03 0 02 000001 		move	hsb,$hsboffset(hbt)
+	400005'	271 03 0 01 000000 		addi	hsb,0(base)	;now addr of hsb
+	400006'	336 00 0 03 000000 		skipn	$hsbflag(hsb)	;if inactive
+	400007'	254 00 0 00 400013'		jrst	nexthbt		;then check outer hbt
+	400010'	120 00 0 03 000000 		dmove	r0,$hsbxaddr(hsb)
+	400011'	350 00 0 17 000000 		aos	0(top)		;do skip return with info
+	400012'	263 17 0 00 000000 		popj	top,
+	400013'				nexthbt:
+	400013'	550 02 0 02 000000 		hrrz	hbt,$hbtlink(hbt);get outer hbt
+	400014'	326 02 0 00 400004'		jumpn	hbt,act.check	;check it if is one
+	400015'				nextsf:
+	400015'	200 01 0 01 000001 		move	base,1(base)	;back one frame
+	400016'	326 01 0 00 400002'		jumpn	base,act.loop	;look for a handler in it
+	400017'	263 17 0 00 000000 		popj	top,		;end of stack, return
+						prgend
+exact - find active handler	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-98
+EXCEPT	MAC	23-May-71 22:31	
+
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400020
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:40.104
+
+50P CORE USED
+exact - find active handler	MACRO %53A(1155) 18:31 29-Sep-82 Page S-63
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+ACT.CH		400004'		$HSBXA		000000	spd	
+ACT.LO		400002'		$HSBXB		000001	spd	
+BASE		000001	spd	$LOC	777777	777777	spd	
+BASIS		000016	spd	$LOLOC		000000	spd	
+DISMIS	047000	777755		$MAXLO		000000	spd	
+EX.ACT		400000'	ent	$MAXST		000217	spd	
+HBT		000002	spd	$MAXTE		000002	spd	
+HSB		000003	spd	$MXCH		000204	spd	
+INTACT	047000	777743		$STATS		000000	spd	
+INTADR	047000	777745		$STDMA		000100	spd	
+INTASS	047000	777742		$STDNU		000010	spd	
+INTENB	047000	777744		$SYS		000001	spd	
+NEXTHB		400013'		$TYM		000001	spd	
+NEXTSF		400015'		.AROVF		000104	spd	
+R0		000000	spd	.CANCO		000033	spd	
+R1		000001	spd	.CELLS		000001	spd	
+R10		000010	spd	.EXLOC		000047	spd	
+R11		000011	spd	.IADDR		000216	spd	
+R12		000012	spd	.INTMA		000000	spd	
+R13		000013	spd	.OTH16		000034	spd	
+R2		000002	spd	.OTHBT		000035	spd	
+R3		000003	spd	.OTHCE		000036	spd	
+R4		000004	spd	.REGS		000011	spd	
+R5		000005	spd	.RESIG		000031	spd	
+R6		000006	spd	.RTEMP		000001	spd	
+R7		000007	spd	.STKOV		000106	spd	
+SETTR1	047000	777740		.TMPAD		000041	spd	
+SETTR2	047000	777737		.VECTO		000110	spd	
+TINASS	047000	777736		.XPAGE		000040	spd	
+TOP		000017	spd	.XSTMT		000037	spd	
+$ABSLO		000000	spd	
+$ADP		000000	spd	
+$CHBT		000003	spd	
+$FALSE		000000	spd	
+$HBTEN		000002	spd	
+$HBTLI		000000	spd	
+$HBTVA		000000	spd	
+$HILOC		400000	spd	
+$HSBFL		000000	spd	
+$HSBOF		000001	spd	
+N11	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-99
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exmth,$mthfn)^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400000
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:11.612
+
+50P CORE USED
+N11	MACRO %53A(1155) 18:31 29-Sep-82 Page S-64
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M1.1		000000	sen	
+$ABSLO		000000	spd	
+$EXMTH		000001	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$MTHFN		000001	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+N12	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-100
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exmth,$mthfo)^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400000
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:16.568
+
+50P CORE USED
+N12	MACRO %53A(1155) 18:31 29-Sep-82 Page S-65
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M1.2		000000	sen	
+$ABSLO		000000	spd	
+$EXMTH		000001	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$MTHFO		000002	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+N13	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-101
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exmth,$mthao)^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400000
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:12.435
+
+50P CORE USED
+N13	MACRO %53A(1155) 18:31 29-Sep-82 Page S-66
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M1.3		000000	sen	
+$ABSLO		000000	spd	
+$EXMTH		000001	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$MTHAO		000003	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+N14	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-102
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exmth,$mthdz)^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400000
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:12.768
+
+50P CORE USED
+N14	MACRO %53A(1155) 18:31 29-Sep-82 Page S-67
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M1.4		000000	sen	
+$ABSLO		000000	spd	
+$EXMTH		000001	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$MTHDZ		000004	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+N15	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-103
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exmth,$mthas)^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400000
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:12.468
+
+50P CORE USED
+N15	MACRO %53A(1155) 18:31 29-Sep-82 Page S-68
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M1.5		000000	sen	
+$ABSLO		000000	spd	
+$EXMTH		000001	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$MTHAS		000005	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+N16	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-104
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exmth,$mthac)^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400000
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:12.467
+
+50P CORE USED
+N16	MACRO %53A(1155) 18:31 29-Sep-82 Page S-69
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M1.6		000000	sen	
+$ABSLO		000000	spd	
+$EXMTH		000001	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$MTHAC		000006	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+N21	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-105
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exio,interr)^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400000
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:11.584
+
+50P CORE USED
+N21	MACRO %53A(1155) 18:31 29-Sep-82 Page S-70
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+INTERR		000001		
+M2.1		000000	sen	
+$ABSLO		000000	spd	
+$EXIO		000002	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+N22	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-106
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exio,rewerr)^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400000
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:12.569
+
+50P CORE USED
+N22	MACRO %53A(1155) 18:31 29-Sep-82 Page S-71
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M2.2		000000	sen	
+REWERR		000002		
+$ABSLO		000000	spd	
+$EXIO		000002	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+N23	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-107
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exio,eoferr)^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400000
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:12.083
+
+50P CORE USED
+N23	MACRO %53A(1155) 18:31 29-Sep-82 Page S-72
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+EOFERR		000003		
+M2.3		000000	sen	
+$ABSLO		000000	spd	
+$EXIO		000002	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+N24	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-108
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exio,outerr)^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400000
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:12.016
+
+50P CORE USED
+N24	MACRO %53A(1155) 18:31 29-Sep-82 Page S-73
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M2.4		000000	sen	
+OUTERR		000004		
+$ABSLO		000000	spd	
+$EXIO		000002	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+N25	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-109
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exio,inpopn)^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400000
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:11.131
+
+50P CORE USED
+N25	MACRO %53A(1155) 18:31 29-Sep-82 Page S-74
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+INPOPN		000005		
+M2.5		000000	sen	
+$ABSLO		000000	spd	
+$EXIO		000002	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+N26	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-110
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exio,ranerr)^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400000
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:11.180
+
+50P CORE USED
+N26	MACRO %53A(1155) 18:31 29-Sep-82 Page S-75
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M2.6		000000	sen	
+RANERR		000006		
+$ABSLO		000000	spd	
+$EXIO		000002	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+N27	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-111
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exio,illcur)^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400000
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:11.282
+
+50P CORE USED
+N27	MACRO %53A(1155) 18:31 29-Sep-82 Page S-76
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+ILLCUR		000007		
+M2.7		000000	sen	
+$ABSLO		000000	spd	
+$EXIO		000002	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+N210	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-112
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exio,emperr)^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400000
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:11.346
+
+50P CORE USED
+N210	MACRO %53A(1155) 18:31 29-Sep-82 Page S-77
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+EMPERR		000010		
+M2.10		000000	sen	
+$ABSLO		000000	spd	
+$EXIO		000002	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+N211	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-113
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exio,opnerr)^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400000
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:12.156
+
+50P CORE USED
+N211	MACRO %53A(1155) 18:31 29-Sep-82 Page S-78
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M2.11		000000	sen	
+OPNERR		000011		
+$ABSLO		000000	spd	
+$EXIO		000002	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+N31	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-114
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exusr,$usras)^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400000
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:11.219
+
+50P CORE USED
+N31	MACRO %53A(1155) 18:31 29-Sep-82 Page S-79
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M3.1		000000	sen	
+$ABSLO		000000	spd	
+$EXUSR		000003	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+$USRAS		000001	spd	
+
+N32	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-115
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exusr,$usrcx)^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400000
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:11.174
+
+50P CORE USED
+N32	MACRO %53A(1155) 18:31 29-Sep-82 Page S-80
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M3.2		000000	sen	
+$ABSLO		000000	spd	
+$EXUSR		000003	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+$USRCX		000002	spd	
+
+N33	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-116
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exusr,$usrag)^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400000
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:11.235
+
+50P CORE USED
+N33	MACRO %53A(1155) 18:31 29-Sep-82 Page S-81
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M3.3		000000	sen	
+$ABSLO		000000	spd	
+$EXUSR		000003	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+$USRAG		000003	spd	
+
+N34	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-117
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exusr,$usrnl)^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400000
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:12.385
+
+50P CORE USED
+N34	MACRO %53A(1155) 18:31 29-Sep-82 Page S-82
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M3.4		000000	sen	
+$ABSLO		000000	spd	
+$EXUSR		000003	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+$USRNL		000004	spd	
+
+N35	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-118
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exusr,$usrpt)^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400000
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:11.233
+
+50P CORE USED
+N35	MACRO %53A(1155) 18:31 29-Sep-82 Page S-83
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M3.5		000000	sen	
+$ABSLO		000000	spd	
+$EXUSR		000003	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+$USRPT		000005	spd	
+
+N36	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-119
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exusr,$usrss)^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400000
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:11.937
+
+50P CORE USED
+N36	MACRO %53A(1155) 18:31 29-Sep-82 Page S-84
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M3.6		000000	sen	
+$ABSLO		000000	spd	
+$EXUSR		000003	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+$USRSS		000006	spd	
+
+N37	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-120
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exusr,$usrsr)^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400000
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:13.104
+
+50P CORE USED
+N37	MACRO %53A(1155) 18:31 29-Sep-82 Page S-85
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M3.7		000000	sen	
+$ABSLO		000000	spd	
+$EXUSR		000003	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+$USRSR		000007	spd	
+
+N310	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-121
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exusr,$usrsc)^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400000
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:12.161
+
+50P CORE USED
+N310	MACRO %53A(1155) 18:31 29-Sep-82 Page S-86
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M3.10		000000	sen	
+$ABSLO		000000	spd	
+$EXUSR		000003	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+$USRSC		000010	spd	
+
+N311	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-122
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exusr,$usrfl)^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400000
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:11.301
+
+50P CORE USED
+N311	MACRO %53A(1155) 18:31 29-Sep-82 Page S-87
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M3.11		000000	sen	
+$ABSLO		000000	spd	
+$EXUSR		000003	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+$USRFL		000011	spd	
+
+N40	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-123
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exsto,$none)^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400000
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:11.587
+
+50P CORE USED
+N40	MACRO %53A(1155) 18:31 29-Sep-82 Page S-88
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M4.0		000000	sen	
+$ABSLO		000000	spd	
+$EXSTO		000004	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$NONE		000000	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+N50	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-124
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exstk,$none)^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400000
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:11.165
+
+50P CORE USED
+N50	MACRO %53A(1155) 18:31 29-Sep-82 Page S-89
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M5.0		000000	sen	
+$ABSLO		000000	spd	
+$EXSTK		000005	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$NONE		000000	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+N61	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-125
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exspc,$spcmr)^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400000
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:10.407
+
+50P CORE USED
+N61	MACRO %53A(1155) 18:31 29-Sep-82 Page S-90
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M6.1		000000	sen	
+$ABSLO		000000	spd	
+$EXSPC		000006	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$SPCMR		000001	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+N62	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-126
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exspc,$spciu)^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400000
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:11.173
+
+50P CORE USED
+N62	MACRO %53A(1155) 18:31 29-Sep-82 Page S-91
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M6.2		000000	sen	
+$ABSLO		000000	spd	
+$EXSPC		000006	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$SPCIU		000002	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+N63	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-127
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exspc,$spcnn)^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400000
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:11.234
+
+50P CORE USED
+N63	MACRO %53A(1155) 18:31 29-Sep-82 Page S-92
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M6.3		000000	sen	
+$ABSLO		000000	spd	
+$EXSPC		000006	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$SPCNN		000003	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+N64	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-128
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exspc,$spcbp)^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400000
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:11.190
+
+50P CORE USED
+N64	MACRO %53A(1155) 18:31 29-Sep-82 Page S-93
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M6.4		000000	sen	
+$ABSLO		000000	spd	
+$EXSPC		000006	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$SPCBP		000004	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+N65	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-129
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exspc,$spcff)^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400000
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:12.310
+
+50P CORE USED
+N65	MACRO %53A(1155) 18:31 29-Sep-82 Page S-94
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M6.5		000000	sen	
+$ABSLO		000000	spd	
+$EXSPC		000006	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$SPCFF		000005	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+N66	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-130
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exspc,$spcrh)^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400000
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:10.686
+
+50P CORE USED
+N66	MACRO %53A(1155) 18:31 29-Sep-82 Page S-95
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M6.6		000000	sen	
+$ABSLO		000000	spd	
+$EXSPC		000006	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$SPCRH		000006	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+N70	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-131
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						search	iosym
+						$errmodule ($exatn,$none)^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400000
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:11.438
+
+50P CORE USED
+N70	MACRO %53A(1155) 18:31 29-Sep-82 Page S-96
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M7.0		000000	sen	
+$ABSLO		000000	spd	
+$EXATN		000007	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$NONE		000000	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+nuser	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-132
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						$module	nuser^
+						entry	m.user
+			000000		m.user==0
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400000
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:01.608
+
+50P CORE USED
+nuser	MACRO %53A(1155) 18:31 29-Sep-82 Page S-97
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+M.USER		000000	sen	
+$ABSLO		000000	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+
+rtreg	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-133
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						$module	rtreg^
+						entry	rt.reg
+
+	400000'				rt.reg:
+	400000'	27 04 0 01 777777 		point	4, -1(r1), 12
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400001
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:02.633
+
+50P CORE USED
+rtreg	MACRO %53A(1155) 18:31 29-Sep-82 Page S-98
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+R1		000001	spd	
+RT.REG		400000'	ent	
+$ABSLO		000000	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+
+vxrx	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-134
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						$module	vxrx^
+						entry	vx.rx
+			000000		vx.rx==0
+						$low^
+						intern	rx.mth
+	000000'	000000	000001		rx.mth:!	exp	$exmth
+						intern	rx.io
+	000001'	000000	000002		rx.io:!	exp	$exio
+						intern	rx.usr
+	000002'	000000	000003		rx.usr:!	exp	$exusr
+						intern	rx.sto
+	000003'	000000	000004		rx.sto:!	exp	$exsto
+						intern	rx.stk
+	000004'	000000	000005		rx.stk:!	exp	$exstk
+						intern	rx.spc
+	000005'	000000	000006		rx.spc:!	exp	$exspc
+						intern	rx.atn
+	000006'	000000	000007		rx.atn:!	exp	$exatn
+						$high^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400000
+PROGRAM BREAK IS 000007
+CPU TIME USED 00:04.760
+
+50P CORE USED
+vxrx	MACRO %53A(1155) 18:31 29-Sep-82 Page S-99
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+RX.ATN		000006'	sin	
+RX.IO		000001'	sin	
+RX.MTH		000000'	sin	
+RX.SPC		000005'	sin	
+RX.STK		000004'	sin	
+RX.STO		000003'	sin	
+RX.USR		000002'	sin	
+VX.RX		000000	sen	
+$ABSLO		000000	spd	
+$EXATN		000007	spd	
+$EXIO		000002	spd	
+$EXMTH		000001	spd	
+$EXSPC		000006	spd	
+$EXSTK		000005	spd	
+$EXSTO		000004	spd	
+$EXUSR		000003	spd	
+$FALSE		000000	spd	
+$HILOC		400000'	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000007'	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+
+rxmth	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-135
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						$module	rxmth^
+						entry	rx.mth
+						$high^
+	400000'	000000	000001		rx.mth:!	exp	$exmth
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400001
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:03.032
+
+50P CORE USED
+rxmth	MACRO %53A(1155) 18:31 29-Sep-82 Page S-100
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+RX.MTH		400000'	sen	
+$ABSLO		000000	spd	
+$EXMTH		000001	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+
+rxio	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-136
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						$module	rxio^
+						entry	rx.io
+						$high^
+	400000'	000000	000002		rx.io:!	exp	$exio
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400001
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:02.967
+
+50P CORE USED
+rxio	MACRO %53A(1155) 18:31 29-Sep-82 Page S-101
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+RX.IO		400000'	sen	
+$ABSLO		000000	spd	
+$EXIO		000002	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+
+rxusr	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-137
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						$module	rxusr^
+						entry	rx.usr
+						$high^
+	400000'	000000	000003		rx.usr:!	exp	$exusr
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400001
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:02.996
+
+50P CORE USED
+rxusr	MACRO %53A(1155) 18:31 29-Sep-82 Page S-102
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+RX.USR		400000'	sen	
+$ABSLO		000000	spd	
+$EXUSR		000003	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+
+rxsto	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-138
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						$module	rxsto^
+						entry	rx.sto
+						$high^
+	400000'	000000	000004		rx.sto:!	exp	$exsto
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400001
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:02.982
+
+50P CORE USED
+rxsto	MACRO %53A(1155) 18:31 29-Sep-82 Page S-103
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+RX.STO		400000'	sen	
+$ABSLO		000000	spd	
+$EXSTO		000004	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+
+rxstk	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-139
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						$module	rxstk^
+						entry	rx.stk
+						$high^
+	400000'	000000	000005		rx.stk:!	exp	$exstk
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400001
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:03.109
+
+50P CORE USED
+rxstk	MACRO %53A(1155) 18:31 29-Sep-82 Page S-104
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+RX.STK		400000'	sen	
+$ABSLO		000000	spd	
+$EXSTK		000005	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+
+rxspc	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-140
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						$module	rxspc^
+						entry	rx.spc
+						$high^
+	400000'	000000	000006		rx.spc:!	exp	$exspc
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400001
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:08.296
+
+50P CORE USED
+rxspc	MACRO %53A(1155) 18:31 29-Sep-82 Page S-105
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+RX.SPC		400000'	sen	
+$ABSLO		000000	spd	
+$EXSPC		000006	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+
+rxatn	MACRO %53A(1155) 18:31 29-Sep-82 Page 1-141
+EXCEPT	MAC	23-May-71 22:31	
+
+						search	rtsym
+						$module	rxatn^
+						entry	rx.atn
+						$high^
+	400000'	000000	000007		rx.atn:!	exp	$exatn
+						end
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400001
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:03.045
+
+50P CORE USED
+rxatn	MACRO %53A(1155) 18:31 29-Sep-82 Page S-106
+EXCEPT	MAC	23-May-71 22:31		SYMBOL TABLE
+
+RX.ATN		400000'	sen	
+$ABSLO		000000	spd	
+$EXATN		000007	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+
+  0 8Z

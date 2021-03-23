@@ -1,0 +1,1353 @@
+#DOCUMENT(M68000 Project Progress Report,<:Feburary 16 1982:>,45,,100)
+$positions +0,+4,+4,+4,+4,+4,+4
+#sect_default(66,0,3,1,2,1)
+#NAME(FAIMAN)
+#define (#sched,x,y,#schedule (x,y,1))&
+#define (#resched,x,y,#schedule (x,y))&
+#task (Code Generator Design Notes)
+Preliminary documentation will be written to describe the form and use of
+code generator data structures,
+and to outline the fundamental procedures that will be needed to do code
+generation.
+Detailed algorithms will not be provided -- this document provides a
+framework for the code generator, but no more.
+(Some sections will be written by Steve Medlin.)
+#end_disc
+#sched (11/2/81,12/4/81)
+#progress (12/7/81)
+Most sections of the design notes are complete.
+A section is still needed on the treatment of multiple-use expressions.
+#end_disc
+#beginlevel
+#task (Code Generator Design Notes - Review,n)
+#sched (12/9/81,12/9/81)
+#endlevel
+#task (Pass 1)
+The type and storage allocation tables, as well as the miscellaneous
+target machine constants, must be defined in the initialization pass.
+#end_disc
+#sched (11/16/81,11/27/81)
+#actual (12/4/81,12/4/81)
+#progress (12/4/81)
+The initialization pass (M68INI) has been completed.
+Programs may be processed by the analysis pass, using the :TARGET M68
+command.
+Only the code generator remains to be written.
+#end_disc
+#task (Register Allocation)
+Coding of low-level utility routines for register allocation (specified in the
+Design Notes).
+#end_disc
+#sched (11/30/81,12/11/81)
+#actual (12/7/81,12/7/81)
+#ENDLEVEL
+#NAME(ROUSH)
+#task(Memo on code sharing)
+Write a memo to the application group managers describing the
+approach we are taking to code sharing and detailing its
+advantages and disadvantages.
+#end_disc
+#schedule(12/4/81,12/7/81,1)
+#actual(12/4/81,12/7/81)
+#task(EXORmacs installation)
+Assist in and learn from installation of our EXORmacs development
+system.
+#end_disc
+#schedule(12/7/81,12/8/81,1)
+#actual(12/7/81,12/11/81)
+#task(Complete runtime specification)
+Update the runtime specification document to reflect the changes
+necessary for code sharing in an unmapped system.
+Distribute the runtime specification and hold a design review for the runtime.
+#end_disc
+#schedule(12/3/81,12/16/81)
+#actual(12/3/81,12/16/81)
+#progress(12/11/81)
+Runtime spec complete.
+Review scheduled for 12/16/81.
+#end_disc
+#beginlevel
+#task(Partial spec update)
+Update all sections of the specification except the
+section on procedure calling conventions.
+#end_disc
+#schedule(12/3/81,12/8/81)
+#actual(12/3/81,12/11/81)
+#task(Update procedure calling conventions)
+Decide if a dedicated argument pointer register is acceptable
+now that a dedicated static area register is necessary.
+If a dedicated argument pointer register is unacceptable,
+then design a document an alternative procedure calling mechanism.
+#end_disc
+#schedule(12/7/81,12/11/81)
+#actual(12/7/81,12/11/81)
+#task(Hold design review,N)
+#schedule(12/16/81,12/16/81)
+#actual(12/16/81,12/16/81)
+#endlevel
+#task(File transfer)
+Work with Neil Krone in getting his file transfer program working
+and documented.
+#end_disc
+#schedule(12/14/81,12/18/81,1)
+#schedule(12/18/81,1/13/81)
+#actual(1/5/82,1/19/82)
+#progress(12/17/81)
+We've decided not to try using Neil Krone's simple transfer program
+because Motorola's official transfer program with error checking 
+and retransmission capability is available.
+This will undoubtably take longer to get up because of its increased
+complexity but may eliminate the need for writing our own later.
+The start of this task has been delayed for two reasons.
+First, Neil Krone must obtain some missing components of the
+transfer program.
+Second I wanted to establish the initial library, with
+initialization routine, before starting on the transfer task.
+The initialization routine will make creation of test harnesses
+much easier for others working on the runtime.
+#end_disc
+#progress(1/11/82)
+Motorola's file transfer program works in "transparent" mode after
+some patches to the VERSAdos operating system were applied.
+The next step is to get the downloading of printable ASCII
+files to the EXORmacs working.
+#end_disc
+#progress(1/12/82)
+Transfer of printable ASCII files is working.
+#end_disc
+#progress(1/13/82)
+Modified both ends of the transfer program to enable transfer
+of VERSAdos object files to the EXORmacs.
+Object file transfers are now working.
+The remaining steps are to get file transfers working from 
+TYMSHARE and to document how to use the transfer programs.
+#end_disc
+#task(Exception handling macros)
+Write, enter and document macros for the runtime which generate
+exception handling data structures.
+#end_disc
+#schedule(12/10/81,12/15/81)
+#actual(12/10/81,12/14/81)
+#task(Runtime Initialization Routine)
+Write and test the runtime initialization routine.
+This includes setting up the initial searchable object library
+and testing most of the ideas involved in the proposed
+scheme for sharing code on an unmapped system.
+#end_disc
+#schedule(12/14/81,12/23/81)
+#actual(12/14/81,12/17/81)
+#progress(12/17/81)
+I calling this routine done, but somewhere down the line it will
+undoubtably have to be rewritten.
+This has become apparent as we've learned more about the OEM version
+of VERSados.
+However, before the final form of the initialization routine
+can be determined we'll have to find out even more about OEM VERSados.
+The present routine will enable work to proceed.
+#beginlevel
+#task(Versados experimentation)
+Some of the ideas critical to the code sharing approach chosen
+will be tried out on the EXORmacs system.
+#end_disc
+#schedule(12/14/81,12/16/81)
+#actual(12/14/81,12/15/81)
+#task(Design initialization routine)
+The approach used in support of code sharing will be decided upon.
+The initialization routine and the
+methodology to used in testing it will
+be designed.
+#end_disc
+#schedule(12/15/81,12/17/81)
+#actual(12/15/81,12/15/81)
+#task(Code initialization routine)
+The initialization routine will be
+coded, keyed in and assembled.
+#end_disc
+#schedule(12/17/81,12/21/81)
+#actual(12/15/81,12/17/81)
+#task(Set up initial library)
+An initial version of the runtime object library will be set up.
+A command file for constructing it will be set up also.
+#schedule(12/21/81,12/21/81)
+#actual(12/17/81,12/17/81)
+#task(Test initialization routine)
+The initialization routine and library ordering will be tested.
+#end_disc
+#schedule(12/22/81,12/23/81)
+#actual(12/17/81,12/17/81)
+#endlevel
+#task(Binary I/O Design)
+Produce a design for the implementation of the runtime routines
+for support of binary I/O.
+#end_disc
+#schedule(1/25/82,2/5/82,1)
+#actual(1/25/82,2/3/82)
+#task(Overlay System Functional Specification)
+Produce a function specification for an overlay system to run
+under VERSAdos.
+#end_disc
+#schedule(2/1/82,3/26/82,1)
+#progress(2/9/82)
+This task has been cancelled due to uncertainty about the
+target system.
+#end_disc
+#task(Dynamic temp allocation routine)
+Write, test and document a runtime routine to allocate dynamic temps.
+#end_disc
+#schedule(2/9/82,2/10/82,1)
+#actual(2/9/82,2/10/82)
+#task(Non-local goto runtime routine)
+Write, test and document a runtime routine to do non-local gotos
+into the main routine.
+#end_disc
+#schedule(2/10/82,2/11/82,1)
+#actual(2/10/82)
+#task(Improve stack frame macros used by runtime)
+Modify the M$FRAME and M$UNFRAME macros used at the entry and exit
+points of most runtime routines.
+The modifications will result in smaller and faster code
+being generated by the macros in many cases.
+#end_disc
+#schedule(2/11/82,2/12/82,1)
+#actual(2/11/82,2/12/82)
+#ENDLEVEL
+#NAME(MEDLIN)
+#task (Code Generator Design)
+In consultation with Neil Faiman and Dave Wilson,
+define the structure of the code generator and the data structures employed.
+#end_disc
+#schedule (11/1/81,12/1/81,1)
+#actual (11/1/81,1/1/82)
+#task (Support Routines)
+Specification and coding of numerous routines useful throughout the code generator.
+These will be subject to frequent revision over the course of the project.
+#end_disc
+#schedule (11/16/81,12/19/81,1)
+#actual (12/7/81,1/9/82)
+#task (Instruction Emission)
+Specification of the routines used to emit instructions during compilation.
+This includes checks for consistency and legality.
+#end_disc
+#schedule (11/30/81,12/19/81,1)
+#actual (12/7/81,1/11/82)
+#progress (12/23/81)
+All instruction emission routines have been defined and written.
+#end_disc
+#progress (1/7/82)
+The decision that GEN_INST must translate generic to specific opcodes,
+a task previously postponed till object file emission, 
+requires a major restructuring of that routine and invalidates much of
+the error checking code.
+#end_disc
+#task (String References)
+Basic string references and specification of routines used
+throughout the code generator for manipulation of string expressions.
+#end_disc
+#schedule (1/18/82,1/25/82,1)
+#actual (1/18/82,1/25/82)
+#task (String Runtime Interface)
+Specification of all runtime routines used for string manipulation
+as well as their calling sequences and parameter formats.
+#end_disc
+#schedule (1/11/82,1/18/82,1)
+#actual (1/11/82,1/18/82)
+#task (Subroutine Calls and Parameters)
+Evaluation and emission of parameter lists for calls to Pascal and FORTRAN
+routines.
+#end_disc
+#schedule (1/25/82,2/22/82,1)
+#task (String Expressions)
+Basic string manipulation including assignment, concatenation, substring,
+subscript, upper/lowercasing, etc.
+#schedule (2/22/82,3/22/82,1)
+#task (Instrinsic String Functions)
+Completion of the SEARCH, VERIFY, and INDEX functions.
+#end_disc
+#schedule (3/22/82,4/5/82,1)
+#ENDLEVEL
+#NAME (HOPE)
+#TASK (M68000 MDSI Pascal I/O Runtime)
+My assignment for the foreseeable future is to provide the I/O runtime
+routines for the M68000 implementation of MDSI Pascal.
+#END_DISC
+#BEGINLEVEL
+#TASK (I/O Design Spec,N)
+#SCHEDULE (9/?/81,11/13/81,1)
+#ACTUAL (9/?/81,11/13/81)
+#PROGRESS (11/13/81)
+The spec was completed.
+#END_DISC
+#TASK (I/O Design Review,N)
+#SCHEDULE (11/18/81,11/18/81,1)
+#ACTUAL (11/18/81,11/18/81)
+#TASK (Text File Association,N)
+#SCHEDULE (11/16/81,12/4/81,1)
+#SCHEDULE (11/16/81,12/18/81)
+#ACTUAL(11/16/81,1/13/82)
+#PROGRESS(11/25/81)
+Using the EXORmacs system at the local Motorola sales office, a modem,
+and my ADM terminal, with the Motorola editor in line mode, I have set
+up a file of literals to be used not only on textfile association, but
+on all phases of the I/O runtime project.
+These include all literals needed to address a file block, and the values
+of MDSI Pascal standard type IO_ERROR.
+#PAR
+When the Text File Association part of the I/O runtime is complete, it
+will not be testable until the code for some rudimentary writing and
+reading of files is completed.  If this happens substantially before
+the NEW routine is available, a NEW routine will have to be dummied up
+for the testing.
+#END_DISC
+#PROGRESS (12/2/81)
+I have devised a method of parsing a string passed in to the association
+routines and extracting a resource name acceptable to VERSAdos.
+#END_DISC
+#PROGRESS (12/3/81)
+I badly underestimated this task.  Several factors contributed to the
+underestimate.  A minor contribution came from an underestimate of the
+difficulty of using the Motorola editor in line mode.
+Having an EXORmacs system in house will make possible use of the editor in
+page mode, which, because it was the intended mode for this editor, and
+has been in use by many other people, has had most of the bugs worked out of it.
+Also, having the EXORmacs in house will greatly increase its availability.
+The greatest factor was
+that I did not realize how much was involved in the task.  Perhaps
+it would have been better to leave the resource name parsing and all its
+ramifications for later, and pony up some minimum parsing function for
+this task only.  At any rate, I have rescheduled the entire task, and
+I am further breaking the task down as follows:
+#END_DISC
+#BEGINLEVEL
+#TASK (File block manipulation)
+Without a NEW function, this involves creating
+and working with a very few file blocks at fixed locations.
+What is to be done is to create file blocks which contain IOS
+blocks and FHS blocks which VERSAdos will buy.  This also involves
+finding out how to treat logical unit numbers, how VERSAdos reacts to
+such things as lower case letters in resource name strings, and
+generally how to work with VERSAdos.
+#END_DISC
+#SCHEDULE (12/7/81,12/10/81,1)
+#ACTUAL (12/7/81,1/13/82)
+#PROGRESS (12/11/81)
+I have made less progress than I had hoped on
+the EXORmacs.  The EXORmacs has been flaky since it was delivered, and
+it has not been uncommon to lose several hours worth of editted data.
+I am doing more frequent SAVEs and backup procedures have been instituted
+which alleviate this somewhat.
+Chasing and recovering from system errors has taken much too much time.  
+We now know more about how to recover, and have a good logging system,
+both of which will free up more time.
+#TASK (T.OPEN and T.RESET,N)
+#SCHEDULE (12/10/81,12/14/81,1)
+#ACTUAL (12/10/81,1/13/82)
+#PROGRESS (12/11/81)
+T.OPEN is coded, but gets assembler syntax errors which I believe are
+related to the way static storage is declared.  The error numbers are
+listed in the manual as "RELOCATION OF BYTE FIELD ATTEMPTED", and
+"SYNTAX ERROR".
+These errors occur on lines which refer to static variables.
+T.RESET is a call to T.OPEN followed by a call to T.GET.
+#END_DISC
+#PROGRESS (12/15/81)
+T.OPEN and T.RESET are coded and get no syntax errors.
+#PROGRESS (12,27,81)
+T.OPEN and T.RESET will open files, and the information in the
+FHS block looks reasonable.
+#END_DISC
+#TASK (T.REWRITE,N)
+#SCHEDULE (12/14/81,12/16/81,1)
+#ACTUAL (12/14/81,1/13/82)
+#PROGRESS (12/15/81)
+T.REWRITE is coded and gets no syntax errors.
+#PROGRESS (12/27/81)
+T.REWRIT will create files.
+#END_DISC
+#PROGRESS (1/6/82)
+A file can be created with T.REWRITE, but VERSAdos doesn't want to overwrite
+an existing file of the same name.
+#END_DISC
+#TASK (Testing)
+See if a file opened with T.OPEN appears in the directory, see if a
+file open with T.REWRIT is emptied, see if the information placed
+in the file block looks reasonable.
+#END_DISC
+#SCHEDULE (12/16/81,12/18/81,1)
+#SCHEDULE (12/16/81,5/3/82)
+#ACTUAL (12/16/81)
+#PROGRESS (12/27/81)
+T.OPEN, T.RESET, and T.REWRIT leave reasonable data in the directory and in
+the file block.
+#END_DISC
+#ENDLEVEL
+#TASK (<Text I/O, including GETSTRING and PUTSTRING>,N)
+#SCHEDULE (12/7/81,2/12/82,1)
+#SCHEDULE (12/21/81,2/19/82)
+#ACTUAL (12/28/82)
+#BEGINLEVEL
+#TASK (T.PUT and T.WRTLN,N)
+#SCHEDULE (12/7/81,12/23/81,1)
+#SCHEDULE (12/21/81,1/12/82)
+#ACTUAL (12/28/81,1/13/82)
+#PROGRESS (12/30/81)
+T.PUT and T.WRTLN are coded and get no syntax errors.
+#END_DISC
+#PROGRESS (1/13/82)
+T.PUT and T.WRTLN are debugged.
+#END_DISC
+#TASK (T.READLN and T.GET,N)
+#SCHEDULE (12/28/81,1/15/81,1)
+#SCHEDULE (1/13/82,2/1/82)
+#ACTUAL (12/28/81,1/13/82)
+#PROGRESS (12/30/81)
+T.READLN and T.GET are coded and get no syntax errors.
+#END_DISC
+#PROGRESS (1/13/82)
+T.READLN and T.GET are debugged.
+#END_DISC
+#TASK (Format conversion)
+Design and code a system of coroutines to produce and consume ASCII characters.
+Don Remboski will code the real number format conversion coroutines.
+#SCHEDULE (1/20/82,2/15/82,1)
+#ACTUAL (1/20/82)
+#PROGRESS (2/9/82)
+I lost a day and a half to snow the week of 2/1 - 2/5.  This should be
+made up by 2/15.
+#BEGINLEVEL
+#TASK (Coroutine invocation design,N)
+#SCHEDULE (1/20/82,1/27/82,1)
+#ACTUAL (1/20/82,1/27/82)
+#TASK (Parameter access design,N)
+#SCHEDULE (1/27/82,1/29/82,1)
+#ACTUAL (1/27/82,1/29/82)
+#TASK (Parent routines)
+T.READ, T.WRITE, I.GETSTR, I.PUTSTRV, and I.PUTSTRF.
+#END_DISC
+#SCHEDULE (2/1/82,2/15/82,1)
+#ACTUAL (2/1/82)
+#PROGRESS (2/5/82)
+T.WRITE is coded.
+#END_DISC
+#PROGRESS (2/8/82)
+T.WRITE is debugged,
+except that unframing a variable number of parameters is proving
+stubborn.
+#END_DISC
+#PROGRESS (2/10/82)
+T.WRITE is debugged.
+#END_DISC
+#PROGRESS (2/11/82)
+T.READ is coded and gets no syntax errors.
+#END_DISC
+#TASK (Item producer routines,N)
+#SCHEDULE (1/28/82,2/3/82,1)
+#ACTUAL (1/28/82,2/9/82)
+#PROGRESS (1/29/82)
+I am doing the Boolean and integer item producers, Don is doing the reals
+and double reals.  The boolean producer is coded and gets no syntax
+errors, the integer-decimal routine is coded and gets no syntax errors.
+#END_DISC
+#PROGRESS (2/5/82)
+The hex and octal parts of the integer routine are coded.
+#END_DISC
+#PROGRESS (2/8/82)
+The Boolean producer is debugged.  The integer producer is close but no 
+cigar.
+#END_DISC
+#PROGRESS (2/9/82)
+The integer producer is debugged, for decimal, hex, and octal output.
+#TASK (Target consumer routines,N)
+#SCHEDULE (2/3/82,2/8/82,1)
+#ACTUAL (2/3/82)
+#PROGRESS (2/8/82)
+The text file consumer is debugged.
+#TASK (Target producer routines,N)
+#SCHEDULE (2/8/82,2/11/82,1)
+#ACTUAL (2/9/82)
+#PROGRESS (2/11/82)
+The text file producer routine is coded and gets no syntax errors.
+#END_DISC
+#TASK (Item consumer routines,N)
+#SCHEDULE (2/11/82,2/15/82,1)
+#ACTUAL (2/11/82)
+#PROGRESS (2/11/82)
+The integer consumer routine is coded and gets no syntax errors.
+#END_DISC
+#ENDLEVEL
+#ENDLEVEL
+#ENDLEVEL
+#PROGRESS (1/15/82)
+The following routines are now availaible:
+#BEGINITEM (,,0)
+#ITEM (I.GETUN)Returns the next available VERSAdos logical unit number, marks
+it used in a static map.
+#ITEM (I.DISPUN)Marks a unit not used in the static map.
+#ITEM (I.CHKVAL)Checks whether the file variable passed in has been associated
+with a file, and, if so, whether there was a previous fatal error on the file.
+#ITEM (I.RETRY)To be used when another routine finds an error.  Checks whether
+the file was associated with the "retry" option, and, if not, signaals the
+error.
+#ITEM (T.GET)
+#ITEM (T.READLN)
+#ITEM (T.WRTLN)
+#ITEM (T.PUT)
+#ITEM (T.PAGE)
+#ITEM (T.OPEN)
+#ITEM (T.RESET)
+#ITEM (T.REWRIT)
+#ITEM (I.CLOSE)
+#ITEM (I.CLOSEA)
+#ITEM (I.SCRTCH)
+#ENDITEM
+#END_DISC
+#ENDLEVEL
+#NAME(WILSON)
+
+#TASK(Statement level operators)
+Development of the module M68GEN, which is invoked by PASS4 to compile an
+entirece module.
+M68GEN contains all routines to control the overall progress of 
+code generation, down to the level of generating the specific code for
+many statement tuples, and invoking routines in other modules for the
+remainder.  The groups of routines involved are:
+#beginitem()
+#item()High-level control
+#item()Control of generation within a single procedure, function, or mainline
+#item()Management of basic blocks; temporary storage allocation and deallocation
+#item()Code generation for those statement tuples not complex enough to
+require their own modules
+#item()Aggregate objects
+#enditem
+#END_DISC
+#SCHEDULE(11/30/81,1/15/82,1)
+#ACTUAL(11/30/81,1/15/82)
+#beginlevel
+#TASK(High-level control)
+These routines control the structure of code generation: initialization,
+invoking lower level processing for each block, and termination.
+The specific routines are
+#beginitem()
+#item()GEN_CODE
+#item()COMPILE_MAIN
+#item()COMPILE_SUBR
+#item()INIT_STATIC
+#item()FATAL_ERROR
+#enditem
+#end_disc
+#PROGRESS(12/4/81)
+Done.
+#end_disc
+#TASK(Control within a single block)
+These routines handle initialization for a block, generate entry code, scan
+the intermediate-form tuples for the block, and handle termination for a
+block.  The routines are
+#beginitem()
+#item()COMPILE_BODY (but only skeleton of IF scanning)
+#item()PROLOGUE
+#enditem
+#end_disc
+#PROGRESS(12/11/81)
+Done.
+#end_disc
+#TASK(Management of basic blocks; temporaries)
+These routines handle allocation of static and dynamic temporaries, and the
+processing at the beginning and end of each basic block.
+The routines are
+#beginitem()
+#item()BB_START
+#item()BB_END
+#item()RESET_STACK
+#item()GET_TEMP
+#item()KILL_TEMPS
+#enditem
+#end_disc
+#PROGRESS(12/18/81)
+Done.
+#end_disc
+#TASK(Code generation for some statements, dispatching for rest)
+These routines generate code for many statements. For others, such
+as string operations, sets, and some of the I/O operations, routines
+in other modules are invoked. The complete reference and expression
+generating mechanisms utilized by these routines are in other modules.
+The routines are
+#beginitem()
+#item()COMPILE_BODY (flesh out IF scanning, generating code for some
+ statements on the spot, invoking routines for rest)
+#item()VALUE_CHECK
+#item()POINTER_CHECK
+#item()SUBSTRING_CHECK
+#item()COMPATABILITY_CHECK
+#item()COND_HANDLER_STMTS (skeleton only)
+#item()CASE_JUMP
+#item()BLOCK_MOVE
+#item()PROC_FUNC_ASSIGNMENT
+#item()SCALAR_ASSIGNMENT
+#item()WITH_START (M68EXP)
+#item()WITH_END (M68EXP)
+#enditem
+#end_disc
+#progress(1/8/82)
+Done.
+#end_disc
+#TASK(Aggregate objects)
+These routines handle assignment of records and arrays, and break aggregate
+constructors down into sequences of more primitive operations.
+#beginitem()
+#item()EXPAND_AGG_CONSTRUCTOR
+#item()AGG_ASSIGNMENT
+#enditem
+#end_disc
+#progress(1/15/82)
+Done.
+#end_disc
+#endlevel
+
+#TASK(Constant emission)
+Development of those routines in M68CGU that generate constant objects
+given symbol table information.
+#SCHEDULE(1/18/82,1/22/82,1)
+#ACTUAL(1/18/82,1/22/82)
+
+#TASK(Sets)
+#SCHEDULE(1/25/82,3/19/82,1)
+
+#TASK(Fix branches)
+#SCHEDULE(3/22/82,3/26/82)
+
+#TASK(Constant pooling)
+#SCHEDULE(3/29/82,4/2/82)
+
+#ENDLEVEL
+#NAME(SPENCER)
+#TASK(Runtime routine for pascal time function)
+This is a very simple 68000 assembly language program.
+Writing it involves learning the basics of the 68000 operating
+system, the editor, the assembler, the linker, the debugger,
+and out own internal conventions and standards.
+#schedule(1/5/82,1/8/82,1)
+#actual(1/5/82,1/8/82)
+#progress(1/21/82)
+Completed.
+#task(Runtime routines for procedure entry and exit)
+Runtime routines for procedure entry and exit including stack
+overflow checking.  Again, a learning task.
+#schedule(1/11/82,1/15/82,1)
+#actual(1/11/82,1/18/82)
+#progress(1/14/82)
+Entire day was spent working on WORD-11 for D. Redding.
+#progress (1/18/82)
+Completed.
+#task(Runtime String Routines)
+Write the Pascal runtime string routines, including twenty-four basic
+string move routines, three string comparison routines, and three
+index routines.
+#schedule(1/18/82,2/19/82,1)
+#progress(1/21/82)
+String move routines are mostly coded
+#progress(2/10/82)
+Twenty-four string concatenate routines were added to the task list
+last week.  The forty-eight string move and concatenate routines are
+coded and assembled.  A little more testing remains to be done.  Steve
+Roush has read over them and suggested improvements, which have been
+made.  This leaves the remainder of the week of 2/8/82 and the entire
+week of 2/15/82 for the (3) string comparison routines and the (3) 
+string index routines.
+#ENDLEVEL
+#NAME(MONTAG)
+#TASK(Object File Analyzer)The 
+Object File Analyzer is a stand-alone program that reads in the
+relocatable object file generated by the Pascal compiler, breaks
+its contents up into their logical records, and prints out the values
+of each of the component fields of these logical records.
+#SCHEDULE(11/16/81,12/07/81,1)
+#ACTUAL(11/16/81,12/04/81)
+#PROGRESS(12/04/81)
+The Analyzer is complete and tested, currently in (PASDEV4)M68DMP.PAS.
+#TASK(Code List Emission routines)The 
+Code List Emission routines are are collection of routines that
+do all the processing on the code lists once they have been generated
+by the Code Generator to create the Relocatable Object File and the
+Assembly Code Listing.
+#SCHEDULE(12/07/81,01/18/82,1)
+#SCHEDULE(12/07/81,02/08/82)
+#ACTUAL(12/07/81)
+#PROGRESS(12/11/81)
+Started.
+#PROGRESS(01/08/82)
+Due to illness the week before Christmas, and a long vacation, 
+the emitter routines appear to be 3 weeks behind schedule.
+#PROGRESS(01/21/82)
+Still working on them, might be done by new deadline.
+#PROGRESS(02/05/82)
+Almost done, should be finished sometime next week.
+#BEGINLEVEL
+#TASK(Emission routines)The 
+Emission routines are 5 routines that are the only 5 entry points
+to the emission section of the Code Generator.  These routines
+check to see which options are set, and use this information to 
+determine whether or not to call the Object File routines and/or
+the Assembly Listing routines.
+#SCHEDULE(12/07/81,01/11/82,1)
+#SCHEDULE(12/07/81,02/08/82)
+#ACTUAL(12/07/81)
+#PROGRESS(12/11/81)
+Started.
+#PROGRESS(01/08/82)
+3 of the 5 routines are done.  This section appears to be about
+1 week behind schedule.
+#PROGRESS(01/21/82)
+Still working on them, might be done by new deadline.
+#PROGRESS(02/05/82)
+No change.  I can't tell how long one of the routines (emt_fixup)
+is going to take, nor whether I'm supposed to code it or if someone
+else is going to.
+#BEGINLEVEL
+#TASK(Design Emission routines,N)
+#SCHEDULE(12/07/81,01/06/82,1)
+#ACTUAL(12/07/81,01/06/82)
+#PROGRESS(12/11/81)
+Started.
+#PROGRESS(01/08/82)
+The emission routines are designed.
+#TASK(Implement skeleton program with stubs,N)
+#SCHEDULE(12/07/81,12/14/81,1)
+#ACTUAL(12/07/81,12/11/81)
+#PROGRESS(12/11/81)
+The skeleton program with stubs is complete and tested, and is
+currently in (PASDEV4)M68EMT.PAS.
+#TASK(Fill out stubs,N)
+#SCHEDULE(12/14/81,01/11/82,1)
+#SCHEDULE(12/14/81,02/08/82)
+#ACTUAL(12/11/81)
+#PROGRESS(12/11/81)
+Started.
+#PROGRESS(01/08/82)
+There are still 2 routines to be coded, which will probably take about
+1 week.
+#PROGRESS(01/21/82)
+Still working on them, might be done by new deadline.
+#PROGRESS(02/05/82)
+There are still 2 routines to be coded, one of which is relatively
+easy, but the other is a mystery to me.  See progress report above.
+#ENDLEVEL
+#TASK(Object File Emission routines)The 
+Object File Emission routines are a collection of routines that
+actually emit the object code into the relocatable object file, using
+the internal data structures of the compiler.
+#SCHEDULE(11/16/81,01/18/82,1)
+#SCHEDULE(11/16/81,02/08/82)
+#ACTUAL(11/16/81)
+#PROGRESS(12/04/81)
+A preliminary version of the Emitter is running to generate object
+files to test the Object File Analyzer with.  It emits all four types  
+of logical records, including all subtypes.  It does not yet contain
+the logic to convert an actual compiler code list into object code
+to be emitted.  Instead, it generates records containing dummy 
+information.
+#PROGRESS(01/08/82)
+Due to illness the week before Christmas vacation, and a long vacation,
+this section appears to be about 3 weeks behind schedule.
+#PROGRESS(01/21/82)
+Still working on it, might be done by new deadline.
+#PROGRESS(02/05/82)
+Almost done, should be done sometime next week.
+#BEGINLEVEL
+#TASK(Design Object File Emission routines,N)
+#SCHEDULE(11/16/81,01/11/82,1)
+#SCHEDULE(11/16/81,02/08/82)
+#ACTUAL(11/16/81,02/05/82)
+#PROGRESS(12/11/81)
+Started.
+#PROGRESS(01/08/82)
+One of the major routines, the routine to convert a code list into
+actual object code, is still not completely designed.  It should be
+designed within 10 days.
+#PROGRESS(01/21/82)
+Still working on it, might be done by new deadline.
+#PROGRESS(02/05/82)
+All the routines are designed.
+#TASK(Implement skeleton program with stubs,N)
+#SCHEDULE(11/16/81,12/11/81,1)
+#ACTUAL(11/16/81,12/11/81)
+#PROGRESS(12/11/81)
+The skeleton program with stubs is complete and tested, and is 
+currently in (PASDEV4)M68REL.PAS.
+#TASK(Fill out stubs,N)
+#SCHEDULE(12/14/81,01/18/82,1)
+#SCHEDULE(12/14/81,02/08/82)
+#ACTUAL(12/11/81)
+#PROGRESS(12/11/81)
+Started.
+#PROGRESS(01/08/82)
+Most of the stubs are filled out, with the major exception of
+the routine to convert a code list to actual object code, which
+hasn't been designed yet.  It should take about 3 weeks to complete
+this.
+#PROGRESS(01/21/82)
+Still working on it, might be done by new deadline.
+#PROGRESS(02/05/82)
+Almost done, should be done sometime next week.
+#ENDLEVEL
+#TASK(Assembly Code Listing routines)The 
+Assembly Code Listing routines are a collection of routines that
+print out a listing of the assembler instructions generated by the
+code generator.
+#SCHEDULE(12/07/81,01/18/82,1)
+#ACTUAL(12/07/81,01/15/82)
+#PROGRESS(01/08/82)
+Due to illness the week before Christmas vacation, and a long vacation,
+it appears that this section is about 2 weeks behind schedule.
+#PROGRESS(01/15/82)
+The Assembly Listing Routines are complete, but not tested with an
+actual code list, and are currently in (PASDEV4)M68MAC.PAS.
+#BEGINLEVEL
+#TASK(Design Assembly Code Listing routines,N)
+#SCHEDULE(12/07/81,01/11/82,1)
+#ACTUAL(12/07/81,01/12/82)
+#PROGRESS(12/11/81)
+Started.
+#PROGRESS(01/08/82)
+There are still many of the routines that need to be designed.
+It appears to be about 1 week behind schedule.
+#PROGRESS(01/15/82)
+The Assembly Listing routines are all designed.
+#TASK(Implement skeleton program with stubs,N)
+#SCHEDULE(12/07/81,12/14/81,1)
+#ACTUAL(12/07/81,12/11/81)
+#PROGRESS(12/11/81)
+The skeleton program with stubs is complete and tested, and is 
+currently in (PASDEV4)M68MAC.PAS.
+#TASK(Fill out stubs,N)
+#SCHEDULE(12/14/81,01/18/82,1)
+#ACTUAL(12/11/81,01/14/82)
+#PROGRESS(12/11/81)
+Started.
+#PROGRESS(01/08/82)
+Many of the stubs are still left to be filled out.  Appears
+to be 2 weeks behind schedule.
+#PROGRESS(01/15/82)
+All the stubs are filled out.
+#ENDLEVEL
+#ENDLEVEL
+#TASK(Text I/O,N)
+#SCHEDULE(02/08/82,03/08/82,1)
+#TASK(Typed I/O and Binary I/O,N)
+#SCHEDULE(03/08/82,03/15/82,1)
+#TASK(Getstring and Putstring,N)
+#SCHEDULE(03/15/82,03/22/82,1)
+#ENDLEVEL
+#NAME(RASMUSSEN)
+#task(Motorola Runtime Memory Management - NEW and DISPOSE)
+#progress(1/8/82)
+Functional testing for NEW and DISPOSE complete.
+NEW and DISPOSE added to library (PASLIB) on m68000.
+Runtime specification reflects all changes
+in calling sequence, etc.
+#task(Four byte integer multiplication and division runtime routines.)
+#progress(1/8/82)
+Modules I4MULT and I4DIV complete, and added to runtime library.
+Must still make updates to M68000 runtime specs. Should be 
+complete today, 1/8/82.
+#task(Exceptional condition handling for M68000)
+Study of the following documents must precede any
+detailed planning for exceptional condition handling:
+1).  Pascal language specification, 2)  M68000 Runtime
+Specification section on exceptions,  3)  Language
+enhaancement notes #2B -- Exceptions, conditions
+and handlers,  4)  VAX Exceptional condition
+handling design notes.  Expect a detailed plan of 
+attack by Monday, January 18.
+#task(Becoming familiar)
+#schedule(1/11/82,1/15/82,1)
+#actual(1/11/82,1/15/82)
+#progress(1/15/82)
+I now feel I have a working knowledge of PASCAL exception handling.
+#schedule(1/11/82,2/26/82,1)
+#task(Coding exception handling)
+#schedule(1/18/82,2/3/82,1)
+#task(Debugging exception handling)
+#schedule(2/4/82,2/15/82,1)
+#task(Integrate exception handling to rest of the runtime)
+#schedule(2/16/82,2/19/82,1)
+#task(Slop time)
+Includes such diversions as SCRIBE, VAX bugs, helping new people, etc.
+Should be at least enough to use the extra week I've allotted
+for exception handling.
+#ENDLEVEL
+#NAME(PALGUT)
+#task(Introduction to the M68000)
+A general overview of what the Development Software group is doing and the
+systems that will be used is needed before I can begin any meaningful work.
+Major points to focus on are:
+#beginitem()
+#item()Learning about the M68000 system,
+#item()Learning M68000 Assembly Language,
+#item()Learning about the TYMSHARE and ADP systems,
+#item()Learning the PASCAL language.
+#enditem
+#schedule(1/18/82,1/22/82,1)
+#actual(1/18/82,1/22/82)
+#progress(1/22/82)
+I have gone over the documentation that was recommended for reading and have
+logged-on each of the systems to become familiar with them.  The languages will
+take time to learn.  I will continue gaining familiarity  as I begin new tasks.
+#task(Introduction to RDLIB)
+A general understanding of what RDLIB is and how it will be used is required
+before coding can begin.  Points to focus on are:
+#beginitem()
+#item()Studying the RDLIB documentation,
+#item()Finding out what tasks I will be performing with respect to RDLIB.
+#enditem()
+#schedule(1/20/82,1/21/82,1)
+#actual(1/20/82,1/21/82)
+#progress(1/21/82)
+I have read the available documentation about RDLIB and have obtained the
+background information I will need in order to begin work on it.
+#task(Scheduling RDLIB Development)
+A schedule for the coding and documenting of RDLIB routines will be formed.
+Important items will include:
+#beginitem()
+#item()Dividing the RDLIB routines to be written between S. Kennedy and myself,
+#item()Determining the format of reference documentation and in-code documentation,
+#item()Begin coding.
+#enditem()
+#schedule (1/22/81,1/29/82,1)
+#actual(1/22/82,1/29/82)
+a
+#progress(1/22/82)
+Most of the routines were divided up between Steve Kennedy and myself.   
+I will be coding the DTIME routines and JOBNUM to start with.  Others
+were left until we get a better idea of how long it will take each of us to code
+the ones we have.  A file was set up on the M68000 system (1002..RDLIBHDR.SA) that
+is a template of general in-code documentation.  It was decided that reference
+documentation would use the same format as the VAX RDLIB documentation.
+#progress(1/29/82)
+Several of the Day/Time routines have been coded, as well as Jobnum.  I
+will complete their documentation as soon as S. Kennedy completes a Macro
+package for documentation formatting.
+#task(Coding, Documenting, Testing RDLIB DTIME Routines)
+Each of the Day/Time routines will be coded, documented, and tested.
+#schedule(2/1/82,2/12/82,1)
+#actual(2/1/82,2/11/82)
+#progress(2/5/82)
+The documentation for the RDLIB Day/Time routines has been written.  All of the
+routines have been coded and assembled except DC_DAYS and EC_DAYS.  I have
+begun testing some of the routines.  I missed approximately a day and a half
+due to snow/illness, but I think I should finish by 2/12.
+#progress(2/11/82)
+Task completed.
+#task(Coding, Documenting, Testing RDLIB Miscellaneous Routines)
+Background on the miscellaneous routines (listed in M68DOC.TXT) must be 
+obtained, then coding, etc, can begin.
+#schedule(2/11/82,2/19/82,1)
+#actual(2/11/82)
+#ENDLEVEL
+#define(#com1,)
+#define(#com2,)
+#define(#com3,)
+#define(#com4,)
+#NAME(KENNEDY)
+#com1(Intro to the M68000 and RDLIB)&
+#task(Intro to the M68000 and RDLIB)&
+At  the present I can not put much detail into my schedule as to the 
+specific tasks I will have. For the near future the following
+items are topics in which I will be involved:
+#beginitem()
+#item()Learning about the current RDLIB routines on both the DEC10
+and the VAX;
+#item()Finding out which RDLIB routines ANC uses;
+#item()Learning the M68000 Assembler;
+#item()Studying the relevant M68000 Spec documents;
+#item()Determining a priority (or order) for working on the 
+RDLIB routines that will be needed, and expand this schedule
+in accordance with the determined order.
+#enditem
+#schedule(11/30/81,1/4/82,1)
+#actual(11/30/81,1/4/82)
+#progress(1/4/82)
+#beginitem(,1,,0)
+#item()The available documentation on RDLIB has been read.
+#item()It will most likely be more efficient for us to come up with
+our own list of routines we know ANC uses and present this list to ANC
+for review and modification.
+There are some (perhaps many) items that will have to be discussed
+with ANC to determine what they "need" and what will
+be possible to provide.
+#item()I have read and gone over both the M68000 16-Bit Microprocessor
+User's Manual and the Resident Structured Assembler Reference Manual.
+#item()I have read the M68000 design documents that have been
+distributed and have a general understanding of them.
+#item()Once we come up with our list of RDLIB routines for ANC 
+a more specific schedule for studying, coding, implementing, and
+testing these routines will be determined.
+#enditem
+#com1(RDLIB Development Procedure)&
+#task(RDLIB Development Procedure)&
+I plan to draw up a procedure that will be used in investigating,
+documenting (for both the M68000 RDLIB User Documentation and Program
+Notebook Documentation), coding, and testing
+of individual RDLIB routines.
+This is being done so that a standard procedure exists in the 
+development process, with the goals being consistancy in 
+RDLIB development.
+#schedule(1/5/82,1/6/82,1)
+#actual(1/5/82,1/5/82)
+#progress(1/5/82)The procedure has been put together and SCRMAC input
+can be found in (PASDEV32)M68PRO.PMF.
+A copy will be given to SMR and PJP.
+#com1(Outline RDLIB)&
+#task(Outline RDLIB)&
+This task will involve putting together a document
+which lists the RDLIB routines to be
+implemented on the M68000, and a brief description of each
+routine. Included in the description will be an indication of
+the language that was used to code the corresponding routine on the VAX,
+whether the routine is system dependent, and if the routine can be
+coded as previously speced, or if some part of the spec needs to be
+defined.
+Also included in the same document will be a list of issues that will
+have to be discussed with ANC to determine their needs, and determine
+whether we can meet those needs directly, through some viable 
+alternative, or not at all.
+#schedule(1/5/82,1/8/82,1)
+#schedule(1/12/82,1/15/82)
+#actual(1/12/82,1/14/82)
+#progress(1/12/82)
+I was absent from work due to illness and severe weather conditions from
+1/6\thru\1/11, as a result this task was rescheduled as shown above.
+#progress(1/14/82)The document has been completed and
+a copy was given to SMR and PJP.
+SCRMAC input can be found in (PASDEV32)M68DOC.PMF.
+#com1(Standard Macros)&
+#task(Standard Macros)&
+Macros used in assembly coding
+are needed to insure that the standard sequences as
+described in the Runtime Specification are followed.
+This will also make it convenient if for some reason
+any of the standard sequences have to be changed.
+#schedule(1/15/82,1/25/82,1)
+#actual(1/14/82,1/22/82)
+#progress
+(1/22/82)The macros to be used in the assembly language coding of
+RDLIB subroutines have been written and put in the file
+1002..RDLIBMAC.SA.
+The actual work involved was less than originally
+expected (accounting for being ahead of schedule).
+Once I understood how the the entry and exit sequences
+are handled by the compiler the writting of the macros
+was rather easy.
+Also, I waited until all the macros were written before I entered
+the code, thus all the sub-tasks below were completed on the 
+same day. (Friday 1/22/82).
+#progress(1/27/82)
+A number of bugs were found in the macros once we started
+ assembling\-\those  bugs have been fixed.
+In addition, I have added a number of other macros besides the three
+macros listed below.
+Added to the macro file are the following new macros:
+#beginitem(13,1)
+#item(RD$ADD_BLANK)
+this macro is used by RD$PGM_BLK to pad the end of filenames
+less than six characters out to six characters.
+#item(RD$PGM_BLK)
+this macro sets up the program block for the module (file).
+#item(RD$MODULE)
+this macro sets up the beginning of the module with
+a standard sequence of assembler directives and also
+sets up some convenient symbols. 
+#enditem
+#beginlevel
+#com2(Entry Sequence Macro)&
+#task(Entry Sequence Macro)&
+Write  an entry sequence macro that conforms to the standard
+ entry sequence  as stated in the M68000 Runtime Standard.
+#schedule(1/18/82,1/20/82,1)
+#actual(1/18/82,1/22/82)
+#progress(1/22/82)Completed.
+#com2(Exit Sequence Macro)&
+#task(Exit Sequence Macro)&
+Write  an exit sequence macro that conforns to the standard exit
+ sequence  as stated in the M68000 Runtime Standard.
+#schedule(1/19/82,1/21/82,1)
+#actual(1/19/82,1/22/82)
+#progress(1/22/82)Completed.
+#com2(Procedure Block Macro)&
+#task(Procedure Block Macro)&
+Write  a macro to be the standard sequence of commands
+ to set up the procedure block.
+#schedule(1/21/82,1/25/82,1)
+#actual(1/21/82,1/22/82)
+#progress(1/22/82)Completed.
+#endlevel
+#com1(Scheduling RDLIB Development)&
+#task(Scheduling RDLIB Development)&
+A  schedule for the writing of the  RDLIB routines
+ will be formed and documented. 
+This document will also include areas where
+1)\problems may exist that could lead to schedule extentions,
+2)\investigation is needed, or
+3)\consultation is needed.
+The schedule document, upon completion, will be
+translated to put in this schedule.
+#schedule(1/26/82,1/28/82,1)
+#progress(1/22/82)This task has been abandoned because it is felt
+that the documentation of RDLIB subroutine development
+can be sufficiently done in the schedule itself.
+The scheduling of RDLIB development will begin in the next task
+section.
+#com1(RDLIB Subroutine Development)&
+#task(RDLIB Subroutine Development)&
+ This task involves the
+documentation, coding, and testing of the subroutines in the
+RDLIB Package.
+ The development of each routine will be done as
+outlined in (PASDEV32)M68PRO.TXT.
+Only a portion of the RDLIB routines will be scheduled at first
+and the rest will be scheduled as the library is built.
+#schedule(1/22/82,3/19/81,1)
+#actual(1/22/82)
+$need 10
+#progress(1/22/82)K.\Palgut and I met today to talk about RDLIB.
+Items discussed were:
+#beginitem()
+#item()Header for the RDLIB Assembly source code. [KMP]
+#item()M68000 RDLIB Documentation
+#beginitem(,,0,0,0)
+#item(\\a.)User Documentation.
+#item(\\b.)Macros to be used in doing User Documentation. [SMK]
+#item(\\c.)Program Notebook Documentation.
+#enditem
+#item()Dividing up the responsibilities of RDLIB Delelopment
+#enditem
+My part of  RDLIB will be documented as we divide up the routines
+for RDLIB.
+#beginlevel
+#com2(RDLIB User Documentation,N)&
+#task(RDLIB User Documentation)&
+Documentation of RDLIB will be a continuous task and
+will be done as routines are implemented.
+Before any documentation can be done there are three
+sub-tasks that need to be completed; they are listed below.
+#schedule(1/25/82,1/29/82,1)
+#actual(1/27/82/,1/29/82)
+#progress(1/29/82)
+The three sub-tasks listed below have been completed and
+documentation of the M68000 RDLIB routines may begin.
+#beginlevel
+#com3(Setting Up M68LIB.PMF)&
+#task(Setting Up M68LIB.PMF)&
+M68LIB.PMF will be the user documentation for the RDLIB Package
+[SCRMAC input]. The file must be set up before sections of
+documentation on routines can be inserted.
+#schedule(1/25/82,1/25/82,1)
+#actual(1/27/82/,1/27/82)
+#com3(RDLIB User Documentation Macros)&
+#task(RDLIB User Documentation Macros)&
+The user documentation for the M68000 RDLIB will all be
+done in a standard format.
+To aid in adhering to this standard format I will write a set
+of PMF macros that will correspond to the standard items
+found in a routine's documentation.
+These macros will include:
+#beginitem(8,,0)
+#item(#ENTRY)gives entry point name;
+#item(#USE)
+starts a verbatim section to specify hoe the routine is used;
+#item(#ENDUSE)signals the end of the USE section;
+#item(#ARG)argument description;
+#item(#INPUT)sections off input arguments;
+#item(#OUTPUT)sections off output arguments;
+#item(#RET)special case of #ARG for return values;
+#item(#INC)lists include files needed;
+#item(#OTHER)used to set up either a 'Requirements' section,
+a 'Notes' section, or a user named section.
+#schedule(1/25/82,1/27/82,1)
+#actual(1/27/82/,1/29/82)
+#progress(1/29/81)
+The macros listed above have been written and tested.
+The PMF library file compiled from the macros has been
+put in M68MAC.PML in each of the three accounts
+PASDEV4, PASDEV25, and PASDEV32.
+This file should be used as the PMF library file
+when running SCRMAC on a file which uses these macros.
+An example using the above macros can be found in the
+file (PASDEV32)TEST.PMF, with the SCRMAC output in the
+file (PASDEV32)TEST.TXT.
+#com3(Program Notebook Documentation)&
+#task(Program Notebook Documentation)&
+The outline for the program notebook documentation needs to be
+done in the file (PASDEV4)M68LIB.NOT.
+#schedule(1/25/82,1/25/82,1)
+#actual(1/29/82/,1/29/82)
+#endlevel
+#com2(RDLIB Routine: SLEEP,n)&
+#task(RDLIB Routine: SLEEP,n)&
+#schedule(1/28/82,2/3/82,1)
+#actual(2/1/82)
+#beginlevel
+#com3(Write User Documentation for SLEEP,n)&
+#task(Write User Documentation for SLEEP,n)&
+#schedule(1/27/82,1/28/82,1)
+#actual(2/1/82,2/1/82)
+#com3(Write SLEEP)&
+#task(Write SLEEP)&
+Code the SLEEP routine.
+#schedule(1/28/82,2/1/82,1)
+#actual(2/1/82,2/3/82)
+#com(&
+#com3(Test SLEEP)&
+#task(Test SLEEP)&
+Write the test programs to test SLEEP and test the SLEEP routine.
+#schedule(2/1/82,2/4/82,1)
+#actual()
+&)
+#com3(Finalize SLEEP)&
+#task(Finalize SLEEP)&
+Put source code for SLEEP in account 1002;
+Put user documentation for SLEEP in (PASDEV4)M68LIB.PMF
+and a copy in the documentation notebook;
+Add necessary items to the M68000 RDLIB Program Notebook for SLEEP.
+#schedule(2/3/82,2/3/82,1)
+#actual(2/3/82,2/4/82)
+#endlevel
+#com2(CMDUTL Routines)&
+#task(CMDUTL Routines)&
+The following sub-task sections outline what needs to be done
+with the CMDUTL Package for the M68000 RDLIB.
+#beginlevel
+#com3(Documentation)&
+#task(Documentation)&
+The documentation for the CMDUTL routines needs to be
+added to the M68000 RDLIB Documentation. This will include
+all the routines for the CMDUTL package.
+#schedule(2/4/82,2/4/82,1)
+#actual(2/3/82,2/8/82)
+#com3(Update CMD_FILE_NAME Source)&
+#task(Update CMD_FILE_NAME Source)&
+CMD_FILE_NAME is the only CMDUTL routine that is system dependent
+and needs a version for the M68000.
+Changes to the routine code will be to put in a section of
+code that will conditionally compile for the M68000 and will
+handle VERSADOS filenames.
+#schedule(2/4/82,2/8/82,1)
+#actual(2/8/82,)
+#progress(2/9/82)
+This tast will entail more work than originally thought.
+I will have to put together a BNF representation for
+the M68000 file formats. This BNF representation wwill then 
+be run through LEXGEN to produce a table used by
+CMD_FILE_NAME (and also FILUTL routines).
+#com3(CMDUTL Finalization)&
+#task(CMDUTL Finalization)&
+Put source code for CMDUTL routines in [???];
+Put user documentation for CMDUTL in (PASDEV4)M68LIB.PMF
+and a copy in the documentation notebook;
+Add necessary items to the M68000 RDLIB Program Notebook for CMDUTL.
+#schedule(2/8/82,2/8/82,1)
+#actual()
+#endlevel
+#com2(FILUTL Routines)&
+#task(FILUTL Routines)&
+The following sub-task sections outline what needs to be done
+with the FILUTL Package for the M68000 RDLIB.
+#beginlevel
+#com3(RDLIB Routine: PR_FILE_ID)&
+#task(RDLIB Routine: PR_FILE_ID,N)&
+#beginlevel
+#task(PR_FILE_ID Documentation)&
+Write user documentation for the PR_FILE_ID Routine.
+#schedule(,,1)
+#actual()
+#task(PR_FILE_ID Source Code)&
+Alter the current PASCAL code to incorporate the M68000 
+VERSADOS file syntax.
+#schedule(,,1)
+#actual()
+#task(PR_FILE_ID Finalization)&
+Put source code for PR_FILE_ID routines in [???];
+Put user documentation for PR_FILE_ID in (PASDEV4)M68LIB.PMF
+and a copy in the documentation notebook;
+Add necessary items to the M68000 RDLIB Program Notebook for PR_FILE_ID.
+#schedule(,,1)
+#actual()
+#endlevel
+#com3(RDLIB ROUTINE: OPEN_FILE)&
+#task(RDLIB ROUTINE: OPEN_FILE,N)&
+#beginlevel
+#task(OPEN_FILE Documentation)&
+Write user documentation for the OPEN_FILE Routine.
+#schedule(,,1)
+#actual()
+#task(OPEN_FILE Source Code)&
+Alter the current PASCAL code to incorporate the M68000 
+VERSADOS file syntax.
+#schedule(,,1)
+#actual()
+#task(OPEN_FILE Finalization)&
+Put source code for OPEN_FILE routines in [???];
+Put user documentation for OPEN_FILE in (PASDEV4)M68LIB.PMF
+and a copy in the documentation notebook;
+Add necessary items to the M68000 RDLIB Program Notebook for OPEN_FILE.
+#schedule(,,1)
+#actual()
+#endlevel
+#ENDLEVEL
+#SECT_DEFAULT(66,0,3,1,2,1)
+#NAME(REMBOSKI)
+#task(Define Double Precision Format)
+An analysis of the Motorola FFP single precision arithmetic package
+will be performed.
+The results of the analysis will be used to help choose
+a double precision number representation format.
+#end_disc
+#schedule(12/3/81,12/18/81,1)
+#actual(12/3/81,12/18/81)
+#progress(1/8/81)
+The double precision format has been defined.
+#end_disc
+#task(Define Floating Point Calling Conventions)
+Calling conventions for the floating point arithmetic routines
+will be defined.
+Exceptional condition handling will also be defined.
+#end_disc
+#schedule(1/4/82,1/6/82,1)
+#actual(1/4/82,1/6/82)
+#task(Convert FFP to Double Precision)
+The FFP arithmetic (+,-,*,/) routines will be rewritten to do double precision
+arithmetic.
+The unmodified FFP routines will be used for single precision arithmetic.
+#end_disc
+#schedule(1/4/82,1/11/82,1)
+#actual(1/4/82,1/11/82)
+#progress(1/11/82)
+The double precision routines (+,-,*,/) are written and partially tested.
+#end_disc
+#task(Define Conversion Routines)
+The routines to convert floating point numbers to and from ascii strings
+need to be defined.
+
+#end_disc
+#schedule(1/11/82,1/18/82,1)
+#schedule(1/11/82,1/27/82)
+#task(Investigate Alternatives to CORDIC Function Evaluation)
+It may be possible to evaluate elementary functions faster using a
+coarse table lookup scheme.
+An analysis of time vs memory usage for this technique will be done .
+A decision of which is the better method will be made based on the analysis.
+#end_disc
+#schedule(1/11/82,1/22/82,1)
+#schedule(1/11/82,1/27/82)
+#PROGRESS(1/27/82)
+Because the long range plans for the 68000 are uncertain at this point
+spending the extra time to implement a different scheme for evaluating elementary
+is not warranted.
+If the 68000 is ever to be used heavily, an alternative to the CORDIC
+function evaluation routines should probably be used.
+#task(Write Floating Point Conversion Routines)
+The floating point conversion routines for the I/O system are to be written.
+#end_disc
+#schedule(2/1/82,2/12/82,1)
+#schedule(2/1/82,2/17/82)
+#ENDLEVEL
+#TOC
+ @HQ

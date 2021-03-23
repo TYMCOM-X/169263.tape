@@ -1,0 +1,13 @@
+	TITLE	FNDPAT
+
+;	This module equates the external names called by FIND to
+;	those defined by the SCANNR modules.
+
+	ENTRY	INIT%P, USE%PA, FREE%P
+	EXTERN	INITRE, USE%RE, FREE%R
+
+	INIT%P=INITRE
+	USE%PA=USE%RE
+	FREE%P=FREE%R
+
+	END

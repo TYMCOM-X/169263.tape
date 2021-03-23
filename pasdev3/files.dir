@@ -1,0 +1,314 @@
+VAXADR.TYP    4 Fri 28-Dec-79 18:58 GMT ac:Fri 04-Jan-80      
+LABEL .SMR    2 Thu 04-Oct-79 13:45 GMT ac:Fri 12-Oct-79      
+120   .TSF    1 Thu 04-Oct-79 13:46 GMT ac:Fri 04-Jan-80      
+30    .TSF    1 Thu 04-Oct-79 13:46 GMT ac:Wed 02-Jan-80      
+SWITCH.INI    2 Thu 13-Dec-79 15:50 GMT ac:Fri 04-Jan-80      
+TST004.PAS    1 Fri 28-Dec-79 19:58 GMT ac:Fri 04-Jan-80      
+VAXEXP.PAS  138 Thu 03-Jan-80 16:46 GMT ac:Thu 03-Jan-80      
+VAX   .SCR   29 Thu 18-Oct-79 21:07 GMT ac:Thu 18-Oct-79      
+VAXCG .TYP   24 Wed 26-Dec-79 15:38 GMT ac:Fri 04-Jan-80      
+VAXTAL.PAS   33 Fri 21-Dec-79 20:22 GMT ac:Thu 03-Jan-80      
+VAXALC.PAS   12 Tue 18-Dec-79 22:48 GMT ac:Fri 28-Dec-79      
+LABEL .SEM    1 Thu 11-Oct-79 14:35 GMT ac:Wed 02-Jan-80      
+VAXCGU.PAS   54 Thu 03-Jan-80 13:37 GMT ac:Thu 03-Jan-80      
+LABEL .001    2 Fri 12-Oct-79 13:16 GMT ac:Fri 04-Jan-80      
+LABEL .DJW    1 Fri 28-Dec-79 15:00 GMT ac:Thu 03-Jan-80      
+VAXOPC.INC    5 Wed 26-Dec-79 19:32 GMT ac:Fri 04-Jan-80      
+VAXSTR.TYP    3 Mon 19-Nov-79 18:48 GMT ac:Fri 04-Jan-80      
+VAXSTR.INC    2 Fri 21-Dec-79 15:43 GMT ac:Fri 04-Jan-80      
+TST002.PAS    3 Thu 29-Nov-79 17:14 GMT ac:Fri 04-Jan-80      
+TST001.PAS    6 Fri 14-Dec-79 12:42 GMT ac:Wed 19-Dec-79      
+VAXCGU.INC    6 Fri 28-Dec-79 19:38 GMT ac:Fri 04-Jan-80      
+VAXDEB.INC    1 Thu 18-Oct-79 19:28 GMT ac:Thu 03-Jan-80      
+VAXGEN.INC    1 Wed 19-Dec-79 16:26 GMT ac:Fri 04-Jan-80      
+VAXCLL.INC    1 Tue 16-Oct-79 21:08 GMT ac:Thu 03-Jan-80      
+VAXALC.REL    5 Tue 18-Dec-79 22:49 GMT ac:Wed 02-Jan-80      
+PASIST.INC    4 Tue 16-Oct-79 21:12 GMT ac:Fri 04-Jan-80      
+VAXTAL.REL   16 Fri 28-Dec-79 18:58 GMT ac:Fri 04-Jan-80      
+VAXEXP.REL   91 Thu 03-Jan-80 16:49 GMT ac:Fri 04-Jan-80      
+VAXEXP.INC    4 Thu 13-Dec-79 17:58 GMT ac:Fri 04-Jan-80      
+VAXMAC.INC    1 Thu 15-Nov-79 15:30 GMT ac:Thu 03-Jan-80      
+VAXCMP.INC    1 Fri 26-Oct-79 18:36 GMT ac:Thu 03-Jan-80      
+PA7DMP.INC    1 Wed 17-Oct-79 13:11 GMT ac:Thu 03-Jan-80      
+PA7DMP.PAS   67 Wed 05-Dec-79 16:42 GMT ac:Wed 26-Dec-79      
+PA7DMP.REL   54 Tue 18-Dec-79 20:30 GMT ac:Fri 04-Jan-80      
+VAXCLL.REL   12 Thu 03-Jan-80 14:04 GMT ac:Fri 04-Jan-80      
+VAXGEN.PAS   64 Thu 03-Jan-80 19:00 GMT ac:Fri 04-Jan-80      
+VAXCLL.PAS   15 Thu 03-Jan-80 14:01 GMT ac:Fri 04-Jan-80      
+VAXSET.INC    1 Thu 03-Jan-80 13:49 GMT ac:Thu 03-Jan-80      
+VAXSET.PAS   36 Thu 03-Jan-80 13:47 GMT ac:Thu 03-Jan-80      
+VAXREL.INC    1 Fri 30-Nov-79 18:06 GMT ac:Thu 03-Jan-80      
+VAXCSP.INC    1 Mon 10-Dec-79 21:03 GMT ac:Thu 03-Jan-80      
+VAXDEB.PAS   12 Mon 19-Nov-79 17:03 GMT ac:Fri 04-Jan-80      
+VAXDEB.REL    9 Mon 17-Dec-79 11:37 GMT ac:Fri 04-Jan-80      
+VAXGEN.REL   40 Thu 03-Jan-80 19:02 GMT ac:Fri 04-Jan-80      
+PAXCAL.PAS    3 Fri 02-Nov-79 16:03 GMT ac:Fri 04-Jan-80      
+PAXCAL.REL    5 Tue 04-Dec-79 04:59 GMT ac:Fri 07-Dec-79      
+VAXSET.REL   25 Thu 03-Jan-80 13:51 GMT ac:Fri 04-Jan-80      
+VAXREL.PAS   58 Fri 28-Dec-79 15:15 GMT ac:Fri 04-Jan-80      
+VAXCMP.PAS   41 Fri 28-Dec-79 21:18 GMT ac:Fri 04-Jan-80      
+VAXMAC.PAS   27 Fri 28-Dec-79 21:05 GMT ac:Fri 04-Jan-80      
+VAXCSP.REL   18 Wed 19-Dec-79 20:58 GMT ac:Fri 04-Jan-80      
+VAXCMP.REL   31 Fri 28-Dec-79 21:18 GMT ac:Fri 04-Jan-80      
+VAXMAC.REL   36 Fri 28-Dec-79 21:05 GMT ac:Fri 04-Jan-80      
+VAXSTR.REL   39 Fri 21-Dec-79 15:46 GMT ac:Fri 04-Jan-80      
+VAXUTL.PAS   17 Thu 13-Dec-79 18:30 GMT ac:Fri 28-Dec-79      
+VAXUTL.INC    2 Wed 21-Nov-79 15:22 GMT ac:Fri 04-Jan-80      
+CGU   .PAS   17 Fri 19-Oct-79 16:08 GMT ac:Fri 19-Oct-79      
+VAXUTL.REL   13 Mon 17-Dec-79 11:55 GMT ac:Fri 04-Jan-80      
+T     .PAS    1 Wed 02-Jan-80 14:23 GMT ac:Wed 02-Jan-80      
+TST003.PAS    6 Thu 20-Dec-79 13:52 GMT ac:Thu 20-Dec-79      
+PA7JMP.REL    8 Mon 17-Dec-79 11:29 GMT ac:Fri 04-Jan-80      
+CGU   .REL   11 Fri 19-Oct-79 15:53 GMT ac:Fri 19-Oct-79      
+M     .PAS   21 Fri 19-Oct-79 20:21 GMT ac:Fri 19-Oct-79      
+VAXJNK.PAS    1 Fri 19-Oct-79 17:15 GMT ac:Fri 04-Jan-80      
+VAXJNK.REL    1 Mon 17-Dec-79 11:53 GMT ac:Fri 04-Jan-80      
+LIB   .MIC    1 Fri 19-Oct-79 17:17 GMT ac:Fri 07-Dec-79      
+VAXCGU.REL   32 Thu 03-Jan-80 13:39 GMT ac:Fri 04-Jan-80      
+PASNEW.MAC   30 Fri 30-Nov-79 16:30 GMT ac:Fri 04-Jan-80      
+PASNEW.REL    5 Fri 30-Nov-79 16:30 GMT ac:Fri 04-Jan-80      
+PASINI.EXE   84 Fri 28-Dec-79 22:17 GMT ac:Fri 28-Dec-79      
+PAS10 .INI   20 Fri 28-Dec-79 22:17 GMT ac:Thu 03-Jan-80      
+INI   .MIC    1 Fri 19-Oct-79 21:20 GMT ac:Tue 23-Oct-79      
+PASINI.REL   28 Fri 28-Dec-79 22:14 GMT ac:Fri 28-Dec-79      
+PASCAL.BLD    2 Tue 11-Dec-79 22:00 GMT ac:Fri 04-Jan-80      
+PASUTL.REL   17 Mon 17-Dec-79 10:55 GMT ac:Wed 02-Jan-80      
+PASVAL.REL    4 Mon 17-Dec-79 10:57 GMT ac:Wed 02-Jan-80      
+PASCMD.REL    4 Mon 17-Dec-79 10:58 GMT ac:Wed 02-Jan-80      
+PASLEX.REL   16 Mon 17-Dec-79 11:00 GMT ac:Wed 02-Jan-80      
+PASSMO.REL   10 Mon 17-Dec-79 11:07 GMT ac:Wed 02-Jan-80      
+PASCMP.REL    9 Mon 17-Dec-79 11:10 GMT ac:Wed 02-Jan-80      
+PASANL.REL   25 Mon 17-Dec-79 11:11 GMT ac:Wed 02-Jan-80      
+PASBLK.REL   19 Mon 17-Dec-79 11:12 GMT ac:Wed 02-Jan-80      
+PASBOD.REL   59 Wed 26-Dec-79 20:08 GMT ac:Wed 02-Jan-80      
+PASTSM.REL   23 Wed 02-Jan-80 14:44 GMT ac:Wed 02-Jan-80      
+PASESM.REL   26 Mon 17-Dec-79 11:17 GMT ac:Wed 02-Jan-80      
+PASREF.REL   37 Mon 17-Dec-79 11:19 GMT ac:Wed 02-Jan-80      
+PA1DMP.REL   64 Mon 17-Dec-79 11:22 GMT ac:Wed 02-Jan-80      
+PA1XRF.REL    8 Mon 17-Dec-79 11:23 GMT ac:Wed 02-Jan-80      
+PASCGR.REL   12 Mon 17-Dec-79 11:24 GMT ac:Wed 02-Jan-80      
+PASGLB.REL    2 Mon 17-Dec-79 11:25 GMT ac:Wed 02-Jan-80      
+PA1ESU.REL   15 Mon 17-Dec-79 11:25 GMT ac:Wed 02-Jan-80      
+PA1FLD.REL   34 Mon 17-Dec-79 11:26 GMT ac:Wed 02-Jan-80      
+PASMTH.REL    2 Mon 17-Dec-79 11:27 GMT ac:Fri 04-Jan-80      
+PASCV .REL    8 Mon 17-Dec-79 11:27 GMT ac:Fri 04-Jan-80      
+PASRDR.REL   19 Mon 17-Dec-79 11:27 GMT ac:Wed 02-Jan-80      
+PASSW .REL    2 Mon 17-Dec-79 11:28 GMT ac:Fri 04-Jan-80      
+PASIFU.REL   22 Mon 17-Dec-79 11:28 GMT ac:Fri 04-Jan-80      
+FIO   .REL    6 Mon 17-Dec-79 11:34 GMT ac:Fri 04-Jan-80      
+PASDEL.REL    1 Mon 17-Dec-79 11:34 GMT ac:Fri 04-Jan-80      
+PASDAT.REL    4 Mon 17-Dec-79 11:34 GMT ac:Fri 04-Jan-80      
+PASERR.REL    7 Mon 17-Dec-79 11:35 GMT ac:Wed 02-Jan-80      
+OP    .PAS    4 Tue 23-Oct-79 16:40 GMT ac:Tue 23-Oct-79      
+OP    .REL    5 Tue 23-Oct-79 16:41 GMT ac:Tue 23-Oct-79      
+HEXOPS.TXT   11 Tue 23-Oct-79 16:41 GMT ac:Tue 23-Oct-79      
+TST005.PAS    2 Tue 11-Dec-79 16:21 GMT ac:Wed 02-Jan-80      
+035   .PAS   24 Mon 22-Oct-79 19:20 GMT ac:Mon 22-Oct-79      
+PAXCAL.MIC    1 Fri 07-Dec-79 20:50 GMT ac:Thu 03-Jan-80      
+VAXEXP.DEB  129 Thu 03-Jan-80 16:49 GMT ac:Thu 03-Jan-80      
+TST006.PAS    4 Thu 01-Nov-79 15:54 GMT ac:Mon 10-Dec-79      
+TST007.PAS    1 Mon 29-Oct-79 13:15 GMT ac:Wed 14-Nov-79      
+TST008.PAS    4 Mon 10-Dec-79 19:18 GMT ac:Mon 10-Dec-79      
+SET   .PAS    2 Tue 20-Nov-79 19:35 GMT ac:Tue 20-Nov-79      
+SET   .REL    5 Tue 20-Nov-79 21:51 GMT ac:Tue 20-Nov-79      
+PA7JMP.PAS   44 Fri 30-Nov-79 16:10 GMT ac:Mon 17-Dec-79      
+JMP   .REL    8 Thu 25-Oct-79 21:20 GMT ac:Thu 25-Oct-79      
+TSTSET.PAS    6 Fri 26-Oct-79 18:00 GMT ac:Fri 14-Dec-79      
+T     .REL    1 Fri 28-Dec-79 22:18 GMT ac:Fri 28-Dec-79      
+STEST .PAS   18 Tue 30-Oct-79 20:32 GMT ac:Thu 01-Nov-79      
+T1    .PAS    1 Wed 02-Jan-80 14:27 GMT ac:Wed 02-Jan-80      
+TST010.PAS    2 Mon 29-Oct-79 16:23 GMT ac:Thu 03-Jan-80      
+TST012.PAS    2 Tue 11-Dec-79 16:28 GMT ac:Thu 03-Jan-80      
+PASVER.REL    4 Mon 17-Dec-79 11:57 GMT ac:Fri 04-Jan-80      
+STATUS.SCR    2 Wed 31-Oct-79 19:38 GMT ac:Wed 02-Jan-80      
+SMR   .PAS    5 Wed 31-Oct-79 20:23 GMT ac:Thu 01-Nov-79      
+REL   .PAS    1 Thu 01-Nov-79 16:35 GMT ac:Thu 01-Nov-79      
+REL   .REL    1 Thu 01-Nov-79 16:35 GMT ac:Thu 01-Nov-79      
+TST011.PAS   16 Wed 02-Jan-80 15:58 GMT ac:Thu 03-Jan-80      
+TST009.PAS    2 Fri 02-Nov-79 14:50 GMT ac:Thu 15-Nov-79      
+TESTIO.PAS    2 Tue 27-Nov-79 15:19 GMT ac:Tue 18-Dec-79      
+TESTIO.REL    3 Tue 18-Dec-79 15:46 GMT ac:Tue 18-Dec-79      
+#START.CMD    1 Fri 02-Nov-79 22:04 GMT ac:Fri 30-Nov-79      
+VAXIO .PAS   17 Fri 04-Jan-80 12:44 GMT ac:Fri 04-Jan-80      
+VAXIO .REL   13 Fri 04-Jan-80 12:46 GMT ac:Fri 04-Jan-80      
+VAXIO .INC    1 Thu 03-Jan-80 15:41 GMT ac:Thu 03-Jan-80      
+DMPOBJ.PAS   13 Thu 20-Dec-79 16:18 GMT ac:Thu 27-Dec-79      
+DMPOBJ.EXE   52 Thu 20-Dec-79 16:36 GMT ac:Fri 28-Dec-79      
+F     .REL   16 Tue 06-Nov-79 15:52 GMT ac:Tue 06-Nov-79      
+IO    .PAS   12 Wed 07-Nov-79 21:50 GMT ac:Wed 07-Nov-79      
+DMPOBJ.REL   17 Thu 27-Dec-79 22:10 GMT ac:Thu 27-Dec-79      
+IO    .REL    6 Wed 07-Nov-79 21:33 GMT ac:Wed 07-Nov-79      
+CMP   .PAS   28 Wed 14-Nov-79 18:35 GMT ac:Wed 14-Nov-79      
+VAXTS2.REL    1 Thu 08-Nov-79 22:03 GMT ac:Thu 08-Nov-79      
+VAXSTR.PAS   99 Fri 21-Dec-79 15:44 GMT ac:Fri 28-Dec-79      
+CMP   .REL    8 Wed 14-Nov-79 17:55 GMT ac:Wed 14-Nov-79      
+TSTCMP.PAS    1 Wed 14-Nov-79 18:53 GMT ac:Wed 14-Nov-79      
+INTEST.PAS    2 Fri 16-Nov-79 20:43 GMT ac:Mon 19-Nov-79      
+VAXSTR.SYM    8 Fri 28-Dec-79 20:04 GMT ac:Thu 03-Jan-80      
+VAXSTR.SY2    9 Fri 16-Nov-79 15:19 GMT ac:Fri 16-Nov-79      
+INTEST.REL    8 Mon 19-Nov-79 17:12 GMT ac:Mon 19-Nov-79      
+VAXCMP.SYM    7 Fri 28-Dec-79 21:18 GMT ac:Thu 03-Jan-80      
+VAXSET.SYM    6 Wed 02-Jan-80 13:48 GMT ac:Thu 03-Jan-80      
+VAXUTL.SYM    2 Thu 13-Dec-79 18:30 GMT ac:Thu 03-Jan-80      
+VAXGEN.SYM    8 Fri 28-Dec-79 19:55 GMT ac:Thu 03-Jan-80      
+VAXCGU.SYM    4 Fri 28-Dec-79 19:42 GMT ac:Thu 03-Jan-80      
+VAXIO .SYM    2 Fri 14-Dec-79 21:25 GMT ac:Thu 03-Jan-80      
+VAXREL.SYM    6 Fri 21-Dec-79 19:35 GMT ac:Thu 03-Jan-80      
+PASCAL.INC    8 Tue 04-Dec-79 04:30 GMT ac:Fri 04-Jan-80      
+VAXMAC.SYM    5 Fri 21-Dec-79 19:52 GMT ac:Thu 03-Jan-80      
+PAX   .SYM   72 Thu 03-Jan-80 16:37 GMT ac:Thu 03-Jan-80      
+PAXREF.MIC    1 Thu 03-Jan-80 16:35 GMT ac:Thu 03-Jan-80      
+VAXEXP.SYM   13 Wed 19-Dec-79 22:23 GMT ac:Thu 03-Jan-80      
+VAXCSP.SYM    2 Tue 11-Dec-79 20:13 GMT ac:Thu 03-Jan-80      
+VAXJNK.SYM    1 Fri 16-Nov-79 21:44 GMT ac:Thu 03-Jan-80      
+VAXCLL.SYM    2 Wed 02-Jan-80 14:32 GMT ac:Thu 03-Jan-80      
+VAXDEB.SYM    1 Fri 16-Nov-79 21:52 GMT ac:Thu 03-Jan-80      
+VAXTAL.SYM    1 Fri 28-Dec-79 18:58 GMT ac:Thu 03-Jan-80      
+Z     .PAS    1 Mon 19-Nov-79 15:45 GMT ac:Mon 19-Nov-79      
+Z1    .PAS    1 Mon 19-Nov-79 15:46 GMT ac:Mon 19-Nov-79      
+Z1A   .PAS    1 Mon 19-Nov-79 15:46 GMT ac:Mon 19-Nov-79      
+Z2    .PAS    1 Mon 19-Nov-79 15:47 GMT ac:Mon 19-Nov-79      
+Z     .REL    9 Mon 19-Nov-79 17:07 GMT ac:Mon 19-Nov-79      
+SETGEN.PAS    4 Mon 19-Nov-79 18:38 GMT ac:Thu 27-Dec-79      
+SETGEN.REL    5 Mon 19-Nov-79 18:38 GMT ac:Mon 19-Nov-79      
+SETEST.PAS   23 Mon 19-Nov-79 18:18 GMT ac:Thu 27-Dec-79      
+SETST1.PAS    6 Mon 19-Nov-79 18:39 GMT ac:Thu 27-Dec-79      
+SETST6.PAS    2 Mon 19-Nov-79 18:39 GMT ac:Tue 20-Nov-79      
+SETST2.PAS    6 Mon 19-Nov-79 18:39 GMT ac:Thu 27-Dec-79      
+SETST3.PAS    5 Mon 19-Nov-79 18:39 GMT ac:Thu 27-Dec-79      
+SETST4.PAS    4 Mon 19-Nov-79 18:39 GMT ac:Thu 27-Dec-79      
+SETST5.PAS    3 Mon 19-Nov-79 18:39 GMT ac:Wed 21-Nov-79      
+SETST7.PAS    2 Mon 19-Nov-79 18:39 GMT ac:Tue 20-Nov-79      
+SETST2.MIC    1 Tue 20-Nov-79 21:53 GMT ac:Wed 21-Nov-79      
+SETST1.MIC    1 Tue 20-Nov-79 21:53 GMT ac:Thu 03-Jan-80      
+SETST1.REL   28 Wed 21-Nov-79 17:43 GMT ac:Wed 21-Nov-79      
+SETST2.REL   28 Wed 21-Nov-79 17:46 GMT ac:Wed 21-Nov-79      
+SETST3.REL   27 Wed 21-Nov-79 17:48 GMT ac:Wed 21-Nov-79      
+SETST5.REL   12 Wed 21-Nov-79 17:56 GMT ac:Wed 21-Nov-79      
+SETST6.REL   13 Tue 20-Nov-79 22:13 GMT ac:Tue 20-Nov-79      
+SETST7.REL   13 Tue 20-Nov-79 22:15 GMT ac:Tue 20-Nov-79      
+SETST4.REL   25 Tue 20-Nov-79 22:07 GMT ac:Tue 20-Nov-79      
+SETST .PAS    3 Mon 19-Nov-79 22:18 GMT ac:Mon 19-Nov-79      
+SETST .REL    1 Mon 19-Nov-79 22:46 GMT ac:Mon 19-Nov-79      
+VAXDIE.MAC    1 Tue 11-Dec-79 21:55 GMT ac:Fri 04-Jan-80      
+PASSYM.MAC    6 Mon 19-Nov-79 22:28 GMT ac:Mon 19-Nov-79      
+PASSYM.REL    2 Mon 19-Nov-79 22:28 GMT ac:Mon 19-Nov-79      
+PASSYM.UNV    3 Mon 19-Nov-79 22:28 GMT ac:Tue 11-Dec-79      
+VAXDIE.REL    1 Tue 11-Dec-79 21:59 GMT ac:Fri 04-Jan-80      
+S     .PAS    1 Mon 19-Nov-79 23:01 GMT ac:Mon 19-Nov-79      
+S     .REL    1 Mon 19-Nov-79 23:02 GMT ac:Mon 19-Nov-79      
+PASMTH.SYM    1 Tue 20-Nov-79 05:33 GMT ac:Thu 03-Jan-80      
+PASCV .SYM    1 Tue 20-Nov-79 05:33 GMT ac:Thu 03-Jan-80      
+PASSW .SYM    1 Tue 20-Nov-79 05:33 GMT ac:Thu 03-Jan-80      
+PASIFU.SYM    2 Tue 20-Nov-79 05:34 GMT ac:Thu 03-Jan-80      
+FIO   .SYM    1 Tue 20-Nov-79 05:35 GMT ac:Thu 03-Jan-80      
+PASDEL.SYM    1 Tue 20-Nov-79 05:36 GMT ac:Thu 03-Jan-80      
+PASDAT.SYM    1 Wed 02-Jan-80 21:35 GMT ac:Thu 03-Jan-80      
+PA7JMP.SYM    2 Tue 20-Nov-79 05:41 GMT ac:Thu 03-Jan-80      
+PA7DMP.SYM    6 Tue 18-Dec-79 20:30 GMT ac:Thu 03-Jan-80      
+TST013.PAS    1 Tue 20-Nov-79 15:39 GMT ac:Wed 21-Nov-79      
+VAXREL.REL   32 Fri 28-Dec-79 15:16 GMT ac:Fri 04-Jan-80      
+CLIP  .MIC    1 Mon 26-Nov-79 22:34 GMT ac:Tue 04-Dec-79      
+TSTAGG.PAS    2 Thu 13-Dec-79 22:41 GMT ac:Fri 14-Dec-79      
+PASJMP.INC    1 Thu 29-Nov-79 15:29 GMT ac:Thu 03-Jan-80      
+PASUTL.SYM    3 Mon 17-Dec-79 10:55 GMT ac:Mon 17-Dec-79      
+PASVAL.SYM    1 Mon 17-Dec-79 10:57 GMT ac:Mon 17-Dec-79      
+PASLEX.SYM    1 Mon 17-Dec-79 11:00 GMT ac:Mon 17-Dec-79      
+PASCMP.SYM    1 Mon 17-Dec-79 11:10 GMT ac:Mon 17-Dec-79      
+PASESM.SYM    4 Mon 17-Dec-79 11:17 GMT ac:Mon 17-Dec-79      
+PASREF.SYM    5 Mon 17-Dec-79 11:19 GMT ac:Mon 17-Dec-79      
+PASSFC.SYM    6 Wed 26-Dec-79 20:13 GMT ac:Wed 26-Dec-79      
+PA1DMP.SYM    7 Mon 17-Dec-79 11:22 GMT ac:Mon 17-Dec-79      
+PA1XRF.SYM    1 Mon 17-Dec-79 11:23 GMT ac:Mon 17-Dec-79      
+PASCGR.SYM    2 Mon 17-Dec-79 11:24 GMT ac:Mon 17-Dec-79      
+VAXCSP.PAS   51 Wed 19-Dec-79 20:57 GMT ac:Fri 04-Jan-80      
+BUILD .MIC    1 Wed 19-Dec-79 22:27 GMT ac:Wed 02-Jan-80      
+VAXALC.SYM    1 Fri 07-Dec-79 20:33 GMT ac:Fri 07-Dec-79      
+JUSTFY.REL    5 Fri 07-Dec-79 16:01 GMT ac:Fri 07-Dec-79      
+SCAN  .REL    1 Fri 07-Dec-79 16:07 GMT ac:Fri 07-Dec-79      
+PAX1  .PAS   36 Fri 07-Dec-79 16:51 GMT ac:Fri 28-Dec-79      
+PAX3  .PAS   55 Fri 07-Dec-79 16:56 GMT ac:Fri 28-Dec-79      
+PAX4  .PAS    4 Fri 07-Dec-79 19:51 GMT ac:Fri 04-Jan-80      
+PAX   .PAS    3 Fri 07-Dec-79 18:20 GMT ac:Fri 04-Jan-80      
+PAX   .REL    4 Mon 17-Dec-79 10:57 GMT ac:Mon 17-Dec-79      
+PAX1  .REL   30 Mon 17-Dec-79 10:58 GMT ac:Wed 02-Jan-80      
+PAX3  .REL   50 Mon 17-Dec-79 11:31 GMT ac:Mon 17-Dec-79      
+PAX4  .REL    5 Fri 28-Dec-79 18:29 GMT ac:Fri 04-Jan-80      
+077SOS.TEM    0 Fri 07-Dec-79 17:45 GMT ac:Fri 07-Dec-79      
+PASCAL.LOG   47 Thu 03-Jan-80 22:39 GMT ac:Thu 03-Jan-80 <222>
+PAX1  .EXE  472 Wed 02-Jan-80 14:53 GMT ac:Thu 03-Jan-80      
+PAX3  .EXE  152 Mon 17-Dec-79 11:58 GMT ac:Thu 03-Jan-80      
+PAXCAL.EXE   44 Mon 17-Dec-79 11:58 GMT ac:Thu 03-Jan-80      
+PAX4  .EXE  540 Fri 04-Jan-80 12:49 GMT ac:Fri 04-Jan-80      
+PA5RUN.MAC    2 Fri 07-Dec-79 17:52 GMT ac:Fri 07-Dec-79      
+PA5RUN.REL    1 Fri 07-Dec-79 17:54 GMT ac:Mon 17-Dec-79      
+B     .BLD    2 Fri 07-Dec-79 18:05 GMT ac:Fri 07-Dec-79      
+PA7RUN.REL    1 Fri 07-Dec-79 18:22 GMT ac:Fri 04-Jan-80      
+T     .SCR    1 Fri 07-Dec-79 18:40 GMT ac:Fri 07-Dec-79      
+PASERR.TXT   23 Fri 07-Dec-79 22:41 GMT ac:Thu 03-Jan-80      
+TST004.XPN   32 Mon 10-Dec-79 12:49 GMT ac:Mon 10-Dec-79      37(60175) 
+RTMON .REL    7 Mon 10-Dec-79 14:11 GMT ac:Mon 10-Dec-79      
+STMT  .MAC    1 Mon 10-Dec-79 13:44 GMT ac:Mon 10-Dec-79      
+STMT  .REL    1 Mon 10-Dec-79 13:44 GMT ac:Mon 10-Dec-79      
+DNF   .REL    2 Tue 11-Dec-79 16:42 GMT ac:Tue 11-Dec-79      
+VAXERR.PAS    1 Tue 11-Dec-79 22:59 GMT ac:Fri 04-Jan-80      
+VAXERR.REL    3 Mon 17-Dec-79 11:56 GMT ac:Fri 04-Jan-80      
+VAXERR.SYM    1 Tue 11-Dec-79 22:00 GMT ac:Thu 03-Jan-80      
+QEDLN .REL   17 Thu 13-Dec-79 12:11 GMT ac:Thu 13-Dec-79      
+T     .OBJ    1 Wed 02-Jan-80 14:24 GMT ac:Wed 02-Jan-80      
+TST2  .PAS    2 Thu 13-Dec-79 22:42 GMT ac:Fri 14-Dec-79      
+BAH   .PIO  115 Wed 26-Dec-79 21:08 GMT ac:Fri 04-Jan-80      
+LOG   .PIO    0 Wed 02-Jan-80 16:01 GMT ac:Wed 02-Jan-80      
+OOF   .PAS    1 Thu 03-Jan-80 18:29 GMT ac:Thu 03-Jan-80      
+OOF   .REL    1 Thu 03-Jan-80 13:18 GMT ac:Thu 03-Jan-80      
+TST014.PAS    7 Mon 17-Dec-79 13:44 GMT ac:Wed 02-Jan-80      
+TSTPRC.PAS    2 Wed 19-Dec-79 18:39 GMT ac:Wed 19-Dec-79      
+QEDLN .OBJ   17 Fri 14-Dec-79 20:24 GMT ac:Fri 14-Dec-79      
+OOF   .OBJ    2 Thu 03-Jan-80 19:31 GMT ac:Thu 03-Jan-80      
+OOF2  .OBJ    1 Fri 14-Dec-79 21:14 GMT ac:Fri 14-Dec-79      
+PASSET.REL    6 Mon 17-Dec-79 11:31 GMT ac:Mon 17-Dec-79      
+PASSDM.REL   32 Mon 17-Dec-79 11:33 GMT ac:Mon 17-Dec-79      
+PASLOG.REL    1 Mon 17-Dec-79 11:34 GMT ac:Fri 04-Jan-80      
+DEBTST.OBJ    5 Tue 18-Dec-79 13:33 GMT ac:Tue 18-Dec-79      
+COMPAR.MIC    1 Tue 18-Dec-79 15:41 GMT ac:Tue 18-Dec-79      
+TESTIO.OBJ    5 Tue 18-Dec-79 15:43 GMT ac:Tue 18-Dec-79      
+LABEL .JDR    1 Thu 20-Dec-79 18:11 GMT ac:Thu 20-Dec-79      
+OPTIMI.OBJ   44 Fri 28-Dec-79 20:59 GMT ac:Fri 28-Dec-79      
+OPTIMI.PAS   29 Fri 28-Dec-79 16:40 GMT ac:Wed 02-Jan-80      
+IOTS40.OBJ    5 Fri 21-Dec-79 19:47 GMT ac:Fri 21-Dec-79      
+T1    .OBJ    1 Wed 02-Jan-80 14:27 GMT ac:Wed 02-Jan-80      
+IOTS35.OBJ    4 Fri 21-Dec-79 19:47 GMT ac:Fri 21-Dec-79      
+IOTS47.OBJ    8 Fri 21-Dec-79 19:46 GMT ac:Fri 21-Dec-79      
+PASSFC.REL   31 Wed 26-Dec-79 20:13 GMT ac:Wed 02-Jan-80      
+TST015.PAS   10 Fri 28-Dec-79 16:08 GMT ac:Wed 02-Jan-80      
+TST016.PAS    4 Thu 27-Dec-79 18:11 GMT ac:Wed 02-Jan-80      
+PAX4  .SYM    1 Fri 28-Dec-79 18:37 GMT ac:Thu 03-Jan-80      
+PASINI.PAS   26 Fri 28-Dec-79 22:14 GMT ac:Wed 02-Jan-80      
+SCRIBE.MIC    1 Wed 02-Jan-80 20:23 GMT ac:Fri 04-Jan-80 
+DOSCRI.REL    9 Wed 02-Jan-80 17:55 GMT ac:Wed 02-Jan-80      
+RUNSCR.REL   36 Wed 02-Jan-80 18:51 GMT ac:Wed 02-Jan-80      
+SCRIBE.EXE  248 Wed 02-Jan-80 19:58 GMT ac:Wed 02-Jan-80      
+SCRIBE.PAS    3 Wed 02-Jan-80 20:03 GMT ac:Wed 02-Jan-80      
+SCRIBE.REL    4 Wed 02-Jan-80 18:34 GMT ac:Wed 02-Jan-80      
+DOSCRI.PAS   34 Wed 02-Jan-80 20:09 GMT ac:Wed 02-Jan-80      
+SCRIBE.OBJ    6 Wed 02-Jan-80 20:24 GMT ac:Thu 03-Jan-80      
+DOSCRI.OBJ   79 Wed 02-Jan-80 20:31 GMT ac:Wed 02-Jan-80      
+READER.OBJ   22 Thu 03-Jan-80 20:03 GMT ac:Thu 03-Jan-80      
+WRITER.OBJ   11 Thu 03-Jan-80 19:58 GMT ac:Thu 03-Jan-80      
+JUSTFY.OBJ   13 Wed 02-Jan-80 21:00 GMT ac:Wed 02-Jan-80      
+GETLIN.OBJ    3 Wed 02-Jan-80 21:04 GMT ac:Wed 02-Jan-80      
+SCAN  .OBJ   10 Wed 02-Jan-80 21:08 GMT ac:Wed 02-Jan-80      
+PASLOG.SYM    1 Wed 02-Jan-80 21:29 GMT ac:Thu 03-Jan-80      
+COROUT.SYM    1 Wed 02-Jan-80 21:38 GMT ac:Thu 03-Jan-80      
+DUMPIO.SYM    1 Wed 02-Jan-80 21:46 GMT ac:Wed 02-Jan-80      
+TST017.PAS    4 Thu 03-Jan-80 11:44 GMT ac:Thu 03-Jan-80      
+FILUTL.OBJ   10 Thu 03-Jan-80 17:28 GMT ac:Thu 03-Jan-80      
+PAX   .XRF  190 Thu 03-Jan-80 16:39 GMT ac:Thu 03-Jan-80      
+LEXGEN.PAS  158 Thu 03-Jan-80 20:28 GMT ac:Thu 03-Jan-80      
+LEXIN .1      1 Thu 03-Jan-80 17:51 GMT ac:Thu 03-Jan-80      
+LEXIN .2      2 Thu 03-Jan-80 17:51 GMT ac:Thu 03-Jan-80      
+LEXOUT.1     28 Thu 03-Jan-80 21:30 GMT ac:Fri 04-Jan-80      
+LEXGEN.OBJ  228 Thu 03-Jan-80 21:59 GMT ac:Thu 03-Jan-80      
+022PAS.TMP    0 Fri 04-Jan-80 12:48 GMT ac:Fri 04-Jan-80      
+312 file(s) 5956 blocks 
+ n,,ß

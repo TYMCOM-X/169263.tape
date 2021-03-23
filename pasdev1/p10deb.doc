@@ -1,0 +1,48 @@
+#system (PASCAL compiler)
+#module (P10DEB,4/1/79)
+Emission of DEBUG and TRACE supports.
+#ENTRY (DEB_INIT)initializes the data structures and reserves locations
+for the program block.
+#entry (TRACE_BLOCK)emits the trace block.
+#entry (PROG_BLOCK)emits the program block.
+#entry (STMT_BLOCK)emits statement blocks and sets up definitions for page and file blocks.
+#entry (BLK_END)insures that forward statement pointers from trace blocks are resolved.
+#entry (FP_BLOCKS)dumps the page and file blocks.
+#entry (DEB_STABLE)directs the symbol table dump for the PASCAL debugger.
+#effects
+Since some symbol table entries are modified during the dump P10DEB must be called
+after code emission is PASS4.
+#algorithm
+The compiler symbol table is a complex structure on the heap comprised of
+block, symbol, type, value and name nodes.
+This structure is walked in three passes, starting from the root block and
+following all relevent pointers.
+The nodes are visited in the same order in all three passes.
+The first or initialization pass sets the "self" pointer of each node to
+NIL and its Boolean "visited" flag to false. In the second pass each node
+is assigned an address offset from zero which will be its word offset in
+the symbol table file when it is dumped.
+This address is stored in its self pointer and the visited flag is set
+true in preparation for the third pass.
+Finally, each node is copied field by field into a simplified version
+
+of the record for the debugger, replacing all pointers by their self addresses,
+and written to the symbol table file.
+The visied flag is then set false to indicate that the node has been processed.
+#notes
+Not all symbols are emitted. In particular named types, indirect types, and
+standard procedures and functions are deleted from the "sym_list"s during the first pass.
+Name nodes which are not required (not "visited" in the second pass) are
+deleted from the name tree prior to the third pass.
+$skip
+In emission of file and page blocks, three fields in the PAGE_ID records
+are redefined since they are otherwise unused in the fourth pass.
+The "following_page" pointer for the first page of a file holds the
+"def" pointer for the file's "file_block". 
+Each page for which a page_block is to be emitted has the "def" pointer
+for this block stored in the "left_page" field of its page_id record,
+while the "right_page" field holds the def pointer of the last "stmt"
+block emitted for the page. These are initialized to NIL by DEB_INIT,
+assigned by STMT_BLOCK, and resolved by FP_BLOCKS.
+#responsible (Compiler group)
+#end

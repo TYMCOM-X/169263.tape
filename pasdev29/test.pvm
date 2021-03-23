@@ -1,0 +1,13 @@
+.title TEST
+.psect stuff,1,EXE,RD,WRT
+;COMMENT COMMENT
+q: .word 4
+r: .word q+3
+txt: .ascii 'abc''de''''' ;comment
+txt2:  .ascii 'abc''de''';comment
+start:
+   FTYPE1  r2,    q
+   LTYPE3 r3   ,r2
+   FTYPE3 r1   ,   r2
+   FTYPE3  r1,r2;comment
+.END start

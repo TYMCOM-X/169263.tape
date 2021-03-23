@@ -1,0 +1,55 @@
+(*    +--------------------------------------------------------------+
+      |                                                              |
+      |                     P R   F I L E   I D                      |
+      |                     - - - - - - - - - -                      |
+      |                                                              |
+      +--------------------------------------------------------------+
+      
+      MDSI, Company Confidential
+      
+      SYSTEM:  FILUTL subroutines
+      
+      STARTED:  7/7/78
+      
+      PURPOSE:  This extracts a file title from an input  string,  and
+         returns  a  file_id  string containing the text of the title.
+         Use  of  this  routine  localizes  knowledge  of  the  system
+         dependent format of a file title.
+      
+      USAGE:
+      
+         EXTERNAL FUNCTION PR_FILE_ID
+               ( LINE: CMDLINE;
+                 VAR IDX: CMDLINEIDX;
+                 VAR FID: FILE_ID      ): BOOLEAN;
+      
+      INPUT:
+      
+         LINE        is the line to be scanned.
+      
+         IDX         is  parsing  cursor.  It  is  assumed  that  this
+                     points to  the  first  character  of  the  title.
+                     Leading white space is not ignored.
+      
+      OUTPUT:
+      
+         IDX         is set to the first character past the end of the
+                     file title if a valid  title  is  found.  If  the
+                     title   is   incorrectly  formed,  this  is  left
+                     pointing to the character that is in error.
+      
+         FID         is set to the text of the title, if a valid title
+                     is found; otherwise, it is left unchanged.
+      
+         <return value>
+                     is  true  if  a complete and well-formed title is
+                     found; false, otherwise.
+      
+      INCLUDE FILES REQUIRED:
+      
+         CMDUTL.TYP
+         FILUTL.INC
+      
+      RESPONSIBLE:  Software Tools
+      
+      ---------------------------------------------------------------- *)

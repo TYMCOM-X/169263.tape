@@ -1,0 +1,1311 @@
+universal	virsym
+;    +--------------------------------------------------------------+
+;    |                                                              |
+;    |                         V I R S Y M                          |
+;    |                         - - - - - -                          |
+;    |                                                              |
+;    +--------------------------------------------------------------+
+;    
+;    MDSI, Company Confidential
+;    
+;    SYSTEM:  PASCAL Compiler
+;    
+;    STARTED: 
+;    
+;    PURPOSE:  Universal file for the virtual heap facility.
+;    
+;    RESPONSIBLE:  Comiler group
+;    
+;    ----------------------------------------------------------------
+
+	search	passym
+
+ind.bit=20	;mask for testing/setting indirection bit
+atbwd=reg+1	;area table word address
+ptbwd=reg+2	;page table word address
+ptidx=reg+3	;buffer index of page table
+bfptr=reg+4	;buffer pointer of page (table)
+bfidx=reg+5	;index of above buffer
+fpage=reg+6	;file page address
+dioptr=reg+7	;dumpio	arg-block ptr
+r=reg+10	;temps
+r2=reg+11
+r3=reg+12
+r4=reg+13
+
+afield=^o11	; bits in areaid
+pfield=^o24	; bits in virtual page address
+ofield=^o7	; bits in word offset
+ptfield=pfield-ofield	; bits in page table offset
+pofield=ofield	; bits in page offset
+
+	ifn	<afield+ptfield+pofield+ofield-^o44>,<printx 'Bogus field specs' >
+
+bmax=^d16		; default number buffers
+amax=^d32		; max number of areas
+pagsize=1_<ofield>	; page size in words
+
+maskoffset=1_<ofield>-1	; mask for offset field
+maskp=<1_<pfield>-1>_<ofield>	; mask for virtual page field
+maskpo=<1_<ofield>-1>_<ofield>
+maskpt=<1_<ptfield>-1>_<ofield+pofield-22>	; mask for page table offset field
+maskarea=<1_<afield>-1>_<ofield+pfield-22>	; mask for areaid field
+
+	end
+	title	vaddr ** PASCAL virtual address translation routines **
+;    +--------------------------------------------------------------+
+;    |                                                              |
+;    |                         V T R A N S                          |
+;    |                         - - - - - -                          |
+;    |                                                              |
+;    +--------------------------------------------------------------+
+;    
+;    MDSI, Company Confidential
+;    
+;    SYSTEM:  PASCAL Compiler
+;    
+;    STARTED:  November 27
+;    
+;    PURPOSE:  Contains the  address  translation  routines  for  the
+;       virtual heap facility.
+;    
+;    ENTRY POINTS:
+;    
+;       VTRNS.      translates a virtual pointer.
+;    
+;       FTRNS.      translates a virtual pointer in a WITH register.
+;    
+;       VMACC.      makes a virtual pointer addressible.
+;    
+;       VBPTI.      brings in a page table.
+;    
+;       VBVPI.      brings in a virtual page from the swapping file.
+;    
+;       VGTBF.      gets a buffer, swapping a page out if neccessary.
+;    
+;       VKBFP.      kills a buffer page.
+;    
+;       Internal routines:
+;    
+;       SWAPIN      brings in a page.
+;    
+;    RESPONSIBLE:  Compiler group
+;    
+;    ----------------------------------------------------------------
+
+	search	passym
+	search	virsym
+
+	$reloc
+
+	entry	vtrns.
+	entry	ftrns.
+	entry	vmacc.
+	entry	vbpti.
+	entry	vbvpi.
+	entry	vgtbf.
+	entry	vkbfp.
+
+	extern	n%buf,vregs.,vatbl.,vroot.,valc.,vmru.
+	extern	vmrut.,vorg.,vchn.,vr.save,vr.return,vbuf.
+	extern	vgnfp.,vfrfp.
+	extern	vread.,vwrit.
+	extern	omask.,bp.area,bp.p,bp.po,bp.pt,bp.o
+	extern	.jbff,die.,twait.
+
+indxbp:	point	4,@0(topp),12
+
+vtrns.:	ldb	r4,indxbp	;get # of indexr
+	move	ac1,0(r4)	;get virtual pointer
+	tlnn	ac1,maskarea	;is in area?
+	jrst	vret		;no, just passing through
+	push	topp,r4	;yes, save indexr #
+	pushj	topp,vr.save	;save registers
+	pushj	topp,vmacc.	;translate
+	pop	topp,r4	;retrieve indexr #
+	addi	r4,vregs.-2	;addr of saved indexr
+	movem	ac1,0(r4)	;bash it
+	jrst	vr.return	;do skip return
+vret:	aos	0(topp)		;skip return
+	popj	topp,
+
+ftrns.:	ldb	ac1,indxbp	;get indexr
+	move	ac1,0(ac1)	;then virtual pointer
+	tlnn	ac1,maskarea	;if not virtual then
+	jrst	vret		;almost done
+	push	topp,@0(topp)	;put offset onto stack
+	addi	ac1,@0(topp)	;correct by offset
+	pushj	topp,vr.save	;save registers
+	pushj	topp,vmacc.	;translate
+	subi	ac1,@0(topp)	;remove offset
+	pop	topp,0(topp)	;tick stack pointer back
+	jrst	vr.return	;and do skip return
+
+; VMACC. called with
+;	move	ac1,vptr
+;	pushj	topp,vmacc.
+; on return (ac1) is actual address, preserving areaid
+;
+vmacc.:	ldb	r,bp.area	;get area #
+	ldb	r2,bp.pt	;and page table offset
+	move	r3,r2		;copy
+	move	atbwd,vatbl.	;address of first area table
+vmloop:	sosge	r3		;search for correct area table
+	jrst	vmok		;found it
+	skipe	atbwd,0(atbwd)	;if chained to next area table, get it
+	jrst	vmloop		;and continue search
+	jrst	vmerr.		;else error out
+vmok:	add	atbwd,r		;now addr of entry in area table
+	skipn	ptbwd,0(atbwd)	;get address of page table
+	jrst	vmerr.		;error if none
+;	tlnn	ptbwd,ind.bit	;check if in core
+	pushj	topp,vbpti.	;if not bring it in
+	ldb	r,bp.po		;get page offset
+	add	ptbwd,r		;now addr of entry in page table
+	move	bfptr,0(ptbwd)	;get addr of page
+	pushj	topp,vbvpi.	;no, get it
+	ldb	r,bp.o		;get word offset
+	addi	r,0(bfptr)	;now absolute addr
+	tdz	ac1,omask.	;mask all but areaid
+	add	ac1,r
+	aos	r,vmru.		;advance mru/ref count
+	move	r2,vmrut.	;addr of mru table
+	add	r2,bfidx	;addr of correct entry
+	movem	r,0(r2)		;updated
+	popj	topp,
+
+;
+; VBPTI. brings in the page table indicated by ATBWD
+;
+vbpti.:	move	r,atbwd		;parameter to swapin
+	pushj	topp,swapin	;does all the word
+	move	ptbwd,bfptr	;return parameter
+	move	ptidx,bfidx
+	popj	topp,0
+
+;
+; VBVTI. brings in a virtual page indicated by PTBWD
+;
+vbvpi.:	move	r,bfidx		;index of page table buffer
+	move	ptidx,bfidx	;same
+	add	r,vmrut.	;addr of entry in mru table
+	sos	0(r)		;decrement before swap
+	move	r,ptbwd
+; fall into swapin
+
+;
+; SWAPIN brings in a page whose file page number is indicated
+; by T.
+;
+swapin:	move	fpage,0(r)	;get file page no
+	tlnn	fpage,ind.bit	; is it already in core?
+	jrst	swapit		; yes, must read it in
+	hrrzi	bfptr,0(fpage)	; else stuff addr of buffer
+	movei	bfidx,0(bfptr)	; copy it
+	sub	bfidx,vbuf.	; get offset from start of first buffer
+	lsh	bfidx,-<ofield>	; shift (divide by page size)
+	popj	topp,0		; and go home with it
+
+swapit:	push	topp,r		;save addr
+	pushj	topp,vgtbf.	;get buffer
+	pushj	topp,vread.	;read in the page
+	move	r2,bfidx	;buffer index
+	add	r2,vmrut.	;addr of mru entry
+	setzm	0(r2)		;zapped
+	pop	topp,r		;retrieve addr in table
+	hrrm	bfptr,0(r)	; put buffer addr into page table
+	hrlzi	r2,ind.bit	; get indirect bit in right place
+	orm	r2,0(r)		; and set, don'r disturb rest of word
+	move	r3,fpage	;virtual page from which read
+	hrli	r3,0(r)		;packed for origin table
+	move	r2,bfidx
+	add	r2,vorg.	;addr in origin table
+	movem	r3,0(r2)
+	popj	topp,
+
+;
+; VGTBF. gets a buffer
+;
+vgtbf.:		;may have to save regs here
+		;for search let:
+		; ac0 = buffer index for search
+		; r   = mru address
+		; bfidx  = index of best candidate for swapin
+		; r3 = mru count of r2
+	move	ac0,n%buf
+	move	r,ac0
+	add	r,vmrut.
+	hrloi	r3,377777	;largest positive integer
+gloop:	sojl	ac0,gloop2	;iterate 
+	movei	r,-1(r)		;next mru entry
+	skipe	0(r)		;if free then allocate it
+	jrst	gloop1		;else keep looking
+	move	bfidx,ac0
+	move	bfptr,bfidx
+	imuli	bfptr,pagsize
+	add	bfptr,vbuf.
+	popj	topp,
+gloop1:	skipl	0(r)		;if a page table then ignore it
+	camg	r3,0(r)		;if mru count < best found so far
+	jrst	gloop		;
+	move	r3,0(r)		;then its the new best choice
+	move	bfidx,ac0
+	jrst	gloop
+gloop2:
+	move	bfptr,bfidx
+	imuli	bfptr,pagsize
+	add	bfptr,vbuf.	;now addr of buffer
+	move	r2,bfidx
+	add	r2,vorg.	;addr in origin table
+	hrrz	r,0(r2)		;check if came from file
+	jumpn	r,gloop3
+	push	topp,r2
+	pushj	topp,vgnfp.	;if not, get a file page for it
+	pop	topp,r2
+gloop3:	hlrz	r2,0(r2)	;get addr in area/page table
+	hrrm	r,0(r2)		;install page number
+	push	topp,fpage	;save file page # of page to be read in
+	move	fpage,r
+	hrlzi	r,ind.bit	;get mask word with indirect bit set
+	andcam	r,0(r2)		;zero out only indirect bit
+	pushj	topp,vwrit.	;write page out
+	pop	topp,fpage
+		;may have to restore regs here
+	popj	topp,
+
+
+vkbfp.:		;kill buffer page
+	move	r2,bfidx
+	add	r2,vorg.	;addr of entry in origin table
+	hrrz	r,0(r2)		;gets file #
+	setzm	0(r2)		;clear origin entry
+	jumpe	r,vkill		;nothing to do if not from file
+	pushj	topp,vfrfp.	;else free file page
+vkill:	move	r2,bfidx	;index of buffer to free
+	add	r2,vmrut.	;addr of mur entry
+	setzm	0(r2)
+	popj	topp,
+vmerr.:	pushj	topp,twait.	;empty tty buffer
+	outstr	[asciz /
+?	Bad virtual pointer.
+/]
+	jrst	die.
+	end
+	title	vinit ** virtual heap initialization/termination/storage **
+
+;    +--------------------------------------------------------------+
+;    |                                                              |
+;    |                          V I N I T                           |
+;    |                          - - - - -                           |
+;    |                                                              |
+;    +--------------------------------------------------------------+
+;    
+;    MDSI, Company Confidential
+;    
+;    SYSTEM:  PASCAL Compiler
+;    
+;    STARTED:  November 27
+;    
+;    PURPOSE:  This is the initialization and support package for the
+;       virtual  heap  routines.  Relevant  byte  pointers  and field
+;       masks are defined in this package.
+;    
+;    ENTRY POINTS:
+;    
+;       VINIT.      called  from  the  PASMON  package  (INITP.)   to
+;                   acquire  storage  for buffers and tables required
+;                   by the virtual  heap  routines.  Also  opens  the
+;                   swapping file.
+;    
+;       VEND.       called  from  EXIT. on  termination of the PASCAL
+;                   program to close and delete the swapping file.
+;    
+;       VR.SAVE     saves register 2 through 14 in static storage.
+;    
+;       VR.RESTORE  restores the saved registers.
+;    
+;       VR.RETURN   also restores the registers but performs  a  skip
+;                   return.
+;    
+;    EXTERNAL REFERENCES:
+;    
+;       OPENFILE
+;       CLOSEFILE
+;    
+;    RESPONSIBLE:  Compiler group
+;    
+;    ----------------------------------------------------------------
+	search	passym
+	search	virsym
+
+	entry	vinit.	;initialization
+	entry	vend.	;clean up at end of run
+	entry	vend.	;termination
+	entry	n%buf	;number buffers to allocate
+	entry	vregs.	;register save area
+	entry	vatbl.	;address of first area table
+	entry	vroot.	;address of root table
+	entry	vbuf.	;address of first buffer
+	entry	valc.	;address of allocator table
+	entry	vmru.	;mru counter
+	entry	vmrut.	;address of mru/reference table
+	entry	vorg.	;address of origin table
+	entry	omask.	;mask offset field
+	entry	amask.	;mask area field
+	entry	ovfl.	;test for overflow on assingment to offsets
+	entry	a.shl	;to shift area #s left
+	entry	a.shr	;to shift area #s right
+	entry	bp.area	;byte pointer to access areaid
+	entry	bp.p	;byte pointer to access virtual page pointer field
+	entry	bp.pt	;byte pointer to access page table offset
+	entry	bp.po	;byte pointer to access page offset
+	entry	bp.o	;byte pointer to access word offset
+	entry	vr.save	;register save routine
+	entry	vr.return ;register restoration with skip return
+	entry	vr.restore ;register restoration with no skip return
+	entry	ffend.	;true if first free page at end of file
+	entry	aok.	;flag for dumpio
+	entry	vchn.	;channel for same
+	entry	ffree.	;head of free page chain
+
+	extern	.jbff
+	extern	openfile,closefile
+	extern	corer.
+
+	$reloc
+	$low
+n%buf:	exp	bmax	; default # page buffers
+vregs.:	block	13	; register save area for 2..14
+vbuf.:	z		; address of first buffer
+vatbl.:	z		; address of first area table
+vroot.:	z
+valc.:	z
+vmru.:	z
+vmrut.:	z
+vorg.:	z
+vchn.:	z		; channel # of swap file
+ffend.:	z
+ffree.:	z
+aok.:	z
+
+	$high
+file.name: exp ^d10
+	ascii /###VHP.TMP        /
+omask.:	exp	maskp+maskoffset	; for masking everything but areaid
+amask.:	exp	<1_<afield>-1>_<44-afield>	; for masking only areaid
+ovfl.:	xwd	<1_<afield>-1>,0	;mask all but left areaid in left hw
+a.shl:	exp	44-afield	; to LSH # into areaid field
+a.shr:	xwd	0,afield-44	; to LSH areaid into rightmost bits of a reg
+bp.area: point	afield,ac1,afield-1
+bp.p:	point	pfield,ac1,afield+pfield-1
+bp.pt:	point	ptfield,ac1,afield-1+ptfield
+bp.po:	point	pofield,ac1,afield+ptfield+pofield-1
+bp.o:	point	ofield,ac1,^d35
+
+;
+; VINIT. initializes the virtual heap environment: acquiring storage
+; for the buffers and tables, opening the swapping file, etc.
+;
+vinit.:	hrrz	ac1,.jbff	;get first free loc in lowseg
+	addi	ac1,pagsize-1	;round to mod 512
+	trz	ac1,pagsize-1	;assumes its a power of 2
+	movem	ac1,vbuf.	;address of first buffer
+	move	ac1,n%buf	;number buffers to allocate
+	imuli	ac1,pagsize
+	add	ac1,vbuf.
+	movem	ac1,vroot.	;address of root table
+	addi	ac1,amax
+	movem	ac1,valc.	;address of allocator table
+	addi	ac1,amax
+	movem	ac1,vmrut.	;address of mru/ref table
+	setzm	vmru.		;zero mru count
+	add	ac1,n%buf
+	movem	ac1,vorg.	;address of origin table
+	add	ac1,n%buf
+	movem	ac1,vatbl.	;address of first area table
+	addi	ac1,amax
+	core	ac1,		;get storage
+	jsp	ac0,corer.	;fails
+	setzm	ac1,ffend.	;start at page one (get next page with AOS)
+	setzm	ffree.		;free list is empty
+	movei	reg,file.name
+	movei	reg1,vchn.
+	movei	reg2,aok.
+	movei	reg3,0		;want both input and output
+	movei	reg4,1		;empty file first
+	pushj	topp,openfile	;let dumpio do the work
+	skipe	aok.		;error in open?
+	popj	topp,		;no, continue
+	outstr	[asciz /
+?	Can't open swapping file.
+/]
+	exit	0,		;no more possible
+
+vend.:
+				;close/delete swapping file
+	move	reg,vchn.	;channel of file
+	movei	reg1,1		;delete it
+	pushj	topp,closefile
+	popj	topp,
+
+vr.save:
+	move	ac0,[xwd reg,vregs.]
+	blt	ac0,vregs.+12	;save regs 2..14
+	popj	topp,
+vr.return:
+	aos	0(topp)		;skip return
+vr.restore:
+	move	ac0,[xwd vregs.,reg]
+	blt	ac0,14
+	popj	topp,
+	end
+	title	virtio ** PASCAL virtual heap io routines **
+;    +--------------------------------------------------------------+
+;    |                                                              |
+;    |                            V I O                             |
+;    |                            - - -                             |
+;    |                                                              |
+;    +--------------------------------------------------------------+
+;    
+;    MDSI, Company Confidential
+;    
+;    SYSTEM:  PASCAL Compiler
+;    
+;    STARTED:  November 27
+;    
+;    PURPOSE:  IO interface routines for the virtual  heap  facility.
+;       All  input  and  output  to  the  swapping  file is performed
+;       through DUMPIO.
+;    
+;    ENTRY POINTS:
+;    
+;       VREAD.      reads a page into a buffer.
+;    
+;       VWRIT.      writes a buffer page to the swapping file.
+;    
+;       VGNFP.      gets a new file page.
+;    
+;       VFRFP.      frees a file page.
+;    
+;    EXTERNAL REFERENCES:
+;    
+;       READPAGE
+;       WRITEPAGE
+;    
+;    RESPONSIBLE:  Compiler group
+;    
+;    ----------------------------------------------------------------
+
+	search	passym
+	search	virsym
+
+	entry	vread.,vwrit.,vgnfp.,vfrfp.
+	extern	readpage,writepage
+	extern	ffree.,ffend.,vchn.,aok.
+
+	$reloc
+	$low
+regs:	block	14	;register save area prior to dumpio
+
+	$high
+vwrit.:
+	pushj	topp,r.save
+	move	reg,bfptr
+	movei	reg1,pagsize/^d128
+	movei	reg2,0(fpage)
+	imuli	reg2,0(reg1)		; get block number in file
+	move	reg3,vchn.
+	movei	reg4,aok.
+	pushj	topp,writepage
+	pushj	topp,r.restore
+	popj	topp,
+
+vread.:	pushj	topp,r.save
+	move	reg,bfptr
+	movei	reg1,pagsize/^d128
+	movei	reg2,0(fpage)
+	imuli	reg2,0(reg1)
+	move	reg3,vchn.
+	movei	reg4,aok.
+	pushj	topp,readpage
+	pushj	topp,r.restore
+	popj	topp,
+
+vgnfp.:	skipn	r,ffree.	;any free pages?
+	jrst	extend		;no, go extend file
+	exch	fpage,r		;save fpage!
+	pushj	topp,vread.	;yes, read in first free page
+	exch	fpage,r		;restore fpage
+	move	ac0,0(bfptr)	;get first word of free page
+	movem	ac0,ffree.	;becomes new first free
+	popj	topp,
+
+extend:	aos	r,ffend.	;none in free list, allocate from end
+	popj	topp,
+
+vfrfp.:	camn	r,ffend.	;is page to be freed at end of file?
+	jrst	atend		;yes
+	move	ac0,ffree.	;yes, place at head of free list
+	movem	ac0,0(bfptr)
+	movem	r,ffree.
+	pushj	topp,vwrit.	;update on file
+	popj	topp,
+
+atend:	sos	ffend.		;merely truncate block at end of file
+	popj	topp,
+r.save:	move	ac0,[xwd ac1,regs]
+	blt	ac0,regs+13
+	popj	topp,
+r.restore:
+	move	ac0,[xwd regs,ac1]
+	blt	ac0,14
+	popj	topp,
+	end
+	title	PASVLC	Allocator for PASCAL Virtual Heap
+	search	VIRSYM
+	search	PASSYM
+	$reloc
+
+	entry	VNEW.,ANEW.,VDPS.,VMARK.,AMARK.,VRLES.,VCREA.,VDELA.
+	intern	NEW.,DSPOS.,MARK.,RLEAS.
+
+	extern	VBPTI.,VBVPI.,VATBL.,VGTBF.,VMACC.,VFRFP.,VKBFP.
+	extern	TWAIT.,WRTPC.,DIE.,VMRUT.,VORG.,OMASK.,VMRU.
+
+; a few allocation parameters
+
+	MINBLK=2			; the smallest block to allocate
+	SMALL=3				; the smallest remnant to leave
+		; note ** both of these include the control word
+
+	DEFAREA=1			; the default area for VMARK. and VNEW.
+
+; event counter
+
+	RECORD=1			; if <> 0, record events
+
+    ife RECORD, < define COUNT(A) <>>	; null definition if not enabled
+
+    ifn RECORD, <
+	define COUNT(A) <
+	  AOS 0,A >
+	$low
+	C$NEW::exp 0
+	C$DISP::exp 0
+	C$COAL::exp 0
+	C$SPLI::exp 0
+	C$EXAM::exp 0
+	C$XTND::exp 0  >
+	$high
+
+
+; VNEW. and ANEW. -- allocate a record, just like NEW. does. First we check
+;   all pages in the area for sufficient free space (via 17 bits in the
+;   page tables). If a page is found with enough, it is brought in and the
+;   allocation made, otherwise the area is extended. There is no way of
+;   really telling, in the general case, whether an allocation has changed
+;   the maximum free block on a page, so we must walk the entire free list
+;   to find out.
+
+VNEW.:	PUSHJ	TOPP,SAVREG
+	MOVEI	AC1,DEFAREA		; install default area number
+	MOVE	R,VATBL.	t address of area table
+	SKIPN	0,DEFAREA(R)		; is there a page table?
+	PUSHJ	TOPP,VCREA.		; no, go do it (hee-hee!)
+	SKIPA	0,0
+
+ANEW.:	PUSHJ	TOPP,SAVREG
+	COUNT	C$NEW
+	CAIL	REG,PAGSIZ-1		; make sure user isn't trying to
+	JRST	TOOBIG			;   get a record larger than page
+	CAIGE	REG,MINBLK		; smaller than smallest allowed size?
+	MOVEI	REG,MINBLK		;   yes, stuff in that size
+
+	JUMPE	AC1,ARZERO		; attempt to allocate in area zero
+	MOVEI	ATBWD,VATBL.		; get area table address
+	HLRZ	R,ALCTB.(AC1)		; get appropriate area table
+	MOVEM	R,PGTEMP		; remember for making virtual address
+	IDIVI	R,PAGSIZ		;   for lowest allowed page number
+
+	MOVE	ATBWD,0(ATBWD)		; load addr of area table
+	JUMPE	ATBWD,BADPAG		; no table -- illegal page number
+	SOJGE	R,.-2			; do again, count down page number
+
+	ADDI	ATBWD,0(AC1)		; add area number for ptable addr
+	PUSHJ	TOPP,VBPTI.		;   and bring in the table
+	HLRZ	R,ALCTB.(AC1)		; first page to check
+	HRRZ	R2,ALCTB.(AC1)		;   and last page
+	SUB	R2,R			; now number to check
+	ADDI	R2,1			; less one
+	MOVNS	0,R2			; negate it
+	HRL	PTBWD,R2		; stuff in left half
+	ANDI	R,PAGSIZ-1		; get offset from start of table
+	ADDI	PTBWD,0(R)		;   to get addr of entry in right half
+
+NULOOP:	LDB	R,PTINFO		; get size of largest block from p table
+	CAIG	REG,0(R)		; is big enough?
+	JRST	NUALOC			; yeah, go do it
+	AOS	0,PGTEMP		; tick page number
+	AOBJP	PTBWD,NUXTND		; if count exhausted, go extend area
+	TRNE	PTBWD,PAGSIZ-1		; did we go over page boundary?
+	JRST	NULOOP			;   no, go back and check next page
+
+	SUBI	ATBWD,0(AC1)		;   yes, so to get next table, get next
+	SKIPN	ATBWD,0(ATBWD)		;     area table
+	JRST	BADPAG			; none -- bad page number
+	HLLM	PTBWD,CHHLIM		; remember count for a second
+	ADDI	ATBWD,0(AC1)		; add area number to get entry
+	PUSHJ	TOPP,VBPTI.		;   bring in next page table
+	HLL	PTBWD,CHHLIM		; restore count
+	JRST	NULOOP			;   and back up to top
+
+NUALOC:	HLLI	PTBWD,0			; clear out count
+	PUSHJ	TOPP,VBVPI.		; bring in candidate page
+	JRST	NUFIND			;   and go find the right block
+
+NUXTND:	AOS	R,ALCTB.(AC1)		; tick to next page, load shebang
+	COUNT	C$XTND
+	PUSHJ	TOPP,PGINIT		; and initialize as a new free page
+
+NUFIND:	MOVEI	R,0(BFPTR)		; start at first word of block
+	ADDI	REG,1			; tick size to alloc. for control
+
+FINDIT:	SKIPG	R2,0(R)			; pick up size word
+	JRST	NUNEXT			;  allocated -- get next block
+	COUNT	C$EXAM
+	CAILE	REG,0(R2)		; is it big enough?
+	JRST	NUNEXT+1		;   no, get next, don't negate size
+	SUBI	R2,0(REG)		; get remnant size if split
+	CAIG	R2,SMALL		; is it worth splitting block?
+	JRST	NUXACT			; no, exact allocation
+	COUNT	C$SPLI
+	MOVEM	R2,0(R)			; install remnant size
+	ADDI	R,0(R2)			; get addr of record to allocate
+	MOVEM	REG,0(R)		; put in size
+
+NUXACT:	MOVNS	0,0(R)			; negate size word -- allocated record
+NUINIT:	MOVEI	AC0,1(R)		; save real address in AC0
+	SETZM	0,1(R)			; zero out first word
+	HRLI	R2,1(R)			; set up BLT ac word
+	HRRI	R2,2(R)
+	MOVEI	R3,-1(R)		; zero out one less than size words
+	ADDI	R3,0(REG)		; from start of block
+	BLT	R2,0(R3)
+
+	SETZ	R2,0			; initialize running largest
+	HRRZI	R,0(BFPTR)		; start at first block
+
+LGLOOP:	SKIPG	R3,0(R)			; pick up size word
+	JRST	LGNEXT			; negative -- forget about it
+	CAIGE	R2,0(R3)		; bigger than running one?
+	MOVEI	R2,0(R3)		; yes, put in R2 for later
+LGNEXT:	MOVM	R3,R3			; make sure size is positive
+	ADDI	R,0(r3)			;   and add on for addr next record
+	CAIGE	R,PAGSIZ(BFPTR)		; over end of buffer yet?
+	JRST	LGLOOP			; no, do it
+
+NUDONE:	SOSG	0,R2			; dec largest so it'll fit in PT
+	SETZ	R2,0			; don't let it be negative
+	DPB	R2,PTINFO		; put into age table
+	EXCH	AC1,AC0			; get real addr in AC0 for index reg.
+	MOVE	REG,PGTEMP		; get page number
+	MOVEI	R,0(AC1)		; pick up real address
+	ANDI	R,pagsiz-1		; leave only offset within page
+	LSH	REG,OFIELD		; shove page number into right field
+	ADD	REG,R			; compose virtual address
+	MOVE	R,AC0			; pick up area number
+	LSH	R,ofield+pfield		; shift into area field
+	OR	REG,R			; or into address
+	JRST	RESTREG			; and we're done
+
+NUNEXT:	MOVM	R2,R2			; get positive offset to next block
+	ADDI	R,0(R2)			; get address of next block
+	JRST	FINDIT			; and try again
+
+PGINIT:	TRNE	PTBWD,PAGSIZ-1		; has page table pointer carried over?
+	JRST	PGNRML			; no, just create page normally
+	SUBI	ATBWD,0(AC1)		; get addr of start of area table
+	HRRZ	R,.JBREL##		; get current loseg end
+	MOVEI	R2,1(R)			; remember addr of new area table page
+	ADDI	R,PAGSIZ		; a page more than current end
+	CORE	R,0
+	JRST	4,.		; halt on error for now
+	MOVEM	R2,0(ATBWD)		; install link between area tables
+	MOVEI	ATBWD,0(R2)		; update area table pointer to new table
+	ADDI	ATBWD,0(AC1)		; tack on area number as index
+	PUSHJ	TOPP,VGTBF.		; get a buffer for the page table
+	MOVEI	PTBWD,0(BFPTR)		; set up page table pointer registers
+	MOVEI	PTIDX,0(BFIDX)
+	HRLI	R,IND.BIT		; assemble parea table word for the ptable
+	HRRI	R,0(PTBWD)		; page table addr in right half
+	MOVEM	R,0(ATBWD)
+	MOVE	R,VMRUT.		; initializa MRU counter for page table
+	ADDI	R,0(PTIDX)
+	SETZM	0(R)
+	MOVE	R,VORG.			; must also set origin table
+	ADDI	R,0(PTIDX)		; for the page table buffer
+	HRLZM	ATBWD,0(R)
+
+PGNRML:	MOVE	BFPTR,VMRUT.		; get address of mruref table
+	ADDI	BFPTR,0(PTIDX)		; address of entry of page table
+	SOS	0,0(BFPTR)		; dec ref count before creating page
+	PUSHJ	TOPP,VGTBF.		; get a free buffer
+	MOVE	R,VMRUT.		; get addr of MRU table
+	ADDI	R,0(BFIDX)		; now index into table
+	AOS	R2,VMRU.		; promote page to MRU -- get global
+	MOVEM	R2,0(R)			;   MRU count, increm., and install
+	MOVE	R,VORG.			; pick up addr of origin table
+	ADDI	R,0(BFIDX)		; tack on index into table
+	HRLZM	PTBWD,0(R)		; install ptable addr into origin table
+	MOVEI	R,0(BFPTR)		; the address of the buffer
+	HRLI	R,<<<PAGSIZ-1>_<^o22-OFIELD>>+IND.BIT> ; free size, incore bit on
+	MOVEM	R,0(PTBWD)		; install in page table
+	MOVEI	R,<PAGSIZ>		; whole block is free
+	MOVEM	R,0(BFPTR)		; put it down
+	POPJ	TOPP,0
+
+; VDPS. -- free a block, then pass through page, concatenating
+;   whenever possible. Update maximum size free block on page when done.
+;
+VDPS.:	subi	reg,1		;get virtual addr of control block
+	PUSHJ	TOPP,SAVREG
+	move	ac1,reg		;translate supplied pointer
+	movei	reg,minblk	;that big only
+	count	c$disp
+	pushj	topp,vmacc.	;make accessible
+;
+; now have translated address in AC1 and buffer address in BFPTR.
+; check if really an allocated block.
+;
+	skipl	0(ac1)		;must be negative if allocated
+	jrst	dsperr
+	movms	0(ac1)		;mark as free
+;
+; Scan over page. Use:
+;	ac0 = max free block size (negative)
+;	ac1 = search pointer
+;	reg = concatenation pointer
+;
+	movei	ac0,0
+	movei	ac1,0(bfptr)	;start search at first word of page
+vd.loop:
+	cail	ac1,pagsize(bfptr) ;check if block within page
+	jrst	vd.done		;done if not
+	skipl	reg,0(ac1)	;if not allocated then
+	jrst	vd.free		;  try to concatenate
+	sub	ac1,reg		;else try next block
+	jrst	vd.loop
+vd.free:
+	add	reg,ac1		;address of next block
+	caige	reg,pagsize(bfptr) ;if not within page
+	skipg	reg,0(reg)	;or if allocated 
+	jrst	vd.size		;then just check against max size
+	addb	reg,0(ac1)	;else concatenate blocks
+	count	c$coal
+	jrst	vd.free		;and continue check
+vd.size:
+	camg	ac0,0(ac1)	;check if this block the largest yet
+	move	ac0,0(ac1)		;appears so
+	add	ac1,0(ac1)	;addr of next block
+	jrst	vd.loop		;and continue
+vd.done:
+	subi	ac0,1		;deduct one so it'll fit into word
+	dpb	ac0,ptinfo	;store update max size
+	movei	reg,377777	;return nil
+	JRST	RESTREG
+
+	$low
+REGARE:	block	^o12
+	$high
+SAVREG:	MOVE	0,[3,,REGAREA]
+	BLT	0,REGAREA+11
+	POPJ	TOPP,0
+
+RESTRE:	MOVS	0,[3,,REGAREA]
+	BLT	0,14
+	POPJ	TOPP,0
+
+; VMARK. and AMARK. -- we return the magic word in the allocator table,
+;   get a new page, and reset allocator table to point to it and only it.
+
+VMARK.:	MOVEI	AC1,DEFAREA		; install default area index
+
+AMARK.:	MOVEI	ATBWD,VATBL.		; must find right area table
+	HRRZ	R,ALCTB.(AC1)		; for largest page in area
+	IDIVI	R,PAGSIZ		; get number of tables to skip
+	MOVEI	REG,0(R2)		; remember remainder as offset in table
+
+MLOOP:	SKIPN	ATBWD,0(ATBWD)		; pick up pointer to table
+	JRST	BADPAG			; bad -- error
+	SOJGE	R,MLOOP			; get as many as needed
+
+	ADDI	ATBWD,0(AC1)		; get this area's entry
+	PUSHJ	TOPP,VBPTI.		; bring in page table
+
+	ADDI	PTBWD,1(REG)		; get index of next page table entry
+	AOS	REG,ALCTB.(AC1)		; get old word + 1
+	PUSHJ	TOPP,PGINIT		; initialize page
+	HRLS	0,ALCTB.(AC1)		; duplicate in left halfword
+	POPJ	TOPP,0			; and we're done
+
+
+; VRLES. -- must discard all pages in any following heaps.
+
+VRLES.:	HRRZM	REG,CHLLIM		; left half as lower limit for CHUCKM
+	AOS	R2,CHLLIM		; actually, one past that
+	HRRZ	R,ALCTB.(AC1)		; get current top
+	MOVEM	R,CHHLIM		;   as high limit
+	CAILE	R2,0(R)			; make sure low limit is less than high
+	JRST	RLSERR
+	PUSHJ	TOPP,CHUCKM		; throw out pages
+	MOVEM	REG,ALCTB.(AC1)		; restore passed control word
+	POPJ	TOPP,0			; and go home
+
+; VDELA. -- delete area -- must throw out all pages, including any
+;   page tables, and then zero out area table entry(s).
+
+VDELA.:	SKIPN	R,ALCTB.(AC1)		; is area active?
+	POPJ	TOPP,0			; no, don't bother
+	HRRZM	R,CHHLIM		; current max as max to chuck
+	SETZM	0,CHLLIM		; zero as lower limit
+	SETZM	ALCTB.(AC1)		; zero out table entry now
+	PUSHJ	TOPP,CHUCKM
+	MOVEI	ATBWD,VATBL.		; must find page tables
+
+DELLOP:	SKIPN	ATBWD,0(ATBWD)		; get area table
+	POPJ	TOPP,0			; last one, we're done
+	MOVEI	R3,0(ATBWD)		; get right entry
+	ADDI	R3,0(AC1)		; in page table
+	SKIPN	BFPTR,0(R3)		; is anything there?
+	JRST	DELLOP			; no, try next
+	SETZM	0,0(R3)			; zero out page table entry
+	TLNE	BFPTR,IND.BIT		; is incore bit set?
+	JRST	INCORE			; yes, different call
+	HRRZI	R,0(BFPTR)		; get disk page address
+	PUSHJ	TOPP,VFRFP.		; free it
+	JRST	DELLOP			; and back to top
+
+INCORE:	PUSHJ	TOPP,VKBFP.		; free it, addr already in BFPTR
+	JRST	DELLOP
+
+; VCREA. -- create area.  Get a buffer for the page table, initialize the
+;   location in the area table, and give the new area a new page.
+
+VCREA.:	PUSHJ	TOPP,VGTBF.		; get buffer for page table
+	MOVE	ATBWD,VATBL.		; get area table address
+	ADDI	ATBWD,0(AC1)		; append area index
+	SKIPE	0,0(ATBWD)		; is there already an entry there?
+	JRST	CR2WCE			;    yes, attempt to create twice
+	TLO	BFPTR,IND.BIT		; set incore bit in entry
+	MOVEM	BFPTR,0(ATBWD)		;   and install ptable pointer in atable
+	TLZ	BFPTR,IND.BIT		; don't leave indirect bit hanging on
+
+	SETZM	0,ALCTB.(AC1)		; initialize allocator table word
+	MOVE	R,VORG.			; pick up addr of origin table
+	ADDI	R,0(BFIDX)		; tack on index into table
+	HRLZM	ATBWD,0(R)		;   and install back pointer to ptable
+
+	SETZM	0,0(BFPTR)		; zero out first word in page table
+	HRLI	R,0(BFPTR)		;   and set up to zero rest
+	HRRI	R,1(BFPTR)		; pointers for BLT
+	BLT	R,PAGSIZ-1(BFPTR)	; do the zero-ing
+
+	MOVEI	PTBWD,0(BFPTR)		; get pointer to page table entry
+	MOVEI	PTIDX,0(BFIDX)		; and set page table buffer index
+	JRST	PGNRML			; initialize a page and go home
+
+; CHUCKM -- helper for deleting pages in areas. Limits are in static cells
+;   CHLLIM and CHHLIM. AC1 has area number
+
+CHUCKM:	MOVEI	ATBWD,VATBL.		; our usual walk down area table
+	MOVE	R,CHLLIM		; get lower limit to start with
+	IDIVI	R,PAGSIZ		;   get magic numbers
+
+CHKLOP:	MOVE	ATBWD,0(ATBWD)		; get table address
+	JUMPE	ATBWD,BADPAG		; zero -- illegal page number
+	SOJGE	R,CHKLOP		; back if any more
+
+	EXCH	AC1,CHLLIM		; save AC1, get first page
+	SUB	AC1,CHHLIM		; get negative number to free
+	HRLI	AC1,-1(AC1)		; place in left half, with one extra
+	ADDI	AC1,0(R2)		; tack on offset
+	PUSHJ	TOPP,VBPTI.		; get page table
+	ADDI	AC1,0(PTBWD)		; and all's ok
+
+CHKNXT:	MOVE	R,0(AC1)		; pick up page table entry
+	JUMPE	R,CHNEXT		; not there, try next one
+	TLNE	R,IND.BIT		; is incore bit set?
+	JRST	CHINCO			; yes, different deal
+	HRLI	R,0			; else clear left to get disk addr
+	PUSHJ	TOPP,VFRFP.		; free disk page
+CHNEXT:	AOBJP	AC1,CHDONE		; if exhausted, all done
+	TRNE	AC1,PAGSIZ-1		; else check for page overflow
+	JRST	CHKNXT			; all's cool
+
+	SKIPN	ATBWD,0(ATBWD)		; else get next area table
+	JRST	BADPAG			; not there -- error
+	ADD	ATBWD,CHLLIM		; add area number save in core
+	PUSHJ	TOPP,VBPTI.		; get next page table
+	HRRI	AC1,0(PTBWD)		; replace addr in AC1
+	JRST	CHKNXT			; back to top
+
+CHINCO:	HRRZ	BFPTR,0(R)		; load up buffer pointer
+	PUSHJ	TOPP,VKBFP.		; kill incore page
+	JRST	CHNEXT			; back to top
+
+CHDONE:	MOVE	AC1,CHLLIM		; restore AC1
+	POPJ	TOPP,0
+
+;
+; error routines
+
+DSPOS.:
+MARK.:
+NEW.:
+RLEAS.:	MOVEI	R,[asciz/
+?	Virtual heap program has non-virtual module/]
+	JRST	VLCOUT
+
+CR2WCE:	MOVEI	R,[asciz/
+?	Attempt to create same area twice/]
+	JRST	VLCOUT
+
+BADPAG:	MOVEI	R,[asciz/
+?	Illegal page number in virtual allocator/]
+	JRST	VLCOUT
+
+TOOBIG:	MOVEI	R,[asciz/
+?	Cannot allocate record larger than page/]
+	JRST	VLCOUT
+
+INTERR:	MOVEI	R,[asciz/
+?	Internal error in virtual allocator/]
+	JRST	VLCOUT
+
+RLSERR:	MOVEI	R,[asciz/
+?	Bad heapmark in virtual release/]
+	JRST	VLCOUT
+
+ARZERO:	MOVEI	R,[asciz/
+?	Attempt to allocate in area zero/]
+	JRST	VLCOUT
+
+DSPREV:	MOVEI	R,[asciz/
+?	Attempt to dispose a disposed pointer/]
+	JRST	VLCOUT
+
+DSPERR:	MOVEI	R,[asciz/
+?	Bad pointer in virtual DISPOSE/]
+
+VLCOUT:	PUSHJ	TOPP,TWAIT.
+	OUTSTR	0(R)
+	MOVE	AC0,0(TOPP)
+	PUSHJ	TOPP,WRTPC.
+	JRST	DIE.
+
+	$low
+ALCTB.:	block	AMAX			; table, one word per area
+
+CHLLIM:	exp	0			; low and high bounds for chuckm
+CHHLIM:	exp	0
+PGTEMP:	exp	0			; temp for making virtual address
+	$high
+
+PTINFO:	point	OFIELD,0(PTBWD),<OFIELD-1> ; to manipulate size data in page table
+	lit
+	end
+	title	root ** PASCAL virtual pointer root routines **
+;    +--------------------------------------------------------------+
+;    |                                                              |
+;    |                          V R O O T                           |
+;    |                          - - - - -                           |
+;    |                                                              |
+;    +--------------------------------------------------------------+
+;    
+;    MDSI, Company Confidential
+;    
+;    SYSTEM:  PASCAL Compiler
+;    
+;    STARTED:  November 27
+;    
+;    PURPOSE:  Contains the runtime routines  supporting  the  PASCAL
+;       compiler standard funtion ROOT and procedure SETROOT.
+;    
+;    ENTRY POINTS:
+;    
+;       ROOT.       returns the root of an area.
+;    
+;       SROOT.      sets the root of an area.
+;    
+;    RESPONSIBLE:  Compiler group
+;    
+;    ----------------------------------------------------------------
+
+	search	passym
+	search	virsym
+
+	entry	root.,sroot.
+	extern	vroot.
+
+	$reloc
+; ROOT. is called with
+;	move	reg,area#
+;	movei	ac1,reg
+;	pushj	topp,root.
+; on return the area # is replaced by the root pointer
+;
+root.:	move	ac0,@ac1	;get area #
+	add	ac0,vroot.	;address in root table
+	move	ac0,@ac0
+	movem	ac0,@ac1	;replaces area #
+	popj	topp,
+
+;
+; SROOT. is called via
+;	move	reg,area#
+;	move	reg1,ptr
+;	pushj	topp,sroot.
+sroot.:	add	reg,vroot.
+	movem	reg1,0(reg)	;new root for this area
+	popj	topp,
+	end
+	title	vaddr ** PASCAL virtual address translation routines **
+;    +--------------------------------------------------------------+
+;    |                                                              |
+;    |                         V T R A N S                          |
+;    |                         - - - - - -                          |
+;    |                                                              |
+;    +--------------------------------------------------------------+
+;    
+;    MDSI, Company Confidential
+;    
+;    SYSTEM:  PASCAL Compiler
+;    
+;    STARTED:  November 27
+;    
+;    PURPOSE:  Contains the  address  translation  routines  for  the
+;       virtual heap facility.
+;    
+;    ENTRY POINTS:
+;    
+;       VTRNS.      translates a virtual pointer.
+;    
+;       FTRNS.      translates a virtual pointer in a WITH register.
+;    
+;       VMACC.      makes a virtual pointer addressible.
+;    
+;       VBPTI.      brings in a page table.
+;    
+;       VBVPI.      brings in a virtual page from the swapping file.
+;    
+;       VGTBF.      gets a buffer, swapping a page out if neccessary.
+;    
+;       VKBFP.      kills a buffer page.
+;    
+;       Internal routines:
+;    
+;       SWAPIN      brings in a page.
+;    
+;    RESPONSIBLE:  Compiler group
+;    
+;    ----------------------------------------------------------------
+
+	search	passym
+	search	virsym
+
+	$reloc
+
+	entry	vtrns.
+	entry	ftrns.
+	entry	vmacc.
+	entry	vbpti.
+	entry	vbvpi.
+	entry	vgtbf.
+	entry	vkbfp.
+
+	extern	n%buf,vregs.,vatbl.,vroot.,valc.,vmru.
+	extern	vmrut.,vorg.,vchn.,vr.save,vr.return,vbuf.
+	extern	vgnfp.,vfrfp.
+	extern	vread.,vwrit.
+	extern	omask.,bp.area,bp.p,bp.po,bp.pt,bp.o
+	extern	.jbff,die.,twait.
+
+indxbp:	point	4,@0(topp),12
+
+vtrns.:	ldb	r4,indxbp	;get # of indexr
+	move	ac1,0(r4)	;get virtual pointer
+	tlnn	ac1,maskarea	;is in area?
+	jrst	vret		;no, just passing through
+	push	topp,r4	;yes, save indexr #
+	pushj	topp,vr.save	;save registers
+	pushj	topp,vmacc.	;translate
+	pop	topp,r4	;retrieve indexr #
+	addi	r4,vregs.-2	;addr of saved indexr
+	movem	ac1,0(r4)	;bash it
+	jrst	vr.return	;do skip return
+vret:	aos	0(topp)		;skip return
+	popj	topp,
+
+ftrns.:	ldb	ac1,indxbp	;get indexr
+	move	ac1,0(ac1)	;then virtual pointer
+	tlnn	ac1,maskarea	;if not virtual then
+	jrst	vret		;almost done
+	push	topp,@0(topp)	;put offset onto stack
+	addi	ac1,@0(topp)	;correct by offset
+	pushj	topp,vr.save	;save registers
+	pushj	topp,vmacc.	;translate
+	subi	ac1,@0(topp)	;remove offset
+	pop	topp,0(topp)	;tick stack pointer back
+	jrst	vr.return	;and do skip return
+
+; VMACC. called with
+;	move	ac1,vptr
+;	pushj	topp,vmacc.
+; on return (ac1) is actual address, preserving areaid
+;
+vmacc.:	ldb	r,bp.area	;get area #
+	ldb	r2,bp.pt	;and page table offset
+	move	r3,r2		;copy
+	move	atbwd,vatbl.	;address of first area table
+vmloop:	sosge	r3		;search for correct area table
+	jrst	vmok		;found it
+	skipe	atbwd,0(atbwd)	;if chained to next area table, get it
+	jrst	vmloop		;and continue search
+	jrst	vmerr.		;else error out
+vmok:	add	atbwd,r		;now addr of entry in area table
+	skipn	ptbwd,0(atbwd)	;get address of page table
+	jrst	vmerr.		;error if none
+;	tlnn	ptbwd,ind.bit	;check if in core
+	pushj	topp,vbpti.	;if not bring it in
+	ldb	r,bp.po		;get page offset
+	add	ptbwd,r		;now addr of entry in page table
+	move	bfptr,0(ptbwd)	;get addr of page
+	pushj	topp,vbvpi.	;no, get it
+	ldb	r,bp.o		;get word offset
+	addi	r,0(bfptr)	;now absolute addr
+	tdz	ac1,omask.	;mask all but areaid
+	add	ac1,r
+	aos	r,vmru.		;advance mru/ref count
+	move	r2,vmrut.	;addr of mru table
+	add	r2,bfidx	;addr of correct entry
+	movem	r,0(r2)		;updated
+	popj	topp,
+
+;
+; VBPTI. brings in the page table indicated by ATBWD
+;
+vbpti.:	move	r,atbwd		;parameter to swapin
+	pushj	topp,swapin	;does all the word
+	move	ptbwd,bfptr	;return parameter
+	move	ptidx,bfidx
+	popj	topp,0
+
+;
+; VBVTI. brings in a virtual page indicated by PTBWD
+;
+vbvpi.:	move	r,bfidx		;index of page table buffer
+	move	ptidx,bfidx	;same
+	add	r,vmrut.	;addr of entry in mru table
+	sos	0(r)		;decrement before swap
+	move	r,ptbwd
+; fall into swapin
+
+;
+; SWAPIN brings in a page whose file page number is indicated
+; by T.
+;
+swapin:	move	fpage,0(r)	;get file page no
+	tlnn	fpage,ind.bit	; is it already in core?
+	jrst	swapit		; yes, must read it in
+	hrrzi	bfptr,0(fpage)	; else stuff addr of buffer
+	movei	bfidx,0(bfptr)	; copy it
+	sub	bfidx,vbuf.	; get offset from start of first buffer
+	lsh	bfidx,-<ofield>	; shift (divide by page size)
+	popj	topp,0		; and go home with it
+
+swapit:	push	topp,r		;save addr
+	pushj	topp,vgtbf.	;get buffer
+	pushj	topp,vread.	;read in the page
+	move	r2,bfidx	;buffer index
+	add	r2,vmrut.	;addr of mru entry
+	setzm	0(r2)		;zapped
+	pop	topp,r		;retrieve addr in table
+	hrrm	bfptr,0(r)	; put buffer addr into page table
+	hrlzi	r2,ind.bit	; get indirect bit in right place
+	orm	r2,0(r)		; and set, don'r disturb rest of word
+	move	r3,fpage	;virtual page from which read
+	hrli	r3,0(r)		;packed for origin table
+	move	r2,bfidx
+	add	r2,vorg.	;addr in origin table
+	movem	r3,0(r2)
+	popj	topp,
+
+;
+; VGTBF. gets a buffer
+;
+vgtbf.:		;may have to save regs here
+		;for search let:
+		; ac0 = buffer index for search
+		; r   = mru address
+		; bfidx  = index of best candidate for swapin
+		; r3 = mru count of r2
+	move	ac0,n%buf
+	move	r,ac0
+	add	r,vmrut.
+	hrloi	r3,377777	;largest positive integer
+gloop:	sojl	ac0,gloop2	;iterate 
+	movei	r,-1(r)		;next mru entry
+	skipe	0(r)		;if free then allocate it
+	jrst	gloop1		;else keep looking
+	move	bfidx,ac0
+	move	bfptr,bfidx
+	imuli	bfptr,pagsize
+	add	bfptr,vbuf.
+	popj	topp,
+gloop1:	skipl	0(r)		;if a page table then ignore it
+	camg	r3,0(r)		;if mru count < best found so far
+	jrst	gloop		;
+	move	r3,0(r)		;then its the new best choice
+	move	bfidx,ac0
+	jrst	gloop
+gloop2:
+	move	bfptr,bfidx
+	imuli	bfptr,pagsize
+	add	bfptr,vbuf.	;now addr of buffer
+	move	r2,bfidx
+	add	r2,vorg.	;addr in origin table
+	hrrz	r,0(r2)		;check if came from file
+	jumpn	r,gloop3
+	push	topp,r2
+	pushj	topp,vgnfp.	;if not, get a file page for it
+	pop	topp,r2
+gloop3:	hlrz	r2,0(r2)	;get addr in area/page table
+	hrrm	r,0(r2)		;install page number
+	push	topp,fpage	;save file page # of page to be read in
+	move	fpage,r
+	hrlzi	r,ind.bit	;get mask word with indirect bit set
+	andcam	r,0(r2)		;zero out only indirect bit
+	pushj	topp,vwrit.	;write page out
+	pop	topp,fpage
+		;may have to restore regs here
+	popj	topp,
+
+
+vkbfp.:		;kill buffer page
+	move	r2,bfidx
+	add	r2,vorg.	;addr of entry in origin table
+	hrrz	r,0(r2)		;gets file #
+	setzm	0(r2)		;clear origin entry
+	jumpe	r,vkill		;nothing to do if not from file
+	pushj	topp,vfrfp.	;else free file page
+vkill:	move	r2,bfidx	;index of buffer to free
+	add	r2,vmrut.	;addr of mur entry
+	setzm	0(r2)
+	popj	topp,
+vmerr.:	pushj	topp,twait.	;empty tty buffer
+	outstr	[asciz /
+?	Bad virtual pointer.
+/]
+	jrst	die.
+	end
+@

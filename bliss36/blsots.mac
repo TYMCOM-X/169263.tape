@@ -1,0 +1,3228 @@
+	UNIVERSAL $OTSDE
+
+;
+;
+; Copyright (C) 1976, 1977, 1978, 1979, 1980, 1981, 1982, 1983
+; Digital Equipment Corporation,  Maynard, Massachusetts  01754
+;
+; This software is furnished under a license for use only on  a
+; single computer system and may be copied only with the inclu-
+; sion of the above copyright notice.  This  software,  or  any
+; other  copies  thereof, may not be provided or otherwise made
+; available to any other person except for use on  such  system
+; and  to  one who agrees to these license terms.  Title to and
+; ownership of the software shall at all times remain in DEC.
+;
+; The information in this software is subject to change without
+; notice and should not be construed as a commitment by Digital
+; Equipment Corporation.
+;
+; DEC assumes no responsibility for the use or  reliability  of
+; its software on equipment which is not supplied by DEC.
+;
+;
+;
+; REVISION HISTORY:
+;
+;	07-Aug-79	TC	Removed .BREG.
+;
+;	26-Oct-81	AL	SIGNA. should always save the FP on
+;				entry to make SIX12 work right.
+;
+;	19-Jan-82	LD	SIGNA. should save th FP only if FP exists.
+;				Otherwise we were trying to save the contents
+;				of -1, causing the TOPS-10 compiler to bomb.
+;
+;	16-Mar-82	LD	Included checks for 1-word global byte
+;				pointers for CHDIF%.
+;
+;	22-Mar-82	LD	Fixed UNWIND to check for global byte pointers
+;				when changing the stack pointer (SP).
+;
+;	11-Apr-82	LD	Fixed up some of the changes to CHDIF% for
+;				1-word global byte pointers. The stack
+;				was off since the PUSHER macro isn't
+;				that smart.
+;
+;	29-Apr-82	LD	Added the tables for converting 1-word
+;				global byte pointers to 2-word global
+;				byte pointers.
+;
+;	18-May-82	LD	Corrected code in CHDIF% for 1-word global
+;				byte pointers.
+;
+;	21-May-82	LD	Added the routine CHSIZ%.
+;
+; END V3.1 BUG FIXES
+;
+; BLISS V4 DEVELOPMENT
+;
+;	19-Nov-82	LD	Added the routine PSI36%. Added code to
+;				UNWIND which checks for PS_INTERRUPT
+;				linkage routines and issues a DEBRK.
+;
+;	22-Nov-82	LD	Moved check for PS_INTERRUPT into 
+;				DO.NXTWNWIND loop.
+;
+;	7-Dec-82	LD	 OPDEF PIBLK. and .PSVOP for TOPS-10.
+;
+;	28-Mar-83	LD	Include SET%PSECT and checks for whether
+;				to generate a TWOSEG or PSECTED OTS.
+;
+;	1-Apr-83	LD	Include the MACROS PSECTCODE, PSECTPLIT,
+;				PSECTGLOBAL, PSECTOWN.
+;
+;	25-Apr-83	LD	Move B36%SZ out of $OTSDE.
+;
+; END OF REVISION HISTORY
+;
+;
+;
+;				FUNCTION
+; This sub-module is used to make declarations used by the rest of  the
+; OTS.    It  consists  of  two  inter-related  parts.   The first part
+; consists of a set of symbols and macros which are used to establish a
+; linkage  type  for  the OTS in a style not too dissimilar from BLISS.
+; The second part consists of a set of symbols and macros which use the
+; declarations  of  the  first part to make it easy for a programmer to
+; create routines consistent with any linkage.
+;
+;			General Usage Notes:
+; Sub-modules should begin with:
+;
+; 	SEARCH	$OTSDE
+;
+; in order to access the declarations made here.
+; On  this  page are some generally useful macros and initialization for
+; both parts of the sub-module.
+
+DEFINE CONCAT(NM1,NM2)
+    <NM1'NM2>
+
+DEFINE DEFCONCAT(NM1,NM2),
+    <DEFINE NM1'NM2>
+
+RADIX 10
+
+USTYPE== 0
+LNKTYPE== 1
+SVTYPE== 2
+TMPTYPE== 3
+LCLFP== 0
+DONELINKAGE== 0
+DONEPRESERVE== 0
+DONENOPRESERVE== 0
+DONETYPE== 0
+
+
+CNT== 0
+REPEAT 16,
+    <
+    CONCAT(TP,\CNT)== USTYPE
+    CNT== CNT + 1
+    >
+PURGE CNT
+
+PR= 0
+NPR= 0
+LNK== 0
+
+FP== -1
+AP== -1
+
+FPFLAG== 0
+APFLAG== 0
+
+RADIX 8
+ 
+; The   following   pages  contain  declarations  relating  to  linkage
+; definition.    These are of interest to anyone creating an OTS with a
+; non-standard  linkage  type.    The general procedure which should be
+; followed is to create a file (for purposes of discussion we will call
+; it "LINKAGE.MAC") which has the following form:
+;
+; 	DEFINE TYPE,
+; 	<
+; 		. . .
+; 	>
+;
+; Where the ellipsis  represent  one  or  more  of  the  macros  to  be
+; discussed later.
+;
+; The following is then typed starting out at monitor command level:
+;
+; 	@MACRO
+; 	*OTS=LINKAGE,BLSOTS
+; 	*^C
+;
+; under TOPS-20; or:
+;
+; 	.R MACRO
+; 	*OTS=LINKAGE,BLSOTS
+; 	*^C
+;
+; under TOPS-10.
+;
+; I  have  assumed  here  that  the  OTS  source  file  (BLSOTS.MAC) is
+; somewhere in the users search path.  If it  is  not,  an  appropriate
+; device should be defined and specified.
+;
+; If  no  linkage  file is included then the OTS will be assembled with
+; the BLISS-36C linkage.
+;
+; The first line  of  TYPE  should  be  either  PUSHJ  or  F10.   These
+; correspond to the BLISS-36 linkage types of the same names.     These
+; must be the first things in TYPE.  If neither is specified then PUSHJ
+; is assumed.
+;
+; LINKAGEREGS,  PRESERVE  and  NOPRESERVE may then appear in any order.
+; Each should be put on a separate line.
+;
+; LINKAGEREGS may take zero  to  four  arguments.     These  should  be
+; enclosed in angle brackets ("<>").  The first argument represents the
+; register number to be used for the SP (the stack  pointer  register).
+; It  defaults  to  register  zero.  The second argument represents the
+; register number for the FP (the frame pointer  register).  Defaulting
+; this argument, or using a negative number, specifies that a preserved
+; register is to be used as a frame pointer if one  is  needed  and  no
+; frame  list  is  to  be kept.       The third argument represents the
+; register number for the VR (the value return register).  It  defaults
+; to  register 3.    The fourth argument represents the register number
+; to be used for the AP (the argument pointer register). Note  that  it
+; only  has  meaning  if  the linkage type is F10. It is ignored if the
+; linkage type is PUSHJ.  If the linkage type is F10 it defaults to 14.
+;
+; PRESERVE  specifies  those  registers  which  are  to  be  considered
+; "savable", i.e. which should be saved by any routine which uses them.
+; Any register which was previously listed in a NOPRESERVE declaration,
+; or  which  was or will be specified in a LINKAGEREGS declaration will
+; be ignored. If a PRESERVE is not included it will default to:
+;
+; 	PRESERVE <0,11,12,13,14,15>
+;
+; if the linkage type is PUSHJ or:
+;
+; 	PRESERVE <>
+;
+; if the linkage type is F10.   Note the use of  "<"  and  ">"  in  the
+; above.
+;
+; NOPRESERVE  specifies  those  registers  which  are  to be considered
+; "temporaries", i.e.  which may  be  used  freely  but  which  may  be
+; modified  by making a call.  Any register which was previously listed
+; in a PRESERVE declaration, or which was or will  be  specified  in  a
+; LINKAGEREGS  declaration  will  be  ignored.   If a NOPRESERVE is not
+; included it will default to:
+;
+; 	NOPRESERVE <1,2,3,4,5,6,7,8,9,10>
+;
+; if linkage type is PUSHJ or:
+;
+; 	NOPRESERVE <1,2,3,4,5,6,7,8,9,10,11,12,13>
+;
+; if the linkage type is F10.   Note the use of  "<"  and  ">"  in  the
+; above.
+;
+; All register numbers are specified in decimal radix.
+;
+; The  user  may  also include the declaration SET%KL.   This specifies
+; that the OTS is to be  run  on  a  KL-10  processor  (for  example  a
+; DECsystem-20).     If SET%KL is not specified then the code generated
+; will be for a KA-10 processor and may be run on any  DECsystem-10  or
+; DECsystem-20.
+;
+; The  TOPS20  macro  may be used to indicate that the code is destined
+; for a DECsystem-20.  This will have a side effect of doing a SET%KL.
+;
+; Macros for three of the four pre-defined linkages  for  BLISS-36  are
+; defined.    These  may  be  used  instead of PUSHJ, F10, LINKAGEREGS,
+; PRESERVE and NOPRESERVE.  Available is:
+;
+; 	BLS36C	corresponding to BLISS36C
+; 	BLSS10	corresponding to BLISS10
+; 	FRTFUNC	corresponding to FORTRAN_FUNC
+;
+; A linkage corresponding to  FORTRAN_SUB  may  not  at  this  time  be
+; defined  because of the absence of preserved registers.   An OTS with
+; linkage FRTFUNC is safely callable from a BLISS routine with  linkage
+; FORTRAN_SUB.
+DEFINE SET%KL,
+    <KLFLAG== -1>
+
+DEFINE SET%PSECT,
+    <PSECTFLG== -1>
+
+DEFINE TOPS20,
+    <
+    T20FLAG== -1
+    KLFLAG== -1
+    >
+
+DEFINE LNKDEFINE(REG)
+    <
+    CONCAT(TP,\REG)== LNKTYPE
+    LNK== LNK ! <1_<REG>>
+    >
+
+DEFINE TMPDEFINE(REG)
+    <
+    IFE <<PR ! LNK> & <1_<REG>>>,
+	<
+	CONCAT(TP,\REG)== TMPTYPE
+	NPR= NPR ! <1_<REG>>
+	>
+    >
+
+DEFINE SVDEFINE(REG)
+    <
+    IFE <<NPR ! LNK> & <1_<REG>>>,
+	<
+	CONCAT(TP,\REG)== SVTYPE
+	PR= PR ! <1_<REG>>
+	>
+    >
+
+DEFINE LINKSP(REG<0>)
+    <
+    SP== REG
+    LNKDEFINE(SP)
+    >
+
+DEFINE LINKVR(REG<3>)
+    <
+    VR== REG
+    LNKDEFINE(VR)
+    >
+
+DEFINE LINKFP(REG<-1>)
+    <
+    IFNB <REG>,<FP== REG>
+    IFB <REG>,<FP== -1>
+    IFGE FP,
+	<
+	LNKDEFINE(FP)
+	>
+    >
+
+DEFINE LINKAP(REG<14>)
+    <
+    IFN APFLAG,
+	<
+	IFNB <REG>,<AP== REG>
+	IFB <REG>,<AP== 14>
+	IFL AP,
+	    <AP== 14>
+	LNKDEFINE(AP)
+	>
+    IFE APFLAG,
+	<AP== -1>
+    >
+
+DEFINE LINKAGEREGS(LRLIST),
+    <
+    DONELINKAGE== -1
+    CNT== 0
+    IRP LRLIST,
+	<
+	IFE CNT,
+	    <LINKSP(LRLIST)>
+	IFE CNT - 1,
+	    <LINKFP(LRLIST)FE CNT - 2,
+	    <LINKVR(LRLIST)>
+	IFE CNT - 3,
+	    <LINKAP(LRLIST)>
+	CNT== CNT + 1
+	>
+    >
+
+DEFINE PRESERVE(A)
+    <
+    IFE DONETYPE,
+	<PSHJ>
+    DONEPRESERVE== -1
+    IRP A,
+	<
+	SVDEFINE(A)
+	>
+    >
+
+DEFINE NOPRESERVE(A)
+    <
+    IFE DONETYPE,
+	<PSHJ>
+    DONENOPRESERVE== -1
+    IRP A,
+	<
+	TMPDEFINE(A)
+	>
+    >
+
+DEFINE PSHJ,
+    <
+    IFE DONETYPE,
+	<
+	DONETYPE== -1
+	APFLAG== 0
+	FPFLAG== 0
+	DEFINE DFLTLNK,
+	    <LINKAGEREGS <0,2,3>>
+	DEFINE DFLTPR,
+	    <PRESERVE <11,12,13,14,15,0>>
+	DEFINE DFLTNPR,
+	    <NOPRESERVE <1,2,3,4,5,6,7,8,9,10>>
+	>
+    >
+
+DEFINE F10,
+    <
+    IFE DONETYPE,
+	<
+	DONETYPE== -1
+	APFLAG== -1
+	FPFLAG== 0
+	DEFINE DFLTLNK,
+	    <LINKAGEREGS <15,-1,0,14>>
+	DEFINE DFLTPR,
+	    <>
+	DEFINE DFLTNPR,
+	    <NOPRESERVE <1,2,3,4,5,6,7,8,9,10,11,12,13>>
+	>
+    >
+
+DEFINE DFNLINKAGE,
+    <
+    IFE DONELINKAGE,
+	<DFLTLNK>
+    IFE DONEPRESERVE,
+	<DFLTPR>
+    IFE DONENOPRESERVE,
+	<DFLTNPR>
+    RCNT== 1
+    TMPCNT== 0
+    SVCNT== 0
+    REPEAT ^D15,
+	<
+	IFE CONCAT(TP,\RCNT) - SVTYPE,
+	    <
+	    SVCNT== SVCNT + 1
+	    CONCAT(SAVR,\SVCNT)== RCNT
+	    >
+	IFE CONCAT(TP,\RCNT) - TMPTYPE
+	    <
+	    TMPCNT== TMPCNT + 1
+	    CONCAT(TMPR,\TMPCNT)== RCNT
+	    >
+	RCNT== RCNT + 1
+	>
+    PURGE RCNT
+
+    PR= PR & <^-<LNK>>
+    NPR= NPR & <^-<LNK>>
+
+    IFL FP,
+	<LCLFP== -1>
+    IFE FPFLAG,
+	<
+	IFE SP,
+	    <FPFLAG== -1>
+	>
+    IFNDEF KLFLAG,<KLFLAG== 0>
+    IFNDEF T20FLAG,<T20FLAG== 0>
+    IFNDEF PSECTFLG,<PSECTFLG== 0>
+    IFNDEF PSECTCODE,		; If the user did not specify
+        < DEFINE PSECTCODE,	; another name for the CODE
+	    < .PSECT $CODE$ >>	; PSECT then use the name $CODE$.
+    IFNDEF PSECTOWN,		; If the user did not specify
+	< DEFINE PSECTOWN,	; another name for the OWN
+	    < .PSECT $OWN$ >>	; PSECT then use the name $OWN$.
+    IFNDEF PSECTPLIT,		; If the user did not specify
+        < DEFINE PSECTPLIT,	; another name for the PLIT
+	    < .PSECT $PLIT$ >>	; PSECT then use the name $PLIT$.
+    IFNDEF PSECTGLOBAL,		; If the user did not specify
+	< DEFINE PSECTGLOBAL,	; another name for the GLOBAL
+	    < .PSECT $GLOBAL$ >>; PSECT then use the name $GLOBAL$.
+    IFN FPFLAG,
+	<
+	DEFINE DYTEMP(I),<<SRCNT+LCLCNT+I>(FP)>
+	>
+    IFE FPFLAG,
+	<
+	DEFINE DYTEMP(I),<<LCLCNT-STKDPTH+I+1>(SP)>
+	>
+
+    PURGE LNK
+
+    >
+DEFINE BLS36C
+    <
+    PUSHJ
+    LINKAGEREGS <15,13,1>
+    PRESERVE <0, 6, 7, 8, 9, 10, 11, 12, 14>
+    NOPRESERVE <2, 3, 4, 5>
+    >
+
+DEFINE BLSS10,
+    <PUSHJ>
+
+DEFINE FRTFUNC
+    <
+    F10
+    PRESERVE <2,3,4,5,6,7,8,9,10,11,12,13>
+    >
+
+IFNDEF TYPE,
+    <
+    DEFINE TYPE,<BLS36C>
+    >
+
+RADIX 10
+
+DEFINE PUSHJ,<PSHJ>
+
+
+TYPE
+
+DFNLINKAGE
+
+PURGE PUSHJ
+
+RADIX 8
+; The pages which follow make declarations of use  to  writers  of  OTS
+; routines.   For examples of usage style for the macros the programmer
+; should examine existing routines in the OTS.
+;
+; The primary macro defined here is the macro ROUTINE, which sets up  a
+; routine  entry.   ROUTINE takes two arguments.  The first argument to
+; ROUTINE is the name of the routine.   The second argument to  ROUTINE
+; is  a  list,  enclosed  in <>, of routine argument names, in the same
+; order as they would be listed  a  BLISS  ROUTINE  declaration.    The
+; specified  names  are  used as macro names so that the programmer may
+; use these names to access the parameters whatever the linkage.
+;
+; The ROUTINE macro may be preceded by the  word  GLOBAL.    This  will
+; cause   the   routine  to  be  declared  INTERNAL  (GLOBAL  in  BLISS
+; terminology) so that it may be accesed from outside its sub-module.
+;
+; The ROUTINE macro may  be  followed  by  one  or  more  "declaration"
+; macros.   These macros are used to declare names, consistent with the
+; current linkage, of various types.  They may occur in any  order  and
+; may  be  repeated  as  many times as desired.  They all take a single
+; argument which is a list of names which should be enclosed  in  angle
+; brackets  ("<>").  If there is a single name the brackets may be left
+; off.
+;
+; TEMPREGS is a "declaration" macro which assigns values to  the  names
+; corresponding to registers.  If there are enough available these will
+; be assigned from the list of NON-PRESERVED registers for the  current
+; linkage.   If there are not enough NON-PRESERVED registers available,
+; they will be assigned from the list of PRESERVED  registers  for  the
+; current  linkage.   If  there are not enough registers of either type
+; available (how spendthrift) an error message will be typed.  Register
+; 0  will  not  be  assigned  so  the  programmer  may freely use these
+; registers as index registers,  etc.    These  registers  may  not  be
+; depended on to retain their values "across" routine calls.
+;
+; SAVEREGS  is a "declaration" macro which is very similar to TEMPREGS.
+; Registers will not be drawn from the list of NON-PRESERVED registers,
+; however.  These  registers  may be depended on to retain their values
+; "across" routine calls.
+;
+; The register named VR may be used as  a  TEMPREG  as  well  as  those
+; declared  by  the user by use of the TEMPREG macro.  It should not be
+; used as an index  register,  however,  since  it  may  correspond  to
+; register 0.
+;
+; STKLOCALS is a "declaration" macro which causes a number of locations
+; to be reserved on the stack.  The names are defined as  macros  which
+; will reference these locations consistently and correctly.
+;
+; INITDY  is  a  macro  which is used like a "declaration" macro except
+; that it takes no arguments.  It informs the system  that  the  DYTEMP
+; macro described later is used in the body of the routine.
+;
+; After  the  "declaration"  macros  but  before  the first line of the
+; routine body the macro RTNSTART should  be  inserted.   It  takes  no
+; arguments.  It is NOT optional.
+;
+; The  symbol  NEEDFP will have a non-zero value if FP has been defined
+; and set up.    LCLFP will be non-zero if NEEDFP is  non-zero  but  no
+; frame thread is being maintained.
+;
+; The  symbol  APFLAG will be non-zero if the linkage uses an AP.    In
+; this case AP will have a valid value.
+;
+; The symbol KLFLAG will have a non-zero value  if  the  OTS  is  being
+; assembled for a KL-10 processor.
+;
+; The  symbol  T20FLAG  will  have a non-zero value if the OTS is being
+; assembled for a DECsystem-20.  The programmer may assume that  KLFLAG
+; will also be non-zero if T20FLAG is non-zero.
+;
+; A  routine is normally terminated by RTNEND.  This macro (which takes
+; no arguments) pops the stack back to its position on entry,  restores
+; any  saved  registers, and does a POPJ to return to the caller.  Code
+; should terminate by branching to a label placed before this macro. It
+; should be placed after all code concerned with the routine.
+;
+; Under  those  conditions  when  other arrangements have been made for
+; terminating the routine, FAKEEND should be used  instead  of  RTNEND.
+; FAKEEND  generates  no code but cleans up some bookkeeping.   FAKEEND
+; should be used by experts only.
+;
+; So as to be able to index correctly off  the  SP,  the  system  keeps
+; track  of  the  size  of  the stack.   For this reason the programmer
+; should not do PUSH's POP's or ADJSP's directly.   The macros  PUSHER,
+; POPPER  and  ADJSTK  are  supplied  for this purpose.   Use them.  In
+; addition, ADJSTK will generate the necessary code to  simulate  ADJSP
+; on  non-KL-10  systems.  Remember, that the system can only treat the
+; code as a linear stream, forks and loops which do not take this  into
+; account  may cause garbage to be generated.  If you consider yourself
+; expert enough, the variable STKDPTH may be adjusted to  handle  forks
+; and  loops with fixed number of iterations correctly.  Otherwise call
+; POPPER or ADJSTK before labels.
+;
+; Stack locations created by  PUSHER  or  ADJSTK  are  called  dy-temps
+; (dynamic-temporaries). Dy-temps may be accessed with the macro DYTEMP
+; which takes a single argument.   The argument represents  the  number
+; of the dy-temp.  The dy-temp created by the first PUSHER is zero, the
+; dy-temp created by the second PUSHER is one, etc.
+;
+; Routine arguments should be generated by using PUSHER.    Before  the
+; first  such  PUSHER  however, CALLSTART should be called.   CALLSTART
+; takes no arguments.  The routine call itself should be  generated  by
+; using the macro CALLER which takes a single argument, the name of the
+; routine to be called.   After CALLER any  arguments  pushed  will  be
+; popped  automatically.  The section of code between a CALLSTART and a
+; CALLER is called a call-block.     Call-blocks  should  not  nest  or
+; overlap.
+DEFINE PUSHER(LOC)
+    <
+    PUSH	SP,LOC
+    STKDPTH== STKDPTH + 1
+    >
+
+DEFINE POPPER(LOC)
+    <
+    POP	SP,LOC
+    STKDPTH== STKDPTH - 1
+    >
+
+DEFINE ADJSTK(AMNT)
+    <
+    TMP%%%== AMNT
+    IFN TMP%%%,
+	<
+	IFN KLFLAG,
+	    <ADJSP	SP,TMP%%%>
+	IFE KLFLAG,
+	    <
+	    IFGE TMP%%%,
+		<
+		ADD	SP,	
+		    [<<TMP%%%>&^O777777> ! <<<TMP%%%>&^O777777>_^D18>]
+		>
+	    IFL TMP%%%,
+		<
+		SUB	SP,	
+		    [<<-<TMP%%%>>&^O777777> !	
+			<<<-<TMP%%%>>&^O777777>_^D18>]
+		>
+	    >
+	STKDPTH== STKDPTH + TMP%%%
+	>
+    PURGE TMP%%%
+    >
+
+DEFINE CALLSTART,
+    <
+    IFN APFLAG,
+	<
+	PUSHER([0])
+	MOVEI	AP,1(SP)
+	>
+    CLLCNT== STKDPTH
+    >
+
+DEFINE CALLER(CLDRTN),
+    <
+    CLLCNT== CLLCNT-STKDPTH	; Negative of the number of arguments
+    IFN APFLAG,
+	<
+	HRLZI	VR, CLLCNT
+	MOVEM	VR, -1(AP)
+	>
+    PUSHJ	SP,CLDRTN
+    IFN APFLAG,
+	<ADJSTK(<CLLCNT-1>)>
+    IFE APFLAG,
+	<ADJSTK(<CLLCNT>)>
+    >
+
+DEFINE SVREG(REGNAME)
+    <
+    PUSH	SP,REGNAME
+    SRCNT== SRCNT + 1
+    CONCAT(SVDR,\^D<SRCNT>)== REGNAME
+    USDMSK== USDMSK ! <1 _ REGNAME>
+    >
+
+DEFINE RSTRREGS,
+    <
+    IFG SRCNT,
+	<
+	CNT== SRCNT
+	REPEAT SRCNT,
+	    <
+	    POP	SP,CONCAT(SVDR,\^D<CNT>)
+	    CNT== CNT-1
+	    >
+	PURGE CNT
+	>
+    >
+DEFINE ONESV(NAME)
+    <
+    SKIPFLG== 0
+    REPEAT ^D15,
+	<
+	IFE SKIPFLG,
+	    <
+	    SVUSED== SVUSED + 1
+	    IFG SVUSED-SVCNT,
+		<
+		PRINTX < TOO MANY REGISTERS REQUESTED >
+		HALTSVD== 1
+		SKIPFLG== -1
+		>
+	    IFLE SVUSED-SVCNT,
+		<
+		IFE <USDMSK & <1 _ <CONCAT(SAVR,\^D<SVUSED>)>>>,
+		    <
+		    NAME== CONCAT(SAVR,\^D<SVUSED>)
+		    SVREG(NAME)
+		    SKIPFLG== -1
+		    >
+		>
+	    >
+	>
+    PURGE SKIPFLG
+    >
+
+DEFINE ONETMP(NAME)
+    <
+    TSKPFLG== 0
+    REPEAT ^D15,
+	<
+	IFE TSKPFLG,
+	    <
+	    IFE TMPUSED-TMPCNT
+		<
+		ONESV(NAME)
+		IFN HALTSV,
+		    <HALTTMP== -1>
+		TSKPFLG== -1
+		>
+	    IFN TMPUSED-TMPCNT
+		<
+		TMPUSED== TMPUSED + 1
+		IFE <USDMSK & <1 _ <CONCAT(TMPR,\^D<TMPUSED>)>>>,
+		    <
+		    NAME== CONCAT(TMPR,\^D<TMPUSED>)
+		    USDMSK== USDMSK ! <1 _ NAME>
+		    TSKPFLG== -1
+		    >
+		>
+	    >
+	>
+    PURGE TSKPFLG
+    >
+
+DEFINE MAKTMPS,
+    <
+    CNT== 0
+    REPEAT P%TCNT,
+	<
+	IFE HALTTMP,
+	    <
+	    CNT== CNT + 1
+	    CONCAT(P%T,\^D<CNT>)
+	    >
+	>
+    PURGE CNT
+    >
+
+DEFINE MAKSVS,
+    <
+    CNT== 0
+    REPEAT P%SCNT,
+	<
+	IFE HALTSVD,
+	    <
+	    CNT== CNT + 1
+	    CONCAT(P%S,\^D<CNT>)
+	    >
+	>
+    PURGE CNT
+    >
+
+DEFINE DEFARG(DF,VAL)
+    <
+    IFN FPFLAG,<DF,<<VAL-1>(FP)>>
+    IFE FPFLAG,<DF,<<VAL-<STKDPTH+SRCNT>>(SP)>>
+    >
+
+DEFINE DEFDSP(DF,XPS,REG)
+    <DF,<<XPS>(REG)>>
+
+DEFINE ARG%CNT,
+    <-1(L%AP)>
+
+DEFINE MAKARGS,
+    <
+    IFN APFLAG,
+	<
+	CNT== 0
+	REPEAT P%PCNT,
+	    <
+	    DEFDSP(CONCAT(P%P,\^D<CNT+1>),\^D<CNT>,L%AP)
+	    CNT== CNT + 1
+	    >
+	PURGE CNT
+	>
+    IFE APFLAG,
+	<
+	CNT== - P%PCNT
+	REPEAT P%PCNT,
+	    <
+	    DEFARG(CONCAT(P%P,\^D<P%PCNT + CNT + 1>),\^D<CNT>)
+	    CNT== CNT + 1
+	    >
+	PURGE CNT
+	>
+    >
+
+DEFINE DEFSLOCAL(DF,VAL),
+    <
+    IFN FPFLAG,
+	<
+	DF,
+	    <<SRCNT+VAL-1>(FP)>
+	>
+    IFE FPFLAG,
+	<
+	DF,
+	    <<VAL - STKDPTH>(SP)>
+	>
+    >
+
+DEFINE MAKSLCLS,
+    <
+    CNT== 0
+    REPEAT P%LCNT,
+	<
+	IFNB <CONCAT(P%L,\^D<CNT>)>,
+	    <
+	    LCLCNT== LCLCNT + 1
+	    CNT== CNT + 1
+	    DEFSLOCAL(CONCAT(P%L,\^D<CNT>),\^D<LCLCNT>)
+	    >
+	>
+    PURGE CNT
+    ADJSTK(LCLCNT)
+    >
+DEFINE ONEADJ(NAME),
+    <
+    NAME== FREG%
+    USDMSK== USDMSK ! <1 _ FREG%>
+    IFN <PR & <1 _ FREG%>>,
+	<
+	SVREG(FREG%)
+	>
+    >
+
+DEFINE MAKADJS,
+    <
+    IFN P%ACNT,
+	<
+	; DON'T BOTHER IF WE DON'T NEED ANY.
+	MASK%== <1 _ P%ACNT> - 1		; A MASK of the reg block.
+	CHKMSK== <PR ! NPR> _ <-1>	; Registers we might use.
+	I%== 1		; Outer loop index.
+	FREG%== -1	; First register of best block so far.
+	ACNT== -1	; Count of temp regs of best block so far.
+
+	; Outer loop: check each possible first register.
+	REPEAT <^D16 - P%ACNT + 1>,
+	    <
+	    ; Don't bother if we already have a maximum.
+	    IFN <ACNT - P%ACNT>,
+		<
+		; If we may use the next block of registers:
+		IFE <<CHKMSK & MASK%> ^! MASK%>,
+		    <
+		    J%== I%		; Inner loop index.
+		    TACNT== 0		; Temporary ACNT.
+
+		    ; Inner loop.  Count of number of temps in the
+		    ; block.
+		    REPEAT P%ACNT,
+			<
+			IFN <NPR & <1 _ J%>>,
+			    <
+			    TACNT== TACNT + 1
+			    >
+			J%== J% + 1
+			>
+
+		    ; If this block is an improvement ... use it.
+		    IFL <ACNT - TACNT>,
+			<
+			ACNT== TACNT
+			FREG%== I%
+			>
+		    >
+		I%== I% + 1
+		CHKMSK== CHKMSK _ <-1>
+		>
+	    >
+
+	IFL ACNT,
+	    <
+	    PRINTX < NO ADEQUATE BLOCKS OF REGISTERS>
+	    >
+	IFGE ACNT,
+	    <
+	    CNT== 0
+	    REPEAT P%ACNT,
+		<
+		CNT== CNT + 1
+		CONCAT(P%A,\^D<CNT>)
+		FREG%== FREG% + 1
+		>
+	    >
+	PURGE MASK%, CHKMSK, I%, FREG%, ACNT, J%, TACNT, CNT
+	>
+    >
+DEFINE TEMPREGS(RLIST),
+    <
+    IRP RLIST,
+	<
+	P%TCNT== P%TCNT + 1
+	DEFCONCAT(P%T,\^D<P%TCNT>),
+	    <ONETMP(RLIST)>
+	>
+    >
+
+DEFINE SAVEREGS(RLIST),
+    <
+    IRP RLIST,
+	<
+	P%SCNT== P%SCNT + 1
+	DEFCONCAT(P%S,\^D<P%SCNT>),
+	    <ONESV(RLIST)>
+	>
+    >
+
+DEFINE STKLOCALS(LLIST),
+    <
+    IRP LLIST,
+	<
+	P%LCNT== P%LCNT + 1
+	DEFCONCAT(P%L,\^D<P%LCNT>),
+	    <DEFINE LLIST>
+	>
+    >
+
+DEFINE ADJREGS(RLIST),
+    <
+    P%ACNT== 0
+    IRP RLIST,
+	<
+	P%ACNT== P%ACNT + 1
+	DEFCONCAT(P%A,\^D<P%ACNT>),
+	    <ONEADJ(RLIST)>
+	>
+    >
+
+DEFINE INITDY,
+    <
+    NEEDFP== FPFLAG
+    >
+
+DEFINE ROUTINE(NM,PRMS),
+    <
+    IFNDEF GLBFLG,
+	<
+	GLBFLG== 0
+	>
+    IFN GLBFLG,
+	<
+	NM::
+	GLBFLG== 0
+	>
+    IFE GLBFLG,
+	<
+	NM:
+	>
+
+    NEEDFP== 0
+    STKDPTH== 0
+    HALTSVD== 0
+    HALTTMP== 0
+    SVUSED== 0
+    TMPUSED== 0
+    USDMSK== 0
+    SRCNT== 0
+    CLLCNT== 0
+    LCLCNT== 0
+    P%LCNT== 0
+    P%TCNT== 0
+    P%SCNT== 0
+    P%PCNT== 0
+    P%ACNT== 0
+
+    IRP PRMS,
+	<
+	P%PCNT== P%PCNT + 1
+	DEFCONCAT(P%P,\^D<P%PCNT>),
+	    <DEFINE PRMS>
+	>
+    >
+
+DEFINE GLOBAL,
+    <
+    GLBFLG== -1
+    >
+DEFINE RTNSTART,
+    <
+
+	;; Do we need an FP for this routine?
+	IFN FPFLAG,
+	    <
+	    IFE APFLAG,
+		<
+		IFNB <PARMS>,<NEEDFP== -1>
+		>
+	    IFNB <SLCLS>,<NEEDFP== -1>
+	    >
+
+	IFN NEEDFP,
+	    <
+	    ;; If we are using a local FP, we use a TMP register if
+	    ;; we can.
+	    IFN LCLFP,
+		<
+		ONESV(FP)
+		>
+
+	    ;; If we are using a global FP, save it on the stack.
+	    IFE LCLFP,
+		<
+		SVREG(FP)
+		>
+
+	    ;; Set the FP.
+	    MOVE	FP, SP
+	    >
+
+	;; Define the requested names, saving registers as needed.
+	MAKARGS
+	MAKADJS
+
+	IFN APFLAG,
+	    <IFG P%PCNT,
+		<
+		ONESV(L%AP)
+		MOVE	L%AP,AP
+		>
+	    >
+
+	MAKTMPS
+	MAKSVS
+	MAKSLCLS
+    >
+
+DEFINE FAKEEND,
+    <
+	PURGE NEEDFP, STKDPTH, HALTSVD, HALTTMP, SVUSED
+	PURGE TMPUSED, SRCNT, CLLCNT, LCLCNT, P%LCNT, P%TCNT,
+	PURGE P%SCNT, P%PCNT
+    >
+
+DEFINE RTNEND,
+    <
+
+	;; Get rid of the stack locals plus any DYTEMPS.
+	ADJSTK(<-STKDPTH>)
+
+	;; Restore saved registers, including possibly FP.
+	RSTRREGS
+
+	POPJ	SP, 0
+
+	;; Get rid of local symbol names.
+	FAKEEND
+    >
+
+LIT
+PRGEND
+;  CONDITION HANDLING
+
+TITLE $OTSCH: CONDITION HANDLING
+
+SEARCH	$OTSDE
+
+IFE PSECTFLG
+    <
+     TWOSEG
+     RELOC 400000
+    >
+
+IFN PSECTFLG
+    <
+     PSECTCODE
+    >
+
+; This sub-module handles the condition handling mechanism.
+
+ENTRY UNWND., SIGNA., SIGST., SIGND.
+
+SUBTTL UNWND.
+
+
+EXTERNAL	EFPNT.
+
+
+GLOBAL ROUTINE UNWND.
+
+RTNSTART
+    SETOM	0, UWFLAG
+RTNEND
+SUBTTL SIGNAL
+
+GLOBAL ROUTINE SIGNA.,<ARGUMENT>
+    TEMPREGS	<TMP>
+    SAVEREGS	<LEFPNT>
+    INITDY
+
+IFN FP+1,		; Save the FP if one exists
+<
+LCLFP==0
+NEEDFP==-1
+>
+
+RTNSTART
+    ; Set up an enable frame.
+    PUSHER	EFPNT.
+    PUSHER	[[EXP	SIGCH,0]]
+
+    ; Save the enable frame pointer then establish this enable frame.
+    PUSHER	EFPNT.
+    MOVEI	TMP,DYTEMP<0>
+    MOVEM	TMP,EFPNT.
+
+    ; Save the UNWIND flag and clear it.
+    PUSHER	UWFLAG
+    SETZM	UWFLAG
+
+    ; Set up the mechanism vector.
+    PUSHER	[1]
+    PUSHER	VR
+
+    ; Get the address of the signal vector.
+    IFN APFLAG,
+	<
+	; If there is an AP:
+
+	; PUSH the argument count.
+	PUSHER	[-3,,0]
+
+	; ARGUMENT points to the SIGNAL vector.
+	MOVEI	TMP, ARGUMENT
+	>
+    IFE APFLAG,
+	; If there is no AP: ARGUMENT is after the last entry in
+	; the SIGNAL vector and contains the negative of the length
+	; of the SIGNAL vector including the "vector length word".
+	<
+	MOVE	TMP, ARGUMENT
+	ADDI	TMP, ARGUMENT
+	>
+    PUSHER	TMP
+
+    ; Second argument is the address of the mechanism vector.
+    MOVEI	TMP, DYTEMP<4>
+    PUSHER	TMP
+
+    ; Loop back here to do a resignal:
+DO.RESIGNAL:
+
+    ; Make a local EF pointer
+    MOVE	LEFPNT., DYTEMP<0>
+    SKIPN	LEFPNT.
+    MOVEI	LEFPNT., DFLTEF
+
+    ; Reset the EF thread to point to the previous enable frame.
+    MOVE	TMP, (LEFPNT.)
+    MOVEM	TMP, DYTEMP<0>
+
+    ; Call enable handler with the EF as the argument
+    PUSHER	LEFPNT.
+
+    ; If we are using it, set the AP here.
+    IFN APFLAG,
+	<
+	MOVEI	AP,DYTEMP<7>
+	>
+
+    ; Calculate the address of the condition handler caller, and
+    ; call it.
+    MOVE	TMP, 1(LEFPNT.)
+    MOVE	TMP, (TMP)
+    PUSHJ	SP,(TMP)
+    POPPER	TMP		; TMP is a bit bucket here.
+
+    ; Was UNWIND requested?
+    SKIPN	UWFLAG
+    JRST	DO.NOUNWIND
+
+    ; Yes -- do it.
+
+    ; Get rid of the remaining arguments, the argument count if there
+    ; is one and the mechanism vector.  But first save the stack depth.
+
+    SAVSTKDPTH== STKDPTH
+
+    IFN APFLAG,
+	<
+	ADJSTK	-5
+	>
+    IFE APFLAG,
+	<
+	ADJSTK	-4
+	>
+
+    ; Restore the unwind flag and the enable frame pointer.
+    POPPER	UWFLAG
+    POPPER	EFPNT.
+
+    CALLSTART
+	PUSHER	LEFPNT.
+    CALLER	UNWIND
+
+    ; We never return from here.  STKDPTH is adjusted to keep the macros
+    ; happy.
+    STKDPTH== SAVSTKDPTH
+
+DO.NOUNWIND:
+
+    ; UNWIND wasn't requested.  Was resignaling?
+    TRNN	VR, 1
+    JRST	DO.RESIGNAL
+
+    ; No.  Continue (i.e. return from SIGNAL)
+
+    ; Eliminate the remaining arguments and the argument count if there
+    ; is one.
+
+    IFN APFLAG,
+	<
+	ADJSTK	-3
+	>
+    IFE APFLAG,
+	<
+	ADJSTK	-2
+	>
+
+    ; Set the return value as directed by the condition handler(s)
+    POPPER	VR
+    POPPER	TMP		; TMP is acting as a bit bucket.
+
+    POPPER	UWFLAG
+    POPPER	EFPNT.
+RTNEND
+SUBTTL SIGCH	The condition handler for SIGNA.
+
+ROUTINE SIGCH,<SV,MV,EF>
+    TEMPREGS	<EFTMP,LEFPNT>
+
+RTNSTART
+    CNDVAL== EFTMP
+
+    ; Get the condition value, mask out irrelevant portions.
+    MOVE	CNDVAL,SV
+    MOVE	CNDVAL,1(CNDVAL)
+    AND		CNDVAL,[037777,,777760]
+
+    ; Return with resignal if this is not an unwind.
+    CAME	CNDVAL,[SS$UNW]
+    JRST	SIGCHFIN
+
+    ; If this is an unwind the enable frame pointer
+    ; should be reset to point to immediate preceding
+    ; enable frame rather than the preceding "active" enable frame.
+    MOVE	EFTMP, EF
+    MOVE	LEFPNT., 2(EFTMP)
+    MOVEM	LEFPNT., EFPNT.
+
+    ; Continue following the thread.
+SIGCHFIN:
+    
+    SETZ	VR,
+RTNEND
+SUBTTL SIGNAL_STOP
+
+GLOBAL ROUTINE SIGST., <ARGUMENT>
+    TEMPREGS	<TMP,PNT>
+    SAVEREGS	<VALUE>
+
+IFN FP+1,
+	<LCLFP==0
+	 NEEDFP==-1
+	>
+RTNSTART
+
+    IFN APFLAG,
+	<
+	HLLZ	TMP,-1(AP)
+	PUSH	SP,TMP
+	HRR	TMP,(AP)
+	>
+    IFE APFLAG,
+	<
+	HRRI	TMP,ARGUMENT
+	ADD	TMP,ARGUMENT
+	HRL	TMP,ARGUMENT
+	SUB	TMP,[1,,0]
+	>
+
+    MOVE	PNT, SP		; Compute where condition value will be
+    SUB		PNT, ARGUMENT	;  after we make copy of the arglist
+
+SSTPLOOP:			; This is all necessary in case there is an
+    PUSH	SP,(TMP)	;  AP and the incoming argument-list is in
+    AOBJN	TMP,SSTPLOOP	;  read-only memory
+
+    ;+
+    ; Arg-list all copied
+    ;-
+
+    MOVE	VALUE,(PNT)	; The signalled condition-value
+    ANDCMI	VALUE,17	; Strip the severity
+    ORI		VALUE,4		;  and make it a FATAL one
+    MOVEM	VALUE,(PNT)	; Plunk it back in the arg-list
+
+    IFN APFLAG,
+	<
+	MOVEI	AP,-1(PNT)
+	>
+
+    PUSHJ	SP,SIGNA.
+
+    ; Shouldn't return to here ... ever.
+
+    CALLSTART
+	PUSHER	[0,,SSPMSG]
+    CALLER	STROUT
+
+    CALLSTART
+	PUSHER	VALUE
+    CALLER	OUTOCT
+
+    ; Return to the monitor.
+    CALLSTART
+    CALLER	MONRET
+
+FAKEEND
+
+SSPMSG:	ASCIZ/%BLSOTS	Attempt to return from SIGNAL_STOP
+			Condition value = /
+SUBTTL UNWIND
+
+IFN T20FLAG,
+    <
+    SEARCH MONSYM		; Recognize JSYS calls
+    >
+
+IFE T20FLAG
+    <
+    OPDEF PIBLK. [CALLI 212]
+    OPDEF XMOVEI [SETMI]
+    .PSVOP== 1
+    >
+
+ROUTINE UNWIND,<ESTABLISHER>
+    TEMPREGS	<TMP,XIT>
+    SAVEREGS	LEFPNT.
+    INITDY
+
+
+RTNSTART
+    ; Save the UNWIND flag and clear it.
+    PUSHER	UWFLAG
+    SETZM	UWFLAG
+
+    ; Set up the signal vector.
+    PUSHER	[1]
+    PUSHER	[SS$UNW]
+
+    ; Set up the mechanism vector.
+    PUSHER	[1]
+    PUSHER	VR
+
+    ; PUSH the argument count if one is needed
+    IFN APFLAG,
+	<
+	PUSHER	[-3,,0]
+	>
+
+    ; PUSH the address of the signal vector.
+    MOVEI	TMP, DYTEMP<1>
+    PUSHER	TMP
+
+    ; PUSH the address of the mechanism vector.
+    MOVEI	TMP, DYTEMP<3>
+    PUSHER	TMP
+
+    ; Loop back here for each establisher unwound.
+DO.NXTUNWIND:
+
+    ; Make a local EF pointer
+    MOVE	LEFPNT., EFPNT.
+
+    ; Reset the EF pointer to point to the previous entry frame.
+    MOVE	TMP, (LEFPNT.)
+    MOVEM	TMP, EFPNT.
+
+    ; Call the enable handler with the EF as the argument.
+    PUSHER	LEFPNT.
+
+    ; If we are using it, set the AP.
+    IFN APFLAG,
+	<
+	MOVEI	AP,DYTEMP<6>
+	>
+
+    ; Find the address of the condition handler caller and call it.
+    MOVE	TMP, 1(LEFPNT.)
+    MOVE	TMP, (TMP)
+    PUSHJ	SP,(TMP)
+    POPPER	TMP		; TMP is used as a bit bucket.
+
+    ; Find the address of the exit code (DEBRK flag in left half).
+    MOVE	XIT, 1(LEFPNT.)
+    MOVE	XIT, 1(XIT)
+
+    ; Check if we are unwinding thru a PS_INTERRUPT
+    ; linkage-type routine.
+    SKIPL	XIT		; Is this a PS_INTERRUPT linkage?
+      JRST	CHKEST		; No
+IFN T20FLAG,			; Yes, (TOPS-20 implementation)
+    <
+    PUSHER	XIT		; Save registers.
+    PUSHER 	1
+    PUSHER 	2
+    PUSHER  	3
+    MOVEI	1, .FHSLF	; Get active channels
+    RWM%			;  of current process
+      ERJMP	KPUNWD		; Error - ignore DEBRK
+    JFFO	2, ACTIVE	; Find active channel #
+      JRST 	KPUNWD		; No active channels
+ACTIVE:
+    CAILE	3, 3		; Bit 1,2,3 for priority levels
+      JRST	KPUNWD		; Error - Ignore DEBRK
+    MOVEI	1, .FHSLF	; Get pointer to PSI
+    RIR				; Get channel and priority level table address
+      ERJMP	XTEND		; Must be in extended addressing mode
+    JUMPE	2, XTEND	; SIR wasn't isuued..check for extended addr.
+    HLRZ	2, 2		; Get priority level table address only
+    ADDI	2, -1(3)	; Form address of saved PC
+    XMOVEI	1, KPUNWD	; Make DEBRK continue inside
+    MOVEM	1, @(2)		;  unwind OTS code
+    DEBRK%			; Dismiss interrupt and enable
+      ERJMP	KPUNWD		; Error - fake a return
+
+; Here if we're in extended addressing mode and we're unwinding
+; thru a PS_INTERRUPT linkage-type routine.
+XTEND:
+    ADJSP	SP, 3		; Space for returned
+    MOVEI	2, -2(SP)	;  argblock with PSI
+    XRIR%		  	;  data-bases
+      ERJMP	KPUNW1		; Error - ignore DEBRK
+    SOS		3		; Adjust for offset into priority level table
+    ADD		3, -1(SP)	; Form addr of saved PC
+    MOVE	3, (3)	; Get the PC block for this priority
+    XMOVEI	1, KPUNW1	; Make DEBRK continue inside
+    MOVEM	1, 1(3)		;  unwind OTS code
+    DEBRK%			; Dismiss interrupt and enable
+      ERJMP	KPUNW1		; Error - Fake a return
+
+KPUNW1:
+    ADJSP	SP, -3		; Remove XRIR arg-block
+
+; Restore the saved registers.
+KPUNWD:
+    POPPER	3
+    POPPER	2
+    POPPER	1
+    POPPER	XIT
+    >
+IFE T20FLAG,			; TOPS-10 code for dismissing interrupt
+    <				;   (must be 7.02 or later)
+    PIBLK.	TMP,		; Get the current interrupt block
+      JRST	CHKEST		; Error - ignore DEBRK.
+    PUSHER 	XIT		; Need another register
+    XMOVEI	XIT, CHKEST	; Make DEBRK. continue inside
+    MOVEM	XIT, .PSVOP(TMP);  unwind OTS code
+    POPPER	XIT		; Restore the register
+    DEBRK.			; Return with PSI activated
+      JRSTF	@.PSVOP(TMP)	; ERROR! Fake a return
+
+; If we fall thru to here, then the DEBRK. is really
+; messed up. Restore return address and act as if
+; nothing happened.
+    JRSTF	@.PSVOP(TMP)	; Return to caller as if
+    >				; nothing happened
+
+; Loop unless this is the establisher which requested the unwind.
+CHKEST:
+    CAME	LEFPNT., ESTABLISHER
+    JRST	DO.NXTUNWIND
+
+    ; Set up the return value.
+    MOVE	VR, DYTEMP<4>
+
+; Back the SP to point to first word of the enable frame.
+    HLLZ	TMP, SP		; Check if this a local or global stack pointer.
+    JUMPG	TMP, GLBSTK
+
+; Here if local stack pointer.
+    HRRZ	TMP, SP
+    SUB		TMP, LEFPNT.
+    HRL		TMP, TMP
+    JRST	LEAVE
+
+; Here if global stack pointer.
+; A Global stack pointer contains a section number in
+; the left half. Therefore we do not want to destroy this.
+GLBSTK:
+    MOVE	TMP, SP
+    SUB		TMP, LEFPNT.
+
+LEAVE:
+    SUB 	SP, TMP
+; Exit from the establisher.
+    JRST	(XIT)
+SIGND.::
+FAKEEND
+SUBTTL DFLTCH	The default condition handler.
+
+ROUTINE DFLTCH,<SV,MV,EV>
+
+RTNSTART
+    CALLSTART
+	PUSHER	[0,,DCHMSG]
+    CALLER	STROUT
+
+    MOVE	TMP,SV
+    MOVE	TMP,1(TMP)
+    CALLSTART
+	PUSHER	TMP
+    CALLER	OUTOCT
+    CALLSTART
+    CALLER	MONRET
+
+FAKEEND
+
+DCHMSG: ASCIZ/%BLSOTS	No condition handler established for signal.
+			Condition Value = /
+
+DFLTEF:	EXP	0,[EXP	DFLTCH, DFLTCH]
+SUBTTL MONRET ROUTINE  return to the monitor...and stay there.
+
+IFN T20FLAG,
+    <
+    SEARCH MONSYM
+    >
+
+IFE T20FLAG,
+    <
+    ROUTINE MONRET
+
+    RTNSTART
+
+	EXIT
+
+    RTNEND
+    >
+
+IFN T20FLAG,
+    <
+    ROUTINE MONRET
+
+    RTNSTART
+
+    MR.START:
+	HALTF
+
+	; Don't let it continue.
+
+	HRROI	1,[ASCIZ/Can't continue/]
+	PSOUT
+	HRROI	1, CRLF
+	PSOUT
+
+	JRST	MR.START
+    RTNEND
+    >
+SUBTTL STROUT routine
+
+IFE T20FLAG,
+    <
+    ROUTINE STROUT, <ASZPNT>
+
+    RTNSTART
+	TTCALL	3, @ASZPNT
+    RTNEND
+    >
+
+IFN T20FLAG,
+    <
+    ROUTINE STROUT,<ASZPNT>
+
+    RTNSTART
+	AC1== 1
+	SSP== 2
+	PNTSV== ^D35 - ^L<<PR ! NPR> & ^O17774>
+
+	PUSHER	PNTSV
+	MOVE	PNTSV,ASZPNT
+
+	PUSHER	AC1
+	PUSHER	SSP
+	MOVE	SSP,SP
+
+	HRRO	AC1,PNTSV
+	PSOUT
+
+	MOVE	SP,SSP
+	POPPER	SSP
+	POPPER	AC1
+	POPPER	PNTSV
+    RTNEND
+    >
+SUBTTL	OUTOCT ROUTINE
+
+IFE T20FLAG,
+    <
+
+    ROUTINE	OUTOCT, <VALU>
+	TEMPREGS	<CFLAG,CNTR,ARG,TMP>
+
+    RTNSTART
+	SETZ	CFLAG,
+	MOVE	ARG,VALU
+
+    OO.OLOOP:
+	HRREI	CNTR,-6
+
+    OO.ILOOP:
+	ROT	ARG,3
+	MOVE	TMP,ARG
+	ANDI	TMP,7
+	ADDI	TMP,"0"
+	TTCALL	1,TMP
+	AOJL	CNTR,OO.ILOOP
+
+	JUMPN	CFLAG,OO.FIN
+
+	TTCALL	3,[ASCIZ/,,/]
+	SETO	CFLAG,
+	JRST	OO.OLOOP
+
+    OO.FIN:
+
+    RTNEND
+    >
+
+IFN T20FLAG,
+    <
+    ROUTINE	OUTOCT, <VALU>
+
+    RTNSTART
+
+    ; We can't really make use of the macros here because of the
+    ; demands that JSYS makes on register usage.  This should probably
+    ; eventually be fixed up with an appropriate set of JSYSROUTINE
+    ; macros.  For now: this cluge.
+
+	AC1== 1
+	AC2== 2
+	AC3== 3
+	SSP== 4
+	ARG== ^D35 - ^L<<PR ! NPR> & ^O17760>
+
+	PUSHER	ARG		; Save register 5
+	MOVE	ARG,VALU
+
+	; Save the other registers
+	PUSHER	AC1
+	PUSHER	AC2
+	PUSHER	AC3
+	PUSHER	SSP
+
+	; Save the SP
+	MOVE	SSP,SP
+
+	MOVEI	AC1,.PRIOU
+	MOVE	AC3,[NO%MAG ! NO%LFL ! NO%ZRO ! <^D6B17> ! ^D8]
+	HLRZ	AC2,ARG
+	NOUT
+	    ERJMP	OO.FIN		;Exit on error.
+	HRROI	AC1,[ASCIZ/,,/]
+	PSOUT
+	MOVEI	AC1,.PRIOU
+	HRRZ	AC2,ARG
+	NOUT
+	    ERJMP	OO.FIN
+    OO.FIN:
+	MOVE	SP,SSP
+	POPPER	SSP
+	POPPER	AC3
+	POPPER	AC2
+	POPPER	AC1
+	POPPER	ARG
+    RTNEND
+    >
+SS$UNW=:	017777,,377760
+CRLF:		BYTE (7) 15,12,0
+
+
+IFE PSECTFLG
+    <
+     RELOC 0		; Low Segment
+    >
+
+IFN PSECTFLG
+    <
+     PSECTOWN
+    >
+
+UWFLAG:		BLOCK 1
+
+
+LIT
+PRGEND
+TITLE EFPNT.: INITIAL
+	SEARCH $OTSDE
+
+IFE PSECTFLG
+    <
+     TWOSEG
+     RELOC 0
+    >
+
+IFN PSECTFLG
+    <
+     PSECTGLOBAL
+    >
+
+; This sub-module contains only the variable EFPNT.
+; This variable is always initialized by the main module and so
+; it will always be loaded.
+
+ENTRY EFPNT.
+
+EFPNT.::	Z
+
+LIT
+PRGEND
+TITLE B36%SZ
+	SEARCH $OTSDE
+
+IFE PSECTFLG
+    <
+     TWOSEG
+     RELOC 0
+    >
+
+IFN PSECTFLG
+    <
+     PSECTGLOBAL
+    >
+
+ENTRY B36%SZ			; This is so /Search will see this symbol
+; B36%SZ is a table used in the process of converting
+; a 1-word global byte pointer to a 2-word global
+; byte pointer.
+;
+; It is indexed by size and contains the address of
+; another table (B36%6,7,8,9,18 and DEFLT). Given
+; the position and size of the 2-word pointer, these
+; tables contain the corresponding 'P' field for
+; the 1-word global byte pointer.
+
+B36%6:					; 6-bit character size
+	BYTE(6)45,46,47,50,51,52,53
+DEFLT:					; Default table 
+B36%7:					; 7-bit character size
+	BYTE(7)61,62,63,64,65,66
+B36%8:					; 8-bit character size
+	BYTE(8)54,55,56,57,60
+B36%9:					; 9-bit character size
+	BYTE(9)67,70,71,72,73
+B36%18:				; 18-bit character size
+	BYTE(18)74,75,76
+
+B36%SZ::
+	DEFLT
+	DEFLT
+	DEFLT
+	DEFLT
+	DEFLT
+	DEFLT
+	B36%6
+	B36%7
+	B36%8
+	B36%9
+	DEFLT
+	DEFLT
+	DEFLT
+	DEFLT
+	DEFLT
+	DEFLT
+	DEFLT
+	DEFLT
+	B36%18
+	DEFLT
+	DEFLT
+	DEFLT
+	DEFLT
+	DEFLT
+	DEFLT
+	DEFLT
+	DEFLT
+	DEFLT
+	DEFLT
+	DEFLT
+	DEFLT
+	DEFLT
+	DEFLT
+	DEFLT
+	DEFLT
+	DEFLT
+	DEFLT
+
+    LIT
+    PRGEND
+	TITLE	PSI36%
+	ENTRY	PSI36%
+SEARCH	$OTSDE
+IFE PSECTFLG
+    <
+     TWOSEG
+     RELOC 400000
+    >
+
+IFN PSECTFLG
+    <
+     PSECTCODE
+    >
+
+; Phony routine to make SIX12 happy. These will never
+;  be executed, but they look "good" to SIX12 when
+;  it rummages thru the stack for arg. counts, etc.
+;  (Used with PS_INTERRUPT linkage routines)
+
+    PUSHJ	SP, PSI36%	; These two instructions
+PSI36%::
+    POPJ	SP,		;  are never executed!
+
+    LIT
+    PRGEND
+
+	TITLE	CHPLU%
+SEARCH	$OTSDE
+IFE PSECTFLG
+    <
+     TWOSEG
+     RELOC 400000
+    >
+
+IFN PSECTFLG
+    <
+     PSECTCODE
+    >
+
+;+
+; CALLING SEQUENCE (BLISS):
+;    %NAME('CHPLU%')(PTR, I)
+;
+; FUNCTION:
+;    Implements the BLISS character function CH$PLUS.
+;
+; INPUTS:
+;    PTR --	A byte pointer.
+;    I --	A character count (index).
+;
+; OUTPUTS:
+;    VALUE --	A byte pointer which references the byte (character)
+;	"I" characters after the character referenced by PTR.
+;
+; OTHER ROUTINES USED:
+;    CHCNP%
+;    CHCBP%
+;-
+
+    ENTRY CHPLU%
+
+GLOBAL ROUTINE CHPLU%,<PTR,I>
+
+TEMPREGS	<CHSIZE>		; Character size.
+
+RTNSTART
+    CALLSTART
+	PUSHER	PTR			; Convert pointer to absolute
+    CALLER	CHCNP%##		;    character position.
+
+    ADD		VR, I
+    LDB		CHSIZE,[POINT	6,PTR,11]
+
+    CALLSTART
+	PUSHER	CHSIZE
+	PUSHER	VR			; Convert absolute character
+    CALLER	CHCBP%##		;    to pointer.
+RTNEND
+
+	LIT
+	PRGEND
+	TITLE	CHPTR%
+	ENTRY	CHPTR%
+	SEARCH	$OTSDE
+IFE PSECTFLG
+    <
+     TWOSEG
+     RELOC 400000
+    >
+
+IFN PSECTFLG
+    <
+     PSECTCODE
+    >
+
+;+
+; CALLING SEQUENCE (BLISS):
+;    %NAME('CHPTR%')(ADDR, I, CHSIZE)
+;
+; FUNCTION:
+;    Implements CH$PTR.
+;
+; INPUTS:
+;    ADDR --	The base address.
+;    I --	The number of characters after the first character of
+;		the base address.
+;    CHSIZE --	The number of bits-per-chracter.
+;
+; OUTPUT:
+;    VALUE --	A character pointer for the specified character.
+;
+; OTHER ROUTINES USED:
+;    CHCNO%
+;    CHCBP%
+;-
+
+
+GLOBAL ROUTINE CHPTR%, <ADDR,I,CHSIZE>
+
+RTNSTART
+    CALLSTART
+	PUSHER	ADDR
+	PUSHER	CHSIZE
+    CALLER	CHCNO%##
+    ADD		VR,I
+    CALLSTART
+	PUSHER	CHSIZE
+	PUSHER	VR
+    CALLER	CHCBP%##
+RTNEND
+
+	LIT
+	PRGEND
+	TITLE	CHDIF%
+	ENTRY	CHDIF%
+	SEARCH	$OTSDE
+IFE PSECTFLG
+    <
+     TWOSEG
+     RELOC 400000
+    >
+
+IFN PSECTFLG
+    <
+     PSECTCODE
+    >
+
+;+
+; CALLING SEQUENCE (BLISS):
+;    %NAME('CHDIF%')(PTR1,PTR2)
+;
+; FUNCTION:
+;    Implements the CH$DIFF character function.
+;
+; INPUTS:
+;    PTR1 --	Character pointer to the first character.
+;    PTR2 --	Character pointer to the second character.
+;
+; OUTPUTS:
+;    VALUE --	The number of characters between the first and second
+;		characters.
+;
+; OTHER ROUTINES USED:
+;    CHCNP% -- If only local byte pointers are passed.
+;    CHCNE% -- If a global byte pointer is passed.
+;-
+
+
+GLOBAL ROUTINE CHDIF%, <PTR1, PTR2>
+
+TEMPREGS	<TMP>
+INITDY
+
+RTNSTART
+
+    ; Pick up 'P' from PTR2.
+    LDB		VR, [POINT 6,PTR2,5]
+    SUBI	VR, ^D36
+    JUMPG	VR, GLBPTR	; Check if we're dealing with one-word global byte pointers.
+
+    ; Pick up 'P' from PTR1.
+    LDB		VR, [POINT 6,PTR1,5]
+    SUBI	VR, ^D36
+    JUMPG	VR, GLBPTR	; Check if we're dealing with one-word global byte pointers.
+
+; Here when dealing with only local byte pointers.
+    CALLSTART
+	PUSHER	PTR2
+    CALLER	CHCNP%##
+    PUSHER	VR		; Save result.
+
+    CALLSTART
+	PUSHER	PTR1
+    CALLER	CHCNP%##
+    POPPER	TMP		; Get back PTR2 result so we won't mess up the stack.
+    JRST	RETURN
+
+; Here when dealing with global byte pointers.
+GLBPTR:
+    CALLSTART
+	PUSHER	-<STKDPTH+SRCNT>(SP)	; Push the return PC to get section #.
+	PUSHER	PTR2
+    CALLER	CHCNE%##
+    PUSHER	VR		; Save result.
+
+    CALLSTART
+	PUSHER	-<STKDPTH+SRCNT>(SP)	; Push the return PC to get section #.
+	PUSHER	PTR1
+    CALLER	CHCNE%##
+    POPPER	TMP		; Get back PTR2 result so we won't mess up the stack.
+
+RETURN:
+    SUB		VR, TMP
+RTNEND
+
+	PRGEND
+	TITLE	CHCNP%
+	ENTRY CHCNP%
+	SEARCH	$OTSDE
+IFE PSECTFLG
+    <
+     TWOSEG
+     RELOC 400000
+    >
+
+IFN PSECTFLG
+    <
+     PSECTCODE
+    >
+
+;+
+; CALLING SEQUENCE (BLISS):
+;    %NAME('CHCNP%')(PTR)
+;
+; FUNCTION:
+;     Converts a character pointer to an absolute character number.
+;
+; INPUTS:
+;    PTR --	The character pointer.
+;
+; OUTPUTS:
+;    VALUE --	The absolute character number.
+;-
+
+GLOBAL ROUTINE CHCNP%, <PTR>
+
+    TEMPREGS	<CHSIZE>
+    ADJREGS	<CPW,DUMMY>
+    CHRS==	CPW
+
+RTNSTART
+    LDB		CHSIZE, [POINT 6,PTR,11]
+
+    ; CPW = [36/CHSIZE]
+    MOVEI	CPW, ^D36
+    IDIV	CPW, CHSIZE
+
+    ; VR = (ADDRESS*CPW)-[(POS-36)/CHSIZE]
+    HRRZ	VR, PTR
+    IMUL	VR, CPW
+    LDB		CHRS, [POINT 6,PTR,5]
+    SUBI	CHRS, ^D36
+    IDIV	CHRS, CHSIZE
+    SUB		VR, CHRS
+    SOJ		VR,
+RTNEND
+
+	LIT
+	PRGEND
+	TITLE	CHCNE%
+	ENTRY CHCNE%
+	SEARCH	$OTSDE
+IFE PSECTFLG
+    <
+     TWOSEG
+     RELOC 400000
+    >
+
+IFN PSECTFLG
+    <
+     PSECTCODE
+    >
+
+;+
+; CALLING SEQUENCE (BLISS):
+;    %NAME('CHCNE%')(PC,PTR)
+;
+; FUNCTION:
+;     Converts a character pointer to an absolute character number.
+;	It is called by 'CHDIF%' when a 1-word global byte pointer is
+;	passed as an argument to CH$DIFF.  It is similar to CHCNP% 
+;	except that: (1) If a local byte ptr. is passed then the
+;	current section number is also used in calculating the character
+;	number. (2) If a global byte pointer is passed then we must
+;	translate "P" into the correct size and position.
+;
+; INPUTS:
+;    PC --	The return PC of CHDIF% (used to get section #)
+;    PTR --	The character pointer.
+;
+; OUTPUTS:
+;    VALUE --	The absolute character number.
+;-
+
+GLOBAL ROUTINE CHCNE%, <PC, PTR>
+
+    TEMPREGS	<CHSIZE>
+    ADJREGS	<CPW,DUMMY>
+    CHRS==	CPW
+
+RTNSTART
+    LDB	CHSIZE, [POINT 6,PTR,5]		; Check if 1-word global byte pointer.
+    SUBI	CHSIZE, ^D37
+    JUMPGE	CHSIZE, GLBPTR
+
+; Here when Local byte pointer
+    LDB		CHSIZE, [POINT 6,PTR,11]
+
+    ; CPW = [36/CHSIZE]
+    MOVEI	CPW, ^D36
+    IDIV	CPW, CHSIZE
+
+    ; VR = (ADDRESS*CPW)-[(POS-36)/CHSIZE]
+    HLLI	VR, PC			; Get the section number.
+    HRR		VR, PTR
+    IMUL	VR, CPW
+    LDB		CHRS, [POINT 6,PTR,5]
+    SUBI	CHRS, ^D36
+    IDIV	CHRS, CHSIZE
+    JRST	COMMON
+
+; Here when 1-word global byte pointer.
+GLBPTR:
+    HLRZ	CPW, GLBTAB(CHSIZE)	; Get the number of characters per word.
+
+    ;VR = (ADDRESS*CPW)-[(POS-36)/CHSIZE]
+    SETZ	VR,
+    LDB		VR, [POINT 30,PTR,35]	; Get the address.
+    IMUL	VR, CPW
+    HRRE	CHRS, GLBTAB(CHSIZE)	; Get [(POS-36)/CHSIZE].
+    
+COMMON:
+    SUB		VR, CHRS
+    SOJ		VR,
+RTNEND
+
+;
+; GLBTAB - Table used for converting 1-word global byte pointers
+;	   to an absolute character number.
+;	   It is indexed by the character size.
+;	   The left half of the each word represents the
+;	   number of characters per word and the right
+;	   half is: POSITION-36/CHARACTER-SIZE.
+;
+GLBTAB:
+    EXP		<^D36/6,,0>
+    EXP		<^D36/6,,-1>
+    EXP		<^D36/6,,-2>
+    EXP		<^D36/6,,-3>
+    EXP		<^D36/6,,-4>
+    EXP		<^D36/6,,-5>
+    EXP		<^D36/6,,-6>
+
+    EXP		<^D36/^D8,,0>
+    EXP		<^D36/^D8,,-1>
+    EXP		<^D36/^D8,,-2>
+    EXP		<^D36/^D8,,-3>
+    EXP		<^D36/^D8,,-4>
+
+    EXP		<^D36/7,,0>
+    EXP		<^D36/7,,-1>
+    EXP		<^D36/7,,-2>
+    EXP		<^D36/7,,-3>
+    EXP		<^D36/7,,-4>
+    EXP		<^D36/7,,-5>
+
+    EXP		<^D36/^D9,,0>
+    EXP		<^D36/^D9,,-1>
+    EXP		<^D36/^D9,,-2>
+    EXP		<^D36/^D9,,-3>
+    EXP		<^D36/^D9,,-4>
+
+    EXP		<^D36/^D18,,0>
+    EXP		<^D36/^D18,,-1>
+    EXP		<^D36/^D18,,-2>
+
+	LIT
+	PRGEND
+	TITLE	CHCNO%
+	ENTRY CHCNO%
+	SEARCH	$OTSDE
+IFE PSECTFLG
+    <
+     TWOSEG
+     RELOC 400000
+    >
+
+IFN PSECTFLG
+    <
+     PSECTCODE
+    >
+
+;+
+; CALLING SEQUENCE (BLISS):
+;    %NAME('CHCNO%')(ADDR, CHSIZE)
+;
+; FUNCTION:
+;     Converts a character description to an absolute character number.
+;     It is called by 'CHPTR%'.  It is similar to CHCNP% except that
+;     (1) It gets the address and size from its parameters. (2) It
+;     assumes that the position is 36 (i.e. before the leftmost bit).
+;
+; INPUTS:
+;    ADDR --	The base address for the character.
+;    CHSIZE --	The number of bits-per-character.
+;
+; OUTPUTS:
+;    VALUE --	The absolute character number.
+;-
+
+GLOBAL ROUTINE CHCNO%, <ADDR, CHSIZE>
+
+    ADJREGS	<CPW,DUMMY>
+
+RTNSTART
+
+    ; VR = (ADDRESS*CPW) - 1
+    HRRZ	VR, ADDR
+    MOVEI	CPW, ^D36
+    IDIV	CPW, CHSIZE
+    IMUL	VR, CPW
+    SOJ		VR,
+RTNEND
+
+	LIT
+	PRGEND
+	TITLE	CHCBP%
+	ENTRY	CHCBP%
+	SEARCH	$OTSDE
+IFE PSECTFLG
+    <
+     TWOSEG
+     RELOC 400000
+    >
+
+IFN PSECTFLG
+    <
+     PSECTCODE
+    >
+
+;+
+; CALLING SEQUENCE (BLISS):
+;    %NAME('CHCBP%')(CHSIZE, CHRNUM)
+;
+; FUNCTION:
+;    Converts an absolute character number to a character pointer.
+;
+; INPUTS:
+;    CHSIZE --	The number of bits-per-character
+;    CHRNUM --	The absolute character number.
+;
+; OUTPUTS:
+;    VALUE --	A character pointer to the specified character.
+;-
+
+GLOBAL ROUTINE CHCBP%, <CHSIZE, CHRNUM>
+
+    TEMPREGS	<TMP>
+    ADJREGS	<DR1,DR2>
+    CPW==	DR1
+    INITDY
+
+RTNSTART
+    SETZ	VR,
+
+    ; SIZE = CHSIZE
+    MOVE	TMP, CHSIZE
+    DPB		TMP, [POINT 6,VR,11]
+
+    ; CPW = [36/CHSIZE]
+    MOVEI	CPW, ^D36
+    IDIV	CPW, TMP
+    PUSHER	CPW
+
+    ; DR1 = [CHRNUM/CHSIZE]
+    ; DR2 = CHRNUM MOD CHSIZE
+    MOVE	DR1, CHRNUM
+    IDIV	DR1, DYTEMP<0>
+
+;   ADDRESS = DR1
+    HRR		VR, DR1
+
+    ; POSITION = 36 - (DR2 + 1)*CHSIZE
+    AOJ		DR2,
+    IMUL	TMP, DR2
+    MOVEI	DR2, ^D36
+    SUB		DR2, TMP
+    DPB		DR2, [POINT 6,VR,5]
+RTNEND
+
+	LIT
+	PRGEND
+	TITLE	CHFCH%
+	ENTRY	CHFCH%
+	SEARCH	$OTSDE
+IFE PSECTFLG
+    <
+     TWOSEG
+     RELOC 400000
+    >
+
+IFN PSECTFLG
+    <
+     PSECTCODE
+    >
+
+;+
+; CALLING SEQUENCE (BLISS):
+;    %NAME('CHFCH%')(N, PTR, CHAR)
+;
+; FUNCTION:
+;    Implements CH$FIND_CH.
+;
+; INPUTS:
+;    N --	The number of characters in the string.
+;    PTR --	A character pointer to the first character in the
+;		string.
+;    CHAR --	The character to be found.
+;
+; OUTPUTS:
+;    VALUE --	A character pointer to the first occurence of
+;		the character "CHAR" after the character pointed to
+;		by "PTR".  If there are no occurrences of "CHAR"
+;		in the first "N" characters following "PTR" return
+;		the failure character pointer (0).
+;-
+
+GLOBAL ROUTINE CHFCH%, <N, PTR, CHAR>
+
+    TEMPREGS	<LNG, TPTR, TSTCHR>
+
+RTNSTART
+
+    ; Load "N" into the length register.  Take the faiure return
+    ; if "N" is less-than-or-equal-to zero.
+    SKIPG	LNG, N
+    JRST	FAIL
+
+    MOVE	TPTR, PTR
+LOOP:
+    MOVE	VR, TPTR
+    ILDB	TSTCHR, TPTR
+    CAMN	TSTCHR, CHAR
+    JRST	RETURN
+    SOJG	LNG, LOOP
+FAIL:
+    SETZ	VR,
+RETURN:
+
+RTNEND
+
+	LIT
+	PRGEND
+	TITLE	CHFNC%
+	ENTRY	CHFNC%
+	SEARCH	$OTSDE
+IFE PSECTFLG
+    <
+     TWOSEG
+     RELOC 400000
+    >
+
+IFN PSECTFLG
+    <
+     PSECTCODE
+    >
+
+;+
+; CALLING SEQUENCE (BLISS):
+;    %NAME('CHFNC%')(N, PTR, CHAR)
+;
+; FUNCTION:
+;    Implements CH$FIND_NOT_CH.
+;
+; INPUTS:
+;    N --	The number of characters in the string.
+;    PTR --	A character pointer to the first character in the
+;		string.
+;    CHAR --	The character to be "skipped over".
+;
+; OUTPUTS:
+;    VALUE --	A character pointer to the first occurence of a
+;		character other than "CHAR" after the character pointed
+;		to by "PTR".  If the first "N" characters after "PTR"
+;		are equal to "CHAR" returns the failure character
+;		pointer (0).
+;-
+
+GLOBAL ROUTINE CHFNC%, <N, PTR, CHAR>
+
+    TEMPREGS	<LNG, TPTR, TSTCHR>
+
+RTNSTART
+
+    ; Load "N" into the length register.  Take the faiure return
+    ; if "N" is less-than-or-equal-to zero.
+    SKIPG	LNG, N
+    JRST	FAIL
+
+    MOVE	TPTR, PTR
+LOOP:
+    MOVE	VR, TPTR
+    ILDB	TSTCHR, TPTR
+    CAME	TSTCHR, CHAR
+    JRST	RETURN
+    SOJG	LNG, LOOP
+FAIL:
+    SETZ	VR,
+RETURN:
+
+RTNEND
+
+	LIT
+	PRGEND
+	TITLE	CHFSU%
+	ENTRY	CHFSU%
+	SEARCH	$OTSDE
+IFE PSECTFLG
+    <
+     TWOSEG
+     RELOC 400000
+    >
+
+IFN PSECTFLG
+    <
+     PSECTCODE
+    >
+
+;+
+; CALLING SEQUENCE (BLISS):
+;    %NAME('CHFSU%')(CN, CPTR, PN, PPTR)
+;
+; FUNCTION:
+;    Implements the CH$FIND_SUB character function for non-KL10
+;    machines.
+;
+; INPUTS:
+;    CN --	The length of the character string.
+;    CPTR --	Pointer to the first character of the character string.
+;    PN --	The length of the sub-string.
+;    PPTR --	Pointer to the first character of the sub-string.
+;
+; OUTPUTS:
+;    VALUE --	A character pointer to the first character of the first
+;		occurence of the sub-string in the character string.
+;		If the sub-string does not occur in the character, the
+;		VALUE is the failure string pointer (0).
+;
+; OTHER ROUTINES USED:
+;    CHCMP%
+;-
+
+GLOBAL ROUTINE CHFSU%, <CN, CPTR, PN, PPTR>
+
+    TMP==	VR
+    CHAR==	VR
+    SAVEREGS	<NEWLNG, SAVPTR>
+    STKLOCALS	<FCHAR, VALPTR>
+
+RTNSTART
+
+    ; If null sub-string do fast return.
+    SKIPN	PN
+    JRST	FSTRET
+
+    ; We need only look at sub-strings starting on or before the
+    ; NEWLNG'th character.
+    MOVE	NEWLNG, CN
+    SUB		NEWLNG, PN
+
+    ; If the sub-string is longer than the character string then fail.
+    SKIPGE	NEWLNG
+    JRST	FAIL
+
+    ; Get the first character of the sub-string.
+    MOVE	TMP, PPTR
+    ILDB	TMP, TMP
+    MOVEM	TMP, FCHAR
+
+    ; Copy CPTR to a local where it may be safely incremented.
+    MOVE	TMP, CPTR
+    MOVEM	TMP, VALPTR
+
+    ; Loop until the first character is matched.
+LOOP:
+    MOVE	SAVPTR, VALPTR
+    ILDB	CHAR, SAVPTR
+
+    CAME	CHAR, FCHAR
+    JRST	NOMATCH
+
+    ; Use CH$COMPARE to see if the rest of the sub-string agrees.
+    CALLSTART
+	PUSHER	PN
+	PUSHER	VALPTR
+	PUSHER	PN
+	PUSHER	PPTR
+	PUSHER	[0]
+    CALLER	CHCMP%##
+    JUMPE	VR, MATCH
+
+NOMATCH:
+    SOJL	NEWLNG, FAIL
+    MOVE	TMP, SAVPTR
+    MOVEM	TMP, VALPTR
+    JRST	LOOP
+
+    ; We have found a complete match.
+MATCH:
+    MOVE	VR, VALPTR
+    JRST	RETURN
+
+FSTRET:
+    ; Null match: fast return.
+    MOVE	VR, CPTR
+    JRST	RETURN
+
+FAIL:
+    SETZ	VR,
+RETURN:
+
+RTNEND
+
+	LIT
+	PRGEND
+	TITLE	CHFSX%
+	ENTRY	CHFSX%
+	SEARCH	$OTSDE
+IFE PSECTFLG
+    <
+     TWOSEG
+     RELOC 400000
+    >
+
+IFN PSECTFLG
+    <
+     PSECTCODE
+    >
+
+;+
+; CALLING SEQUENCE (BLISS):
+;    %NAME('CHFSX%')(CN, CPTR, PN, PPTR)
+;
+; FUNCTION:
+;    Implements the CH$FIND_SUB character function for KL10
+;    machines.
+;
+; INPUTS:
+;    CN --	The length of the character string.
+;    CPTR --	Pointer to the first character of the character string.
+;    PN --	The length of the sub-string.
+;    PPTR --	Pointer to the first character of the sub-string.
+;
+; OUTPUTS:
+;    VALUE --	A character pointer to the first character of the first
+;		occurence of the sub-string in the character string.
+;		If the sub-string does not occur in the character, the
+;		VALUE is the failure string pointer (0).
+;-
+
+GLOBAL ROUTINE CHFSX%, <CN, CPTR, PN, PPTR>
+
+    TMP==	VR
+    CHAR==	VR
+    SAVEREGS	<NEWLNG, SAVPTR>
+    STKLOCALS	<FCHAR, VALPTR>
+    ADJREGS	<AC1, AC2, AC3, AC4, AC5>
+
+RTNSTART
+
+    ; If null sub-string: do a fast return.
+    SKIPN	PN
+    JRST	FSTRET
+
+    ; We need only look at sub-strings starting on or before the
+    ; NEWLNG'th character.
+    MOVE	NEWLNG, CN
+    SUB		NEWLNG, PN
+
+    ; If the sub-string is longer than the character string: fail.
+    SKIPGE	NEWLNG
+    JRST	FAIL
+
+    ; Get the first character of the sub-string.
+    MOVE	TMP, PPTR
+    ILDB	TMP, TMP
+    MOVEM	TMP, FCHAR
+
+    ; Put CPTR in a local where we may safely increment it.
+    MOVE	TMP, CPTR
+    MOVEM	TMP, VALPTR
+
+    ; Loop until the first character is matched.
+LOOP:
+    MOVE	SAVPTR, VALPTR
+    ILDB	CHAR, SAVPTR
+
+    CAME	CHAR, FCHAR
+    JRST	NOMATCH
+
+    ; Use CH$COMPARE to see if the rest of the sub-string agrees.
+    MOVE	AC1, PN
+    MOVE	AC2, VALPTR
+    MOVE	AC4, AC1
+    MOVE	AC5, PPTR
+    EXTEND	AC1, [EXP	CMPSN, 0, 0]
+    JRST	MATCH
+
+NOMATCH:
+    SOJL	NEWLNG, FAIL
+    MOVE	TMP, SAVPTR
+    MOVEM	TMP, VALPTR
+    JRST	LOOP
+
+    ; We have found a complete match.
+MATCH:
+    MOVE	VR, VALPTR
+    JRST	RETURN
+
+FSTRET:
+    ; Null match: fast return.
+    MOVE	VR, CPTR
+    JRST	RETURN
+
+FAIL:
+    SETZ	VR,
+RETURN:
+
+RTNEND
+
+	LIT
+	PRGEND
+	TITLE	CHMOV%
+	ENTRY	CHMOV%
+	SEARCH	$OTSDE
+IFE PSECTFLG
+    <
+     TWOSEG
+     RELOC 400000
+    >
+
+IFN PSECTFLG
+    <
+     PSECTCODE
+    >
+
+;+
+; CALLING SEQUENCE (BLISS):
+;    %NAME('CHMOV%')(N, SPTR, DPTR)
+;
+; FUNCTION:
+;    Implements the CH$MOVE character function.
+;
+; INPUTS:
+;    N --	The number of characters to be transfered.
+;    SPTR --	A pointer to the first character to be transfered.
+;    DPTR --	A pointer to the location to which the first character
+;		is to be transfered.
+;
+; OUTPUTS:
+;    VALUE --	A character pointer to the character following the
+;		last character transferred, i.e. CH$PLUS(DPTR, N + 1).
+;-
+
+GLOBAL ROUTINE CHMOV%, <N, SPTR, DPTR>
+
+    TEMPREGS	<LNG, SRC, TMP>
+    DST==	VR
+
+RTNSTART
+
+    MOVE	LNG, N
+    MOVE	SRC, SPTR
+    MOVE	DST, DPTR
+    JRST	LTEST
+
+LOOP:
+    ILDB	TMP, SRC
+    IDPB	TMP, DST
+LTEST:
+    SOJGE	LNG, LOOP
+
+RTNEND
+
+	LIT
+	PRGEND
+	TITLE	CHFIL%
+	ENTRY	CHFIL%
+	SEARCH	$OTSDE
+IFE PSECTFLG
+    <
+     TWOSEG
+     RELOC 400000
+    >
+
+IFN PSECTFLG
+    <
+     PSECTCODE
+    >
+
+;+
+; CALLING SEQUENCE (BLISS):
+;    %NAME('CHFIL%')(FILL, DN, DPTR)
+;
+; FUNCTION:
+;    Implement the CH$FILL character function.
+;
+; INPUTS:
+;    FILL --	The value of the character to be used as fill.
+;    DN --	The number of characters to be filled.
+;    DPTR --	The position of the first character to be filled.
+;
+; OUTPUTS:
+;    VALUE --	A pointer to the first character after "DPTR" which
+;		was not filled, i.e. CH$PLUS(DPTR, DN + 1).
+;-
+
+GLOBAL ROUTINE CHFIL%, <FILL, DN, DPTR>
+
+    TEMPREGS	<LNG, CHAR>
+    DEST==	VR
+
+RTNSTART
+    MOVE	LNG, DN
+    MOVE	CHAR, FILL
+    MOVE	DEST, DPTR
+    JRST	LTEST
+
+LOOP:
+    IDPB	CHAR, DEST
+LTEST:
+    SOJGE	LNG, LOOP
+RTNEND
+
+	LIT
+	PRGEND
+	TITLE	CHCOP%
+	ENTRY	CHCOP%
+	SEARCH	$OTSDE
+IFE PSECTFLG
+    <
+     TWOSEG
+     RELOC 400000
+    >
+
+IFN PSECTFLG
+    <
+     PSECTCODE
+    >
+
+;+
+; CALLING SEQUENCE (BLISS):
+;    %NAME('CHCOP%')(SN1, SPTR1, SN2, SPTR2, . . . , SNN, SPTRN,
+;	FILL, DN, DPTR, ARGCNT)
+;
+; FUNCTION:
+;    Implements the CH$COPY character function.
+;
+; INPUTS:
+;    SN1, SN2, . . . SNN --	The lengths of the source strings.
+;    SPTR1, SPTR2, . . . SPTRN --	The positions of the first
+;		characters of the source strings.
+;    FILL --	The fill character to be used if the sum of the
+;		source lengths is less than the destination length.
+;    DN --	The total number of characters to be transfered from
+;		the source strings or filled.
+;    DPTR --	The position of the first character to be copied into.
+;    ARGCNT --	The negative of the number of other arguments.  It
+;		is equal to -(2*N + 3) where N is the number of source
+;		strings.
+;
+; OUTPUTS:
+;    VALUE --	A character pointer to the character following the last
+;		character position copied to, i.e.
+;		CH$PLUS(DPTR, DN + 1).
+;-
+
+GLOBAL ROUTINE CHCOP%, <ARGUMENT>
+
+    TEMPREGS	<INDX, TMP, DLNGTH, TRNSFR, SRC>
+    DST== VR
+    INITDY
+
+RTNSTART
+
+    ; Initialize.
+    IFN APFLAG,
+	<
+	MOVE	INDX, ARG%CNT
+	ADD	INDX, [4,,0]
+	HRRI	INDX, ARGUMENT
+	HLRE	TMP, ARG%CNT
+	MOVM	TMP, TMP
+	ADDI	TMP, ARG%CNT
+	>
+    IFE APFLAG,
+	<
+	MOVE	INDX, ARGUMENT
+	ADDI	INDX, ARGUMENT
+	HRL	INDX, ARGUMENT
+	ADD	INDX, [4,,0]
+	MOVEI	TMP, ARGUMENT
+	>
+
+    PUSHER	-3(TMP)
+    MOVE	DLNGTH, -2(TMP)
+    MOVE	DST, -1(TMP)
+
+    ; Move each source string in turn.
+ILOOP:
+    JUMPLE	DLNGTH, RETURN
+    MOVE	TRNSFR, 0(INDX)
+    CAMLE	TRNSFR, DLNGTH
+    MOVE	TRNSFR, DLNGTH
+
+    SUB		DLNGTH, TRNSFR
+
+    ; Do CH$MOVE.
+    MOVE	SRC, 1(INDX)
+    JRST	MLTEST
+MLOOP:
+    ILDB	TMP, SRC
+    IDPB	TMP, DST
+MLTEST:
+    SOJGE	TRNSFR, MLOOP
+
+    ; INCREMENT INDX, AND TEST
+    ADD	INDX, [1,,1]
+    AOBJN	INDX, ILOOP
+
+    JUMPLE	DLNGTH, RETURN
+
+    ; Do CH$FILL
+    MOVE	TMP, DYTEMP<0>
+FLOOP:
+    IDPB	TMP, DST
+    SOJG	DLNGTH, FLOOP
+RETURN:
+
+RTNEND
+
+	LIT
+	PRGEND
+	TITLE	CHCMP%
+	ENTRY	CHCMP%
+	SEARCH	$OTSDE
+IFE PSECTFLG
+    <
+     TWOSEG
+     RELOC 400000
+    >
+
+IFN PSECTFLG
+    <
+     PSECTCODE
+    >
+;+
+; CALLING SEQUENCE (BLISS):
+;    %NAME('CHCMP%')(N1, PTR1, N2, PTR2, FILL)
+;
+; FUNCTION:
+;    Implements the CH$COMPARE character function.  This is used to
+;    implement the character functions CH$GTR, CH$GEQ, CH$EQL, CH$LEQ,
+;    CH$LSS, CH$NEQ.
+;
+; INPUTS:
+;    N1 --	The length of the first string to be compared.
+;    PTR1 --	The position of the first character of the first
+;		comparison string.
+;    N2 --	The length of the second string to be compared.
+;    PTR2 --	The position of the first character of the second
+;		comparison string.
+;    FILL --	The character to be used to fill out the shorter
+;		string durring the comparison.
+;
+; OUTPUTS:
+;    VALUE --	-1 if the first string is less than the second.
+;		0 if the strings are equal.
+;		+1 if the first string is greater than the second.
+;-
+
+GLOBAL ROUTINE CHCMP%, <N1, PTR1, N2, PTR2, FILL>
+
+    TEMPREGS	<LNG1, LNG2, CHR1, CHR2, MAXLNG>
+    STKLOCALS	<SRC1, SRC2>
+    TMP== VR
+
+RTNSTART
+
+    ; See if the strings are of the same length.
+    MOVE	LNG1, N1
+    CAME	LNG1, N2
+    JRST	NEQLNG
+
+    ; They are the same length, if that length is zero than they are
+    ; equal without any further comparison.
+    JUMPLE	LNG1, RETEQL
+    MOVE	TMP, PTR1
+    MOVEM	TMP, SRC1
+    MOVE	TMP, PTR2
+    MOVEM	TMP, SRC2
+
+LOOP1:
+    ILDB	CHR1, SRC1
+    ILDB	CHR2, SRC2
+    CAME	CHR1, CHR2
+    JRST	RETNEQ		; We have found a mis-match.
+
+    ; Test and loop.
+    SOJG	LNG1, LOOP1
+
+    ; If we fall through the loop, the strings are equal.
+RETEQL:
+    SETZ	VR,
+    JRST	RETURN
+
+    ; We come here if the strings are of unequal length.
+NEQLNG:
+
+    MOVE	LNG2, N2
+
+    ; Find the maximum length so we know when to quit comparing.
+    MOVE	MAXLNG, LNG1
+    CAMGE	MAXLNG, LNG2
+    MOVE	MAXLNG, LNG2
+
+    ; If the maximum length is zero, the strings are equaly null.
+    JUMPLE	MAXLNG, RETEQL
+
+    MOVE	TMP, PTR1
+    MOVEM	TMP, SRC1
+    MOVE	TMP, PTR2
+    MOVEM	TMP, SRC2
+
+LOOP2:
+    ; Temporarily assume that both comparisons will use the fill
+    ; character.
+    MOVE	CHR1, FILL
+    MOVE	CHR2, CHR1
+
+    ; Get the correct character if there is any left.
+    SOSL	LNG1
+    ILDB	CHR1, SRC1
+    SOSL	LNG2
+    ILDB	CHR2, SRC2
+
+    CAME	CHR1, CHR2
+    JRST	RETNEQ
+    SOJG	MAXLNG, LOOP2
+
+    SETZ	VR,
+    JRST	RETURN
+
+RETNEQ:
+    ; We have found unequal characters.  Do an unsigned comparison.
+    SETO	VR,
+    TLC		CHR1,400000
+    TLC		CHR2,400000
+    CAML	CHR1, CHR2
+    MOVEI	VR, 1
+RETURN:
+
+RTNEND
+
+	LIT
+	PRGEND
+	TITLE	CHTRA%
+	ENTRY	CHTRA%
+	SEARCH	$OTSDE
+IFE PSECTFLG
+    <
+     TWOSEG
+     RELOC 400000
+    >
+
+IFN PSECTFLG
+    <
+     PSECTCODE
+    >
+
+;+
+; CALLING SEQUENCE (BLISS):
+;    %NAME(CHTRA%)(TAB, SN, SPTR, FILL, DN, DPTR)
+;
+; FUNCTION:
+;    Implements the CH$TRANSLATE character function.
+;
+; INPUTS:
+;    TAB --	The address of the translation table.
+;    SN --	The length of the source string.
+;    SPTR --	The location of the first character of the source
+;		string.
+;    FILL --	The character to fill the destination out with if
+;		DN is greater than SN.
+;    DN --	The length of the destination string.
+;    DPTR --	The location of the first character of the destination
+;		string.
+;-
+
+GLOBAL ROUTINE CHTRA%, <TAB, SN, SPTR, FILL, DN, DPTR>
+
+    TEMPREGS	<DLNGTH, DST, SLNGTH, SRC, CHR, TTABLE>
+
+RTNSTART
+    MOVE	DST, DPTR
+    MOVE	DLNGTH, DN
+
+    ; Return immediatly if destination string is null.
+    JUMPLE	DLNGTH, RETURN
+
+    MOVE	SRC, SPTR
+    MOVE	SLNGTH, SN
+    MOVE	TTABLE, TAB
+
+LOOP:
+    SOJL	SLNGTH, DOFILL
+    ILDB	CHR, SRC
+
+    ; Put half the character value in the right half, save the parity
+    ; (i.e. low order) bit in the left half.
+    ROT		CHR, -1
+
+    ; CHR will now point to a pair of (half-word) entries in the
+    ; translation table.
+    ADDI	CHR, (TTABLE)
+
+    ; Choose the left or right halves of the table-word depending on
+    ; the parity of the orriginal character, now stored as the sign
+    ; bit of CHR.
+    JUMPL	CHR, ODD
+    HLRZ	CHR, (CHR)
+    SKIPA
+ODD:
+    HRRZ	CHR, (CHR)
+
+    ; Load the new character into the destination string, increment
+    ; test and loop.
+    IDPB	CHR, DST
+    SOJG	DLNGTH, LOOP
+
+    ; We have used up the destination string, exit.
+    JRST	RETURN
+
+DOFILL:
+    ; The source string is exhasted but there are unfilled charcters
+    ; left in the destination string.  Fill them.
+    MOVE	CHR, FILL
+FLOOP:
+    IDPB	CHR, DST
+    SOJG	DLNGTH, FLOOP
+
+RETURN:
+
+RTNEND
+
+	LIT
+	PRGEND
+	TITLE	CHSIZ%
+	ENTRY 	B36CHSIZ
+	ENTRY	CHSIZ%
+	SEARCH	$OTSDE
+IFE PSECTFLG
+    <
+     TWOSEG
+     RELOC 400000
+    >
+
+IFN PSECTFLG
+    <
+     PSECTCODE
+    >
+	B36CHSIZ==CHSIZ%
+
+;+
+; CALLING SEQUENCE (BLISS):
+;    %NAME(CHSIZ%)(PTR)
+;
+; FUNCTION:
+;	This routine returns the size of a given pointer.
+;
+; INPUTS:
+;    PTR -- A pointer or at least the 'P' field of a 1 word global
+;		byte pointer in leftmost part of the word.
+;
+; OUTPUTS:
+;    VALUE --    The size.
+;-
+
+GLOBAL ROUTINE CHSIZ%, <PTR>
+
+RTNSTART
+    MOVE	VR, PTR
+    LSH		VR, -^D30		; Get 'P'
+    SUBI	VR, ^D37		; Check if it is a 1-word global byte ptr.
+    JUMPL	VR, LOCAL		
+    MOVE	VR, SIZE(VR)		; Get the size for this global byte ptr.
+    JRST	RETURN			; Return to the caller.
+;Here if LOCAL byte pointer
+LOCAL:
+    MOVE	VR, PTR
+    ASH		VR, -^D24
+    ANDI	VR, 77
+
+RETURN:
+
+RTNEND
+
+;
+; SIZE - Table used to get the size field of a 1-word
+;	 global byte pointer. It is indexed by 37-'P'.
+;
+
+SIZE:
+	EXP <6>
+	EXP <6>
+	EXP <6>
+	EXP <6>
+	EXP <6>
+	EXP <6>
+	EXP <6>
+	EXP <^D8>
+	EXP <^D8>
+	EXP <^D8>
+	EXP <^D8>
+	EXP <^D8>
+	EXP <7>
+	EXP <7>
+	EXP <7>
+	EXP <7>
+	EXP <7>
+	EXP <7>
+	EXP <^D9>
+	EXP <^D9>
+	EXP <^D9>
+	EXP <^D9>
+	EXP <^D9>
+	EXP <^D18>
+	EXP <^D18>
+	EXP <^D18>
+	EXP <77>
+
+	LIT
+	PRGEND
+	TITLE	CVTDF%
+	ENTRY	CVTDF%
+	SEARCH	$OTSDE
+IFE PSECTFLG
+    <
+     TWOSEG
+     RELOC 400000
+    >
+
+IFN PSECTFLG
+    <
+     PSECTCODE
+    >
+
+;+
+; CALLING SEQUENCE (BLISS):
+;    %NAME(CVTDF%)(DSRCA)
+;
+; FUNCTION:
+;    Implements the CVTDF floating-point function.
+;
+; INPUTS:
+;    DSRCA --    The address of the double-precision number.
+;
+; OUTPUTS:
+;    VALUE --    The single-precision number.
+;-
+
+GLOBAL ROUTINE CVTDF%, <DSRCA>
+
+    ADJREGS	<AC1,AC2>
+
+RTNSTART
+    MOVE	AC1, DSRCA
+    DMOVE 	AC1, (AC1)
+    JUMPL	AC1, CVT1
+    TLNE	AC2, 200000
+    TRON	AC1, 1
+    JRST	LEAVE
+    MOVE	AC2, AC1
+    AND		AC1, [-1000,,1] 
+    FADR	AC1, AC2
+    JRST	LEAVE
+CVT1:DMOVN	AC1, AC1
+    TLNE	AC2, 200000
+    TRON	AC1, 1
+    JRST	CVT2
+    MOVN	AC2, AC1
+    ORCA	AC1, [777,,777777]
+    FADR	AC1, AC2
+    JRST	LEAVE
+CVT2:MOVN	AC1, AC1
+
+LEAVE:MOVE	VR, AC1
+RTNEND
+
+	LIT
+	END
+   @5i!

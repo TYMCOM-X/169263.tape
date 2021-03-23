@@ -1,0 +1,2699 @@
+       File DSK:EXE013.PAS[31024,274425]   Compiled 10-Aug-82 10:55   Pascal, Version 2A(440)-1
+
+       File DSK:EXE013.PAS[31024,274425]   Compiled 10-Aug-82 10:55   Pascal, Version 2A(440)-1
+
+       File DSK:EXE013.PAS[31024,274425]   Compiled 10-Aug-82 10:55   Pascal, Version 2A(440)-1
+
+       File DSK:EXE013.PAS[31024,274425]   Compiled 10-Aug-82 10:55   Pascal, Version 2A(440)-1
+
+
+
+
+
+			    $$$$$   $   $   $$$$$     $$      $      $$$ 
+			    $       $   $   $        $  $    $$     $   $
+			    $        $ $    $        $  $     $         $
+			    $$$       $     $$$      $  $     $       $$ 
+			    $        $ $    $        $  $     $         $
+			    $       $   $   $        $  $     $     $   $
+			    $$$$$   $   $   $$$$$     $$     $$$     $$$ 
+
+
+			       Formatted I/O Executable test program
+
+
+Options in effect: 
+
+	CHECK, NOSPECIAL, NOMAP, NOSYMBOLS, NOCALLS, ASSEMBLY, NOXREF, TRACE, QBLOCKS, NOOPTIMIZE, 
+	CODE, NODEBUG, FINISH, NOGLOBAL, NOMAINSEG, NOOVERLAY, AUTOQUICK, SOURCE, NOSTANDARD, 
+	LENGTH (45), WIDTH (102), NOEXTLENGTH, STORAGE (2048), ALLOC (0), ENABLE(M68)
+
+
+
+
+       File DSK:EXE013.PAS[31024,274425]   Compiled 10-Aug-82 10:55   Pascal, Version 2A(440)-1
+
+       File DSK:EXE013.PAS[31024,274425]   Compiled 10-Aug-82 10:55   Pascal, Version 2A(440)-1
+
+       File DSK:EXE013.PAS[31024,274425]   Compiled 10-Aug-82 10:55   Pascal, Version 2A(440)-1
+
+       File DSK:EXE013.PAS[31024,274425]   Compiled 10-Aug-82 10:55   Pascal, Version 2A(440)-1
+       File DSK:EXE013.PAS[31024,274425]   Compiled 10-Aug-82 10:55   Pascal, Version 2A(440)-1
+
+       File DSK:EXE013.PAS[31024,274425]   Compiled 10-Aug-82 10:55   Pascal, Version 2A(440)-1
+
+       File DSK:EXE013.PAS[31024,274425]   Compiled 10-Aug-82 10:55   Pascal, Version 2A(440)-1
+
+       File DSK:EXE013.PAS[31024,274425]   Compiled 10-Aug-82 10:55   Pascal, Version 2A(440)-1
+
+
+
+
+
+			    $$$$$   $   $   $$$$$     $$      $      $$$ 
+			    $       $   $   $        $  $    $$     $   $
+			    $        $ $    $        $  $     $         $
+			    $$$       $     $$$      $  $     $       $$ 
+			    $        $ $    $        $  $     $         $
+			    $       $   $   $        $  $     $     $   $
+			    $$$$$   $   $   $$$$$     $$     $$$     $$$ 
+
+
+			       Formatted I/O Executable test program
+
+
+Options in effect: 
+
+	CHECK, NOSPECIAL, NOMAP, NOSYMBOLS, NOCALLS, ASSEMBLY, NOXREF, TRACE, QBLOCKS, NOOPTIMIZE, 
+	CODE, NODEBUG, FINISH, NOGLOBAL, NOMAINSEG, NOOVERLAY, AUTOQUICK, SOURCE, NOSTANDARD, 
+	LENGTH (45), WIDTH (102), NOEXTLENGTH, STORAGE (2048), ALLOC (0), ENABLE(M68)
+
+
+
+
+       File DSK:EXE013.PAS[31024,274425]   Compiled 10-Aug-82 10:55   Pascal, Version 2A(440)-1
+
+       File DSK:EXE013.PAS[31024,274425]   Compiled 10-Aug-82 10:55   Pascal, Version 2A(440)-1
+
+       File DSK:EXE013.PAS[31024,274425]   Compiled 10-Aug-82 10:55   Pascal, Version 2A(440)-1
+
+       File DSK:EXE013.PAS[31024,274425]   Compiled 10-Aug-82 10:55   Pascal, Version 2A(440)-1
+MODULE  EXE013       Formatted I/O Executable test program                             10-Aug-82 10:55
+SECTION 0                                                                                       PAGE 1
+
+    1	$Title Formatted I/O Executable test program
+    2	
+    3	program exe013;
+    4	(* EXE013 - Formatted and unformatted I/O *)
+    5	
+    6	  const test_name:file_name := 'exe013.tmp';
+    7	
+    8	  var
+    9	     fix_string   :packed array[1..20] of char;
+   10	     test_string  :string[20];
+   11	     test_integer1:integer;
+   12	     test_integer2:integer;
+   13	     test_integer3:integer;
+   14	     test_real1   :minimum(real)..maximum(real) prec 4;  
+   15	     test_real2   :minimum(real)..maximum(real) prec 11;  
+   16	     test_char    :char;
+   17	     test_bool    :boolean;
+   18	
+   19	     test_file    :text;
+   20	
+   21	     fname:file_name;
+   22	
+   23	  procedure error (error_number: 0..1000);
+   24	    begin
+   25	    writeln(tty, 'Error ',error_number);
+   26	    break(tty);
+   27	    end;
+   28	MODULE  EXE013       Formatted I/O Executable test program                             10-Aug-82 10:55
+SECTION 1            'UNFORMMATED WRITES'                                                       PAGE 2
+
+    2	begin
+    3	rewrite(tty);
+    4	writeln(tty,'Begin EXE013');
+    5	
+    6	test_integer1 := -12345;
+    7	test_integer2 := 333333;
+    8	test_real1    := .00000001;
+    9	test_real2    := .00000002;  (* NEGATIVE INTEGER *)
+   10	
+   11	rewrite(test_file,test_name); 
+   12	
+   13	fname := filename(test_file);
+   14	
+   15	writeln(test_file,test_integer1);
+   16	writeln(test_file,test_integer2);
+   17	writeln(test_file,test_integer2);
+   18	writeln(test_file,'ABC');     
+   19	writeln(test_file,'999999999999');
+   20	
+   21	writeln(test_file,test_real1);
+   22	writeln(test_file,test_real2);
+   23	writeln(test_file,-237.813905);
+   24	
+   25	writeln(test_file,'abcde');
+   26	writeln(test_file,'vwxyz');
+   27	
+   28	writeln(test_file,'-4,,030,,-3.26');
+   29	writeln(test_file,'11');
+   30	
+   31	close(test_file);
+   32	MODULE  EXE013       Formatted I/O Executable test program                             10-Aug-82 10:55
+SECTION 1            'UNFORMMATED WRITES'                                                       PAGE 3
+
+   34	
+   35	reset(test_file,fname);
+   36	
+   37	readln(test_file,test_string);
+   38	if not(( test_string = '-12345') and (length(test_string) = 6))
+   39	   then error ( 1 );
+   40	
+   41	readln(test_file,test_string);
+   42	if not(( test_string = ' 333333') and (length(test_string) = 7))
+   43	   then error ( 2 );  (* POSITIVE INTEGER *)
+   44	 
+   45	readln(test_file,test_real2);
+   46	if test_real2  <> 333333.00000  
+   47	   then error ( 3 );  (* INTEGER READ AS REAL *)
+   48	
+   49	read(test_file,test_integer1);
+   50	if not(( test_integer1 = 0) and (iostatus(test_file) = io_dgit))
+   51	   then error ( 4 );  (* ALPHA READ AS INTEGER *)
+   52	readln ( test_file );
+   53	
+   54	read(test_file,test_integer2);
+   55	if not(( test_integer2 = 333333) and (iostatus(test_file) = io_novf))
+   56	   then error ( 5 );  (* TOO LARGE OF AN INTEGER *)
+   57	readln ( test_file );
+   58	
+   59	read(test_file,test_string);
+   60	if not( test_string = ' 1.000E-08' )
+   61	   then error ( 6 );  (* CHECK PRECISION OF REALS *)
+   62	readln ( test_file );
+   63	
+   64	read(test_file,test_string);
+   65	if not( test_string = ' 2.0000000000E-08' )
+   66	   then error ( 7 );
+   67	readln ( test_file );
+   68	
+   69	read(test_file,test_string);
+   70	if not(( test_string = '-237.813905') and (length(test_string) = 11))
+   71	   then error ( 8 );  (* NEGATIVE REAL *)
+   72	readln ( test_file );
+   73	
+   74	read(test_file,fix_string);
+   75	if not( fix_string = 'abcde               ') MODULE  EXE013       Formatted I/O Executable test program                             10-Aug-82 10:55
+SECTION 1            'UNFORMMATED WRITES'                                                       PAGE 4
+
+   76	   then error ( 9 );  (* FIXED STRING READ *)
+   77	readln ( test_file );
+   78	
+   79	read(test_file,test_string);
+   80	if not(( test_string = 'vwxyz') and (length(test_string) = 5))
+   81	   then error ( 10 );  (* VARIABLE STRING READ *)
+   82	readln ( test_file );
+   83	
+   84	readln ( test_file,test_integer1,test_integer2,test_integer3,
+   85	       test_real1,test_real2);
+   86	if test_integer1 <> -4
+   87	   then error ( 11 );
+   88	if test_integer2 <> 0
+   89	   then error ( 12 );  (* DEFAULT TO ZERO *)
+   90	if test_integer3 <> 30
+   91	   then error ( 13 );  (* SKIP LEADING ZEROS *)
+   92	if test_real1 <> 0
+   93	   then error ( 14 );  (* DEFAULT TO ZERO *)
+   94	if test_real2 <> -3.2600000000
+   95	   then error ( 15 );
+   96	
+   97	read(test_file,test_integer1);
+   98	if test_integer1 <> 11
+   99	   then error ( 16 );
+  100	
+  101	close(test_file);
+  102	MODULE  EXE013       Formatted I/O Executable test program                             10-Aug-82 10:55
+SECTION 1            'UNFORMMATED WRITES'                                                       PAGE 5
+
+  104	
+  105	rewrite(test_file,fname);
+  106	
+  107	writeln(test_file,'127');
+  108	writeln(test_file,'ABC');
+  109	writeln(test_file,'78');
+  110	writeln(test_file,'ABCDEFG');
+  111	writeln(test_file,'123   ');
+  112	
+  113	close(test_file);
+  114	MODULE  EXE013       Formatted I/O Executable test program                             10-Aug-82 10:55
+SECTION 2            'FORMATED READS'                                                           PAGE 6
+
+    2	
+    3	reset(test_file,fname);
+    4	
+    5	read(test_file,test_integer1:3:O);
+    6	if not(( test_integer1 = 87) and (iostatus(test_file) <> io_dgit))
+    7	   then error ( 17 );  (* READ VALID OCTAL *)
+    8	readln ( test_file );
+    9	 
+   10	read(test_file,test_integer2:3:H);
+   11	if not(( test_integer2 = 2748) and (iostatus(test_file) <> io_dgit))
+   12	   then error ( 18 );  (* READ VALID HEX *)
+   13	readln ( test_file );
+   14	
+   15	read(test_file,test_integer1:2:O);
+   16	if not(( test_integer1 = 0) and (iostatus(test_file) = io_dgit))
+   17	   then error ( 19 );  (* READ INVALID OCATAL *)
+   18	readln ( test_file );
+   19	 
+   20	read(test_file,test_integer2:7:H);
+   21	if not(( test_integer2 = 0) and (iostatus(test_file) = io_dgit))
+   22	   then error ( 20 );  (* READ INVALID HEX *)
+   23	readln ( test_file );
+   24	 
+   25	read(test_file,test_integer2:6);
+   26	if test_integer2 <> 123  
+   27	   then error ( 21 );  (* IGNORE TRAILING BLANKS *)
+   28	readln ( test_file );
+   29	
+   30	close(test_file);
+   31	MODULE  EXE013       Formatted I/O Executable test program                             10-Aug-82 10:55
+SECTION 3            'FORMATTED WRITES'                                                         PAGE 7
+
+    2	
+    3	rewrite(test_file,fname);
+    4	
+    5	test_string := 'Format';
+    6	test_char   := 'X';
+    7	test_integer1 := 751;
+    8	test_integer2 := -1234;
+    9	test_bool   := false;
+   10	test_real1  := 234.567;
+   11	test_real2  := -219.431257;
+   12	
+   13	writeln(test_file,test_string:20);
+   14	writeln(test_file,test_string:4);
+   15	writeln(test_file,test_string:20:L);
+   16	
+   17	writeln(test_file,test_char:3);
+   18	writeln(test_file,test_char:2:L);
+   19	
+   20	writeln(test_file,test_bool:4);
+   21	writeln(test_file,test_bool:6);
+   22	
+   23	writeln(test_file,test_integer1:5);
+   24	writeln(test_file,test_integer2:5);
+   25	writeln(test_file,test_integer2:8);
+   26	writeln(test_file,test_integer1:0);
+   27	writeln(test_file,test_integer1:1:O);
+   28	writeln(test_file,test_integer1:4:O);
+   29	writeln(test_file,test_integer1:8:O);
+   30	writeln(test_file,test_integer2:16:O);
+   31	writeln(test_file,test_integer1:1:H);
+   32	writeln(test_file,test_integer1:3:H);
+   33	writeln(test_file,test_integer1:7:H);
+   34	writeln(test_file,test_integer2:16:H);
+   35	
+   36	writeln(test_file,test_real2:14);
+   37	writeln(test_file,test_real2:4);
+   38	writeln(test_file,test_real1:12:5);
+   39	writeln(test_file,test_real1:4:3);
+   40	writeln(test_file,test_real2:7:2:E);
+   41	writeln(test_file,test_real1:0:5:E);
+   42	
+   43	close(test_file);MODULE  EXE013       Formatted I/O Executable test program                             10-Aug-82 10:55
+SECTION 3            'FORMATTED WRITES'                                                         PAGE 8
+
+   44	MODULE  EXE013       Formatted I/O Executable test program                             10-Aug-82 10:55
+SECTION 3            'FORMATTED WRITES'                                                         PAGE 9
+
+   46	
+   47	reset(test_file,fname);
+   48	
+   49	read(test_file,test_string);
+   50	if test_string <> '              Format'
+   51	   then error ( 22 );  (* WIDE FORMATTED STRING *)
+   52	readln ( test_file );
+   53	
+   54	read(test_file,test_string);
+   55	if test_string <> 'Form'
+   56	   then error ( 23 );  (* NARROW FORMATTED STRING *)
+   57	readln ( test_file );
+   58	
+   59	read(test_file,test_string);
+   60	if test_string <> 'Format              '
+   61	   then error ( 24 );  (* WIDE LEFT ALIGNED STRING *)
+   62	readln ( test_file );
+   63	
+   64	read(test_file,test_string);
+   65	if test_string <> '  X'
+   66	   then error ( 25 );  (* CHARACTER *)
+   67	readln ( test_file );
+   68	
+   69	read(test_file,test_string);
+   70	if test_string <> 'X '
+   71	   then error ( 26 );  (* LEFT ALIGN CHARACTER *)
+   72	readln ( test_file );
+   73	
+   74	read(test_file,test_string);
+   75	if test_string <> 'FALS'
+   76	   then error ( 27 );  (* NARRROW FEILD WITH BOOLEAN *)
+   77	readln ( test_file );
+   78	
+   79	read(test_file,test_string);
+   80	if test_string <> ' FALSE'
+   81	   then error ( 28 );  (* WIDE FEILD WITH BOOLEAN *)
+   82	readln ( test_file );
+   83	
+   84	read(test_file,test_string);
+   85	if test_string <> '  751'
+   86	   then error ( 29 );  (* FEILD WITH POSITIVE INTEGER *)
+   87	readln ( test_file );MODULE  EXE013       Formatted I/O Executable test program                             10-Aug-82 10:55
+SECTION 3            'FORMATTED WRITES'                                                        PAGE 10
+
+   88	
+   89	read(test_file,test_string);
+   90	if test_string <> '-1234'
+   91	   then error ( 30 );  (* FEILD WITH NEGATIVE INTEGER *)
+   92	readln ( test_file );
+   93	
+   94	read(test_file,test_string);
+   95	if test_string <> '   -1234'
+   96	   then error ( 31 );  (* WIDE FEILD WITH INTEGER *)
+   97	readln ( test_file );
+   98	
+   99	read(test_file,test_string);
+  100	if test_string <> '751'
+  101	   then error ( 32 );  (* NARROW FEILD WITH INTEGER *)
+  102	readln ( test_file );
+  103	
+  104	read(test_file,test_string);
+  105	if test_string <> '7'
+  106	   then error ( 33 );  (* RIGHT MOST DIGIT ONLY *)
+  107	readln ( test_file );
+  108	
+  109	read(test_file,test_string);
+  110	if test_string <> '1357'
+  111	   then error ( 34 );  (* OCTAL READ *)
+  112	readln ( test_file );
+  113	
+  114	read(test_file,test_string);
+  115	if test_string <> '00001357'
+  116	   then error ( 35 );  (* OCTAL PADDED WITH LEADING ZEROS *)
+  117	readln ( test_file );
+  118	
+  119	read(test_file,test_string);
+  120	if test_string <> '7777777777775456'
+  121	   then error ( 36 );  (* NEGATIVE OCTAL READ *)
+  122	readln ( test_file );
+  123	
+  124	read(test_file,test_string);
+  125	if test_string <> 'F'
+  126	   then error ( 37 );  (* RIGHT MOST HEX DIGIT *)
+  127	readln ( test_file );
+  128	
+  129	read(test_file,test_string);MODULE  EXE013       Formatted I/O Executable test program                             10-Aug-82 10:55
+SECTION 3            'FORMATTED WRITES'                                                        PAGE 11
+
+  130	if test_string <> '2EF'
+  131	   then error ( 38 );  (* HEX READ *)
+  132	readln ( test_file );
+  133	
+  134	read(test_file,test_string);
+  135	if test_string <> '00002EF'
+  136	   then error ( 39 );  (* HEX READ PADDED WITH LEADING ZEROS *)
+  137	readln ( test_file );
+  138	
+  139	read(test_file,test_string);
+  140	if test_string <> 'FFFFFFFFFFFFFB2E'
+  141	   then error ( 40 );  (* READ NEGATIVE HEX *)
+  142	readln ( test_file );
+  143	
+  144	read(test_file,test_string);
+  145	if test_string <> '-2.1943126E+02'
+  146	   then error ( 41 );  (* WIDE FEILD FOR REAL READ *)
+  147	readln ( test_file );
+  148	
+  149	read(test_file,test_string);
+  150	if test_string <> '-2.2E+02'
+  151	   then error ( 42 );  (* NARROW FEILD FOR REAL *)
+  152	readln ( test_file );
+  153	
+  154	read(test_file,test_string);
+  155	if test_string <> '   234.56700'
+  156	   then error ( 43 );  (* FIELD AND DECIMAL WIDTH *)
+  157	readln ( test_file );
+  158	
+  159	read(test_file,test_string);
+  160	if test_string <> '2.34567E+02'
+  161	   then error ( 44 );  (* FEILD WIDTH TOO SMALL *)
+  162	readln ( test_file );
+  163	
+  164	read(test_file,test_string);
+  165	if test_string <> '-2.2E+02'
+  166	   then error ( 45 );  (* EXPONTENTIAL NOTATION *)
+  167	readln ( test_file );
+  168	
+  169	read(test_file,test_string);
+  170	if test_string <> '2.3457E+02'
+  171	   then error ( 46 );  (* EXPONTENTIAL NOTATION WITH TOO SMALL OF FEILD *)MODULE  EXE013       Formatted I/O Executable test program                             10-Aug-82 10:55
+SECTION 3            'FORMATTED WRITES'                                                        PAGE 12
+
+  172	readln ( test_file );
+  173	
+  174	scratch(test_file);
+  175	
+  176	writeln(tty,'End EXE013');
+  177	end.
+
+File   level   on page     name
+
+  0	 0	    1	DSK:EXE013.PAS[31024,274425]
+
+
+
+Section   in file   on page     title
+
+     2	      0	         6    'FORMATED READS'
+     3	      0	         7    'FORMATTED WRITES'
+     1	      0	         2    'UNFORMMATED WRITES'
+                                                                                                                                                                  		      EXE013     IDNT	   0,0
+		      *
+		      *		 MC68000 Checkout Code Generator,  Aug 10, 1982  10:55:41 am
+		      *
+	 00000002		 SECTION   2
+	 00000000     STATIC.	 EQU	   *
+	 0000000A		 SECTION   10
+	 00000000     CODE.	 EQU	   *
+00000000 C21DD20D     C.1	 DC.L	   $C21DD20D			       Date-time
+00000004 0000			 DC.W	   0				         $0
+00000006 455845303133		 DC.B	   'EXE013'
+	 00000002		 SECTION   2
+		      *
+		      *		 Unitialized static area
+		      *
+00000000 0000006E		 DS.B	   110
+	 0000000A		 SECTION   10
+		      *
+		      *		 Constant area for subroutine ERROR
+		      *
+0000000C 4572726F7220 K.1	 DC.B	   'Error '
+		      *
+		      *		 Begin subroutine ERROR
+		      *
+00000012	      B.3
+		      *							       LINE 24
+		      *							       LINE 25
+00000012 202D0000     L.3.1	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00000016 4A80			 TST.L	   D0
+00000018 6606			 BNE.S	   X.3.1(PC)
+0000001A 4EB900000000		 JSR	   E.FILE
+00000020 7206	      X.3.1	 MOVEQ	   #6,D1			         $6
+00000022 3F01			 MOVE.W	   D1,-(A7)
+00000024			 MOVEQ	   #4,D1			         $4
+00000026 3F01			 MOVE.W	   D1,-(A7)
+00000028 487AFFE2		 PEA	   K.1(PC)			         CODE.+$C
+0000002C 2F00			 MOVE.L	   D0,-(A7)
+0000002E 4EB900000000		 JSR	   T.WRITE
+00000034 4267			 CLR.W	   -(A7)
+00000036 486EFFFC		 PEA	   -4(A6)			         ERROR_NUMBER
+0000003A 2F00			 MOVE.L	   D0,-(A7)
+0000003C 4EB900000000		 JSR	   T.WRITE
+00000042 2F00			 MOVE.L	   D0,-(A7)
+00000044 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 260000004A 202D0000		 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+0000004E 4A80			 TST.L	   D0
+00000050 6606			 BNE.S	   X.3.2(PC)
+00000052 4EB900000000		 JSR	   E.FILE
+00000058 2F00	      X.3.2	 MOVE.L	   D0,-(A7)
+0000005A 4EB900000000		 JSR	   T.BREAK
+		      *							       LINE 27
+00000060 4E75			 RTS	   
+		      *
+		      *		 Constant area for program EXE013
+		      *
+00000062 23434E	      K.2	 DC.B	   '#CN'
+00000065 00000001		 DS.B	   1
+00000066 426567696E20 K.3	 DC.B	   'Begin EXE013'
+00000072 ABCC7711     K.4	 DC.L	   $ABCC7711
+00000072 8461CE66		 DC.L	   $8461CE66				 0.00000001
+0000007A ABCC7711     K.5	 DC.L	   $ABCC7711
+0000007A 8461CE67		 DC.L	   $8461CE67				 0.00000002
+00000082 000A	      K.6	 DC.W	   10				       String length word
+00000084 657865303133		 DC.B	   'exe013.tmp'
+0000008E 414243	      K.7	 DC.B	   'ABC'
+00000091 00000001		 DS.B	   1
+00000092 393939393939 K.8	 DC.B	   '999999999999'
+0000009E EDD05C13     K.9	 DC.L	   $EDD05C13
+0000009E FD0D0788		 DC.L	   $FD0D0788				 -237.813905
+000000A6 6162636465   K.10	 DC.B	   'abcde'
+000000AB 00000001		 DS.B	   1
+000000AC 767778797A   K.11	 DC.B	   'vwxyz'
+000000B1 00000001		 DS.B	   1
+000000B2 2D342C2C3033 K.12	 DC.B	   '-4,,030,,-3.26'
+000000C0 3131	      K.13	 DC.B	   '11'
+000000C2 2D3132333435 K.14	 DC.B	   '-12345'
+000000C8 203333333333 K.15	 DC.B	   ' 333333'
+000000CF 00000001		 DS.B	   1
+000000D0 FFFFC99E     K.16	 DC.L	   $FFFFC99E
+000000D0 400001A3		 DC.L	   $400001A3				 -34359626993.99999999
+000000D8 E640A5CB		 DC.L	   $E640A5CB
+000000D8 000000A0		 DC.L	   $000000A0				 3862996427.0000000000
+000000E0 A2C2A000     K.17	 DC.L	   $A2C2A000
+000000E0 00000093		 DC.L	   $00000093				 333333.00000000000000
+000000E8 20312E303030 K.18	 DC.B	   ' 1.000E-08'
+000000F2 20322E303030 K.19	 DC.B	   ' 2.0000000000E-08'
+00000103 00000001		 DS.B	   1
+00000104 2D3233372E38 K.20	 DC.B	   '-237.813905'
+0000010F 00000001		 DS.B	   100000110 616263646520 K.21	 DC.B	   'abcde               '
+00000124 767778797A   K.22	 DC.B	   'vwxyz'
+00000129 00000001		 DS.B	   1
+0000012A FFFFCAE3     K.23	 DC.L	   $FFFFCAE3				 -34359626993.99999999
+0000012E E640A660		 DC.L	   $E640A660				 3862996427.0000000000
+00000132 FFFFC99E     K.24	 DC.L	   $FFFFC99E
+00000132 400001A3		 DC.L	   $400001A3				 -34359626993.99999999
+0000013A E640A5CB		 DC.L	   $E640A5CB
+0000013A 000000A0		 DC.L	   $000000A0				 3862996427.0000000000
+00000142 D0A3D70A     K.25	 DC.L	   $D0A3D70A
+00000142 3D70A382		 DC.L	   $3D70A382				 -3.26
+0000014A 313237	      K.26	 DC.B	   '127'
+0000014D 00000001		 DS.B	   1
+0000014E 414243	      K.27	 DC.B	   'ABC'
+00000151 00000001		 DS.B	   1
+00000152 3738	      K.28	 DC.B	   '78'
+00000154 414243444546 K.29	 DC.B	   'ABCDEFG'
+0000015B 00000001		 DS.B	   1
+0000015C 313233202020 K.30	 DC.B	   '123   '
+00000162 EA912748     K.31	 DC.L	   $EA912748				 234.567
+00000166 DB6E66DB     K.32	 DC.L	   $DB6E66DB
+00000166 D72BCB88		 DC.L	   $D72BCB88				 -219.431257
+0000016E 202020202020 K.33	 DC.B	   '              Format'
+00000182 466F726D     K.34	 DC.B	   'Form'
+00000186 466F726D6174 K.35	 DC.B	   'Format              '
+0000019A 202058	      K.36	 DC.B	   '  X'
+0000019D 00000001		 DS.B	   1
+0000019E 5820	      K.37	 DC.B	   'X '
+000001A0 46414C53     K.38	 DC.B	   'FALS'
+000001A4 2046414C5345 K.39	 DC.B	   ' FALSE'
+000001AA 2020373531   K.40	 DC.B	   '  751'
+000001AF 00000001		 DS.B	   1
+000001B0 2D31323334   K.41	 DC.B	   '-1234'
+000001B5 00000001		 DS.B	   1
+000001B6 2020202D3132 K.42	 DC.B	   '   -1234'
+000001BE 373531	      K.43	 DC.B	   '751'
+000001C1 00000001		 DS.B	   1
+000001C2 31333537     K.44	 DC.B	   '1357'
+000001C6 303030303133 K.45	 DC.B	   '00001357'
+000001CE 373737373737 K.46	 DC.B	   '7777777777775456'
+000001DE 324546	      K.47	 DC.B	   '2EF'
+000001E1 00000001		 DS.B	   1
+000001E2 303030303245 K.48	 DC.B	   '00002EF'
+000001E9 00000001		 DS.B	   1
+000001EA 464646464646 K.49	 DC.B	   'FFFFFFFFFFFFFB2E'000001FA 2D322E313934 K.50	 DC.B	   '-2.1943126E+02'
+00000208 2D322E32452B K.51	 DC.B	   '-2.2E+02'
+00000210 202020323334 K.52	 DC.B	   '   234.56700'
+0000021C 322E33343536 K.53	 DC.B	   '2.34567E+02'
+00000227 00000001		 DS.B	   1
+00000228 2D322E32452B K.54	 DC.B	   '-2.2E+02'
+00000230 322E33343537 K.55	 DC.B	   '2.3457E+02'
+0000023A 456E64204558 K.56	 DC.B	   'End EXE013'
+		      *
+		      *		 Begin program EXE013
+		      *
+				 XDEF	   M.START 
+00000244	      M.START 
+00000244 7010	      B.1	 MOVEQ	   #16,D0			         $10
+00000246 2F00			 MOVE.L	   D0,-(A7)
+00000248 610E			 BSR.S	   X.1.1(PC)
+0000024A 00000000		 DC.L	   C.1
+0000024E 0000			 DC.W	   0				         $0
+00000250 0006			 DC.W	   6				       String length word
+00000252 455845303133		 DC.B	   'EXE013'
+00000258 203CFFFFFFD2 X.1.1	 MOVE.L	   #T.1-4,D0			         -42
+0000025E 4EB900000000		 JSR	   M.ENTRY
+		      *							       LINE 1/2
+		      *							       LINE 1/3
+00000264 487AFDFC     L.1.1	 PEA	   K.2(PC)			         CODE.+$62
+00000268 7003			 MOVEQ	   #3,D0			         $3
+0000026A 3F00			 MOVE.W	   D0,-(A7)
+0000026C 7032			 MOVEQ	   #50,D0			         $32
+0000026E 3F00			 MOVE.W	   D0,-(A7)
+00000270 4EB900000000		 JSR	   T.REWRIT
+00000276 2B5F0000		 MOVE.L	   (A7)+,TTYOUTPUT-32768(A5)	         TTYOUTPUT
+		      *							       LINE 1/4
+0000027A 202D0000		 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+0000027E 4A80			 TST.L	   D0
+00000280 6606			 BNE.S	   X.1.2(PC)
+00000282 4EB900000000		 JSR	   E.FILE
+00000288 720C	      X.1.2	 MOVEQ	   #12,D1			         $C
+0000028A 3F01			 MOVE.W	   D1,-(A7)
+0000028C 7204			 MOVEQ	   #4,D1			         $4
+0000028E 3F01			 MOVE.W	   D1,-(A7)
+00000290 487AFDD4		 PEA	   K.3(PC)			         CODE.+$66
+00000294 2F00			 MOVE.L	   D0,-(A7)
+00000296 4EB900000000		 JSR	   T.WRITE
+0000029C 2F00			 MOVE.L	   D0,-(A7)
+0000029E 4EB900000000		 JSR	   T.WRTLN		      *							       LINE 1/6
+000002A4 2B7CFFFFCFC7		 MOVE.L	   #-12345,STATIC.+42-32768(A5)	         $FFFFCFC7  TEST_INTEG
+	 802A
+		      *							       LINE 1/7
+000002AC 2B7C00051615		 MOVE.L	   #333333,STATIC.+46-32768(A5)	         $51615  TEST_INTEGER2
+	 802E
+		      *							       LINE 1/8
+000002B4 487AFDBC		 PEA	   K.4(PC)			         CODE.+$72
+000002B8 4EB900000000		 JSR	   D.SINGLE
+000002BE 2B5F8036		 MOVE.L	   (A7)+,STATIC.+54-32768(A5)	         TEST_REAL1
+		      *							       LINE 1/9
+000002C2 41FAFDB6		 LEA	   K.5(PC),A0			         CODE.+$7A
+000002C6 43ED803A		 LEA	   STATIC.+58-32768(A5),A1	         TEST_REAL2
+000002CA 22D8			 MOVE.L	   (A0)+,(A1)+
+000002CC 22D8			 MOVE.L	   (A0)+,(A1)+
+		      *							       LINE 1/11
+000002CE 487AFDB4		 PEA	   K.6+2(PC)			         CODE.+$82
+000002D2 700A			 MOVEQ	   #10,D0			         $A
+000002D4 3F00			 MOVE.W	   D0,-(A7)
+000002D6 7032			 MOVEQ	   #50,D0			         $32
+000002D8 3F00			 MOVE.W	   D0,-(A7)
+000002DA 4EB900000000		 JSR	   T.REWRIT
+000002E0 2B5F8044		 MOVE.L	   (A7)+,STATIC.+68-32768(A5)	         TEST_FILE
+		      *							       LINE 1/13
+000002E4 2F2D8044		 MOVE.L	   STATIC.+68-32768(A5),-(A7)	         TEST_FILE
+000002E8 486EFFD6		 PEA	   -42(A6)			         $FFFFFFD6
+000002EC 4EB900000000		 JSR	   I.FILNAM			         FILENAME
+000002F2 302EFFD6		 MOVE.W	   -42(A6),D0			         $FFFFFFD6
+000002F6 41EEFFD6		 LEA	   -42(A6),A0			         $FFFFFFD6
+000002FA 43ED8048		 LEA	   STATIC.+72-32768(A5),A1	         FNAME
+000002FE 5240			 ADDQ.W	   #1,D0			         $1
+00000300 E248			 LSR.W	   #1,D0			         $1
+00000302 32D8	      X.1.3	 MOVE.W	   (A0)+,(A1)+
+00000304 51C8FFFC		 DBF	   D0,X.1.3(PC)
+		      *							       LINE 1/15
+00000308 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+0000030C 4A80			 TST.L	   D0
+0000030E 6606			 BNE.S	   X.1.4(PC)
+00000310 4EB900000000		 JSR	   E.FILE
+00000316 4267	      X.1.4	 CLR.W	   -(A7)
+00000318 486D802A		 PEA	   STATIC.+42-32768(A5)		         TEST_INTEGER1
+0000031C 2F00			 MOVE.L	   D0,-(A7)
+0000031E 4EB900000000		 JSR	   T.WRITE
+00000324 2F00			 MOVE.L	   D0,-(A7)
+00000326 4EB900000000		 JSR	   T.WRTLN		      *							       LINE 1/16
+0000032C 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000330 4A80			 TST.L	   D0
+00000332 6606			 BNE.S	   X.1.5(PC)
+00000334 4EB900000000		 JSR	   E.FILE
+0000033A 4267	      X.1.5	 CLR.W	   -(A7)
+0000033C 486D802E		 PEA	   STATIC.+46-32768(A5)		         TEST_INTEGER2
+00000340 2F00			 MOVE.L	   D0,-(A7)
+00000342 4EB900000000		 JSR	   T.WRITE
+00000348 2F00			 MOVE.L	   D0,-(A7)
+0000034A 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/17
+00000350 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000354 4A80			 TST.L	   D0
+00000356 6606			 BNE.S	   X.1.6(PC)
+00000358 4EB900000000		 JSR	   E.FILE
+0000035E 4267	      X.1.6	 CLR.W	   -(A7)
+00000360 486D802E		 PEA	   STATIC.+46-32768(A5)		         TEST_INTEGER2
+00000364 2F00			 MOVE.L	   D0,-(A7)
+00000366 4EB900000000		 JSR	   T.WRITE
+0000036C 2F00			 MOVE.L	   D0,-(A7)
+0000036E 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/18
+00000374 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000378 4A80			 TST.L	   D0
+0000037A 6606			 BNE.S	   X.1.7(PC)
+0000037C 4EB900000000		 JSR	   E.FILE
+00000382 7203	      X.1.7	 MOVEQ	   #3,D1			         $3
+00000384 3F01			 MOVE.W	   D1,-(A7)
+00000386 7204			 MOVEQ	   #4,D1			         $4
+00000388 3F01			 MOVE.W	   D1,-(A7)
+0000038A 487AFD02		 PEA	   K.7(PC)			         CODE.+$8E
+0000038E 2F00			 MOVE.L	   D0,-(A7)
+00000390 4EB900000000		 JSR	   T.WRITE
+00000396 2F00			 MOVE.L	   D0,-(A7)
+00000398 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/19
+0000039E 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+000003A2 4A80			 TST.L	   D0
+000003A4 6606			 BNE.S	   X.1.8(PC)
+000003A6 4EB900000000		 JSR	   E.FILE
+000003AC 720C	      X.1.8	 MOVEQ	   #12,D1			         $C
+000003AE 3F01			 MOVE.W	   D1,-(A7)
+000003B0 7204			 MOVEQ	   #4,D1			         $4
+000003B2 3F01			 MOVE.W	   D1,-(A7)000003B4 487AFCDC		 PEA	   K.8(PC)			         CODE.+$92
+000003B8 2F00			 MOVE.L	   D0,-(A7)
+000003BA 4EB900000000		 JSR	   T.WRITE
+000003C0 2F00			 MOVE.L	   D0,-(A7)
+000003C2 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/21
+000003C8 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+000003CC 4A80			 TST.L	   D0
+000003CE 6606			 BNE.S	   X.1.9(PC)
+000003D0 4EB900000000		 JSR	   E.FILE
+000003D6 7206	      X.1.9	 MOVEQ	   #6,D1			         $6
+000003D8 2F01			 MOVE.L	   D1,-(A7)
+000003DA 7201			 MOVEQ	   #1,D1			         $1
+000003DC 3F01			 MOVE.W	   D1,-(A7)
+000003DE 486D8036		 PEA	   STATIC.+54-32768(A5)		         TEST_REAL1
+000003E2 2F00			 MOVE.L	   D0,-(A7)
+000003E4 4EB900000000		 JSR	   T.WRITE
+000003EA 2F00			 MOVE.L	   D0,-(A7)
+000003EC 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/22
+000003F2 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+000003F6 4A80			 TST.L	   D0
+000003F8 6606			 BNE.S	   X.1.10(PC)
+000003FA 4EB900000000		 JSR	   E.FILE
+00000400 7210	      X.1.10	 MOVEQ	   #16,D1			         $10
+00000402 2F01			 MOVE.L	   D1,-(A7)
+00000404 7202			 MOVEQ	   #2,D1			         $2
+00000406 3F01			 MOVE.W	   D1,-(A7)
+00000408 486D803A		 PEA	   STATIC.+58-32768(A5)		         TEST_REAL2
+0000040C 2F00			 MOVE.L	   D0,-(A7)
+0000040E 4EB900000000		 JSR	   T.WRITE
+00000414 2F00			 MOVE.L	   D0,-(A7)
+00000416 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/23
+0000041C 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000420 4A80			 TST.L	   D0
+00000422 6606			 BNE.S	   X.1.11(PC)
+00000424 4EB900000000		 JSR	   E.FILE
+0000042A 7210	      X.1.11	 MOVEQ	   #16,D1			         $10
+0000042C 2F01			 MOVE.L	   D1,-(A7)
+0000042E 7202			 MOVEQ	   #2,D1			         $2
+00000430 3F01			 MOVE.W	   D1,-(A7)
+00000432 487AFC6A		 PEA	   K.9(PC)			         CODE.+$9E
+00000436 2F00			 MOVE.L	   D0,-(A7)
+00000438 4EB900000000		 JSR	   T.WRITE0000043E 2F00			 MOVE.L	   D0,-(A7)
+00000440 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/25
+00000446 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+0000044A 4A80			 TST.L	   D0
+0000044C 6606			 BNE.S	   X.1.12(PC)
+0000044E 4EB900000000		 JSR	   E.FILE
+00000454 7205	      X.1.12	 MOVEQ	   #5,D1			         $5
+00000456 3F01			 MOVE.W	   D1,-(A7)
+00000458 7204			 MOVEQ	   #4,D1			         $4
+0000045A 3F01			 MOVE.W	   D1,-(A7)
+0000045C 487AFC48		 PEA	   K.10(PC)			         CODE.+$A6
+00000460 2F00			 MOVE.L	   D0,-(A7)
+00000462 4EB900000000		 JSR	   T.WRITE
+00000468 2F00			 MOVE.L	   D0,-(A7)
+0000046A 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/26
+00000470 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000474 4A80			 TST.L	   D0
+00000476 6606			 BNE.S	   X.1.13(PC)
+00000478 4EB900000000		 JSR	   E.FILE
+0000047E 7205	      X.1.13	 MOVEQ	   #5,D1			         $5
+00000480 3F01			 MOVE.W	   D1,-(A7)
+00000482 7204			 MOVEQ	   #4,D1			         $4
+00000484 3F01			 MOVE.W	   D1,-(A7)
+00000486 487AFC24		 PEA	   K.11(PC)			         CODE.+$AC
+0000048A 2F00			 MOVE.L	   D0,-(A7)
+0000048C 4EB900000000		 JSR	   T.WRITE
+00000492 2F00			 MOVE.L	   D0,-(A7)
+00000494 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/28
+0000049A 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+0000049E 4A80			 TST.L	   D0
+000004A0 6606			 BNE.S	   X.1.14(PC)
+000004A2 4EB900000000		 JSR	   E.FILE
+000004A8 720E	      X.1.14	 MOVEQ	   #14,D1			         $E
+000004AA 3F01			 MOVE.W	   D1,-(A7)
+000004AC 7204			 MOVEQ	   #4,D1			         $4
+000004AE 3F01			 MOVE.W	   D1,-(A7)
+000004B0 487AFC00		 PEA	   K.12(PC)			         CODE.+$B2
+000004B4 2F00			 MOVE.L	   D0,-(A7)
+000004B6 4EB900000000		 JSR	   T.WRITE
+000004BC 2F00			 MOVE.L	   D0,-(A7)
+000004BE 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/29000004C4 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+000004C8 4A80			 TST.L	   D0
+000004CA 6606			 BNE.S	   X.1.15(PC)
+000004CC 4EB900000000		 JSR	   E.FILE
+000004D2 7202	      X.1.15	 MOVEQ	   #2,D1			         $2
+000004D4 3F01			 MOVE.W	   D1,-(A7)
+000004D6 7204			 MOVEQ	   #4,D1			         $4
+000004D8 3F01			 MOVE.W	   D1,-(A7)
+000004DA 487AFBE4		 PEA	   K.13(PC)			         CODE.+$C0
+000004DE 2F00			 MOVE.L	   D0,-(A7)
+000004E0 4EB900000000		 JSR	   T.WRITE
+000004E6 2F00			 MOVE.L	   D0,-(A7)
+000004E8 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/31
+000004EE 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+000004F2 4A80			 TST.L	   D0
+000004F4 6606			 BNE.S	   X.1.16(PC)
+000004F6 4EB900000000		 JSR	   E.FILE
+000004FC 2F00	      X.1.16	 MOVE.L	   D0,-(A7)
+000004FE 4EB900000000		 JSR	   I.CLOSE
+		      *							       LINE 1/35
+00000504 486D804A		 PEA	   STATIC.+72-32766(A5)		         FNAME
+00000508 3F2D8048		 MOVE.W	   STATIC.+72-32768(A5),-(A7)	         FNAME
+0000050C 7031			 MOVEQ	   #49,D0			         $31
+0000050E 3F00			 MOVE.W	   D0,-(A7)
+00000510 4EB900000000		 JSR	   T.RESET
+00000516 2B5F8044		 MOVE.L	   (A7)+,STATIC.+68-32768(A5)	         TEST_FILE
+		      *							       LINE 1/37
+0000051A 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+0000051E 4A80			 TST.L	   D0
+00000520 6606			 BNE.S	   X.1.17(PC)
+00000522 4EB900000000		 JSR	   E.FILE
+00000528 7214	      X.1.17	 MOVEQ	   #20,D1			         $14
+0000052A 3F01			 MOVE.W	   D1,-(A7)
+0000052C 720B			 MOVEQ	   #11,D1			         $B
+0000052E 3F01			 MOVE.W	   D1,-(A7)
+00000530 486D8014		 PEA	   STATIC.+20-32768(A5)		         TEST_STRING
+00000534 2F00			 MOVE.L	   D0,-(A7)
+00000536 4EB900000000		 JSR	   T.READ
+0000053C 2F00			 MOVE.L	   D0,-(A7)
+0000053E 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 1/38
+00000544 487AFB7C		 PEA	   K.14(PC)			         CODE.+$C2
+00000548 7006			 MOVEQ	   #6,D0			         $6
+0000054A 3F00			 MOVE.W	   D0,-(A7)0000054C 486D8016		 PEA	   STATIC.+20-32766(A5)		         TEST_STRING
+00000550 3F2D8014		 MOVE.W	   STATIC.+20-32768(A5),-(A7)	         TEST_STRING
+00000554 4EB900000000		 JSR	   C.CPFF
+0000055A 6608			 BNE.S	   L.1.3(PC)
+0000055C 7006	      L.1.2	 MOVEQ	   #6,D0			         $6
+0000055E B06D8014		 CMP.W	   STATIC.+20-32768(A5),D0	         TEST_STRING
+00000562 670C			 BEQ.S	   L.1.4(PC)
+		      *							       LINE 1/39
+00000564 2D7C00000001 L.1.3	 MOVE.L	   #1,-4(A6)			         $1  $FFFFFFFC
+	 FFFC
+0000056C 6100FAA4		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 1/41
+00000570 202D8044     L.1.4	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000574 4A80			 TST.L	   D0
+00000576 6606			 BNE.S	   X.1.18(PC)
+00000578 4EB900000000		 JSR	   E.FILE
+0000057E 7214	      X.1.18	 MOVEQ	   #20,D1			         $14
+00000580 3F01			 MOVE.W	   D1,-(A7)
+00000582 720B			 MOVEQ	   #11,D1			         $B
+00000584 3F01			 MOVE.W	   D1,-(A7)
+00000586 486D8014		 PEA	   STATIC.+20-32768(A5)		         TEST_STRING
+0000058A 2F00			 MOVE.L	   D0,-(A7)
+0000058C 4EB900000000		 JSR	   T.READ
+00000592 2F00			 MOVE.L	   D0,-(A7)
+00000594 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 1/42
+0000059A 487AFB2C		 PEA	   K.15(PC)			         CODE.+$C8
+0000059E 7007			 MOVEQ	   #7,D0			         $7
+000005A0 3F00			 MOVE.W	   D0,-(A7)
+000005A2 486D8016		 PEA	   STATIC.+20-32766(A5)		         TEST_STRING
+000005A6 3F2D8014		 MOVE.W	   STATIC.+20-32768(A5),-(A7)	         TEST_STRING
+000005AA 4EB900000000		 JSR	   C.CPFF
+000005B0 6608			 BNE.S	   L.1.6(PC)
+000005B2 7007	      L.1.5	 MOVEQ	   #7,D0			         $7
+000005B4 B06D8014		 CMP.W	   STATIC.+20-32768(A5),D0	         TEST_STRING
+000005B8 670C			 BEQ.S	   L.1.7(PC)
+		      *							       LINE 1/43
+000005BA 2D7C00000002 L.1.6	 MOVE.L	   #2,-4(A6)			         $2  $FFFFFFFC
+	 FFFC
+000005C2 6100FA4E		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 1/45
+000005C6 202D8044     L.1.7	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+000005CA 4A80			 TST.L	   D0
+000005CC 6606			 BNE.S	   X.1.19(PC)
+000005CE 4EB900000000		 JSR	   E.FILE000005D4 487AFAFA     X.1.19	 PEA	   K.16(PC)			         CODE.+$D0
+000005D8 7210			 MOVEQ	   #16,D1			         $10
+000005DA 2F01			 MOVE.L	   D1,-(A7)
+000005DC 3F3C0202		 MOVE.W	   #514,-(A7)			         $202
+000005E0 486D803A		 PEA	   STATIC.+58-32768(A5)		         TEST_REAL2
+000005E4 2F00			 MOVE.L	   D0,-(A7)
+000005E6 4EB900000000		 JSR	   T.READ
+000005EC 2F00			 MOVE.L	   D0,-(A7)
+000005EE 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 1/46
+000005F4 486D803A		 PEA	   STATIC.+58-32768(A5)		         TEST_REAL2
+000005F8 487AFAE6		 PEA	   K.17(PC)			         CODE.+$E0
+000005FC 4EB900000000		 JSR	   D.CMP
+00000602 670C			 BEQ.S	   L.1.9(PC)
+		      *							       LINE 1/47
+00000604 2D7C00000003 L.1.8	 MOVE.L	   #3,-4(A6)			         $3  $FFFFFFFC
+	 FFFC
+0000060C 6100FA04		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 1/49
+00000610 202D8044     L.1.9	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000614 4A80			 TST.L	   D0
+00000616 6606			 BNE.S	   X.1.20(PC)
+00000618 4EB900000000		 JSR	   E.FILE
+0000061E 4267	      X.1.20	 CLR.W	   -(A7)
+00000620 486D802A		 PEA	   STATIC.+42-32768(A5)		         TEST_INTEGER1
+00000624 2F00			 MOVE.L	   D0,-(A7)
+00000626 4EB900000000		 JSR	   T.READ
+		      *							       LINE 1/50
+0000062C 4AAD802A		 TST.L	   STATIC.+42-32768(A5)		         TEST_INTEGER1
+00000630 661C			 BNE.S	   L.1.11(PC)
+00000632 202D8044     L.1.10	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000636 4A80			 TST.L	   D0
+00000638 6606			 BNE.S	   X.1.21(PC)
+0000063A 4EB900000000		 JSR	   E.FILE
+00000640 2F00	      X.1.21	 MOVE.L	   D0,-(A7)
+00000642 4EB900000000		 JSR	   I.FILSTA
+00000648 7003			 MOVEQ	   #3,D0			         $3
+0000064A B05F			 CMP.W	   (A7)+,D0
+0000064C 670C			 BEQ.S	   L.1.12(PC)
+		      *							       LINE 1/51
+0000064E 2D7C00000004 L.1.11	 MOVE.L	   #4,-4(A6)			         $4  $FFFFFFFC
+	 FFFC
+00000656 6100F9BA		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 1/52
+0000065A 202D8044     L.1.12	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE0000065E 4A80			 TST.L	   D0
+00000660 6606			 BNE.S	   X.1.22(PC)
+00000662 4EB900000000		 JSR	   E.FILE
+00000668 2F00	      X.1.22	 MOVE.L	   D0,-(A7)
+0000066A 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 1/54
+00000670 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000674 4A80			 TST.L	   D0
+00000676 6606			 BNE.S	   X.1.23(PC)
+00000678 4EB900000000		 JSR	   E.FILE
+0000067E 4267	      X.1.23	 CLR.W	   -(A7)
+00000680 486D802E		 PEA	   STATIC.+46-32768(A5)		         TEST_INTEGER2
+00000684 2F00			 MOVE.L	   D0,-(A7)
+00000686 4EB900000000		 JSR	   T.READ
+		      *							       LINE 1/55
+0000068C 0CAD00051615		 CMPI.L	   #333333,STATIC.+46-32768(A5)	         $51615  TEST_INTEGER2
+	 802E
+00000694 661C			 BNE.S	   L.1.14(PC)
+00000696 202D8044     L.1.13	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+0000069A 4A80			 TST.L	   D0
+0000069C 6606			 BNE.S	   X.1.24(PC)
+0000069E 4EB900000000		 JSR	   E.FILE
+000006A4 2F00	      X.1.24	 MOVE.L	   D0,-(A7)
+000006A6 4EB900000000		 JSR	   I.FILSTA
+000006AC 7001			 MOVEQ	   #1,D0			         $1
+000006AE B05F			 CMP.W	   (A7)+,D0
+000006B0 670C			 BEQ.S	   L.1.15(PC)
+		      *							       LINE 1/56
+000006B2 2D7C00000005 L.1.14	 MOVE.L	   #5,-4(A6)			         $5  $FFFFFFFC
+	 FFFC
+000006BA 6100F956		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 1/57
+000006BE 202D8044     L.1.15	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+000006C2 4A80			 TST.L	   D0
+000006C4 6606			 BNE.S	   X.1.25(PC)
+000006C6 4EB900000000		 JSR	   E.FILE
+000006CC 2F00	      X.1.25	 MOVE.L	   D0,-(A7)
+000006CE 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 1/59
+000006D4 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+000006D8 4A80			 TST.L	   D0
+000006DA 6606			 BNE.S	   X.1.26(PC)
+000006DC 4EB900000000		 JSR	   E.FILE
+000006E2 7214	      X.1.26	 MOVEQ	   #20,D1			         $14
+000006E4 3F01			 MOVE.W	   D1,-(A7)000006E6 720B			 MOVEQ	   #11,D1			         $B
+000006E8 3F01			 MOVE.W	   D1,-(A7)
+000006EA 486D8014		 PEA	   STATIC.+20-32768(A5)		         TEST_STRING
+000006EE 2F00			 MOVE.L	   D0,-(A7)
+000006F0 4EB900000000		 JSR	   T.READ
+		      *							       LINE 1/60
+000006F6 487AF9F0		 PEA	   K.18(PC)			         CODE.+$E8
+000006FA 700A			 MOVEQ	   #10,D0			         $A
+000006FC 3F00			 MOVE.W	   D0,-(A7)
+000006FE 486D8016		 PEA	   STATIC.+20-32766(A5)		         TEST_STRING
+00000702 3F2D8014		 MOVE.W	   STATIC.+20-32768(A5),-(A7)	         TEST_STRING
+00000706 4EB900000000		 JSR	   C.CPFF
+0000070C 670C			 BEQ.S	   L.1.17(PC)
+		      *							       LINE 1/61
+0000070E 2D7C00000006 L.1.16	 MOVE.L	   #6,-4(A6)			         $6  $FFFFFFFC
+	 FFFC
+00000716 6100F8FA		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 1/62
+0000071A 202D8044     L.1.17	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+0000071E 4A80			 TST.L	   D0
+00000720 6606			 BNE.S	   X.1.27(PC)
+00000722 4EB900000000		 JSR	   E.FILE
+00000728 2F00	      X.1.27	 MOVE.L	   D0,-(A7)
+0000072A 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 1/64
+00000730 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000734 4A80			 TST.L	   D0
+00000736 6606			 BNE.S	   X.1.28(PC)
+00000738 4EB900000000		 JSR	   E.FILE
+0000073E 7214	      X.1.28	 MOVEQ	   #20,D1			         $14
+00000740 3F01			 MOVE.W	   D1,-(A7)
+00000742 720B			 MOVEQ	   #11,D1			         $B
+00000744 3F01			 MOVE.W	   D1,-(A7)
+00000746 486D8014		 PEA	   STATIC.+20-32768(A5)		         TEST_STRING
+0000074A 2F00			 MOVE.L	   D0,-(A7)
+0000074C 4EB900000000		 JSR	   T.READ
+		      *							       LINE 1/65
+00000752 487AF99E		 PEA	   K.19(PC)			         CODE.+$F2
+00000756 7011			 MOVEQ	   #17,D0			         $11
+00000758 3F00			 MOVE.W	   D0,-(A7)
+0000075A 486D8016		 PEA	   STATIC.+20-32766(A5)		         TEST_STRING
+0000075E 3F2D8014		 MOVE.W	   STATIC.+20-32768(A5),-(A7)	         TEST_STRING
+00000762 4EB900000000		 JSR	   C.CPFF
+00000768 670C			 BEQ.S	   L.1.19(PC)
+		      *							       LINE 1/660000076A 2D7C00000007 L.1.18	 MOVE.L	   #7,-4(A6)			         $7  $FFFFFFFC
+	 FFFC
+00000772 6100F89E		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 1/67
+00000776 202D8044     L.1.19	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+0000077A 4A80			 TST.L	   D0
+0000077C 6606			 BNE.S	   X.1.29(PC)
+0000077E 4EB900000000		 JSR	   E.FILE
+00000784 2F00	      X.1.29	 MOVE.L	   D0,-(A7)
+00000786 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 1/69
+0000078C 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000790 4A80			 TST.L	   D0
+00000792 6606			 BNE.S	   X.1.30(PC)
+00000794 4EB900000000		 JSR	   E.FILE
+0000079A 7214	      X.1.30	 MOVEQ	   #20,D1			         $14
+0000079C 3F01			 MOVE.W	   D1,-(A7)
+0000079E 720B			 MOVEQ	   #11,D1			         $B
+000007A0 3F01			 MOVE.W	   D1,-(A7)
+000007A2 486D8014		 PEA	   STATIC.+20-32768(A5)		         TEST_STRING
+000007A6 2F00			 MOVE.L	   D0,-(A7)
+000007A8 4EB900000000		 JSR	   T.READ
+		      *							       LINE 1/70
+000007AE 487AF954		 PEA	   K.20(PC)			         CODE.+$104
+000007B2 700B			 MOVEQ	   #11,D0			         $B
+000007B4 3F00			 MOVE.W	   D0,-(A7)
+000007B6 486D8016		 PEA	   STATIC.+20-32766(A5)		         TEST_STRING
+000007BA 3F2D8014		 MOVE.W	   STATIC.+20-32768(A5),-(A7)	         TEST_STRING
+000007BE 4EB900000000		 JSR	   C.CPFF
+000007C4 6608			 BNE.S	   L.1.21(PC)
+000007C6 700B	      L.1.20	 MOVEQ	   #11,D0			         $B
+000007C8 B06D8014		 CMP.W	   STATIC.+20-32768(A5),D0	         TEST_STRING
+000007CC 670C			 BEQ.S	   L.1.22(PC)
+		      *							       LINE 1/71
+000007CE 2D7C00000008 L.1.21	 MOVE.L	   #8,-4(A6)			         $8  $FFFFFFFC
+	 FFFC
+000007D6 6100F83A		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 1/72
+000007DA 202D8044     L.1.22	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+000007DE 4A80			 TST.L	   D0
+000007E0 6606			 BNE.S	   X.1.31(PC)
+000007E2 4EB900000000		 JSR	   E.FILE
+000007E8 2F00	      X.1.31	 MOVE.L	   D0,-(A7)
+000007EA 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 1/74000007F0 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+000007F4 4A80			 TST.L	   D0
+000007F6 6606			 BNE.S	   X.1.32(PC)
+000007F8 4EB900000000		 JSR	   E.FILE
+000007FE 7214	      X.1.32	 MOVEQ	   #20,D1			         $14
+00000800 3F01			 MOVE.W	   D1,-(A7)
+00000802 720C			 MOVEQ	   #12,D1			         $C
+00000804 3F01			 MOVE.W	   D1,-(A7)
+00000806 486D8000		 PEA	   STATIC.+0-32768(A5)		         FIX_STRING
+0000080A 2F00			 MOVE.L	   D0,-(A7)
+0000080C 4EB900000000		 JSR	   T.READ
+		      *							       LINE 1/75
+00000812 487AF8FC		 PEA	   K.21(PC)			         CODE.+$110
+00000816 7014			 MOVEQ	   #20,D0			         $14
+00000818 3F00			 MOVE.W	   D0,-(A7)
+0000081A 486D8000		 PEA	   STATIC.+0-32768(A5)		         FIX_STRING
+0000081E 7014			 MOVEQ	   #20,D0			         $14
+00000820 3F00			 MOVE.W	   D0,-(A7)
+00000822 4EB900000000		 JSR	   C.CPFF
+00000828 670C			 BEQ.S	   L.1.24(PC)
+		      *							       LINE 1/76
+0000082A 2D7C00000009 L.1.23	 MOVE.L	   #9,-4(A6)			         $9  $FFFFFFFC
+	 FFFC
+00000832 6100F7DE		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 1/77
+00000836 202D8044     L.1.24	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+0000083A 4A80			 TST.L	   D0
+0000083C 6606			 BNE.S	   X.1.33(PC)
+0000083E 4EB900000000		 JSR	   E.FILE
+00000844 2F00	      X.1.33	 MOVE.L	   D0,-(A7)
+00000846 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 1/79
+0000084C 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000850 4A80			 TST.L	   D0
+00000852 6606			 BNE.S	   X.1.34(PC)
+00000854 4EB900000000		 JSR	   E.FILE
+0000085A 7214	      X.1.34	 MOVEQ	   #20,D1			         $14
+0000085C 3F01			 MOVE.W	   D1,-(A7)
+0000085E 720B			 MOVEQ	   #11,D1			         $B
+00000860 3F01			 MOVE.W	   D1,-(A7)
+00000862 486D8014		 PEA	   STATIC.+20-32768(A5)		         TEST_STRING
+00000866 2F00			 MOVE.L	   D0,-(A7)
+00000868 4EB900000000		 JSR	   T.READ
+		      *							       LINE 1/80
+0000086E 487AF8B4		 PEA	   K.22(PC)			         CODE.+$12400000872 7005			 MOVEQ	   #5,D0			         $5
+00000874 3F00			 MOVE.W	   D0,-(A7)
+00000876 486D8016		 PEA	   STATIC.+20-32766(A5)		         TEST_STRING
+0000087A 3F2D8014		 MOVE.W	   STATIC.+20-32768(A5),-(A7)	         TEST_STRING
+0000087E 4EB900000000		 JSR	   C.CPFF
+00000884 6608			 BNE.S	   L.1.26(PC)
+00000886 7005	      L.1.25	 MOVEQ	   #5,D0			         $5
+00000888 B06D8014		 CMP.W	   STATIC.+20-32768(A5),D0	         TEST_STRING
+0000088C 670C			 BEQ.S	   L.1.27(PC)
+		      *							       LINE 1/81
+0000088E 2D7C0000000A L.1.26	 MOVE.L	   #10,-4(A6)			         $A  $FFFFFFFC
+	 FFFC
+00000896 6100F77A		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 1/82
+0000089A 202D8044     L.1.27	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+0000089E 4A80			 TST.L	   D0
+000008A0 6606			 BNE.S	   X.1.35(PC)
+000008A2 4EB900000000		 JSR	   E.FILE
+000008A8 2F00	      X.1.35	 MOVE.L	   D0,-(A7)
+000008AA 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 1/84
+000008B0 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+000008B4 4A80			 TST.L	   D0
+000008B6 6606			 BNE.S	   X.1.36(PC)
+000008B8 4EB900000000		 JSR	   E.FILE
+000008BE 4267	      X.1.36	 CLR.W	   -(A7)
+000008C0 486D802A		 PEA	   STATIC.+42-32768(A5)		         TEST_INTEGER1
+000008C4 2F00			 MOVE.L	   D0,-(A7)
+000008C6 4EB900000000		 JSR	   T.READ
+000008CC 4267			 CLR.W	   -(A7)
+000008CE 486D802E		 PEA	   STATIC.+46-32768(A5)		         TEST_INTEGER2
+000008D2 2F00			 MOVE.L	   D0,-(A7)
+000008D4 4EB900000000		 JSR	   T.READ
+000008DA 4267			 CLR.W	   -(A7)
+000008DC 486D8032		 PEA	   STATIC.+50-32768(A5)		         TEST_INTEGER3
+000008E0 2F00			 MOVE.L	   D0,-(A7)
+000008E2 4EB900000000		 JSR	   T.READ
+000008E8 487AF840		 PEA	   K.23(PC)			         CODE.+$12A
+000008EC 7206			 MOVEQ	   #6,D1			         $6
+000008EE 2F01			 MOVE.L	   D1,-(A7)
+000008F0 3F3C0201		 MOVE.W	   #513,-(A7)			         $201
+000008F4 486D8036		 PEA	   STATIC.+54-32768(A5)		         TEST_REAL1
+000008F8 2F00			 MOVE.L	   D0,-(A7)
+000008FA 4EB900000000		 JSR	   T.READ
+00000900 487AF830		 PEA	   K.24(PC)			         CODE.+$13200000904 7210			 MOVEQ	   #16,D1			         $10
+00000906 2F01			 MOVE.L	   D1,-(A7)
+00000908 3F3C0202		 MOVE.W	   #514,-(A7)			         $202
+0000090C 486D803A		 PEA	   STATIC.+58-32768(A5)		         TEST_REAL2
+00000910 2F00			 MOVE.L	   D0,-(A7)
+00000912 4EB900000000		 JSR	   T.READ
+00000918 2F00			 MOVE.L	   D0,-(A7)
+0000091A 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 1/86
+00000920 70FC			 MOVEQ	   #-4,D0			         $FFFFFFFC
+00000922 B0AD802A		 CMP.L	   STATIC.+42-32768(A5),D0	         TEST_INTEGER1
+00000926 670C			 BEQ.S	   L.1.29(PC)
+		      *							       LINE 1/87
+00000928 2D7C0000000B L.1.28	 MOVE.L	   #11,-4(A6)			         $B  $FFFFFFFC
+	 FFFC
+00000930 6100F6E0		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 1/88
+00000934 4AAD802E     L.1.29	 TST.L	   STATIC.+46-32768(A5)		         TEST_INTEGER2
+00000938 670C			 BEQ.S	   L.1.31(PC)
+		      *							       LINE 1/89
+0000093A 2D7C0000000C L.1.30	 MOVE.L	   #12,-4(A6)			         $C  $FFFFFFFC
+	 FFFC
+00000942 6100F6CE		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 1/90
+00000946 701E	      L.1.31	 MOVEQ	   #30,D0			         $1E
+00000948 B0AD8032		 CMP.L	   STATIC.+50-32768(A5),D0	         TEST_INTEGER3
+0000094C 670C			 BEQ.S	   L.1.33(PC)
+		      *							       LINE 1/91
+0000094E 2D7C0000000D L.1.32	 MOVE.L	   #13,-4(A6)			         $D  $FFFFFFFC
+	 FFFC
+00000956 6100F6BA		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 1/92
+0000095A 2F2D8036     L.1.33	 MOVE.L	   STATIC.+54-32768(A5),-(A7)	         TEST_REAL1
+0000095E 42A7			 CLR.L	   -(A7)
+00000960 4EB900000000		 JSR	   F.FLOAT
+00000966 4EB900000000		 JSR	   F.CMP
+0000096C 670C			 BEQ.S	   L.1.35(PC)
+		      *							       LINE 1/93
+0000096E 2D7C0000000E L.1.34	 MOVE.L	   #14,-4(A6)			         $E  $FFFFFFFC
+	 FFFC
+00000976 6100F69A		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 1/94
+0000097A 486D803A     L.1.35	 PEA	   STATIC.+58-32768(A5)		         TEST_REAL2
+0000097E 487AF7C2		 PEA	   K.25(PC)			         CODE.+$142
+00000982 4EB900000000		 JSR	   D.CMP00000988 670C			 BEQ.S	   L.1.37(PC)
+		      *							       LINE 1/95
+0000098A 2D7C0000000F L.1.36	 MOVE.L	   #15,-4(A6)			         $F  $FFFFFFFC
+	 FFFC
+00000992 6100F67E		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 1/97
+00000996 202D8044     L.1.37	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+0000099A 4A80			 TST.L	   D0
+0000099C 6606			 BNE.S	   X.1.37(PC)
+0000099E 4EB900000000		 JSR	   E.FILE
+000009A4 4267	      X.1.37	 CLR.W	   -(A7)
+000009A6 486D802A		 PEA	   STATIC.+42-32768(A5)		         TEST_INTEGER1
+000009AA 2F00			 MOVE.L	   D0,-(A7)
+000009AC 4EB900000000		 JSR	   T.READ
+		      *							       LINE 1/98
+000009B2 700B			 MOVEQ	   #11,D0			         $B
+000009B4 B0AD802A		 CMP.L	   STATIC.+42-32768(A5),D0	         TEST_INTEGER1
+000009B8 670C			 BEQ.S	   L.1.39(PC)
+		      *							       LINE 1/99
+000009BA 2D7C00000010 L.1.38	 MOVE.L	   #16,-4(A6)			         $10  $FFFFFFFC
+	 FFFC
+000009C2 6100F64E		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 1/101
+000009C6 202D8044     L.1.39	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+000009CA 4A80			 TST.L	   D0
+000009CC 6606			 BNE.S	   X.1.38(PC)
+000009CE 4EB900000000		 JSR	   E.FILE
+000009D4 2F00	      X.1.38	 MOVE.L	   D0,-(A7)
+000009D6 4EB900000000		 JSR	   I.CLOSE
+		      *							       LINE 1/105
+000009DC 486D804A		 PEA	   STATIC.+72-32766(A5)		         FNAME
+000009E0 3F2D8048		 MOVE.W	   STATIC.+72-32768(A5),-(A7)	         FNAME
+000009E4 7032			 MOVEQ	   #50,D0			         $32
+000009E6 3F00			 MOVE.W	   D0,-(A7)
+000009E8 4EB900000000		 JSR	   T.REWRIT
+000009EE 2B5F8044		 MOVE.L	   (A7)+,STATIC.+68-32768(A5)	         TEST_FILE
+		      *							       LINE 1/107
+000009F2 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+000009F6 4A80			 TST.L	   D0
+000009F8 6606			 BNE.S	   X.1.39(PC)
+000009FA 4EB900000000		 JSR	   E.FILE
+00000A00 7203	      X.1.39	 MOVEQ	   #3,D1			         $3
+00000A02 3F01			 MOVE.W	   D1,-(A7)
+00000A04 7204			 MOVEQ	   #4,D1			         $4
+00000A06 3F01			 MOVE.W	   D1,-(A7)00000A08 487AF740		 PEA	   K.26(PC)			         CODE.+$14A
+00000A0C 2F00			 MOVE.L	   D0,-(A7)
+00000A0E 4EB900000000		 JSR	   T.WRITE
+00000A14 2F00			 MOVE.L	   D0,-(A7)
+00000A16 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/108
+00000A1C 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000A20 4A80			 TST.L	   D0
+00000A22 6606			 BNE.S	   X.1.40(PC)
+00000A24 4EB900000000		 JSR	   E.FILE
+00000A2A 7203	      X.1.40	 MOVEQ	   #3,D1			         $3
+00000A2C 3F01			 MOVE.W	   D1,-(A7)
+00000A2E 7204			 MOVEQ	   #4,D1			         $4
+00000A30 3F01			 MOVE.W	   D1,-(A7)
+00000A32 487AF71A		 PEA	   K.27(PC)			         CODE.+$14E
+00000A36 2F00			 MOVE.L	   D0,-(A7)
+00000A38 4EB900000000		 JSR	   T.WRITE
+00000A3E 2F00			 MOVE.L	   D0,-(A7)
+00000A40 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/109
+00000A46 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000A4A 4A80			 TST.L	   D0
+00000A4C 6606			 BNE.S	   X.1.41(PC)
+00000A4E 4EB900000000		 JSR	   E.FILE
+00000A54 7202	      X.1.41	 MOVEQ	   #2,D1			         $2
+00000A56 3F01			 MOVE.W	   D1,-(A7)
+00000A58 7204			 MOVEQ	   #4,D1			         $4
+00000A5A 3F01			 MOVE.W	   D1,-(A7)
+00000A5C 487AF6F4		 PEA	   K.28(PC)			         CODE.+$152
+00000A60 2F00			 MOVE.L	   D0,-(A7)
+00000A62 4EB900000000		 JSR	   T.WRITE
+00000A68 2F00			 MOVE.L	   D0,-(A7)
+00000A6A 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/110
+00000A70 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000A74 4A80			 TST.L	   D0
+00000A76 6606			 BNE.S	   X.1.42(PC)
+00000A78 4EB900000000		 JSR	   E.FILE
+00000A7E 7207	      X.1.42	 MOVEQ	   #7,D1			         $7
+00000A80 3F01			 MOVE.W	   D1,-(A7)
+00000A82 7204			 MOVEQ	   #4,D1			         $4
+00000A84 3F01			 MOVE.W	   D1,-(A7)
+00000A86 487AF6CC		 PEA	   K.29(PC)			         CODE.+$154
+00000A8A 2F00			 MOVE.L	   D0,-(A7)
+00000A8C 4EB900000000		 JSR	   T.WRITE00000A92 2F00			 MOVE.L	   D0,-(A7)
+00000A94 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/111
+00000A9A 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000A9E 4A80			 TST.L	   D0
+00000AA0 6606			 BNE.S	   X.1.43(PC)
+00000AA2 4EB900000000		 JSR	   E.FILE
+00000AA8 7206	      X.1.43	 MOVEQ	   #6,D1			         $6
+00000AAA 3F01			 MOVE.W	   D1,-(A7)
+00000AAC 7204			 MOVEQ	   #4,D1			         $4
+00000AAE 3F01			 MOVE.W	   D1,-(A7)
+00000AB0 487AF6AA		 PEA	   K.30(PC)			         CODE.+$15C
+00000AB4 2F00			 MOVE.L	   D0,-(A7)
+00000AB6 4EB900000000		 JSR	   T.WRITE
+00000ABC 2F00			 MOVE.L	   D0,-(A7)
+00000ABE 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/113
+00000AC4 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000AC8 4A80			 TST.L	   D0
+00000ACA 6606			 BNE.S	   X.1.44(PC)
+00000ACC 4EB900000000		 JSR	   E.FILE
+00000AD2 2F00	      X.1.44	 MOVE.L	   D0,-(A7)
+00000AD4 4EB900000000		 JSR	   I.CLOSE
+		      *							       LINE 2/3
+00000ADA 486D804A		 PEA	   STATIC.+72-32766(A5)		         FNAME
+00000ADE 3F2D8048		 MOVE.W	   STATIC.+72-32768(A5),-(A7)	         FNAME
+00000AE2 7031			 MOVEQ	   #49,D0			         $31
+00000AE4 3F00			 MOVE.W	   D0,-(A7)
+00000AE6 4EB900000000		 JSR	   T.RESET
+00000AEC 2B5F8044		 MOVE.L	   (A7)+,STATIC.+68-32768(A5)	         TEST_FILE
+		      *							       LINE 2/5
+00000AF0 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000AF4 4A80			 TST.L	   D0
+00000AF6 6606			 BNE.S	   X.1.45(PC)
+00000AF8 4EB900000000		 JSR	   E.FILE
+00000AFE 7203	      X.1.45	 MOVEQ	   #3,D1			         $3
+00000B00 2F01			 MOVE.L	   D1,-(A7)
+00000B02 7230			 MOVEQ	   #48,D1			         $30
+00000B04 3F01			 MOVE.W	   D1,-(A7)
+00000B06 486D802A		 PEA	   STATIC.+42-32768(A5)		         TEST_INTEGER1
+00000B0A 2F00			 MOVE.L	   D0,-(A7)
+00000B0C 4EB900000000		 JSR	   T.READ
+		      *							       LINE 2/6
+00000B12 7057			 MOVEQ	   #87,D0			         $57
+00000B14 B0AD802A		 CMP.L	   STATIC.+42-32768(A5),D0	         TEST_INTEGER100000B18 661C			 BNE.S	   L.1.41(PC)
+00000B1A 202D8044     L.1.40	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000B1E 4A80			 TST.L	   D0
+00000B20 6606			 BNE.S	   X.1.46(PC)
+00000B22 4EB900000000		 JSR	   E.FILE
+00000B28 2F00	      X.1.46	 MOVE.L	   D0,-(A7)
+00000B2A 4EB900000000		 JSR	   I.FILSTA
+00000B30 7003			 MOVEQ	   #3,D0			         $3
+00000B32 B05F			 CMP.W	   (A7)+,D0
+00000B34 660C			 BNE.S	   L.1.42(PC)
+		      *							       LINE 2/7
+00000B36 2D7C00000011 L.1.41	 MOVE.L	   #17,-4(A6)			         $11  $FFFFFFFC
+	 FFFC
+00000B3E 6100F4D2		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 2/8
+00000B42 202D8044     L.1.42	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000B46 4A80			 TST.L	   D0
+00000B48 6606			 BNE.S	   X.1.47(PC)
+00000B4A 4EB900000000		 JSR	   E.FILE
+00000B50 2F00	      X.1.47	 MOVE.L	   D0,-(A7)
+00000B52 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 2/10
+00000B58 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000B5C 4A80			 TST.L	   D0
+00000B5E 6606			 BNE.S	   X.1.48(PC)
+00000B60 4EB900000000		 JSR	   E.FILE
+00000B66 7203	      X.1.48	 MOVEQ	   #3,D1			         $3
+00000B68 2F01			 MOVE.L	   D1,-(A7)
+00000B6A 7250			 MOVEQ	   #80,D1			         $50
+00000B6C 3F01			 MOVE.W	   D1,-(A7)
+00000B6E 486D802E		 PEA	   STATIC.+46-32768(A5)		         TEST_INTEGER2
+00000B72 2F00			 MOVE.L	   D0,-(A7)
+00000B74 4EB900000000		 JSR	   T.READ
+		      *							       LINE 2/11
+00000B7A 0CAD00000ABC		 CMPI.L	   #2748,STATIC.+46-32768(A5)	         $ABC  TEST_INTEGER2
+	 802E
+00000B82 661C			 BNE.S	   L.1.44(PC)
+00000B84 202D8044     L.1.43	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000B88 4A80			 TST.L	   D0
+00000B8A 6606			 BNE.S	   X.1.49(PC)
+00000B8C 4EB900000000		 JSR	   E.FILE
+00000B92 2F00	      X.1.49	 MOVE.L	   D0,-(A7)
+00000B94 4EB900000000		 JSR	   I.FILSTA
+00000B9A 7003			 MOVEQ	   #3,D0			         $3
+00000B9C B05F			 CMP.W	   (A7)+,D000000B9E 660C			 BNE.S	   L.1.45(PC)
+		      *							       LINE 2/12
+00000BA0 2D7C00000012 L.1.44	 MOVE.L	   #18,-4(A6)			         $12  $FFFFFFFC
+	 FFFC
+00000BA8 6100F468		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 2/13
+00000BAC 202D8044     L.1.45	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000BB0 4A80			 TST.L	   D0
+00000BB2 6606			 BNE.S	   X.1.50(PC)
+00000BB4 4EB900000000		 JSR	   E.FILE
+00000BBA 2F00	      X.1.50	 MOVE.L	   D0,-(A7)
+00000BBC 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 2/15
+00000BC2 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000BC6 4A80			 TST.L	   D0
+00000BC8 6606			 BNE.S	   X.1.51(PC)
+00000BCA 4EB900000000		 JSR	   E.FILE
+00000BD0 7202	      X.1.51	 MOVEQ	   #2,D1			         $2
+00000BD2 2F01			 MOVE.L	   D1,-(A7)
+00000BD4 7230			 MOVEQ	   #48,D1			         $30
+00000BD6 3F01			 MOVE.W	   D1,-(A7)
+00000BD8 486D802A		 PEA	   STATIC.+42-32768(A5)		         TEST_INTEGER1
+00000BDC 2F00			 MOVE.L	   D0,-(A7)
+00000BDE 4EB900000000		 JSR	   T.READ
+		      *							       LINE 2/16
+00000BE4 4AAD802A		 TST.L	   STATIC.+42-32768(A5)		         TEST_INTEGER1
+00000BE8 661C			 BNE.S	   L.1.47(PC)
+00000BEA 202D8044     L.1.46	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000BEE 4A80			 TST.L	   D0
+00000BF0 6606			 BNE.S	   X.1.52(PC)
+00000BF2 4EB900000000		 JSR	   E.FILE
+00000BF8 2F00	      X.1.52	 MOVE.L	   D0,-(A7)
+00000BFA 4EB900000000		 JSR	   I.FILSTA
+00000C00 7003			 MOVEQ	   #3,D0			         $3
+00000C02 B05F			 CMP.W	   (A7)+,D0
+00000C04 670C			 BEQ.S	   L.1.48(PC)
+		      *							       LINE 2/17
+00000C06 2D7C00000013 L.1.47	 MOVE.L	   #19,-4(A6)			         $13  $FFFFFFFC
+	 FFFC
+00000C0E 6100F402		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 2/18
+00000C12 202D8044     L.1.48	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000C16 4A80			 TST.L	   D0
+00000C18 6606			 BNE.S	   X.1.53(PC)
+00000C1A 4EB900000000		 JSR	   E.FILE00000C20 2F00	      X.1.53	 MOVE.L	   D0,-(A7)
+00000C22 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 2/20
+00000C28 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000C2C 4A80			 TST.L	   D0
+00000C2E 6606			 BNE.S	   X.1.54(PC)
+00000C30 4EB900000000		 JSR	   E.FILE
+00000C36 7207	      X.1.54	 MOVEQ	   #7,D1			         $7
+00000C38 2F01			 MOVE.L	   D1,-(A7)
+00000C3A 7250			 MOVEQ	   #80,D1			         $50
+00000C3C 3F01			 MOVE.W	   D1,-(A7)
+00000C3E 486D802E		 PEA	   STATIC.+46-32768(A5)		         TEST_INTEGER2
+00000C42 2F00			 MOVE.L	   D0,-(A7)
+00000C44 4EB900000000		 JSR	   T.READ
+		      *							       LINE 2/21
+00000C4A 4AAD802E		 TST.L	   STATIC.+46-32768(A5)		         TEST_INTEGER2
+00000C4E 661C			 BNE.S	   L.1.50(PC)
+00000C50 202D8044     L.1.49	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000C54 4A80			 TST.L	   D0
+00000C56 6606			 BNE.S	   X.1.55(PC)
+00000C58 4EB900000000		 JSR	   E.FILE
+00000C5E 2F00	      X.1.55	 MOVE.L	   D0,-(A7)
+00000C60 4EB900000000		 JSR	   I.FILSTA
+00000C66 7003			 MOVEQ	   #3,D0			         $3
+00000C68 B05F			 CMP.W	   (A7)+,D0
+00000C6A 670C			 BEQ.S	   L.1.51(PC)
+		      *							       LINE 2/22
+00000C6C 2D7C00000014 L.1.50	 MOVE.L	   #20,-4(A6)			         $14  $FFFFFFFC
+	 FFFC
+00000C74 6100F39C		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 2/23
+00000C78 202D8044     L.1.51	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000C7C 4A80			 TST.L	   D0
+00000C7E 6606			 BNE.S	   X.1.56(PC)
+00000C80 4EB900000000		 JSR	   E.FILE
+00000C86 2F00	      X.1.56	 MOVE.L	   D0,-(A7)
+00000C88 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 2/25
+00000C8E 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000C92 4A80			 TST.L	   D0
+00000C94 6606			 BNE.S	   X.1.57(PC)
+00000C96 4EB900000000		 JSR	   E.FILE
+00000C9C 7206	      X.1.57	 MOVEQ	   #6,D1			         $6
+00000C9E 2F01			 MOVE.L	   D1,-(A7)
+00000CA0 7210			 MOVEQ	   #16,D1			         $1000000CA2 3F01			 MOVE.W	   D1,-(A7)
+00000CA4 486D802E		 PEA	   STATIC.+46-32768(A5)		         TEST_INTEGER2
+00000CA8 2F00			 MOVE.L	   D0,-(A7)
+00000CAA 4EB900000000		 JSR	   T.READ
+		      *							       LINE 2/26
+00000CB0 707B			 MOVEQ	   #123,D0			         $7B
+00000CB2 B0AD802E		 CMP.L	   STATIC.+46-32768(A5),D0	         TEST_INTEGER2
+00000CB6 670C			 BEQ.S	   L.1.53(PC)
+		      *							       LINE 2/27
+00000CB8 2D7C00000015 L.1.52	 MOVE.L	   #21,-4(A6)			         $15  $FFFFFFFC
+	 FFFC
+00000CC0 6100F350		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 2/28
+00000CC4 202D8044     L.1.53	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000CC8 4A80			 TST.L	   D0
+00000CCA 6606			 BNE.S	   X.1.58(PC)
+00000CCC 4EB900000000		 JSR	   E.FILE
+00000CD2 2F00	      X.1.58	 MOVE.L	   D0,-(A7)
+00000CD4 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 2/30
+00000CDA 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000CDE 4A80			 TST.L	   D0
+00000CE0 6606			 BNE.S	   X.1.59(PC)
+00000CE2 4EB900000000		 JSR	   E.FILE
+00000CE8 2F00	      X.1.59	 MOVE.L	   D0,-(A7)
+00000CEA 4EB900000000		 JSR	   I.CLOSE
+		      *							       LINE 3/3
+00000CF0 486D804A		 PEA	   STATIC.+72-32766(A5)		         FNAME
+00000CF4 3F2D8048		 MOVE.W	   STATIC.+72-32768(A5),-(A7)	         FNAME
+00000CF8 7032			 MOVEQ	   #50,D0			         $32
+00000CFA 3F00			 MOVE.W	   D0,-(A7)
+00000CFC 4EB900000000		 JSR	   T.REWRIT
+00000D02 2B5F8044		 MOVE.L	   (A7)+,STATIC.+68-32768(A5)	         TEST_FILE
+		      *							       LINE 3/5
+00000D06 41ED8014		 LEA	   STATIC.+20-32768(A5),A0	         TEST_STRING
+00000D0A 20FC0006466F		 MOVE.L	   #411247,(A0)+		         $6466F
+00000D10 20FC726D6174		 MOVE.L	   #1919770996,(A0)+		         $726D6174
+		      *							       LINE 3/6
+00000D16 7058			 MOVEQ	   #88,D0			         $58
+00000D18 1B408042		 MOVE.B	   D0,STATIC.+66-32768(A5)	         TEST_CHAR
+		      *							       LINE 3/7
+00000D1C 2B7C000002EF		 MOVE.L	   #751,STATIC.+42-32768(A5)	         $2EF  TEST_INTEGER1
+	 802A
+		      *							       LINE 3/8
+00000D24 2B7CFFFFFB2E		 MOVE.L	   #-1234,STATIC.+46-32768(A5)	         $FFFFFB2E  TEST_INTEG	 802E
+		      *							       LINE 3/9
+00000D2C 7000			 MOVEQ	   #0,D0			         $0
+00000D2E 1B408043		 MOVE.B	   D0,STATIC.+67-32768(A5)	         TEST_BOOL
+		      *							       LINE 3/10
+00000D32 2B7AF42E8036		 MOVE.L	   K.31(PC),STATIC.+54-32768(A5)         CODE.+$162  TEST_REAL
+		      *							       LINE 3/11
+00000D38 41FAF42C		 LEA	   K.32(PC),A0			         CODE.+$166
+00000D3C 43ED803A		 LEA	   STATIC.+58-32768(A5),A1	         TEST_REAL2
+00000D40 22D8			 MOVE.L	   (A0)+,(A1)+
+00000D42 22D8			 MOVE.L	   (A0)+,(A1)+
+		      *							       LINE 3/13
+00000D44 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000D48 4A80			 TST.L	   D0
+00000D4A 6606			 BNE.S	   X.1.60(PC)
+00000D4C 4EB900000000		 JSR	   E.FILE
+00000D52 7214	      X.1.60	 MOVEQ	   #20,D1			         $14
+00000D54 2F01			 MOVE.L	   D1,-(A7)
+00000D56 3F2D8014		 MOVE.W	   STATIC.+20-32768(A5),-(A7)	         TEST_STRING
+00000D5A 7213			 MOVEQ	   #19,D1			         $13
+00000D5C 3F01			 MOVE.W	   D1,-(A7)
+00000D5E 486D8016		 PEA	   STATIC.+20-32766(A5)		         TEST_STRING
+00000D62 2F00			 MOVE.L	   D0,-(A7)
+00000D64 4EB900000000		 JSR	   T.WRITE
+00000D6A 2F00			 MOVE.L	   D0,-(A7)
+00000D6C 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 3/14
+00000D72 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000D76 4A80			 TST.L	   D0
+00000D78 6606			 BNE.S	   X.1.61(PC)
+00000D7A 4EB900000000		 JSR	   E.FILE
+00000D80 7204	      X.1.61	 MOVEQ	   #4,D1			         $4
+00000D82 2F01			 MOVE.L	   D1,-(A7)
+00000D84 3F2D8014		 MOVE.W	   STATIC.+20-32768(A5),-(A7)	         TEST_STRING
+00000D88 7213			 MOVEQ	   #19,D1			         $13
+00000D8A 3F01			 MOVE.W	   D1,-(A7)
+00000D8C 486D8016		 PEA	   STATIC.+20-32766(A5)		         TEST_STRING
+00000D90 2F00			 MOVE.L	   D0,-(A7)
+00000D92 4EB900000000		 JSR	   T.WRITE
+00000D98 2F00			 MOVE.L	   D0,-(A7)
+00000D9A 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 3/15
+00000DA0 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000DA4 4A80			 TST.L	   D0
+00000DA6 6606			 BNE.S	   X.1.62(PC)00000DA8 4EB900000000		 JSR	   E.FILE
+00000DAE 7214	      X.1.62	 MOVEQ	   #20,D1			         $14
+00000DB0 2F01			 MOVE.L	   D1,-(A7)
+00000DB2 3F2D8014		 MOVE.W	   STATIC.+20-32768(A5),-(A7)	         TEST_STRING
+00000DB6 721B			 MOVEQ	   #27,D1			         $1B
+00000DB8 3F01			 MOVE.W	   D1,-(A7)
+00000DBA 486D8016		 PEA	   STATIC.+20-32766(A5)		         TEST_STRING
+00000DBE 2F00			 MOVE.L	   D0,-(A7)
+00000DC0 4EB900000000		 JSR	   T.WRITE
+00000DC6 2F00			 MOVE.L	   D0,-(A7)
+00000DC8 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 3/17
+00000DCE 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000DD2 4A80			 TST.L	   D0
+00000DD4 6606			 BNE.S	   X.1.63(PC)
+00000DD6 4EB900000000		 JSR	   E.FILE
+00000DDC 7203	      X.1.63	 MOVEQ	   #3,D1			         $3
+00000DDE 2F01			 MOVE.L	   D1,-(A7)
+00000DE0 7201			 MOVEQ	   #1,D1			         $1
+00000DE2 3F01			 MOVE.W	   D1,-(A7)
+00000DE4 7214			 MOVEQ	   #20,D1			         $14
+00000DE6 3F01			 MOVE.W	   D1,-(A7)
+00000DE8 486D8042		 PEA	   STATIC.+66-32768(A5)		         TEST_CHAR
+00000DEC 2F00			 MOVE.L	   D0,-(A7)
+00000DEE 4EB900000000		 JSR	   T.WRITE
+00000DF4 2F00			 MOVE.L	   D0,-(A7)
+00000DF6 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 3/18
+00000DFC 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000E00 4A80			 TST.L	   D0
+00000E02 6606			 BNE.S	   X.1.64(PC)
+00000E04 4EB900000000		 JSR	   E.FILE
+00000E0A 7202	      X.1.64	 MOVEQ	   #2,D1			         $2
+00000E0C 2F01			 MOVE.L	   D1,-(A7)
+00000E0E 7201			 MOVEQ	   #1,D1			         $1
+00000E10 3F01			 MOVE.W	   D1,-(A7)
+00000E12 721C			 MOVEQ	   #28,D1			         $1C
+00000E14 3F01			 MOVE.W	   D1,-(A7)
+00000E16 486D8042		 PEA	   STATIC.+66-32768(A5)		         TEST_CHAR
+00000E1A 2F00			 MOVE.L	   D0,-(A7)
+00000E1C 4EB900000000		 JSR	   T.WRITE
+00000E22 2F00			 MOVE.L	   D0,-(A7)
+00000E24 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 3/20
+00000E2A 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE00000E2E 4A80			 TST.L	   D0
+00000E30 6606			 BNE.S	   X.1.65(PC)
+00000E32 4EB900000000		 JSR	   E.FILE
+00000E38 7204	      X.1.65	 MOVEQ	   #4,D1			         $4
+00000E3A 2F01			 MOVE.L	   D1,-(A7)
+00000E3C 7215			 MOVEQ	   #21,D1			         $15
+00000E3E 3F01			 MOVE.W	   D1,-(A7)
+00000E40 486D8043		 PEA	   STATIC.+67-32768(A5)		         TEST_BOOL
+00000E44 2F00			 MOVE.L	   D0,-(A7)
+00000E46 4EB900000000		 JSR	   T.WRITE
+00000E4C 2F00			 MOVE.L	   D0,-(A7)
+00000E4E 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 3/21
+00000E54 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000E58 4A80			 TST.L	   D0
+00000E5A 6606			 BNE.S	   X.1.66(PC)
+00000E5C 4EB900000000		 JSR	   E.FILE
+00000E62 7206	      X.1.66	 MOVEQ	   #6,D1			         $6
+00000E64 2F01			 MOVE.L	   D1,-(A7)
+00000E66 7215			 MOVEQ	   #21,D1			         $15
+00000E68 3F01			 MOVE.W	   D1,-(A7)
+00000E6A 486D8043		 PEA	   STATIC.+67-32768(A5)		         TEST_BOOL
+00000E6E 2F00			 MOVE.L	   D0,-(A7)
+00000E70 4EB900000000		 JSR	   T.WRITE
+00000E76 2F00			 MOVE.L	   D0,-(A7)
+00000E78 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 3/23
+00000E7E 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000E82 4A80			 TST.L	   D0
+00000E84 6606			 BNE.S	   X.1.67(PC)
+00000E86 4EB900000000		 JSR	   E.FILE
+00000E8C 7205	      X.1.67	 MOVEQ	   #5,D1			         $5
+00000E8E 2F01			 MOVE.L	   D1,-(A7)
+00000E90 7210			 MOVEQ	   #16,D1			         $10
+00000E92 3F01			 MOVE.W	   D1,-(A7)
+00000E94 486D802A		 PEA	   STATIC.+42-32768(A5)		         TEST_INTEGER1
+00000E98 2F00			 MOVE.L	   D0,-(A7)
+00000E9A 4EB900000000		 JSR	   T.WRITE
+00000EA0 2F00			 MOVE.L	   D0,-(A7)
+00000EA2 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 3/24
+00000EA8 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000EAC 4A80			 TST.L	   D0
+00000EAE 6606			 BNE.S	   X.1.68(PC)
+00000EB0 4EB900000000		 JSR	   E.FILE00000EB6 7205	      X.1.68	 MOVEQ	   #5,D1			         $5
+00000EB8 2F01			 MOVE.L	   D1,-(A7)
+00000EBA 7210			 MOVEQ	   #16,D1			         $10
+00000EBC 3F01			 MOVE.W	   D1,-(A7)
+00000EBE 486D802E		 PEA	   STATIC.+46-32768(A5)		         TEST_INTEGER2
+00000EC2 2F00			 MOVE.L	   D0,-(A7)
+00000EC4 4EB900000000		 JSR	   T.WRITE
+00000ECA 2F00			 MOVE.L	   D0,-(A7)
+00000ECC 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 3/25
+00000ED2 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000ED6 4A80			 TST.L	   D0
+00000ED8 6606			 BNE.S	   X.1.69(PC)
+00000EDA 4EB900000000		 JSR	   E.FILE
+00000EE0 7208	      X.1.69	 MOVEQ	   #8,D1			         $8
+00000EE2 2F01			 MOVE.L	   D1,-(A7)
+00000EE4 7210			 MOVEQ	   #16,D1			         $10
+00000EE6 3F01			 MOVE.W	   D1,-(A7)
+00000EE8 486D802E		 PEA	   STATIC.+46-32768(A5)		         TEST_INTEGER2
+00000EEC 2F00			 MOVE.L	   D0,-(A7)
+00000EEE 4EB900000000		 JSR	   T.WRITE
+00000EF4 2F00			 MOVE.L	   D0,-(A7)
+00000EF6 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 3/26
+00000EFC 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000F00 4A80			 TST.L	   D0
+00000F02 6606			 BNE.S	   X.1.70(PC)
+00000F04 4EB900000000		 JSR	   E.FILE
+00000F0A 42A7	      X.1.70	 CLR.L	   -(A7)
+00000F0C 7210			 MOVEQ	   #16,D1			         $10
+00000F0E 3F01			 MOVE.W	   D1,-(A7)
+00000F10 486D802A		 PEA	   STATIC.+42-32768(A5)		         TEST_INTEGER1
+00000F14 2F00			 MOVE.L	   D0,-(A7)
+00000F16 4EB900000000		 JSR	   T.WRITE
+00000F1C 2F00			 MOVE.L	   D0,-(A7)
+00000F1E 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 3/27
+00000F24 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000F28 4A80			 TST.L	   D0
+00000F2A 6606			 BNE.S	   X.1.71(PC)
+00000F2C 4EB900000000		 JSR	   E.FILE
+00000F32 7201	      X.1.71	 MOVEQ	   #1,D1			         $1
+00000F34 2F01			 MOVE.L	   D1,-(A7)
+00000F36 7230			 MOVEQ	   #48,D1			         $30
+00000F38 3F01			 MOVE.W	   D1,-(A7)00000F3A 486D802A		 PEA	   STATIC.+42-32768(A5)		         TEST_INTEGER1
+00000F3E 2F00			 MOVE.L	   D0,-(A7)
+00000F40 4EB900000000		 JSR	   T.WRITE
+00000F46 2F00			 MOVE.L	   D0,-(A7)
+00000F48 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 3/28
+00000F4E 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000F52 4A80			 TST.L	   D0
+00000F54 6606			 BNE.S	   X.1.72(PC)
+00000F56 4EB900000000		 JSR	   E.FILE
+00000F5C 7204	      X.1.72	 MOVEQ	   #4,D1			         $4
+00000F5E 2F01			 MOVE.L	   D1,-(A7)
+00000F60 7230			 MOVEQ	   #48,D1			         $30
+00000F62 3F01			 MOVE.W	   D1,-(A7)
+00000F64 486D802A		 PEA	   STATIC.+42-32768(A5)		         TEST_INTEGER1
+00000F68 2F00			 MOVE.L	   D0,-(A7)
+00000F6A 4EB900000000		 JSR	   T.WRITE
+00000F70 2F00			 MOVE.L	   D0,-(A7)
+00000F72 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 3/29
+00000F78 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000F7C 4A80			 TST.L	   D0
+00000F7E 6606			 BNE.S	   X.1.73(PC)
+00000F80 4EB900000000		 JSR	   E.FILE
+00000F86 7208	      X.1.73	 MOVEQ	   #8,D1			         $8
+00000F88 2F01			 MOVE.L	   D1,-(A7)
+00000F8A 7230			 MOVEQ	   #48,D1			         $30
+00000F8C 3F01			 MOVE.W	   D1,-(A7)
+00000F8E 486D802A		 PEA	   STATIC.+42-32768(A5)		         TEST_INTEGER1
+00000F92 2F00			 MOVE.L	   D0,-(A7)
+00000F94 4EB900000000		 JSR	   T.WRITE
+00000F9A 2F00			 MOVE.L	   D0,-(A7)
+00000F9C 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 3/30
+00000FA2 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000FA6 4A80			 TST.L	   D0
+00000FA8 6606			 BNE.S	   X.1.74(PC)
+00000FAA 4EB900000000		 JSR	   E.FILE
+00000FB0 7210	      X.1.74	 MOVEQ	   #16,D1			         $10
+00000FB2 2F01			 MOVE.L	   D1,-(A7)
+00000FB4 7230			 MOVEQ	   #48,D1			         $30
+00000FB6 3F01			 MOVE.W	   D1,-(A7)
+00000FB8 486D802E		 PEA	   STATIC.+46-32768(A5)		         TEST_INTEGER2
+00000FBC 2F00			 MOVE.L	   D0,-(A7)
+00000FBE 4EB900000000		 JSR	   T.WRITE00000FC4 2F00			 MOVE.L	   D0,-(A7)
+00000FC6 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 3/31
+00000FCC 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000FD0 4A80			 TST.L	   D0
+00000FD2 6606			 BNE.S	   X.1.75(PC)
+00000FD4 4EB900000000		 JSR	   E.FILE
+00000FDA 7201	      X.1.75	 MOVEQ	   #1,D1			         $1
+00000FDC 2F01			 MOVE.L	   D1,-(A7)
+00000FDE 7250			 MOVEQ	   #80,D1			         $50
+00000FE0 3F01			 MOVE.W	   D1,-(A7)
+00000FE2 486D802A		 PEA	   STATIC.+42-32768(A5)		         TEST_INTEGER1
+00000FE6 2F00			 MOVE.L	   D0,-(A7)
+00000FE8 4EB900000000		 JSR	   T.WRITE
+00000FEE 2F00			 MOVE.L	   D0,-(A7)
+00000FF0 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 3/32
+00000FF6 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00000FFA 4A80			 TST.L	   D0
+00000FFC 6606			 BNE.S	   X.1.76(PC)
+00000FFE 4EB900000000		 JSR	   E.FILE
+00001004 7203	      X.1.76	 MOVEQ	   #3,D1			         $3
+00001006 2F01			 MOVE.L	   D1,-(A7)
+00001008 7250			 MOVEQ	   #80,D1			         $50
+0000100A 3F01			 MOVE.W	   D1,-(A7)
+0000100C 486D802A		 PEA	   STATIC.+42-32768(A5)		         TEST_INTEGER1
+00001010 2F00			 MOVE.L	   D0,-(A7)
+00001012 4EB900000000		 JSR	   T.WRITE
+00001018 2F00			 MOVE.L	   D0,-(A7)
+0000101A 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 3/33
+00001020 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00001024 4A80			 TST.L	   D0
+00001026 6606			 BNE.S	   X.1.77(PC)
+00001028 4EB900000000		 JSR	   E.FILE
+0000102E 7207	      X.1.77	 MOVEQ	   #7,D1			         $7
+00001030 2F01			 MOVE.L	   D1,-(A7)
+00001032 7250			 MOVEQ	   #80,D1			         $50
+00001034 3F01			 MOVE.W	   D1,-(A7)
+00001036 486D802A		 PEA	   STATIC.+42-32768(A5)		         TEST_INTEGER1
+0000103A 2F00			 MOVE.L	   D0,-(A7)
+0000103C 4EB900000000		 JSR	   T.WRITE
+00001042 2F00			 MOVE.L	   D0,-(A7)
+00001044 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 3/340000104A 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+0000104E 4A80			 TST.L	   D0
+00001050 6606			 BNE.S	   X.1.78(PC)
+00001052 4EB900000000		 JSR	   E.FILE
+00001058 7210	      X.1.78	 MOVEQ	   #16,D1			         $10
+0000105A 2F01			 MOVE.L	   D1,-(A7)
+0000105C 7250			 MOVEQ	   #80,D1			         $50
+0000105E 3F01			 MOVE.W	   D1,-(A7)
+00001060 486D802E		 PEA	   STATIC.+46-32768(A5)		         TEST_INTEGER2
+00001064 2F00			 MOVE.L	   D0,-(A7)
+00001066 4EB900000000		 JSR	   T.WRITE
+0000106C 2F00			 MOVE.L	   D0,-(A7)
+0000106E 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 3/36
+00001074 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00001078 4A80			 TST.L	   D0
+0000107A 6606			 BNE.S	   X.1.79(PC)
+0000107C 4EB900000000		 JSR	   E.FILE
+00001082 720E	      X.1.79	 MOVEQ	   #14,D1			         $E
+00001084 2F01			 MOVE.L	   D1,-(A7)
+00001086 42A7			 CLR.L	   -(A7)
+00001088 3F3C0092		 MOVE.W	   #146,-(A7)			         $92
+0000108C 486D803A		 PEA	   STATIC.+58-32768(A5)		         TEST_REAL2
+00001090 2F00			 MOVE.L	   D0,-(A7)
+00001092 4EB900000000		 JSR	   T.WRITE
+00001098 2F00			 MOVE.L	   D0,-(A7)
+0000109A 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 3/37
+000010A0 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+000010A4 4A80			 TST.L	   D0
+000010A6 6606			 BNE.S	   X.1.80(PC)
+000010A8 4EB900000000		 JSR	   E.FILE
+000010AE 7204	      X.1.80	 MOVEQ	   #4,D1			         $4
+000010B0 2F01			 MOVE.L	   D1,-(A7)
+000010B2 42A7			 CLR.L	   -(A7)
+000010B4 3F3C0092		 MOVE.W	   #146,-(A7)			         $92
+000010B8 486D803A		 PEA	   STATIC.+58-32768(A5)		         TEST_REAL2
+000010BC 2F00			 MOVE.L	   D0,-(A7)
+000010BE 4EB900000000		 JSR	   T.WRITE
+000010C4 2F00			 MOVE.L	   D0,-(A7)
+000010C6 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 3/38
+000010CC 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+000010D0 4A80			 TST.L	   D0
+000010D2 6606			 BNE.S	   X.1.81(PC)000010D4 4EB900000000		 JSR	   E.FILE
+000010DA 720C	      X.1.81	 MOVEQ	   #12,D1			         $C
+000010DC 2F01			 MOVE.L	   D1,-(A7)
+000010DE 7205			 MOVEQ	   #5,D1			         $5
+000010E0 2F01			 MOVE.L	   D1,-(A7)
+000010E2 3F3C0111		 MOVE.W	   #273,-(A7)			         $111
+000010E6 486D8036		 PEA	   STATIC.+54-32768(A5)		         TEST_REAL1
+000010EA 2F00			 MOVE.L	   D0,-(A7)
+000010EC 4EB900000000		 JSR	   T.WRITE
+000010F2 2F00			 MOVE.L	   D0,-(A7)
+000010F4 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 3/39
+000010FA 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+000010FE 4A80			 TST.L	   D0
+00001100 6606			 BNE.S	   X.1.82(PC)
+00001102 4EB900000000		 JSR	   E.FILE
+00001108 7204	      X.1.82	 MOVEQ	   #4,D1			         $4
+0000110A 2F01			 MOVE.L	   D1,-(A7)
+0000110C 7203			 MOVEQ	   #3,D1			         $3
+0000110E 2F01			 MOVE.L	   D1,-(A7)
+00001110 3F3C0111		 MOVE.W	   #273,-(A7)			         $111
+00001114 486D8036		 PEA	   STATIC.+54-32768(A5)		         TEST_REAL1
+00001118 2F00			 MOVE.L	   D0,-(A7)
+0000111A 4EB900000000		 JSR	   T.WRITE
+00001120 2F00			 MOVE.L	   D0,-(A7)
+00001122 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 3/40
+00001128 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+0000112C 4A80			 TST.L	   D0
+0000112E 6606			 BNE.S	   X.1.83(PC)
+00001130 4EB900000000		 JSR	   E.FILE
+00001136 7207	      X.1.83	 MOVEQ	   #7,D1			         $7
+00001138 2F01			 MOVE.L	   D1,-(A7)
+0000113A 7202			 MOVEQ	   #2,D1			         $2
+0000113C 2F01			 MOVE.L	   D1,-(A7)
+0000113E 3F3C0192		 MOVE.W	   #402,-(A7)			         $192
+00001142 486D803A		 PEA	   STATIC.+58-32768(A5)		         TEST_REAL2
+00001146 2F00			 MOVE.L	   D0,-(A7)
+00001148 4EB900000000		 JSR	   T.WRITE
+0000114E 2F00			 MOVE.L	   D0,-(A7)
+00001150 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 3/41
+00001156 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+0000115A 4A80			 TST.L	   D0
+0000115C 6606			 BNE.S	   X.1.84(PC)0000115E 4EB900000000		 JSR	   E.FILE
+00001164 42A7	      X.1.84	 CLR.L	   -(A7)
+00001166 7205			 MOVEQ	   #5,D1			         $5
+00001168 2F01			 MOVE.L	   D1,-(A7)
+0000116A 3F3C0191		 MOVE.W	   #401,-(A7)			         $191
+0000116E 486D8036		 PEA	   STATIC.+54-32768(A5)		         TEST_REAL1
+00001172 2F00			 MOVE.L	   D0,-(A7)
+00001174 4EB900000000		 JSR	   T.WRITE
+0000117A 2F00			 MOVE.L	   D0,-(A7)
+0000117C 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 3/43
+00001182 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00001186 4A80			 TST.L	   D0
+00001188 6606			 BNE.S	   X.1.85(PC)
+0000118A 4EB900000000		 JSR	   E.FILE
+00001190 2F00	      X.1.85	 MOVE.L	   D0,-(A7)
+00001192 4EB900000000		 JSR	   I.CLOSE
+		      *							       LINE 3/47
+00001198 486D804A		 PEA	   STATIC.+72-32766(A5)		         FNAME
+0000119C 3F2D8048		 MOVE.W	   STATIC.+72-32768(A5),-(A7)	         FNAME
+000011A0 7031			 MOVEQ	   #49,D0			         $31
+000011A2 3F00			 MOVE.W	   D0,-(A7)
+000011A4 4EB900000000		 JSR	   T.RESET
+000011AA 2B5F8044		 MOVE.L	   (A7)+,STATIC.+68-32768(A5)	         TEST_FILE
+		      *							       LINE 3/49
+000011AE 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+000011B2 4A80			 TST.L	   D0
+000011B4 6606			 BNE.S	   X.1.86(PC)
+000011B6 4EB900000000		 JSR	   E.FILE
+000011BC 7214	      X.1.86	 MOVEQ	   #20,D1			         $14
+000011BE 3F01			 MOVE.W	   D1,-(A7)
+000011C0 720B			 MOVEQ	   #11,D1			         $B
+000011C2 3F01			 MOVE.W	   D1,-(A7)
+000011C4 486D8014		 PEA	   STATIC.+20-32768(A5)		         TEST_STRING
+000011C8 2F00			 MOVE.L	   D0,-(A7)
+000011CA 4EB900000000		 JSR	   T.READ
+		      *							       LINE 3/50
+000011D0 487AEF9C		 PEA	   K.33(PC)			         CODE.+$16E
+000011D4 7014			 MOVEQ	   #20,D0			         $14
+000011D6 3F00			 MOVE.W	   D0,-(A7)
+000011D8 486D8016		 PEA	   STATIC.+20-32766(A5)		         TEST_STRING
+000011DC 3F2D8014		 MOVE.W	   STATIC.+20-32768(A5),-(A7)	         TEST_STRING
+000011E0 4EB900000000		 JSR	   C.CPFF
+000011E6 670C			 BEQ.S	   L.1.55(PC)
+		      *							       LINE 3/51000011E8 2D7C00000016 L.1.54	 MOVE.L	   #22,-4(A6)			         $16  $FFFFFFFC
+	 FFFC
+000011F0 6100EE20		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 3/52
+000011F4 202D8044     L.1.55	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+000011F8 4A80			 TST.L	   D0
+000011FA 6606			 BNE.S	   X.1.87(PC)
+000011FC 4EB900000000		 JSR	   E.FILE
+00001202 2F00	      X.1.87	 MOVE.L	   D0,-(A7)
+00001204 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 3/54
+0000120A 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+0000120E 4A80			 TST.L	   D0
+00001210 6606			 BNE.S	   X.1.88(PC)
+00001212 4EB900000000		 JSR	   E.FILE
+00001218 7214	      X.1.88	 MOVEQ	   #20,D1			         $14
+0000121A 3F01			 MOVE.W	   D1,-(A7)
+0000121C 720B			 MOVEQ	   #11,D1			         $B
+0000121E 3F01			 MOVE.W	   D1,-(A7)
+00001220 486D8014		 PEA	   STATIC.+20-32768(A5)		         TEST_STRING
+00001224 2F00			 MOVE.L	   D0,-(A7)
+00001226 4EB900000000		 JSR	   T.READ
+		      *							       LINE 3/55
+0000122C 487AEF54		 PEA	   K.34(PC)			         CODE.+$182
+00001230 7004			 MOVEQ	   #4,D0			         $4
+00001232 3F00			 MOVE.W	   D0,-(A7)
+00001234 486D8016		 PEA	   STATIC.+20-32766(A5)		         TEST_STRING
+00001238 3F2D8014		 MOVE.W	   STATIC.+20-32768(A5),-(A7)	         TEST_STRING
+0000123C 4EB900000000		 JSR	   C.CPFF
+00001242 670C			 BEQ.S	   L.1.57(PC)
+		      *							       LINE 3/56
+00001244 2D7C00000017 L.1.56	 MOVE.L	   #23,-4(A6)			         $17  $FFFFFFFC
+	 FFFC
+0000124C 6100EDC4		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 3/57
+00001250 202D8044     L.1.57	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00001254 4A80			 TST.L	   D0
+00001256 6606			 BNE.S	   X.1.89(PC)
+00001258 4EB900000000		 JSR	   E.FILE
+0000125E 2F00	      X.1.89	 MOVE.L	   D0,-(A7)
+00001260 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 3/59
+00001266 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+0000126A 4A80			 TST.L	   D0
+0000126C 6606			 BNE.S	   X.1.90(PC)0000126E 4EB900000000		 JSR	   E.FILE
+00001274 7214	      X.1.90	 MOVEQ	   #20,D1			         $14
+00001276 3F01			 MOVE.W	   D1,-(A7)
+00001278 720B			 MOVEQ	   #11,D1			         $B
+0000127A 3F01			 MOVE.W	   D1,-(A7)
+0000127C 486D8014		 PEA	   STATIC.+20-32768(A5)		         TEST_STRING
+00001280 2F00			 MOVE.L	   D0,-(A7)
+00001282 4EB900000000		 JSR	   T.READ
+		      *							       LINE 3/60
+00001288 487AEEFC		 PEA	   K.35(PC)			         CODE.+$186
+0000128C 7014			 MOVEQ	   #20,D0			         $14
+0000128E 3F00			 MOVE.W	   D0,-(A7)
+00001290 486D8016		 PEA	   STATIC.+20-32766(A5)		         TEST_STRING
+00001294 3F2D8014		 MOVE.W	   STATIC.+20-32768(A5),-(A7)	         TEST_STRING
+00001298 4EB900000000		 JSR	   C.CPFF
+0000129E 670C			 BEQ.S	   L.1.59(PC)
+		      *							       LINE 3/61
+000012A0 2D7C00000018 L.1.58	 MOVE.L	   #24,-4(A6)			         $18  $FFFFFFFC
+	 FFFC
+000012A8 6100ED68		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 3/62
+000012AC 202D8044     L.1.59	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+000012B0 4A80			 TST.L	   D0
+000012B2 6606			 BNE.S	   X.1.91(PC)
+000012B4 4EB900000000		 JSR	   E.FILE
+000012BA 2F00	      X.1.91	 MOVE.L	   D0,-(A7)
+000012BC 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 3/64
+000012C2 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+000012C6 4A80			 TST.L	   D0
+000012C8 6606			 BNE.S	   X.1.92(PC)
+000012CA 4EB900000000		 JSR	   E.FILE
+000012D0 7214	      X.1.92	 MOVEQ	   #20,D1			         $14
+000012D2 3F01			 MOVE.W	   D1,-(A7)
+000012D4 720B			 MOVEQ	   #11,D1			         $B
+000012D6 3F01			 MOVE.W	   D1,-(A7)
+000012D8 486D8014		 PEA	   STATIC.+20-32768(A5)		         TEST_STRING
+000012DC 2F00			 MOVE.L	   D0,-(A7)
+000012DE 4EB900000000		 JSR	   T.READ
+		      *							       LINE 3/65
+000012E4 487AEEB4		 PEA	   K.36(PC)			         CODE.+$19A
+000012E8 7003			 MOVEQ	   #3,D0			         $3
+000012EA 3F00			 MOVE.W	   D0,-(A7)
+000012EC 486D8016		 PEA	   STATIC.+20-32766(A5)		         TEST_STRING
+000012F0 3F2D8014		 MOVE.W	   STATIC.+20-32768(A5),-(A7)	         TEST_STRING000012F4 4EB900000000		 JSR	   C.CPFF
+000012FA 670C			 BEQ.S	   L.1.61(PC)
+		      *							       LINE 3/66
+000012FC 2D7C00000019 L.1.60	 MOVE.L	   #25,-4(A6)			         $19  $FFFFFFFC
+	 FFFC
+00001304 6100ED0C		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 3/67
+00001308 202D8044     L.1.61	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+0000130C 4A80			 TST.L	   D0
+0000130E 6606			 BNE.S	   X.1.93(PC)
+00001310 4EB900000000		 JSR	   E.FILE
+00001316 2F00	      X.1.93	 MOVE.L	   D0,-(A7)
+00001318 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 3/69
+0000131E 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00001322 4A80			 TST.L	   D0
+00001324 6606			 BNE.S	   X.1.94(PC)
+00001326 4EB900000000		 JSR	   E.FILE
+0000132C 7214	      X.1.94	 MOVEQ	   #20,D1			         $14
+0000132E 3F01			 MOVE.W	   D1,-(A7)
+00001330 720B			 MOVEQ	   #11,D1			         $B
+00001332 3F01			 MOVE.W	   D1,-(A7)
+00001334 486D8014		 PEA	   STATIC.+20-32768(A5)		         TEST_STRING
+00001338 2F00			 MOVE.L	   D0,-(A7)
+0000133A 4EB900000000		 JSR	   T.READ
+		      *							       LINE 3/70
+00001340 487AEE5C		 PEA	   K.37(PC)			         CODE.+$19E
+00001344 7002			 MOVEQ	   #2,D0			         $2
+00001346 3F00			 MOVE.W	   D0,-(A7)
+00001348 486D8016		 PEA	   STATIC.+20-32766(A5)		         TEST_STRING
+0000134C 3F2D8014		 MOVE.W	   STATIC.+20-32768(A5),-(A7)	         TEST_STRING
+00001350 4EB900000000		 JSR	   C.CPFF
+00001356 670C			 BEQ.S	   L.1.63(PC)
+		      *							       LINE 3/71
+00001358 2D7C0000001A L.1.62	 MOVE.L	   #26,-4(A6)			         $1A  $FFFFFFFC
+	 FFFC
+00001360 6100ECB0		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 3/72
+00001364 202D8044     L.1.63	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00001368 4A80			 TST.L	   D0
+0000136A 6606			 BNE.S	   X.1.95(PC)
+0000136C 4EB900000000		 JSR	   E.FILE
+00001372 2F00	      X.1.95	 MOVE.L	   D0,-(A7)
+00001374 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 3/740000137A 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+0000137E 4A80			 TST.L	   D0
+00001380 6606			 BNE.S	   X.1.96(PC)
+00001382 4EB900000000		 JSR	   E.FILE
+00001388 7214	      X.1.96	 MOVEQ	   #20,D1			         $14
+0000138A 3F01			 MOVE.W	   D1,-(A7)
+0000138C 720B			 MOVEQ	   #11,D1			         $B
+0000138E 3F01			 MOVE.W	   D1,-(A7)
+00001390 486D8014		 PEA	   STATIC.+20-32768(A5)		         TEST_STRING
+00001394 2F00			 MOVE.L	   D0,-(A7)
+00001396 4EB900000000		 JSR	   T.READ
+		      *							       LINE 3/75
+0000139C 487AEE02		 PEA	   K.38(PC)			         CODE.+$1A0
+000013A0 7004			 MOVEQ	   #4,D0			         $4
+000013A2 3F00			 MOVE.W	   D0,-(A7)
+000013A4 486D8016		 PEA	   STATIC.+20-32766(A5)		         TEST_STRING
+000013A8 3F2D8014		 MOVE.W	   STATIC.+20-32768(A5),-(A7)	         TEST_STRING
+000013AC 4EB900000000		 JSR	   C.CPFF
+000013B2 670C			 BEQ.S	   L.1.65(PC)
+		      *							       LINE 3/76
+000013B4 2D7C0000001B L.1.64	 MOVE.L	   #27,-4(A6)			         $1B  $FFFFFFFC
+	 FFFC
+000013BC 6100EC54		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 3/77
+000013C0 202D8044     L.1.65	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+000013C4 4A80			 TST.L	   D0
+000013C6 6606			 BNE.S	   X.1.97(PC)
+000013C8 4EB900000000		 JSR	   E.FILE
+000013CE 2F00	      X.1.97	 MOVE.L	   D0,-(A7)
+000013D0 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 3/79
+000013D6 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+000013DA 4A80			 TST.L	   D0
+000013DC 6606			 BNE.S	   X.1.98(PC)
+000013DE 4EB900000000		 JSR	   E.FILE
+000013E4 7214	      X.1.98	 MOVEQ	   #20,D1			         $14
+000013E6 3F01			 MOVE.W	   D1,-(A7)
+000013E8 720B			 MOVEQ	   #11,D1			         $B
+000013EA 3F01			 MOVE.W	   D1,-(A7)
+000013EC 486D8014		 PEA	   STATIC.+20-32768(A5)		         TEST_STRING
+000013F0 2F00			 MOVE.L	   D0,-(A7)
+000013F2 4EB900000000		 JSR	   T.READ
+		      *							       LINE 3/80
+000013F8 487AEDAA		 PEA	   K.39(PC)			         CODE.+$1A4
+000013FC 7006			 MOVEQ	   #6,D0			         $6000013FE 3F00			 MOVE.W	   D0,-(A7)
+00001400 486D8016		 PEA	   STATIC.+20-32766(A5)		         TEST_STRING
+00001404 3F2D8014		 MOVE.W	   STATIC.+20-32768(A5),-(A7)	         TEST_STRING
+00001408 4EB900000000		 JSR	   C.CPFF
+0000140E 670C			 BEQ.S	   L.1.67(PC)
+		      *							       LINE 3/81
+00001410 2D7C0000001C L.1.66	 MOVE.L	   #28,-4(A6)			         $1C  $FFFFFFFC
+	 FFFC
+00001418 6100EBF8		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 3/82
+0000141C 202D8044     L.1.67	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00001420 4A80			 TST.L	   D0
+00001422 6606			 BNE.S	   X.1.99(PC)
+00001424 4EB900000000		 JSR	   E.FILE
+0000142A 2F00	      X.1.99	 MOVE.L	   D0,-(A7)
+0000142C 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 3/84
+00001432 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00001436 4A80			 TST.L	   D0
+00001438 6606			 BNE.S	   X.1.100(PC)
+0000143A 4EB900000000		 JSR	   E.FILE
+00001440 7214	      X.1.100	 MOVEQ	   #20,D1			         $14
+00001442 3F01			 MOVE.W	   D1,-(A7)
+00001444 720B			 MOVEQ	   #11,D1			         $B
+00001446 3F01			 MOVE.W	   D1,-(A7)
+00001448 486D8014		 PEA	   STATIC.+20-32768(A5)		         TEST_STRING
+0000144C 2F00			 MOVE.L	   D0,-(A7)
+0000144E 4EB900000000		 JSR	   T.READ
+		      *							       LINE 3/85
+00001454 487AED54		 PEA	   K.40(PC)			         CODE.+$1AA
+00001458 7005			 MOVEQ	   #5,D0			         $5
+0000145A 3F00			 MOVE.W	   D0,-(A7)
+0000145C 486D8016		 PEA	   STATIC.+20-32766(A5)		         TEST_STRING
+00001460 3F2D8014		 MOVE.W	   STATIC.+20-32768(A5),-(A7)	         TEST_STRING
+00001464 4EB900000000		 JSR	   C.CPFF
+0000146A 670C			 BEQ.S	   L.1.69(PC)
+		      *							       LINE 3/86
+0000146C 2D7C0000001D L.1.68	 MOVE.L	   #29,-4(A6)			         $1D  $FFFFFFFC
+	 FFFC
+00001474 6100EB9C		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 3/87
+00001478 202D8044     L.1.69	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+0000147C 4A80			 TST.L	   D0
+0000147E 6606			 BNE.S	   X.1.101(PC)
+00001480 4EB900000000		 JSR	   E.FILE00001486 2F00	      X.1.101	 MOVE.L	   D0,-(A7)
+00001488 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 3/89
+0000148E 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00001492 4A80			 TST.L	   D0
+00001494 6606			 BNE.S	   X.1.102(PC)
+00001496 4EB900000000		 JSR	   E.FILE
+0000149C 7214	      X.1.102	 MOVEQ	   #20,D1			         $14
+0000149E 3F01			 MOVE.W	   D1,-(A7)
+000014A0 720B			 MOVEQ	   #11,D1			         $B
+000014A2 3F01			 MOVE.W	   D1,-(A7)
+000014A4 486D8014		 PEA	   STATIC.+20-32768(A5)		         TEST_STRING
+000014A8 2F00			 MOVE.L	   D0,-(A7)
+000014AA 4EB900000000		 JSR	   T.READ
+		      *							       LINE 3/90
+000014B0 487AECFE		 PEA	   K.41(PC)			         CODE.+$1B0
+000014B4 7005			 MOVEQ	   #5,D0			         $5
+000014B6 3F00			 MOVE.W	   D0,-(A7)
+000014B8 486D8016		 PEA	   STATIC.+20-32766(A5)		         TEST_STRING
+000014BC 3F2D8014		 MOVE.W	   STATIC.+20-32768(A5),-(A7)	         TEST_STRING
+000014C0 4EB900000000		 JSR	   C.CPFF
+000014C6 670C			 BEQ.S	   L.1.71(PC)
+		      *							       LINE 3/91
+000014C8 2D7C0000001E L.1.70	 MOVE.L	   #30,-4(A6)			         $1E  $FFFFFFFC
+	 FFFC
+000014D0 6100EB40		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 3/92
+000014D4 202D8044     L.1.71	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+000014D8 4A80			 TST.L	   D0
+000014DA 6606			 BNE.S	   X.1.103(PC)
+000014DC 4EB900000000		 JSR	   E.FILE
+000014E2 2F00	      X.1.103	 MOVE.L	   D0,-(A7)
+000014E4 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 3/94
+000014EA 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+000014EE 4A80			 TST.L	   D0
+000014F0 6606			 BNE.S	   X.1.104(PC)
+000014F2 4EB900000000		 JSR	   E.FILE
+000014F8 7214	      X.1.104	 MOVEQ	   #20,D1			         $14
+000014FA 3F01			 MOVE.W	   D1,-(A7)
+000014FC 720B			 MOVEQ	   #11,D1			         $B
+000014FE 3F01			 MOVE.W	   D1,-(A7)
+00001500 486D8014		 PEA	   STATIC.+20-32768(A5)		         TEST_STRING
+00001504 2F00			 MOVE.L	   D0,-(A7)
+00001506 4EB900000000		 JSR	   T.READ		      *							       LINE 3/95
+0000150C 487AECA8		 PEA	   K.42(PC)			         CODE.+$1B6
+00001510 7008			 MOVEQ	   #8,D0			         $8
+00001512 3F00			 MOVE.W	   D0,-(A7)
+00001514 486D8016		 PEA	   STATIC.+20-32766(A5)		         TEST_STRING
+00001518 3F2D8014		 MOVE.W	   STATIC.+20-32768(A5),-(A7)	         TEST_STRING
+0000151C 4EB900000000		 JSR	   C.CPFF
+00001522 670C			 BEQ.S	   L.1.73(PC)
+		      *							       LINE 3/96
+00001524 2D7C0000001F L.1.72	 MOVE.L	   #31,-4(A6)			         $1F  $FFFFFFFC
+	 FFFC
+0000152C 6100EAE4		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 3/97
+00001530 202D8044     L.1.73	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00001534 4A80			 TST.L	   D0
+00001536 6606			 BNE.S	   X.1.105(PC)
+00001538 4EB900000000		 JSR	   E.FILE
+0000153E 2F00	      X.1.105	 MOVE.L	   D0,-(A7)
+00001540 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 3/99
+00001546 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+0000154A 4A80			 TST.L	   D0
+0000154C 6606			 BNE.S	   X.1.106(PC)
+0000154E 4EB900000000		 JSR	   E.FILE
+00001554 7214	      X.1.106	 MOVEQ	   #20,D1			         $14
+00001556 3F01			 MOVE.W	   D1,-(A7)
+00001558 720B			 MOVEQ	   #11,D1			         $B
+0000155A 3F01			 MOVE.W	   D1,-(A7)
+0000155C 486D8014		 PEA	   STATIC.+20-32768(A5)		         TEST_STRING
+00001560 2F00			 MOVE.L	   D0,-(A7)
+00001562 4EB900000000		 JSR	   T.READ
+		      *							       LINE 3/100
+00001568 487AEC54		 PEA	   K.43(PC)			         CODE.+$1BE
+0000156C 7003			 MOVEQ	   #3,D0			         $3
+0000156E 3F00			 MOVE.W	   D0,-(A7)
+00001570 486D8016		 PEA	   STATIC.+20-32766(A5)		         TEST_STRING
+00001574 3F2D8014		 MOVE.W	   STATIC.+20-32768(A5),-(A7)	         TEST_STRING
+00001578 4EB900000000		 JSR	   C.CPFF
+0000157E 670C			 BEQ.S	   L.1.75(PC)
+		      *							       LINE 3/101
+00001580 2D7C00000020 L.1.74	 MOVE.L	   #32,-4(A6)			         $20  $FFFFFFFC
+	 FFFC
+00001588 6100EA88		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 3/102
+0000158C 202D8044     L.1.75	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE00001590 4A80			 TST.L	   D0
+00001592 6606			 BNE.S	   X.1.107(PC)
+00001594 4EB900000000		 JSR	   E.FILE
+0000159A 2F00	      X.1.107	 MOVE.L	   D0,-(A7)
+0000159C 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 3/104
+000015A2 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+000015A6 4A80			 TST.L	   D0
+000015A8 6606			 BNE.S	   X.1.108(PC)
+000015AA 4EB900000000		 JSR	   E.FILE
+000015B0 7214	      X.1.108	 MOVEQ	   #20,D1			         $14
+000015B2 3F01			 MOVE.W	   D1,-(A7)
+000015B4 720B			 MOVEQ	   #11,D1			         $B
+000015B6 3F01			 MOVE.W	   D1,-(A7)
+000015B8 486D8014		 PEA	   STATIC.+20-32768(A5)		         TEST_STRING
+000015BC 2F00			 MOVE.L	   D0,-(A7)
+000015BE 4EB900000000		 JSR	   T.READ
+		      *							       LINE 3/105
+000015C4 7037			 MOVEQ	   #55,D0			         $37
+000015C6 1F00			 MOVE.B	   D0,-(A7)
+000015C8 486D8016		 PEA	   STATIC.+20-32766(A5)		         TEST_STRING
+000015CC 3F2D8014		 MOVE.W	   STATIC.+20-32768(A5),-(A7)	         TEST_STRING
+000015D0 4EB900000000		 JSR	   C.CPFC
+000015D6 670C			 BEQ.S	   L.1.77(PC)
+		      *							       LINE 3/106
+000015D8 2D7C00000021 L.1.76	 MOVE.L	   #33,-4(A6)			         $21  $FFFFFFFC
+	 FFFC
+000015E0 6100EA30		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 3/107
+000015E4 202D8044     L.1.77	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+000015E8 4A80			 TST.L	   D0
+000015EA 6606			 BNE.S	   X.1.109(PC)
+000015EC 4EB900000000		 JSR	   E.FILE
+000015F2 2F00	      X.1.109	 MOVE.L	   D0,-(A7)
+000015F4 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 3/109
+000015FA 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+000015FE 4A80			 TST.L	   D0
+00001600 6606			 BNE.S	   X.1.110(PC)
+00001602 4EB900000000		 JSR	   E.FILE
+00001608 7214	      X.1.110	 MOVEQ	   #20,D1			         $14
+0000160A 3F01			 MOVE.W	   D1,-(A7)
+0000160C 720B			 MOVEQ	   #11,D1			         $B
+0000160E 3F01			 MOVE.W	   D1,-(A7)
+00001610 486D8014		 PEA	   STATIC.+20-32768(A5)		         TEST_STRING00001614 2F00			 MOVE.L	   D0,-(A7)
+00001616 4EB900000000		 JSR	   T.READ
+		      *							       LINE 3/110
+0000161C 487AEBA4		 PEA	   K.44(PC)			         CODE.+$1C2
+00001620 7004			 MOVEQ	   #4,D0			         $4
+00001622 3F00			 MOVE.W	   D0,-(A7)
+00001624 486D8016		 PEA	   STATIC.+20-32766(A5)		         TEST_STRING
+00001628 3F2D8014		 MOVE.W	   STATIC.+20-32768(A5),-(A7)	         TEST_STRING
+0000162C 4EB900000000		 JSR	   C.CPFF
+00001632 670C			 BEQ.S	   L.1.79(PC)
+		      *							       LINE 3/111
+00001634 2D7C00000022 L.1.78	 MOVE.L	   #34,-4(A6)			         $22  $FFFFFFFC
+	 FFFC
+0000163C 6100E9D4		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 3/112
+00001640 202D8044     L.1.79	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00001644 4A80			 TST.L	   D0
+00001646 6606			 BNE.S	   X.1.111(PC)
+00001648 4EB900000000		 JSR	   E.FILE
+0000164E 2F00	      X.1.111	 MOVE.L	   D0,-(A7)
+00001650 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 3/114
+00001656 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+0000165A 4A80			 TST.L	   D0
+0000165C 6606			 BNE.S	   X.1.112(PC)
+0000165E 4EB900000000		 JSR	   E.FILE
+00001664 7214	      X.1.112	 MOVEQ	   #20,D1			         $14
+00001666 3F01			 MOVE.W	   D1,-(A7)
+00001668 720B			 MOVEQ	   #11,D1			         $B
+0000166A 3F01			 MOVE.W	   D1,-(A7)
+0000166C 486D8014		 PEA	   STATIC.+20-32768(A5)		         TEST_STRING
+00001670 2F00			 MOVE.L	   D0,-(A7)
+00001672 4EB900000000		 JSR	   T.READ
+		      *							       LINE 3/115
+00001678 487AEB4C		 PEA	   K.45(PC)			         CODE.+$1C6
+0000167C 7008			 MOVEQ	   #8,D0			         $8
+0000167E 3F00			 MOVE.W	   D0,-(A7)
+00001680 486D8016		 PEA	   STATIC.+20-32766(A5)		         TEST_STRING
+00001684 3F2D8014		 MOVE.W	   STATIC.+20-32768(A5),-(A7)	         TEST_STRING
+00001688 4EB900000000		 JSR	   C.CPFF
+0000168E 670C			 BEQ.S	   L.1.81(PC)
+		      *							       LINE 3/116
+00001690 2D7C00000023 L.1.80	 MOVE.L	   #35,-4(A6)			         $23  $FFFFFFFC
+	 FFFC
+00001698 6100E978		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12		      *							       LINE 3/117
+0000169C 202D8044     L.1.81	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+000016A0 4A80			 TST.L	   D0
+000016A2 6606			 BNE.S	   X.1.113(PC)
+000016A4 4EB900000000		 JSR	   E.FILE
+000016AA 2F00	      X.1.113	 MOVE.L	   D0,-(A7)
+000016AC 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 3/119
+000016B2 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+000016B6 4A80			 TST.L	   D0
+000016B8 6606			 BNE.S	   X.1.114(PC)
+000016BA 4EB900000000		 JSR	   E.FILE
+000016C0 7214	      X.1.114	 MOVEQ	   #20,D1			         $14
+000016C2 3F01			 MOVE.W	   D1,-(A7)
+000016C4 720B			 MOVEQ	   #11,D1			         $B
+000016C6 3F01			 MOVE.W	   D1,-(A7)
+000016C8 486D8014		 PEA	   STATIC.+20-32768(A5)		         TEST_STRING
+000016CC 2F00			 MOVE.L	   D0,-(A7)
+000016CE 4EB900000000		 JSR	   T.READ
+		      *							       LINE 3/120
+000016D4 487AEAF8		 PEA	   K.46(PC)			         CODE.+$1CE
+000016D8 7010			 MOVEQ	   #16,D0			         $10
+000016DA 3F00			 MOVE.W	   D0,-(A7)
+000016DC 486D8016		 PEA	   STATIC.+20-32766(A5)		         TEST_STRING
+000016E0 3F2D8014		 MOVE.W	   STATIC.+20-32768(A5),-(A7)	         TEST_STRING
+000016E4 4EB900000000		 JSR	   C.CPFF
+000016EA 670C			 BEQ.S	   L.1.83(PC)
+		      *							       LINE 3/121
+000016EC 2D7C00000024 L.1.82	 MOVE.L	   #36,-4(A6)			         $24  $FFFFFFFC
+	 FFFC
+000016F4 6100E91C		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 3/122
+000016F8 202D8044     L.1.83	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+000016FC 4A80			 TST.L	   D0
+000016FE 6606			 BNE.S	   X.1.115(PC)
+00001700 4EB900000000		 JSR	   E.FILE
+00001706 2F00	      X.1.115	 MOVE.L	   D0,-(A7)
+00001708 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 3/124
+0000170E 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00001712 4A80			 TST.L	   D0
+00001714 6606			 BNE.S	   X.1.116(PC)
+00001716 4EB900000000		 JSR	   E.FILE
+0000171C 7214	      X.1.116	 MOVEQ	   #20,D1			         $14
+0000171E 3F01			 MOVE.W	   D1,-(A7)00001720 720B			 MOVEQ	   #11,D1			         $B
+00001722 3F01			 MOVE.W	   D1,-(A7)
+00001724 486D8014		 PEA	   STATIC.+20-32768(A5)		         TEST_STRING
+00001728 2F00			 MOVE.L	   D0,-(A7)
+0000172A 4EB900000000		 JSR	   T.READ
+		      *							       LINE 3/125
+00001730 7046			 MOVEQ	   #70,D0			         $46
+00001732 1F00			 MOVE.B	   D0,-(A7)
+00001734 486D8016		 PEA	   STATIC.+20-32766(A5)		         TEST_STRING
+00001738 3F2D8014		 MOVE.W	   STATIC.+20-32768(A5),-(A7)	         TEST_STRING
+0000173C 4EB900000000		 JSR	   C.CPFC
+00001742 670C			 BEQ.S	   L.1.85(PC)
+		      *							       LINE 3/126
+00001744 2D7C00000025 L.1.84	 MOVE.L	   #37,-4(A6)			         $25  $FFFFFFFC
+	 FFFC
+0000174C 6100E8C4		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 3/127
+00001750 202D8044     L.1.85	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00001754 4A80			 TST.L	   D0
+00001756 6606			 BNE.S	   X.1.117(PC)
+00001758 4EB900000000		 JSR	   E.FILE
+0000175E 2F00	      X.1.117	 MOVE.L	   D0,-(A7)
+00001760 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 3/129
+00001766 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+0000176A 4A80			 TST.L	   D0
+0000176C 6606			 BNE.S	   X.1.118(PC)
+0000176E 4EB900000000		 JSR	   E.FILE
+00001774 7214	      X.1.118	 MOVEQ	   #20,D1			         $14
+00001776 3F01			 MOVE.W	   D1,-(A7)
+00001778 720B			 MOVEQ	   #11,D1			         $B
+0000177A 3F01			 MOVE.W	   D1,-(A7)
+0000177C 486D8014		 PEA	   STATIC.+20-32768(A5)		         TEST_STRING
+00001780 2F00			 MOVE.L	   D0,-(A7)
+00001782 4EB900000000		 JSR	   T.READ
+		      *							       LINE 3/130
+00001788 487AEA54		 PEA	   K.47(PC)			         CODE.+$1DE
+0000178C 7003			 MOVEQ	   #3,D0			         $3
+0000178E 3F00			 MOVE.W	   D0,-(A7)
+00001790 486D8016		 PEA	   STATIC.+20-32766(A5)		         TEST_STRING
+00001794 3F2D8014		 MOVE.W	   STATIC.+20-32768(A5),-(A7)	         TEST_STRING
+00001798 4EB900000000		 JSR	   C.CPFF
+0000179E 670C			 BEQ.S	   L.1.87(PC)
+		      *							       LINE 3/131
+000017A0 2D7C00000026 L.1.86	 MOVE.L	   #38,-4(A6)			         $26  $FFFFFFFC	 FFFC
+000017A8 6100E868		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 3/132
+000017AC 202D8044     L.1.87	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+000017B0 4A80			 TST.L	   D0
+000017B2 6606			 BNE.S	   X.1.119(PC)
+000017B4 4EB900000000		 JSR	   E.FILE
+000017BA 2F00	      X.1.119	 MOVE.L	   D0,-(A7)
+000017BC 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 3/134
+000017C2 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+000017C6 4A80			 TST.L	   D0
+000017C8 6606			 BNE.S	   X.1.120(PC)
+000017CA 4EB900000000		 JSR	   E.FILE
+000017D0 7214	      X.1.120	 MOVEQ	   #20,D1			         $14
+000017D2 3F01			 MOVE.W	   D1,-(A7)
+000017D4 720B			 MOVEQ	   #11,D1			         $B
+000017D6 3F01			 MOVE.W	   D1,-(A7)
+000017D8 486D8014		 PEA	   STATIC.+20-32768(A5)		         TEST_STRING
+000017DC 2F00			 MOVE.L	   D0,-(A7)
+000017DE 4EB900000000		 JSR	   T.READ
+		      *							       LINE 3/135
+000017E4 487AE9FC		 PEA	   K.48(PC)			         CODE.+$1E2
+000017E8 7007			 MOVEQ	   #7,D0			         $7
+000017EA 3F00			 MOVE.W	   D0,-(A7)
+000017EC 486D8016		 PEA	   STATIC.+20-32766(A5)		         TEST_STRING
+000017F0 3F2D8014		 MOVE.W	   STATIC.+20-32768(A5),-(A7)	         TEST_STRING
+000017F4 4EB900000000		 JSR	   C.CPFF
+000017FA 670C			 BEQ.S	   L.1.89(PC)
+		      *							       LINE 3/136
+000017FC 2D7C00000027 L.1.88	 MOVE.L	   #39,-4(A6)			         $27  $FFFFFFFC
+	 FFFC
+00001804 6100E80C		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 3/137
+00001808 202D8044     L.1.89	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+0000180C 4A80			 TST.L	   D0
+0000180E 6606			 BNE.S	   X.1.121(PC)
+00001810 4EB900000000		 JSR	   E.FILE
+00001816 2F00	      X.1.121	 MOVE.L	   D0,-(A7)
+00001818 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 3/139
+0000181E 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00001822 4A80			 TST.L	   D0
+00001824 6606			 BNE.S	   X.1.122(PC)
+00001826 4EB900000000		 JSR	   E.FILE0000182C 7214	      X.1.122	 MOVEQ	   #20,D1			         $14
+0000182E 3F01			 MOVE.W	   D1,-(A7)
+00001830 720B			 MOVEQ	   #11,D1			         $B
+00001832 3F01			 MOVE.W	   D1,-(A7)
+00001834 486D8014		 PEA	   STATIC.+20-32768(A5)		         TEST_STRING
+00001838 2F00			 MOVE.L	   D0,-(A7)
+0000183A 4EB900000000		 JSR	   T.READ
+		      *							       LINE 3/140
+00001840 487AE9A8		 PEA	   K.49(PC)			         CODE.+$1EA
+00001844 7010			 MOVEQ	   #16,D0			         $10
+00001846 3F00			 MOVE.W	   D0,-(A7)
+00001848 486D8016		 PEA	   STATIC.+20-32766(A5)		         TEST_STRING
+0000184C 3F2D8014		 MOVE.W	   STATIC.+20-32768(A5),-(A7)	         TEST_STRING
+00001850 4EB900000000		 JSR	   C.CPFF
+00001856 670C			 BEQ.S	   L.1.91(PC)
+		      *							       LINE 3/141
+00001858 2D7C00000028 L.1.90	 MOVE.L	   #40,-4(A6)			         $28  $FFFFFFFC
+	 FFFC
+00001860 6100E7B0		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 3/142
+00001864 202D8044     L.1.91	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00001868 4A80			 TST.L	   D0
+0000186A 6606			 BNE.S	   X.1.123(PC)
+0000186C 4EB900000000		 JSR	   E.FILE
+00001872 2F00	      X.1.123	 MOVE.L	   D0,-(A7)
+00001874 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 3/144
+0000187A 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+0000187E 4A80			 TST.L	   D0
+00001880 6606			 BNE.S	   X.1.124(PC)
+00001882 4EB900000000		 JSR	   E.FILE
+00001888 7214	      X.1.124	 MOVEQ	   #20,D1			         $14
+0000188A 3F01			 MOVE.W	   D1,-(A7)
+0000188C 720B			 MOVEQ	   #11,D1			         $B
+0000188E 3F01			 MOVE.W	   D1,-(A7)
+00001890 486D8014		 PEA	   STATIC.+20-32768(A5)		         TEST_STRING
+00001894 2F00			 MOVE.L	   D0,-(A7)
+00001896 4EB900000000		 JSR	   T.READ
+		      *							       LINE 3/145
+0000189C 487AE95C		 PEA	   K.50(PC)			         CODE.+$1FA
+000018A0 700E			 MOVEQ	   #14,D0			         $E
+000018A2 3F00			 MOVE.W	   D0,-(A7)
+000018A4 486D8016		 PEA	   STATIC.+20-32766(A5)		         TEST_STRING
+000018A8 3F2D8014		 MOVE.W	   STATIC.+20-32768(A5),-(A7)	         TEST_STRING
+000018AC 4EB900000000		 JSR	   C.CPFF000018B2 670C			 BEQ.S	   L.1.93(PC)
+		      *							       LINE 3/146
+000018B4 2D7C00000029 L.1.92	 MOVE.L	   #41,-4(A6)			         $29  $FFFFFFFC
+	 FFFC
+000018BC 6100E754		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 3/147
+000018C0 202D8044     L.1.93	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+000018C4 4A80			 TST.L	   D0
+000018C6 6606			 BNE.S	   X.1.125(PC)
+000018C8 4EB900000000		 JSR	   E.FILE
+000018CE 2F00	      X.1.125	 MOVE.L	   D0,-(A7)
+000018D0 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 3/149
+000018D6 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+000018DA 4A80			 TST.L	   D0
+000018DC 6606			 BNE.S	   X.1.126(PC)
+000018DE 4EB900000000		 JSR	   E.FILE
+000018E4 7214	      X.1.126	 MOVEQ	   #20,D1			         $14
+000018E6 3F01			 MOVE.W	   D1,-(A7)
+000018E8 720B			 MOVEQ	   #11,D1			         $B
+000018EA 3F01			 MOVE.W	   D1,-(A7)
+000018EC 486D8014		 PEA	   STATIC.+20-32768(A5)		         TEST_STRING
+000018F0 2F00			 MOVE.L	   D0,-(A7)
+000018F2 4EB900000000		 JSR	   T.READ
+		      *							       LINE 3/150
+000018F8 487AE90E		 PEA	   K.51(PC)			         CODE.+$208
+000018FC 7008			 MOVEQ	   #8,D0			         $8
+000018FE 3F00			 MOVE.W	   D0,-(A7)
+00001900 486D8016		 PEA	   STATIC.+20-32766(A5)		         TEST_STRING
+00001904 3F2D8014		 MOVE.W	   STATIC.+20-32768(A5),-(A7)	         TEST_STRING
+00001908 4EB900000000		 JSR	   C.CPFF
+0000190E 670C			 BEQ.S	   L.1.95(PC)
+		      *							       LINE 3/151
+00001910 2D7C0000002A L.1.94	 MOVE.L	   #42,-4(A6)			         $2A  $FFFFFFFC
+	 FFFC
+00001918 6100E6F8		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 3/152
+0000191C 202D8044     L.1.95	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00001920 4A80			 TST.L	   D0
+00001922 6606			 BNE.S	   X.1.127(PC)
+00001924 4EB900000000		 JSR	   E.FILE
+0000192A 2F00	      X.1.127	 MOVE.L	   D0,-(A7)
+0000192C 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 3/154
+00001932 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE00001936 4A80			 TST.L	   D0
+00001938 6606			 BNE.S	   X.1.128(PC)
+0000193A 4EB900000000		 JSR	   E.FILE
+00001940 7214	      X.1.128	 MOVEQ	   #20,D1			         $14
+00001942 3F01			 MOVE.W	   D1,-(A7)
+00001944 720B			 MOVEQ	   #11,D1			         $B
+00001946 3F01			 MOVE.W	   D1,-(A7)
+00001948 486D8014		 PEA	   STATIC.+20-32768(A5)		         TEST_STRING
+0000194C 2F00			 MOVE.L	   D0,-(A7)
+0000194E 4EB900000000		 JSR	   T.READ
+		      *							       LINE 3/155
+00001954 487AE8BA		 PEA	   K.52(PC)			         CODE.+$210
+00001958 700C			 MOVEQ	   #12,D0			         $C
+0000195A 3F00			 MOVE.W	   D0,-(A7)
+0000195C 486D8016		 PEA	   STATIC.+20-32766(A5)		         TEST_STRING
+00001960 3F2D8014		 MOVE.W	   STATIC.+20-32768(A5),-(A7)	         TEST_STRING
+00001964 4EB900000000		 JSR	   C.CPFF
+0000196A 670C			 BEQ.S	   L.1.97(PC)
+		      *							       LINE 3/156
+0000196C 2D7C0000002B L.1.96	 MOVE.L	   #43,-4(A6)			         $2B  $FFFFFFFC
+	 FFFC
+00001974 6100E69C		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 3/157
+00001978 202D8044     L.1.97	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+0000197C 4A80			 TST.L	   D0
+0000197E 6606			 BNE.S	   X.1.129(PC)
+00001980 4EB900000000		 JSR	   E.FILE
+00001986 2F00	      X.1.129	 MOVE.L	   D0,-(A7)
+00001988 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 3/159
+0000198E 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00001992 4A80			 TST.L	   D0
+00001994 6606			 BNE.S	   X.1.130(PC)
+00001996 4EB900000000		 JSR	   E.FILE
+0000199C 7214	      X.1.130	 MOVEQ	   #20,D1			         $14
+0000199E 3F01			 MOVE.W	   D1,-(A7)
+000019A0 720B			 MOVEQ	   #11,D1			         $B
+000019A2 3F01			 MOVE.W	   D1,-(A7)
+000019A4 486D8014		 PEA	   STATIC.+20-32768(A5)		         TEST_STRING
+000019A8 2F00			 MOVE.L	   D0,-(A7)
+000019AA 4EB900000000		 JSR	   T.READ
+		      *							       LINE 3/160
+000019B0 487AE86A		 PEA	   K.53(PC)			         CODE.+$21C
+000019B4 700B			 MOVEQ	   #11,D0			         $B
+000019B6 3F00			 MOVE.W	   D0,-(A7)000019B8 486D8016		 PEA	   STATIC.+20-32766(A5)		         TEST_STRING
+000019BC 3F2D8014		 MOVE.W	   STATIC.+20-32768(A5),-(A7)	         TEST_STRING
+000019C0 4EB900000000		 JSR	   C.CPFF
+000019C6 670C			 BEQ.S	   L.1.99(PC)
+		      *							       LINE 3/161
+000019C8 2D7C0000002C L.1.98	 MOVE.L	   #44,-4(A6)			         $2C  $FFFFFFFC
+	 FFFC
+000019D0 6100E640		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 3/162
+000019D4 202D8044     L.1.99	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+000019D8 4A80			 TST.L	   D0
+000019DA 6606			 BNE.S	   X.1.131(PC)
+000019DC 4EB900000000		 JSR	   E.FILE
+000019E2 2F00	      X.1.131	 MOVE.L	   D0,-(A7)
+000019E4 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 3/164
+000019EA 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+000019EE 4A80			 TST.L	   D0
+000019F0 6606			 BNE.S	   X.1.132(PC)
+000019F2 4EB900000000		 JSR	   E.FILE
+000019F8 7214	      X.1.132	 MOVEQ	   #20,D1			         $14
+000019FA 3F01			 MOVE.W	   D1,-(A7)
+000019FC 720B			 MOVEQ	   #11,D1			         $B
+000019FE 3F01			 MOVE.W	   D1,-(A7)
+00001A00 486D8014		 PEA	   STATIC.+20-32768(A5)		         TEST_STRING
+00001A04 2F00			 MOVE.L	   D0,-(A7)
+00001A06 4EB900000000		 JSR	   T.READ
+		      *							       LINE 3/165
+00001A0C 487AE81A		 PEA	   K.54(PC)			         CODE.+$228
+00001A10 7008			 MOVEQ	   #8,D0			         $8
+00001A12 3F00			 MOVE.W	   D0,-(A7)
+00001A14 486D8016		 PEA	   STATIC.+20-32766(A5)		         TEST_STRING
+00001A18 3F2D8014		 MOVE.W	   STATIC.+20-32768(A5),-(A7)	         TEST_STRING
+00001A1C 4EB900000000		 JSR	   C.CPFF
+00001A22 670C			 BEQ.S	   L.1.101(PC)
+		      *							       LINE 3/166
+00001A24 2D7C0000002D L.1.100	 MOVE.L	   #45,-4(A6)			         $2D  $FFFFFFFC
+	 FFFC
+00001A2C 6100E5E4		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 3/167
+00001A30 202D8044     L.1.101	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00001A34 4A80			 TST.L	   D0
+00001A36 6606			 BNE.S	   X.1.133(PC)
+00001A38 4EB900000000		 JSR	   E.FILE
+00001A3E 2F00	      X.1.133	 MOVE.L	   D0,-(A7)00001A40 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 3/169
+00001A46 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00001A4A 4A80			 TST.L	   D0
+00001A4C 6606			 BNE.S	   X.1.134(PC)
+00001A4E 4EB900000000		 JSR	   E.FILE
+00001A54 7214	      X.1.134	 MOVEQ	   #20,D1			         $14
+00001A56 3F01			 MOVE.W	   D1,-(A7)
+00001A58 720B			 MOVEQ	   #11,D1			         $B
+00001A5A 3F01			 MOVE.W	   D1,-(A7)
+00001A5C 486D8014		 PEA	   STATIC.+20-32768(A5)		         TEST_STRING
+00001A60 2F00			 MOVE.L	   D0,-(A7)
+00001A62 4EB900000000		 JSR	   T.READ
+		      *							       LINE 3/170
+00001A68 487AE7C6		 PEA	   K.55(PC)			         CODE.+$230
+00001A6C 700A			 MOVEQ	   #10,D0			         $A
+00001A6E 3F00			 MOVE.W	   D0,-(A7)
+00001A70 486D8016		 PEA	   STATIC.+20-32766(A5)		         TEST_STRING
+00001A74 3F2D8014		 MOVE.W	   STATIC.+20-32768(A5),-(A7)	         TEST_STRING
+00001A78 4EB900000000		 JSR	   C.CPFF
+00001A7E 670C			 BEQ.S	   L.1.103(PC)
+		      *							       LINE 3/171
+00001A80 2D7C0000002E L.1.102	 MOVE.L	   #46,-4(A6)			         $2E  $FFFFFFFC
+	 FFFC
+00001A88 6100E588		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 3/172
+00001A8C 202D8044     L.1.103	 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00001A90 4A80			 TST.L	   D0
+00001A92 6606			 BNE.S	   X.1.135(PC)
+00001A94 4EB900000000		 JSR	   E.FILE
+00001A9A 2F00	      X.1.135	 MOVE.L	   D0,-(A7)
+00001A9C 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 3/174
+00001AA2 202D8044		 MOVE.L	   STATIC.+68-32768(A5),D0	         TEST_FILE
+00001AA6 4A80			 TST.L	   D0
+00001AA8 6606			 BNE.S	   X.1.136(PC)
+00001AAA 4EB900000000		 JSR	   E.FILE
+00001AB0 2F00	      X.1.136	 MOVE.L	   D0,-(A7)
+00001AB2 4EB900000000		 JSR	   I.SCRTCH
+		      *							       LINE 3/176
+00001AB8 202D0000		 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00001ABC 4A80			 TST.L	   D0
+00001ABE 6606			 BNE.S	   X.1.137(PC)
+00001AC0 4EB900000000		 JSR	   E.FILE
+00001AC6 720A	      X.1.137	 MOVEQ	   #10,D1			         $A00001AC8 3F01			 MOVE.W	   D1,-(A7)
+00001ACA 7204			 MOVEQ	   #4,D1			         $4
+00001ACC 3F01			 MOVE.W	   D1,-(A7)
+00001ACE 487AE76A		 PEA	   K.56(PC)			         CODE.+$23A
+00001AD2 2F00			 MOVE.L	   D0,-(A7)
+00001AD4 4EB900000000		 JSR	   T.WRITE
+00001ADA 2F00			 MOVE.L	   D0,-(A7)
+00001ADC 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 3/177
+00001AE2 4EB900000000		 JSR	   M.STOP
+				 XREF	   TTYOUTPU
+				 XREF	   E.FILE
+				 XREF	   T.WRITE
+				 XREF	   T.WRTLN
+				 XREF	   T.BREAK
+				 XREF	   M.ENTRY
+				 XREF	   T.REWRIT
+				 XREF	   D.SINGLE
+				 XREF	   I.FILNAM
+				 XREF	   I.CLOSE
+				 XREF	   T.RESET
+				 XREF	   T.READ
+				 XREF	   T.READLN
+				 XREF	   C.CPFF
+				 XREF	   D.CMP
+				 XREF	   I.FILSTA
+				 XREF	   F.FLOAT
+				 XREF	   F.CMP
+				 XREF	   C.CPFC
+				 XREF	   I.SCRTCH
+				 XREF	   M.STOP
+		      *
+		      *		 Code area:      00001900 bytes (6400 decimal)
+		      *		 Constant area:  000001E8 bytes (488 decimal)
+		      *		 Static area:    0000006E bytes (110 decimal)
+		      *
+	 00000000		 END
+ .1{O

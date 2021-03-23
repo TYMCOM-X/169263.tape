@@ -1,0 +1,567 @@
+$num off
+$page
+$cen
+&MDSI VAX PASCAL USER&'&S GUIDE&
+$ski
+&Table of contents&
+$ski 2 $ver $tab 12,45
+1.0	Implementation Overview	. . . . . . .  2
+
+2.0	PAXCAL Programs under VMS	. . . . . . .  2
+2.1	Sharability	. . . . . . .  3
+2.2	Dynamic Memory	. . . . . . .  4
+2.3	The PAXCAL Monitor	. . . . . . .  5
+2.4	Debugging Facilities	. . . . . . .  6
+
+3.0	I/O Implementation	. . . . . . .  7
+3.1	Filename Interpretation	. . . . . . .  7
+3.2	Text File I/O	. . . . . . .  9
+3.3	Typed File I/O	. . . . . . . 10
+3.4	Binary File I/O	. . . . . . . 10
+
+4.0	Using the PAXCAL Runtime	. . . . . . . 10
+
+5.0	How to use the PAXCAL Compiler	. . . . . . . 11
+$title right 'MDSI VAX PASCAL User''s Guide/\' right 'January 17, 1980'
+$page
+$just $tab
+$ver
+1.0 -- &Implementation Overview&
+$ski $jus
+The MDSI VAX PASCAL (PAXCAL) compiler generates native VAX-11
+code.
+This binary code is linked with the PAXCAL libraries to produce an
+executable image to be run under VAX/VMS.
+The PAXCAL libraries (PAXRTL and PAXLIB) perform various functions for
+the program for which the emission of inline code is impractical.
+Such functions include I/O, certain set and string operations, error
+reporting, dynamic memory allocation, and program initialization.
+$ski
+The PAXCAL runtime support defines and implements an interface
+between compiled programs and available system software.
+PAXCAL uses VMS system services when necessary, and uses RMS-11 for
+all I/O (currently).
+A few common runtime routines (LIB$, OTS$, and MTH$) are also called from
+both the runtime and the inline code.
+String and set support is hand-coded for efficiency.
+$ski
+The runtime routines (and PAXCAL procedures) follow the VAX procedure
+calling conventions, and generally conform to the standards described
+in the &Modular Libraries& manual from DEC.
+The libraries are written in VAX-11 MACRO, and occupy 88 pages of memory,
+83 of which are sharable.
+This total includes the VMS system sharable library VMSRTL.
+$ski 2 $ver
+2.0 -- &PAXCAL Programs under VMS&
+$ski $jus
+A PAXCAL program consists of the compiled code and the PAXCAL libraries
+linked together to form an executable image.
+There are two libraries; PAXRTL is a single sharable image which is linked
+into every PAXCAL program, while PAXLIB is an object library whose modules
+are "pulled" into the link as needed to resolve undefined symbols.
+PAXRTL includes VMSRTL within it, and thus the final executable image
+references both sharables, VMSRTL and PAXRTL, while requiring only a single
+copy of VMSRTL.
+Calls to library routines from the compiled code will be resolved to VMSRTL
+within PAXRTL by the linker.
+$ski
+PAXLIB contains modules defining standard predefined symbols, such as TTY,
+and routines, such as TRACE.
+Such routine modules branch to PAXRTL at the proper place.
+PAXLIB also contains weak definitions of symbols, to provide user control
+at link time of various code options through the linker INCLUDE option.
+An example of this mechanism is the statement spy option described
+in Section 2.4 below.
+$ski
+In general, programs running under VMS are neither restartable nor sharable.
+Any PAXCAL program can be written
+to be restartable (that is, self-initializing);
+the runtime is also self-initializing except with respect to its (limited)
+use of dynamic memory.
+At any time when no files are open, a program can
+call a special runtime
+entry point to reinitialize the runtime.
+Unfortunately, there is no DCL command to restart an interrupted program
+(such as REENTER in TOPS-10).
+$ski
+Conditions, as discussed in the &VAX Architecture Handbook& from DEC,
+are never modified by the PAXCAL runtime.
+The level 0 condition handler installed at program initialization time
+resignals any error condition with which it is invoked, after providing
+a traceback and statement spy.
+Replacement condition handlers can be provided for the program stack frame,
+or any of its subordinates, to handle arithmetic or other exceptions which
+are not strictly fatal errors.
+As with any other condition handler on the VAX, the choice is essentially
+to continue or to resignal.
+$ski
+Asynchronous interrupt signals are difficult for user programs to
+intercept on the VAX.
+For the moment, no facility for handling breaks is available; indeed, such
+a facility is difficult to imagine, given the current VAX/VMS method of
+reporting control-c signals as ASTs from the terminal device driver.
+A single program exception can be initiated by the user, however (Section 2.4).
+$ski
+The PAXCAL system includes certain logical name assignments on some level,
+preferably in the group or system table.
+Most are for convenience; the standard names "PAX$INPUT" and "PAX$OUTPUT",
+however, are used for recognizing the program's input and output streams
+respectively.
+Note that these names are not necessarily associated with a terminal
+device, as in a batch job, but should be assigned to "SYS$INPUT" and
+"SYS$OUTPUT" respectively.
+The incorrect assignment of these names will result in a failure to
+recognize the association of the controlling input and output streams,
+as required by Chapter 14 of the &MDSI Pascal Report&.
+$ski 2 $ver
+2.1 -- &Sharability&
+$ski $jus
+As mentioned previously, the majority of the PAXCAL runtime code is contained
+in a single sharable image, PAXRTL.
+On the VAX, sharable images are libraries
+with universal entry points.
+Executable images are not sharable; they may contain sharable components,
+however.
+Finally, sharable images are &not& sharable (in terms of occupying distinct
+users' virtual memory mapping to the same real memory) until they have
+been INSTALLed by the system manager.
+$ski
+The code emitted by the PAXCAL compiler is suitable for sharing; it is
+position-independent and clean.
+Remembering, however, that only libraries are sharable, the user's program
+must be converted to a sharable image and then installed.
+The idea is to create a sharable library with one entry point --
+the mainline of the program.
+This implies a second linking with the sharable user library
+to create an executable image.
+If the module LIBMON is not explicitly INCLUDEd from PAXLIB during a
+link, the resulting image will not be executable.
+$ski
+The user is not restricted to creating only whole programs as sharable
+images.
+In the option file given above, the explicit declaration of PAX$PROGRAM.\as
+a universal symbol provides the "hook" needed by the program initialization
+code.
+The user can declare his/her own sharable library entry points by constructing
+a transfer vector for them, using the assembler's .TRANSFER directive.
+This directive automatically defines the symbol so used as universal.
+More information is available from DEC documentation concerning the assembler.
+Suffice it to say here that any sharable image must contain any other
+sharable images it references, and that
+it is unacceptable for a program to contain more than one copy of a
+sharable image.
+Therefore, the programmer must construct the libraries so that
+multiple reference conflicts are eliminated.
+$ski 2 $ver
+2.2 -- &Dynamic Memory&
+$ski $jus
+The default memory management routines NEW and DISPOSE
+simply call the common runtime
+storage allocation and deallocation routines
+(LIB$GET_VM and LIB$FREE_VM respectively)
+to obtain and recycle heap objects for the user program.
+The implementation of alternative dynamic memory systems involves the
+replacement of NEW and DISPOSE.
+Notice that the runtime uses LIB$GET_VM for file blocks and for the
+statement spy block (Section 2.4), and not NEW or DISPOSE.
+Therefore, the runtime's state is not dependent upon the dynamic
+memory system in use in the program.
+$ski
+Future implementations of the PAXCAL runtime will include a heap saving
+and sharing facility, similar to the "virtual heap" provided on the PDP-10
+PASCAL system.
+The global section mapping facility of VMS will be used, along with an
+explicit allocation and deallocation package.
+Since global sections can be shared across concurrent programs, it will
+be possible to share heaps between programs running simultaneously.
+Presumably, the allocation routines can interlock, or use the self-relative
+queue instructions, to avoid concurrent access problems.
+User programs would have to provide their own interlock mechanisms during
+object assignments on a shared heap, assisted by extralingual routines to
+provide synchronization.
+Finally, saving such a heap in a file is a trivial task, since mapped global
+sections require an explicit file for use as a paging store.
+$ski
+Note that the LIB$ system VM routines provide no guarantees about the
+contiguity in virtual memory of records returned on successive calls.
+Therefore, simply writing the contents of a heap to a file does &not&
+provide the ability to restore that same heap to another program.
+Thus, no "HPSAVE/HPLOAD" routines can be provided by the runtime at the
+current time; the linked data structure section in Chapter 12 of the
+&MDSI Pascal Report& should be consulted to present an algorithm for
+recording and restoring dynamic data structures using PAXCAL binary I/O.
+$ski 2 $ver
+2.3 -- &The PAXCAL Monitor&
+$ski $jus
+For obscure historical reasons, the sections of the runtime code
+concerned with program initialization and termination, error reporting, 
+stack unwinding,
+and stack tracebacks are collectively called the "monitor".
+In the PAXCAL runtime, the error, traceback, and statement spy code is
+placed in the sharable section, while program startup and shutdown are
+by necessity pulled from PAXLIB.
+$ski
+Program initialization is provided by the DEC-recommended method.
+A longword contribution to PSECT LIB$INITIALIZE gives the address of
+a routine to call prior to program execution (PAX$MON.INITP).
+This routine calls the PAXRTL initialization routine,
+installs the PAXCAL condition handler,  and then effects
+a coroutine linkage with the main program by calling it.
+Within the program block of the program, the routine PAX$MON.MAINFRA is
+called to store the main program's frame
+pointer for future traceback and unwinding
+information.
+Finally, the main program terminates by jumping to PAX$MON.STOP, which
+winds back frames if necessary, eventually executing a RET.
+This returns control to PAX$MON.INITP, which closes all files and returns
+to VMS.
+User programs can provide an initialization routine by contributing
+to LIB$INITIALIZE from a MACRO assembly before searching PAXLIB.
+$ski
+Stack unwinding is necessary in general to perform "non-local GOTOs" -- 
+GOTOs which jump out of the scope of the GOTO into an enclosing one.
+To perform a non-local GOTO, the stack must be wound back
+to the most recent activation of the block
+containing the target label.
+This is done by two routines, PAX$MON.UNWIND and PAX$MON.UNWMAIN, with the
+help of a "static chain" of stack frames maintained by PAXCAL procedures
+and not by the VAX hardware.
+$ski
+All errors are signalled.
+In most cases, an error message is printed, giving the location of the
+error, and identifying it if it was detected by PAXCAL code or the runtime.
+The condition "unknown condition" is then signalled, to be intercepted by
+the level 0 condition handler installed by PAX$MON.INITP.
+If a system utility returned with an error code, the message
+"Runtime error" is printed, and the error code itself is signalled.
+Finally, hardware exceptions signal automatically.
+$ski
+The PAXCAL condition handler performs a traceback, a statement spy dump
+if any modules were compiled in DEBUG mode, and then resignals the
+error.
+In all except PAXCAL-detected error conditions, the system catch-all handler
+prints the message identifying the error.
+$ski 2 $ver
+2.4 -- &Debugging facilities&
+$ski $jus
+The PAXCAL TRACE option, distinct from any system traceback, uses
+a word in the stack frame called a "trace link", which points to
+a "trace block" and is pushed onto the stack as part of a procedure's
+entry sequence.
+The trace block provides the name of the procedure.
+The return addresses of the frames provide the remainder of the information
+displayed in the traceback.
+A call to the prefedined procedure TRACE will print a stack
+traceback on the user's terminal.
+To assist in runtime error correction, the TRACE option for compiled blocks
+is effectively implemented for all runtime routines; the names of runtime
+routines therefore appear in error tracebacks signalled from the runtime.
+$ski
+A DEBUG compilation places "statement blocks" throughout
+the executable code, providing a linked data structure which contains
+sufficient information to associate a statement ID (file@page/line) with
+any address within the module, as well as a statement "kind", such as
+assignment statement, while statement, etc.
+Furthermore, during the course of execution, the routine "PAX$MON.STMT" is
+called at the start of each statement's code.
+If the calls' return addresses are saved in succession, then a backwards
+traversal of the list provides a sequence of statement IDs identifying
+the most recently executed PAXCAL statements.
+This list is called a statement spy, and can be dumped onto the
+user's terminal by the predefined procedure SPY.
+The recording of these return addresses can be modified at link time
+by the forced inclusion of modules STMT30, which will record the 30
+most recent statements, or STMT1, which will record only the single
+most recent statement.
+STMT30 is the default for any link containing a DEBUG compilation.
+STMT1 uses one-third the number of instructions used by STMT30
+per statement executed.
+Finally, during the traceback, these statement blocks can be used to
+identify the frame's return address with a statement ID, to provide the
+statement ID of the call, instead of a hexadecimal address.
+$ski
+The VAX debugger must be used to debug PAXCAL programs.
+Public names in PAXCAL programs are available to the debugger.
+All names in VAX are significant to 15 characters.
+Calls to PAX$MON.STMT are followed by 5 bytes of statement block information,
+so when stepping through a DEBUG compilation, step into STMT once to determine
+its length, and then use the "STEP/INTO n" command to step over future calls,
+where n is the number of instructions in the STMT routine used.
+Similarly, when examining instructions in a DEBUG compilation, a statement
+block can be stepped over with "EXAM/INST .+0B" from the JSB PAX$MON.STMT
+instruction.
+All PAXCAL routines (including runtime routines) push two longwords upon
+entry (the static and trace links respectively).
+Once these two instructions have been executed, the routine PAX$MON.TRACE
+can be called via the debugger CALL command
+at any time to provide a stack traceback.
+$ski
+In non-debug programs (programs linked without the VAX debugger), typing
+a control-y and DEBUG will invoke the debugger without any symbols, but
+will signal a program exception condition before reaching it.
+This is intercepted by the PAXCAL condition handler, so a stack traceback
+and statement spy list is printed before the debugger is reached.
+Typing "G" will continue the program's execution.
+Further control-y and DEBUG will invoke the debugger without the condition.
+To get a stack traceback, the location of the trace routine must be
+determined, since no symbol values are available.
+Its transfer vector entry is 17 (hex) bytes from the start of the PAXCAL
+transfer vector.
+For example, if the vector starts at 400 (hex), then a stack traceback
+may be obtained by typing "CALL 417" to the debugger.
+Similarly, the statement spy can be called at 12 (hex) bytes from the
+start of the transfer vector.
+The origin of the transfer vector is the origin of PAXRTL, which
+is available from a link map.
+$ski
+As mentioned above,
+the DEBUG command provides a way to cause conditions to be signalled
+asynchronously by the user.
+A future library addition could provide the user with the means to
+intercept this signal and perform an UNWIND operation to the mainline
+if not to an arbitrary parent frame.
+At the moment, typing a control-y followed by the DEBUG command will
+cause a PAXCAL stack traceback and statement dump, followed by entrance
+to the debugger, as described above.
+$ski 2 $ver
+3.0 -- &I&/&O Implementation&
+$ski $jus
+All I/O is performed by the PAXCAL runtime using VAX-11 RMS.
+The major task in the I/O implementation was adapting the RMS models
+of files to the PASCAL models.
+Each model is discussed below.
+$ski
+As in the PDP-10 implementation, file variables act much like pointers in
+that they are address of data blocks.
+File variables point to file blocks allocated by the I/O system.
+File blocks are created by calls to OPEN, RESET, REWRITE, and UPDATE,
+destroyed by calls to CLOSE and SCRATCH, and can be left dangling through
+incorrect assignment of file variables by careless programmers.
+$ski
+Extended status, as returned from EXTSTATUS, usually consists of the RMS
+error code from the previous error.
+Any  error condition during a data transfer acts as an IO_INPF
+or IO_OUTF error, which will be deferred for an OKERRS file.
+Similarly, any normal errors during file association will cause
+an IO_OPNF error.
+Any completely unexpected error condition during I/O operations, however,
+will cause the "Runtime error" message to be printed, and the error condition
+to be signalled.
+Such errors usually reveal PAXRTL bugs.
+$ski 2 $ver
+3.1 -- &Filename Interpretation&
+$ski $jus
+The VMS logical name facility creates quite a problem for interpreting
+file names in the manner to which MDSI PASCAL users are accustomed.
+Readers are urged to read Section 2.2 (Logical Names) in the
+&VAX&/&VMS Command Language User&'&s Guide& from DEC before continuing
+this section of the &MDSI VAX PASCAL User&'&s Guide&.
+$ski
+As in the PDP-10 implementation, the filename string is canonicalized
+before processing.
+In other words, the filename is separated into its separate components --
+device, directory, filename, extension, and version number -- which are
+then reassembled in the order acceptable to VAX.
+This permits default and/or overriding file specifications,
+since the last occurrence of a component in a string is the one used
+when reassemblhe string.
+For example, the string ".REL " |||| ST will default the extension of the
+file described by ST to .REL, if ST has no extension specification.
+If ST includes an extension, it will be used, since it is the last occurrence.
+$ski
+In order to recognize the terminal when associating a file variable,
+any logical names in the filename string must be completely and recursively
+translated.
+The resultant string is compared with the completely translated result
+from "PAX$INPUT" and "PAX$OUTPUT" to detect the terminal.
+Note that the two strings above represent the proper ways to associate
+the terminal, but that any string translating to the same result will
+be recoginzed as the controlling terminal.
+Also, to detect the terminal, the input string is translated only to the
+colon following the device specification, if one is present.
+Therefore, "PAX$OUTPUT:FOO.TMP", which might result from filename parsing,
+will be identified correctly as the controlling terminal.
+$ski
+If no filename string is given to one of the association procedures,
+a default file name is taken from the name of the file reference used in
+the call, as follows.
+First, the file reference must be a simple variable.
+The text of its name is given to the runtime for the call.
+The runtime first attempts to translate the name of the variable as a
+logical name.
+If this succeeds, the variable name is given to RMS without modification.
+Otherwise, it is truncated to nine characters, and the extenstion ".PAX" is
+concatenated.
+Therefore, a "standard" PASCAL program using the predefined file identifiers
+INPUT and OUTPUT will work using arbitrary files or devices, if the names
+INPUT and OUTPUT are placed in one of the logical name tables; the files
+INPUT.PAX and OUTPUT.PAX will be used otherwise.
+$ski
+When associated without an explicit filename string, the predefined file
+identifiers TTY and TTYOUTPUT are associated with the filename strings
+"PAX$INPUT" and "PAX$OUTPUT" respectively, and not with "TTY" or "TTYOUTPUT".
+Note, however, that only the predefined identifiers will do this; a
+user-declared variable TTY of type &text&, for example, will associate
+with the string "TTY", as with INPUT above.
+$ski
+The SUP option to RMS is used when opening a file for output, which
+handles version numbers in the following manner.
+If an explicit version is given in the filename string, that file &with that
+version number& is either created or superceded.
+If no explicit version is given, or if version zero is specified, no
+superceding will occur, and the version created will be one greater
+than the highest existing version before the creation.
+On input, an explcit non-zero version number will succeed or fail depending
+on the existence of the particular version requested.
+With no version number specified, or version zero, the highest version
+will be opened.
+$ski 2 $ver
+3.2 -- &Text File I&/&O&
+$ski $jus
+Text files on the VAX consist of optionally line-numbered variable length
+record files.
+Each record is a line, and the length of each record is the length
+of that line.
+A page mark is a record containing a single form feed character,
+which is considered to be the first record of the new page.
+This is in contrast to the PAXCAL text file model, which consists of
+a stream of characters containing distinct punctuation marks for end
+of line, end of page, and end of file.
+$ski
+In normal text file processing, the true structure of VAX text files is
+transparent to the user.
+However, a text file opened with the ASCII option is more revealing.
+Since there are no line terminators in VAX text files, the character
+buffer of an ASCII text file contains a blank when EOLN or EOPAGE is true.
+Strictly speaking, there are line terminators for terminal input, but
+RMS does not make them available to the PAXCAL runtime.
+Both form feeds and end of file characters from the terminal appear to
+the user as line terminators, thus EOPAGE and EOF never become true
+on terminal input.
+Thus, the ASCII option serves only to inhibit horizontal tab expansion and
+the removal of other control characters from the input stream.
+$ski
+Interactive terminal operations are complex, because partial lines cannot
+be output to the terminal using RMS.
+The normal PASCAL sequence of &write&, BREAK, &readln&, &read& for prompted
+terminal input works as expected,
+because of the following contrived definition.
+When BREAK is performed on the terminal output file (TTYOUTPUT or equivalent),
+&and& there was a partial line written to TTYOUTPUT preceding the break
+(i.e., a &write& without a &writeln&), the runtime sets a flag indicating the
+presence of a "prompt break".
+On a subsequent &readln& on the terminal input file (TTY or equivalent), the
+partial line written to TTYOUTPUT is used as a prompt for the terminal
+read operation, using the RMS read with prompt function.
+After completion of the read operation, the partial line is cleared from
+the TTYOUTPUT buffer.
+The appearance is that of a partial line written to TTYOUTPUT as a prompt.
+The prompt break flag is cleared either by the read operation or by
+a subsequent &writeln& to TTYOUTPUT.
+Note that since entire lines are given to RMS on a &writeln&, a BREAK on
+a normal text file is a no-op as far as the PAXCAL runtime is concerned
+(the RMS $FLUSH operation is invoked, however).
+A partial line written to a non-interactive text file is &not& flushed
+on a BREAK.
+$ski
+Prompts on the VAX are rewritten to the terminal when a control-r
+or control-u editing character is typed.
+This may be suprising at first to new users, but is the normal VAX mode
+of operation, as can be seen when using interactive system programs.
+$ski
+The CONTROL option for an output text file places the file in FTN record
+format mode, as documented under RMS.
+This works normally for actual files.
+When terminal output is associated with the CONTROL option,
+however, and prompt
+breaks are issued, the carriage control characters may appear spuriously
+in the prompt, without conversion.
+Therefore, the use of the CONTROL option with terminal output is discouraged.
+$ski 2 $ver
+3.3 -- &Typed File I&/&O&
+$ski $jus
+The essence of typed file I/O on VAX is the manipulation of &fixed length
+record& files.
+Strictly speaking, a &file& &of& CHAR is &not& a text file, for which special 
+provisions are made.
+Note that the record length may be any integral number of bytes.
+$ski
+The workings of typed files on the VAX require little documentation, since
+they work almost exactly as one would suspect from reading the &Report&.
+A BREAK on a typed file performs an RMS $FLUSH service.
+A SEEK to a position beyond the end of a file open for output extends the
+file with zero bytes.
+For typed files, it must be noted that EXTENT is obtained
+from RMS; the value returned may &not& reflect changes made to the file
+if a $FLUSH has not been performed.
+Therefore, EXTENT performs a $FLUSH service.
+$ski 2 $ver
+3.4 -- &Binary File I&/&O&
+$ski $jus
+Binary file operations permit the reading or writing of an arbitrary
+number of bytes to or from any position in the file.
+The file is classified as a variable-length record file, to permit
+maximum flexibility in dealing with other system programs.
+The PASCAL programmer is responsible for recording the lengths of records
+when creating a binary file for use by a program expecting a true
+variable-length record file.
+The preceding record should be padded such that the length word for the next
+record falls on a word boundary in the file.
+$ski
+Note that CURSOR, as defined in the &Report&, is a one-based byte value.
+For example, the first byte of the file is 1, the first byte of the second
+block is 513 (201 hex), and so on.
+Therefore, odd cursor values indicate word boundaries.
+$ski
+A double buffering scheme is used to implement binary I/O.
+EXTENT does &not& flush the PAXCAL runtime's buffers; a BREAK is therefore
+&required& before an EXTENT measurement is taken, unless the programmer
+is certain that the length of the file has not been increased since the
+last BREAK operation (if any).
+$ski 2 $ver
+4.0 -- &Using the PAXCAL Runtime&
+$ski $jus
+This section deals with the mechanics of producing an executable image
+from a collection of object files.
+For information concerning the production and transportation of PAXCAL
+object files, see Section 5.0 below, and the &VAXFER User&'&s Guide&.
+$ski
+Logical names are part of the PAXCAL system, to provide simplicity in
+linking PAXCAL programs and libraries.
+The names PAXLIB and PAXRTL are assigned to the PAXCAL object and sharable
+libraries respectively.
+Given these, the name PLINK is assigned to the standard link options file
+to create an executable image, while PSHAR is assigned to the file to
+create a sharable image.
+Further, PLINK1 refers to an options file specifying STMT1, the one statement
+spy list.
+Finally, the name LIBMON specifies the object file (actually part of the
+library PAXLIB) which must be force loaded into every executable image.
+Given these, the user may link a program as follows:
+$ski $ind left +4 $ver
+\$ link [/deb] [/map[=f]] f1, f2, ..., fn, plink/opt
+$ski $ind left -4 $jus
+To create a sharable program, the following sequence may be used:
+$ski $ind left +4 $ver
+\$ link /shar=pgm [/map[=f]] f1, f2, ..., fn, pshar/opt
+\$ link [/deb] [/map[=f]] foo/opt
+$ski $ind left -4 $jus
+where the option file FOO.OPT contains:
+$ski $ind left +4 $ver
+libmon,-
+pgm/shar[:copy],-
+paxlib/search
+$ski $ind left -4 $jus
+Users are invited to create useful command symbol definitions and
+command procedures.
+Note that the ":COPY" option on the sharable input file command to link
+may be required for using "sharable" images which have not been INSTALLed
+by the system manager.
+$ski 2 $ver
+5.0 -- &How to use the PAXCAL Compiler&
+$ski $jus
+This section describes the use of the PAXCAL cross-compiler running
+on the PDP-10.
+This compiler produces object files suitable for transporting to a
+VAX using the VAXFER program.
+  r"y;š

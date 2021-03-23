@@ -1,0 +1,322 @@
+		LINK symbol map of	T1		page 1
+	Produced by LINK version 4(771030)-4 on 21-May-80 at 16:51:48
+
+	Low  segment starts at	     0 ends at	  1276 length	  1277 = 2P
+	High segment starts at	400000 ends at	427263 length	 27264 = 24P
+	321 words free in Low segment, 332 words free in high segment
+	234 Global symbols loaded, therefore min. hash size is 261
+	Start address is 400031, located in program PROG
+
+		*************
+
+JOBDAT-INITIAL-SYMBOLS
+
+	Zero length module
+
+		*************
+
+PROG	from DSK:T.REL[52250,264]	created on 21-May-80 at 16:51:00
+	Low  segment starts at	   140 ends at	   140 length	     1 (octal),     1. (decimal)
+	High segment starts at	400010 ends at	400050 length	    41 (octal),    33. (decimal)
+
+	PROG	      400031	Entry	Relocatable 		START.	      400031	Global	Relocatable 	
+
+		*************
+
+FIRST	from DSK:NEWLIB.REL[52250,264]	created by MACRO on 16-Apr-80 at 15:33:00
+
+	Zero length module
+
+		*************
+
+INI1	from DSK:NEWLIB.REL[52250,264]	created by MACRO on 16-Apr-80 at 15:33:00
+	High segment starts at	400051 ends at	400051 length	     1 (octal),     1. (decimal)
+
+	INIT1.	      400051	Entry	Relocatable 	
+
+		*************
+
+LAST	from DSK:NEWLIB.REL[52250,264]	created by MACRO on 16-Apr-80 at 15:33:00
+
+	Zero length module
+
+		*************
+
+DEBMON	from DSK:NEWLIB.REL[52250,264]	created by MACRO on 16-Apr-80 at 15:33:00
+	Low  segment starts at	   141 ends at	   203 length	    43 (octal),    35. (decimal)
+	High segment starts at	400052 ends at	400454 length	   403 (octal),   259. (decimal)
+
+	BA$I$	         203	Global	Relocatable 		BFPAD.	         142	Global	Relocatable 	
+	BR$KIP	         150	Global	Relocatable 		BREAK$	         151	Global	Relocatable 	
+	BRK$MA	         152	Global	Relocatable 		BRK$TA	         153	Global	Relocatable 	
+	C$TMT	         143	Global	Relocatable 		CSTMT.	         143	Global	Relocatable 	
+	DBUG$	      400226	Global	Relocatable 		DEBUG.	      400054	Entry	Relocatable 	
+	DIE.	      400117	Global	Relocatable 		DTRAN$	      400052	Global	Relocatable 	
+	END.	      400112	Global	Relocatable 		EXIT.	      400112	Global	Relocatable 	
+	INITP.	      400054	Global	Relocatable 		KA10N.	      400334	Global	Relocatable 	
+		LINK symbol map of	T1		page 2
+DEBMON
+	KA10X.	      400365	Global	Relocatable 		KI10N.	      400334	Global	Relocatable 	
+	KI10X.	      400365	Global	Relocatable 		P$KIP	         147	Global	Relocatable 	
+	PNTRY.	      400334	Global	Relocatable 		PRTRN.	      400365	Global	Relocatable 	
+	REA$ON	         145	Global	Relocatable 		REG$AV	         165	Global	Relocatable 	
+	STEP$	         146	Global	Relocatable 		TRACE	      400271	Global	Relocatable 	
+	V$NCOR	      400053	Global	Relocatable 		V$NIL	      400053	Global	Relocatable 	
+	V$OFFS	      400052	Global	Relocatable 		V$POFF	      400052	Global	Relocatable 	
+	V$RTUA	      400053	Global	Relocatable 		VINI0.	      400054	Global	Relocatable 	
+	VINI1.	      400054	Entry	Relocatable 		VINI2.	      400054	Global	Relocatable 	
+	VINI3.	      400054	Global	Relocatable 		VINI4.	      400054	Global	Relocatable 	
+	VINI5.	      400054	Global	Relocatable 		VTRAN$	      400052	Global	Relocatable 	
+	WRTDC.	      400253	Global	Relocatable 		WRTPC.	      400243	Global	Relocatable 	
+
+		*************
+
+DEBUG$	from DSK:NEWLIB.REL[52250,264]	created on 16-Apr-80 at 15:33:00
+	Low  segment starts at	   204 ends at	  1006 length	   603 (octal),   387. (decimal)
+	High segment starts at	400455 ends at	407351 length	  6675 (octal),  3517. (decimal)
+
+	DEBUG$	      407060	Entry	Relocatable 		NEXT$C	      400645	Entry	Relocatable 	
+	BRK$ST	         403	Entry	Relocatable 		CUR$CH	         346	Entry	Relocatable 	
+	SCOPE$	         205	Entry	Relocatable 		WITH$S	         256	Entry	Relocatable 	
+
+		*************
+
+INSYM$	from DSK:NEWLIB.REL[52250,264]	created on 16-Apr-80 at 15:33:00
+	Low  segment starts at	  1007 ends at	  1044 length	    36 (octal),    30. (decimal)
+	High segment starts at	407352 ends at	410372 length	  1021 (octal),   529. (decimal)
+
+	IN$SYM	      407563	Entry	Relocatable 		INSYM$	      407563	Entry	Relocatable 	
+	CUR$ID	        1011	Entry	Relocatable 		CUR$SY	        1010	Entry	Relocatable 	
+	CUR$VA	        1013	Entry	Relocatable 	
+
+		*************
+
+BSCOP$	from DSK:NEWLIB.REL[52250,264]	created on 16-Apr-80 at 15:33:00
+	Low  segment starts at	  1045 ends at	  1046 length	     2 (octal),     2. (decimal)
+	High segment starts at	410373 ends at	413346 length	  2754 (octal),  1516. (decimal)
+
+	EXT$SC	      413247	Entry	Relocatable 		MOD$SC	      413051	Entry	Relocatable 	
+	FRAME$	      412162	Entry	Relocatable 		STACK$	      412047	Entry	Relocatable 	
+	CALL$B	      411610	Entry	Relocatable 		FIND$M	      411524	Entry	Relocatable 	
+	SYM$LO	      411416	Entry	Relocatable 		MOD$LO	      411270	Entry	Relocatable 	
+	NEXT$M	      411236	Entry	Relocatable 		FIRST$	      411210	Entry	Relocatable 	
+	R50$AS	      410753	Entry	Relocatable 		PAS$LO	      410445	Entry	Relocatable 	
+	BSCOP$	      410445	Entry	Relocatable 	
+
+		*************
+
+DUMPS$	from DSK:NEWLIB.REL[52250,264]	created on 16-Apr-80 at 15:33:00
+	Low  segment starts at	  1047 ends at	  1047 length	     1 (octal),     1. (decimal)
+	High segment starts at	413347 ends at	415362 length	  2014 (octal),  1036. (decimal)
+
+	DMP$ST	      415264	Entry	Relocatable 		DMP$LO	      414343	Entry	Relocatable 	
+		LINK symbol map of	T1		page 3
+DUMPS$
+	DMP$BR	      414235	Entry	Relocatable 		DMP$MO	      414022	Entry	Relocatable 	
+	DMP$SC	      413617	Entry	Relocatable 		DMP$PA	      413577	Entry	Relocatable 	
+	DMP$FI	      413500	Entry	Relocatable 		DUMPS$	      413500	Entry	Relocatable 	
+
+		*************
+
+BRKPT$	from DSK:NEWLIB.REL[52250,264]	created on 16-Apr-80 at 15:33:00
+	Low  segment starts at	  1050 ends at	  1050 length	     1 (octal),     1. (decimal)
+	High segment starts at	415363 ends at	416177 length	   615 (octal),   397. (decimal)
+
+	CLR$AL	      416163	Entry	Relocatable 		CLR$BR	      416145	Entry	Relocatable 	
+	SET$BR	      416114	Entry	Relocatable 		INFO$S	      416015	Entry	Relocatable 	
+	FIND$S	      415762	Entry	Relocatable 		FIND$P	      415636	Entry	Relocatable 	
+	FIND$F	      415512	Entry	Relocatable 		FIND$B	      415435	Entry	Relocatable 	
+	BRKPT$	      415435	Entry	Relocatable 	
+
+		*************
+
+ADDRE$	from DSK:NEWLIB.REL[52250,264]	created on 16-Apr-80 at 15:33:00
+	Low  segment starts at	  1051 ends at	  1051 length	     1 (octal),     1. (decimal)
+	High segment starts at	416200 ends at	422240 length	  4041 (octal),  2081. (decimal)
+
+	CHECK$	      422144	Entry	Relocatable 		RHS$VA	      421222	Entry	Relocatable 	
+	LHS$RE	      421173	Entry	Relocatable 		SET$KI	      417722	Entry	Relocatable 	
+	NAMED$	      417654	Entry	Relocatable 		COPY$W	      417335	Entry	Relocatable 	
+	STORE$	      416346	Entry	Relocatable 		ADDRE$	      416346	Entry	Relocatable 	
+
+		*************
+
+DEBIO$	from DSK:NEWLIB.REL[52250,264]	created on 16-Apr-80 at 15:33:00
+	Low  segment starts at	  1052 ends at	  1053 length	     2 (octal),     2. (decimal)
+	High segment starts at	422241 ends at	422651 length	   411 (octal),   265. (decimal)
+
+	WRIT$N	      422641	Entry	Relocatable 		WRIT$S	      422617	Entry	Relocatable 	
+	WRIT$I	      422546	Entry	Relocatable 		READ$I	      422314	Entry	Relocatable 	
+	READ$N	      422302	Entry	Relocatable 		WRIT$C	      422266	Entry	Relocatable 	
+	READ$C	      422242	Entry	Relocatable 		DEBIO$	      422242	Entry	Relocatable 	
+	AT$EOL	        1053	Entry	Relocatable 	
+
+		*************
+
+DEBSY$	from DSK:NEWLIB.REL[52250,264]	created on 16-Apr-80 at 15:33:00
+	Low  segment starts at	  1054 ends at	  1213 length	   140 (octal),    96. (decimal)
+	High segment starts at	422652 ends at	424333 length	  1462 (octal),   818. (decimal)
+
+	ST$OPE	      424243	Entry	Relocatable 		ST$ARE	      423775	Entry	Relocatable 	
+	DEREF$	      423653	Entry	Relocatable 		DEBSY$	      423653	Entry	Relocatable 	
+
+		*************
+
+DUMPIO	from DSK:NEWLIB.REL[52250,264]	created by MACRO on 16-Apr-80 at 15:33:00
+	Low  segment starts at	  1214 ends at	  1235 length	    22 (octal),    18. (decimal)
+	High segment starts at	424334 ends at	424654 length	   321 (octal),   209. (decimal)
+
+		LINK symbol map of	T1		page 4
+DUMPIO
+	CLOS$F	      424610	Entry	Relocatable 		OPN$FI	      424373	Entry	Relocatable 	
+	READ$P	      424541	Entry	Relocatable 		WRIT$P	      424503	Entry	Relocatable 	
+
+		*************
+
+PASFIL	from DSK:NEWLIB.REL[52250,264]	created by MACRO on 16-Apr-80 at 15:33:00
+	High segment starts at	424655 ends at	424715 length	    41 (octal),    33. (decimal)
+
+	CH$IN	      424711	Global	Relocatable 		CH$OUT	      424714	Global	Relocatable 	
+	STMT.	      424655	Entry	Relocatable 	
+
+		*************
+
+INIT0B	from DSK:NEWLIB.REL[52250,264]	created by MACRO on 16-Apr-80 at 15:33:00
+
+	Zero length module
+
+		*************
+
+DOUUO	from DSK:NEWLIB.REL[52250,264]	created by MACRO on 16-Apr-80 at 15:33:00
+	Low  segment starts at	  1236 ends at	  1242 length	     5 (octal),     5. (decimal)
+	High segment starts at	424716 ends at	424753 length	    36 (octal),    30. (decimal)
+
+	DOUUO	      424716	Entry	Relocatable 	
+
+		*************
+
+PASIOU	from DSK:NEWLIB.REL[52250,264]	created by MACRO on 16-Apr-80 at 15:33:00
+	Low  segment starts at	  1243 ends at	  1250 length	     6 (octal),     6. (decimal)
+	High segment starts at	424754 ends at	425755 length	  1002 (octal),   514. (decimal)
+
+	BREAK.	      425636	Entry	Relocatable 		CLOSE.	      425455	Entry	Relocatable 	
+	CONER.	      425646	Entry	Relocatable 		FIXSP.	      425562	Entry	Relocatable 	
+	FLIST.	        1244	Entry	Relocatable 		FLTRCC	      425661	Entry	Relocatable 	
+	FLTRCR	      425654	Entry	Relocatable 		FRECN.	      425510	Entry	Relocatable 	
+	GET.	      425101	Entry	Relocatable 		GETCH.	      424760	Entry	Relocatable 	
+	GETCN.	      425472	Entry	Relocatable 		GETLN.	      424754	Entry	Relocatable 	
+	OPEN.	      425217	Entry	Relocatable 		PASSCC	      425652	Entry	Relocatable 	
+	PASSCR	      425663	Entry	Relocatable 		PUT.	      425130	Entry	Relocatable 	
+	PUTCH.	      425116	Entry	Relocatable 		PUTLN.	      425161	Entry	Relocatable 	
+	PUTPG.	      425166	Entry	Relocatable 		RESET.	      425212	Entry	Relocatable 	
+	REWRT.	      425237	Entry	Relocatable 		TTYOP.	      425641	Entry	Relocatable 	
+	TWAIT.	      425614	Entry	Relocatable 	
+
+		*************
+
+PASNIO	from DSK:NEWLIB.REL[52250,264]	created by MACRO on 16-Apr-80 at 15:33:00
+	High segment starts at	425756 ends at	426502 length	   525 (octal),   341. (decimal)
+
+	CNVTOR	      426346	Entry	Relocatable 		CVTOI.	      426332	Entry	Relocatable 	
+	CVTOR.	      426346	Entry	Relocatable 		READI.	      426227	Entry	Relocatable 	
+	READR.	      426352	Entry	Relocatable 		STR2R.	      426336	Entry	Relocatable 	
+	WRTRL.	      425756	Entry	Relocatable 	
+
+		LINK symbol map of	T1		page 5
+
+		*************
+
+WRTSUB	from DSK:NEWLIB.REL[52250,264]	created by MACRO on 16-Apr-80 at 15:33:00
+	High segment starts at	426503 ends at	426527 length	    25 (octal),    21. (decimal)
+
+	TOSML.	      426524	Entry	Relocatable 		WRBLK.	      426503	Entry	Relocatable 	
+	WRMIN.	      426522	Entry	Relocatable 		WROPN.	      426510	Entry	Relocatable 	
+	WRSGN.	      426520	Entry	Relocatable 	
+
+		*************
+
+ROUND	from DSK:NEWLIB.REL[52250,264]	created by MACRO on 16-Apr-80 at 15:33:00
+	High segment starts at	426530 ends at	426545 length	    16 (octal),    14. (decimal)
+
+	ROUND.	      426530	Entry	Relocatable 	
+
+		*************
+
+FTTYOU	from DSK:NEWLIB.REL[52250,264]	created by MACRO on 16-Apr-80 at 15:33:00
+	Low  segment starts at	  1251 ends at	  1276 length	    26 (octal),    22. (decimal)
+
+	TTYOUT	        1251	Entry	Relocatable 	
+
+		*************
+
+CBPSS	from DSK:NEWLIB.REL[52250,264]	created by MACRO on 16-Apr-80 at 15:33:00
+	High segment starts at	426546 ends at	426552 length	     5 (octal),     5. (decimal)
+
+	CBPSS.	      426546	Entry	Relocatable 	
+
+		*************
+
+PRTSTR	from DSK:NEWLIB.REL[52250,264]	created by MACRO on 16-Apr-80 at 15:33:00
+	High segment starts at	426553 ends at	426667 length	   115 (octal),    77. (decimal)
+
+	CMFF.	      426553	Entry	Relocatable 		CMPSS.	      426615	Entry	Relocatable 	
+	CMSF.	      426557	Entry	Relocatable 		CMSSR.	      426577	Entry	Relocatable 	
+	CTSS.	      426654	Entry	Relocatable 	
+
+		*************
+
+PRTIXF	from DSK:NEWLIB.REL[52250,264]	created by MACRO on 16-Apr-80 at 15:33:00
+	High segment starts at	426670 ends at	426727 length	    40 (octal),    32. (decimal)
+
+	IX3SS.	      426671	Entry	Relocatable 		IXSS.	      426670	Entry	Relocatable 	
+
+		*************
+
+PRTSRF	from DSK:NEWLIB.REL[52250,264]	created by MACRO on 16-Apr-80 at 15:33:00
+	High segment starts at	426730 ends at	426754 length	    25 (octal),    21. (decimal)
+
+	SR3SS.	      426731	Entry	Relocatable 		SRSS.	      426730	Entry	Relocatable 	
+
+		*************
+		LINK symbol map of	T1		page 6
+
+
+PRFID	from DSK:NEWLIB.REL[52250,264]	created by MACRO on 16-Apr-80 at 15:33:00
+	High segment starts at	426755 ends at	427167 length	   213 (octal),   139. (decimal)
+
+	PRFID.	      426755	Entry	Relocatable 	
+
+		*************
+
+PASERR	from DSK:NEWLIB.REL[52250,264]	created by MACRO on 16-Apr-80 at 15:33:00
+	High segment starts at	427170 ends at	427252 length	    63 (octal),    51. (decimal)
+
+	CORER.	      427201	Entry	Relocatable 		FORER.	      427204	Entry	Relocatable 	
+	INXER.	      427173	Entry	Relocatable 		PTRER.	      427170	Entry	Relocatable 	
+	SRERR.	      427176	Entry	Relocatable 	
+
+		*************
+
+UNWND	from DSK:NEWLIB.REL[52250,264]	created by MACRO on 16-Apr-80 at 15:33:00
+	High segment starts at	427253 ends at	427263 length	    11 (octal),     9. (decimal)
+
+	UNWND.	      427253	Entry	Relocatable 	
+
+		*************
+
+
+	Index to LINK symbol map of	T1		page 7
+
+	Name	Page	Name	Page	Name	Page	Name	Page
+
+	ADDRE$	 3	DOUUO	 4	INSYM$	 2	PROG	 1
+	BRKPT$	 3	DUMPIO	 3	LAST	 1	PRTIXF	 5
+	BSCOP$	 2	DUMPS$	 2	PASERR	 6	PRTSRF	 5
+	CBPSS	 5	FIRST	 1	PASFIL	 4	PRTSTR	 5
+	DEBIO$	 3	FTTYOU	 5	PASIOU	 4	ROUND	 5
+	DEBMON	 1	INI1	 1	PASNIO	 4	UNWND	 6
+	DEBSY$	 3	INIT0B	 4	PRFID	 6	WRTSUB	 5
+	DEBUG$	 2
+
+	[End of LINK map of	T1]
+ 

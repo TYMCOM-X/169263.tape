@@ -1,0 +1,266 @@
+
+
+
+
+
+
+
+
+
+
+     INTRODUCTION     ____________
+
+     This document summarizes our understanding of ANC's requirements of an
+     enhanced  Pascal  overlay  system  as identified at the April 17, 1980
+     meeting (of D.  Cone, S.  Roush, et al.).  With  two  exceptions,  the
+     capabilities  described  in this document are expected to be available
+     prior to ANC's initial Beta Site installation.  High segment  swapping
+     and  full  integration  of the overlay system and the Pascal condition
+     handling facility are not requirements of the initial  overlay  system
+     revision.   They   will  be  supplied  in  a  subsequent  version.  In
+     addition, this document discusses two issues  raised  at  the  meeting
+     which represent longer term goals for the overlay system.  These goals
+     represent areas  where  some  improvement  is  desirable  and  can  be
+     achieved  prior  to  Beta  Site,  but where a complete solution is not
+     feasible in the short run.
+
+
+     Separate Compilation of the Module Definition Language     ________ ___________ __ ___ ______ __________ ________
+
+     The current overlay database maintenance program (ODMS) requires  that
+     the  first  command  given  be  a USE command which specifies the file
+     containing the overlay  module  definition  language  (MDL).  The  USE
+     command 'compiles' the MDL, creating an internal representation of the
+     programs overlay structure.  The USE command can take a long  time  to
+     execute  and must always be the first command to ODMS, even if the MDL
+     has not be changed since the last execution of ODMS.  A  facility  for
+     explicitly saving the compiled MDL and using it in a later run will be
+     added to ODMS.  A  'COMPILE'  command  will  be  added  to  ODMS.  The
+     COMPILE  command  will  have  the  same  parameters as the present USE
+     command plus an optional additional parameter for specifying an output
+     file in which the compiled MDL will be saved.  The USE command will be
+     redefined to take a single parameter giving the name of file  produced
+     by  a previous COMPILE command.  Thus if the MDL has not changed since
+     the last run of ODMS, a USE command may be given to  simply  load  the
+     saved internal representation of the MDL from disk.
+
+
+     Public Variables and Constants in Overlays     ______ _________ ___ _________ __ ________
+
+     The  overlay  system  permits  declarations  of  PUBLIC  variables and
+     constants only within non-overlaid code.  This means that  an  overlay
+     module  composed  of  multiple, separately compiled Pascal modules may
+     not use "internal"  PUBLIC  variables  for  communication  within  the
+     overlay  module.  This  is a serious restriction for links, which make
+     extensive use of  internal  state  information.  The  revised  overlay
+     system will relax this restriction and allow the declaration of PUBLIC
+     variables and constants in Pascal modules compiled  with  the  overlay
+     option.  These  PUBLICs  will  be  accessible only within the overlay;
+     neither resident code nor  other  overlay  modules  may  access  them.
+     PUBLIC  variables  and  constants  defined  in  non-overlaid  code and
+
+
+                                     - 1 -
+
+
+
+
+
+
+
+
+
+
+     universally accessible will be permitted as now.  Each PUBLIC variable
+     or  constant  declared  in  an  overlay will incur one word of storage
+     overhead  and  one  level  of  indirection  overhead   when   accessed
+     externally.
+
+
+     Enhanced User Interface and Error Checking     ________ ____ _________ ___ _____ ________
+
+     The  new  release  of  the  overlay  system  will  provide a generally
+     enhanced level of error checking.  The goal will be  to  diagnose  all
+     errors  during  the  running  of ODMS for which sufficient information
+     exists to detect the error with an acceptable level of efficiency.  In
+     addition,  the user interface to ODMS will be enhanced where possible.
+     The COMPILE command is a specific step in this direction.  The present
+     ODMS  command  language syntax will also be reviewed with current ODMS
+     users to identify possible improvements.  Possible extensions  to  the
+     command language for increased convenience and reliablity will also be
+     examined.  For example, a command to check that some  or  all  overlay
+     records  in  a  database file meet the size and relocation constraints
+     implied by the MDL may be added.
+
+
+     Miscellaneous Enhancements     _____________ ____________
+
+     Two miscellaneous requirements shall be satisfied by the  new  overlay
+     system.  The current overlay system requires that LINK generate '.HGH'
+     and '.LOW' files.  The revised system shall use '.EXE' files.  Second,
+     a  facility  shall  be  added  to allow a user to display the creation
+     dates of overlay module versions within a standard database file.
+
+
+     Integration with Pascal Condition Handling Facility     ___________ ____ ______ _________ ________ ________
+
+     The Pascal  condition  handling  mechanism  shall  function  correctly
+     within  overlaid  programs.  Currently,  Pascal programs incorporating
+     condition handling use an  interim  mechanism.  An  integrated  Pascal
+     condition handling mechanism has not yet been defined.  The integrated
+     facility is scheduled to  be  defined  and  implemented  approximately
+     concurrently  with  the  first  ANC Beta Site installation.  Therefore
+     this requirement implies  that  the  present  mechanism  for  handling
+     breaks  (ONESCAPE) must work with the overlay system.  Currently, this
+     mechanism does not  function  correctly  if  the  user  break  handler
+     resides  in an overlay.  The initial release of the new overlay system
+     will provide a version of ONESCAPE which works  when  called  from  an
+     overlay.  Subsequent  versions will support the final Pascal condition
+     handling mechanism when it is defined and implemented.
+
+
+     Sharable Overlays     ________ ________
+
+     Sharable, high segment overlays shall be provided by an overlay system
+     revision  subsequent  to  the  initial  one.  On  the  PDP-10 sharable
+     overlays will be provided by allowing  an  overlaid  program  to  have
+
+
+                                     - 2 -
+
+
+
+
+
+
+
+
+
+
+     multiple,  sharable high segments.  At any given point in time exactly
+     one high segment will be active (and thus  guaranteed  resident).  One
+     of the sharable overlays, known as "MAIN", will be distinguished.  All
+     PUBLIC variables and constants which must be accessible across overlay
+     modules must be declared in MAIN.  A sharable overlay will be obtained
+     at runtime from a file which contains only the image of  that  overlay
+     module.  A default file name for the sharable overlay is placed in the
+     program by ODMS and may be overidden at runtime by an entry  point  to
+     the  overlay  manager.  When  sharable  overlays  are used, no code is
+     guaranteed to be  always  resident  in  main  memory.  However  it  is
+     desirable  to  have certain routines which are accessed frequently and
+     from many overlays, such as the Pascal runtime  routines,  permanently
+     resident.  A  new  concept  of  'resident' routines will be introduced
+     intended  for  the  Pascal  runtime.  'Resident'   routines   may   be
+     explicitly  declared  and will be linked into each high segment.  They
+     will not in general be at the same physical  addresses  in  each  high
+     segment  and  therefore  will  be  accessed via local transfer vectors
+     preceding each high  segment.  The  local  transfer  vectors  will  be
+     generated  by  ODMS.  Finally,  the  MDL will be modified to allow the
+     declaration of sharable overlays and resident routines.
+
+
+     Longer Term Goals     ______ ____ _____
+
+     This section discusses two issues which, while they are not short term
+     requirements  of  the  overlay  system,  have been identified as areas
+     where enhancements are desirable in the long run.
+
+     An idealized goal for the overlay system would be total automation  of
+     the  process  of  building  the  overlay  records, including automatic
+     determination of overlay area sizes.  The current  system  requires  a
+     fairly  high  level  of  user  interaction.  The  user must explicitly
+     specify universally accessible variables, constants and routines.  The
+     size  of  each  overlay  area  must  be declared in the MDL before any
+     processing by ODMS can take  place.  The  subsequent  processing  then
+     takes  place in several stages:  the compiling of the MDL, the linking
+     of the overlay modules and, optionally, the entering  of  the  modules
+     into  a  database  file.  Total  automation  of  this  process  is not
+     feasible.  In particular the declaration of the overlay area sizes  in
+     the  MDL is essential.  The first step in the process described above,
+     the compilation of the MDL, requires  these  sizes  to  determine  the
+     relocation  bases for each overlay module.  An automatic determination
+     of these sizes would require that every  object  file  in  the  entire
+     overlaid  program  be  read.  The  time  required  for  this  would be
+     prohibitive.  A less  ambitious  but  more  feasible  approach  is  to
+     develop  tools  aimed  at  expediting  specific  aspects  of the above
+     process.  The COMPILE command and a command to check  the  consistency
+     of  specific overlay records' size and relocation requirements against
+     the area sizes  and  bases  are  specific  steps  in  this  direction.
+     Another possibility which will be investigated is the development of a
+     program to total the size requirements of a  group  of  object  files.
+     Such  a  tool  would  be  useful  both in the initial determination of
+     overlay area sizes and for subsequently verifying that new modules met
+
+
+                                     - 3 -
+
+
+
+
+
+
+
+
+
+
+     the size constraints.
+
+     The  second  issue  is  the handling of procedure and function values.
+     Pascal allows such values to be created by either passing a routine as
+     a parameter or by the assignment of a routine reference to a variable.
+     Both the current overlay system and  the  forthcoming  versions  place
+     certain  restrictions on the ways in which routine values may be used.
+     It is the programmer's responsibility to  observe  these  restrictions
+     since  neither the compiler nor the overlay system can detect improper
+     usage.  Ideally  it  would  be  desirable  to  either   remove   these
+     restrictions  or  to  enable automatic detection of improper uses.  At
+     present however neither of these seem technically feasible.  This area
+     is  being  studied  further, but for now the programmer must carefully
+     observe the following restriction:  if  a  routine  value  is  created
+     (i.e.,  the  routine is used as a parameter or assigned to a variable)
+     within the overlay module containing the routine, then that value  may
+     be  used  (to  call  the  routine)  only  in that same overlay module.
+     Again, it is solely the programmer's responsibility  to  observe  this
+     restriction,  since  violations  cannot be detected by the compiler or
+     the overlay system  software.  Note  that  with  the  present  overlay
+     system,  no  problems  can  arise  with routines contained in the high
+     segment since those routines are always resident.  In the future, this
+     will not be true if multiple high segments are used since no code will
+     be permanently resident.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                     - 4 -
+
+
+
+
+    

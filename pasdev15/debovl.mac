@@ -1,0 +1,137 @@
+	search	RTSYM(RTSYM.UNV[52250,222])
+	sall
+	$MODULE	DBOVL
+
+	entry	BK$OVL,OVL$IN
+
+	$LOCAL	REGSAV,4
+; OVL$IN -- update debugger info for overlay swap.  This routine is called
+;   from the overlayer when an overlay read is to be performed.  The break-
+;   point table must always be updated.  If the debugger is active, the
+;   current statement and default module pointers must be updated if either
+;   involves the overlays being swapped in/out.  The overlayer's registers
+;   at the time of the call give the overlay area origin in EXP1, and the
+;   index into the overlay table (mod # * 3) in R1.
+
+OVL$IN:	$FRAME
+	$SAVE	REGSAV,EXP2,EXP5
+	MOVE	EXP2,$RTBAS(PDA)	; first find out if debugger is active
+	SKIPN	0,1(EXP2)	; check the flag in_debugger
+	JRST	DONODB		;   not in debugger -- go update breaks
+
+	MOVE	EXP2,$DBBAS(PDA)	; load up addr of cur_stmt_rec
+	JSP	EXP3,DOOVL	; hit the helper to update it
+	ADDI	EXP2,1		; now load addr of def_mod_rec
+	JSP	EXP3,DOOVL	;   and update it
+	MOVE	EXP2,$RTBAS(PDA)	; reload RT data area pointer
+
+DONODB:	ADDI	EXP2,7		; make addr of breakpoint table
+	HRLI	EXP2,-^o11	; negative of # b.p.'s - 1
+
+DOBKLP:	HRRZ	EXP3,0(EXP2)	; get addr of break point
+	CAIE	EXP3,$NIL	; if not nil then there's a BP there
+	JSP	EXP3,DOOVL	;   so update it
+	AOBJN	EXP2,DOBKLP	; increment and go again
+
+	$RESTOR	REGSAV,EXP2,EXP5
+	$UNFRAME
+	POPJ	TOP,0
+; DOOVL -- helper for OVL$IN.  Depending upon whether the debugger word
+;   pointed to by EXP2 indicates an incore overlay or an out-of-core one,
+;   check the address in the right half against the extent of the overlay
+;   to be swapped out, or the module number of the overlay being swapped
+;   in.   If it is the overlay in question, update the debugger word as
+;   appropriate.
+
+DOOVL:	SKIPGE	0,0(EXP2)	; check field in_core
+	JRST	DOISIN		;   true -- overlay is in core
+	HLRZ	EXP4,0(EXP2)	; get overlay number of out-of-core ovl
+	IMULI	EXP4,3		; convert to overlay table index
+	CAIE	EXP4,0(R1)	; is it the overlay being swapped in?
+	JRST	0(EXP3)		;   no, return from procedure
+	HRLZI	EXP4,400000	; arright, mark it as in-core now
+	ORM	EXP4,0(EXP2)	; by setting bit zero
+	JRST	0(EXP3)		;   and splitting
+
+DOISIN:	HRRZ	EXP4,0(EXP2)	; in core -- get statement addr
+	HLRZ	EXP5,3(EXP1)	; get size of overlay from its VJDA
+	ADDI	EXP5,0(EXP1)	;   plus area origin = end of overlay
+	CAIG	EXP4,0(EXP5)	; see if within bounds
+	CAIGE	EXP4,0(EXP1)
+	JRST	0(EXP3)		;   no -- not the overlay we're swapping out.
+	MOVE	EXP4,10(EXP1)	; pick up in-core overlay's module number
+	HRLM	EXP4,0(EXP2)	; put in debugger's table, clear in-core bit
+	JRST	0(EXP3)		;   and return from procedure
+; BK$OVL -- flush invalid breakpoints.  Various devious mechanisms in the
+;   overlayer manager (changing a module version, for example) invalidate
+;   debugger breakpoints.  This routine is called from the overlay
+;   manager with EXP1 containing the mod table index of the overlay being
+;   killed, and with EXP2 containing the origin of the overlay area in
+;   question.  First off, if the overlay is either the default module, or
+;   contains the current statement, recognize a fatal debugger error.
+;   Then just mash down the breakpoint table, checking either for the right
+;   overlay number for out-of-core modules or an appropriate core address
+;   for in-core modules, and kill the breakpoints by setting to $NIL.
+
+BK$OVL:	$FRAME
+	$SAVE	REGSAV,EXP3,EXP5
+	MOVE	EXP3,$DBBAS(PDA)	; first check cur_stmt and def_mod
+	HLRZ	EXP4,0(EXP3)	; get mod # of current statement
+	TRZ	EXP4,^o400000	; clear in-core bit
+	IMULI	EXP4,3		; convert to module index
+	CAIN	EXP4,0(EXP1)	; better not be equal
+	JRST	BERROR		;   else kill it now
+	HLRZ	EXP4,1(EXP3)	; similarly for mod # of def_mod
+	TRZ	EXP4,^o400000
+	IMULI	EXP4,3
+	CAIN	EXP4,0(EXP1)
+	JRST	BERROR
+
+	MOVE	EXP3,$RTBAS(PDA)	; must get to breakpoint table
+	ADDI	EXP3,7		; compute its addr
+	HRLI	EXP3,-^o11	; left half get minus tablesize + 1
+	HRRZ	EXP4,10(EXP2)	; get mod # of overlay currently in area
+	IMULI	EXP4,3		; compare against the one being killed
+	CAIN	EXP4,0(EXP1)
+	JRST	BKOINC		;   dead one is in core
+
+BKONIC:	SKIPGE	EXP4,0(EXP3)	; is breakpoint mod in core?
+	JRST	BKONXT		;   yes, not interested
+	MOVEI	EXP5,$NIL	; compare it to $NIL before going further
+	CAIN	EXP5,0(EXP4)
+	JRST	BKONXT		;   no breakpoint, forget it
+	HLRZ	EXP4,EXP4	; load up module number of outofcore break
+	IMULI	EXP4,3		; convert to module index
+	CAIN	EXP4,0(EXP1)	; are we interested?
+	MOVEM	EXP5,0(EXP3)	;   yes, kill breapoint by storing NIL
+
+BKONXT:	AOBJN	EXP3,BKONIC	; go back if more
+	JRST	BKOVDN		;   else hit common exit code
+
+BKOINC:	SKIPL	EXP4,0(EXP3)	; is it in core?
+	JRST	BKINXT		;   no, get next
+	MOVEI	EXP5,$NIL	; compare to nil
+	CAIN	EXP5,0(EXP4)	; well?
+	JRST	BKINXT		;   no breakpoint, forget it
+	HRRZ	EXP4,0(EXP3)	; get breakpoint addr
+	HLRZ	EXP5,3(EXP2)	; get size of overlay currently in
+	ADDI	EXP5,0(EXP2)	; plus overlay origin = end of overlay
+	CAIG	EXP4,0(EXP5)	; see if BP addr is within this overlay
+	CAIGE	EXP4,0(EXP2)
+	JRST	BKINXT		;   no, do next one
+	MOVEI	EXP4,$NIL	; cream the breakpoint
+	MOVEM	EXP4,0(EXP3)
+BKINXT:	AOBJN	EXP3,BKOINC	; go back if more
+BKOVDN:	$RESTOR	REGSAV,EXP3,EXP5
+	$UNFRAME
+	POPJ	TOP,0
+
+BERROR:	$UNFRA			; so we can get to return addr
+	POP	TOP,R0		; like so
+	$RTERR	BMSG
+
+BMSG:	asciz/
+?	Attempt to kill active overlay/
+
+	$END	DBOVL
+	end

@@ -1,0 +1,296 @@
+$verbatim
+PROGRAM: QEDLIB                                      DATE: 8/6/79
+VERSION: 1.7                                         AUTHOR: P. Lee
+APPROVED BY:
+
+
+
+$justify
+&RELEASE SCHEDULE&
+$skip 4
+&CHANGES&
+$skip 1
+NOTE - All changes to any QEDLIB 1.6 entry point parameter lists are
+&underlined&.
+$skip
+$indent 3
+&MODULE QEDLN&
+$skip
+$paragraph -4
+1. Entries QFILEAPPEND and QTTYAPPEND now have handlers to assign the QED
+error code QHEAPFULL to ERRCODE when the storage capacity is exceeded. All
+lines appended or loaded will be placed into the buffer except for the last
+line input. QFILEAPPEND will fail to assign a value to the default file name
+when this error occurs.
+$skip
+$par -4
+2. QSETBOUNDS has been changed to allow absolute addresses to be the actual
+line numbers in a bounded buffer. For example, it is now possible to bound
+to lines 7, 8, and 9, and still have 7-9 as their line numbers. Line 9
+can be referred to as either "9" or "$". This "offsetting" is accomplished
+by first setting a buffer offset in procedure QSETOFFSET in module QEDCL.
+$verbatim
+
+&EXTERNAL PROCEDURE QSETOFFSET&
+            (  NEWOFFSET : QLINENO;
+               VAR BUFFER : QBUFFER  );
+
+$justify
+where NEWOFFSET is the desired value of the first line number in the bounded
+buffer.
+$verbatim
+Then a call to QSETBOUNDS:
+
+EXTERNAL PROCEDURE QSETBOUNDS
+            (  VAR BUF : QBUFFER;
+               FIRST, LAST : QLINENO;
+               &ABSOLUTE : BOOLEAN&;
+               VAR ERRCODE : QERRCODE  );
+
+$justify
+where ABSOLUTE is a boolean flag indicating the line addressing mode. When
+TRUE, FIRST and LAST are line numbers relative to &unbounded& buffer.
+When FALSE, the current value of the buffer offset is used to
+address the line numbers in the &bounded& buffer.
+Note that procedure QINITBUF will initialize the offset to 1.
+$skip
+$need 10
+$par -4
+3. Two new entries,
+$verbatim
+
+&QDOLLAR_VAL& ( VAR BUF : QBUFFER ): QLINENO;
+
+and
+
+&QFIRST_VAL& ( VAR BUF : QBUFFER ): QLINENO;
+
+$justify
+can be called to compute the last and first line numbers of the bounded buffer.
+The buffer offset is used in this computation to return the absolute
+line number values.
+$skip 2
+&MODULE QSPAT&
+$skip
+$par -4
+1. The QSPAT module is now equipped to handle "*" wildcarding as described
+in the version report for QED 1.7. The changes to the QSPAT entry points
+are as follows:
+$indent +3
+$skip 2
+$par -4
+a)
+$verbatim
+  EXTERNAL FUNCTION SPATPARSE
+             (  LINE : CMDLINE;
+                VAR IDX : CMDLINEIDX;
+                VAR PAT : SPATTERN;
+                &WILDSWITCH : BOOLEAN&;
+                VAR ERRCODE : QERRCODE  ): BOOLEAN;
+
+$justify
+where WILDSWITCH is a flag that enables or disables both "*" and "?"
+wildcarding. When TRUE, wildcarding is enabled and when FALSE
+wildcarding is disabled and "*" and "?" are treated as normal characters.
+$skip
+$par -4
+b)\\Function SPATMATCH &must& receive as input an internal representation
+of the pattern as is produced by SPATPARSE.
+$skip
+$need 9
+$par -4
+c)\\A new entry,
+$verbatim
+
+&EXTERNAL PROCEDURE SPATDISPOSE& ( PAT : SPATTERN );
+
+$justify
+will dispose of the internal representation of the pattern. Caution
+is advised in the use of this procedure as modules QSPRED and QLD
+use SPATDISPOSE and attempts to dispose of a pattern more than once
+will cause QSPAT to abort. SPATDISPOSE should be used &only& when
+QSPRED and QLD are &not& being used.
+$indent-3
+$skip
+$need 4
+$par -4
+2. A new static variable, NODEFAULT, controls the evaluation of the
+default pattern (//). Its initial value, FALSE, causes the default pattern
+to be processed normally. When TRUE, the use of the default pattern
+will produce an error.
+$skip 2
+$need 11
+&MODULE QSPRED&
+$skip
+$par -4
+1.\\As in SPATPARSE, SPREDPARSE requires a new input argument WILDSWITCH
+to enable or disable the wildcard feature.
+$verbatim
+
+EXTERNAL FUNCTION SPREDPARSE
+           (  LINE : CMDLINE;
+              VAR IDX : CMDLINEIDX;
+              VAR PRED : SPRED;
+              &WILDSWITCH : BOOLEAN&;
+              VAR ERRCODE : QERRCODE  ): BOOLEAN;
+
+$justify
+$par -4
+2. SPREDMATCH will match predicates with the "*" wildcarding feature.
+$skip 2
+$need 17
+&MODULE QSUBSTITUTE&
+$skip
+$par -4
+1. Function QSUBSTITUTE,
+$verbatim
+
+EXTERNAL FUNCTION QSUBSTITUTE
+           (  VAR LINE : QSTRING;
+              LINENO : QLINENO;
+              PAT : SPATTERN;
+              RPLMTSTR : QSTRING;
+              OPTIONS : SUB_OPT_SET;
+              VAR CNT : QSTRINGIDX;
+              &CMD : QEDCMDS&;
+              &VAR NTH : QLINENO&;
+              &N_PAR : QLINENO&;
+              VAR ERRCODE : QERRCODE  ): BOOLEAN;
+
+$justify
+now has three new arguments.
+$skip
+$indent +3
+$need 10
+$par -4
+CMD on input must be either SUBSTITUTE, BEFORE, or AFTER. This controls
+the type of string replacement used as they are implemented in QED
+Version 1.7.
+$skip
+$par -4
+NTH and N_PAR control the nth occurrence feature of QSUBSTITUTE. NTH,
+initially 0,
+is incremented by one for every match of PAT, and a string replacement is
+executed only when NTH is greater than or equal to the input value,
+N_PAR. This module
+returns TRUE upon completing the substitute operation or false upon
+failing to match the PATtern N_PAR times in the LINE.
+NTH will return the number of occurrences of PAT found during the
+substitute operation.
+$indent -3
+$skip 2
+$need 13
+&MODULE QLISTLINES&
+$skip
+$par -4
+1. To handle special printing of the tab character (control-I),
+QLISTLINES and PRLINE have been modified to
+$verbatim
+
+EXTERNAL PROCEDURE QLISTLINES
+            (  VAR BUFFER : QBUFFER;
+               FIRST, LAST : QLINENO;
+               VAR OUTFILE : TEXT;
+               CTL_CHAR : BOOLEAN;
+               NUMBER : BOOLEAN;
+               &TAB_PRINT : BOOLEAN&;
+               VAR ERRCODE : QERRCODE  );
+$jus
+$need 6
+$verbatim
+
+EXTERNAL PROCEDURE PRLINE
+            (  VAR OUTFILE : TEXT;
+               LINE : QSTRING;
+               &TAB_PRINT : BOOLEAN&;
+               VAR ERRCODE : QERRCODE  );
+
+$justify
+$need 4
+where TAB_PRINT is a flag controlling the printing of the tab character.
+When TRUE, tabs are printed as spaces, and when FALSE are printed as
+&&I. Note that in QLISTLINES, when either NUMBER is true or CTL_CHAR
+is false, tabs are printed as spaces.
+$skip 2
+$need 9
+&MODULE EDITREAD&
+$skip
+$par -4
+1. Although its parameter list has not changed, EDITREAD is now simply a
+call to QREAD.
+$verbatim
+
+EXTERNAL FUNCTION QREAD : QSTRING;
+
+$justify
+QREAD, as well as QEDLIB, does not support any type of control character
+editing.
+$skip 2
+$need 7
+&MODULE QLD&
+$skip
+$par -4
+1. QLDPARSE is now able to parse a backward search predicate as is described
+in QED Version 1.7.
+$skip
+$par -4
+2. QLDEVAL is now able to evaluate backward search predicates and resolve
+them into line numbers as is described in QED Version 1.7.
+$skip 2
+$need 8
+&MODULE QEDCL&
+$skip
+$par -4
+1. Users of QEDCL may now select their own defaults for the SET options
+TABS [ON | OFF] and MARK <predicate>.
+$verbatim
+
+&EXTERNAL PROCEDURE QSETMARKDEFAULT& ( LINE : CMDLINE );
+
+&EXTERNAL PROCEDURE QSETTABDEFAULT& ( DEFAULT : BOOLEAN );
+
+$justify
+$need 4
+QINITEXEC sets these defaults as ':$PAGE:' and TRUE, respectively, and
+calls all initialization procedures in the proper order. QINIT must be
+called &after& the above two default setting procedures have been called
+if QINITEXEC is not used.
+$skip 2
+$need 5
+&MODULE QED&
+$skip
+$par -4
+1. The BOUND command now has the NEXT option which causes QED to bound to
+the next page in the buffer. This is described in the version report for
+QED 1.7.
+$skip 2
+$need 4
+&MODULE QMARKMATCH&
+$skip
+$par -4
+1. In order to support the NEXT option and backward searches in the BOUND
+command, QMARKMATCH has been changed to
+$need 10
+$verbatim
+
+EXTERNAL PROCEDURE QMARKMATCH
+            (  VAR BUFFER : QBUFFER;
+               MARK : SPRED;
+               PAT : SPATTERN;
+               START : QLINENO;
+               VAR LBOUND, HBOUND : QLINENO;
+               &BACKWARD : BOOLEAN&;
+               &WRAP : BOOLEAN&;
+               VAR ERRCODE : QERRCODE  );
+
+$justify
+$need 5
+BACKWARD, when TRUE, causes QMARKMATCH to search backwards for the MARK and PAT.
+This provides a convenient way to bound to the current section
+(i.e. "BOUND ^::" in QED Version 1.7).
+WRAP controls the wrap-around searching for the section. When TRUE, a
+search will, if necessary, wrap around the top or bottom of the buffer, 
+and when false, will
+fail upon reaching the top or bottom of the buffer in the same way
+that BOUND NEXT will.
+ 

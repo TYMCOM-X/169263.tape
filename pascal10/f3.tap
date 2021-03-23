@@ -1,0 +1,655 @@
+l36900-37100
+		    A PASCAL PROCESSOR VALIDATION SUITE
+		    -----------------------------------
+
+
+
+by	  B.A. Wichmann
+	       National Physical Laboratory
+	       Teddington, Middlesex,
+	       TW11 OLW, United Kingd0m
+
+
+	  A.H.J. Sale
+	       Department of Information Science
+	       University of Tasmania,
+	       GPO Box 252C,
+	       HOBART,	Tasmania  7001
+
+
+
+
+
+Abstract
+--------
+
+
+The document describes a series of test programs written in Pascal.  Th
+suite of programs may be used to validate a Pascal processor by
+presenting it with a series of programs which it should, or should not,
+accept.  The suite also contains a number of programs that explore
+implementation-defined features and the quality of the processor.  The
+tests are generally based on the draft ISO Standard for Pascal.
+
+
+
+
+
+
+
+
+Not for publication
+-------------------
+
+
+This is a working document.  It is being continually revised and
+extended.  Comments, corrections, extra tests, and results of running
+any tests would be most welcome.
+
+
+
+
+
+
+
+
+Dated: 19 june 1979
+-----
+
+
+Version: 2.0
+-------
+
+
+
+
+1.  INTRODUCTION AND PURPOSE
+----------------------------
+
+This paper describes a suite of test programs which has been designed
+to support the draft Standard (Addyman, 1979) for the programming
+language Pascal (Jensen & Wirth, 1975) prepared for approval by ISO.
+(In the rest of this paper, the draft Standard is simply referred to
+as the Standard).  It therefore follows similar work done by AFSC(1970)
+for COBOL, and Wichmann (1973,76,77) for Algol 60.
+
+
+The suite of programs is called a validation suite for Pascal
+processors; however it is important to emphasize that no amount of
+testing can assure that a processor that passes all tests is error-free
+Inherent in each test are some assumptions about possible processors an
+their designs; a processor which violates an assumption may apparently
+pass the test without doing so in reality.  Also, some violations may
+simply not be tested because they never occurred to the validation
+suite designers, nor were generated from the draft Standard.
+
+
+Two examples may illustrate this as a warning to users against expectin
+too much.  Firstly, consider a fully interpretable Pascal processor.  I
+may pass a test which contains a declaration which it would mis-handle
+otherwise, simply because the program did not include an access to the
+object concerned so that it was never interpreted.  A second example
+might be a Pascal processor which employs a transformation of the Pasca
+syntax rules.  Since the pathological cases incorporated into the test
+programs are based on the original rules, a mistake in transformation
+may not be detected by the test programs.
+
+
+On the other hand, the test series contains a large number of test
+cases which exercise a Pascal processor fairly thoroughtly.  Hence
+passing the tests is a strong indication that the processor is well-
+designed and unlikely to give trouble in use.  The validation suite
+may therefore be of interest to two main groups:  implementors of
+Pascal, and users of Pascal.
+
+
+Implementors of Pascal may use the test series to assist them in
+producting an error_free processor.  The large number of tests, and
+their independent origin, will assist in detecting many probable
+implementation errors.	The series may also be of use for re-validation
+of a processor after modification to incorporate a new feature, or
+to fix an error.
+
+
+
+
+Users of Pascal, which includes actual programming users, users of
+Pascal-written software, prospective purchasers of Pascal processors,
+and many others, will also be interested in the validation suite.
+For them it will provide an opportunity to measure the quality of an
+implementation, and to bring pressure on implementors to provide a
+correct implementation of Standard Pascal.  In turn, this will improve
+the portability of Pascal programs.  To emphasize this role, the
+validation suite also contains some programs which explore features
+which are permitted to be implementations defined, and some tests
+which seek to make quality judgements on the processor.  The validation
+suite is therefore an important weapon for users to use in
+influencing suppliers.
+
+
+Naturally, implementors of Pascal are best placed to understand why
+a processor fails a particular test, and how to remedy the fault.
+However, the users' view of a Pascal processor is mainly at the Pascal
+language level, and the fact of a failure is sufficient for the
+users' purpose.
+
+
+
+
+2.  THE TEST PROGRAM STRUCTURE
+------------------------------
+
+
+Each test program follows a consistent structure to aid users of the
+suite in handling them.  Most of the following rules apply to all
+programs: a few hold everywhere except in a few test cases meant to
+test the particular feature involved.  Such rules are marked by an
+asterisk, and a following note points out the exceptions.
+
+
+    (i)   Each program starts with a header comment, whose structure is
+	  given later.
+    (ii)  The header comment is always immediately followed by an
+	  explanatory comment in plain English, which describes the
+	  test to be carried out and its probable results.
+    (iii) Each program closes with the characters "end." in the first
+	  four character positions of a line.  This pattern does not
+	  otherwise occur in the program text.
+    (iv)  All program lines are limited to 72 character positions.
+    (v)*  The lexical tokens used are in conformance with the
+	  conventions set out in the draft ISO standard, and
+	  reproduced in an appendix.  Thus comments are enclosed in
+	  curly brackets, the not-equal token is "<>", etc.  In
+	  addition, all program text is in lower case letters, with
+	  mixed-case used in comments in accordance with normal
+	  English usage.  String- and character-constants are always
+	  given in upper-case letters.	(Note:	A few tests set out
+	  to check lexical handling, and may violate these rules.
+	  Translation of mixed cases to one case will therefore make
+	  these tests irrevlevant, but will have no other effect.)
+    (vi)  Direct textual replacement of any lexical token, or the
+	  comment markers with the approved equivalents given in the
+	  Standard, will not cause the significant text on a program
+	  line to exceed 72 characters.
+   (viii)*The program writes to the default file output, which is
+	  therefore declared in the program heading.  (Note: one
+	  test - the minimal program - does no printing; a few
+	  cross-references are virtually the same.).
+
+
+
+
+2.1  The header comment
+-----------------------
+
+
+The header comment always begins with the characters "{TEST" in
+positions 1-5 of a line.  No other comments are permitted to have the
+character "{" and "T" directly juxtaposed in this way.	The syntax
+of a header comment in EBNF is given by:
+
+
+header-comment = "{TEST"program-number "," "CLASS=" category_name"}" .
+
+
+program_number = number {"." number} "-" number .
+
+
+number	       = digit {digit} .
+
+
+category-name  = CONFORMANCE ! DEVIANCE ! IMPLEMENTATIONDEFINED !
+		 ERRORHANDLING ! QUALITY ! EXTENSION .
+
+
+For example, a possible header comment is:
+     {TEST 6.5.3-10, CLASS=CONFORMANCE}
+
+
+The program number identifies a section in the standard which gives
+rise to the test, and a serial number following the dash to
+uniquely identify each test within that section.  If other sections
+of the Standard are relevant, the explanatory comment will mention
+them.  The program title is constructed from the section number by
+replacing "TEST" by "t", "." by "p" for point, and "-" by "d" for
+dash.  Thus the above header comment belongs to a program t6p5p3d10.
+This technique may also be used to make the program source test file
+in processing.
+
+
+The category-name identifies a class into which this test falls.
+The function and design of each test depends on its class.  These
+are explained later.  Thus it is possible to read through the
+validation suite file and simply identify the header comment by the
+leading "{T" in the first two character positions, identify its
+section relevance and construct a unique identifier for each program,
+and to select programs of particular classes.
+
+
+
+
+2.2  The program classes
+------------------------
+
+2.2.1 Class = CONFORMANCE
+-------------------------
+      -------------------
+
+The simplest category to explain is CLASS=CONFORMANCE. These programs
+are always correct standard Pascal, and should compile and execute.
+With one exception (the minimal program), the program should
+print "PASS" and the test number if the program behaves as expected.
+In some cases an erroneous interpretation causes the program to
+print "FAIL"; in other cases it may fail before doing this (in
+execution, loading or compilation). Conformance tests are derived
+directly from the requirements of the Standard, and attempt
+to ensure that processors do indeed provide the features that the
+Standard says are part of Pascal, and that they behave as defined.
+Since  conforming programs execute to completion, typical conformance
+tests will include a number of related features; all will
+be exercised by processors that pass.
+
+2.2.2 Class = DEVIANCE
+----------------------
+      ----------------
+
+The next simplest category to explain is CLASS=DEVIANCE.  These
+programs are never standard Pascal, but differ from it in some
+subtle way.  They serve to detect processors that meet one or more
+of the following criteria:
+     (a)  the processor handles an extension of Pascal,
+     (b)  the processor fails to check or limit some Pascal feature
+	  appropriately, or
+     (c)  the processor incorporates some common error.
+Ideally, a processor should report clearly on all deviance tests that
+they are extensions, or programming errors.  This report should be
+at compile-time if possible, or in some cases in execution.  A
+processor does not conform to the standard if it executes to
+completion.  In such cases the program will print a message beginning
+"DEVIATES", and users of the tests must distinguish between
+extensions and errors.	(In a few cases a possible extension is tested
+also for consistency under this class.)
+
+
+It is obviously not possible to test all possible errors or extensions.
+The deviance tests are therefore generated from some assumptions about
+implementation (which may differ from test to test), and from experienc
+with past flaws detected.  No attempt is made to detect extensions base
+on new statement types or procedures, but attention is concentrated
+on more stable areas.  Obviously since each deviance test is oriented t
+one feature, they tend to be shorter than conformance tests, and to
+generate a short series where one conformance test collects several
+examples.
+
+
+
+
+2.2.3. Class = IMPLEMENTATIONDEFINED
+------------------------------------
+       -----------------------------
+
+In some sections of the Standard, implementors are permitted to
+exercise some freedom in implementing a feature.  An example is the
+significance limit of identifiers; another is the evaluation order
+of boolean expressions.  The CLASS=IMPLEMENTATIONDEFINED tests are
+designed to report on the handling of such features.  A processor
+may fail these tests by not handling them correctly, but generally
+should execute and print some message detailing the implementation
+dependency.  The collection of such implementation dependencies is
+useful to the writers of portable software.  Some tests in this
+category require care in interpretation, as the messages generated
+by the test program rely on some assumptions about the processor
+implementation.  The programs may or may not be standard Pascal:  often
+they are not.
+
+
+For example, one program attempts to measure the significance limits
+of identifiers by declaring a series of differing length in an
+inner procedure that are different from an outer series by their last
+letter.  Thus it violates the requirement for uniqueness over the
+first eight characters and relies on masquerading redefinition under
+the scope rules for its effect.  One processor, however, reports that
+just this is happening during compilation.  Though this is ideal
+behaviour, it would destroy the test if the program then was not
+permitted to run.  (In this case, in fact, the messages were only
+warnings.)
+
+
+2.2.4.	Class = ERRORHANDLING
+-----------------------------
+	---------------------
+
+The Standard specifies a number of situations by stating that
+"an error occurs if" the situation occurs.  The tests of this class
+each evoke one (and only one) such error.  They are therefore not
+in Standard Pascal with respect to this feature, but otherwise
+conform.
+
+A correct processor will detect each error, most probably as it occurs
+during execution but possibly at an earlier time, and would give
+some explicit indication of the error to the user.  Processors that
+fail to detect the error will exhibit some undefined behaviour:  the
+tests enable these cases to be identified, and allows for documentation
+of the handling of detected errors.
+
+
+2.2.5.	Class = QUALITY
+-----------------------
+	---------------
+
+These tests are a miscellany of test programs which have as their
+only common feature that they explore in some sense the quality of
+an implementation.  The tests include the following, amongst others:
+
+     *	  tests that can be timed, or used to estimate the
+	  performance.
+     *	  tests that have known syntax errors which can be
+	  used to inspect the diagnostics.
+     *	  tests that establish whether the implementation
+	  has a limit which is a virtual infinity in some
+	  list or recursive production.  For example a deep
+	  nesting of for-loops (but not unreasonable!) would
+	  see whether there was any limit, perhaps due to a
+	  shortage of registers on a computer.
+
+
+2.2.6.	Class = EXTENSION
+-------------------------
+	-----------------
+
+A final category is CLASS=EXTENSION.  These are specific to some
+conventionalized extension approved by the Pascal Users Group, such
+as the provision of an otherwise clause in case statements.  In this
+case, the class in the header comment is followed by a sub-class, as
+in the example:
+     {TEST 6.8.-1, CLASS=EXTENSION, SUBCLASS=CONFORMANCE}
+The subclass gives the purpose of the test according to the previously
+explained classes.
+
+
+3.  STRUCTURE OF THE VALIDATION SUITE
+-------------------------------------
+
+The validation suite as distributed consists of:
+
+
+A.  Machine-readable files
+    ----------------------
+
+    1.	A header file containing the character set and an explanation
+	of the structure of the other files.
+    2.	A skeleton program, written in Pascal, to operate on the
+	previous file.
+    3.	A copy of this report.
+    4.	A file consisting of the sequence of test programs arranged
+	in lexicographic order of their program-number (see section 2.1
+
+B.  Printed materials
+    -----------------
+
+    1.	This document.
+    2.	A printed version of A.1.
+
+
+The skeleton program as supplied prints the test programs on the
+output file, but calls a procedure newprogram before listing the
+start of a program, and calls a procedure endprogram after printing
+the last end of a program.  These procedures as now supplied
+simply print a heading and a separator respectively.  However,
+users of the suite may write versions of newprogram and endprogram
+that may write programs to different named files, and which may
+initiate jobs in the operating system queues to carry out the tests.
+The two procedures newsuite and endsuite are also provided in case
+these are of use.
+
+
+Since newprogram may return a status result, it may also be
+programmed to be selective in its handling of tests.  Only
+conformance tests may be selected, or only tests in section 6.3, as
+required.
+
+
+The skeleton program is in standard Pascal, and conforms to the
+conventions of the validation suite (but has no header comment).  It is
+documented in an Appendix.
+
+
+
+
+4.  REPORTING THE RESULTS
+-------------------------
+
+
+The results of a pass of the validation suite against a Pascal
+processor should be reported in a standard way, illustrated by the
+schema below.
+
+
+     PASCAL PROCESSOR IDENTIFICATION (host computer, origin of
+				      processor, version):
+     ------------------------------
+     TEST CONDITIONS (tester, date, test version):
+     ---------------
+     CONFORMANCE TESTS
+     -----------------
+     Number of tests passed = ?
+     Number of tests failed = ?
+	  details of failed tests:
+	  TEST ???? : explanation of why or what
+	  .....
+
+     DEVIANCE TESTS
+     --------------
+     Number of deviations correctly detected = ?
+     Number of tests showing true extensions = ?
+     Number of tests not detecting erroneous deviations = ?
+	  Details of extensions:
+	  .....
+	  Details of deviations:
+	  .....
+
+     ERROR-HANDLING
+     --------------
+     Number of errors correctly detected = ?
+     Number of errors not detected = ?
+	  Details of errors not detected:
+	  .....
+
+     IMPLEMENTATION-DEPENDENCE
+     -------------------------
+     Number of tests run = ?
+     Number of tests incorrectly handled = ?
+	  Details of implementation-dependence:
+	  .....
+
+     QUALITY MEASUREMENT
+     ------------------
+     Number of tests run = ?
+     Number of tests incorrectly handled = ?
+	  Results of tests:
+	  .....
+
+     EXTENSIONS
+     ----------
+     Extensions present = ?
+	  as above for this extension
+
+
+
+
+5.  ACKNOWLEDGEMENTS
+--------------------
+
+
+The authors gratefully acknowledge the assistance of many colleagues
+who have collected difficult cases and bugs in their compilers
+and have passed them on for inspirational purposes.  Many of the
+tests have been derived from work of B.A. Wichmann (1973) and
+A.H.J. Sale (1978) and significant contributions have also been
+made by A.M. Addyman and R.D. Tennent.	N. Saville and R. Freak
+contributed greatly by bringing consistency and care into the
+large effort required to assemble the validation suite itself.
+
+
+The present level of the suite would not have been possible without
+the work of BSI DPS/13/4 in drawing up the draft ISO Standard,
+nor without the support of the Pascal Users Group.
+
+
+
+
+REFERENCES
+--------
+Addyman, A.M. (1979): BSI/ISO Working Draft of Standard Pascal by the
+     BSI DPS/13/4 Working Group, Pascal News no 14, January 1979,pp4-54
+
+AFSC (1970): User's Manual, COBOL Compiler Validation System,
+     Hancom Field, Mass., 2970.
+
+DeMorgan, R.M., Hill, I.D., Wichmann, B.A. (1977): Modified Report
+     on the Algorithmic Language ALGOL 60, Comp. J. Vol 19 No 4.
+     pp364-379. 1977
+
+Sale, A.H.J. (1978): Pascal Compatibility Report (revision 2),
+     Department of Information Science Report r78-3, University of
+     Tasmania, May 1978.
+     {obseleted by this document}
+      --------------------------
+
+Wichmann, B.A. (1973): Some Validation tests for an Algol compiler, NPL
+     Report NAC 33, March 1973.
+
+Wichmann, B.A. & Jones, B. (1976): Testing ALGOL 60 Compilers,
+     Software - Practice and Experience, Vol 6 pp261-270. 1976.
+
+
+
+
+Appendix : Documentation of Skeleton Program
+--------------------------------------------
+
+
+Purpose
+-------
+The skeleton program provided gives a correct standard Pascal
+program that will identify each test in a file of test programs.  It
+is distributed with five stubs which are intended for user
+modification so that the program will serve as the parent of an
+automatic system for running the tests,  With the large number
+of tests in the validation suite, such a system is important.
+As distributed the stubs simply print the test of the test program.
+
+
+Implementation
+--------------
+If the recipient's Pascal processor will accept upper- and lower-case
+letters, and the ISO standard lexical representation, then the
+program should be able to run directly.  If lexical substitutions
+are necessary, these should be made.  No lines approach the limiting
+length of 72 closely, so some expansion room is possible.  If only
+one case of letters is available for the source text, then the whole
+program should be upper-cased with the exception of the character
+constants in the main program and the procedure convert.  If
+however, the Pascal processor is also limited to upper-case
+characters in the char type, these too will have to be converted,
+and the whole of the validation suite will have to be converted
+to upper-case alone before the program will run.
+
+
+Modification
+------------
+Once the recipient has verified that he has the skeleton working
+correctly, it can be modified to other purposes,  If the only use
+desired is the construction of many  individual files, each with
+a single test program, then newsuite and endsuite may be made dummy
+procedures.  Procedure newprogram can open (rewrite) a file with the
+converted name supplied, which is guaranteed unique, leaving
+processline to write the text to this file and endprogram to do
+any necessary closing of the file.
+Alternatively, the program may be modified to construct a job
+deck including job control statements.	The newprogram procedure will
+have some more complex actions to take, and the endprogram
+procedure will initiate the job into the operating system queues.
+In the event that the user wants to batch up the tests in
+lots of 20 or so, the access to the variable count allows newprogram
+and endprogram to take appropriate action every twentieth test.  Or
+again, if the whole lot is to be batched or submitted as a simulated
+time-sharing job, the newsuite and endsuite programs can be used to
+initialize and initiate.
+
+Additionally the newprogram procedure is given access to the test
+program name and its class.  Specially tailored programs can be written
+to only initiate conformance tests, or only conformance tests
+relevant to section 6.5 of the Standard, or whatever the user desires.
+If necessary, specifications could be read in, most easily by a
+modified version of the newsuite procedure.
+
+
+System documentation
+--------------------
+The main program alternates between dormant states where it searches
+for the header comment starting a test, and active states where it
+processes lines keeping an eye out for the closing end of the test.
+When it finds a header comment, it extracts the data for passing to
+the stub procedures newprogram and endprogram.
+
+The procedure extract does this extraction from the line buffer.  It
+essentially assumes correctness of the header syntax.  The program
+name is stored in a special record.
+
+The procedure convert is not necessary to the distributed version
+apart from a demonstrative use.  It is provided to convert test
+program numbers from numeric format (e.g. 6.2.8-4) to an alphabetic
+format suitable as an identifier or file name (e.g. t6p2p8d4).	It
+switches the format in the name record from whatever it is to the
+alternative format.  The format as supplied to newprogram is
+digitized.
+
+The procedure readaline does simply that.  The line is stored in an
+internal buffer line.
+
+The procedures newprogram and endprogram have value parameters with
+exactly the same name as their global counterparts.  This is to
+hide the global variables from them and provide some measure of
+robustness against errors.  The status parameter of newprogram is
+listed explicitly to emphasize the possible change of value.
+
+There are features of Pascal in the program that may not be implemented
+There are two goto statements leading to a disaster-exit label; if
+non-local gotos are not implemented the gotos may be omitted or
+replaced by a halt equivalent.	The packing in charvectype is only
+provided to allow comparisons with character array constants
+("strings").  All identifiers have been checked for uniqueness
+over the first eight characters, and no non-standard usages have
+been detected in the program.  If it is necessary to alter the program
+to recognize header comments by '(*T' instead of '{T', some changes
+will be necessary on two lines of the main program.
+
+
+Lexical structure of procedures
+-------------------------------
+
+     main
+	readaline
+	convert
+	extract
+	   scan
+	newsuite*
+	endsuite*
+	newprogram*
+	endprogram*
+	processline*
+
+notes:
+   * user-modifiable stub procedures.
+
+Distributed version
+-------------------
+As distributed the skeleton program prints all the test programs,
+one per page, in sequence.  The headings simply illustrate some
+features of the package.  Warning: this takes a lot of paper, so
+be prepared.
+
+Date of documentation		   Author
+---------------------		   ------
+1979 June 19			A.H.J. Sale, University of Tasmania ch!ó

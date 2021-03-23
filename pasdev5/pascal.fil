@@ -1,0 +1,76 @@
+		Files associated with the PASCAL compiler
+
+	(.pas/.rel) files needed to build PASCAL in [52250,222] ...
+
+	PASCAL -- mainline and command-line and file-name parser
+	PASLEX -- listing supports, error routines, scanner, and symbol
+		  table supports
+	PASLX  -- character input routines and more listing supports
+	PASBLK -- type/variable/procedure/function declaration routines
+	PASCSN -- constant declaration and structured constant/variable
+		  initialization
+	PASBOD -- statement parser
+	PASCLL -- procedure/function call support, standard or declared
+	PASSEL -- addressibility for structured variables (records, etc.)
+	PASCST -- parses constants
+	PASCMP -- determines type compatibility
+	PASMC  -- handles output to .rel file
+	PASSTR -- string manipulation support routines
+	PASOPT -- parses option lines
+	PASCG  -- code generation, procedure entry/exit, and debug support
+	PASCGN -- instruction emission and register manipulation
+
+	(.mac/.rel) MACRO files used ...
+
+	PASLX  -- MACRO version of PASLX.PAS (more efficient)
+	PASCGN -- MACRO version of PASCGN.PAS (more efficient)
+	PASVER -- compiler "version" date
+	PASHAK -- minor routines required by PASCON and PASMC
+
+	in addition RND:RDLIB is searched in the build.
+
+	error messages are obtained from PASMSG.TXT.
+
+	$include files used by PASCAL ...
+
+	PASDCL.INC -- universal declarations--includes PASCON.INC,
+		      PASTYP.INC and PASVAR.INC (included in everything
+		      but PASCAL)
+	PASCON.INC -- constant declarations (included in PASCAL and
+		      PASDCL.INC)
+	PASTYP.INC -- type declarations (included in PASCAL and PASDCL.INC)
+	PASVAR.INC -- variable declarations (included in PASCAL and
+		      PASDCL.INC)
+	PASINI.PAS -- level 0 symbol table definition (included in PASCAL)
+	PASRW.PAS  -- reserved word declarations (included in PASLEX)
+	PASLEX.INC -- external declarations for PASLEX and PASLX (included
+		      in PASCAL, PASBOD, PASBLK, PASEXP, PASCLL, PASMC,
+		      PASCG, PASCGN, PASCSN, PASOPT, PASCST, PASSTR, PASCMP,
+		      and PASSEL)
+	PASBLK.INC -- external declarations for PASBLK (included in PASCAL)
+	PASSTR.INC -- external declarations for PASSTR (included in PASCAL,
+		      PASBLK, PASBOD, PASCLL, PASSEL, and PASCST)
+	PASMC.INC  -- external declarations for PASMC (included in PASCAL,
+		      PASBLK, PASBOD, PASCG, and PASCSN)
+	PASCMP.INC -- external declarations for PASCMP (included in PASBLK,
+		      PASBOD, PASEXP, PASCLL, PASCG, PASSEL, PASCSN, PASMC,
+		      and PASSTR)
+	PASCG.INC  -- external declarations for PASCG and PASCGN (included
+		      in PASCAL, PASSEL, PASSTR, PASCLL, PASEXP, PASBOD,
+		      and PASLEX)
+	PASFB.INC  -- file block declarations (included in PASCLL and PASMC)
+	PASOPT.INC -- external declarations for PASOPT (included in PASCAL,
+		      PASLEX, and PASCG)
+	PASEXP.INC -- external declarations for PASCST, PASEXP, PASSEL, and
+		      PASCLL (included in PASBLK, PASBOD, and PASCSN)
+	PASCEX.INC -- external declarations for PASCST, PASEXP, and
+		      PASSEL (included in PASCLL)
+	RLB:PRGDIR.INC -- (included in PASMC and PASLEX)
+
+	the following command files are associated with PASCAL ...
+
+	PASCAL.CMD -- LINK-10 command file to build system
+	VERSION.MIC-- MIC command file to run SETDAT.EXE[52250,222],
+		      which writes the current date to PASVER.MAC, and
+		      MACRO to assemble PASVER
+

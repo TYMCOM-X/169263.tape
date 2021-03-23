@@ -1,0 +1,830 @@
+       File DSK:EXE017.PAS[31024,274425]   Compiled 26-Aug-82 10:04   Pascal, Version 2A(460)-1
+
+       File DSK:EXE017.PAS[31024,274425]   Compiled 26-Aug-82 10:04   Pascal, Version 2A(460)-1
+
+       File DSK:EXE017.PAS[31024,274425]   Compiled 26-Aug-82 10:04   Pascal, Version 2A(460)-1
+
+       File DSK:EXE017.PAS[31024,274425]   Compiled 26-Aug-82 10:04   Pascal, Version 2A(460)-1
+
+
+
+
+
+                            $$$$$   $   $   $$$$$     $$      $     $$$$$
+                            $       $   $   $        $  $    $$         $
+                            $        $ $    $        $  $     $        $ 
+                            $$$       $     $$$      $  $     $       $  
+                            $        $ $    $        $  $     $      $   
+                            $       $   $   $        $  $     $     $    
+                            $$$$$   $   $   $$$$$     $$     $$$    $    
+
+
+                                     EXE017 - MATH TEST ROUTINE
+
+
+Options in effect: 
+
+        CHECK, SPECIAL(COERCIONS, PTR), NOSPECIAL(WORD), NOMAP, NOSYMBOLS, NOCALLS, ASSEMBLY, 
+        NOXREF, TRACE, QBLOCKS, NOOPTIMIZE, CODE, NODEBUG, FINISH, NOGLOBAL, NOMAINSEG, NOOVERLAY, 
+        AUTOQUICK, SOURCE, NOSTANDARD, LENGTH (45), WIDTH (102), NOEXTLENGTH, STORAGE (2048), 
+        ALLOC (0), ENABLE(M68)
+
+
+
+
+       File DSK:EXE017.PAS[31024,274425]   Compiled 26-Aug-82 10:04   Pascal, Version 2A(460)-1
+
+       File DSK:EXE017.PAS[31024,274425]   Compiled 26-Aug-82 10:04   Pascal, Version 2A(460)-1
+
+       File DSK:EXE017.PAS[31024,274425]   Compiled 26-Aug-82 10:04   Pascal, Version 2A(460)-1
+
+       File DSK:EXE017.PAS[31024,274425]   Compiled 26-Aug-82 10:04   Pascal, Version 2A(460)-1
+
+       File DSK:EXE017.PAS[31024,274425]   Compiled 26-Aug-82 10:04   Pascal, Version 2A(460)-1
+
+       File DSK:EXE017.PAS[31024,274425]   Compiled 26-Aug-82 10:04   Pascal, Version 2A(460)-1
+
+       File DSK:EXE017.PAS[31024,274425]   Compiled 26-Aug-82 10:04   Pascal, Version 2A(460)-1
+
+       File DSK:EXE017.PAS[31024,274425]   Compiled 26-Aug-82 10:04   Pascal, Version 2A(460)-1
+
+
+
+
+
+                            $$$$$   $   $   $$$$$     $$      $     $$$$$
+                            $       $   $   $        $  $    $$         $
+                            $        $ $    $        $  $     $        $ 
+                            $$$       $     $$$      $  $     $       $  
+                            $        $ $    $        $  $     $      $   
+                            $       $   $   $        $  $     $     $    
+                            $$$$$   $   $   $$$$$     $$     $$$    $    
+
+
+                                     EXE017 - MATH TEST ROUTINE
+
+
+Options in effect: 
+
+        CHECK, SPECIAL(COERCIONS, PTR), NOSPECIAL(WORD), NOMAP, NOSYMBOLS, NOCALLS, ASSEMBLY, 
+        NOXREF, TRACE, QBLOCKS, NOOPTIMIZE, CODE, NODEBUG, FINISH, NOGLOBAL, NOMAINSEG, NOOVERLAY, 
+        AUTOQUICK, SOURCE, NOSTANDARD, LENGTH (45), WIDTH (102), NOEXTLENGTH, STORAGE (2048), 
+        ALLOC (0), ENABLE(M68)
+
+
+
+
+       File DSK:EXE017.PAS[31024,274425]   Compiled 26-Aug-82 10:04   Pascal, Version 2A(460)-1
+
+       File DSK:EXE017.PAS[31024,274425]   Compiled 26-Aug-82 10:04   Pascal, Version 2A(460)-1
+
+       File DSK:EXE017.PAS[31024,274425]   Compiled 26-Aug-82 10:04   Pascal, Version 2A(460)-1
+
+       File DSK:EXE017.PAS[31024,274425]   Compiled 26-Aug-82 10:04   Pascal, Version 2A(460)-1
+
+MODULE  EXE017       EXE017 - MATH TEST ROUTINE                                        26-Aug-82 10:04
+SECTION 0                                                                                       PAGE 1
+
+    1   $TITLE EXE017 - MATH TEST ROUTINE
+    2   
+    3   program exe017;
+    4   
+    5   (* EXE017 - test all math functions *)
+MODULE  EXE017       EXE017 - MATH TEST ROUTINE                                        26-Aug-82 10:04
+SECTION 1            EXE017 overview                                                            PAGE 2
+
+    2   
+    3   (* This program tests the math functions by using a library math file
+    4      created on the VAX using the high precision library there.  GENLIB is
+    5      run on the VAX and creates the library file read by EXE017.  This
+    6      file contains a function name, one or two arguments in decimal and
+    7      hex representation and the function expected result, also given in
+    8      decimal and hex representation.  This math library gives a straigh-forward
+    9      method of testing any implementation of math functions.  The values
+   10      in the file are not dependant on the implementation being tested.  
+   11   
+   12      The program flow is as follows:
+   13         1.  Read the function name
+   14         2.  Using cmd_lookup_record, find the function_type value
+   15             to be used later in a case statement
+   16         3.  If the function to be performed is an integer function,
+   17                a)  Read the first integer argument
+   18                b)  If two arguments are required, read the second argument
+   19                c)  Read the result
+   20             Otherwise,
+   21                a)  Read in the rest of the record, use getstring to
+   22                    get the decimal double precision value, and parse off
+   23                    the hex representation of the value 
+   24                b)  Get a hex string cooresponding to the decimal value read
+   25                    in and a double precision value corresponding to the hex
+   26                    string read in
+   27                c)  Check that the error between the two values is within a
+   28                    tolerable range.  If not print a message - this could indicate
+   29                    a problem with the i/o routines.  The value actually used in
+   30                    the computations is the one read as a decimal number
+   31                d)  If there is a second argument, read it in as outlined above
+   32                e)  Read in the result as outlined above
+   33         4.  Do a case statement on the function_type which executes the proper
+   34             statement to test the function
+   35         5.  Compare the result against the expected result and print out
+   36             an error message if the difference is too large
+   37   
+   38      Major procedures used are:
+   39         1.  hexreal - translate a hex string to a real number
+   40         2.  realhex - translate a real number to a hex string
+   41         3.  read_next_record - read the next function name and the arguments
+   42             and result for it.  Set up for the case statement.
+   43         4.  check_precision - check that two values are close enough to
+MODULE  EXE017       EXE017 - MATH TEST ROUTINE                                        26-Aug-82 10:04
+SECTION 1            EXE017 overview                                                            PAGE 3
+
+   44             each other.  If not, print an error message.
+   45         5.  subtract_string - subtracts one string format number from another
+   46             string format number giving a string format number as a result.
+   47         6.  cmd_lookup_record - search a list for a specific string and
+   48             and return the match value
+   49   
+   50      Of the above procedures, hexreal, realhex, subtract_string,
+   51      and cmd_lookup_record are external to the program.
+   52   
+   53                                                                  *)
+   54   
+MODULE  EXE017       EXE017 - MATH TEST ROUTINE                                        26-Aug-82 10:04
+SECTION 2            machine specific constants                                                 PAGE 4
+
+    2   const
+    3      str_size:=
+    4   $IF m68       22;
+    5 * $IF p10       24;
+    6 * $IF vax       22;
+    7      mant_size:=
+    8   $IF m68       14;
+    9 * $IF p10       16;
+   10 * $IF vax       14;
+   11      d_max:minimum(real)..maximum(real) prec 16 := 1.69999997607218212e+38;
+   12      d_max_str:=
+   13   $IF m68        '[+7F  +FFC99E00000000]';
+   14 * $IF p10        '[+7F  +FFC99E0000000000]';
+   15 * $IF vax        '[+7F  +FFC99E00000000]';
+   16      d_min:minimum(real)..maximum(real) prec 16 := 1.00001004208091197e-27;
+   17      d_min_str:=
+   18   $IF m68        '[-59  +9E753A00000000]';
+   19 * $IF p10        '[-59  +9E753A0000000000]';
+   20 * $IF vax        '[-59  +9E753A00000000]';
+   21      s_max:=9.22330001884315648e+18;
+   22      s_max_str:=
+   23   $IF m68        '[+3F  +FFFF7D00000000]';
+   24 * $IF p10        '[+3F  +FFFF7D0000000000]';
+   25 * $IF vax        '[+3F  +FFFF7D00000000]';
+   26      s_min:=1.00000004581370497e-18;
+   27      s_min_str:=
+   28   $IF m68        '[-3B  +9392EF00000000]';
+   29 * $IF p10        '[-3B  +9392EF0000000000]';
+   30 * $IF vax        '[-3B  +9392EF00000000]';
+MODULE  EXE017       EXE017 - MATH TEST ROUTINE                                        26-Aug-82 10:04
+SECTION 3            external declarations                                                      PAGE 5
+
+    2   $INCLUDE (pasdev2)cmdutl.inc
+    1   type cmd_lookup_record = record
+    2           text: packed array [1..10] of char;
+    3           abbrev: 1 .. 10;
+    4           code: integer;
+    5        end;
+    6   external procedure cmd_skip_blanks
+    7         ( packed array [1..*] of char;
+    8           var integer );
+    9   external function cmd_check_punct
+   10         ( packed array [1..*] of char;
+   11           var integer;
+   12           char ): boolean;
+   13   external function cmd_token
+   14         ( packed array [1..*] of char;
+   15           var integer;
+   16           set of char;
+   17           var string [*] ): boolean;
+   18   external function cmd_number
+   19         ( packed array [1..*] of char;
+   20           var integer;
+   21           boolean;
+   22           var integer ): boolean;
+   23   external function cmd_lookup
+   24         ( packed array [1..*] of char;
+   25           var integer;
+   26           set of char;
+   27           array [1..*] of cmd_lookup_record;
+   28           var integer ): boolean;
+   29   external function cmd_string
+   30         ( packed array [1..*] of char;
+   31           var integer;
+   32           char;
+   33           var string [*] ): boolean;
+   34   external function cmd_dqstring
+   35         ( packed array [1..*] of char;
+   36           var integer;
+   37           char;
+   38           var string [*] ): boolean;
+   39   external function cmd_file_name
+   40         ( packed array [1..*] of char;
+   41           var integer;
+MODULE  EXE017       EXE017 - MATH TEST ROUTINE                                        26-Aug-82 10:04
+SECTION 1-0          external declarations                                                      PAGE 6
+
+   42           boolean;
+   43           var string [*] ): boolean;
+   44   external function cmd_eol
+   45         ( packed array [1..*] of char;
+   46           var integer ): boolean;
+   47   external function cmd_query
+   48         ( packed array [1..*] of char;
+   49           packed array [1..*] of char ): boolean;
+   50   external procedure cmd_getline
+   51         ( packed array [1..*] of char;
+   52           var string [*];
+   53           var integer );
+   54   external procedure cmd_display_table
+   55         ( array [1..*] of cmd_lookup_record;
+   56           integer;
+   57           integer );
+    3   
+    4   $INCLUDE hexr.inc
+    1   type
+    2     d_real = minimum ( real ) .. maximum ( real ) prec 16;
+    3     h_real = packed array[1..8] of 0 .. #HFFFF;
+    4     real_format = (
+    5         s_format,       (* Single precision *)
+    6           d_format,       (* Double precision *)
+    7           g_format,       (* VAX only, extended exponent precision *)
+    8      h_format );     (* VAX only, ultra-extended precision *)
+    9   
+   10   external function realhex (
+   11          real_address: ptr;      (* Call with ADDRESS (real #) *)
+   12         format: real_format )   (* Indicates whether s, d, g, or h format *)
+   13       : string;             (* Returns # in ASCII E-format and in hex *)
+   14   
+   15   external procedure hexreal (
+   16     real_address: ptr;      (* Address of real number for result *)
+   17          format: real_format;    (* Format of result *)
+   18           str: string );          (* String from which to extract it *)
+   19   
+   20   external function realhd ( h_real ): d_real;   (* H to D conversion *)
+   21   
+   22   external function realdh ( d_real ): h_real; (* D to H conversion *)
+   23    
+    5   
+MODULE  EXE017       EXE017 - MATH TEST ROUTINE                                        26-Aug-82 10:04
+SECTION 3            external declarations                                                      PAGE 7
+
+    6   external function subtract_string (
+    7                             str1:string[*];
+    8                             str2:string[*]
+    9                             ):string[str_size];
+   10   
+MODULE  EXE017       EXE017 - MATH TEST ROUTINE                                        26-Aug-82 10:04
+SECTION 4            global declarations                                                        PAGE 8
+
+    2   type
+    3      function_type = (iadd,isub,imult,idiv,imod,ipower,fadd,fsub,fmult,
+    4         fdiv,fpower,fipower,natlog,log10,expon,sine,cosine,tangent,arcsine,
+    5         arccosine,arctangent,arctan2,hsine,hcosine,htangent,sqroot,dummy,
+    6         truncate,round1,round2);
+    7      sets = set of function_type;
+    8   
+    9   
+   10   var
+   11      fctn:function_type;     (* value used in the case statement - computed from funct_name *)
+   12      funct_name:string[254]; (* function to be tested - read in from MATLIB *)
+   13      input_check:boolean;    (* flag - true if comparing the decimal and hex values read in,
+   14                                        false if comparing computed and expected function results
+         *)
+   15      arg1:real;              (* values read in from MATLIB *)
+   16      arg2:real;
+   17      lib_rslt:real;
+   18      d_arg1:d_real;
+   19      d_arg2:d_real;
+   20      d_lib_rslt:d_real;
+   21      int_arg1:integer;
+   22      int_arg2:integer;
+   23      int_lib_rslt:integer;
+   24      strg_arg1:string[70];
+   25      strg_arg2:string[70];
+   26      strg_lib_rslt:string[70];
+   27      rslt:real;              (* computed results *)
+   28      d_rslt:d_real;
+   29      int_rslt:integer;
+   30      strg_rslt:string[70];
+   31      d_d:d_real;             (* dummy variable *)
+   32      matlib:text;            (* math library - contains function name with args and expected res
+        ult *)
+   33      errfil:text;            (* text file listing of errors encountered during execution *)
+   34      intfunction:sets:=[iadd..ipower];  (* sets to determine what type of arguments to read *)
+   35      twoargs:sets:=[iadd..fipower,arctan2];
+   36   
+MODULE  EXE017       EXE017 - MATH TEST ROUTINE                                        26-Aug-82 10:04
+SECTION 5            result_error                                                               PAGE 9
+
+    2   procedure result_error(format:real_format);
+    3   
+    4   (* This procedure is called whenever the computed result is not close
+    5      enough to the expected result.  Integer arguments and results
+    6      are output in decimal only.  Double and single precision variables
+    7      are output both in decimal and hex representation.  The hex
+    8      representation is:
+    9          [sEE  sMMMMMMMMMMMMMMMM]
+   10      where 's' is the sign of the exponent or the mantissa, 'E' is the binary
+   11      exponent and 'M' is the normalized mantissa.   
+   12   
+   13        parameters:   format - tells whether the error was for double
+   14                               or single precision if its not an integer function
+   15        assumptions:  the appropriate arguments, results, and hex representations
+   16                      of arguments and results are properly set up
+   17        output:       a printed error message
+   18        side affects: none
+   19                                                           *)
+   20   
+   21   begin
+   22   
+   23      if fctn in intfunction then write(errfil,'integer ')
+   24         else if format = d_format then write(errfil,'double precision ')
+   25         else write(errfil,'single precision ');
+   26      writeln(errfil,'error: function ',funct_name);
+   27      if fctn in intfunction then 
+   28      begin
+   29         writeln(errfil,'   arg1            = ',int_arg1);
+   30         if fctn in twoargs then
+   31            writeln(errfil,'   arg2            = ',int_arg2);
+   32         writeln(errfil,'   expected result = ',int_lib_rslt);
+   33         writeln(errfil,'   result          = ',int_rslt);
+   34      end
+   35      else if format = d_format then
+   36      begin
+   37         writeln(errfil,'   arg1            = ',d_arg1,' ',strg_arg1);
+   38         if fctn in twoargs then
+   39            if (fctn = fipower) or (fctn = round2) then
+   40               writeln(errfil,'   arg2            = ',int_arg2)
+   41            else
+   42               writeln(errfil,'   arg2            = ',d_arg2,' ',strg_arg2);
+   43         writeln(errfil,'   expected result = ',d_lib_rslt,' ',strg_lib_rslt);
+MODULE  EXE017       EXE017 - MATH TEST ROUTINE                                        26-Aug-82 10:04
+SECTION 5            result_error                                                              PAGE 10
+
+   44         writeln(errfil,'   result          = ',d_rslt,' ',strg_rslt);
+   45      end
+   46      else
+   47      begin
+   48         writeln(errfil,'   arg1            = ',arg1,' ',strg_arg1);
+   49         if fctn in twoargs then
+   50            if (fctn = fipower) or (fctn = round2) then
+   51               writeln(errfil,'   arg2            = ',int_arg2)
+   52            else
+   53               writelnil,'   arg2            = ',arg2,' ',strg_arg2);
+   54         writeln(errfil,'   expected result = ',lib_rslt,' ',strg_lib_rslt);
+   55         writeln(errfil,'   result          = ',rslt,' ',strg_rslt);
+   56      end;
+   57      writeln(errfil);
+   58   end;
+   59   
+MODULE  EXE017       EXE017 - MATH TEST ROUTINE                                        26-Aug-82 10:04
+SECTION 6            check_precision                                                           PAGE 11
+
+    2   procedure check_precision (
+    3      d_1:d_real;
+    4      strg1:string[*];
+    5      d_2:d_real;
+    6      strg2:string[*];
+    7      format:real_format
+    8      );
+    9   
+   10   (* This procedure checks that the error between two hex strings passed
+   11      in is in an acceptable range.  The routine subtract_string is used to
+   12      give the difference between the two as a normalized value represented
+   13      as another hex string.  If the result is not within bounds, an error
+   14      message is printed out.  This routine is used to check the result
+   15      of a computation against the expected result and to check that the
+   16      hex and decimal values for a particular argument or result input match.  
+   17   
+   18        parameters:    d_1 - double precision value cooresponding to the first
+   19                             hex string (valid only if input_check set)
+   20                       strg1 - first hex string to be compared
+   21                       d_2 - double precision value corresponding to the second
+   22                             hex string (valid only if input_check set)
+   23                       strg2 - second hex string to be compared
+   24                       format - indicated precision that the string must be
+   25                                correct to
+   26        assumptions:   input_check is set if the routine is called by 
+   27                          read_next_record to compare decimal and hex values
+   28                          input
+   29                       assumptions required by input_error, result_error, and
+   30                          subtract_string
+   31         output:       none - indirectly a possible error message from one of
+   32                       the error routines
+   33         side effects: none
+   34   
+   35                                                              *)
+   36   
+   37   
+MODULE  EXE017       EXE017 - MATH TEST ROUTINE                                        26-Aug-82 10:04
+SECTION 7            input_error                                                               PAGE 12
+
+    2   procedure input_error;   (* local to check_precision *)
+    3   
+    4   (* This procedure prints the error message when the decimal value and
+    5      hex string read from the file do not match.  
+    6   
+    7   
+    8        parameters:   none
+    9        assumptions:  arguments, result, and hex representations of the
+   10                      arguments and result should be set up for the function
+   11        output:       none
+   12        side effects: none
+   13                                            *)
+   14   
+   15   begin
+   16      writeln(errfil,'conversion error - decimal input = ',d_1,' ',strg1);
+   17      writeln(errfil,'                   hex input     = ',d_2,' ',strg2);
+   18      writeln(errfil);
+   19   end;
+   20   
+MODULE  EXE017       EXE017 - MATH TEST ROUTINE                                        26-Aug-82 10:04
+SECTION 8            check_precision                                                           PAGE 13
+
+    2   var
+    3      result:string[str_size];
+    4      exp:integer;
+    5      exp1:integer;
+    6      exp2:integer;
+    7   
+    8   const
+    9      s_error:=
+   10   $IF m68      -20;
+   11 * $IF vax      -18;
+   12 * $IF p10      -22;
+   13      d_error:=
+   14   $IF m68      -51;
+   15 * $IF vax      -50;
+   16 * $IF p10      -58;
+   17      zero_str:=
+   18   $IF m68       '[+00  +00000000000000]';
+   19 * $IF p10       '[+00  +0000000000000000]';
+   20 * $IF vax       '[+00  +00000000000000]';
+   21   
+   22   begin  (* check_precision mainline *)
+   23   
+   24      result:=subtract_string(strg1,strg2);  (* result := strg1 - strg2 *)
+   25      getstring(substr(result,3,2),exp:2:h);
+   26      if substr(result,2,1) = '-' then exp:=-exp;
+   27      getstring(substr(strg1,3,2),exp1:2:h);
+   28      if substr(strg1,2,1) = '-' then exp1:=-exp1;
+   29      getstring(substr(strg2,3,2),exp2:2:h);
+   30      if substr(strg2,2,1) = '-' then exp2:=-exp2;
+   31      (* check the binary exponent of the error between the expected and
+   32         computed values.  Print an error message if it's too great *)
+   33      exp:=exp - max(exp1,exp2);
+   34      if (format = s_format) and (exp > s_error) and
+   35         (result <> zero_str) then
+   36         if input_check then input_error else result_error(format)
+   37      else if (format = d_format) and (exp > d_error) and 
+   38         (result <> zero_str) then
+   39         if input_check then input_error else result_error(format);
+   40   end;
+   41   
+MODULE  EXE017       EXE017 - MATH TEST ROUTINE                                        26-Aug-82 10:04
+SECTION 9            get_funct_name                                                            PAGE 14
+
+    2   procedure get_funct_name;
+    3   
+    4   (* This procedure reads the math library one character at a time to
+    5      pull off the function name.  It is necessary since the library is
+    6      not fixed format  
+    7   
+    8   
+    9        parameters:   none
+   10        assumptions:  none
+   11        output:       sets up funct_name to contain the next string in the file
+   12        side effects: eof or eoln is set if no function name is found
+   13                      file is set up to read the first argument if a name was
+   14                         found
+   15                                                      *)
+   16   
+   17   var
+   18      done:boolean;
+   19      fctn_char:char;
+   20   
+   21   begin
+   22   
+   23      done:=false;
+   24      funct_name:='';
+   25   
+   26      while (not(eoln(matlib)) and not(eof(matlib)) and not(done)) do
+   27      begin
+   28         fctn_char:=matlib^;
+   29         get(matlib);
+   30         if fctn_char <> ' ' then funct_name:=funct_name || fctn_char;
+   31         if (fctn_char = ' ') and (funct_name <> '') then done:=true;
+   32      end;
+   33   end;
+   34   
+MODULE  EXE017       EXE017 - MATH TEST ROUTINE                                        26-Aug-82 10:04
+SECTION 10           hexonly                                                                   PAGE 15
+
+    2   function hexonly (
+    3      adr:ptr;
+    4      format:real_format
+    5      ):string[70];
+    6   
+    7   (* This routine uses realhex to translate a real number to a string
+    8      representing the number.  It then parses off the hex representation
+    9      portion of the string.  
+   10   
+   11   
+   12        parameters:   adr - address of real number to be translated
+   13                      format - format of the real number
+   14        assumptions:  none
+   15        output:       hexonly - a string containing the hex representation
+   16        side effects: none
+   17                                                                 *)
+   18   
+   19   var
+   20      start:integer;
+   21   
+   22   begin
+   23   
+   24      hexonly:=realhex(adr,format);
+   25      start:=search(hexonly,['[']);
+   26      hexonly:=substr(hexonly,start);
+   27   
+   28   end;
+   29   
+MODULE  EXE017       EXE017 - MATH TEST ROUTINE                                        26-Aug-82 10:04
+SECTION 11           read_next_record                                                          PAGE 16
+
+    2   function read_next_record:boolean;
+    3   
+    4   (* This procedure reads in the function name and arguments and 
+    5      expected result for that function.  It compares the double precision
+    6      and hex representation values for each argument or result read in.  If
+    7      there is a discrepency between the double precision and hex values,
+    8      it could indicate a problem with the input/output conversions.  
+    9   
+   10   
+   11        parameters:   none
+   12        assumptions:  file is set up to read the function name
+   13        output:       sets up the appropriate arguments, lib_results, and
+   14                         hex representations
+   15                      fctn is set up
+   16                      an error message is printed if there was a discrepency
+   17                         between the decimal and hex values read in
+   18        side effects: the file is set up to read the next function
+   19                                                                      *)
+   20   
+   21   type
+   22      function_type_list = array[1..ord(maximum(function_type))-3] of cmd_lookup_record;
+   23   
+   24   var 
+   25      start:integer;
+   26      check_val:d_real;
+   27      rec:string[255];
+   28      match:integer;
+   29      index:0..255;
+   30   
+   31   const
+   32      fctn_list:function_type_list := (
+   33         ('IADD',4,ord(iadd)),('ISUB',4,ord(isub)),('IMULT',5,ord(imult)),
+   34         ('IDIV',4,ord(idiv)),('IMOD',4,ord(imod)),('IPOWER',6,ord(ipower)),
+   35         ('FADD',4,ord(fadd)),('FSUB',4,ord(fsub)),('FMULT',5,ord(fmult)),
+   36         ('FDIV',4,ord(fdiv)),('FPOWER',6,ord(fpower)),('FIPOWER',7,ord(fipower)),
+   37         ('NATLOG',6,ord(natlog)),('LOG10',5,ord(log10)),('EXPON',5,ord(expon)),
+   38         ('SINE',4,ord(sine)),('COSINE',6,ord(cosine)),('TANGENT',6,
+   39         ord(tangent)),('ARCSINE',7,ord(arcsine)),('ARCCOSINE',9,
+   40         ord(arccosine)),('ARCTANGENT',10,ord(arctangent)),('ARCTAN2',7,ord(arctan2)),
+   41         ('HSINE',5,ord(hsine)),('HCOSINE',7,ord(hcosine)),
+   42         ('HTANGENT',8,ord(htangent)),('SQROOT',6,ord(sqroot))
+   43         );
+MODULE  EXE017       EXE017 - MATH TEST ROUTINE                                        26-Aug-82 10:04
+SECTION 11           read_next_record                                                          PAGE 17
+
+   44   
+   45   
+   46   begin
+   47   
+   48      read_next_record:=true;
+   49      get_funct_name;
+   50      if (funct_name <> '') then
+   51      begin
+   52         index:=1;
+   53         if cmd_lookup(funct_name,index,[minimum(char)..maximum(char)],fctn_list,match) then
+   54         begin
+   55            fctn:=function_type(match);
+   56            if fctn in intfunction then
+   57            begin
+   58               if fctn in twoargs then
+   59                  readln(matlib,int_arg1,int_arg2,int_lib_rslt)
+   60               else
+   61                  readln(matlib,int_arg1,int_lib_rslt);
+   62            end
+   63            else
+   64            begin
+   65               input_check:=true;
+   66               readln(matlib,rec);
+   67               getstring(rec,d_arg1);
+   68               strg_arg1:=hexonly(address(d_arg1),d_format);
+   69               start:=search(rec,['[']);
+   70               strg_rslt:=substr(rec,start,2) || substr(rec,start+4,str_size-3) || ']';
+   71               hexreal(address(check_val),d_format,strg_rslt);
+   72               check_precision(d_arg1,strg_arg1,check_val,strg_rslt,d_format);
+   73               d_arg1:=check_val;
+   74               strg_arg1:=strg_rslt;
+   75               if fctn in twoargs then
+   76               if fctn = fipower then
+   77                  readln(matlib,int_arg2)
+   78               else
+   79               begin
+   80                  readln(matlib,rec);
+   81                  getstring(rec,d_arg2);
+   82                  strg_arg2:=hexonly(address(d_arg2),d_format);
+   83                  start:=search(rec,['[']);
+   84                  strg_rslt:=substr(rec,start,2) || substr(rec,start+4,str_size-3) || ']';
+   85                  hexreal(address(check_val),d_format,strg_rslt);
+MODULE  EXE017       EXE017 - MATH TEST ROUTINE                                        26-Aug-82 10:04
+SECTION 11           read_next_record                                                          PAGE 18
+
+00000FB6 E641                    ASR.W     #3,D1                                 $3
+00000FB8 7407                    MOVEQ     #7,D2                                 $7
+00000FBA C002                    AND.B     D2,D0
+00000FBC 9400                    SUB.B     D0,D2
+00000FBE 41ED8000                LEA       STATIC.+0-32768(A5),A0                INTFUNCTION
+00000FC2 05301000                BTST.B    D2,0(A0,D1.W)                         $0
+00000FC6 67000092                BEQ.L     L.8.8(PC)
+                      *                                                        LINE 11/57
+                      *                                                        LINE 11/58
+00000FCA 302D8000     L.8.4      MOVE.W    STATIC.+8-32768(A5),D0                FCTN
+00000FCE 3200                    MOVE.W    D0,D1
+00000FD0 E641                    ASR.W     #3,D1                                 $3
+00000FD2 7407                    MOVEQ     #7,D2                                 $7
+00000FD4 C002                    AND.B     D2,D0
+00000FD6 9400                    SUB.B     D0,D2
+00000FD8 41ED8004                LEA       STATIC.+4-32768(A5),A0                TWOARGS
+00000FDC 05301000                BTST.B    D2,0(A0,D1.W)                         $0
+00000FE0 6742                    BEQ.S     L.8.6(PC)
+                      *                                                        LINE 11/59
+00000FE2 202D826C     L.8.5      MOVE.L    STATIC.+628-32768(A5),D0              MATLIB
+00000FE6 4A80                    TST.L     D0
+00000FE8 6606                    BNE.S     X.8.3(PC)
+00000FEA 4EB900000000            JSR       E.FILE
+00000FF0 4267         X.8.3      CLR.W     -(A7)
+00000FF2 486D8128                PEA       STATIC.+304-32768(A5)                 INT_ARG1
+00000FF6 2F00                    MOVE.L    D0,-(A7)
+00000FF8 4EB900000000            JSR       T.READ
+00000FFE 4267                    CLR.W     -(A7)
+00001000 486D812C                PEA       STATIC.+308-32768(A5)                 INT_ARG2
+00001004 2F00                    MOVE.L    D0,-(A7)
+00001006 4EB900000000            JSR       T.READ
+0000100C 4267                    CLR.W     -(A7)
+0000100E 486D8130                PEA       STATIC.+312-32768(A5)                 INT_LIB_RSLT
+00001012 2F00                    MOVE.L    D0,-(A7)
+00001014 4EB900000000            JSR       T.READ
+0000101A 2F00                    MOVE.L    D0,-(A7)
+0000101C 4EB900000000            JSR       T.READLN
+00001022 6032                    BRA.S     L.8.7(PC)
+                      *                                                        LINE 11/61
+00001024 202D826C     L.8.6      MOVE.L    STATIC.+628-32768(A5),D0              MATLIB
+00001028 4A80                    TST.L     D0
+0000102A 6606                    BNE.S     X.8.4(PC)
+0000102C 4EB900000000            JSR       E.FILE
+00001032 4267         X.8.4      CLR.W     -(A7)
+00001034 486D8128                PEA       STATIC.+304-32768(A5)                 INT_ARG1
+00001038 2F00                    MOVE.L    D0,-(A7)
+0000103A 4EB900000000            JSR       T.READ
+00001040 4267                    CLR.W     -(A7)
+00001042 486D8130                PEA       STATIC.+312-32768(A5)                 INT_LIB_RSLT
+00001046 2F00                    MOVE.L    D0,-(A7)
+00001048 4EB900000000            JSR       T.READ
+0000104E 2F00                    MOVE.L    D0,-(A7)
+00001050 4EB900000000            JSR       T.READLN
+                      *                                                        LINE 11/62
+00001056 60000562     L.8.7      BRA.L     L.8.16(PC)
+0000105A              L.8.8
+                      *                                                        LINE 11/64
+                      *                                                        LINE 11/65
+0000105A 7001         L.8.9      MOVEQ     #1,D0                                 $1
+0000105C 1B408102                MOVE.B    D0,STATIC.+266-32768(A5)              INPUT_CHECK
+                      *                                                        LINE 11/66
+00001060 202D826C                MOVE.L    STATIC.+628-32768(A5),D0              MATLIB
+00001064 4A80                    TST.L     D0
+00001066 6606                    BNE.S     X.8.5(PC)
+00001068 4EB900000000            JSR       E.FILE
+0000106E 3F3C00FF     X.8.5      MOVE.W    #255,-(A7)                            $FF
+00001072 720B                    MOVEQ     #11,D1                                $B
+00001074 3F01                    MOVE.W    D1,-(A7)
+00001076 486EFEEE                PEA       -274(A6)                              REC
+0000107A 2F00                    MOVE.L    D0,-(A7)
+0000107C 4EB900000000            JSR       T.READ
+00001082 2F00                    MOVE.L    D0,-(A7)
+00001084 4EB900000000            JSR       T.READLN
+                      *                                                        LINE 11/67
+0000108A 486EFCE6                PEA       -794(A6)                              $FFFFFCE6
+0000108E 3F2EFEEE                MOVE.W    -274(A6),-(A7)                        REC
+00001092 486EFEF0                PEA       -274+2(A6)                            REC
+00001096 3F2EFEEE                MOVE.W    -274(A6),-(A7)                        REC
+0000109A 4EB900000000            JSR       C.MVFF
+000010A0 3D6EFEEEFCE4            MOVE.W    -274(A6),-796(A6)                     REC  $FFFFFCE4
+000010A6 426EFCE2                CLR.W     -798(A6)                              $FFFFFCE2
+000010AA 41EEFCE6                LEA       -794(A6),A0                           $FFFFFCE6
+000010AE 2D48FCDE                MOVE.L    A0,-802(A6)                           $FFFFFCDE
+000010B2 487AFE50                PEA       K.26(PC)                              CODE.+$F04
+000010B6 7010                    MOVEQ     #16,D0                                $10
+000010B8 2F00                    MOVE.L    D0,-(A7)
+000010BA 3F3C0202                MOVE.W    #514,-(A7)                            $202
+000010BE 486D8110                PEA       STATIC.+280-32768(A5)                 D_ARG1
+000010C2 486EFCDE                PEA       -802(A6)                              $FFFFFCDE
+000010C6 4EB900000000            JSR       I.GETSTR
+                      *                                                        LINE 11/68
+000010CC 7001                    MOVEQ     #1,D0                                 $1
+000010CE 3F00                    MOVE.W    D0,-(A7)
+000010D0 41ED8110                LEA       STATIC.+280-32768(A5),A0              D_ARG1
+000010D4 2F08                    MOVE.L    A0,-(A7)
+000010D6 486EFD9E                PEA       -610(A6)                              $FFFFFD9E
+000010DA 6100FB6E                BSR.L     B.7(PC)                               HEXONLY = CODE.+$C4A
+000010DE 302EFD9E                MOVE.W    -610(A6),D0                           $FFFFFD9E
+000010E2 41EEFD9E                LEA       -610(A6),A0                           $FFFFFD9E
+000010E6 43ED8134                LEA       STATIC.+316-32768(A5),A1              STRG_ARG1
+000010EA 5240                    ADDQ.W    #1,D0                                 $1
+000010EC E248                    LSR.W     #1,D0                                 $1
+000010EE 32D8         X.8.6      MOVE.W    (A0)+,(A1)+
+000010F0 51C8FFFC                DBF       D0,X.8.6(PC)
+                      *                                                        LINE 11/69
+000010F4 705B                    MOVEQ     #91,D0                                $5B
+000010F6 2F00                    MOVE.L    D0,-(A7)
+000010F8 705B                    MOVEQ     #91,D0                                $5B
+000010FA 2F00                    MOVE.L    D0,-(A7)
+000010FC 486EFEF0                PEA       -274+2(A6)                            REC
+00001100 3F2EFEEE                MOVE.W    -274(A6),-(A7)                        REC
+00001104 4EB900000000            JSR       C.SRFO
+0000110A 301F                    MOVE.W    (A7)+,D0
+0000110C 48C0                    EXT.L     D0
+0000110E 2D40FFF8                MOVE.L    D0,-8(A6)                             START
+                      *                                                        LINE 11/70
+00001112 202EFFF8                MOVE.L    -8(A6),D0                             START
+00001116 7200                    MOVEQ     #0,D1                                 $0
+00001118 322EFEEE                MOVE.W    -274(A6),D1                           REC
+0000111C 4A80                    TST.L     D0
+0000111E 6F0C                    BLE.S     X.8.7(PC)
+00001120 9280                    SUB.L     D0,D1
+00001122 5281                    ADDQ.L    #1,D1                                 $1
+00001124 0C8100000002            CMPI.L    #2,D1                                 $2
+0000112A 6C06                    BGE.S     X.8.8(PC)
+0000112C 4EB900000000 X.8.7      JSR       E.SUBSTR
+00001132 5380         X.8.8      SUBQ.L    #1,D0                                 $1
+00001134 41EEFEF0                LEA       -274+2(A6),A0                         REC
+00001138 222EFFF8                MOVE.L    -8(A6),D1                             START
+0000113C 5881                    ADDQ.L    #4,D1                                 $4
+0000113E 7400                    MOVEQ     #0,D2                                 $0
+00001140 342EFEEE                MOVE.W    -274(A6),D2                           REC
+00001144 4A81                    TST.L     D1
+00001146 6F0C                    BLE.S     X.8.9(PC)
+00001148 9481                    SUB.L     D1,D2
+0000114A 5282                    ADDQ.L    #1,D2                                 $1
+0000114C 0C8200000013            CMPI.L    #19,D2                                $13
+00001152 6C06                    BGE.S     X.8.10(PC)
+00001154 4EB900000000 X.8.9      JSR       E.SUBSTR
+0000115A 5381         X.8.10     SUBQ.L    #1,D1                                 $1
+0000115C 43EEFEF0                LEA       -274+2(A6),A1                         REC
+00001160 486EFDA0                PEA       -608(A6)                              $FFFFFDA0
+00001164 7446                    MOVEQ     #70,D2                                $46
+00001166 3F02                    MOVE.W    D2,-(A7)
+00001168 48700800                PEA       0(A0,D0.L)                            $0
+0000116C 7402                    MOVEQ     #2,D2                                 $2
+0000116E 3F02                    MOVE.W    D2,-(A7)
+00001170 4EB900000000            JSR       C.MVFF
+00001176 48711800                PEA       0(A1,D1.L)                            $0
+0000117A 7013                    MOVEQ     #19,D0                                $13
+0000117C 3F00                    MOVE.W    D0,-(A7)
+0000117E 4EB900000000            JSR       C.MVFR
+00001184 705D                    MOVEQ     #93,D0                                $5D
+00001186 1F00                    MOVE.B    D0,-(A7)
+00001188 4EB900000000            JSR       C.MVCR
+0000118E 3B7C0046821C            MOVE.W    #70,STATIC.+548-32768(A5)             $46  STRG_RSLT
+00001194 486D821E                PEA       STATIC.+548-32766(A5)                 STRG_RSLT
+00001198 7046                    MOVEQ     #70,D0                                $46
+0000119A 3F00                    MOVE.W    D0,-(A7)
+0000119C 486EFDA0                PEA       -608(A6)                              $FFFFFDA0
+000011A0 7046                    MOVEQ     #70,D0                                $46
+000011A2 3F00                    MOVE.W    D0,-(A7)
+000011A4 4EB900000000            JSR       C.MVFF
+                      *                                                        LINE 11/71
+000011AA 486D821C                PEA       STATIC.+548-32768(A5)                 STRG_RSLT
+000011AE 7001                    MOVEQ     #1,D0                                 $1
+000011B0 3F00                    MOVE.W    D0,-(A7)
+000011B2 41EEFFF0                LEA       -16(A6),A0                            CHECK_VAL
+000011B6 2F08                    MOVE.L    A0,-(A7)
+000011B8 4EB900000000            JSR       HEXREAL                               HEXREAL
+                      *                                                        LINE 11/72
+000011BE 7001                    MOVEQ     #1,D0                                 $1
+000011C0 3F00                    MOVE.W    D0,-(A7)
+000011C2 486D821C                PEA       STATIC.+548-32768(A5)                 STRG_RSLT
+000011C6 7046                    MOVEQ     #70,D0                                $46
+000011C8 3F00                    MOVE.W    D0,-(A7)
+000011CA 486EFFF0                PEA       -16(A6)                               CHECK_VAL
+000011CE 486D8134                PEA       STATIC.+316-32768(A5)                 STRG_ARG1
+000011D2 7046                    MOVEQ     #70,D0                                $46
+000011D4 3F00                    MOVE.W    D0,-(A7)
+   @N¸

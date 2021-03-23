@@ -1,0 +1,134 @@
+;    +--------------------------------------------------------------+
+;    |                                                              |
+;    |                        D A Y T I M E                         |
+;    |                        - - - - - - -                         |
+;    |                                                              |
+;    +--------------------------------------------------------------+
+;    
+;    MDSI, Company Confidential
+;    
+;    SYSTEM:  DTIME - day/time manipulation routines
+;    
+;    STARTED:  11/01/78
+;    
+;    PURPOSE:  Return current local day/time in internal form.
+;    
+;    USAGE:
+;    
+;       EXTERNAL FUNCTION DAYTIME: DTIME_INT;
+;    
+;    OUTPUT:
+;    
+;       <return value>
+;                   the  current  local  day/time  is   returned   in
+;                   internal form.
+;    
+;    INCLUDE FILES REQUIRED:
+;    
+;       DTIME.TYP
+;       DTIME.INC
+;    
+;    RESPONSIBLE:  S.  M.  ROUSH
+;    
+;    ----------------------------------------------------------------
+        TITLE	DAYTIME
+	TWOSEG
+	RELOC	400000
+
+	ENTRY	DAYTIM
+	SEARCH	PASSYM
+
+AC10=10
+AC11=11
+
+; UUO PARAMETER BLOCK.
+
+PARAMS:
+	EXP	1			; NUMBER OF FUNCTIONS.
+	XWD	6,AC11			; FCN 6 - LOCAL UNIV DAY/TIME.
+
+
+;  THE CODE !
+
+DAYTIM:
+	SETZM	0(REG)		; ZERO RETURN VALUE IN CASE OF ERRORS.
+
+	HRROI	AC10,^o40	; gettab 40 (batch status) for current job
+	GETTAB	AC10,0		; do it
+	POPJ	TOPP,0		; error, return zero (false?)
+	TLZ	AC10,777577	; clear all but batch bit
+	HRRI	AC10,PARAMS	; load param addr
+	TLZN	AC10,200	; is the batch bit set?
+	HRLI	AC10,777777	; no, set left half to minus one (this job)
+	CALLI	AC10,-51		;   INFO.
+	POPJ	TOPP,			; ERROR - RETURN 0.
+	MOVEM	AC11,0(REG)		; MOVE DATE TO RETURN LOC.
+;
+	POPJ	TOPP,			; RETURN TO CALLER.
+;
+;
+	PRGEND
+
+	
+;    +--------------------------------------------------------------+
+;    |                                                              |
+;    |                        G M D T I M E                         |
+;    |                        - - - - - - -                         |
+;    |                                                              |
+;    +--------------------------------------------------------------+
+;    
+;    MDSI, Company Confidential
+;    
+;    SYSTEM:  DTIME - day/time manipulation routines
+;    
+;    STARTED:  11/01/78
+;    
+;    PURPOSE:  Return the current Greenwich Mean day/time in internal
+;       form.
+;    
+;    USAGE:
+;    
+;       EXTERNAL FUNCTION GMDTIME: DTIME_INT;
+;    
+;    OUTPUT:
+;    
+;       <return value>
+;                   the  current  Greenwich Mean day/time in internal
+;                   form.
+;    
+;    INCLUDE FILES REQUIRED:
+;    
+;       DTIME.TYP
+;       DTIME.INC
+;    
+;    RESPONSIBLE:  S.  M.  ROUSH
+;    
+;    ----------------------------------------------------------------
+	TITLE	GMDTIME
+	TWOSEG
+	RELOC	400000
+
+	ENTRY	GMDTIM
+	SEARCH	PASSYM
+
+AC10=10
+AC11=11
+
+; ARGUMENT BLOCK FOR ADP TIME UUO.
+
+BLOCK:
+	EXP	1			; 1 FUNCTION DESIRED.
+	XWD	6,AC11			; FCN CODE FOR UNIV DAY/TIME.
+
+
+GMDTIM:
+	SETZ	0(REG)		; IN CASE OF ERRORS.
+	MOVE	AC10,[-2,,BLOCK]	; -2 SAYS RETURN DAY/TIMES
+	CALLI	AC10,-51		;    IN GMT.
+	POPJ	TOPP,			; RETURN ZERO IF ERRORS.
+	MOVEM	AC11,0(REG)		; MOVE GM DAY/TIME TO RETURN LOC.
+;
+	POPJ	TOPP,
+;
+;
+	END

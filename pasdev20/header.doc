@@ -1,0 +1,665 @@
+$number off
+$skip 20
+$center
+The HEADER Utility
+$skip 3
+$justify
+$indent left 10
+$indent right 10
+&Abstract&:\ This provides an automated means for creating and updating formatted
+program documentation.
+It renders the SUBDOC program obsolete.
+$indent left 0
+$indent right 0
+$number 1
+$title left 'The HEADER Utility' left '13 April 1978' left 'Page \'
+$page
+The HEADER utility provides an automated means for producing formatted
+program documentation.
+It produces an input file containing SCRIBE commands and special
+directive lines designating the documentation sections, and
+produces an output file containing the formatted header,
+ready for inclusion in the source program.
+$skip
+Header is executed with commands of the following form:
+$skip
+$par 5
+./rnd:header file,language
+$skip
+The file parameter designates the input and output files;
+it must not contain a device, ppn or extension.
+The input is read from 'file.DOC';
+the formated header is written to 'file.HDR'.
+Language is an optional parameter designating the language in which the
+program is written. It controls the commentary symbols
+surrounding the header.
+Acceptable values are 'pascal', 'fortran', or 'macro'.
+If omitted, pascal is assumed.
+$skip
+It is useful to remember that this is a MIC file;
+as such it is not particularly forgiving with errors.
+The input file is run though PMF\-- the header directives are in fact
+macro invocations.
+The result (file.TMP) is then processed with SCRIBE
+to perform the designated justification, indentation and formatting.
+Scribe produces the '.HDR' file without the commentary symbols.
+These are added by invoking QED, under control of a case on the
+language type.
+Further details may be obtained by examining the MIC file itself.
+$skip 2
+&Header Organization&
+$skip
+The purpose of the header is to describe the external characteristics
+of a program, that is, everything one needs to use the program.
+The information is broken down into various sections, so that
+finding a particular piece of information is more or less straight
+forward.
+All sections may not be needed for a particular program.
+$skip
+There are, in general, two kinds of headers that one might generate.
+The first is for a stand alone program.
+Such a header would simply describe the calling protocal for that 
+subroutine.
+The second is for a package of subroutines.
+When there are multiple entries into one module,
+there should be a header at the start of the program
+summarizing the general purpose of the package.
+This header would also include a concordance of the entry points
+in the package along with terse descriptions of there functions.
+Documentation of arguments common to many entries
+and other relevant information,
+such as required initialization calls,
+should be placed in sections analogous to that used for a
+subroutine.
+$skip
+The sections and the purpose of the sections are described below
+using the format of headers produced by this utility.
+$skip 2
+$verbatim
+$need 6
++-----------------------------------------------------------------+
+|                                                                 |
+|                           S\A\M\P\L\E                           |
+|                           -\-\-\-\-\-                           |
+|                                                                 |
++-----------------------------------------------------------------+
+$justify
+$skip
+MDSI, Company Confidential
+$skip
+$ind left 3
+$par -3
+SYSTEM:\ designates the system to which the subroutine belongs,
+for example, the compiler or the report formatter.
+This section is optional.
+$skip
+$ind left 0
+STARTED:\ Initial creation date.
+$skip
+$justify
+$ind left 3
+$need 6
+$par -3
+PURPOSE:\
+This section describes what the program does.
+$skip
+$ind left 3
+$need 6
+$par -3
+USAGE:
+$skip
+$verbatim
+$just
+Describes the calling conventions for a subroutine, e.g.,
+argument modes and prototype call for FORTRAN, prototype
+procedure heading for PASCAL, etc.
+$skip
+$ind left 3
+$just
+$par -3
+ENTRY\POINTS:
+$skip
+$ind left 15
+$par -12
+entry\point\name
+$par
+Describes the general function of a particular subroutine
+in a package of subroutines.
+An entry point section is used in place of the usage section
+in a module header.
+$skip
+$par -12
+...\\\\\\\\\Similar descriptions of the other entry points.
+$skip
+$ind left 15
+$need 6
+$par -15
+INPUT:
+$skip
+$justify
+$need 6
+$par -12
+Arg\#1\\\\\\Whatever "Arg #1" represents on input
+(thus, strictly output arguments are documented under the output
+section below). "Arg #1" should identify the argument being described,
+e.g., a register, a name in the prototype call in the usage section, etc.
+$skip
+$justify
+$need 6
+$par -12
+...\\\\\\\\\Similar documentation of other input arguments.
+$skip
+$ind left 15
+$need 9
+$par -15
+OUTPUT:
+$skip
+$justify
+$need 6
+$par -12
+...\\\\\\\\\Documentation of all output arguments.
+If an argument is both input and output, it should appear both in
+this section and the previous one, with a description of its function on
+output and input, respectively.
+$justify
+$skip
+$ind left 3
+$need 6
+$par -3
+REQUIREMENTS:\
+A summary of all outside conditions not described under the previous sections
+which must be met before this subroutine is called.
+Examples are: that a buffer in COMMON must be filled,
+an initialization entry point must be called, etc.
+This section may be omitted if it is not needed.
+$justify
+$skip
+$ind left 3
+$need 6
+$par -3
+EFFECTS:\
+A summary of all outside effects of the subroutine not described under
+output arguments above.
+Examples are: that it changes the interrupt state, modifies a PUBLIC
+variable, etc.
+This section may be omitted if not applicable.
+$justify
+$skip
+$ind left 3
+$need 6
+$par -3
+ALGORITHM:\
+This section, which is optional, tells how the subroutine does what it does.
+References to literature describing the technique are particularly
+desirable here.
+$justify
+$skip
+$ind left 3
+$need 6
+$par -3
+NOTES:\
+This section, which is optional, gives miscellaneous information on the
+subroutine which does not fit in any other category.
+$skip
+$ind left 15
+$need 6
+$par -15
+EXTERNAL REFERENCES:
+$skip
+$justify
+$need 6
+$par -12
+Any referenced external name.
+
+$justify
+$need 6
+$par -12
+...
+
+$skip
+$ind left 15
+$need 6
+$par -15
+INCLUDE FILES REQUIRED:
+$skip
+$justify
+$need 6
+$par -12
+Any include file useful in calling the subroutine.
+
+$justify
+$need 6
+$par -12
+...
+
+$justify
+$skip
+$ind left 0
+RESPONSIBLE:\ Person or group responsible for this subroutine.
+
+$skip
+$ind left 19
+$need 6
+$par -19
+CHANGES:
+$skip
+$justify
+$need 6
+$par -16
+7/12/78\\who\\\\A summary of changes added as they are made.
+For each change, add a line with the date, the programmer's initials,
+and a terse summary of the change.
+$justify
+$ind left 0
+$skip
+-------------------------------------------------------------------
+
+$jus
+$skip 2
+The MDSI confidential line is in the header to protect the proprietary nature
+of our software.
+$skip
+The system, input, output, requirements, effects, alogorithm, notes, includes,
+ and external sections are optional,
+and if omitted,
+the section and its header are omitted from the output.
+The purpose, usage (or entry point), and responsible sections
+should appear in all headers.
+$skip 2
+$ind lef 0
+$jus
+$need 6
+&Input Format&
+$skip
+The input file contains special directive lines
+beginning with "#"
+that identify the sections of the documentation
+or provide other required information.
+Except as noted, each section of information begins with justification in
+effect and the indentation set as required for the section.
+The user may change modes or indentation as he pleases by using 
+the appropriate scribe format commands ("$" lines).
+$skip
+The header directives are given below.
+They appear in the order in which they should appear in the input file.
+$skip
+$ind left 15
+$par -15
+#WIDTH\(w)\\\\\sets the width of the text of the documentation.
+This may be omitted,
+and the width will default to 64.
+$skip
+$par -15
+#SYSTEM\(name)\gives the name of  the system to which the module belongs.
+This section is optional.
+If it appears, a "SYSTEM" line will appear after the title block;
+if omitted, there will be no such line.
+$skip
+$par -15
+#MODULE\(name,date)
+$par
+causes the title box, proprietary notice, optional system designation,
+and purpose title to be generated.
+The date should be given in mo/da/yr form.
+The description of the purpose of the module or routine should
+be placed on following lines.
+$skip
+$need 6
+$par -15
+#USAGE\\\\\\\\\starts the usage section.
+It should be followed on the next line by the description of the calling
+sequence of a routine.
+This section begins in verbatim mode.
+$skip
+$need 6
+$par -15
+#ENTRY (name)description
+$par
+begins a description of an entry point in the module.
+One entry directive is used for each entry point.
+The first such directive causes a title for the section to be output;
+subsequent directives merely begin the description of additional entry points.
+The text describing the purpose of the entry point
+must begin on the same line as the directive, and
+there should be no intervening space between the ")" and the first word
+of the description.
+If required, additional text may appear on following lines.
+$skip
+$par -15
+#INPUT (name)description
+$par
+begins the description of a single input argument.
+Its usage is the same as #entry.
+$skip
+$par -15
+#OUTPUT (name)description
+$par
+begins the description of a single output argument.
+Its usage is the same as #entry.
+$skip
+$need 6
+$par -15
+#REQUIREMENTS\\begins the requirements section.
+The text of the section begins on the following line.
+$skip
+$par -15
+#EFFECTS\\\\\\\begins the effects section.
+The text describing the effects of the subroutine begins on
+the following line.
+$skip
+$par -15
+#ALGORITHM\\\\\begins the algorithm section.
+The text begins on the following line.
+$skip
+$par -15
+#NOTES\\\\\\\\\begins the notes section.
+The text of the section begins on the following line.
+$skip
+$par -15
+#INCLUDE\(filename)
+$par
+specifies an include file used by the subroutine.
+There is no description associated with this directive.
+$skip
+$par -15
+#EXTERNAL\(external-name)
+$par
+specifies an external name referenced by the program.
+There is no description associated with this directive.
+$skip
+$need 6
+$par -15
+#RESPONSIBLE\(name)
+$par
+creates the responsiblility heading.
+No additional text is required.
+$skip
+$need 6
+$par -15
+#CHANGE\(date,who)description
+$par
+begins a change indication.
+The date should be given as mo/da/yr;
+the "who" parameter should be the initials of the person making the change.
+The description begins on the same line, but may continue on the following lines.
+There should be no spaced between the ")" and the first word of the description.
+$skip
+$par -15
+#END\\\\\\\\\\\generates the trailer line of the header.
+This must appear and must be the last line of the documentation file.
+$ind left 0
+$skip
+The directive arguments, e.g. name, date, etc.,
+should not contain commas or blanks.
+If blanks are needed, they should be entered as backslashes.
+$skip 2
+$need 6
+&Documentation Format&
+$skip
+     The total width of the document is limited to 71 columns.
+The first five columns contain the required comment characters
+and padding to indent the text of the document.
+$skip
+     The header box appears on the first line of the document
+and begins with a horizontal line of "+--...--+".
+The bottom line is the same as the top;
+the vertical side lines consist of vertical bars ("|").
+The module name is centered within the box.
+$skip
+$need 4
+     The header is followed by the company identification, and
+the sections in the order: system, started, purpose, usage, input, output, requirements,
+effects, algorithm, notes, includes, externals, and responsible.
+$skip
+     A section header is capitalized and followed by a colon.
+It appears in column 6;
+all subsequent lines in the section description are indented
+an additional three columns.
+$skip
+     In argument and entry descriptions, the names are placed in a twelve character
+field beginning in column 9;
+the actual description is aligned in the space to the left of column 21,
+that is, to the left of the name.
+If the name is greater than 11 characters long,
+it appears on a line by itself,
+and the description follows on the next line beginning in column 21.
+$skip
+     The documentation is terminated with a row of "-"s
+beginning in column six.
+$skip
+     This format enables computer recognition of the sections by 
+examination of column six.
+Once the header box and company title have been found and skipped,
+all lines with nonblank characters in that column
+are the beginning of sections
+or the terminating line.
+$skip 2
+&Examples&
+$skip
+Sample headers for all of the accepted languages appear on following pages.
+The below is extracted from the input file used to create the first
+sample header.
+$skip
+$verbatim
+$ind left +5
+#width (64)
+#system (FILUTL Subroutines)
+#module (PR FILE ID,7/7/78)
+This extracts a file title form an input string,
+and returns a file_id string...
+#usage
+   EXTERNAL FUNCTION PR_FILE_ID
+         ( LINE: CMDLINE;
+#input (LINE)is the line to be scanned.
+#input (IDX)is the parsing cursor.
+It is assumed that this points to the first...
+#output (IDX)is set to the first character past
+the end...
+#output (FID)...
+#output (<return!value>)...
+#include (CMDUTL.TYP)
+#include (FILUTL.TYP)
+#responsible (Software Tools)
+#end
+$ind left -5
+$width 80
+$bottom 1
+$verbatim
+$page
+(*    +--------------------------------------------------------------+
+      |                                                              |
+      |                     P R   F I L E   I D                      |
+      |                     - - - - - - - - - -                      |
+      |                                                              |
+      +--------------------------------------------------------------+
+      
+      MDSI, Company Confidential
+      
+      SYSTEM:  FILUTL subroutines
+      
+      STARTED:  7/7/78
+      
+      PURPOSE:  This extracts a file title from an input  string,  and
+         returns  a  file_id  string containing the text of the title.
+         Use  of  this  routine  localizes  knowledge  of  the  system
+         dependent format of a file title.
+      
+      USAGE:
+      
+         EXTERNAL FUNCTION PR_FILE_ID
+               ( LINE: CMDLINE;
+                 VAR IDX: CMDLINEIDX;
+                 VAR FID: FILE_ID      ): BOOLEAN;
+      
+      INPUT:
+      
+         LINE        is the line to be scanned.
+      
+         IDX         is  parsing  cursor.  It  is  assumed  that  this
+                     points to  the  first  character  of  the  title.
+                     Leading white space is not ignored.
+      
+      OUTPUT:
+      
+         IDX         is set to the first character past the end of the
+                     file title if a valid  title  is  found.  If  the
+                     title   is   incorrectly  formed,  this  is  left
+                     pointing to the character that is in error.
+      
+         FID         is set to the text of the title, if a valid title
+                     is found; otherwise, it is left unchanged.
+      
+         <return value>
+                     is  true  if  a complete and well-formed title is
+                     found; false, otherwise.
+      
+      INCLUDE FILES REQUIRED:
+      
+         CMDUTL.TYP
+         FILUTL.INC
+      
+      RESPONSIBLE:  Software Tools
+      
+      ---------------------------------------------------------------- *)
+$page
+(*   +--------------------------------------------------------------+
+     |                                                              |
+     |                         P A S T S M                          |
+     |                         - - - - - -                          |
+     |                                                              |
+     +--------------------------------------------------------------+
+     
+     MDSI, Company Confidential
+     
+     SYSTEM:  Pascal Compiler
+     
+     STARTED:  3/1/78
+     
+     PURPOSE:   This   module   contains   all   entry   points   for
+        semanticating parse trees of <type decl>s.
+     
+     ENTRY POINTS:
+     
+        subr_formal_type
+                    creates  a  procedure or function type, given the
+                    parse trees for  the  kind,  parameter  list  and
+                    return   type.  This  is  used  for  both  formal
+                    subroutine  types  and  for   actual   subroutine
+                    headers.
+     
+        make_array_type
+                    is   an   internal   entry  which  processes  the
+                    definition chain of an <array type> tree.
+     
+        fieldlist   is an internal entry which  processes  field  and
+                    sub-variants  in  a  record or individual variant
+                    case.
+     
+        type_semantics
+                    this semanticates  a  general  <type decl>  parse
+                    tree, e.g.  scalar type, array type, record type,
+                    etc.
+     
+     RESPONSIBLE:  Compiler Group
+     
+     ---------------------------------------------------------------- *)
+$page
+C     +--------------------------------------------------------------+
+C     |                                                              |
+C     |                 F o r t r a n   s a m p l e                  |
+C     |                 - - - - - - - - - - - - - -                  |
+C     |                                                              |
+C     +--------------------------------------------------------------+
+C     
+C     MDSI, Company Confidential
+C     
+C     STARTED:  4/1/77
+C     
+C     PURPOSE:   A  sample  program  to  illustrate  the  use  of  the
+C        documentation utitility with FORTRAN programs.
+C     
+C     USAGE:
+C     
+C        inti
+C        real dx
+C        read result
+C     
+C        result = sample (i, dx)
+C     
+C     INPUT:
+C     
+C        i           is   a   scaling   factor   to  be  used  in  the
+C                    computation.
+C     
+C        dx          is the increment
+C     
+C     OUTPUT:
+C     
+C        result      is the value returned by the sample function
+C     
+C     RESPONSIBLE:  J. Coder
+C     
+C     CHANGES:
+C     
+C        1/2/78   jrc    fixed to recognize an arbitrary year.
+C        12/15/77 jrc    changed  to  randomize  result  on  basis  of
+C                        date/time reading.
+C     
+C     ----------------------------------------------------------------
+$page
+;     +--------------------------------------------------------------+
+;     |                                                              |
+;     |                         G E T I F N                          |
+;     |                         - - - - - -                          |
+;     |                                                              |
+;     +--------------------------------------------------------------+
+;     
+;     MDSI, Company Confidential
+;     
+;     SYSTEM:  TENIO
+;     
+;     STARTED:  11/17/75
+;     
+;     PURPOSE:  scans a PDP-10  file  name  passed  in  a  buffer  and
+;        converts  it  to  the  form  required by the LOOKUP and ENTER
+;        UUO's.
+;     
+;     USAGE:
+;     
+;        PUSHJ   17,GETIFN
+;        error return
+;        return for name = 'TTY:'
+;        normal return
+;     
+;     INPUT:
+;     
+;        reg 16      Address of buffer containing external  file  name
+;                    terminated by a blank.
+;     
+;        reg 15      Address  of  four  word  buffer for internal file
+;                    name to be returned.
+;     
+;     OUTPUT:
+;     
+;        buffer      is the four word block pointed to by register 15.
+;                    If  no error is detected, and the file is not the
+;                    terminal, the internal filename is placed in this
+;                    buffer:
+;                       word 0      name in sixbit format
+;                       word 1 (lh) sixbit extension, default is blank
+;                       word 1 (rh) zero
+;                       word 2      zero
+;                       word 3 (lh) account #, zero if not given
+;                       word 3 (rh) user #, zero if not given
+;     
+;        reg 14      device  name in sixbit format if given, otherwise
+;                    'DSK' is returned as the default value.
+;     
+;     REQUIREMENTS:  This routine assumes that register 17 is a  stack
+;        pointer,  and  that  at least the next 10 words are available
+;        for use as temporaries.
+;     
+;     RESPONSIBLE:  A. Kortesoja
+;     
+;     ----------------------------------------------------------------
+  ? En

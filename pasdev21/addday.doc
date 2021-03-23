@@ -1,0 +1,16 @@
+#system(DTIME - day/time manipulation routines)
+#module(ADD_DAYS,11/01/78)
+Add a given number of days to an internal day/time.
+#usage
+EXTERNAL FUNCTION ADD_DAYS(DTIME: DTIME_INT;
+   NUM_DAYS: DAYS): DTIME_INT;
+#input(DTIME)a day/time in internal form.
+#input(NUM_DAYS)a (possibly negative) number of days.
+#output(<return value>)an internal day/time formed by adding
+the specified number of days to the given day/time.
+If a negative day/time would result then the internal day/time
+for day zero is returned.
+#include(DTIME.TYP)
+#include(DTIME.INC)
+#responsible(S. M. ROUSH)
+#end

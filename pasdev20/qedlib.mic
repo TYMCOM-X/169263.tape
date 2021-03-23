@@ -1,0 +1,5 @@
+.del qedlib.rel
+.r fudge5
+*qedlib=qedcl,qld,qjoin,qsplit,qedtyp,qsubst,qederr,qmark,qprint,qedln,editre,qread,qspred,qspat,phesca[52250,222]/a
+^[
+*^C

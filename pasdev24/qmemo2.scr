@@ -1,0 +1,166 @@
+$control off
+$translate '`' '\'
+$TITLE LEFT 'QED MEMO #2 - INTRA-LINE EDITING' LEFT '12/22/78' left 'S. M. Roush'
+$skip 3
+I. &INTRODUCTION&
+$skip 2
+This memo addresses the two related issues of intra-line editing
+and previous line editing.
+The disadvantages and problems associated with control character
+editing have been well documented (see the memo on this subject
+issued by A. Kortesoja on 10/10/78).
+Character editing does have some advantages over whole line,
+substitution style editing.
+In particular it is convenient for editing tabular data
+and for correction of errors in long command lines.
+Both of these situations are cases of previous line editing.
+These considerations give rise to the following three questions,
+which will be subject of this memo.
+$ind +10
+$par -3
+1.\How might the present Pascal QED SUBSTITUTE command be
+enhanced to make it an adequate alternative to character
+editing?
+$par -3
+2.\Are alternatives to control character editing
+available for previous line editing?
+$par -3
+3.\If character editing is deemed necessary how should it be done?
+$ind -10
+$skip 2
+II. &SUBSTITUTE COMMAND ENHANCEMENTS&
+$SKIP 1
+The ability to address the Nth occurrence of a character string
+within a line is one enhancement which has been suggested.
+This is an extension to the substitute command which
+can be made in a fairly natural way.
+The syntax of the present Pascal QED substitute command
+could be extended as follows:
+$par +5
+ld S [n] /present string/replacement string/[options]
+$par
+Here 'n' is an optional integer which specifies that
+the nth occurrence of 'present string' is to be matched.
+The 'ALL' option could either be illegal or could be interpreted
+to mean that all occurrences of 'present string' from the
+nth on should be replaced.
+The later alternative seems preferable.
+$skip 1
+A second suggestion which has been made is to add
+an ability to insert or append a given character string within 
+a line.
+This could also be done by enhancing the present SUBSTITUTE
+command syntax in the following way:
+(underlining is used to indicate minimal abbreviations)
+$par +5
+ld S [&I&NSERT|&A&PPEND] [n] /present string/replacement string/ [options]
+$par 
+When INSERT or APPEND was present the 'replacement' string would be
+inserted in the current line before or after the matched string,
+which would remain unaltered.
+This is not as clean an enhancement of the SUBSTITUTE command
+as the first suggestion. 
+When the INSERT or APPEND option is used the command no longer
+really does a substitution.
+An alternative would be to come up with a new command in which
+both INSERT and APPEND were still optional but one of them 
+was the default.
+The primary problem with this idea is
+selecting a good name for the command which does not conflict
+with present commands.
+One possibility would be '&AD&D'.
+$skip 1
+An indirect way in which the power of the SUBSTITUTE command
+could be enhanced is by defining more
+powerful string patterns.
+There are many possibilities here: wild cards, regular
+expression notation, directional searches, memory
+indicators, etc.
+These will be the subject of a separate memo.
+$skip 2
+III. &PREVIOUS LINE EDITING&
+$skip 1
+An alternative to control character editing of previous
+lines can be constructed based on the
+SUBSTITUTE command.
+Currently a ^G can be used to invoke character editing
+at the start of an input line when entering a new command
+or when entering text under the APPEND, CHANGE and INSERT
+commands.
+Previous line editing is convenient when
+the previous line is lengthy and in error, and,
+ when tabular data
+is being entered.
+A possible alternative is the following.
+Define a printing character, which we can denote by <prev line char>,
+to serve the same role as ^G now does, i.e., it invokes
+previous line editing mode.
+The character '`' is a possibility for this character.
+Whatever character was chosen it would probably be
+desirable to be able to reset it using a SET command.
+When the <prev line char> was entered the user
+could then enter as many SUBSTITUTE commands as would
+fit on a single line.
+Multiple line commands to edit a single line
+conveniently do not make much sense.
+Line designators would not be permitted; all commands would
+operate on the previous line, whether it was text being entered
+or the previous command line.
+If text was being entered into the file then the
+commands would be executed and the resulting line would
+be the new line of text.
+If the previous command was being edited then the commands
+would be executed and the resulting line would be interpreted
+as the new command to execute.
+The user is somewhat protected from misinterpretation of a <prev line char>
+entered as data because what follows 
+must be a syntactically correct SUBSTITUTE command.
+If it is not then an error will be signaled.
+In summary this method would probably work out fairly well
+for correcting errors in a previous command line.
+In could be  awkward for entering tabular
+data.
+The power of the string patterns available would definitely
+impact the usefulness of this concept.
+$skip 2
+IV. &CHARACTER EDITING&
+$skip 1
+If character editing must be included a good scheme
+to follow is one of the alternatives described in the
+Pascal QED definition of 7/12/77.
+The main points of that proposal were the following.
+$indent +10
+$par -3
+1.\Editing is done in two modes. 
+Control mode is used for entering commands and their
+parameters.
+Input mode is used to enter text which replaces  characters
+in the original line.
+$par -3
+2.\A printing character is used as an <alt mode>
+character to invoke control mode.
+All text entered up to the next <alt mode> character is
+interpreted as character editing commands and parameters.
+$par -3
+3.\If possible commands are not echoed.
+If permitted by the system echoing would be done in a manner
+specific to the individual commands.
+Echoing would not be consistent in full and half duplex systems.
+$par -3
+4.\Carriage returns would be handled differently 
+in systems permitting character at a time I/O than in systems
+permitting only line at a time I/O.
+$ind -10
+This scheme eliminates control characters but is not
+entirely consistent across systems.
+$skip 2
+V.\&CONCLUSION&
+$SKIP 1
+Character editing should be dispensed with if at all feasible.
+The SUBSTITUTE command enhancements described in section II
+seem reasonable and should be carefully considered for
+inclusion in the new QED specification.
+More thought needs to be given to previous line editing 
+schemes.
+The one described in section III is a possible approach
+but is certainly not ideal.

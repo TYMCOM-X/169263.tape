@@ -1,0 +1,102 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;									;
+;	These apparently external subroutines are, in reality, squir-	;
+;	relly adjoints to TENIO which have no business in a separate	;
+;	assembly but are because Al asked for them.  They are respon-	;
+;	sible for checking, allocating, and deallocating TENIO's	;
+;	internal buffers.  Since it appears that some people are some-	;
+;	how incapable of allocating their internal buffers before	;
+;	they invoke TENIO, they can replace this subroutine to allow	;
+;	them to allocate them in the middle.  The protocol for this	;
+;	is very much scout's honor; violation could do all manner of	;
+;	unpredictable things to TENIO.  All routines link by R16;	;
+;	they may use Rs 5, 6, and 17 if they need them.  All other	;
+;	registers are strictly off limits; if any others are required,	;
+;	it is these routines' responsibility to save and restore them.	;
+;									;
+;	The basic buffer management strategy adopted here is as fol-	;
+;	lows:  the word BFLST. is a bit map which associates bits	;
+;	with buffers.  A bit is one if its corresponding buffer is	;
+;	available for allocation.  (The number of buffers (and bits)	;
+;	initially available is an assembly constant and may easily	;
+;	be changed.)  Thus, a JFFO instruction can be used to quickly	;
+;	find an available buffer.  The buffers are 200 (octal) word	;
+;	blocks which immediately follow the bit map.  These subroutines	;
+;	are responsible for insuring that a buffer is available and	;
+;	actually allocating and deallocating them.			;
+;									;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+	TITLE	BUFGET - Squirrely TENIO Buffer Manager and Supplier
+	SUBTTL	(External Internal Subroutines)
+	SEARCH	OPDEFS		; Always do
+	ENTRY	BUF.2,ANYBF.,BFGET.,BFDMP.; How to find us
+	TWOSEG			; Be reentrant
+	RELOC	400000
+;
+;	ANYBF.--Is there a buffer available?  On entry, R5 contains
+;	200 (ignored).  Link by 1(16) if there is a 200 word buffer
+;	to be had, by R16 if there isn't.
+;
+ANYBF.:	SKIPZ	BFLST.		; Anybody home?
+	JMP	1(16)		; Yes.
+	JMP	0(16)		; No.
+;
+;	Gee, that was easy.
+;
+;	BFGET.--Subroutine to allocate a buffer.  On entry, R5 contains
+;	200 (ignored) and R4 points to the location to return the
+;	buffer pointer.  On exit, the buffer bit map and return location
+;	have been updated.  Link by 1(16) on success, by R16 if no
+;	buffer is available.
+;
+BFGET.:	MOVE	5,BFLST.	; Fetch bit map
+	JFFO	5,BUFGOT	; Anything to be had today?
+	JMP	0(16)		; No. Give up
+;
+BUFGOT:	MOVEI	17,0(6)		; Yes. Copy buffer number
+	LSH	17,7		; Compute its address
+	ADDI	17,BUFFER
+	HRRM	17,0(4)		; and return it to caller
+	MOVNI	17,0(6)		; Now get bit shift count
+	MOVSI	6,400000
+	LSH	6,0(17)		; Move bit into slot
+	ANDCAM	6,BFLST.	; Clear appropriate bit in map
+	JMP	1(16)		; Return with joy
+;
+;	BFDMP.--Subroutine to dump the buffer (i.e., return it to
+;	the bufer pool).  On entry, R5 contains 200 (ignored) and
+;	R6 contains the buffer address.  On exit, the bit map will
+;	reflect the given buffer's availability.  Link by 1(16) if
+;	all went well, by R16 if an invalid buffer address was
+;	specified.  Note that a buffer may be returned even if it
+;	is currently available.
+;
+BFDMP.:	SUBI	6,BUFFER	; Compute buffer number,
+	ROT	6,-7		; saving low address bits
+	CAIL	6,MAXBUF	; Is number in range?
+	JMP	0(16)		; No. Forget it
+	JUMPM	6,0(16)		; Bad low order address bits. Ugh
+	MOVSI	17,400000	; Valid buffer. Adjust bit
+	SETCA	6,0		; Negate count (fast)
+	LSH	17,1(6)
+	ORM	17,BFLST.	; and mark buffer available
+	JMP	1(16)
+;
+	LIT			; Dump the pool
+;
+	RELOC	0		; Dirty stuff
+;
+;	I haven't figured out a way to generate the initial bit
+;	map from the assembly constant yet, so it just has to
+;	be stuffed by hand if the buffer number should change.
+;
+BUF.2:	BLOCK	0		; Generate a hook
+BFLST.:: XWD	600000,0	; Two buffers
+MAXBUF==	2
+;
+;	And here they are.  Note that zero is OK.
+;
+BUFFER:	BLOCK	0		; Hang a label on it
+	REPEAT	MAXBUF,<	BLOCK	200>
+	END

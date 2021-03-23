@@ -1,0 +1,4628 @@
+       File DSK:TST019.PAS[31024,320157]   Compiled 09-Apr-81 13:13   Pascal, Version 1C(27)-2
+
+       File DSK:TST019.PAS[31024,320157]   Compiled 09-Apr-81 13:13   Pascal, Version 1C(27)-2
+
+       File DSK:TST019.PAS[31024,320157]   Compiled 09-Apr-81 13:13   Pascal, Version 1C(27)-2
+
+       File DSK:TST019.PAS[31024,320157]   Compiled 09-Apr-81 13:13   Pascal, Version 1C(27)-2
+
+
+
+
+
+			    $$$$        $   $   $   $   $     $$     $$$ 
+			     $  $       $   $   $   $   $    $  $   $   $
+			     $  $       $   $   $   $   $    $  $       $
+			     $  $       $   $ $ $    $ $     $  $    $$$ 
+			     $  $       $   $ $ $    $ $     $  $   $    
+			     $  $   $   $   $ $ $     $      $  $   $    
+			    $$$$     $$$     $ $      $       $$    $$$$$
+
+
+				    DSK:TST019.PAS[31024,320157]
+
+
+Options in effect: 
+
+	NOCHECK(ASSERTIONS, CASES, COMPATIBIL, FIELDS, FILES, INPUT, POINTERS, STRINGS, SUBSCRIPTS, 
+	VALUES), NOSPECIAL(COERCIONS, PTR, WORD), NOMAP, NOSYMBOLS, NOCALLS, ASSEMBLY, NOXREF, 
+	TRACE, QBLOCKS, NOOPTIMIZE, CODE, NODEBUG, FINISH, NOGLOBAL, NOMAINSEG, NOOVERLAY, 
+	AUTOQUICK, AUTOSOURCE, NOSTANDARD, LENGTH (45), WIDTH (102), STORAGE (2048), ALLOC (0)
+
+
+
+
+       File DSK:TST019.PAS[31024,320157]   Compiled 09-Apr-81 13:13   Pascal, Version 1C(27)-2
+
+       File DSK:TST019.PAS[31024,320157]   Compiled 09-Apr-81 13:13   Pascal, Version 1C(27)-2
+
+       File DSK:TST019.PAS[31024,320157]   Compiled 09-Apr-81 13:13   Pascal, Version 1C(27)-2
+
+       File DSK:TST019.PAS[31024,320157]   Compiled 09-Apr-81 13:13   Pascal, Version 1C(27)-2
+
+       File DSK:TST019.PAS[31024,320157]   Compiled 09-Apr-81 13:13   Pascal, Version 1C(27)-2
+
+       File DSK:TST019.PAS[31024,320157]   Compiled 09-Apr-81 13:13   Pascal, Version 1C(27)-2
+
+       File DSK:TST019.PAS[31024,320157]   Compiled 09-Apr-81 13:13   Pascal, Version 1C(27)-2
+
+       File DSK:TST019.PAS[31024,320157]   Compiled 09-Apr-81 13:13   Pascal, Version 1C(27)-2
+
+
+
+
+
+			    $$$$        $   $   $   $   $     $$     $$$ 
+			     $  $       $   $   $   $   $    $  $   $   $
+			     $  $       $   $   $   $   $    $  $       $
+			     $  $       $   $ $ $    $ $     $  $    $$$ 
+			     $  $       $   $ $ $    $ $     $  $   $    
+			     $  $   $   $   $ $ $     $      $  $   $    
+			    $$$$     $$$     $ $      $       $$    $$$$$
+
+
+				    DSK:TST019.PAS[31024,320157]
+
+
+Options in effect: 
+
+	NOCHECK(ASSERTIONS, CASES, COMPATIBIL, FIELDS, FILES, INPUT, POINTERS, STRINGS, SUBSCRIPTS, 
+	VALUES), NOSPECIAL(COERCIONS, PTR, WORD), NOMAP, NOSYMBOLS, NOCALLS, ASSEMBLY, NOXREF, 
+	TRACE, QBLOCKS, NOOPTIMIZE, CODE, NODEBUG, FINISH, NOGLOBAL, NOMAINSEG, NOOVERLAY, 
+	AUTOQUICK, AUTOSOURCE, NOSTANDARD, LENGTH (45), WIDTH (102), STORAGE (2048), ALLOC (0)
+
+
+
+
+       File DSK:TST019.PAS[31024,320157]   Compiled 09-Apr-81 13:13   Pascal, Version 1C(27)-2
+
+       File DSK:TST019.PAS[31024,320157]   Compiled 09-Apr-81 13:13   Pascal, Version 1C(27)-2
+
+       File DSK:TST019.PAS[31024,320157]   Compiled 09-Apr-81 13:13   Pascal, Version 1C(27)-2
+
+       File DSK:TST019.PAS[31024,320157]   Compiled 09-Apr-81 13:13   Pascal, Version 1C(27)-2
+
+MODULE  DJWV02       DSK:TST019.PAS[31024,320157]                                      09-Apr-81 13:13
+SECTION 0                                                                                       PAGE 1
+
+    3	program djwv02 options ass,nocheck;
+    4	  
+    5	const null = [];
+    6	  c1 = [0,1,6];
+    7	  c2 = [0,1,6,8,9,14];
+    8	  c3 = [0,1,6,8,9,14,16,17,22];
+    9	  c4 = [0,1,6,8,9,14,16,17,22,24,25,30];
+   10	  c5 = [0,1,39];
+   11	  c6 = [0,1,47];
+   12	  c7 = [0,1,55];
+   13	  c8 = [0,1,63];
+   14	  c16 = [0,1,127]; copy16 = [0,1,127];
+   15	  copt: set of io_options := [ascii, retry];
+   16	  
+   17	var
+   18	  bool: boolean;
+   19	  i, j, k, l: integer; ipos, jpos, kpos: 0..maximum (integer);
+   20	  i_0_to_7: 0..7; i_0_to_20: 0..20; i_min10_to_7: -10..7;
+   21	  i_48_to_100: 48..100;  i_0_to_55: 0..55;  i_18_to_10000: 18..10000;
+   22	  set1: set of 0..7;
+   23	  set2: set of 0..15;
+   24	  set3: set of 0..23;
+   25	  set4: set of 0..31;
+   26	  set5: set of 0..39;
+   27	  set6: set of 0..47;
+   28	  set7: set of 0..55;
+   29	  set8: set of 0..63;
+   30	  set16: set of 0..127;
+   31	  
+   32	  set1_l2: set of 16..23;
+   33	  set2_l1: set of 8..23;
+   34	  set3_l5: set of 40..63;
+   35	  set5_l6: set of 48..87;
+   36	  set7_l2: set of 16..71;
+   37	  
+   38	  set_3_to_4: set of 3..4;
+   39	  set_20_to_39: set of 20..39;
+   40	  set_32_to_56: set of 32..56;
+   41	  set_31_to_56: set of 31..56;
+   42	  
+   43	  a_array_1: array [0..20] of set of 1..6;
+   44	  b_array_1: array [0..20] of set of 0..7;
+MODULE  DJWV02       DSK:TST019.PAS[31024,320157]                                      09-Apr-81 13:13
+SECTION 0                                                                                       PAGE 2
+
+   45	  a_array_16: array [0..20] of set of 0..126;
+   46	  b_array_16: array [0..20] of set of 0..127;
+   47	  iopt, jopt: io_options;
+   48	  optset: set of io_options;
+   49	  str: string;
+   50	  ix: integer;
+   51	  achar,bchar,cchar: char;
+   52	  dchar,echar,fchar: ' '..'z';
+   53	  charset1: set of chr(8)..chr(127);
+   54	  charset2: set of chr(0)..chr(127);
+   55	  charset3: set of chr(31)..chr(56);
+   56	  
+   57	function f_0_to_7: set of 0..7;
+   58	  begin
+   59	    f_0_to_7 := set1
+   60	  end;
+   61	  
+   62	function f_0_to_126: set of 0..126;
+   63	  begin
+   64	    f_0_to_126 := set16;
+   65	    f_0_to_126 := set3_l5 - (f_0_to_126 - (f_0_to_126 - f_0_to_126));
+   66	    f_0_to_126 := [126];
+   67	    f_0_to_126 := set_31_to_56 + [126];
+   68	    f_0_to_126 := set_31_to_56 + f_0_to_126 + [126];
+   69	  end;
+   70	  
+   71	function f_31_to_56 (seta: set of 16..71; var setb: set of 31..56): set of 31..56;
+   72	  var
+   73	    arr_40_to_63: array [1..10] of set of 40..63;
+   74	    loc_i: integer;
+   75	  begin
+   76	    f_31_to_56 := set_20_to_39;
+   77	    f_31_to_56 := set8;
+   78	    f_31_to_56 := arr_40_to_63 [i] - set3_l5;
+   79	    f_31_to_56 := [31];
+   80	    f_31_to_56 := f_31_to_56 + [31];
+   81	    f_31_to_56 := [56];
+   82	    f_31_to_56 := f_31_to_56 + [56];
+   83	    f_31_to_56 := [loc_i];
+   84	    f_31_to_56 := f_31_to_56 + [loc_i];
+   85	    f_31_to_56 := set1 + setb;
+   86	  end;
+MODULE  DJWV02       DSK:TST019.PAS[31024,320157]                                      09-Apr-81 13:13
+SECTION 0                                                                                       PAGE 3
+
+   87	  
+   88	function f_1_to_62: set of 1..62;
+   89	  begin
+   90	    f_1_to_62 := f_1_to_62 - ((f_1_to_62 * set5_l6) * set5_l6);
+   91	    f_1_to_62 := (set16 * set8) - set_3_to_4;
+   92	  end;
+   93	  
+   94	procedure proc1 (seta: set of 8..23; setb: set of 31..56; var setc: set of 3..4; setd: set of 
+	3..4);
+   95	  begin
+   96	    set3 := seta;
+   97	    set_3_to_4 := setc;
+   98	    setc := set_3_to_4;
+   99	    set_32_to_56 := setb
+  100	  end;
+  101	  
+  102	begin
+  103	  set1 := set1;
+  104	  set1 := c1;
+  105	  set1 := null;
+  106	  
+  107	  set2 := set2;
+  108	  set2 := c2;
+  109	  set2 := [];
+  110	  
+  111	  set3 := c3;
+  112	  set3 := [];
+  113	  set4 := c4;
+  114	  set4 := [];
+  115	  set5 := c5;
+  116	  set5 := [];
+  117	  set7 := c7;
+  118	  set7 := [];
+  119	  set8 := c8;
+  120	  set8 := [];
+  121	  set16 := c16;
+  122	  set16 := [];
+  123	  
+  124	  set1 := set1_l2;
+  125	  set3 := set1_l2;
+  126	  set1_l2 := set3;
+  127	  set4 := set2_l1;
+MODULE  DJWV02       DSK:TST019.PAS[31024,320157]                                      09-Apr-81 13:13
+SECTION 0                                                                                       PAGE 4
+
+  128	  set3_l5 := set16;
+  129	  
+  130	  set16 := set_3_to_4;
+  131	  set_3_to_4 := set1;
+  132	  set_20_to_39 := set5;
+  133	  set5 := set_20_to_39;
+  134	  set6 := set_20_to_39;
+  135	  set_32_to_56 := set5;
+  136	  set_32_to_56 := set8;
+  137	  set8 := set_32_to_56;
+  138	  set7 := set_32_to_56;
+  139	  set16 := set_32_to_56;
+  140	  set_31_to_56 := set16;
+  141	  
+  142	  set1 := set1 - set1;
+  143	  set1 := set1 - set4;
+  144	  set1 := set4 - set2_l1;
+  145	  
+  146	  set2 := set3 - set2;
+  147	  set2 := set2 - set1;
+  148	  set2 := set3 - set5;
+  149	  
+  150	  set3 := set4 - set1;
+  151	  set3 := set3 - set2_l1;
+  152	  set3 := set2_l1 - set3;
+  153	  
+  154	  set_3_to_4 := set1 - set_3_to_4;
+  155	  set_3_to_4 := set_3_to_4 - set2;
+  156	  
+  157	  set4 := set4 - set16;
+  158	  set16 := set16 - set8;
+  159	  set16 := set3_l5 - set8;
+  160	  
+  161	  set_20_to_39 := set_32_to_56 - set_31_to_56;
+  162	  set_32_to_56 := set_31_to_56 - set16;
+  163	  set7 := set8 - (set16 - set_31_to_56);
+  164	  set7 := (set16 - set_31_to_56) - set8;
+  165	  set7 := set5 - (set16 - set_31_to_56);
+  166	  set7 := (set5 - set_31_to_56) - set8;
+  167	  set7 := (set5 - set_31_to_56) - set4;
+  168	  set_31_to_56 := (set_20_to_39 - set_3_to_4) - (set_32_to_56 - set_31_to_56);
+  169	  
+MODULE  DJWV02       DSK:TST019.PAS[31024,320157]                                      09-Apr-81 13:13
+SECTION 0                                                                                       PAGE 5
+
+  170	  set1 := f_0_to_7();
+  171	  set16 := f_0_to_126();
+  172	  set8 := f_0_to_126() - f_31_to_56 (set7_l2, set_31_to_56);
+  173	  set16 := f_0_to_126() - (f_0_to_126() - f_31_to_56 (set7_l2, set_31_to_56));
+  174	  set8 := set8 - (f_1_to_62() - f_0_to_126());
+  175	  set7 := (set5 - f_31_to_56 (set7_l2, set_31_to_56)) - f_0_to_126();
+  176	  set7 := (set5 - f_31_to_56 (set7_l2, set_31_to_56)) - set4;
+  177	  
+  178	  a_array_16 [i] := b_array_16 [i] - a_array_16 [i];
+  179	  a_array_1 [i] := b_array_1 [i] - a_array_1 [i];
+  180	  
+  181	  set1 := set1 * set1;
+  182	  set2 := set1 * set3;
+  183	  set2 := set2 * set2;
+  184	  set3 := set5 * set2;
+  185	  set3 := set3 * set3;
+  186	  set5 := set3 * set4;
+  187	  set4 := set4 * set4;
+  188	  set5 := set5 * set5;
+  189	  set16 := set16 * copy16;
+  190	  set16 := set7 * set5;
+  191	  set16 := set4 * set5;
+  192	  
+  193	  set4 := set4 * (set4 * set4);
+  194	  set5 := set5 * (set5 * set5);
+  195	  set16 := set4 * (set4 * set4);
+  196	  set16 := set5 * (set5 * set6);
+  197	  set4 := (set4 * set5) * (set5 * set4);
+  198	  set5 := (set5 * set6) * (set6 * set5);
+  199	  set16 := (set4 * set5) * (set5 * set4);
+  200	  set16 := (set5 * set6) * (set6 * set5);
+  201	  set1 := (set1 * set1) * set2;
+  202	  set2 := (set2 * set3) * set2;
+  203	  set5 := (set1 * set1) * set2;
+  204	  set5 := (set2 * set3) * set2;
+  205	  
+  206	  set8 := set2_l1 * set1_l2;
+  207	  set8 := set2_l1 - (set2_l1 * set1_l2);
+  208	  set8 := set8 - (set4 * set4);
+  209	  set8 := set7 - (set3_l5 * set3_l5);
+  210	  set16 := set4 - (set2_l1 * set1_l2);
+  211	  set16 := set16 - (set5_l6 * set7_l2);
+MODULE  DJWV02       DSK:TST019.PAS[31024,320157]                                      09-Apr-81 13:13
+SECTION 0                                                                                       PAGE 6
+
+  212	  set8 := set8 - (set5_l6 * set7_l2);
+  213	  set8 := set7_l2 - (set5_l6 * set7_l2);
+  214	  set8 := set7_l2 - ((set7_l2 * set7_l2) * set5_l6);
+  215	  set8 := set8 - ((set8 * set5_l6) * set5_l6);
+  216	  set8 := set8 - ((set8 * set7_l2) * set5_l6);
+  217	  set16 := set16 - ((set8 * set5_l6) * set5_l6);
+  218	  set16 := set16 - ((set8 * set7_l2) * set5_l6);
+  219	  
+  220	  set1 := [1,2] + [7];
+  221	  set1 := [0,1,6];
+  222	  set1 := [-1,2,4,6,8];
+  223	  set1 := [3..4];
+  224	  set_3_to_4 := [3..4];
+  225	  set1 := [-2..6];
+  226	  set1 := [i_min10_to_7..i_0_to_7];
+  227	  set_3_to_4 := [-2..80];
+  228	  set_3_to_4 := [i_0_to_7..i_0_to_7];
+  229	  set3 := [5..22];
+  230	  set3 := [5..60];
+  231	  set4 := [-2..80];
+  232	  set4 := [25..30];
+  233	  set5 := [-2..80];
+  234	  set_31_to_56 := [31..56];
+  235	  set_31_to_56 := [30..57];
+  236	  set16 := [-2..150];
+  237	  set16 := [64..127];
+  238	  set2 := [0,5,10,15];
+  239	  set2 := [1..14];
+  240	  set5_l6 := [0..63,72..100];
+  241	  
+  242	  set1 := set1 + set1;
+  243	  set1 := set2 + set3;
+  244	  set2 := set2 + set3;
+  245	  set2 := set3 + set4;
+  246	  set3 := set4 + set5;
+  247	  set4 := set6 + set4;
+  248	  set5 := set6 + set7;
+  249	  set16 := set16 + f_0_to_126();
+  250	  set1 := set2 + set_3_to_4;
+  251	  set1 := set_3_to_4 + set2;
+  252	  set16 := set16 - (set8 + set7);
+  253	  set16 := set16 - (set3_l5 + set5_l6);
+MODULE  DJWV02       DSK:TST019.PAS[31024,320157]                                      09-Apr-81 13:13
+SECTION 0                                                                                       PAGE 7
+
+  254	  set16 := set16 - (set5_l6 + set3_l5);
+  255	  set4 := (set5 + set6) + (set8 + set4);
+  256	  set4 := (set5 + set6) + (set8 + set4) + (set4 + set8);
+  257	  set4 := (set5 + set6) + set8;
+  258	  set4 := (set5 + set6) + (set8 + set4) + set8;
+  259	  
+  260	  set_31_to_56 := (set4 + set7_l2) + (set3_l5 * set5_l6) - (set_3_to_4 + set_20_to_39);
+  261	  set_31_to_56 := (set4 + set7_l2) + (set3_l5 * set5_l6);
+  262	  set_31_to_56 := (set4 + [3,6,9,12..15] + set7_l2) + (set3_l5 * set5_l6) + [0..30];
+  263	  set_31_to_56 := (set4 + [3,6,9,12..15] + set7_l2) + (set3_l5 * set5_l6) + [0..31];
+  264	  set_31_to_56 := (set4 + [3,6,56..100,12..15] + set7_l2) + (set3_l5 * set5_l6) + [0..31];
+  265	  
+  266	  set1 := set1 + [0,3,5];
+  267	  set1 := set2 + [0,3,5];
+  268	  set2 := set2 + [0,3,5];
+  269	  set2 := set3 + [0,3,5];
+  270	  set2 := set3 + [8,10,12];
+  271	  set2 := set3 + [3,5,7,9];
+  272	  set16 := set16 + [52,54,56];
+  273	  set16 := f_0_to_126() + [52,54,56];
+  274	  set16 := f_0_to_126() + [8..127];
+  275	  set1 := [0];
+  276	  set1 := [7];
+  277	  set1 := [8];
+  278	  set1 := [-1];
+  279	  set1 := [i];
+  280	  set1 := [i_0_to_7];
+  281	  set1 := [i_0_to_20];
+  282	  set1 := [i_min10_to_7];
+  283	  
+  284	  set_3_to_4 := [i_0_to_7];
+  285	  set2 := [8];
+  286	  set2 := [9];
+  287	  set3 := [23];
+  288	  set4 := [31];
+  289	  set16 := [127];
+  290	  set16 := [127] + [127];
+  291	  set5_l6 := [48];
+  292	  set5_l6 := [i];
+  293	  set5_l6 := [i_48_to_100];
+  294	  set5_l6 := [i_0_to_55];
+  295	  set_31_to_56 := [32];
+MODULE  DJWV02       DSK:TST019.PAS[31024,320157]                                      09-Apr-81 13:13
+SECTION 0                                                                                       PAGE 8
+
+  296	  set_31_to_56 := [i];
+  297	  set_31_to_56 := [i_48_to_100];
+  298	  set_31_to_56 := [i_0_to_55];
+  299	  set_31_to_56 := set_31_to_56 - [i];
+  300	  set_31_to_56 := set_31_to_56 - [i_48_to_100];
+  301	  set_31_to_56 := set_31_to_56 - [i_0_to_55];
+  302	  set_31_to_56 := set7_l2 - [i];
+  303	  set_31_to_56 := set7_l2 - [i_48_to_100];
+  304	  set_31_to_56 := set7_l2 - [i_0_to_55];
+  305	  set_31_to_56 := (set7_l2 + set7_l2) - [i];
+  306	  set7_l2 := set7_l2 - ((set_31_to_56 + set_31_to_56) - [i]);
+  307	  set7_l2 := set7_l2 - (set7_l2 - [i]);
+  308	  set7_l2 := set7_l2 - (set_31_to_56 - [i]);
+  309	  
+  310	  set1 := [2,4,5] + set2 + set3;
+  311	  set1 := [2,4,5] + set2 + set1;
+  312	  set_31_to_56 := set_31_to_56 + [i];
+  313	  set_31_to_56 := set_31_to_56 + [i_48_to_100];
+  314	  set_31_to_56 := set_31_to_56 + [i_0_to_55];
+  315	  set_31_to_56 := set7_l2 + [i];
+  316	  set_31_to_56 := set7_l2 + [i_48_to_100];
+  317	  set_31_to_56 := set7_l2 + [i_0_to_55];
+  318	  set_31_to_56 := (set7_l2 + set7_l2) + [i];
+  319	  set7_l2 := set7_l2 - ((set_31_to_56 + set_31_to_56) + [i]);
+  320	  set7_l2 := set7_l2 - (set7_l2 + [i]);
+  321	  set7_l2 := set7_l2 - (set_31_to_56 + [i]);
+  322	  
+  323	  set_31_to_56 := set_31_to_56 - [31];
+  324	  set_31_to_56 := set_31_to_56 - [56];
+  325	  set7_l2 := set7_l2 - [31];
+  326	  set7_l2 := set_31_to_56 - [31];
+  327	  set7_l2 := set7_l2 + [31];
+  328	  set7_l2 := set_31_to_56 + [31];
+  329	  set7_l2 := set7_l2 + [i];
+  330	  set7_l2 := set_31_to_56 + [i];
+  331	  set7_l2 := [i] + set7_l2;
+  332	  set7_l2 := [i] + set_31_to_56;
+  333	  set7_l2 := [100] + set_31_to_56 + [71];
+  334	  
+  335	  proc1 (set2_l1, set_31_to_56, set_3_to_4, set_3_to_4);
+  336	  proc1 (set3, set_32_to_56, set_3_to_4, set1);
+  337	  proc1 (set6, set_20_to_39, set_3_to_4, set2);
+MODULE  DJWV02       DSK:TST019.PAS[31024,320157]                                      09-Apr-81 13:13
+SECTION 0                                                                                       PAGE 9
+
+  338	  proc1 (set1_l2, set5_l6, set_3_to_4, [i]);
+  339	  proc1 ([0..31, 31], set7_l2, set_3_to_4, [i, i_0_to_7]);
+  340	  
+  341	  rewrite (output);
+  342	  rewrite (output, [seekok]);
+  343	  rewrite (output, [ascii..retry]);
+  344	  rewrite (output, [preserve, seekok, retry]);
+  345	  rewrite (output, [iopt]);
+  346	  rewrite (output, [iopt..jopt]);
+  347	  rewrite (output, optset);
+  348	  rewrite (output, optset * [iopt..jopt]);
+  349	  
+  350	  ix := search (str, charset1);
+  351	  ix := verify (str, charset2);
+  352	  ix := search (str, charset3);
+  353	  ix := verify (str, [achar]);
+  354	  ix := search (str, [achar,bchar,cchar]);
+  355	  ix := search (str, [' '..'z']);
+  356	  ix := search (str, [dchar, echar, fchar]);
+  357	  ix := search (str, ['d','e','f']);
+  358	  ix := search (str, charset1 * charset3);
+  359	  ix := search (str, []);
+  360	  ix := verify (str, charset3 * ['a'..'z']);
+  361	  
+  362	  if not (i_0_to_7 in set1_l2) then
+  363	    set1 := c1;
+  364	  if not (i_0_to_7 in [0]) then
+  365	    set1 := c1;
+  366	  if i_0_to_7 in [i_48_to_100] then
+  367	    set1 := c1;
+  368	  if i_0_to_7 in [i_0_to_20] then
+  369	    set1 := c1;
+  370	  if i_0_to_7 in [10..20] then
+  371	    set1 := c1;
+  372	  if i_0_to_7 in [7..20] then 
+  373	    set1 := c1;
+  374	  if i_0_to_7 in [4..20] then
+  375	    set1 := c1;
+  376	  if i_48_to_100 in [i_0_to_55..100] then
+  377	    set1 := c1;
+  378	  if i_48_t in [i_0_to_7..i] then
+  379	    set1 := c1;
+MODULE  DJWV02       DSK:TST019.PAS[31024,320157]                                      09-Apr-81 13:13
+SECTION 0                                                                                      PAGE 10
+
+  380	  if i_0_to_7 in set1 then
+  381	    set1 := c1;
+  382	  if i_0_to_7 in set_3_to_4 then
+  383	    set1 := c1;
+  384	  if i_0_to_20 in set1_l2 then
+  385	    set1 := c1;
+  386	  if i_48_to_100 in set5_l6 then
+  387	    set1 := c1;
+  388	  if i_min10_to_7 in set1 then
+  389	    set1 := c1;
+  390	  if i_0_to_7 in [i,j] then
+  391	    set1 := c1;
+  392	  if k in [i,j] then
+  393	    set1 := c1;
+  394	  if i_18_to_10000 in [i,j] then
+  395	    set1 := c1;
+  396	  if i in [i,j] * [k] then
+  397	    set1 := c1;
+  398	  
+  399	  bool := not (i_0_to_7 in set1_l2);
+  400	  bool := not (i_0_to_7 in [0]);
+  401	  bool := i_0_to_7 in [i_48_to_100];
+  402	  bool := i_0_to_7 in [i_0_to_20];
+  403	  bool := i_0_to_7 in [10..20];
+  404	  bool := i_0_to_7 in [7..20]; 
+  405	  bool := i_0_to_7 in [4..20];
+  406	  bool := not (i_0_to_7 in [4..20]);
+  407	  bool := i_48_to_100 in [i_0_to_55..100];
+  408	  bool := i_48_to_100 in [i_0_to_7..i];
+  409	  bool := i_0_to_7 in set1;
+  410	  bool := i_0_to_7 in set_3_to_4;
+  411	  bool := i_0_to_20 in set1_l2;
+  412	  bool := i_48_to_100 in set5_l6;
+  413	  bool := not (i_48_to_100 in set5_l6);
+  414	  bool := i_min10_to_7 in set1;
+  415	  bool := i_0_to_7 in [i,j];
+  416	  bool := k in [i,j];
+  417	  bool := not (k in [i,j]);
+  418	  bool := i_18_to_10000 in [i,j];
+  419	  bool := i in [i,j] * [k];
+  420	  bool := k in [i..j];
+  421	  bool := not (k in [ipos..jpos]);
+MODULE  DJWV02       DSK:TST019.PAS[31024,320157]                                      09-Apr-81 13:13
+SECTION 0                                                                                      PAGE 11
+
+  422	   
+  423	  if [] = [] then
+  424	    set1 := c1;
+  425	  if [] <> [] then
+  426	    set1 := c1;
+  427	  if not ([] = []) then
+  428	    set1 := c1;
+  429	  if not ([] <> []) then
+  430	    set1 := c1;
+  431	  if [] = [] then
+  432	    set1 := c1
+  433	  else
+  434	    set2 := c2;
+  435	  bool := [] = [];
+  436	  bool := [] <> [];
+  437	  bool := not ([] = []);
+  438	  bool := not ([] <> []);
+  439	  if [3] = [] then
+  440	    set1 := c1
+  441	  else
+  442	    set2 := c2;
+  443	  bool := [] = [i];
+  444	  bool := not ([] = [j..j]);
+  445	  if [i..j] = [] then
+  446	    set1 := c1;
+  447	  if not ([i_48_to_100..i_0_to_20] = []) then
+  448	    set1 := c1;
+  449	  bool := [] <> [10..20];
+  450	  bool := [] = set1;
+  451	  bool := [] <> set2;
+  452	  bool := not (set3 = []);
+  453	  bool := not (set4 <> []);
+  454	  bool := set5 = [];
+  455	  if not (set16 <> []) then
+  456	    set1 := c1
+  457	  else
+  458	    set2 := c2;
+  459	  bool := [] = [i,j,k];
+  460	  bool := [] = [i_0_to_55, i_48_to_100] * [ipos];
+  461	  bool := [i..j] = [k..l];
+  462	  bool := [i..i] = [j..j];
+  463	  bool := [i..i] <> [j..k];
+MODULE  DJWV02       DSK:TST019.PAS[31024,320157]                                      09-Apr-81 13:13
+SECTION 0                                                                                      PAGE 12
+
+  464	  bool := not ([i..j] = [k..k]);
+  465	  bool := not ([i..j] = [k..l]);
+  466	  bool := set1 = [i];
+  467	  bool := [i] = set16;
+  468	  bool := set2 <> [15];
+  469	  bool := not (set3 <> [i..15]);
+  470	  bool := not ([i..23] <> set3);
+  471	  bool := not ([i..23] <> [i,j,k]);
+  472	  bool := not ([i..-5] <> set3);
+  473	  bool := set_31_to_56 = [i_48_to_100];
+  474	  bool := set_31_to_56 = [i];
+  475	  bool := [i..j] = set_31_to_56;
+  476	  bool := not ([i_0_to_55..i_48_to_100] <> set_32_to_56);
+  477	  bool := [i_0_to_55..i_48_to_100] <> set_32_to_56;
+  478	  if [i_48_to_100..i_0_to_55] <> set_32_to_56 then
+  479	    set1 := c1;
+  480	  bool := set4 <> [0..31];
+  481	  bool := set7_l2 = [16..i];
+  482	  bool := [16..ipos] <> set7_l2;
+  483	  bool := [i_18_to_10000..ipos] <> set7_l2;
+  484	  bool := [i_min10_to_7..32767] = set7_l2;
+  485	  bool := set1 = set1;
+  486	  bool := set2 <> set2;
+  487	  bool := set3 = set3;
+  488	  bool := set4 = set4;
+  489	  bool := set5 <> set5;
+  490	  bool := set1 = set2;
+  491	  bool := set7_l2 <> set5_l6;
+  492	  bool := not ([i,j] <> [k,l]);
+  493	  bool := not ([i,j] <> [i_18_to_10000, i_48_to_100]);
+  494	  if not (set16 = [1,5,10]) then
+  495	    set1 := c1
+  496	  else
+  497	    set2 := c2;
+  498	  
+  499	  bool := [] <= [];
+  500	  bool := null >= [];
+  501	  bool := [i] >= null;
+  502	  bool := [i..j] >= null;
+  503	  bool := [] <= set7_l2;
+  504	  bool := set7_l2 >= (set7_l2 - set5_l6) * set2;
+  505	  if set7_l2 >= (set7_l2 - set5_l6) * set2 then
+MODULE  DJWV02       DSK:TST019.PAS[31024,320157]                                      09-Apr-81 13:13
+SECTION 0                                                                                      PAGE 13
+
+  506	    set1 := c1
+  507	  else
+  508	    set2 := c2;
+  509	  if not (set7_l2 >= (set7_l2 - set5_l6) * set2) then
+  510	    set1 := c1
+  511	  else
+  512	    set2 := c2;
+  513	  bool := [i] <= [];
+  514	  bool := not ([] >= [i]);
+  515	  bool := [i] <= [i];
+  516	  bool := [j] >= [i];
+  517	  bool := not ([ipos] <= [i]);
+  518	  bool := [i] <= [j..k];
+  519	  bool := [j..27] >= [i_0_to_7];
+  520	  bool := not ([10..27] >= [6]);
+  521	  bool := [i] <= set1;
+  522	  bool := [4] <= set3;
+  523	  bool := not ([100] <= set4);
+  524	  bool := set16 >= [i];
+  525	  bool := [i,j] >= [i];
+  526	  bool := [0,5,10] >= [5];
+  527	  bool := [1..5] <= [];
+  528	  bool := [1..i] <= [];
+  529	  bool := not ([] >= [i..j]);
+  530	  bool := [i..j] <= [k];
+  531	  bool := not ([ipos..jpos] <= [kpos]);
+  532	  if [kpos] >= [5..10] then
+  533	    set1 := c1
+  534	  else
+  535	    set2 := c2;
+  536	  bool := [i..j] <= [k..l];
+  537	  bool := not ([5..10] >= [6..9]);
+  538	  bool := [i..j] <= set2;
+  539	  bool := [i..15] <= set2;
+  540	  bool := set5 >= [-50..100];
+  541	  bool := not (set_31_to_56 >= [i..j]);
+  542	  bool := [ipos..jpos] <= [i,j];
+  543	  bool := set1 <= [];
+  544	  bool := not ([i,j] <= []);
+  545	  bool := not ([] >= [5,10,15]);
+  546	  bool := set1 <= [1];
+  547	  bool := not (set3 <= [i_0_to_7]);
+MODULE  DJWV02       DSK:TST019.PAS[31024,320157]                                      09-Apr-81 13:13
+SECTION 0                                                                                      PAGE 14
+
+  548	  bool := [i,j] <= [k];
+  549	  bool := set1 <= [1..5];
+  550	  bool := not (set2 <= [i..15]);
+  551	  bool := [i..i_48_to_100] >= set5_l6;
+  552	  bool := [i,j] <= [k..l];
+  553	  bool := set1 <= c1;
+  554	  bool := set1 <= set2;
+  555	  bool := set2 <= set1;
+  556	  bool := set16 <= set1;
+  557	  bool := set16 <= set5_l6;
+  558	  bool := set16 >= set5_l6;
+  559	  bool := [i,j] <= set5_l6;
+  560	  bool := [i,j] >= set5_l6;
+  561	  bool := (set1 + set2 + set4) * set16 <= ((set16 - set_31_to_56) * set_20_to_39) + set4;
+  562	end.
+
+
+File   level   on page     name
+
+  0	 0	    1	DSK:TST019.PAS[31024,320157]
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     		.TITLE	DJWV02
+
+		.PSECT	PAX$STATIC,LONG,CON,NOEXE,LCL,PIC,NOSHR,RD,WRT,REL
+	STATIC.:
+
+		.BLKB	1038
+
+
+		.PSECT	PAX$CODE......B,LONG,CON,EXE,LCL,PIC,SHR,RD,NOWRT,REL
+	;
+	;	Begin subroutine PROC1
+	;
+
+00000	C.3:	.WORD	C.3-C.3
+00002		.WORD	5
+00004		.ASCII	"PROC1"
+
+00009	B.7:	.WORD	^M<R11>
+0000B		CLRL  	-(SP)
+0000D		PUSHAL	C.3
+
+00010	L.1:					; LINE 95
+						; LINE 96
+00010		CLRB  	STATIC.+59		;   SET3
+00016		MOVW  	@4(AP),STATIC.+59+1	;   SETA  SET3
+						; LINE 97
+0001E		MOVB  	@12(AP),STATIC.+126	;   SETC  SET_3_TO_4
+						; LINE 98
+00026		MOVB  	STATIC.+126,@12(AP)	;   SET_3_TO_4  SETC
+						; LINE 99
+0002E		MOVAB 	@8(AP),R11		;   SETB
+00032		MOVL  	1(R11),STATIC.+130	;   SET_32_TO_56
+						; LINE 100
+0003A		RET   	
+
+	;
+	;	Begin subroutine F_1_TO_62
+	;
+
+0003B	C.4:	.WORD	C.4-C.4
+0003D		.WORD	9
+0003F		.ASCII	"F_1_TO_62"
+
+00048	B.6:	.WORD	^M<R2,R3,R4,R5,R11>
+0004A		CLRL  	-(SP)
+0004C		PUSHAL	C.4
+0004F		SUBL2 	S^#8,SP
+
+00052	L.2:					; LINE 89
+						; LINE 90
+00052		MOVC5 	S^#0,0(SP),S^#0,S^#6,-16(FP)
+00059		MOVAB 	@4(AP),R11		;   F_1_TO_62
+0005D		MCOMW 	STATIC.+114,R1		;   SET5_L6
+00064		BICW3 	R1,6(R11),-10(FP)
+0006A		MCOMW 	STATIC.+114,R1		;   SET5_L6
+00071		BICW2 	R1,-10(FP)
+00075		MOVL  	S^#1,R0
+00078	X.1:	BICL2 	-16(FP)[R0],@4(AP)[R0]	;   F_1_TO_62
+0007F		SOBGEQ	R0,X.1
+						; LINE 91
+00082		MOVL  	S^#1,R0
+00085	X.2:	MCOML 	STATIC.+84[R0],R1	;   SET8
+0008D		BICL3 	R1,STATIC.+92[R0],-16(FP)[R0]
+						;   SET16
+00098		SOBGEQ	R0,X.2
+0009B		BICB2 	STATIC.+126,-16(FP)	;   SET_3_TO_4
+000A3		MOVQ  	-16(FP),@4(AP)		;   F_1_TO_62
+000A8		BICB2 	S^#1,@4(AP)		;   F_1_TO_62
+000AC		MOVAB 	@4(AP),R11		;   F_1_TO_62
+000B0		BICB2 	I^#128,7(R11)		;   ^X80
+						; LINE 92
+000B5		RET   	
+
+	;
+	;	Begin subroutine F_31_TO_56
+	;
+
+000B6	C.5:	.WORD	C.5-C.5
+000B8		.WORD	10
+000BA		.ASCII	"F_31_TO_56"
+
+000C4	B.5:	.WORD	^M<R2,R3,R4,R5,R11>
+000C6		CLRL  	-(SP)
+000C8		PUSHAL	C.5
+000CB		SUBL2 	S^#40,SP		;   ^X28
+
+000CE	L.3:					; LINE 75
+						; LINE 76
+000CE		MOVC5 	S^#2,STATIC.+127+1,S^#0,S^#5,@4(AP)
+						;   SET_20_TO_39  F_31_TO_56
+000D9		BICB2 	I^#127,@4(AP)		;   ^X7F  F_31_TO_56
+						; LINE 77
+000DE		MOVC3 	S^#5,STATIC.+84+3,@4(AP);   SET8  F_31_TO_56
+000E7		BICB2 	I^#127,@4(AP)		;   ^X7F  F_31_TO_56
+000EC		MOVAB 	@4(AP),R11		;   F_31_TO_56
+000F0		BICB2 	I^#254,4(R11)		;   ^XFE
+						; LINE 78
+000F5		INDEX 	STATIC.+4,S^#1,S^#10,S^#3,I^#-1,R11
+						;   I
+00104		ADDL2 	FP,R11
+00107		MOVL  	S^#2,R0
+0010A	X.3:	BICB3 	STATIC.+111[R0],-38(R11)[R0],-47(FP)[R0]
+						;   SET3_L5  ARR_40_TO_63
+00117		SOBGEQ	R0,X.3
+0011A		CLRW  	@4(AP)			;   F_31_TO_56
+0011D		MOVAB 	@4(AP),R11		;   F_31_TO_56
+00121		MOVC3 	S^#3,-47(FP),2(R11)
+00127		BICB2 	I^#254,4(R11)		;   ^XFE
+						; LINE 79
+0012C		MOVC5 	S^#0,0(SP),S^#0,S^#5,@4(AP)
+						;   F_31_TO_56
+00133		BISB2 	I^#128,@4(AP)		;   ^X80  F_31_TO_56
+						; LINE 80
+00138		BISB2 	I^#128,@4(AP)		;   ^X80  F_31_TO_56
+						; LINE 81
+0013D		MOVC5 	S^#0,0(SP),S^#0,S^#5,@4(AP)
+						;   F_31_TO_56
+00144		INSV  	S^#1,S^#32,S^#1,@4(AP)	;   ^X20  F_31_TO_56
+						; LINE 82
+0014A		INSV  	S^#1,S^#32,S^#1,@4(AP)	;   ^X20  F_31_TO_56
+						; LINE 83
+00150		MOVC5 	S^#0,0(SP),S^#0,S^#5,@4(AP)
+						;   F_31_TO_56
+00157		SUBL3 	S^#24,-44(FP),R0	;   ^X18  LOC_I
+0015C		BLSS  	X.4
+0015E		CMPL  	R0,S^#40		;   ^X28
+00161		BGEQ  	X.4
+00163		INSV  	S^#1,R0,S^#1,@4(AP)	;   F_31_TO_56
+00169	X.4:	BICB2 	I^#127,@4(AP)		;   ^X7F  F_31_TO_56
+0016E		MOVAB 	@4(AP),R11		;   F_31_TO_56
+00172		BICB2 	I^#254,4(R11)		;   ^XFE
+						; LINE 84
+00177		SUBL3 	S^#24,-44(FP),R0	;   ^X18  LOC_I
+0017C		BLSS  	X.5
+0017E		CMPL  	R0,S^#40		;   ^X28
+00181		BGEQ  	X.5
+00183		INSV  	S^#1,R0,S^#1,@4(AP)	;   F_31_TO_56
+00189	X.5:	BICB2 	I^#127,@4(AP)		;   ^X7F  F_31_TO_56
+0018E		MOVAB 	@4(AP),R11		;   F_31_TO_56
+00192		BICB2 	I^#254,4(R11)		;   ^XFE
+						; LINE 85
+00197		MOVC3 	S^#5,@12(AP),@4(AP)	;   SETB  F_31_TO_56
+						; LINE 86
+0019D		RET   	
+
+	;
+	;	Begin subroutine F_0_TO_126
+	;
+
+0019E	C.6:	.WORD	C.6-C.6
+001A0		.WORD	10
+001A2		.ASCII	"F_0_TO_126"
+
+001AC	B.4:	.WORD	^M<R2,R3,R4,R5,R9,R10,R11>
+001AE		CLRL  	-(SP)
+001B0		PUSHAL	C.6
+001B3		SUBL2 	S^#16,SP		;   ^X10
+
+001B6	L.4:					; LINE 63
+						; LINE 64
+001B6		MOVC3 	S^#16,STATIC.+92,@4(AP)	;   ^X10  SET16  F_0_TO_126
+001BF		MOVAB 	@4(AP),R11		;   F_0_TO_126
+001C3		BICB2 	I^#128,15(R11)		;   ^X80
+						; LINE 65
+001C8		MOVAB 	@4(AP),R11		;   F_0_TO_126
+001CC		MOVAB 	@4(AP),R10		;   F_0_TO_126
+001D0		MOVAB 	@4(AP),R9		;   F_0_TO_126
+001D4		MOVL  	S^#2,R0
+001D7	X.6:	BICB3 	5(R9)[R0],5(R10)[R0],-11(FP)[R0]
+001E1		SOBGEQ	R0,X.6
+001E4		MOVL  	S^#2,R0
+001E7	X.7:	BICB3 	-11(FP)[R0],5(R11)[R0],-11(FP)[R0]
+001F1		SOBGEQ	R0,X.7
+001F4		MOVL  	S^#2,R0
+001F7	X.8:	BICB3 	-11(FP)[R0],STATIC.+111[R0],-11(FP)[R0]
+						;   SET3_L5
+00204		SOBGEQ	R0,X.8
+00207		MOVC5 	S^#0,0(SP),S^#0,S^#5,@4(AP)
+						;   F_0_TO_126
+0020E		MOVAB 	@4(AP),R11		;   F_0_TO_126
+00212		MOVC5 	S^#3,-11(FP),S^#0,S^#11,5(R11)
+						; LINE 66
+0021A		MOVC5 	S^#0,0(SP),S^#0,S^#16,@4(AP)
+						;   ^X10  F_0_TO_126
+00221		MOVAB 	@4(AP),R11		;   F_0_TO_126
+00225		BISB2 	I^#64,15(R11)		;   ^X40
+						; LINE 67
+0022A		MOVC5 	S^#5,STATIC.+134,S^#0,S^#13,-21(FP)
+						;   SET_31_TO_56
+00235		BISB2 	I^#64,-9(FP)		;   ^X40
+0023A		MOVC5 	S^#0,0(SP),S^#0,S^#3,@4(AP)
+						;   F_0_TO_126
+00241		MOVAB 	@4(AP),R11		;   F_0_TO_126
+00245		MOVC3 	S^#13,-21(FP),3(R11)
+						; LINE 68
+0024B		MOVC5 	S^#0,0(SP),S^#0,S^#3,-24(FP)
+00252		MOVC5 	S^#5,STATIC.+134,S^#0,S^#13,-21(FP)
+						;   SET_31_TO_56
+0025D		MOVL  	S^#3,R0
+00260	X.9:	BISL2 	@4(AP)[R0],-24(FP)[R0]	;   F_0_TO_126
+00267		SOBGEQ	R0,X.9
+0026A		BISB2 	I^#64,-9(FP)		;   ^X40
+0026F		MOVC3 	S^#16,-24(FP),@4(AP)	;   ^X10  F_0_TO_126
+						; LINE 69
+00275		RET   	
+
+	;
+	;	Begin subroutine F_0_TO_7
+	;
+
+00276	C.7:	.WORD	C.7-C.7
+00278		.WORD	8
+0027A		.ASCII	"F_0_TO_7"
+
+00282	B.3:	.WORD	^M<>
+00284		CLRL  	-(SP)
+00286		PUSHAL	C.7
+
+00289	L.5:					; LINE 58
+						; LINE 59
+00289		MOVB  	STATIC.+56,@4(AP)	;   SET1  F_0_TO_7
+						; LINE 60
+00291		RET   	
+
+	;
+	;	Begin program DJWV02
+	;
+
+00292	C.8:	.WORD	C.8-C.8
+00294		.WORD	6
+00296		.ASCII	"DJWV02"
+
+0029C	B.1:	.ENTRY	PAX$PROGRAM.,^M<R2,R3,R4,R5,R6,R7,R8,R9,R10,R11>
+0029E		CLRL  	-(SP)
+002A0		PUSHAL	C.8
+002A3		SUBL2 	I^#4096,SP		;   ^X1000
+002AA		JSB   	PAX$MON.MAINFRA
+
+002B0	L.6:					; LINE 102
+						; LINE 103
+						; LINE 104
+002B0		MOVB  	K.1,STATIC.+56		;   SET1
+						; LINE 105
+002BB		CLRB  	STATIC.+56		;   SET1
+						; LINE 107
+						; LINE 108
+002C1		MOVW  	K.2,STATIC.+57		;   SET2
+						; LINE 109
+002CC		CLRW  	STATIC.+57		;   SET2
+						; LINE 111
+002D2		MOVC3 	S^#3,K.3,STATIC.+59	;   SET3
+						; LINE 112
+002DE		MOVC5 	S^#0,0(SP),S^#0,S^#3,STATIC.+59
+						;   SET3
+						; LINE 113
+002E8		MOVL  	K.4,STATIC.+62		;   SET4
+						; LINE 114
+002F3		CLRL  	STATIC.+62		;   SET4
+						; LINE 115
+002F9		MOVC3 	S^#5,K.5,STATIC.+66	;   SET5
+						; LINE 116
+00305		MOVC5 	S^#0,0(SP),S^#0,S^#5,STATIC.+66
+						;   SET5
+						; LINE 117
+0030F		MOVC3 	S^#7,K.6,STATIC.+77	;   SET7
+						; LINE 118
+0031B		MOVC5 	S^#0,0(SP),S^#0,S^#7,STATIC.+77
+						;   SET7
+						; LINE 119
+00325		MOVQ  	K.7,STATIC.+84		;   SET8
+						; LINE 120
+00330		CLRQ  	STATIC.+84		;   SET8
+						; LINE 121
+00336		MOVC3 	S^#16,K.8,STATIC.+92	;   ^X10  SET16
+						; LINE 122
+00342		MOVC5 	S^#0,0(SP),S^#0,S^#16,STATIC.+92
+						;   ^X10  SET16
+						; LINE 124
+0034C		CLRB  	STATIC.+56		;   SET1
+						; LINE 125
+00352		CLRW  	STATIC.+59		;   SET3
+00358		MOVB  	STATIC.+108,STATIC.+59+2;   SET1_L2  SET3
+						; LINE 126
+00363		MOVB  	STATIC.+59+2,STATIC.+108;   SET3  SET1_L2
+						; LINE 127
+0036E		CLRB  	STATIC.+62		;   SET4
+00374		MOVC5 	S^#2,STATIC.+109,S^#0,S^#3,STATIC.+62+1
+						;   SET2_L1  SET4
+						; LINE 128
+00382		MOVC3 	S^#3,STATIC.+92+5,STATIC.+111
+						;   SET16  SET3_L5
+						; LINE 130
+0038E		MOVC5 	S^#1,STATIC.+126,S^#0,S^#16,STATIC.+92
+						;   SET_3_TO_4  ^X10  SET16
+						; LINE 131
+0039C		MOVB  	STATIC.+56,STATIC.+126	;   SET1  SET_3_TO_4
+003A7		BICB2 	S^#7,STATIC.+126	;   SET_3_TO_4
+003AE		BICB2 	I^#224,STATIC.+126	;   ^XE0  SET_3_TO_4
+						; LINE 132
+003B6		MOVC3 	S^#3,STATIC.+66+2,STATIC.+127
+						;   SET5  SET_20_TO_39
+003C2		BICB2 	S^#15,STATIC.+127	;   SET_20_TO_39
+						; LINE 133
+003C9		CLRW  	STATIC.+66		;   SET5
+003CF		MOVC3 	S^#3,STATIC.+127,STATIC.+66+2
+						;   SET_20_TO_39  SET5
+						; LINE 134
+003DB		CLRW  	STATIC.+71		;   SET6
+003E1		MOVC5 	S^#3,STATIC.+127,S^#0,S^#4,STATIC.+71+2
+						;   SET_20_TO_39  SET6
+						; LINE 135
+003EF		MOVZBL	STATIC.+66+4,STATIC.+130;   SET5  SET_32_TO_56
+						; LINE 136
+003FA		MOVL  	STATIC.+84+4,STATIC.+130;   SET8  SET_32_TO_56
+00405		BICB2 	I^#254,STATIC.+130+3	;   ^XFE  SET_32_TO_56
+						; LINE 137
+0040D		CLRL  	STATIC.+84		;   SET8
+00413		MOVL  	STATIC.+130,STATIC.+84+4;   SET_32_TO_56  SET8
+						; LINE 138
+0041E		CLRL  	STATIC.+77		;   SET7
+00424		MOVC3 	S^#3,STATIC.+130,STATIC.+77+4
+						;   SET_32_TO_56  SET7
+						; LINE 139
+00430		CLRL  	STATIC.+92		;   SET16
+00436		MOVC5 	S^#4,STATIC.+130,S^#0,S^#12,STATIC.+92+4
+						;   SET_32_TO_56  SET16
+						; LINE 140
+00444		MOVC3 	S^#5,STATIC.+92+3,STATIC.+134
+						;   SET16  SET_31_TO_56
+00450		BICB2 	I^#127,STATIC.+134	;   ^X7F  SET_31_TO_56
+00458		BICB2 	I^#254,STATIC.+134+4	;   ^XFE  SET_31_TO_56
+						; LINE 142
+00460		BICB2 	STATIC.+56,STATIC.+56	;   SET1  SET1
+						; LINE 143
+0046B		BICB2 	STATIC.+62,STATIC.+56	;   SET4  SET1
+						; LINE 144
+00476		MOVB  	STATIC.+62,STATIC.+56	;   SET4  SET1
+						; LINE 146
+00481		BICW3 	STATIC.+57,STATIC.+59,STATIC.+57
+						;   SET2  SET3  SET2
+						; LINE 147
+00491		BICB2 	STATIC.+56,STATIC.+57	;   SET1  SET2
+						; LINE 148
+0049C		BICW3 	STATIC.+66,STATIC.+59,STATIC.+57
+						;   SET5  SET3  SET2
+						; LINE 150
+004AC		MOVC5 	S^#1,STATIC.+56,S^#0,S^#3,-11(FP)
+						;   SET1
+004B7		MOVL  	S^#2,R0
+004BA	X.10:	BICB3 	-11(FP)[R0],STATIC.+62[R0],STATIC.+59[R0]
+						;   SET4  SET3
+004CA		SOBGEQ	R0,X.10
+						; LINE 151
+004CD		BICW2 	STATIC.+109,STATIC.+59+1;   SET2_L1  SET3
+						; LINE 152
+004D8		BICW3 	STATIC.+59+1,STATIC.+109,-10(FP)
+						;   SET3  SET2_L1
+004E5		CLRB  	STATIC.+59		;   SET3
+004EB		MOVW  	-10(FP),STATIC.+59+1	;   SET3
+						; LINE 154
+004F3		BICB3 	STATIC.+126,STATIC.+56,STATIC.+126
+						;   SET_3_TO_4  SET1  SET_3_TO_4
+00503		BICB2 	S^#7,STATIC.+126	;   SET_3_TO_4
+0050A		BICB2 	I^#224,STATIC.+126	;   ^XE0  SET_3_TO_4
+						; LINE 155
+00512		BICB2 	STATIC.+57,STATIC.+126	;   SET2  SET_3_TO_4
+						; LINE 157
+0051D		BICL2 	STATIC.+92,STATIC.+62	;   SET16  SET4
+						; LINE 158
+00528		MOVL  	S^#1,R0
+0052B	X.11:	BICL2 	STATIC.+84[R0],STATIC.+92[R0]
+						;   SET8  SET16
+00538		SOBGEQ	R0,X.11
+						; LINE 159
+0053B		MOVL  	S^#2,R0
+0053E	X.12:	BICB3 	STATIC.+84+5[R0],STATIC.+111[R0],-11(FP)[R0]
+						;   SET8  SET3_L5
+0054E		SOBGEQ	R0,X.12
+00551		MOVC5 	S^#0,0(SP),S^#0,S^#5,STATIC.+92
+						;   SET16
+0055B		MOVC5 	S^#3,-11(FP),S^#0,S^#11,STATIC.+92+5
+						;   SET16
+						; LINE 161
+00566		BICB3 	STATIC.+134+1,STATIC.+130,-9(FP)
+						;   SET_31_TO_56  SET_32_TO_56
+00573		CLRW  	STATIC.+127		;   SET_20_TO_39
+00579		MOVB  	-9(FP),STATIC.+127+2	;   SET_20_TO_39
+						; LINE 162
+00581		BICL3 	STATIC.+92+4,STATIC.+134+1,STATIC.+130
+						;   SET16  SET_31_TO_56  SET_32_TO_56
+						; LINE 163
+00591		MOVC5 	S^#0,0(SP),S^#0,S^#3,-15(FP)
+00598		MOVL  	STATIC.+134,-12(FP)	;   SET_31_TO_56
+005A0		MOVL  	S^#6,R0
+005A3	X.13:	BICB3 	-15(FP)[R0],STATIC.+92[R0],-15(FP)[R0]
+						;   SET16
+005B0		SOBGEQ	R0,X.13
+005B3		MOVL  	S^#6,R0
+005B6	X.14:	BICB3 	-15(FP)[R0],STATIC.+84[R0],STATIC.+77[R0]
+						;   SET8  SET7
+005C6		SOBGEQ	R0,X.14
+						; LINE 164
+005C9		MOVC5 	S^#0,0(SP),S^#0,S^#3,-15(FP)
+005D0		MOVL  	STATIC.+134,-12(FP)	;   SET_31_TO_56
+005D8		MOVL  	S^#6,R0
+005DB	X.15:	BICB3 	-15(FP)[R0],STATIC.+92[R0],-15(FP)[R0]
+						;   SET16
+005E8		SOBGEQ	R0,X.15
+005EB		MOVL  	S^#6,R0
+005EE	X.16:	BICB3 	STATIC.+84[R0],-15(FP)[R0],STATIC.+77[R0]
+						;   SET8  SET7
+005FE		SOBGEQ	R0,X.16
+						; LINE 165
+00601		MOVC5 	S^#0,0(SP),S^#0,S^#3,-13(FP)
+00608		MOVW  	STATIC.+134,-10(FP)	;   SET_31_TO_56
+00610		MOVL  	S^#4,R0
+00613	X.17:	BICB3 	-13(FP)[R0],STATIC.+92[R0],-13(FP)[R0]
+						;   SET16
+00620		SOBGEQ	R0,X.17
+00623		MOVL  	S^#4,R0
+00626	X.18:	BICB3 	-13(FP)[R0],STATIC.+66[R0],-13(FP)[R0]
+						;   SET5
+00633		SOBGEQ	R0,X.18
+00636		MOVC5 	S^#5,-13(FP),S^#0,S^#7,STATIC.+77
+						;   SET7
+						; LINE 166
+00641		MOVC5 	S^#0,0(SP),S^#0,S^#3,-13(FP)
+00648		MOVW  	STATIC.+134,-10(FP)	;   SET_31_TO_56
+00650		MOVL  	S^#4,R0
+00653	X.19:	BICB3 	-13(FP)[R0],STATIC.+66[R0],-13(FP)[R0]
+						;   SET5
+00660		SOBGEQ	R0,X.19
+00663		MOVL  	S^#4,R0
+00666	X.20:	BICB2 	STATIC.+84[R0],-13(FP)[R0]
+						;   SET8
+00670		SOBGEQ	R0,X.20
+00673		MOVC5 	S^#5,-13(FP),S^#0,S^#7,STATIC.+77
+						;   SET7
+						; LINE 167
+0067E		MOVC5 	S^#0,0(SP),S^#0,S^#3,-13(FP)
+00685		MOVW  	STATIC.+134,-10(FP)	;   SET_31_TO_56
+0068D		MOVL  	S^#4,R0
+00690	X.21:	BICB3 	-13(FP)[R0],STATIC.+66[R0],-13(FP)[R0]
+						;   SET5
+0069D		SOBGEQ	R0,X.21
+006A0		BICL2 	STATIC.+62,-13(FP)	;   SET4
+006A8		MOVC5 	S^#5,-13(FP),S^#0,S^#7,STATIC.+77
+						;   SET7
+						; LINE 168
+006B3		CLRB  	-10(FP)
+006B6		MOVB  	STATIC.+130,-9(FP)	;   SET_32_TO_56
+006BE		BICW2 	STATIC.+134,-10(FP)	;   SET_31_TO_56
+006C6		BICW3 	-10(FP),STATIC.+127+1,-10(FP)
+						;   SET_20_TO_39
+006D0		MOVC5 	S^#2,-10(FP),S^#0,S^#5,STATIC.+134
+						;   SET_31_TO_56
+006DB		BICB2 	I^#127,STATIC.+134	;   ^X7F  SET_31_TO_56
+						; LINE 170
+006E3		PUSHAB	-9(FP)
+006E6		CALLS 	S^#1,B.3
+006EB		MOVB  	-9(FP),STATIC.+56	;   SET1
+						; LINE 171
+006F3		PUSHAB	-24(FP)
+006F6		CALLS 	S^#1,B.4
+006FB		MOVC3 	S^#16,-24(FP),STATIC.+92;   ^X10  SET16
+						; LINE 172
+00704		PUSHAB	-24(FP)
+00707		CALLS 	S^#1,B.4
+0070C		PUSHAB	STATIC.+134		;   SET_31_TO_56
+00712		PUSHAB	STATIC.+119		;   SET7_L2
+00718		PUSHAB	-29(FP)
+0071B		CALLS 	S^#3,B.5
+00720		MOVL  	S^#4,R0
+00723	X.22:	BICB2 	-29(FP)[R0],-21(FP)[R0]
+0072A		SOBGEQ	R0,X.22
+0072D		MOVQ  	-24(FP),STATIC.+84	;   SET8
+						; LINE 173
+00735		PUSHAB	-24(FP)
+00738		CALLS 	S^#1,B.4
+0073D		PUSHAB	-40(FP)
+00740		CALLS 	S^#1,B.4
+00745		PUSHAB	STATIC.+134		;   SET_31_TO_56
+0074B		PUSHAB	STATIC.+119		;   SET7_L2
+00751		PUSHAB	-45(FP)
+00754		CALLS 	S^#3,B.5
+00759		MOVL  	S^#4,R0
+0075C	X.23:	BICB2 	-45(FP)[R0],-37(FP)[R0]
+00763		SOBGEQ	R0,X.23
+00766		MOVL  	S^#3,R0
+00769	X.24:	BICL3 	-40(FP)[R0],-24(FP)[R0],STATIC.+92[R0]
+						;   SET16
+00776		SOBGEQ	R0,X.24
+						; LINE 174
+00779		PUSHAB	-16(FP)
+0077C		CALLS 	S^#1,B.6
+00781		PUSHAB	-32(FP)
+00784		CALLS 	S^#1,B.4
+00789		MOVL  	S^#1,R0
+0078C	X.25:	BICL2 	-32(FP)[R0],-16(FP)[R0]
+00793		SOBGEQ	R0,X.25
+00796		MOVL  	S^#1,R0
+00799	X.26:	BICL2 	-16(FP)[R0],STATIC.+84[R0]
+						;   SET8
+007A3		SOBGEQ	R0,X.26
+						; LINE 175
+007A6		PUSHAB	STATIC.+134		;   SET_31_TO_56
+007AC		PUSHAB	STATIC.+119		;   SET7_L2
+007B2		PUSHAB	-13(FP)
+007B5		CALLS 	S^#3,B.5
+007BA		MOVC5 	S^#0,0(SP),S^#0,S^#3,-18(FP)
+007C1		MOVW  	-13(FP),-15(FP)
+007C6		MOVL  	S^#4,R0
+007C9	X.27:	BICB3 	-18(FP)[R0],STATIC.+66[R0],-18(FP)[R0]
+						;   SET5
+007D6		SOBGEQ	R0,X.27
+007D9		PUSHAB	-34(FP)
+007DC		CALLS 	S^#1,B.4
+007E1		MOVL  	S^#4,R0
+007E4	X.28:	BICB2 	-34(FP)[R0],-18(FP)[R0]
+007EB		SOBGEQ	R0,X.28
+007EE		MOVC5 	S^#5,-18(FP),S^#0,S^#7,STATIC.+77
+						;   SET7
+						; LINE 176
+007F9		PUSHAB	STATIC.+134		;   SET_31_TO_56
+007FF		PUSHAB	STATIC.+119		;   SET7_L2
+00805		PUSHAB	-13(FP)
+00808		CALLS 	S^#3,B.5
+0080D		MOVC5 	S^#0,0(SP),S^#0,S^#3,-18(FP)
+00814		MOVW  	-13(FP),-15(FP)
+00819		MOVL  	S^#4,R0
+0081C	X.29:	BICB3 	-18(FP)[R0],STATIC.+66[R0],-18(FP)[R0]
+						;   SET5
+00829		SOBGEQ	R0,X.29
+0082C		BICL2 	STATIC.+62,-18(FP)	;   SET4
+00834		MOVC5 	S^#5,-18(FP),S^#0,S^#7,STATIC.+77
+						;   SET7
+						; LINE 178
+0083F		INDEX 	STATIC.+4,S^#0,S^#20,S^#16,S^#0,AP
+						;   I  ^X14  ^X10
+0084A		MOVAB 	STATIC.+181,R11		;   A_ARRAY_16
+00851		ADDL2 	AP,R11
+00854		INDEX 	STATIC.+4,S^#0,S^#20,S^#16,S^#0,AP
+						;   I  ^X14  ^X10
+0085F		MOVAB 	STATIC.+517,R10		;   B_ARRAY_16
+00866		ADDL2 	AP,R10
+00869		INDEX 	STATIC.+4,S^#0,S^#20,S^#16,S^#0,AP
+						;   I  ^X14  ^X10
+00874		MOVAB 	STATIC.+181,R9		;   A_ARRAY_16
+0087B		ADDL2 	AP,R9
+0087E		MOVL  	S^#3,R0
+00881	X.30:	BICL3 	0(R9)[R0],0(R10)[R0],0(R11)[R0]
+00888		SOBGEQ	R0,X.30
+0088B		BICB2 	I^#128,15(R11)		;   ^X80
+						; LINE 179
+00890		MOVL  	STATIC.+4,AP		;   I
+00897		MOVL  	STATIC.+4,R11		;   I
+0089E		MOVL  	STATIC.+4,R10		;   I
+008A5		BICB3 	STATIC.+139[R10],STATIC.+160[R11],STATIC.+139[AP]
+						;   A_ARRAY_1  B_ARRAY_1  A_ARRAY_1
+008B8		BICB2 	S^#1,STATIC.+139[AP]	;   A_ARRAY_1
+008C0		BICB2 	I^#128,STATIC.+139[AP]	;   ^X80  A_ARRAY_1
+						; LINE 181
+008C9		MCOMB 	STATIC.+56,R1		;   SET1
+008D0		BICB2 	R1,STATIC.+56		;   SET1
+						; LINE 182
+008D7		MCOMB 	STATIC.+59,R1		;   SET3
+008DE		BICB3 	R1,STATIC.+56,-9(FP)	;   SET1
+008E7		MOVZBW	-9(FP),STATIC.+57	;   SET2
+						; LINE 183
+008EF		MCOMW 	STATIC.+57,R1		;   SET2
+008F6		BICW2 	R1,STATIC.+57		;   SET2
+						; LINE 184
+008FD		MCOMW 	STATIC.+57,R1		;   SET2
+00904		BICW3 	R1,STATIC.+66,-10(FP)	;   SET5
+0090D		MOVC5 	S^#2,-10(FP),S^#0,S^#3,STATIC.+59
+						;   SET3
+						; LINE 185
+00918		MOVL  	S^#2,R0
+0091B	X.31:	MCOMB 	STATIC.+59[R0],R1	;   SET3
+00923		BICB2 	R1,STATIC.+59[R0]	;   SET3
+0092B		SOBGEQ	R0,X.31
+						; LINE 186
+0092E		MOVL  	S^#2,R0
+00931	X.32:	MCOMB 	STATIC.+62[R0],R1	;   SET4
+00939		BICB3 	R1,STATIC.+59[R0],-11(FP)[R0]
+						;   SET3
+00944		SOBGEQ	R0,X.32
+00947		MOVC5 	S^#3,-11(FP),S^#0,S^#5,STATIC.+66
+						;   SET5
+						; LINE 187
+00952		MCOML 	STATIC.+62,R1		;   SET4
+00959		BICL2 	R1,STATIC.+62		;   SET4
+						; LINE 188
+00960		MOVL  	S^#4,R0
+00963	X.33:	MCOMB 	STATIC.+66[R0],R1	;   SET5
+0096B		BICB2 	R1,STATIC.+66[R0]	;   SET5
+00973		SOBGEQ	R0,X.33
+						; LINE 189
+00976		MOVL  	S^#3,R0
+00979	X.34:	MCOML 	K.9[R0],R1
+00981		BICL2 	R1,STATIC.+92[R0]	;   SET16
+00989		SOBGEQ	R0,X.34
+						; LINE 190
+0098C		MOVL  	S^#4,R0
+0098F	X.35:	MCOMB 	STATIC.+66[R0],R1	;   SET5
+00997		BICB3 	R1,STATIC.+77[R0],-13(FP)[R0]
+						;   SET7
+009A2		SOBGEQ	R0,X.35
+009A5		MOVC5 	S^#5,-13(FP),S^#0,S^#16,STATIC.+92
+						;   ^X10  SET16
+						; LINE 191
+009B0		MCOML 	STATIC.+66,R1		;   SET5
+009B7		BICL3 	R1,STATIC.+62,-12(FP)	;   SET4
+009C0		MOVC5 	S^#4,-12(FP),S^#0,S^#16,STATIC.+92
+						;   ^X10  SET16
+						; LINE 193
+009CB		MCOML 	STATIC.+62,R1		;   SET4
+009D2		BICL3 	R1,STATIC.+62,-12(FP)	;   SET4
+009DB		MCOML 	-12(FP),R1
+009DF		BICL2 	R1,STATIC.+62		;   SET4
+						; LINE 194
+009E6		MOVL  	S^#4,R0
+009E9	X.36:	MCOMB 	STATIC.+66[R0],R1	;   SET5
+009F1		BICB3 	R1,STATIC.+66[R0],-13(FP)[R0]
+						;   SET5
+009FC		SOBGEQ	R0,X.36
+009FF		MOVL  	S^#4,R0
+00A02	X.37:	MCOMB 	-13(FP)[R0],R1
+00A07		BICB2 	R1,STATIC.+66[R0]	;   SET5
+00A0F		SOBGEQ	R0,X.37
+						; LINE 195
+00A12		MCOML 	STATIC.+62,R1		;   SET4
+00A19		BICL3 	R1,STATIC.+62,-12(FP)	;   SET4
+00A22		MCOML 	STATIC.+62,R1		;   SET4
+00A29		BICL2 	R1,-12(FP)
+00A2D		MOVC5 	S^#4,-12(FP),S^#0,S^#16,STATIC.+92
+						;   ^X10  SET16
+						; LINE 196
+00A38		MOVL  	S^#4,R0
+00A3B	X.38:	MCOMB 	STATIC.+71[R0],R1	;   SET6
+00A43		BICB3 	R1,STATIC.+66[R0],-13(FP)[R0]
+						;   SET5
+00A4E		SOBGEQ	R0,X.38
+00A51		MOVL  	S^#4,R0
+00A54	X.39:	MCOMB 	STATIC.+66[R0],R1	;   SET5
+00A5C		BICB2 	R1,-13(FP)[R0]
+00A61		SOBGEQ	R0,X.39
+00A64		MOVC5 	S^#5,-13(FP),S^#0,S^#16,STATIC.+92
+						;   ^X10  SET16
+						; LINE 197
+00A6F		MCOML 	STATIC.+66,R1		;   SET5
+00A76		BICL3 	R1,STATIC.+62,-12(FP)	;   SET4
+00A7F		MCOML 	STATIC.+62,R1		;   SET4
+00A86		BICL3 	R1,STATIC.+66,-16(FP)	;   SET5
+00A8F		MCOML 	-16(FP),R1
+00A93		BICL3 	R1,-12(FP),STATIC.+62	;   SET4
+						; LINE 198
+00A9C		MOVL  	S^#4,R0
+00A9F	X.40:	MCOMB 	STATIC.+71[R0],R1	;   SET6
+00AA7		BICB3 	R1,STATIC.+66[R0],-13(FP)[R0]
+						;   SET5
+00AB2		SOBGEQ	R0,X.40
+00AB5		MOVL  	S^#4,R0
+00AB8	X.41:	MCOMB 	STATIC.+66[R0],R1	;   SET5
+00AC0		BICB3 	R1,STATIC.+71[R0],-18(FP)[R0]
+						;   SET6
+00ACB		SOBGEQ	R0,X.41
+00ACE		MOVL  	S^#4,R0
+00AD1	X.42:	MCOMB 	-18(FP)[R0],R1
+00AD6		BICB3 	R1,-13(FP)[R0],STATIC.+66[R0]
+						;   SET5
+00AE1		SOBGEQ	R0,X.42
+						; LINE 199
+00AE4		MCOML 	STATIC.+66,R1		;   SET5
+00AEB		BICL3 	R1,STATIC.+62,-12(FP)	;   SET4
+00AF4		MCOML 	STATIC.+62,R1		;   SET4
+00AFB		BICL3 	R1,STATIC.+66,-16(FP)	;   SET5
+00B04		MCOML 	-16(FP),R1
+00B08		BICL2 	R1,-12(FP)
+00B0C		MOVC5 	S^#4,-12(FP),S^#0,S^#16,STATIC.+92
+						;   ^X10  SET16
+						; LINE 200
+00B17		MOVL  	S^#4,R0
+00B1A	X.43:	MCOMB 	STATIC.+71[R0],R1	;   SET6
+00B22		BICB3 	R1,STATIC.+66[R0],-13(FP)[R0]
+						;   SET5
+00B2D		SOBGEQ	R0,X.43
+00B30		MOVL  	S^#4,R0
+00B33	X.44:	MCOMB 	STATIC.+66[R0],R1	;   SET5
+00B3B		BICB3 	R1,STATIC.+71[R0],-18(FP)[R0]
+						;   SET6
+00B46		SOBGEQ	R0,X.44
+00B49		MOVL  	S^#4,R0
+00B4C	X.45:	MCOMB 	-18(FP)[R0],R1
+00B51		BICB2 	R1,-13(FP)[R0]
+00B56		SOBGEQ	R0,X.45
+00B59		MOVC5 	S^#5,-13(FP),S^#0,S^#16,STATIC.+92
+						;   ^X10  SET16
+						; LINE 201
+00B64		MCOMB 	STATIC.+56,R1		;   SET1
+00B6B		BICB3 	R1,STATIC.+56,-9(FP)	;   SET1
+00B74		MCOMB 	STATIC.+57,R1		;   SET2
+00B7B		BICB3 	R1,-9(FP),STATIC.+56	;   SET1
+						; LINE 202
+00B84		MCOMW 	STATIC.+59,R1		;   SET3
+00B8B		BICW3 	R1,STATIC.+57,-10(FP)	;   SET2
+00B94		MCOMW 	-10(FP),R1
+00B98		BICW2 	R1,STATIC.+57		;   SET2
+						; LINE 203
+00B9F		MCOMB 	STATIC.+56,R1		;   SET1
+00BA6		BICB3 	R1,STATIC.+56,-9(FP)	;   SET1
+00BAF		MCOMB 	STATIC.+57,R1		;   SET2
+00BB6		BICB2 	R1,-9(FP)
+00BBA		MOVC5 	S^#1,-9(FP),S^#0,S^#5,STATIC.+66
+						;   SET5
+						; LINE 204
+00BC5		MCOMW 	STATIC.+59,R1		;   SET3
+00BCC		BICW3 	R1,STATIC.+57,-10(FP)	;   SET2
+00BD5		MCOMW 	STATIC.+57,R1		;   SET2
+00BDC		BICW2 	R1,-10(FP)
+00BE0		MOVC5 	S^#2,-10(FP),S^#0,S^#5,STATIC.+66
+						;   SET5
+						; LINE 206
+00BEB		MCOMB 	STATIC.+108,R1		;   SET1_L2
+00BF2		BICB3 	R1,STATIC.+109+1,-9(FP)	;   SET2_L1
+00BFB		CLRW  	STATIC.+84		;   SET8
+00C01		MOVC5 	S^#1,-9(FP),S^#0,S^#6,STATIC.+84+2
+						;   SET8
+						; LINE 207
+00C0C		CLRB  	-10(FP)
+00C0F		MCOMB 	STATIC.+108,R1		;   SET1_L2
+00C16		BICB3 	R1,STATIC.+109+1,-9(FP)	;   SET2_L1
+00C1F		BICW3 	-10(FP),STATIC.+109,-10(FP)
+						;   SET2_L1
+00C29		CLRB  	STATIC.+84		;   SET8
+00C2F		MOVC5 	S^#2,-10(FP),S^#0,S^#7,STATIC.+84+1
+						;   SET8
+						; LINE 208
+00C3A		CLRL  	-12(FP)
+00C3D		MCOML 	STATIC.+62,R1		;   SET4
+00C44		BICL3 	R1,STATIC.+62,-16(FP)	;   SET4
+00C4D		MOVL  	S^#1,R0
+00C50	X.46:	BICL2 	-16(FP)[R0],STATIC.+84[R0]
+						;   SET8
+00C5A		SOBGEQ	R0,X.46
+						; LINE 209
+00C5D		MOVC5 	S^#0,0(SP),S^#0,S^#5,-15(FP)
+00C64		MCOMW 	STATIC.+111,R1		;   SET3_L5
+00C6B		BICW3 	R1,STATIC.+111,-10(FP)	;   SET3_L5
+00C74		MOVL  	S^#6,R0
+00C77	X.47:	BICB3 	-15(FP)[R0],STATIC.+77[R0],-15(FP)[R0]
+						;   SET7
+00C84		SOBGEQ	R0,X.47
+00C87		MOVC5 	S^#7,-15(FP),S^#0,S^#8,STATIC.+84
+						;   SET8
+						; LINE 210
+00C92		CLRW  	-12(FP)
+00C95		CLRB  	-9(FP)
+00C98		MCOMB 	STATIC.+108,R1		;   SET1_L2
+00C9F		BICB3 	R1,STATIC.+109+1,-10(FP);   SET2_L1
+00CA8		BICL3 	-12(FP),STATIC.+62,-12(FP)
+						;   SET4
+00CB2		MOVC5 	S^#4,-12(FP),S^#0,S^#16,STATIC.+92
+						;   ^X10  SET16
+						; LINE 211
+00CBD		MOVC5 	S^#0,0(SP),S^#0,S^#6,-24(FP)
+00CC4		MOVC5 	S^#0,0(SP),S^#0,S^#7,-15(FP)
+00CCB		MOVL  	S^#2,R0
+00CCE	X.48:	MCOMB 	STATIC.+119+4[R0],R1	;   SET7_L2
+00CD6		BICB3 	R1,STATIC.+114[R0],-18(FP)[R0]
+						;   SET5_L6
+00CE1		SOBGEQ	R0,X.48
+00CE4		MOVL  	S^#3,R0
+00CE7	X.49:	BICL2 	-24(FP)[R0],STATIC.+92[R0]
+						;   SET16
+00CF1		SOBGEQ	R0,X.49
+						; LINE 212
+00CF4		MOVC5 	S^#0,0(SP),S^#0,S^#6,-16(FP)
+00CFB		MCOMW 	STATIC.+119+4,R1	;   SET7_L2
+00D02		BICW3 	R1,STATIC.+114,-10(FP)	;   SET5_L6
+00D0B		MOVL  	S^#1,R0
+00D0E	X.50:	BICL2 	-16(FP)[R0],STATIC.+84[R0]
+						;   SET8
+00D18		SOBGEQ	R0,X.50
+						; LINE 213
+00D1B		CLRL  	-14(FP)
+00D1E		MCOMW 	STATIC.+114,R1		;   SET5_L6
+00D25		BICW3 	R1,STATIC.+119+4,-10(FP);   SET7_L2
+00D2E		MOVL  	S^#2,R0
+00D31	X.51:	BICW3 	-14(FP)[R0],STATIC.+119[R0],-14(FP)[R0]
+						;   SET7_L2
+00D3E		SOBGEQ	R0,X.51
+00D41		CLRW  	STATIC.+84		;   SET8
+00D47		MOVC3 	S^#6,-14(FP),STATIC.+84+2
+						;   SET8
+						; LINE 214
+00D50		MOVL  	S^#2,R0
+00D53	X.52:	MCOMW 	STATIC.+119[R0],R1	;   SET7_L2
+00D5B		BICW3 	R1,STATIC.+119[R0],-14(FP)[R0]
+						;   SET7_L2
+00D66		SOBGEQ	R0,X.52
+00D69		CLRL  	-14(FP)
+00D6C		MCOMW 	STATIC.+114,R1		;   SET5_L6
+00D73		BICW2 	R1,-10(FP)
+00D77		MOVL  	S^#2,R0
+00D7A	X.53:	BICW3 	-14(FP)[R0],STATIC.+119[R0],-14(FP)[R0]
+						;   SET7_L2
+00D87		SOBGEQ	R0,X.53
+00D8A		CLRW  	STATIC.+84		;   SET8
+00D90		MOVC3 	S^#6,-14(FP),STATIC.+84+2
+						;   SET8
+						; LINE 215
+00D99		MOVC5 	S^#0,0(SP),S^#0,S^#6,-16(FP)
+00DA0		MCOMW 	STATIC.+114,R1		;   SET5_L6
+00DA7		BICW3 	R1,STATIC.+84+6,-10(FP)	;   SET8
+00DB0		MCOMW 	STATIC.+114,R1		;   SET5_L6
+00DB7		BICW2 	R1,-10(FP)
+00DBB		MOVL  	S^#1,R0
+00DBE	X.54:	BICL2 	-16(FP)[R0],STATIC.+84[R0]
+						;   SET8
+00DC8		SOBGEQ	R0,X.54
+						; LINE 216
+00DCB		CLRW  	-16(FP)
+00DCE		MOVL  	S^#2,R0
+00DD1	X.55:	MCOMW 	STATIC.+119[R0],R1	;   SET7_L2
+00DD9		BICW3 	R1,STATIC.+84+2[R0],-14(FP)[R0]
+						;   SET8
+00DE4		SOBGEQ	R0,X.55
+00DE7		MOVC5 	S^#0,0(SP),S^#0,S^#6,-16(FP)
+00DEE		MCOMW 	STATIC.+114,R1		;   SET5_L6
+00DF5		BICW2 	R1,-10(FP)
+00DF9		MOVL  	S^#1,R0
+00DFC	X.56:	BICL2 	-16(FP)[R0],STATIC.+84[R0]
+						;   SET8
+00E06		SOBGEQ	R0,X.56
+						; LINE 217
+00E09		MOVC5 	S^#0,0(SP),S^#0,S^#6,-24(FP)
+00E10		CLRQ  	-16(FP)
+00E13		MCOMW 	STATIC.+114,R1		;   SET5_L6
+00E1A		BICW3 	R1,STATIC.+84+6,-18(FP)	;   SET8
+00E23		MOVL  	S^#4,R0
+00E26	X.57:	MCOMB 	STATIC.+114[R0],R1	;   SET5_L6
+00E2E		BICB2 	R1,-18(FP)[R0]
+00E33		SOBGEQ	R0,X.57
+00E36		MOVL  	S^#3,R0
+00E39	X.58:	BICL2 	-24(FP)[R0],STATIC.+92[R0]
+						;   SET16
+00E43		SOBGEQ	R0,X.58
+						; LINE 218
+00E46		CLRW  	-24(FP)
+00E49		CLRQ  	-16(FP)
+00E4C		MOVL  	S^#2,R0
+00E4F	X.59:	MCOMW 	STATIC.+119[R0],R1	;   SET7_L2
+00E57		BICW3 	R1,STATIC.+84+2[R0],-22(FP)[R0]
+						;   SET8
+00E62		SOBGEQ	R0,X.59
+00E65		MOVC5 	S^#0,0(SP),S^#0,S^#6,-24(FP)
+00E6C		MOVL  	S^#4,R0
+00E6F	X.60:	MCOMB 	STATIC.+114[R0],R1	;   SET5_L6
+00E77		BICB2 	R1,-18(FP)[R0]
+00E7C		SOBGEQ	R0,X.60
+00E7F		MOVL  	S^#3,R0
+00E82	X.61:	BICL2 	-24(FP)[R0],STATIC.+92[R0]
+						;   SET16
+00E8C		SOBGEQ	R0,X.61
+						; LINE 220
+00E8F		MOVB  	K.10,STATIC.+56		;   SET1
+						; LINE 221
+00E9A		MOVB  	K.11,STATIC.+56		;   SET1
+						; LINE 222
+00EA5		MOVB  	K.12,STATIC.+56		;   SET1
+						; LINE 223
+00EB0		MOVB  	S^#24,STATIC.+56	;   ^X18  SET1
+						; LINE 224
+00EB7		MOVB  	S^#24,STATIC.+126	;   ^X18  SET_3_TO_4
+						; LINE 225
+00EBE		MOVB  	I^#127,STATIC.+56	;   ^X7F  SET1
+						; LINE 226
+00EC6		PUSHL 	S^#1
+00EC8		PUSHAB	STATIC.+56		;   SET1
+00ECE		PUSHL 	S^#0
+00ED0		PUSHL 	STATIC.+32		;   I_0_TO_7
+00ED6		PUSHL 	STATIC.+40		;   I_MIN10_TO_7
+00EDC		CALLS 	S^#5,PAX$UTL.GENSET
+						; LINE 227
+00EE3		MOVB  	S^#24,STATIC.+126	;   ^X18  SET_3_TO_4
+						; LINE 228
+00EEA		CLRB  	STATIC.+126		;   SET_3_TO_4
+00EF0		INSV  	S^#1,STATIC.+32,S^#1,STATIC.+126
+						;   I_0_TO_7  SET_3_TO_4
+00EFD		BICB2 	S^#7,STATIC.+126	;   SET_3_TO_4
+00F04		BICB2 	I^#224,STATIC.+126	;   ^XE0  SET_3_TO_4
+						; LINE 229
+00F0C		MOVC3 	S^#3,K.13,STATIC.+59	;   SET3
+						; LINE 230
+00F18		MOVC3 	S^#3,K.14,STATIC.+59	;   SET3
+						; LINE 231
+00F24		MOVL  	I^#4294967295,STATIC.+62;   ^XFFFFFFFF  SET4
+						; LINE 232
+00F2F		MOVL  	I^#2113929216,STATIC.+62;   ^X7E000000  SET4
+						; LINE 233
+00F3A		MOVC3 	S^#5,K.15,STATIC.+66	;   SET5
+						; LINE 234
+00F46		MOVC3 	S^#5,K.16,STATIC.+134	;   SET_31_TO_56
+						; LINE 235
+00F52		MOVC3 	S^#5,K.17,STATIC.+134	;   SET_31_TO_56
+						; LINE 236
+00F5E		MOVC3 	S^#16,K.18,STATIC.+92	;   ^X10  SET16
+						; LINE 237
+00F6A		MOVC3 	S^#16,K.19,STATIC.+92	;   ^X10  SET16
+						; LINE 238
+00F76		MOVW  	K.20,STATIC.+57		;   SET2
+						; LINE 239
+00F81		MOVW  	I^#32766,STATIC.+57	;   ^X7FFE  SET2
+						; LINE 240
+00F8A		MOVC3 	S^#5,K.21,STATIC.+114	;   SET5_L6
+						; LINE 242
+00F96		BISB2 	STATIC.+56,STATIC.+56	;   SET1  SET1
+						; LINE 243
+00FA1		BISB3 	STATIC.+59,STATIC.+57,STATIC.+56
+						;   SET3  SET2  SET1
+						; LINE 244
+00FB1		BISW2 	STATIC.+59,STATIC.+57	;   SET3  SET2
+						; LINE 245
+00FBC		BISW3 	STATIC.+62,STATIC.+59,STATIC.+57
+						;   SET4  SET3  SET2
+						; LINE 246
+00FCC		MOVL  	S^#2,R0
+00FCF	X.62:	BISB3 	STATIC.+66[R0],STATIC.+62[R0],STATIC.+59[R0]
+						;   SET5  SET4  SET3
+00FE2		SOBGEQ	R0,X.62
+						; LINE 247
+00FE5		BISL2 	STATIC.+71,STATIC.+62	;   SET6  SET4
+						; LINE 248
+00FF0		MOVL  	S^#4,R0
+00FF3	X.63:	BISB3 	STATIC.+77[R0],STATIC.+71[R0],STATIC.+66[R0]
+						;   SET7  SET6  SET5
+01006		SOBGEQ	R0,X.63
+						; LINE 249
+01009		PUSHAB	-24(FP)
+0100C		CALLS 	S^#1,B.4
+01011		MOVL  	S^#3,R0
+01014	X.64:	BISL2 	-24(FP)[R0],STATIC.+92[R0]
+						;   SET16
+0101E		SOBGEQ	R0,X.64
+						; LINE 250
+01021		BISB3 	STATIC.+126,STATIC.+57,STATIC.+56
+						;   SET_3_TO_4  SET2  SET1
+						; LINE 251
+01031		BISB3 	STATIC.+57,STATIC.+126,STATIC.+56
+						;   SET2  SET_3_TO_4  SET1
+						; LINE 252
+01041		MOVC5 	S^#8,STATIC.+84,S^#0,S^#16,-24(FP)
+						;   SET8  ^X10
+0104C		MOVL  	S^#6,R0
+0104F	X.65:	BISB2 	STATIC.+77[R0],-24(FP)[R0]
+						;   SET7
+01059		SOBGEQ	R0,X.65
+0105C		MOVL  	S^#3,R0
+0105F	X.66:	BICL2 	-24(FP)[R0],STATIC.+92[R0]
+						;   SET16
+01069		SOBGEQ	R0,X.66
+						; LINE 253
+0106C		MOVC5 	S^#0,0(SP),S^#0,S^#5,-24(FP)
+01073		MOVC5 	S^#3,STATIC.+111,S^#0,S^#11,-19(FP)
+						;   SET3_L5
+0107E		MOVL  	S^#4,R0
+01081	X.67:	BISB2 	STATIC.+114[R0],-18(FP)[R0]
+						;   SET5_L6
+0108B		SOBGEQ	R0,X.67
+0108E		MOVL  	S^#3,R0
+01091	X.68:	BICL2 	-24(FP)[R0],STATIC.+92[R0]
+						;   SET16
+0109B		SOBGEQ	R0,X.68
+						; LINE 254
+0109E		MOVC5 	S^#0,0(SP),S^#0,S^#6,-24(FP)
+010A5		MOVC5 	S^#5,STATIC.+114,S^#0,S^#10,-18(FP)
+						;   SET5_L6
+010B0		MOVL  	S^#2,R0
+010B3	X.69:	BISB2 	STATIC.+111[R0],-19(FP)[R0]
+						;   SET3_L5
+010BD		SOBGEQ	R0,X.69
+010C0		MOVL  	S^#3,R0
+010C3	X.70:	BICL2 	-24(FP)[R0],STATIC.+92[R0]
+						;   SET16
+010CD		SOBGEQ	R0,X.70
+						; LINE 255
+010D0		BISL3 	STATIC.+71,STATIC.+66,-12(FP)
+						;   SET6  SET5
+010DD		BISL2 	STATIC.+84,-12(FP)	;   SET8
+010E5		BISL2 	-12(FP),STATIC.+62	;   SET4
+						; LINE 256
+010ED		BISL3 	STATIC.+71,STATIC.+66,-12(FP)
+						;   SET6  SET5
+010FA		BISL2 	STATIC.+84,-12(FP)	;   SET8
+01102		BISL2 	STATIC.+62,-12(FP)	;   SET4
+0110A		BISL2 	STATIC.+62,-12(FP)	;   SET4
+01112		BISL3 	STATIC.+84,-12(FP),STATIC.+62
+						;   SET8  SET4
+						; LINE 257
+0111F		BISL3 	STATIC.+71,STATIC.+66,-12(FP)
+						;   SET6  SET5
+0112C		BISL3 	STATIC.+84,-12(FP),STATIC.+62
+						;   SET8  SET4
+						; LINE 258
+01139		BISL3 	STATIC.+71,STATIC.+66,-12(FP)
+						;   SET6  SET5
+01146		BISL2 	STATIC.+84,-12(FP)	;   SET8
+0114E		BISL2 	STATIC.+62,-12(FP)	;   SET4
+01156		BISL3 	STATIC.+84,-12(FP),STATIC.+62
+						;   SET8  SET4
+						; LINE 260
+01163		MOVC5 	S^#1,STATIC.+62+3,S^#0,S^#5,-13(FP)
+						;   SET4
+0116E		MOVL  	S^#4,R0
+01171	X.71:	BISB2 	STATIC.+119+1[R0],-13(FP)[R0]
+						;   SET7_L2
+0117B		SOBGEQ	R0,X.71
+0117E		MOVC5 	S^#0,0(SP),S^#0,S^#3,-18(FP)
+01185		MCOMW 	STATIC.+114,R1		;   SET5_L6
+0118C		BICW3 	R1,STATIC.+111+1,-15(FP);   SET3_L5
+01195		MOVL  	S^#4,R0
+01198	X.72:	BISB2 	-18(FP)[R0],-13(FP)[R0]
+0119F		SOBGEQ	R0,X.72
+011A2		BICW2 	STATIC.+127+1,-13(FP)	;   SET_20_TO_39
+011AA		MOVC3 	S^#5,-13(FP),STATIC.+134;   SET_31_TO_56
+011B3		BICB2 	I^#127,STATIC.+134	;   ^X7F  SET_31_TO_56
+011BB		BICB2 	I^#254,STATIC.+134+4	;   ^XFE  SET_31_TO_56
+						; LINE 261
+011C3		MOVC5 	S^#1,STATIC.+62+3,S^#0,S^#5,-13(FP)
+						;   SET4
+011CE		MOVL  	S^#4,R0
+011D1	X.73:	BISB2 	STATIC.+119+1[R0],-13(FP)[R0]
+						;   SET7_L2
+011DB		SOBGEQ	R0,X.73
+011DE		MOVC5 	S^#0,0(SP),S^#0,S^#3,-18(FP)
+011E5		MCOMW 	STATIC.+114,R1		;   SET5_L6
+011EC		BICW3 	R1,STATIC.+111+1,-15(FP);   SET3_L5
+011F5		MOVL  	S^#4,R0
+011F8	X.74:	BISB3 	-18(FP)[R0],-13(FP)[R0],STATIC.+134[R0]
+						;   SET_31_TO_56
+01205		SOBGEQ	R0,X.74
+01208		BICB2 	I^#127,STATIC.+134	;   ^X7F  SET_31_TO_56
+01210		BICB2 	I^#254,STATIC.+134+4	;   ^XFE  SET_31_TO_56
+						; LINE 262
+01218		MOVC5 	S^#1,STATIC.+62+3,S^#0,S^#5,-13(FP)
+						;   SET4
+01223		MOVL  	S^#4,R0
+01226	X.75:	BISB2 	STATIC.+119+1[R0],-13(FP)[R0]
+						;   SET7_L2
+01230		SOBGEQ	R0,X.75
+01233		MOVC5 	S^#0,0(SP),S^#0,S^#3,-18(FP)
+0123A		MCOMW 	STATIC.+114,R1		;   SET5_L6
+01241		BICW3 	R1,STATIC.+111+1,-15(FP);   SET3_L5
+0124A		MOVL  	S^#4,R0
+0124D	X.76:	BISB2 	-18(FP)[R0],-13(FP)[R0]
+01254		SOBGEQ	R0,X.76
+01257		MOVC3 	S^#5,-13(FP),STATIC.+134;   SET_31_TO_56
+01260		BICB2 	I^#127,STATIC.+134	;   ^X7F  SET_31_TO_56
+01268		BICB2 	I^#254,STATIC.+134+4	;   ^XFE  SET_31_TO_56
+						; LINE 263
+01270		MOVC5 	S^#1,STATIC.+62+3,S^#0,S^#5,-13(FP)
+						;   SET4
+0127B		MOVL  	S^#4,R0
+0127E	X.77:	BISB2 	STATIC.+119+1[R0],-13(FP)[R0]
+						;   SET7_L2
+01288		SOBGEQ	R0,X.77
+0128B		MOVC5 	S^#0,0(SP),S^#0,S^#3,-18(FP)
+01292		MCOMW 	STATIC.+114,R1		;   SET5_L6
+01299		BICW3 	R1,STATIC.+111+1,-15(FP);   SET3_L5
+012A2		MOVL  	S^#4,R0
+012A5	X.78:	BISB2 	-18(FP)[R0],-13(FP)[R0]
+012AC		SOBGEQ	R0,X.78
+012AF		BISB2 	I^#128,-13(FP)		;   ^X80
+012B4		MOVC3 	S^#5,-13(FP),STATIC.+134;   SET_31_TO_56
+012BD		BICB2 	I^#127,STATIC.+134	;   ^X7F  SET_31_TO_56
+012C5		BICB2 	I^#254,STATIC.+134+4	;   ^XFE  SET_31_TO_56
+						; LINE 264
+012CD		MOVC5 	S^#1,STATIC.+62+3,S^#0,S^#5,-13(FP)
+						;   SET4
+012D8		MOVL  	S^#4,R0
+012DB	X.79:	BISB2 	STATIC.+119+1[R0],-13(FP)[R0]
+						;   SET7_L2
+012E5		SOBGEQ	R0,X.79
+012E8		MOVC5 	S^#0,0(SP),S^#0,S^#3,-18(FP)
+012EF		MCOMW 	STATIC.+114,R1		;   SET5_L6
+012F6		BICW3 	R1,STATIC.+111+1,-15(FP);   SET3_L5
+012FF		MOVL  	S^#4,R0
+01302	X.80:	BISB2 	-18(FP)[R0],-13(FP)[R0]
+01309		SOBGEQ	R0,X.80
+0130C		MOVL  	S^#4,R0
+0130F	X.81:	BISB3 	K.22[R0],-13(FP)[R0],STATIC.+134[R0]
+						;   SET_31_TO_56
+0131F		SOBGEQ	R0,X.81
+01322		BICB2 	I^#127,STATIC.+134	;   ^X7F  SET_31_TO_56
+0132A		BICB2 	I^#254,STATIC.+134+4	;   ^XFE  SET_31_TO_56
+						; LINE 266
+01332		BISB2 	K.23,STATIC.+56		;   SET1
+						; LINE 267
+0133D		BISB3 	K.24,STATIC.+57,STATIC.+56
+						;   SET2  SET1
+						; LINE 268
+0134D		MOVZBW	K.25,-10(FP)
+01355		BISW2 	-10(FP),STATIC.+57	;   SET2
+						; LINE 269
+0135D		MOVZBW	K.26,-10(FP)
+01365		BISW3 	STATIC.+59,-10(FP),STATIC.+57
+						;   SET3  SET2
+						; LINE 270
+01372		BISW3 	K.27,STATIC.+59,STATIC.+57
+						;   SET3  SET2
+						; LINE 271
+01382		BISW3 	K.28,STATIC.+59,STATIC.+57
+						;   SET3  SET2
+						; LINE 272
+01392		MOVC5 	S^#8,K.29,S^#0,S^#16,-24(FP)
+						;   ^X10
+0139D		MOVL  	S^#3,R0
+013A0	X.82:	BISL2 	-24(FP)[R0],STATIC.+92[R0]
+						;   SET16
+013AA		SOBGEQ	R0,X.82
+						; LINE 273
+013AD		PUSHAB	-24(FP)
+013B0		CALLS 	S^#1,B.4
+013B5		MOVL  	S^#1,R0
+013B8	X.83:	BISL2 	K.30[R0],-24(FP)[R0]
+013C2		SOBGEQ	R0,X.83
+013C5		MOVC3 	S^#16,-24(FP),STATIC.+92;   ^X10  SET16
+						; LINE 274
+013CE		PUSHAB	-24(FP)
+013D1		CALLS 	S^#1,B.4
+013D6		MOVL  	S^#3,R0
+013D9	X.84:	BISL3 	K.31[R0],-24(FP)[R0],STATIC.+92[R0]
+						;   SET16
+013E9		SOBGEQ	R0,X.84
+						; LINE 275
+013EC		MOVB  	S^#1,STATIC.+56		;   SET1
+						; LINE 276
+013F3		MOVB  	I^#128,STATIC.+56	;   ^X80  SET1
+						; LINE 277
+013FB		CLRB  	STATIC.+56		;   SET1
+						; LINE 278
+01401		CLRB  	STATIC.+56		;   SET1
+						; LINE 279
+01407		CLRB  	STATIC.+56		;   SET1
+0140D		MOVL  	STATIC.+4,R0		;   I
+01414		BLSS  	X.85
+01416		CMPL  	R0,S^#8
+01419		BGEQ  	X.85
+0141B		INSV  	S^#1,R0,S^#1,STATIC.+56	;   SET1
+01424	X.85:					; LINE 280
+01424		CLRB  	STATIC.+56		;   SET1
+0142A		INSV  	S^#1,STATIC.+32,S^#1,STATIC.+56
+						;   I_0_TO_7  SET1
+						; LINE 281
+01437		CLRB  	STATIC.+56		;   SET1
+0143D		CMPL  	STATIC.+36,S^#8		;   I_0_TO_20
+01444		BGEQ  	X.86
+01446		INSV  	S^#1,STATIC.+36,S^#1,STATIC.+56
+						;   I_0_TO_20  SET1
+01453	X.86:					; LINE 282
+01453		CLRB  	STATIC.+56		;   SET1
+01459		MOVL  	STATIC.+40,R0		;   I_MIN10_TO_7
+01460		BLSS  	X.87
+01462		INSV  	S^#1,R0,S^#1,STATIC.+56	;   SET1
+0146B	X.87:					; LINE 284
+0146B		CLRB  	STATIC.+126		;   SET_3_TO_4
+01471		INSV  	S^#1,STATIC.+32,S^#1,STATIC.+126
+						;   I_0_TO_7  SET_3_TO_4
+0147E		BICB2 	S^#7,STATIC.+126	;   SET_3_TO_4
+01485		BICB2 	I^#224,STATIC.+126	;   ^XE0  SET_3_TO_4
+						; LINE 285
+0148D		MOVW  	I^#256,STATIC.+57	;   ^X100  SET2
+						; LINE 286
+01496		MOVW  	I^#512,STATIC.+57	;   ^X200  SET2
+						; LINE 287
+0149F		MOVC5 	S^#0,0(SP),S^#0,S^#3,STATIC.+59
+						;   SET3
+014A9		BISB2 	I^#128,STATIC.+59+2	;   ^X80  SET3
+						; LINE 288
+014B1		MOVL  	I^#2147483648,STATIC.+62;   ^X80000000  SET4
+						; LINE 289
+014BC		MOVC5 	S^#0,0(SP),S^#0,S^#16,STATIC.+92
+						;   ^X10  SET16
+014C6		BISB2 	I^#128,STATIC.+92+15	;   ^X80  SET16
+						; LINE 290
+014CE		MOVC5 	S^#0,0(SP),S^#0,S^#15,STATIC.+92
+						;   SET16
+014D8		MOVB  	K.32,STATIC.+92+15	;   SET16
+						; LINE 291
+014E3		MOVC5 	S^#0,0(SP),S^#0,S^#5,STATIC.+114
+						;   SET5_L6
+014ED		BISB2 	S^#1,STATIC.+114	;   SET5_L6
+						; LINE 292
+014F4		MOVC5 	S^#0,0(SP),S^#0,S^#5,STATIC.+114
+						;   SET5_L6
+014FE		SUBL3 	S^#48,STATIC.+4,R0	;   ^X30  I
+01506		BLSS  	X.88
+01508		CMPL  	R0,S^#40		;   ^X28
+0150B		BGEQ  	X.88
+0150D		INSV  	S^#1,R0,S^#1,STATIC.+114;   SET5_L6
+01516	X.88:					; LINE 293
+01516		MOVC5 	S^#0,0(SP),S^#0,S^#5,STATIC.+114
+						;   SET5_L6
+01520		SUBL3 	S^#48,STATIC.+44,R0	;   ^X30  I_48_TO_100
+01528		CMPL  	R0,S^#40		;   ^X28
+0152B		BGEQ  	X.89
+0152D		INSV  	S^#1,R0,S^#1,STATIC.+114;   SET5_L6
+01536	X.89:					; LINE 294
+01536		MOVC5 	S^#0,0(SP),S^#0,S^#5,STATIC.+114
+						;   SET5_L6
+01540		SUBL3 	S^#48,STATIC.+48,R0	;   ^X30  I_0_TO_55
+01548		BLSS  	X.90
+0154A		INSV  	S^#1,R0,S^#1,STATIC.+114;   SET5_L6
+01553	X.90:					; LINE 295
+01553		MOVC5 	S^#0,0(SP),S^#0,S^#5,STATIC.+134
+						;   SET_31_TO_56
+0155D		BISB2 	S^#1,STATIC.+134+1	;   SET_31_TO_56
+						; LINE 296
+01564		MOVC5 	S^#0,0(SP),S^#0,S^#5,STATIC.+134
+						;   SET_31_TO_56
+0156E		SUBL3 	S^#24,STATIC.+4,R0	;   ^X18  I
+01576		BLSS  	X.91
+01578		CMPL  	R0,S^#40		;   ^X28
+0157B		BGEQ  	X.91
+0157D		INSV  	S^#1,R0,S^#1,STATIC.+134;   SET_31_TO_56
+01586	X.91:	BICB2 	I^#127,STATIC.+134	;   ^X7F  SET_31_TO_56
+0158E		BICB2 	I^#254,STATIC.+134+4	;   ^XFE  SET_31_TO_56
+						; LINE 297
+01596		MOVC5 	S^#0,0(SP),S^#0,S^#5,STATIC.+134
+						;   SET_31_TO_56
+015A0		SUBL3 	S^#24,STATIC.+44,R0	;   ^X18  I_48_TO_100
+015A8		CMPL  	R0,S^#40		;   ^X28
+015AB		BGEQ  	X.92
+015AD		INSV  	S^#1,R0,S^#1,STATIC.+134;   SET_31_TO_56
+015B6	X.92:	BICB2 	I^#254,STATIC.+134+4	;   ^XFE  SET_31_TO_56
+						; LINE 298
+015BE		MOVC5 	S^#0,0(SP),S^#0,S^#5,STATIC.+134
+						;   SET_31_TO_56
+015C8		SUBL3 	S^#24,STATIC.+48,R0	;   ^X18  I_0_TO_55
+015D0		BLSS  	X.93
+015D2		INSV  	S^#1,R0,S^#1,STATIC.+134;   SET_31_TO_56
+015DB	X.93:	BICB2 	I^#127,STATIC.+134	;   ^X7F  SET_31_TO_56
+						; LINE 299
+015E3		SUBL3 	S^#24,STATIC.+4,R0	;   ^X18  I
+015EB		BLSS  	X.94
+015ED		CMPL  	R0,S^#40		;   ^X28
+015F0		BGEQ  	X.94
+015F2		INSV  	S^#0,R0,S^#1,STATIC.+134;   SET_31_TO_56
+015FB	X.94:					; LINE 300
+015FB		SUBL3 	S^#24,STATIC.+44,R0	;   ^X18  I_48_TO_100
+01603		CMPL  	R0,S^#40		;   ^X28
+01606		BGEQ  	X.95
+01608		INSV  	S^#0,R0,S^#1,STATIC.+134;   SET_31_TO_56
+01611	X.95:					; LINE 301
+01611		SUBL3 	S^#24,STATIC.+48,R0	;   ^X18  I_0_TO_55
+01619		BLSS  	X.96
+0161B		INSV  	S^#0,R0,S^#1,STATIC.+134;   SET_31_TO_56
+01624	X.96:					; LINE 302
+01624		MOVC3 	S^#5,STATIC.+119+1,STATIC.+134
+						;   SET7_L2  SET_31_TO_56
+01630		SUBL3 	S^#24,STATIC.+4,R0	;   ^X18  I
+01638		BLSS  	X.97
+0163A		CMPL  	R0,S^#40		;   ^X28
+0163D		BGEQ  	X.97
+0163F		INSV  	S^#0,R0,S^#1,STATIC.+134;   SET_31_TO_56
+01648	X.97:	BICB2 	I^#127,STATIC.+134	;   ^X7F  SET_31_TO_56
+01650		BICB2 	I^#254,STATIC.+134+4	;   ^XFE  SET_31_TO_56
+						; LINE 303
+01658		MOVC3 	S^#5,STATIC.+119+1,STATIC.+134
+						;   SET7_L2  SET_31_TO_56
+01664		SUBL3 	S^#24,STATIC.+44,R0	;   ^X18  I_48_TO_100
+0166C		CMPL  	R0,S^#40		;   ^X28
+0166F		BGEQ  	X.98
+01671		INSV  	S^#0,R0,S^#1,STATIC.+134;   SET_31_TO_56
+0167A	X.98:	BICB2 	I^#127,STATIC.+134	;   ^X7F  SET_31_TO_56
+01682		BICB2 	I^#254,STATIC.+134+4	;   ^XFE  SET_31_TO_56
+						; LINE 304
+0168A		MOVC3 	S^#5,STATIC.+119+1,STATIC.+134
+						;   SET7_L2  SET_31_TO_56
+01696		SUBL3 	S^#24,STATIC.+48,R0	;   ^X18  I_0_TO_55
+0169E		BLSS  	X.99
+016A0		INSV  	S^#0,R0,S^#1,STATIC.+134;   SET_31_TO_56
+016A9	X.99:	BICB2 	I^#127,STATIC.+134	;   ^X7F  SET_31_TO_56
+016B1		BICB2 	I^#254,STATIC.+134+4	;   ^XFE  SET_31_TO_56
+						; LINE 305
+016B9		MOVL  	S^#4,R0
+016BC	X.100:	BISB3 	STATIC.+119+1[R0],STATIC.+119+1[R0],-13(FP)[R0]
+						;   SET7_L2  SET7_L2
+016CC		SOBGEQ	R0,X.100
+016CF		SUBL3 	S^#24,STATIC.+4,R0	;   ^X18  I
+016D7		BLSS  	X.101
+016D9		CMPL  	R0,S^#40		;   ^X28
+016DC		BGEQ  	X.101
+016DE		INSV  	S^#0,R0,S^#1,-13(FP)
+016E4	X.101:	MOVC3 	S^#5,-13(FP),STATIC.+134;   SET_31_TO_56
+016ED		BICB2 	I^#127,STATIC.+134	;   ^X7F  SET_31_TO_56
+016F5		BICB2 	I^#254,STATIC.+134+4	;   ^XFE  SET_31_TO_56
+						; LINE 306
+016FD		CLRB  	-15(FP)
+01700		MOVC5 	S^#5,STATIC.+134,S^#0,S^#6,-14(FP)
+						;   SET_31_TO_56
+0170B		MOVL  	S^#4,R0
+0170E	X.102:	BISB2 	STATIC.+134[R0],-14(FP)[R0]
+						;   SET_31_TO_56
+01718		SOBGEQ	R0,X.102
+0171B		SUBL3 	S^#16,STATIC.+4,R0	;   ^X10  I
+01723		BLSS  	X.103
+01725		CMPL  	R0,S^#56		;   ^X38
+01728		BGEQ  	X.103
+0172A		INSV  	S^#0,R0,S^#1,-15(FP)
+01730	X.103:	MOVL  	S^#6,R0
+01733	X.104:	BICB2 	-15(FP)[R0],STATIC.+119[R0]
+						;   SET7_L2
+0173D		SOBGEQ	R0,X.104
+						; LINE 307
+01740		MOVC3 	S^#7,STATIC.+119,-15(FP);   SET7_L2
+01749		SUBL3 	S^#16,STATIC.+4,R0	;   ^X10  I
+01751		BLSS  	X.105
+01753		CMPL  	R0,S^#56		;   ^X38
+01756		BGEQ  	X.105
+01758		INSV  	S^#0,R0,S^#1,-15(FP)
+0175E	X.105:	MOVL  	S^#6,R0
+01761	X.106:	BICB2 	-15(FP)[R0],STATIC.+119[R0]
+						;   SET7_L2
+0176B		SOBGEQ	R0,X.106
+						; LINE 308
+0176E		CLRB  	-15(FP)
+01771		MOVC5 	S^#5,STATIC.+134,S^#0,S^#6,-14(FP)
+						;   SET_31_TO_56
+0177C		SUBL3 	S^#16,STATIC.+4,R0	;   ^X10  I
+01784		BLSS  	X.107
+01786		CMPL  	R0,S^#56		;   ^X38
+01789		BGEQ  	X.107
+0178B		INSV  	S^#0,R0,S^#1,-15(FP)
+01791	X.107:	MOVL  	S^#6,R0
+01794	X.108:	BICB2 	-15(FP)[R0],STATIC.+119[R0]
+						;   SET7_L2
+0179E		SOBGEQ	R0,X.108
+						; LINE 310
+017A1		BISB3 	STATIC.+59,STATIC.+57,STATIC.+56
+						;   SET3  SET2  SET1
+017B1		BISB2 	K.33,STATIC.+56		;   SET1
+						; LINE 311
+017BC		BISB2 	STATIC.+57,STATIC.+56	;   SET2  SET1
+017C7		BISB2 	K.34,STATIC.+56		;   SET1
+						; LINE 312
+017D2		SUBL3 	S^#24,STATIC.+4,R0	;   ^X18  I
+017DA		BLSS  	X.109
+017DC		CMPL  	R0,S^#40		;   ^X28
+017DF		BGEQ  	X.109
+017E1		INSV  	S^#1,R0,S^#1,STATIC.+134;   SET_31_TO_56
+017EA	X.109:	BICB2 	I^#127,STATIC.+134	;   ^X7F  SET_31_TO_56
+017F2		BICB2 	I^#254,STATIC.+134+4	;   ^XFE  SET_31_TO_56
+						; LINE 313
+017FA		SUBL3 	S^#24,STATIC.+44,R0	;   ^X18  I_48_TO_100
+01802		CMPL  	R0,S^#40		;   ^X28
+01805		BGEQ  	X.110
+01807		INSV  	S^#1,R0,S^#1,STATIC.+134;   SET_31_TO_56
+01810	X.110:	BICB2 	I^#254,STATIC.+134+4	;   ^XFE  SET_31_TO_56
+						; LINE 314
+01818		SUBL3 	S^#24,STATIC.+48,R0	;   ^X18  I_0_TO_55
+01820		BLSS  	X.111
+01822		INSV  	S^#1,R0,S^#1,STATIC.+134;   SET_31_TO_56
+0182B	X.111:	BICB2 	I^#127,STATIC.+134	;   ^X7F  SET_31_TO_56
+						; LINE 315
+01833		MOVC3 	S^#5,STATIC.+119+1,STATIC.+134
+						;   SET7_L2  SET_31_TO_56
+0183F		SUBL3 	S^#24,STATIC.+4,R0	;   ^X18  I
+01847		BLSS  	X.112
+01849		CMPL  	R0,S^#40		;   ^X28
+0184C		BGEQ  	X.112
+0184E		INSV  	S^#1,R0,S^#1,STATIC.+134;   SET_31_TO_56
+01857	X.112:	BICB2 	I^#127,STATIC.+134	;   ^X7F  SET_31_TO_56
+0185F		BICB2 	I^#254,STATIC.+134+4	;   ^XFE  SET_31_TO_56
+						; LINE 316
+01867		MOVC3 	S^#5,STATIC.+119+1,STATIC.+134
+						;   SET7_L2  SET_31_TO_56
+01873		SUBL3 	S^#24,STATIC.+44,R0	;   ^X18  I_48_TO_100
+0187B		CMPL  	R0,S^#40		;   ^X28
+0187E		BGEQ  	X.113
+01880		INSV  	S^#1,R0,S^#1,STATIC.+134;   SET_31_TO_56
+01889	X.113:	BICB2 	I^#127,STATIC.+134	;   ^X7F  SET_31_TO_56
+01891		BICB2 	I^#254,STATIC.+134+4	;   ^XFE  SET_31_TO_56
+						; LINE 317
+01899		MOVC3 	S^#5,STATIC.+119+1,STATIC.+134
+						;   SET7_L2  SET_31_TO_56
+018A5		SUBL3 	S^#24,STATIC.+48,R0	;   ^X18  I_0_TO_55
+018AD		BLSS  	X.114
+018AF		INSV  	S^#1,R0,S^#1,STATIC.+134;   SET_31_TO_56
+018B8	X.114:	BICB2 	I^#127,STATIC.+134	;   ^X7F  SET_31_TO_56
+018C0		BICB2 	I^#254,STATIC.+134+4	;   ^XFE  SET_31_TO_56
+						; LINE 318
+018C8		MOVL  	S^#4,R0
+018CB	X.115:	BISB3 	STATIC.+119+1[R0],STATIC.+119+1[R0],-13(FP)[R0]
+						;   SET7_L2  SET7_L2
+018DB		SOBGEQ	R0,X.115
+018DE		SUBL3 	S^#24,STATIC.+4,R0	;   ^X18  I
+018E6		BLSS  	X.116
+018E8		CMPL  	R0,S^#40		;   ^X28
+018EB		BGEQ  	X.116
+018ED		INSV  	S^#1,R0,S^#1,-13(FP)
+018F3	X.116:	MOVC3 	S^#5,-13(FP),STATIC.+134;   SET_31_TO_56
+018FC		BICB2 	I^#127,STATIC.+134	;   ^X7F  SET_31_TO_56
+01904		BICB2 	I^#254,STATIC.+134+4	;   ^XFE  SET_31_TO_56
+						; LINE 319
+0190C		CLRB  	-15(FP)
+0190F		MOVC5 	S^#5,STATIC.+134,S^#0,S^#6,-14(FP)
+						;   SET_31_TO_56
+0191A		MOVL  	S^#4,R0
+0191D	X.117:	BISB2 	STATIC.+134[R0],-14(FP)[R0]
+						;   SET_31_TO_56
+01927		SOBGEQ	R0,X.117
+0192A		SUBL3 	S^#16,STATIC.+4,R0	;   ^X10  I
+01932		BLSS  	X.118
+01934		CMPL  	R0,S^#56		;   ^X38
+01937		BGEQ  	X.118
+01939		INSV  	S^#1,R0,S^#1,-15(FP)
+0193F	X.118:	MOVL  	S^#6,R0
+01942	X.119:	BICB2 	-15(FP)[R0],STATIC.+119[R0]
+						;   SET7_L2
+0194C		SOBGEQ	R0,X.119
+						; LINE 320
+0194F		MOVC3 	S^#7,STATIC.+119,-15(FP);   SET7_L2
+01958		SUBL3 	S^#16,STATIC.+4,R0	;   ^X10  I
+01960		BLSS  	X.120
+01962		CMPL  	R0,S^#56		;   ^X38
+01965		BGEQ  	X.120
+01967		INSV  	S^#1,R0,S^#1,-15(FP)
+0196D	X.120:	MOVL  	S^#6,R0
+01970	X.121:	BICB2 	-15(FP)[R0],STATIC.+119[R0]
+						;   SET7_L2
+0197A		SOBGEQ	R0,X.121
+						; LINE 321
+0197D		CLRB  	-15(FP)
+01980		MOVC5 	S^#5,STATIC.+134,S^#0,S^#6,-14(FP)
+						;   SET_31_TO_56
+0198B		SUBL3 	S^#16,STATIC.+4,R0	;   ^X10  I
+01993		BLSS  	X.122
+01995		CMPL  	R0,S^#56		;   ^X38
+01998		BGEQ  	X.122
+0199A		INSV  	S^#1,R0,S^#1,-15(FP)
+019A0	X.122:	MOVL  	S^#6,R0
+019A3	X.123:	BICB2 	-15(FP)[R0],STATIC.+119[R0]
+						;   SET7_L2
+019AD		SOBGEQ	R0,X.123
+						; LINE 323
+019B0		BICB2 	I^#128,STATIC.+134	;   ^X80  SET_31_TO_56
+						; LINE 324
+019B8		BICB2 	S^#1,STATIC.+134+4	;   SET_31_TO_56
+						; LINE 325
+019BF		BICB2 	I^#128,STATIC.+119+1	;   ^X80  SET7_L2
+						; LINE 326
+019C7		MOVC3 	S^#5,STATIC.+134,-13(FP);   SET_31_TO_56
+019D0		BICB2 	I^#128,-13(FP)		;   ^X80
+019D5		CLRB  	STATIC.+119		;   SET7_L2
+019DB		MOVC5 	S^#5,-13(FP),S^#0,S^#6,STATIC.+119+1
+						;   SET7_L2
+						; LINE 327
+019E6		BISB2 	I^#128,STATIC.+119+1	;   ^X80  SET7_L2
+						; LINE 328
+019EE		MOVC3 	S^#5,STATIC.+134,-13(FP);   SET_31_TO_56
+019F7		BISB2 	I^#128,-13(FP)		;   ^X80
+019FC		CLRB  	STATIC.+119		;   SET7_L2
+01A02		MOVC5 	S^#5,-13(FP),S^#0,S^#6,STATIC.+119+1
+						;   SET7_L2
+						; LINE 329
+01A0D		SUBL3 	S^#16,STATIC.+4,R0	;   ^X10  I
+01A15		BLSS  	X.124
+01A17		CMPL  	R0,S^#56		;   ^X38
+01A1A		BGEQ  	X.124
+01A1C		INSV  	S^#1,R0,S^#1,STATIC.+119;   SET7_L2
+01A25	X.124:					; LINE 330
+01A25		CLRB  	STATIC.+119		;   SET7_L2
+01A2B		MOVC5 	S^#5,STATIC.+134,S^#0,S^#6,STATIC.+119+1
+						;   SET_31_TO_56  SET7_L2
+01A39		SUBL3 	S^#16,STATIC.+4,R0	;   ^X10  I
+01A41		BLSS  	X.125
+01A43		CMPL  	R0,S^#56		;   ^X38
+01A46		BGEQ  	X.125
+01A48		INSV  	S^#1,R0,S^#1,STATIC.+119;   SET7_L2
+01A51	X.125:					; LINE 331
+01A51		SUBL3 	S^#16,STATIC.+4,R0	;   ^X10  I
+01A59		BLSS  	X.126
+01A5B		CMPL  	R0,S^#56		;   ^X38
+01A5E		BGEQ  	X.126
+01A60		INSV  	S^#1,R0,S^#1,STATIC.+119;   SET7_L2
+01A69	X.126:					; LINE 332
+01A69		CLRB  	STATIC.+119		;   SET7_L2
+01A6F		MOVC5 	S^#5,STATIC.+134,S^#0,S^#6,STATIC.+119+1
+						;   SET_31_TO_56  SET7_L2
+01A7D		SUBL3 	S^#16,STATIC.+4,R0	;   ^X10  I
+01A85		BLSS  	X.127
+01A87		CMPL  	R0,S^#56		;   ^X38
+01A8A		BGEQ  	X.127
+01A8C		INSV  	S^#1,R0,S^#1,STATIC.+119;   SET7_L2
+01A95	X.127:					; LINE 333
+01A95		MOVC5 	S^#5,STATIC.+134,S^#0,S^#6,-14(FP)
+						;   SET_31_TO_56
+01AA0		BISB2 	I^#128,-9(FP)		;   ^X80
+01AA5		CLRB  	STATIC.+119		;   SET7_L2
+01AAB		MOVC3 	S^#6,-14(FP),STATIC.+119+1
+						;   SET7_L2
+						; LINE 335
+01AB4		PUSHAB	STATIC.+126		;   SET_3_TO_4
+01ABA		PUSHAB	STATIC.+126		;   SET_3_TO_4
+01AC0		PUSHAB	STATIC.+134		;   SET_31_TO_56
+01AC6		PUSHAB	STATIC.+109		;   SET2_L1
+01ACC		CALLS 	S^#4,B.7
+						; LINE 336
+01AD1		MOVB  	STATIC.+56,-9(FP)	;   SET1
+01AD9		BICB2 	S^#7,-9(FP)
+01ADD		BICB2 	I^#224,-9(FP)		;   ^XE0
+01AE2		CLRB  	-14(FP)
+01AE5		MOVL  	STATIC.+130,-13(FP)	;   SET_32_TO_56
+01AED		PUSHAB	-9(FP)
+01AF0		PUSHAB	STATIC.+126		;   SET_3_TO_4
+01AF6		PUSHAB	-14(FP)
+01AF9		PUSHAB	STATIC.+59+1		;   SET3
+01AFF		CALLS 	S^#4,B.7
+						; LINE 337
+01B04		MOVB  	STATIC.+57,-9(FP)	;   SET2
+01B0C		BICB2 	S^#7,-9(FP)
+01B10		BICB2 	I^#224,-9(FP)		;   ^XE0
+01B15		MOVC5 	S^#2,STATIC.+127+1,S^#0,S^#5,-14(FP)
+						;   SET_20_TO_39
+01B20		BICB2 	I^#127,-14(FP)		;   ^X7F
+01B25		PUSHAB	-9(FP)
+01B28		PUSHAB	STATIC.+126		;   SET_3_TO_4
+01B2E		PUSHAB	-14(FP)
+01B31		PUSHAB	STATIC.+71+1		;   SET6
+01B37		CALLS 	S^#4,B.7
+						; LINE 338
+01B3C		CLRB  	-9(FP)
+01B3F		MOVL  	STATIC.+4,R0		;   I
+01B46		BLSS  	X.128
+01B48		CMPL  	R0,S^#8
+01B4B		BGEQ  	X.128
+01B4D		INSV  	S^#1,R0,S^#1,-9(FP)
+01B53	X.128:	BICB2 	S^#7,-9(FP)
+01B57		BICB2 	I^#224,-9(FP)		;   ^XE0
+01B5C		MOVC5 	S^#0,0(SP),S^#0,S^#3,-14(FP)
+01B63		MOVW  	STATIC.+114,-11(FP)	;   SET5_L6
+01B6B		BICB2 	I^#254,-10(FP)		;   ^XFE
+01B70		CLRB  	-16(FP)
+01B73		MOVB  	STATIC.+108,-15(FP)	;   SET1_L2
+01B7B		PUSHAB	-9(FP)
+01B7E		PUSHAB	STATIC.+126		;   SET_3_TO_4
+01B84		PUSHAB	-14(FP)
+01B87		PUSHAB	-16(FP)
+01B8A		CALLS 	S^#4,B.7
+						; LINE 339
+01B8F		CLRB  	-9(FP)
+01B92		MOVL  	STATIC.+4,R0		;   I
+01B99		BLSS  	X.129
+01B9B		CMPL  	R0,S^#8
+01B9E		BGEQ  	X.129
+01BA0		INSV  	S^#1,R0,S^#1,-9(FP)
+01BA6	X.129:	INSV  	S^#1,STATIC.+32,S^#1,-9(FP)
+						;   I_0_TO_7
+01BB0		BICB2 	S^#7,-9(FP)
+01BB4		BICB2 	I^#224,-9(FP)		;   ^XE0
+01BB9		MOVC3 	S^#5,STATIC.+119+1,-14(FP)
+						;   SET7_L2
+01BC2		BICB2 	I^#127,-14(FP)		;   ^X7F
+01BC7		BICB2 	I^#254,-10(FP)		;   ^XFE
+01BCC		PUSHAB	-9(FP)
+01BCF		PUSHAB	STATIC.+126		;   SET_3_TO_4
+01BD5		PUSHAB	-14(FP)
+01BD8		PUSHAB	K.35
+01BDE		CALLS 	S^#4,B.7
+						; LINE 341
+01BE3		MOVZWL	I^#1216,-(SP)		;   ^X4C0
+01BE8		PUSHL 	S^#6
+01BEA		PUSHAB	K.36
+01BF0		CALLS 	S^#3,PAX$FVM.REWRT
+01BF7		MOVL  	R0,AP
+01BFA		MOVL  	AP,OUTPUT		;   OUTPUT
+						; LINE 342
+01C01		MOVZWL	I^#1232,-(SP)		;   ^X4D0
+01C06		PUSHL 	S^#6
+01C08		PUSHAB	K.37
+01C0E		CALLS 	S^#3,PAX$FVM.REWRT
+01C15		MOVL  	R0,AP
+01C18		MOVL  	AP,OUTPUT		;   OUTPUT
+						; LINE 343
+01C1F		MOVZWL	I^#1279,-(SP)		;   ^X4FF
+01C24		PUSHL 	S^#6
+01C26		PUSHAB	K.38
+01C2C		CALLS 	S^#3,PAX$FVM.REWRT
+01C33		MOVL  	R0,AP
+01C36		MOVL  	AP,OUTPUT		;   OUTPUT
+						; LINE 344
+01C3D		MOVZBL	K.39,-(SP)
+01C44		BISL2 	I^#1216,0(SP)		;   ^X4C0
+01C4B		PUSHL 	S^#6
+01C4D		PUSHAB	K.40
+01C53		CALLS 	S^#3,PAX$FVM.REWRT
+01C5A		MOVL  	R0,AP
+01C5D		MOVL  	AP,OUTPUT		;   OUTPUT
+						; LINE 345
+01C64		MOVZBL	STATIC.+853,AP		;   IOPT
+01C6B		CLRL  	-(SP)
+01C6D		INSV  	S^#1,AP,S^#1,0(SP)
+01C72		BISL2 	I^#1216,0(SP)		;   ^X4C0
+01C79		PUSHL 	S^#6
+01C7B		PUSHAB	K.41
+01C81		CALLS 	S^#3,PAX$FVM.REWRT
+01C88		MOVL  	R0,AP
+01C8B		MOVL  	AP,OUTPUT		;   OUTPUT
+						; LINE 346
+01C92		MOVZBL	STATIC.+853,AP		;   IOPT
+01C99		MOVZBL	STATIC.+854,R11		;   JOPT
+01CA0		CLRL  	-(SP)
+01CA2		PUSHL 	S^#4
+01CA4		PUSHAL	0(SP)
+01CA6		PUSHL 	S^#0
+01CA8		PUSHL 	R11
+01CAA		PUSHL 	AP
+01CAC		CALLS 	S^#5,PAX$UTL.GENSET
+01CB3		BISL2 	I^#1216,0(SP)		;   ^X4C0
+01CBA		PUSHL 	S^#6
+01CBC		PUSHAB	K.42
+01CC2		CALLS 	S^#3,PAX$FVM.REWRT
+01CC9		MOVL  	R0,AP
+01CCC		MOVL  	AP,OUTPUT		;   OUTPUT
+						; LINE 347
+01CD3		MOVZBL	STATIC.+855,-(SP)	;   OPTSET
+01CDA		BISL2 	I^#1216,0(SP)		;   ^X4C0
+01CE1		PUSHL 	S^#6
+01CE3		PUSHAB	K.43
+01CE9		CALLS 	S^#3,PAX$FVM.REWRT
+01CF0		MOVL  	R0,AP
+01CF3		MOVL  	AP,OUTPUT		;   OUTPUT
+						; LINE 348
+01CFA		MOVZBL	STATIC.+853,AP		;   IOPT
+01D01		MOVZBL	STATIC.+854,R11		;   JOPT
+01D08		PUSHL 	S^#1
+01D0A		PUSHAB	-9(FP)
+01D0D		PUSHL 	S^#0
+01D0F		PUSHL 	R11
+01D11		PUSHL 	AP
+01D13		CALLS 	S^#5,PAX$UTL.GENSET
+01D1A		MCOMB 	STATIC.+855,R1		;   OPTSET
+01D21		BICB2 	R1,-9(FP)
+01D25		MOVZBL	-9(FP),-(SP)
+01D29		BISL2 	I^#1216,0(SP)		;   ^X4C0
+01D30		PUSHL 	S^#6
+01D32		PUSHAB	K.44
+01D38		CALLS 	S^#3,PAX$FVM.REWRT
+01D3F		MOVL  	R0,AP
+01D42		MOVL  	AP,OUTPUT		;   OUTPUT
+						; LINE 350
+01D49		CLRB  	-24(FP)
+01D4C		MOVC3 	S^#15,STATIC.+1002,-23(FP)
+						;   CHARSET1
+01D55		MOVZBL	I^#128,-(SP)		;   ^X80
+01D59		PUSHAB	-24(FP)
+01D5C		PUSHAB	STATIC.+856+2		;   STR
+01D62		MOVZWL	STATIC.+856,-(SP)	;   STR
+01D69		CALLS 	S^#4,PAX$UTL.SRCH_L
+01D70		MOVL  	R0,AP
+01D73		MOVL  	AP,STATIC.+992		;   IX
+						; LINE 351
+01D7A		MOVZBL	I^#128,-(SP)		;   ^X80
+01D7E		PUSHAB	STATIC.+1017		;   CHARSET2
+01D84		PUSHAB	STATIC.+856+2		;   STR
+01D8A		MOVZWL	STATIC.+856,-(SP)	;   STR
+01D91		CALLS 	S^#4,PAX$UTL.VRFY_L
+01D98		MOVL  	R0,AP
+01D9B		MOVL  	AP,STATIC.+992		;   IX
+						; LINE 352
+01DA2		MOVC5 	S^#0,0(SP),S^#0,S^#3,-16(FP)
+01DA9		MOVC3 	S^#5,STATIC.+1033,-13(FP)
+						;   CHARSET3
+01DB2		PUSHL 	S^#57			;   ^X39
+01DB4		PUSHAB	-16(FP)
+01DB7		PUSHAB	STATIC.+856+2		;   STR
+01DBD		MOVZWL	STATIC.+856,-(SP)	;   STR
+01DC4		CALLS 	S^#4,PAX$UTL.SRCH_L
+01DCB		MOVL  	R0,AP
+01DCE		MOVL  	AP,STATIC.+992		;   IX
+						; LINE 353
+01DD5		MOVZBL	STATIC.+996,AP		;   ACHAR
+01DDC		PUSHL 	AP
+01DDE		PUSHL 	AP
+01DE0		PUSHAB	STATIC.+856+2		;   STR
+01DE6		MOVZWL	STATIC.+856,-(SP)	;   STR
+01DED		CALLS 	S^#4,PAX$UTL.VRFY_O
+01DF4		MOVL  	R0,AP
+01DF7		MOVL  	AP,STATIC.+992		;   IX
+						; LINE 354
+01DFE		MOVZBL	STATIC.+996,AP		;   ACHAR
+01E05		MOVZBL	STATIC.+997,R11		;   BCHAR
+01E0C		MOVC5 	S^#0,0(SP),S^#0,S^#16,-24(FP)
+						;   ^X10
+01E13		INSV  	S^#1,AP,S^#1,-24(FP)
+01E19		INSV  	S^#1,R11,S^#1,-24(FP)
+01E1F		MOVZBL	STATIC.+998,AP		;   CCHAR
+01E26		INSV  	S^#1,AP,S^#1,-24(FP)
+01E2C		MOVZBL	I^#128,-(SP)		;   ^X80
+01E30		PUSHAB	-24(FP)
+01E33		PUSHAB	STATIC.+856+2		;   STR
+01E39		MOVZWL	STATIC.+856,-(SP)	;   STR
+01E40		CALLS 	S^#4,PAX$UTL.SRCH_L
+01E47		MOVL  	R0,AP
+01E4A		MOVL  	AP,STATIC.+992		;   IX
+						; LINE 355
+01E51		MOVZBL	I^#122,-(SP)		;   ^X7A
+01E55		PUSHL 	S^#32			;   ^X20
+01E57		PUSHAB	STATIC.+856+2		;   STR
+01E5D		MOVZWL	STATIC.+856,-(SP)	;   STR
+01E64		CALLS 	S^#4,PAX$UTL.SRCH_O
+01E6B		MOVL  	R0,AP
+01E6E		MOVL  	AP,STATIC.+992		;   IX
+						; LINE 356
+01E75		MOVZBL	STATIC.+999,AP		;   DCHAR
+01E7C		MOVZBL	STATIC.+1000,R11	;   ECHAR
+01E83		MOVC5 	S^#0,0(SP),S^#0,S^#12,-20(FP)
+01E8A		SUBL3 	S^#32,AP,R0		;   ^X20
+01E8E		INSV  	S^#1,R0,S^#1,-20(FP)
+01E94		SUBL3 	S^#32,R11,R0		;   ^X20
+01E98		INSV  	S^#1,R0,S^#1,-20(FP)
+01E9E		MOVZBL	STATIC.+1001,AP		;   FCHAR
+01EA5		SUBL3 	S^#32,AP,R0		;   ^X20
+01EA9		INSV  	S^#1,R0,S^#1,-20(FP)
+01EAF		CLRL  	-36(FP)
+01EB2		MOVC3 	S^#12,-20(FP),-32(FP)
+01EB8		MOVZBL	I^#123,-(SP)		;   ^X7B
+01EBC		PUSHAB	-36(FP)
+01EBF		PUSHAB	STATIC.+856+2		;   STR
+01EC5		MOVZWL	STATIC.+856,-(SP)	;   STR
+01ECC		CALLS 	S^#4,PAX$UTL.SRCH_L
+01ED3		MOVL  	R0,AP
+01ED6		MOVL  	AP,STATIC.+992		;   IX
+						; LINE 357
+01EDD		MOVC5 	S^#0,0(SP),S^#0,S^#12,-21(FP)
+01EE4		MOVB  	K.45,-9(FP)
+01EEC		MOVZBL	I^#103,-(SP)		;   ^X67
+01EF0		PUSHAB	-21(FP)
+01EF3		PUSHAB	STATIC.+856+2		;   STR
+01EF9		MOVZWL	STATIC.+856,-(SP)	;   STR
+01F00		CALLS 	S^#4,PAX$UTL.SRCH_L
+01F07		MOVL  	R0,AP
+01F0A		MOVL  	AP,STATIC.+992		;   IX
+						; LINE 358
+01F11		MOVL  	S^#4,R0
+01F14	X.130:	MCOMB 	STATIC.+1033[R0],R1	;   CHARSET3
+01F1C		BICB3 	R1,STATIC.+1002+2[R0],-13(FP)[R0]
+						;   CHARSET1
+01F27		SOBGEQ	R0,X.130
+01F2A		MOVC5 	S^#0,0(SP),S^#0,S^#3,-21(FP)
+01F31		MOVC3 	S^#5,-13(FP),-18(FP)
+01F37		PUSHL 	S^#57			;   ^X39
+01F39		PUSHAB	-21(FP)
+01F3C		PUSHAB	STATIC.+856+2		;   STR
+01F42		MOVZWL	STATIC.+856,-(SP)	;   STR
+01F49		CALLS 	S^#4,PAX$UTL.SRCH_L
+01F50		MOVL  	R0,AP
+01F53		MOVL  	AP,STATIC.+992		;   IX
+						; LINE 359
+01F5A		PUSHL 	S^#0
+01F5C		PUSHL 	S^#1
+01F5E		PUSHAB	STATIC.+856+2		;   STR
+01F64		MOVZWL	STATIC.+856,-(SP)	;   STR
+01F6B		CALLS 	S^#4,PAX$UTL.SRCH_O
+01F72		MOVL  	R0,AP
+01F75		MOVL  	AP,STATIC.+992		;   IX
+						; LINE 360
+01F7C		PUSHL 	S^#0
+01F7E		PUSHL 	S^#1
+01F80		PUSHAB	STATIC.+856+2		;   STR
+01F86		MOVZWL	STATIC.+856,-(SP)	;   STR
+01F8D		CALLS 	S^#4,PAX$UTL.VRFY_O
+01F94		MOVL  	R0,AP
+01F97		MOVL  	AP,STATIC.+992		;   IX
+						; LINE 362
+
+01F9E	L.7:					; LINE 363
+01F9E		MOVB  	K.1,STATIC.+56		;   SET1
+
+01FA9	L.8:					; LINE 364
+01FA9		CMPL  	STATIC.+32,S^#0		;   I_0_TO_7
+01FB0		BEQL  	L.10
+
+01FB2	L.9:					; LINE 365
+01FB2		MOVB  	K.1,STATIC.+56		;   SET1
+
+01FBD	L.10:					; LINE 366
+01FBD		BRB   	L.12
+
+01FBF	L.11:					; LINE 367
+01FBF		MOVB  	K.1,STATIC.+56		;   SET1
+
+01FCA	L.12:					; LINE 368
+01FCA		CMPL  	STATIC.+32,STATIC.+36	;   I_0_TO_7  I_0_TO_20
+01FD5		BNEQ  	L.14
+
+01FD7	L.13:					; LINE 369
+01FD7		MOVB  	K.1,STATIC.+56		;   SET1
+01FE2	L.14:					; LINE 370
+01FE2		BRB   	L.16
+
+01FE4	L.15:					; LINE 371
+01FE4		MOVB  	K.1,STATIC.+56		;   SET1
+
+01FEF	L.16:					; LINE 372
+01FEF		CMPL  	STATIC.+32,S^#7		;   I_0_TO_7
+01FF6		BNEQ  	L.18
+
+01FF8	L.17:					; LINE 373
+01FF8		MOVB  	K.1,STATIC.+56		;   SET1
+
+02003	L.18:					; LINE 374
+02003		CMPL  	STATIC.+32,S^#4		;   I_0_TO_7
+0200A		BLSS  	L.20
+0200C		CMPL  	STATIC.+32,S^#7		;   I_0_TO_7
+02013		BGTR  	L.20
+
+02015	L.19:					; LINE 375
+02015		MOVB  	K.1,STATIC.+56		;   SET1
+
+02020	L.20:					; LINE 376
+02020		CMPL  	STATIC.+44,STATIC.+48	;   I_48_TO_100  I_0_TO_55
+0202B		BLSS  	L.22
+0202D		CMPL  	STATIC.+44,I^#100	;   I_48_TO_100  ^X64
+02038		BGTR  	L.22
+
+0203A	L.21:					; LINE 377
+0203A		MOVB  	K.1,STATIC.+56		;   SET1
+
+02045	L.22:					; LINE 378
+02045		CMPL  	STATIC.+44,STATIC.+32	;   I_48_TO_100  I_0_TO_7
+02050		BLSS  	L.24
+02052		CMPL  	STATIC.+44,STATIC.+4	;   I_48_TO_100  I
+0205D		BGTR  	L.24
+
+0205F	L.23:					; LINE 379
+0205F		MOVB  	K.1,STATIC.+56		;   SET1
+
+0206A	L.24:					; LINE 380
+0206A		BBC   	STATIC.+32,STATIC.+56,L.26
+						;   I_0_TO_7  SET1
+
+02076	L.25:					; LINE 381
+02076		MOVB  	K.1,STATIC.+56		;   SET1
+
+02081	L.26:					; LINE 382
+02081		BBC   	STATIC.+32,STATIC.+126,L.28
+						;   I_0_TO_7  SET_3_TO_4
+
+0208D	L.27:					; LINE 383
+0208D		MOVB  	K.1,STATIC.+56		;   SET1
+
+02098	L.28:					; LINE 384
+02098		SUBL3 	S^#16,STATIC.+36,R0	;   ^X10  I_0_TO_20
+020A0		BLSS  	L.30
+020A2		BBC   	R0,STATIC.+108,L.30	;   SET1_L2
+
+020AA	L.29:					; LINE 385
+020AA		MOVB  	K.1,STATIC.+56		;   SET1
+
+020B5	L.30:					; LINE 386
+020B5		SUBL3 	S^#48,STATIC.+44,R0	;   ^X30  I_48_TO_100
+020BD		CMPL  	R0,S^#40		;   ^X28
+020C0		BGEQ  	L.32
+020C2		BBC   	R0,STATIC.+114,L.32	;   SET5_L6
+
+020CA	L.31:					; LINE 387
+020CA		MOVB  	K.1,STATIC.+56		;   SET1
+
+020D5	L.32:					; LINE 388
+020D5		MOVL  	STATIC.+40,R0		;   I_MIN10_TO_7
+020DC		BLSS  	L.34
+020DE		BBC   	R0,STATIC.+56,L.34	;   SET1
+
+020E6	L.33:					; LINE 389
+020E6		MOVB  	K.1,STATIC.+56		;   SET1
+
+020F1	L.34:					; LINE 390
+020F1		CLRB  	-9(FP)
+020F4		MOVL  	STATIC.+4,R0		;   I
+020FB		BLSS  	X.131
+020FD		CMPL  	R0,S^#8
+02100		BGEQ  	X.131
+02102		INSV  	S^#1,R0,S^#1,-9(FP)
+02108	X.131:	MOVL  	STATIC.+8,R0		;   J
+0210F		BLSS  	X.132
+02111		CMPL  	R0,S^#8
+02114		BGEQ  	X.132
+02116		INSV  	S^#1,R0,S^#1,-9(FP)
+0211C	X.132:	BBC   	STATIC.+32,-9(FP),L.36	;   I_0_TO_7
+
+02125	L.35:					; LINE 391
+02125		MOVB  	K.1,STATIC.+56		;   SET1
+
+02130	L.36:					; LINE 392
+02130		MOVL  	STATIC.+4,AP		;   I
+02137		CMPL  	AP,STATIC.+8		;   J
+0213E		BGEQ  	X.133
+02140		MOVL  	STATIC.+8,AP		;   J
+02147	X.133:	TSTL  	AP
+02149		BGEQ  	X.134
+0214B		CLRL  	AP
+0214D	X.134:	DIVL2 	S^#8,AP
+02150		INCL  	AP
+02152		SUBL2 	AP,SP
+02155		MOVAB 	0(SP),R11
+02158		MOVC5 	S^#0,0(SP),S^#0,AP,0(R11)
+0215E		MOVL  	STATIC.+4,R0		;   I
+02165		BLSS  	X.135
+02167		MULL3 	S^#8,AP,R1
+0216B		CMPL  	R0,R1
+0216E		BGEQ  	X.135
+02170		INSV  	S^#1,R0,S^#1,0(R11)
+02175	X.135:	MOVL  	STATIC.+8,R0		;   J
+0217C		BLSS  	X.136
+0217E		MULL3 	S^#8,AP,R1
+02182		CMPL  	R0,R1
+02185		BGEQ  	X.136
+02187		INSV  	S^#1,R0,S^#1,0(R11)
+0218C	X.136:	MOVL  	STATIC.+12,R0		;   K
+02193		BLSS  	L.38
+02195		MULL3 	S^#8,AP,R1
+02199		CMPL  	R0,R1
+0219C		BGEQ  	L.38
+0219E		BBC   	R0,0(R11),L.38
+
+021A2	L.37:	MOVAL 	T.6(FP),SP
+						; LINE 393
+021A7		MOVB  	K.1,STATIC.+56		;   SET1
+
+021B2	L.38:	MOVAL 	T.6(FP),SP
+						; LINE 394
+021B7		MOVL  	STATIC.+4,AP		;   I
+021BE		CMPL  	AP,STATIC.+8		;   J
+021C5		BGEQ  	X.137
+021C7		MOVL  	STATIC.+8,AP		;   J
+021CE	X.137:	SUBL2 	S^#16,AP		;   ^X10
+021D1		TSTL  	AP
+021D3		BGEQ  	X.138
+021D5		CLRL  	AP
+021D7	X.138:	DIVL2 	S^#8,AP
+021DA		INCL  	AP
+021DC		SUBL2 	AP,SP
+021DF		MOVAB 	0(SP),R11
+021E2		MOVC5 	S^#0,0(SP),S^#0,AP,0(R11)
+021E8		SUBL3 	S^#16,STATIC.+4,R0	;   ^X10  I
+021F0		BLSS  	X.139
+021F2		MULL3 	S^#8,AP,R1
+021F6		CMPL  	R0,R1
+021F9		BGEQ  	X.139
+021FB		INSV  	S^#1,R0,S^#1,0(R11)
+02200	X.139:	SUBL3 	S^#16,STATIC.+8,R0	;   ^X10  J
+02208		BLSS  	X.140
+0220A		MULL3 	S^#8,AP,R1
+0220E		CMPL  	R0,R1
+02211		BGEQ  	X.140
+02213		INSV  	S^#1,R0,S^#1,0(R11)
+02218	X.140:	SUBL3 	S^#16,STATIC.+52,R0	;   ^X10  I_18_TO_10000
+02220		MULL3 	S^#8,AP,R1
+02224		CMPL  	R0,R1
+02227		BGEQ  	L.40
+02229		BBC   	R0,0(R11),L.40
+
+0222D	L.39:	MOVAL 	T.6(FP),SP
+						; LINE 395
+02232		MOVB  	K.1,STATIC.+56		;   SET1
+
+0223D	L.40:	MOVAL 	T.6(FP),SP
+						; LINE 396
+02242		MOVL  	STATIC.+4,AP		;   I
+02249		CMPL  	AP,STATIC.+8		;   J
+02250		BGEQ  	X.141
+02252		MOVL  	STATIC.+8,AP		;   J
+02259	X.141:	CMPL  	AP,STATIC.+12		;   K
+02260		BLEQ  	X.142
+02262		MOVL  	STATIC.+12,AP		;   K
+02269	X.142:	TSTL  	AP
+0226B		BGEQ  	X.143
+0226D		CLRL  	AP
+0226F	X.143:	DIVL2 	S^#8,AP
+02272		INCL  	AP
+02274		SUBL2 	AP,SP
+02277		MOVAB 	0(SP),R11
+0227A		MOVC5 	S^#0,0(SP),S^#0,AP,0(R11)
+02280		MOVL  	STATIC.+4,R0		;   I
+02287		BLSS  	X.144
+02289		MULL3 	S^#8,AP,R1
+0228D		CMPL  	R0,R1
+02290		BGEQ  	X.144
+02292		INSV  	S^#1,R0,S^#1,0(R11)
+02297	X.144:	MOVL  	STATIC.+8,R0		;   J
+0229E		BLSS  	X.145
+022A0		MULL3 	S^#8,AP,R1
+022A4		CMPL  	R0,R1
+022A7		BGEQ  	X.145
+022A9		INSV  	S^#1,R0,S^#1,0(R11)
+022AE	X.145:	SUBL2 	AP,SP
+022B1		MOVAB 	0(SP),R10
+022B4		MOVC5 	S^#0,0(SP),S^#0,AP,0(R10)
+022BA		MOVL  	STATIC.+12,R0		;   K
+022C1		BLSS  	X.146
+022C3		MULL3 	S^#8,AP,R1
+022C7		CMPL  	R0,R1
+022CA		BGEQ  	X.146
+022CC		INSV  	S^#1,R0,S^#1,0(R10)
+022D1	X.146:	SUBL3 	S^#1,AP,R0
+022D5	X.147:	MCOMB 	0(R10)[R0],R1
+022D9		BICB2 	R1,0(R11)[R0]
+022DD		SOBGEQ	R0,X.147
+022E0		MOVL  	STATIC.+4,R0		;   I
+022E7		BLSS  	L.42
+022E9		MULL3 	S^#8,AP,R1
+022ED		CMPL  	R0,R1
+022F0		BGEQ  	L.42
+022F2		BBC   	R0,0(R11),L.42
+
+022F6	L.41:	MOVAL 	T.6(FP),SP
+						; LINE 397
+022FB		MOVB  	K.1,STATIC.+56		;   SET1
+
+02306	L.42:	MOVAL 	T.6(FP),SP
+						; LINE 399
+0230B		MOVL  	S^#1,AP
+0230E		MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 400
+02315		CLRL  	AP
+02317		CMPL  	STATIC.+32,S^#0		;   I_0_TO_7
+0231E		BEQL  	X.148
+02320		INCL  	AP
+02322	X.148:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 401
+02329		CLRL  	AP
+0232B		MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 402
+02332		CLRL  	AP
+02334		CMPL  	STATIC.+32,STATIC.+36	;   I_0_TO_7  I_0_TO_20
+0233F		BNEQ  	X.149
+02341		INCL  	AP
+02343	X.149:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 403
+0234A		CLRL  	AP
+0234C		MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 404
+02353		CLRL  	AP
+02355		CMPL  	STATIC.+32,S^#7		;   I_0_TO_7
+0235C		BNEQ  	X.150
+0235E		INCL  	AP
+02360	X.150:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 405
+02367		CLRL  	AP
+02369		CMPL  	STATIC.+32,S^#4		;   I_0_TO_7
+02370		BLSS  	X.151
+02372		CMPL  	STATIC.+32,S^#7		;   I_0_TO_7
+02379		BGTR  	X.151
+0237B		INCL  	AP
+0237D	X.151:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 406
+02384		MOVL  	S^#1,AP
+02387		CMPL  	STATIC.+32,S^#4		;   I_0_TO_7
+0238E		BLSS  	X.152
+02390		CMPL  	STATIC.+32,S^#7		;   I_0_TO_7
+02397		BGTR  	X.152
+02399		CLRL  	AP
+0239B	X.152:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 407
+023A2		CLRL  	AP
+023A4		CMPL  	STATIC.+44,STATIC.+48	;   I_48_TO_100  I_0_TO_55
+023AF		BLSS  	X.153
+023B1		CMPL  	STATIC.+44,I^#100	;   I_48_TO_100  ^X64
+023BC		BGTR  	X.153
+023BE		INCL  	AP
+023C0	X.153:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 408
+023C7		CLRL  	AP
+023C9		CMPL  	STATIC.+44,STATIC.+32	;   I_48_TO_100  I_0_TO_7
+023D4		BLSS  	X.154
+023D6		CMPL  	STATIC.+44,STATIC.+4	;   I_48_TO_100  I
+023E1		BGTR  	X.154
+023E3		INCL  	AP
+023E5	X.154:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 409
+023EC		EXTZV 	STATIC.+32,S^#1,STATIC.+56,AP
+						;   I_0_TO_7  SET1
+023F9		MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 410
+02400		EXTZV 	STATIC.+32,S^#1,STATIC.+126,AP
+						;   I_0_TO_7  SET_3_TO_4
+0240D		MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 411
+02414		SUBL3 	S^#16,STATIC.+36,R0	;   ^X10  I_0_TO_20
+0241C		BLSS  	X.155
+0241E		EXTZV 	R0,S^#1,STATIC.+108,AP	;   SET1_L2
+02427		BRB   	X.156
+02429	X.155:	CLRL  	AP
+0242B	X.156:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 412
+02432		SUBL3 	S^#48,STATIC.+44,R0	;   ^X30  I_48_TO_100
+0243A		CMPL  	R0,S^#40		;   ^X28
+0243D		BGEQ  	X.157
+0243F		EXTZV 	R0,S^#1,STATIC.+114,AP	;   SET5_L6
+02448		BRB   	X.158
+0244A	X.157:	CLRL  	AP
+0244C	X.158:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 413
+02453		SUBL3 	S^#48,STATIC.+44,R0	;   ^X30  I_48_TO_100
+0245B		CMPL  	R0,S^#40		;   ^X28
+0245E		BGEQ  	X.159
+02460		EXTZV 	R0,S^#1,STATIC.+114,AP	;   SET5_L6
+02469		BRB   	X.160
+0246B	X.159:	CLRL  	AP
+0246D	X.160:	BICL3 	AP,S^#1,AP
+02471		MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 414
+02478		MOVL  	STATIC.+40,R0		;   I_MIN10_TO_7
+0247F		BLSS  	X.161
+02481		EXTZV 	R0,S^#1,STATIC.+56,AP	;   SET1
+0248A		BRB   	X.162
+0248C	X.161:	CLRL  	AP
+0248E	X.162:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 415
+02495		CLRB  	-9(FP)
+02498		MOVL  	STATIC.+4,R0		;   I
+0249F		BLSS  	X.163
+024A1		CMPL  	R0,S^#8
+024A4		BGEQ  	X.163
+024A6		INSV  	S^#1,R0,S^#1,-9(FP)
+024AC	X.163:	MOVL  	STATIC.+8,R0		;   J
+024B3		BLSS  	X.164
+024B5		CMPL  	R0,S^#8
+024B8		BGEQ  	X.164
+024BA		INSV  	S^#1,R0,S^#1,-9(FP)
+024C0	X.164:	EXTZV 	STATIC.+32,S^#1,-9(FP),AP
+						;   I_0_TO_7
+024CA		MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 416
+024D1		MOVL  	STATIC.+4,AP		;   I
+024D8		CMPL  	AP,STATIC.+8		;   J
+024DF		BGEQ  	X.165
+024E1		MOVL  	STATIC.+8,AP		;   J
+024E8	X.165:	TSTL  	AP
+024EA		BGEQ  	X.166
+024EC		CLRL  	AP
+024EE	X.166:	DIVL2 	S^#8,AP
+024F1		INCL  	AP
+024F3		SUBL2 	AP,SP
+024F6		MOVAB 	0(SP),R11
+024F9		MOVC5 	S^#0,0(SP),S^#0,AP,0(R11)
+024FF		MOVL  	STATIC.+4,R0		;   I
+02506		BLSS  	X.167
+02508		MULL3 	S^#8,AP,R1
+0250C		CMPL  	R0,R1
+0250F		BGEQ  	X.167
+02511		INSV  	S^#1,R0,S^#1,0(R11)
+02516	X.167:	MOVL  	STATIC.+8,R0		;   J
+0251D		BLSS  	X.168
+0251F		MULL3 	S^#8,AP,R1
+02523		CMPL  	R0,R1
+02526		BGEQ  	X.168
+02528		INSV  	S^#1,R0,S^#1,0(R11)
+0252D	X.168:	MOVL  	STATIC.+12,R0		;   K
+02534		BLSS  	X.169
+02536		MULL3 	S^#8,AP,R1
+0253A		CMPL  	R0,R1
+0253D		BGEQ  	X.169
+0253F		EXTZV 	R0,S^#1,0(R11),R10
+02544		BRB   	X.170
+02546	X.169:	CLRL  	R10
+02548	X.170:	MOVB  	R10,STATIC.+0		;   BOOL
+						; LINE 417
+0254F		MOVL  	STATIC.+4,AP		;   I
+02556		CMPL  	AP,STATIC.+8		;   J
+0255D		BGEQ  	X.171
+0255F		MOVL  	STATIC.+8,AP		;   J
+02566	X.171:	TSTL  	AP
+02568		BGEQ  	X.172
+0256A		CLRL  	AP
+0256C	X.172:	DIVL2 	S^#8,AP
+0256F		INCL  	AP
+02571		SUBL2 	AP,SP
+02574		MOVAB 	0(SP),R11
+02577		MOVC5 	S^#0,0(SP),S^#0,AP,0(R11)
+0257D		MOVL  	STATIC.+4,R0		;   I
+02584		BLSS  	X.173
+02586		MULL3 	S^#8,AP,R1
+0258A		CMPL  	R0,R1
+0258D		BGEQ  	X.173
+0258F		INSV  	S^#1,R0,S^#1,0(R11)
+02594	X.173:	MOVL  	STATIC.+8,R0		;   J
+0259B		BLSS  	X.174
+0259D		MULL3 	S^#8,AP,R1
+025A1		CMPL  	R0,R1
+025A4		BGEQ  	X.174
+025A6		INSV  	S^#1,R0,S^#1,0(R11)
+025AB	X.174:	MOVL  	STATIC.+12,R0		;   K
+025B2		BLSS  	X.175
+025B4		MULL3 	S^#8,AP,R1
+025B8		CMPL  	R0,R1
+025BB		BGEQ  	X.175
+025BD		EXTZV 	R0,S^#1,0(R11),R10
+025C2		BRB   	X.176
+025C4	X.175:	CLRL  	R10
+025C6	X.176:	BICL3 	R10,S^#1,R10
+025CA		MOVB  	R10,STATIC.+0		;   BOOL
+						; LINE 418
+025D1		MOVL  	STATIC.+4,AP		;   I
+025D8		CMPL  	AP,STATIC.+8		;   J
+025DF		BGEQ  	X.177
+025E1		MOVL  	STATIC.+8,AP		;   J
+025E8	X.177:	SUBL2 	S^#16,AP		;   ^X10
+025EB		TSTL  	AP
+025ED		BGEQ  	X.178
+025EF		CLRL  	AP
+025F1	X.178:	DIVL2 	S^#8,AP
+025F4		INCL  	AP
+025F6		SUBL2 	AP,SP
+025F9		MOVAB 	0(SP),R11
+025FC		MOVC5 	S^#0,0(SP),S^#0,AP,0(R11)
+02602		SUBL3 	S^#16,STATIC.+4,R0	;   ^X10  I
+0260A		BLSS  	X.179
+0260C		MULL3 	S^#8,AP,R1
+02610		CMPL  	R0,R1
+02613		BGEQ  	X.179
+02615		INSV  	S^#1,R0,S^#1,0(R11)
+0261A	X.179:	SUBL3 	S^#16,STATIC.+8,R0	;   ^X10  J
+02622		BLSS  	X.180
+02624		MULL3 	S^#8,AP,R1
+02628		CMPL  	R0,R1
+0262B		BGEQ  	X.180
+0262D		INSV  	S^#1,R0,S^#1,0(R11)
+02632	X.180:	SUBL3 	S^#16,STATIC.+52,R0	;   ^X10  I_18_TO_10000
+0263A		MULL3 	S^#8,AP,R1
+0263E		CMPL  	R0,R1
+02641		BGEQ  	X.181
+02643		EXTZV 	R0,S^#1,0(R11),R10
+02648		BRB   	X.182
+0264A	X.181:	CLRL  	R10
+0264C	X.182:	MOVB  	R10,STATIC.+0		;   BOOL
+						; LINE 419
+02653		MOVL  	STATIC.+4,AP		;   I
+0265A		CMPL  	AP,STATIC.+8		;   J
+02661		BGEQ  	X.183
+02663		MOVL  	STATIC.+8,AP		;   J
+0266A	X.183:	CMPL  	AP,STATIC.+12		;   K
+02671		BLEQ  	X.184
+02673		MOVL  	STATIC.+12,AP		;   K
+0267A	X.184:	TSTL  	AP
+0267C		BGEQ  	X.185
+0267E		CLRL  	AP
+02680	X.185:	DIVL2 	S^#8,AP
+02683		INCL  	AP
+02685		SUBL2 	AP,SP
+02688		MOVAB 	0(SP),R11
+0268B		MOVC5 	S^#0,0(SP),S^#0,AP,0(R11)
+02691		MOVL  	STATIC.+4,R0		;   I
+02698		BLSS  	X.186
+0269A		MULL3 	S^#8,AP,R1
+0269E		CMPL  	R0,R1
+026A1		BGEQ  	X.186
+026A3		INSV  	S^#1,R0,S^#1,0(R11)
+026A8	X.186:	MOVL  	STATIC.+8,R0		;   J
+026AF		BLSS  	X.187
+026B1		MULL3 	S^#8,AP,R1
+026B5		CMPL  	R0,R1
+026B8		BGEQ  	X.187
+026BA		INSV  	S^#1,R0,S^#1,0(R11)
+026BF	X.187:	SUBL2 	AP,SP
+026C2		MOVAB 	0(SP),R10
+026C5		MOVC5 	S^#0,0(SP),S^#0,AP,0(R10)
+026CB		MOVL  	STATIC.+12,R0		;   K
+026D2		BLSS  	X.188
+026D4		MULL3 	S^#8,AP,R1
+026D8		CMPL  	R0,R1
+026DB		BGEQ  	X.188
+026DD		INSV  	S^#1,R0,S^#1,0(R10)
+026E2	X.188:	SUBL3 	S^#1,AP,R0
+026E6	X.189:	MCOMB 	0(R10)[R0],R1
+026EA		BICB2 	R1,0(R11)[R0]
+026EE		SOBGEQ	R0,X.189
+026F1		MOVL  	STATIC.+4,R0		;   I
+026F8		BLSS  	X.190
+026FA		MULL3 	S^#8,AP,R1
+026FE		CMPL  	R0,R1
+02701		BGEQ  	X.190
+02703		EXTZV 	R0,S^#1,0(R11),R10
+02708		BRB   	X.191
+0270A	X.190:	CLRL  	R10
+0270C	X.191:	MOVB  	R10,STATIC.+0		;   BOOL
+						; LINE 420
+02713		CLRL  	AP
+02715		CMPL  	STATIC.+12,STATIC.+4	;   K  I
+02720		BLSS  	X.192
+02722		CMPL  	STATIC.+12,STATIC.+8	;   K  J
+0272D		BGTR  	X.192
+0272F		INCL  	AP
+02731	X.192:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 421
+02738		MOVL  	S^#1,AP
+0273B		CMPL  	STATIC.+12,STATIC.+20	;   K  IPOS
+02746		BLSS  	X.193
+02748		CMPL  	STATIC.+12,STATIC.+24	;   K  JPOS
+02753		BGTR  	X.193
+02755		CLRL  	AP
+02757	X.193:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 423
+
+0275E	L.43:	MOVAL 	T.6(FP),SP
+						; LINE 424
+02763		MOVB  	K.1,STATIC.+56		;   SET1
+
+0276E	L.44:	MOVAL 	T.6(FP),SP
+						; LINE 425
+02773		BRB   	L.46
+
+02775	L.45:					; LINE 426
+02775		MOVB  	K.1,STATIC.+56		;   SET1
+
+02780	L.46:					; LINE 427
+02780		BRB   	L.48
+
+02782	L.47:					; LINE 428
+02782		MOVB  	K.1,STATIC.+56		;   SET1
+
+0278D	L.48:					; LINE 429
+
+0278D	L.49:					; LINE 430
+0278D		MOVB  	K.1,STATIC.+56		;   SET1
+
+02798	L.50:					; LINE 431
+
+02798	L.51:					; LINE 432
+02798		MOVB  	K.1,STATIC.+56		;   SET1
+027A3		BRB   	L.53
+
+027A5	L.52:					; LINE 434
+027A5		MOVW  	K.2,STATIC.+57		;   SET2
+
+027B0	L.53:					; LINE 435
+027B0		CLRL  	AP
+027B2		INCL  	AP
+027B4	X.194:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 436
+027BB		CLRL  	AP
+027BD		BRB   	X.195
+027BF		INCL  	AP
+027C1	X.195:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 437
+027C8		CLRL  	AP
+027CA		BRB   	X.196
+027CC		INCL  	AP
+027CE	X.196:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 438
+027D5		CLRL  	AP
+027D7		INCL  	AP
+027D9	X.197:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 439
+027E0		BRB   	L.55
+
+027E2	L.54:					; LINE 440
+027E2		MOVB  	K.1,STATIC.+56		;   SET1
+027ED		BRB   	L.56
+
+027EF	L.55:					; LINE 442
+027EF		MOVW  	K.2,STATIC.+57		;   SET2
+
+027FA	L.56:					; LINE 443
+027FA		CLRL  	AP
+027FC		BRB   	X.198
+027FE		INCL  	AP
+02800	X.198:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 444
+02807		CLRL  	AP
+02809		INCL  	AP
+0280B	X.199:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 445
+02812		CMPL  	STATIC.+4,STATIC.+8	;   I  J
+0281D		BLEQ  	L.58
+
+0281F	L.57:					; LINE 446
+0281F		MOVB  	K.1,STATIC.+56		;   SET1
+
+0282A	L.58:					; LINE 447
+0282A		BRB   	L.60
+
+0282C	L.59:					; LINE 448
+0282C		MOVB  	K.1,STATIC.+56		;   SET1
+
+02837	L.60:					; LINE 449
+02837		CLRL  	AP
+02839		CMPL  	S^#10,S^#20		;   ^X14
+0283C		BGTR  	X.200
+0283E		INCL  	AP
+02840	X.200:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 450
+02847		CLRL  	AP
+02849		TSTB  	STATIC.+56		;   SET1
+0284F		BNEQ  	X.201
+02851		INCL  	AP
+02853	X.201:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 451
+0285A		CLRL  	AP
+0285C		TSTW  	STATIC.+57		;   SET2
+02862		BEQL  	X.202
+02864		INCL  	AP
+02866	X.202:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 452
+0286D		CLRL  	AP
+0286F		CMPC5 	S^#0,0(SP),S^#0,S^#3,STATIC.+59
+						;   SET3
+02879		BEQL  	X.203
+0287B		INCL  	AP
+0287D	X.203:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 453
+02884		CLRL  	AP
+02886		TSTL  	STATIC.+62		;   SET4
+0288C		BNEQ  	X.204
+0288E		INCL  	AP
+02890	X.204:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 454
+02897		CLRL  	AP
+02899		CMPC5 	S^#0,0(SP),S^#0,S^#5,STATIC.+66
+						;   SET5
+028A3		BNEQ  	X.205
+028A5		INCL  	AP
+028A7	X.205:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 455
+028AE		CMPC5 	S^#0,0(SP),S^#0,S^#16,STATIC.+92
+						;   ^X10  SET16
+028B8		BNEQ  	L.62
+028BA	L.61:					; LINE 456
+028BA		MOVB  	K.1,STATIC.+56		;   SET1
+028C5		BRB   	L.63
+
+028C7	L.62:					; LINE 458
+028C7		MOVW  	K.2,STATIC.+57		;   SET2
+
+028D2	L.63:					; LINE 459
+028D2		CLRL  	AP
+028D4		MOVL  	STATIC.+4,R11		;   I
+028DB		CMPL  	R11,STATIC.+8		;   J
+028E2		BGEQ  	X.207
+028E4		MOVL  	STATIC.+8,R11		;   J
+028EB	X.207:	CMPL  	R11,STATIC.+12		;   K
+028F2		BGEQ  	X.208
+028F4		MOVL  	STATIC.+12,R11		;   K
+028FB	X.208:	TSTL  	R11
+028FD		BGEQ  	X.209
+028FF		CLRL  	R11
+02901	X.209:	DIVL2 	S^#8,R11
+02904		INCL  	R11
+02906		SUBL2 	R11,SP
+02909		MOVAB 	0(SP),R10
+0290C		MOVC5 	S^#0,0(SP),S^#0,R11,0(R10)
+02912		MOVL  	STATIC.+4,R0		;   I
+02919		BLSS  	X.210
+0291B		MULL3 	S^#8,R11,R1
+0291F		CMPL  	R0,R1
+02922		BGEQ  	X.210
+02924		INSV  	S^#1,R0,S^#1,0(R10)
+02929	X.210:	MOVL  	STATIC.+8,R0		;   J
+02930		BLSS  	X.211
+02932		MULL3 	S^#8,R11,R1
+02936		CMPL  	R0,R1
+02939		BGEQ  	X.211
+0293B		INSV  	S^#1,R0,S^#1,0(R10)
+02940	X.211:	MOVL  	STATIC.+12,R0		;   K
+02947		BLSS  	X.212
+02949		MULL3 	S^#8,R11,R1
+0294D		CMPL  	R0,R1
+02950		BGEQ  	X.212
+02952		INSV  	S^#1,R0,S^#1,0(R10)
+02957	X.212:	CMPC5 	S^#0,0(SP),S^#0,R11,0(R10)
+0295D		BNEQ  	X.206
+0295F		INCL  	AP
+02961	X.206:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 460
+02968		CLRL  	AP
+0296A		MOVC5 	S^#0,0(SP),S^#0,S^#13,-21(FP)
+02971		INSV  	S^#1,STATIC.+48,S^#1,-21(FP)
+						;   I_0_TO_55
+0297B		INSV  	S^#1,STATIC.+44,S^#1,-21(FP)
+						;   I_48_TO_100
+02985		MOVC5 	S^#0,0(SP),S^#0,S^#13,-34(FP)
+0298C		CMPL  	STATIC.+20,I^#104	;   IPOS  ^X68
+02997		BGEQ  	X.214
+02999		INSV  	S^#1,STATIC.+20,S^#1,-34(FP)
+						;   IPOS
+029A3	X.214:	MOVL  	S^#12,R0
+029A6	X.215:	MCOMB 	-34(FP)[R0],R1
+029AB		BICB2 	R1,-21(FP)[R0]
+029B0		SOBGEQ	R0,X.215
+029B3		CMPC5 	S^#0,0(SP),S^#0,S^#13,-21(FP)
+029BA		BNEQ  	X.213
+029BC		INCL  	AP
+029BE	X.213:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 461
+029C5		CLRL  	AP
+029C7		CMPL  	STATIC.+4,STATIC.+8	;   I  J
+029D2		BLEQ  	X.217
+029D4		CMPL  	STATIC.+12,STATIC.+16	;   K  L
+029DF		BGTR  	X.218
+029E1	X.217:	CMPL  	STATIC.+4,STATIC.+12	;   I  K
+029EC		BNEQ  	X.216
+029EE		CMPL  	STATIC.+8,STATIC.+16	;   J  L
+029F9		BNEQ  	X.216
+029FB	X.218:	INCL  	AP
+029FD	X.216:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 462
+02A04		CLRL  	AP
+02A06		CMPL  	STATIC.+4,STATIC.+8	;   I  J
+02A11		BNEQ  	X.219
+02A13		INCL  	AP
+02A15	X.219:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 463
+02A1C		CLRL  	AP
+02A1E		CMPL  	STATIC.+4,STATIC.+8	;   I  J
+02A29		BNEQ  	X.221
+02A2B		CMPL  	STATIC.+4,STATIC.+12	;   I  K
+02A36		BEQL  	X.220
+02A38	X.221:	INCL  	AP
+02A3A	X.220:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 464
+02A41		CLRL  	AP
+02A43		CMPL  	STATIC.+4,STATIC.+12	;   I  K
+02A4E		BNEQ  	X.223
+02A50		CMPL  	STATIC.+8,STATIC.+12	;   J  K
+02A5B		BEQL  	X.222
+02A5D	X.223:	INCL  	AP
+02A5F	X.222:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 465
+02A66		CLRL  	AP
+02A68		CMPL  	STATIC.+4,STATIC.+8	;   I  J
+02A73		BLEQ  	X.225
+02A75		CMPL  	STATIC.+12,STATIC.+16	;   K  L
+02A80		BGTR  	X.224
+02A82	X.225:	CMPL  	STATIC.+4,STATIC.+12	;   I  K
+02A8D		BNEQ  	X.226
+02A8F		CMPL  	STATIC.+8,STATIC.+16	;   J  L
+02A9A		BEQL  	X.224
+02A9C	X.226:	INCL  	AP
+02A9E	X.224:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 466
+02AA5		CLRL  	AP
+02AA7		MOVL  	STATIC.+4,R11		;   I
+02AAE		BGEQ  	X.228
+02AB0		CLRL  	R11
+02AB2	X.228:	DIVL2 	S^#8,R11
+02AB5		INCL  	R11
+02AB7		SUBL2 	R11,SP
+02ABA		MOVAB 	0(SP),R10
+02ABD		MOVC5 	S^#0,0(SP),S^#0,R11,0(R10)
+02AC3		MOVL  	STATIC.+4,R0		;   I
+02ACA		BLSS  	X.229
+02ACC		MULL3 	S^#8,R11,R1
+02AD0		CMPL  	R0,R1
+02AD3		BGEQ  	X.229
+02AD5		INSV  	S^#1,R0,S^#1,0(R10)
+02ADA	X.229:	CMPC5 	S^#1,STATIC.+56,S^#0,R11,0(R10)
+						;   SET1
+02AE4		BNEQ  	X.227
+02AE6		INCL  	AP
+02AE8	X.227:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 467
+02AEF		CLRL  	AP
+02AF1		MOVL  	STATIC.+4,R11		;   I
+02AF8		BGEQ  	X.231
+02AFA		CLRL  	R11
+02AFC	X.231:	DIVL2 	S^#8,R11
+02AFF		INCL  	R11
+02B01		SUBL2 	R11,SP
+02B04		MOVAB 	0(SP),R10
+02B07		MOVC5 	S^#0,0(SP),S^#0,R11,0(R10)
+02B0D		MOVL  	STATIC.+4,R0		;   I
+02B14		BLSS  	X.232
+02B16		MULL3 	S^#8,R11,R1
+02B1A		CMPL  	R0,R1
+02B1D		BGEQ  	X.232
+02B1F		INSV  	S^#1,R0,S^#1,0(R10)
+02B24	X.232:	CMPC5 	S^#16,STATIC.+92,S^#0,R11,0(R10)
+						;   ^X10  SET16
+02B2E		BNEQ  	X.230
+02B30		INCL  	AP
+02B32	X.230:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 468
+02B39		CLRL  	AP
+02B3B		MOVW  	I^#32768,-10(FP)	;   ^X8000
+02B41		CMPW  	STATIC.+57,-10(FP)	;   SET2
+02B49		BEQL  	X.233
+02B4B		INCL  	AP
+02B4D	X.233:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 469
+02B54		CLRL  	AP
+02B56		PUSHL 	S^#2
+02B58		PUSHAB	-10(FP)
+02B5B		PUSHL 	S^#0
+02B5D		PUSHL 	S^#15
+02B5F		PUSHL 	STATIC.+4		;   I
+02B65		CALLS 	S^#5,PAX$UTL.GENSET
+02B6C		CMPC5 	S^#3,STATIC.+59,S^#0,S^#2,-10(FP)
+						;   SET3
+02B77		BNEQ  	X.234
+02B79		INCL  	AP
+02B7B	X.234:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 470
+02B82		CLRL  	AP
+02B84		PUSHL 	S^#3
+02B86		PUSHAB	-11(FP)
+02B89		PUSHL 	S^#0
+02B8B		PUSHL 	S^#23			;   ^X17
+02B8D		PUSHL 	STATIC.+4		;   I
+02B93		CALLS 	S^#5,PAX$UTL.GENSET
+02B9A		CMPC3 	S^#3,STATIC.+59,-11(FP)	;   SET3
+02BA3		BNEQ  	X.235
+02BA5		INCL  	AP
+02BA7	X.235:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 471
+02BAE		CLRL  	AP
+02BB0		MOVL  	STATIC.+4,R11		;   I
+02BB7		CMPL  	R11,STATIC.+8		;   J
+02BBE		BGEQ  	X.237
+02BC0		MOVL  	STATIC.+8,R11		;   J
+02BC7	X.237:	CMPL  	R11,STATIC.+12		;   K
+02BCE		BGEQ  	X.238
+02BD0		MOVL  	STATIC.+12,R11		;   K
+02BD7	X.238:	TSTL  	R11
+02BD9		BGEQ  	X.239
+02BDB		CLRL  	R11
+02BDD	X.239:	DIVL2 	S^#8,R11
+02BE0		INCL  	R11
+02BE2		SUBL2 	R11,SP
+02BE5		MOVAB 	0(SP),R10
+02BE8		MOVC5 	S^#0,0(SP),S^#0,R11,0(R10)
+02BEE		MOVL  	STATIC.+4,R0		;   I
+02BF5		BLSS  	X.240
+02BF7		MULL3 	S^#8,R11,R1
+02BFB		CMPL  	R0,R1
+02BFE		BGEQ  	X.240
+02C00		INSV  	S^#1,R0,S^#1,0(R10)
+02C05	X.240:	MOVL  	STATIC.+8,R0		;   J
+02C0C		BLSS  	X.241
+02C0E		MULL3 	S^#8,R11,R1
+02C12		CMPL  	R0,R1
+02C15		BGEQ  	X.241
+02C17		INSV  	S^#1,R0,S^#1,0(R10)
+02C1C	X.241:	MOVL  	STATIC.+12,R0		;   K
+02C23		BLSS  	X.242
+02C25		MULL3 	S^#8,R11,R1
+02C29		CMPL  	R0,R1
+02C2C		BGEQ  	X.242
+02C2E		INSV  	S^#1,R0,S^#1,0(R10)
+02C33	X.242:	PUSHL 	S^#3
+02C35		PUSHAB	-11(FP)
+02C38		PUSHL 	S^#0
+02C3A		PUSHL 	S^#23			;   ^X17
+02C3C		PUSHL 	STATIC.+4		;   I
+02C42		CALLS 	S^#5,PAX$UTL.GENSET
+02C49		CMPC5 	R11,0(R10),S^#0,S^#3,-11(FP)
+02C50		BNEQ  	X.236
+02C52		INCL  	AP
+02C54	X.236:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 472
+02C5B		CLRL  	AP
+02C5D		CMPC5 	S^#0,0(SP),S^#0,S^#3,STATIC.+59
+						;   SET3
+02C67		BNEQ  	X.243
+02C69		INCL  	AP
+02C6B	X.243:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 473
+02C72		CLRL  	AP
+02C74		MOVC5 	S^#0,0(SP),S^#0,S^#10,-18(FP)
+02C7B		SUBL3 	S^#24,STATIC.+44,R0	;   ^X18  I_48_TO_100
+02C83		INSV  	S^#1,R0,S^#1,-18(FP)
+02C89		CMPC5 	S^#5,STATIC.+134,S^#0,S^#10,-18(FP)
+						;   SET_31_TO_56
+02C94		BNEQ  	X.244
+02C96		INCL  	AP
+02C98	X.244:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 474
+02C9F		CLRL  	AP
+02CA1		CMPL  	STATIC.+4,S^#24		;   I  ^X18
+02CA8		BLSS  	X.245
+02CAA		SUBL3 	S^#24,STATIC.+4,R11	;   ^X18  I
+02CB2		BGEQ  	X.246
+02CB4		CLRL  	R11
+02CB6	X.246:	DIVL2 	S^#8,R11
+02CB9		INCL  	R11
+02CBB		SUBL2 	R11,SP
+02CBE		MOVAB 	0(SP),R10
+02CC1		MOVC5 	S^#0,0(SP),S^#0,R11,0(R10)
+02CC7		SUBL3 	S^#24,STATIC.+4,R0	;   ^X18  I
+02CCF		BLSS  	X.247
+02CD1		MULL3 	S^#8,R11,R1
+02CD5		CMPL  	R0,R1
+02CD8		BGEQ  	X.247
+02CDA		INSV  	S^#1,R0,S^#1,0(R10)
+02CDF	X.247:	CMPC5 	S^#5,STATIC.+134,S^#0,R11,0(R10)
+						;   SET_31_TO_56
+02CE9		BNEQ  	X.245
+02CEB		INCL  	AP
+02CED	X.245:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 475
+02CF4		CLRL  	AP
+02CF6		CMPL  	STATIC.+4,STATIC.+8	;   I  J
+02D01		BGTR  	X.249
+02D03		CMPL  	STATIC.+4,S^#24		;   I  ^X18
+02D0A		BLSS  	X.248
+02D0C	X.249:	SUBL3 	S^#24,STATIC.+8,R11	;   ^X18  J
+02D14		BGEQ  	X.250
+02D16		CLRL  	R11
+02D18	X.250:	DIVL2 	S^#8,R11
+02D1B		INCL  	R11
+02D1D		SUBL2 	R11,SP
+02D20		MOVAB 	0(SP),R10
+02D23		PUSHL 	R11
+02D25		PUSHAB	0(R10)
+02D27		PUSHL 	S^#24			;   ^X18
+02D29		PUSHL 	STATIC.+8		;   J
+02D2F		PUSHL 	STATIC.+4		;   I
+02D35		CALLS 	S^#5,PAX$UTL.GENSET
+02D3C		CMPC5 	S^#5,STATIC.+134,S^#0,R11,0(R10)
+						;   SET_31_TO_56
+02D46		BNEQ  	X.248
+02D48		INCL  	AP
+02D4A	X.248:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 476
+02D51		CLRL  	AP
+02D53		CMPL  	STATIC.+48,STATIC.+44	;   I_0_TO_55  I_48_TO_100
+02D5E		BGTR  	X.252
+02D60		CMPL  	STATIC.+48,S^#32	;   I_0_TO_55  ^X20
+02D67		BLSS  	X.251
+02D69	X.252:	PUSHL 	S^#9
+02D6B		PUSHAB	-17(FP)
+02D6E		PUSHL 	S^#32			;   ^X20
+02D70		PUSHL 	STATIC.+44		;   I_48_TO_100
+02D76		PUSHL 	STATIC.+48		;   I_0_TO_55
+02D7C		CALLS 	S^#5,PAX$UTL.GENSET
+02D83		CMPC5 	S^#4,STATIC.+130,S^#0,S^#9,-17(FP)
+						;   SET_32_TO_56
+02D8E		BNEQ  	X.251
+02D90		INCL  	AP
+02D92	X.251:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 477
+02D99		CLRL  	AP
+02D9B		CMPL  	STATIC.+48,STATIC.+44	;   I_0_TO_55  I_48_TO_100
+02DA6		BGTR  	X.254
+02DA8		CMPL  	STATIC.+48,S^#32	;   I_0_TO_55  ^X20
+02DAF		BLSS  	X.255
+02DB1	X.254:	PUSHL 	S^#9
+02DB3		PUSHAB	-17(FP)
+02DB6		PUSHL 	S^#32			;   ^X20
+02DB8		PUSHL 	STATIC.+44		;   I_48_TO_100
+02DBE		PUSHL 	STATIC.+48		;   I_0_TO_55
+02DC4		CALLS 	S^#5,PAX$UTL.GENSET
+02DCB		CMPC5 	S^#4,STATIC.+130,S^#0,S^#9,-17(FP)
+						;   SET_32_TO_56
+02DD6		BEQL  	X.253
+02DD8	X.255:	INCL  	AP
+02DDA	X.253:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 478
+02DE1		PUSHL 	S^#3
+02DE3		PUSHAB	-11(FP)
+02DE6		PUSHL 	S^#32			;   ^X20
+02DE8		PUSHL 	STATIC.+48		;   I_0_TO_55
+02DEE		PUSHL 	STATIC.+44		;   I_48_TO_100
+02DF4		CALLS 	S^#5,PAX$UTL.GENSET
+02DFB		CMPC5 	S^#4,STATIC.+130,S^#0,S^#3,-11(FP)
+						;   SET_32_TO_56
+02E06		BEQL  	L.65
+
+02E08	L.64:	MOVAL 	T.6(FP),SP
+						; LINE 479
+02E0D		MOVB  	K.1,STATIC.+56		;   SET1
+
+02E18	L.65:	MOVAL 	T.6(FP),SP
+						; LINE 480
+02E1D		CLRL  	AP
+02E1F		MOVL  	I^#4294967295,-12(FP)	;   ^XFFFFFFFF
+02E27		CMPL  	STATIC.+62,-12(FP)	;   SET4
+02E2F		BEQL  	X.256
+02E31		INCL  	AP
+02E33	X.256:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 481
+02E3A		CLRL  	AP
+02E3C		SUBL3 	S^#16,STATIC.+4,R11	;   ^X10  I
+02E44		BGEQ  	X.258
+02E46		CLRL  	R11
+02E48	X.258:	DIVL2 	S^#8,R11
+02E4B		INCL  	R11
+02E4D		SUBL2 	R11,SP
+02E50		MOVAB 	0(SP),R10
+02E53		PUSHL 	R11
+02E55		PUSHAB	0(R10)
+02E57		PUSHL 	S^#16			;   ^X10
+02E59		PUSHL 	STATIC.+4		;   I
+02E5F		PUSHL 	S^#16			;   ^X10
+02E61		CALLS 	S^#5,PAX$UTL.GENSET
+02E68		CMPC5 	S^#7,STATIC.+119,S^#0,R11,0(R10)
+						;   SET7_L2
+02E72		BNEQ  	X.257
+02E74		INCL  	AP
+02E76	X.257:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 482
+02E7D		CLRL  	AP
+02E7F		SUBL3 	S^#16,STATIC.+20,R11	;   ^X10  IPOS
+02E87		BGEQ  	X.260
+02E89		CLRL  	R11
+02E8B	X.260:	DIVL2 	S^#8,R11
+02E8E		INCL  	R11
+02E90		SUBL2 	R11,SP
+02E93		MOVAB 	0(SP),R10
+02E96		PUSHL 	R11
+02E98		PUSHAB	0(R10)
+02E9A		PUSHL 	S^#16			;   ^X10
+02E9C		PUSHL 	STATIC.+20		;   IPOS
+02EA2		PUSHL 	S^#16			;   ^X10
+02EA4		CALLS 	S^#5,PAX$UTL.GENSET
+02EAB		CMPC5 	S^#7,STATIC.+119,S^#0,R11,0(R10)
+						;   SET7_L2
+02EB5		BEQL  	X.259
+02EB7		INCL  	AP
+02EB9	X.259:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 483
+02EC0		CLRL  	AP
+02EC2		SUBL3 	S^#16,STATIC.+20,R11	;   ^X10  IPOS
+02ECA		BGEQ  	X.262
+02ECC		CLRL  	R11
+02ECE	X.262:	DIVL2 	S^#8,R11
+02ED1		INCL  	R11
+02ED3		SUBL2 	R11,SP
+02ED6		MOVAB 	0(SP),R10
+02ED9		PUSHL 	R11
+02EDB		PUSHAB	0(R10)
+02EDD		PUSHL 	S^#16			;   ^X10
+02EDF		PUSHL 	STATIC.+20		;   IPOS
+02EE5		PUSHL 	STATIC.+52		;   I_18_TO_10000
+02EEB		CALLS 	S^#5,PAX$UTL.GENSET
+02EF2		CMPC5 	S^#7,STATIC.+119,S^#0,R11,0(R10)
+						;   SET7_L2
+02EFC		BEQL  	X.261
+02EFE		INCL  	AP
+02F00	X.261:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 484
+02F07		CLRL  	AP
+02F09		CMPL  	STATIC.+40,I^#32767	;   I_MIN10_TO_7  ^X7FFF
+02F14		BGTR  	X.264
+02F16		CMPL  	STATIC.+40,S^#16	;   I_MIN10_TO_7  ^X10
+02F1D		BLSS  	X.263
+02F1F	X.264:	MOVZWL	I^#4094,-(SP)		;   ^XFFE
+02F24		PUSHAB	-4102(FP)
+02F28		PUSHL 	S^#16			;   ^X10
+02F2A		MOVZWL	I^#32767,-(SP)		;   ^X7FFF
+02F2F		PUSHL 	STATIC.+40		;   I_MIN10_TO_7
+02F35		CALLS 	S^#5,PAX$UTL.GENSET
+02F3C		CMPC5 	S^#7,STATIC.+119,S^#0,I^#4094,-4102(FP)
+						;   SET7_L2  ^XFFE
+02F4A		BNEQ  	X.263
+02F4C		INCL  	AP
+02F4E	X.263:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 485
+02F55		CLRL  	AP
+02F57		CMPB  	STATIC.+56,STATIC.+56	;   SET1  SET1
+02F62		BNEQ  	X.265
+02F64		INCL  	AP
+02F66	X.265:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 486
+02F6D		CLRL  	AP
+02F6F		CMPW  	STATIC.+57,STATIC.+57	;   SET2  SET2
+02F7A		BEQL  	X.266
+02F7C		INCL  	AP
+02F7E	X.266:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 487
+02F85		CLRL  	AP
+02F87		CMPC3 	S^#3,STATIC.+59,STATIC.+59
+						;   SET3  SET3
+02F93		BNEQ  	X.267
+02F95		INCL  	AP
+02F97	X.267:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 488
+02F9E		CLRL  	AP
+02FA0		CMPL  	STATIC.+62,STATIC.+62	;   SET4  SET4
+02FAB		BNEQ  	X.268
+02FAD		INCL  	AP
+02FAF	X.268:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 489
+02FB6		CLRL  	AP
+02FB8		CMPC3 	S^#5,STATIC.+66,STATIC.+66
+						;   SET5  SET5
+02FC4		BEQL  	X.269
+02FC6		INCL  	AP
+02FC8	X.269:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 490
+02FCF		CLRL  	AP
+02FD1		CMPC5 	S^#1,STATIC.+56,S^#0,S^#2,STATIC.+57
+						;   SET1  SET2
+02FDF		BNEQ  	X.270
+02FE1		INCL  	AP
+02FE3	X.270:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 491
+02FEA		CLRL  	AP
+02FEC		CLRL  	-17(FP)
+02FEF		MOVC3 	S^#5,STATIC.+114,-13(FP);   SET5_L6
+02FF8		CMPC5 	S^#9,-17(FP),S^#0,S^#7,STATIC.+119
+						;   SET7_L2
+03003		BEQL  	X.271
+03005		INCL  	AP
+03007	X.271:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 492
+0300E		CLRL  	AP
+03010		MOVL  	STATIC.+4,R11		;   I
+03017		CMPL  	R11,STATIC.+8		;   J
+0301E		BGEQ  	X.273
+03020		MOVL  	STATIC.+8,R11		;   J
+03027	X.273:	TSTL  	R11
+03029		BGEQ  	X.274
+0302B		CLRL  	R11
+0302D	X.274:	DIVL2 	S^#8,R11
+03030		INCL  	R11
+03032		SUBL2 	R11,SP
+03035		MOVAB 	0(SP),R10
+03038		MOVC5 	S^#0,0(SP),S^#0,R11,0(R10)
+0303E		MOVL  	STATIC.+4,R0		;   I
+03045		BLSS  	X.275
+03047		MULL3 	S^#8,R11,R1
+0304B		CMPL  	R0,R1
+0304E		BGEQ  	X.275
+03050		INSV  	S^#1,R0,S^#1,0(R10)
+03055	X.275:	MOVL  	STATIC.+8,R0		;   J
+0305C		BLSS  	X.276
+0305E		MULL3 	S^#8,R11,R1
+03062		CMPL  	R0,R1
+03065		BGEQ  	X.276
+03067		INSV  	S^#1,R0,S^#1,0(R10)
+0306C	X.276:	MOVL  	STATIC.+12,R9		;   K
+03073		CMPL  	R9,STATIC.+16		;   L
+0307A		BGEQ  	X.277
+0307C		MOVL  	STATIC.+16,R9		;   L
+03083	X.277:	TSTL  	R9
+03085		BGEQ  	X.278
+03087		CLRL  	R9
+03089	X.278:	DIVL2 	S^#8,R9
+0308C		INCL  	R9
+0308E		SUBL2 	R9,SP
+03091		MOVAB 	0(SP),R8
+03094		MOVC5 	S^#0,0(SP),S^#0,R9,0(R8)
+0309A		MOVL  	STATIC.+12,R0		;   K
+030A1		BLSS  	X.279
+030A3		MULL3 	S^#8,R9,R1
+030A7		CMPL  	R0,R1
+030AA		BGEQ  	X.279
+030AC		INSV  	S^#1,R0,S^#1,0(R8)
+030B1	X.279:	MOVL  	STATIC.+16,R0		;   L
+030B8		BLSS  	X.280
+030BA		MULL3 	S^#8,R9,R1
+030BE		CMPL  	R0,R1
+030C1		BGEQ  	X.280
+030C3		INSV  	S^#1,R0,S^#1,0(R8)
+030C8	X.280:	CMPC5 	R11,0(R10),S^#0,R9,0(R8)
+030CE		BNEQ  	X.272
+030D0		INCL  	AP
+030D2	X.272:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 493
+030D9		CLRL  	AP
+030DB		MOVL  	STATIC.+4,R11		;   I
+030E2		CMPL  	R11,STATIC.+8		;   J
+030E9		BGEQ  	X.282
+030EB		MOVL  	STATIC.+8,R11		;   J
+030F2	X.282:	TSTL  	R11
+030F4		BGEQ  	X.283
+030F6		CLRL  	R11
+030F8	X.283:	DIVL2 	S^#8,R11
+030FB		INCL  	R11
+030FD		SUBL2 	R11,SP
+03100		MOVAB 	0(SP),R10
+03103		MOVC5 	S^#0,0(SP),S^#0,R11,0(R10)
+03109		MOVL  	STATIC.+4,R0		;   I
+03110		BLSS  	X.284
+03112		MULL3 	S^#8,R11,R1
+03116		CMPL  	R0,R1
+03119		BGEQ  	X.284
+0311B		INSV  	S^#1,R0,S^#1,0(R10)
+03120	X.284:	MOVL  	STATIC.+8,R0		;   J
+03127		BLSS  	X.285
+03129		MULL3 	S^#8,R11,R1
+0312D		CMPL  	R0,R1
+03130		BGEQ  	X.285
+03132		INSV  	S^#1,R0,S^#1,0(R10)
+03137	X.285:	MOVL  	STATIC.+52,R9		;   I_18_TO_10000
+0313E		CMPL  	R9,STATIC.+44		;   I_48_TO_100
+03145		BGEQ  	X.286
+03147		MOVL  	STATIC.+44,R9		;   I_48_TO_100
+0314E	X.286:	SUBL2 	S^#16,R9		;   ^X10
+03151		DIVL2 	S^#8,R9
+03154		INCL  	R9
+03156		SUBL2 	R9,SP
+03159		MOVAB 	0(SP),R8
+0315C		MOVC5 	S^#0,0(SP),S^#0,R9,0(R8)
+03162		SUBL3 	S^#16,STATIC.+52,R0	;   ^X10  I_18_TO_10000
+0316A		MULL3 	S^#8,R9,R1
+0316E		CMPL  	R0,R1
+03171		BGEQ  	X.287
+03173		INSV  	S^#1,R0,S^#1,0(R8)
+03178	X.287:	SUBL3 	S^#16,STATIC.+44,R0	;   ^X10  I_48_TO_100
+03180		MULL3 	S^#8,R9,R1
+03184		CMPL  	R0,R1
+03187		BGEQ  	X.288
+03189		INSV  	S^#1,R0,S^#1,0(R8)
+0318E	X.288:	ADDL3 	R9,S^#2,R7
+03192		SUBL2 	R7,SP
+03195		MOVAB 	0(SP),R6
+03198		CMPL  	R7,S^#2
+0319B		BGEQ  	X.289
+0319D		MOVC5 	S^#0,0(SP),S^#0,R7,0(R6)
+031A3		BRB   	X.290
+031A5	X.289:	CLRW  	0(R6)
+031A7		SUBL3 	S^#2,R7,R0
+031AB		MOVC5 	R9,0(R8),S^#0,R0,2(R6)
+031B2	X.290:	CMPC5 	R7,0(R6),S^#0,R11,0(R10)
+031B8		BNEQ  	X.281
+031BA		INCL  	AP
+031BC	X.281:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 494
+031C3		CMPC5 	S^#16,STATIC.+92,S^#0,S^#2,K.46
+						;   ^X10  SET16
+031D1		BEQL  	L.67
+
+031D3	L.66:	MOVAL 	T.6(FP),SP
+						; LINE 495
+031D8		MOVB  	K.1,STATIC.+56		;   SET1
+031E3		BRB   	L.68
+
+031E5	L.67:	MOVAL 	T.6(FP),SP
+						; LINE 497
+031EA		MOVW  	K.2,STATIC.+57		;   SET2
+
+031F5	L.68:					; LINE 499
+031F5		CLRL  	AP
+031F7		INCL  	AP
+031F9	X.291:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 500
+03200		CLRL  	AP
+03202		INCL  	AP
+03204	X.292:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 501
+0320B		CLRL  	AP
+0320D		INCL  	AP
+0320F	X.293:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 502
+03216		CLRL  	AP
+03218		INCL  	AP
+0321A	X.294:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 503
+03221		CLRL  	AP
+03223		INCL  	AP
+03225	X.295:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 504
+0322C		CLRL  	AP
+0322E		INCL  	AP
+03230	X.296:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 505
+03237	L.69:					; LINE 506
+03237		MOVB  	K.1,STATIC.+56		;   SET1
+03242		BRB   	L.71
+
+03244	L.70:					; LINE 508
+03244		MOVW  	K.2,STATIC.+57		;   SET2
+
+0324F	L.71:					; LINE 509
+0324F		BRB   	L.73
+
+03251	L.72:					; LINE 510
+03251		MOVB  	K.1,STATIC.+56		;   SET1
+0325C		BRB   	L.74
+
+0325E	L.73:					; LINE 512
+0325E		MOVW  	K.2,STATIC.+57		;   SET2
+
+03269	L.74:					; LINE 513
+03269		CLRL  	AP
+0326B		BRB   	X.297
+0326D		INCL  	AP
+0326F	X.297:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 514
+03276		CLRL  	AP
+03278		INCL  	AP
+0327A	X.298:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 515
+03281		CLRL  	AP
+03283		CMPL  	STATIC.+4,STATIC.+4	;   I  I
+0328E		BNEQ  	X.299
+03290		INCL  	AP
+03292	X.299:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 516
+03299		CLRL  	AP
+0329B		CMPL  	STATIC.+4,STATIC.+8	;   I  J
+032A6		BNEQ  	X.300
+032A8		INCL  	AP
+032AA	X.300:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 517
+032B1		CLRL  	AP
+032B3		CMPL  	STATIC.+20,STATIC.+4	;   IPOS  I
+032BE		BEQL  	X.301
+032C0		INCL  	AP
+032C2	X.301:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 518
+032C9		CLRL  	AP
+032CB		CMPL  	STATIC.+4,STATIC.+8	;   I  J
+032D6		BLSS  	X.302
+032D8		CMPL  	STATIC.+4,STATIC.+12	;   I  K
+032E3		BGTR  	X.302
+032E5		INCL  	AP
+032E7	X.302:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 519
+032EE		CLRL  	AP
+032F0		CMPL  	STATIC.+32,STATIC.+8	;   I_0_TO_7  J
+032FB		BLSS  	X.303
+032FD		CMPL  	STATIC.+32,S^#7		;   I_0_TO_7
+03304		BGTR  	X.303
+03306		INCL  	AP
+03308	X.303:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 520
+0330F		CLRL  	AP
+03311		INCL  	AP
+03313	X.304:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 521
+0331A		CLRL  	AP
+0331C		MOVL  	STATIC.+4,R0		;   I
+03323		BLSS  	X.305
+03325		CMPL  	R0,S^#8
+03328		BGEQ  	X.305
+0332A		BBC   	R0,STATIC.+56,X.305	;   SET1
+03332		INCL  	AP
+03334	X.305:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 522
+0333B		CLRL  	AP
+0333D		BBC   	S^#4,STATIC.+59,X.306	;   SET3
+03345		INCL  	AP
+03347	X.306:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 523
+0334E		CLRL  	AP
+03350		INCL  	AP
+03352	X.307:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 524
+03359		CLRL  	AP
+0335B		MOVL  	STATIC.+4,R0		;   I
+03362		BLSS  	X.308
+03364		CMPL  	R0,I^#128		;   ^X80
+0336B		BGEQ  	X.308
+0336D		BBC   	R0,STATIC.+92,X.308	;   SET16
+03375		INCL  	AP
+03377	X.308:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 525
+0337E		CLRL  	AP
+03380		MOVL  	STATIC.+4,R11		;   I
+03387		CMPL  	R11,STATIC.+8		;   J
+0338E		BGEQ  	X.310
+03390		MOVL  	STATIC.+8,R11		;   J
+03397	X.310:	TSTL  	R11
+03399		BGEQ  	X.311
+0339B		CLRL  	R11
+0339D	X.311:	DIVL2 	S^#8,R11
+033A0		INCL  	R11
+033A2		SUBL2 	R11,SP
+033A5		MOVAB 	0(SP),R10
+033A8		MOVC5 	S^#0,0(SP),S^#0,R11,0(R10)
+033AE		MOVL  	STATIC.+4,R0		;   I
+033B5		BLSS  	X.312
+033B7		MULL3 	S^#8,R11,R1
+033BB		CMPL  	R0,R1
+033BE		BGEQ  	X.312
+033C0		INSV  	S^#1,R0,S^#1,0(R10)
+033C5	X.312:	MOVL  	STATIC.+8,R0		;   J
+033CC		BLSS  	X.313
+033CE		MULL3 	S^#8,R11,R1
+033D2		CMPL  	R0,R1
+033D5		BGEQ  	X.313
+033D7		INSV  	S^#1,R0,S^#1,0(R10)
+033DC	X.313:	MOVL  	STATIC.+4,R0		;   I
+033E3		BLSS  	X.309
+033E5		MULL3 	S^#8,R11,R1
+033E9		CMPL  	R0,R1
+033EC		BGEQ  	X.309
+033EE		BBC   	R0,0(R10),X.309
+033F2		INCL  	AP
+033F4	X.309:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 526
+033FB		CLRL  	AP
+033FD		CMPL  	S^#5,S^#5
+03400		BNEQ  	X.314
+03402		INCL  	AP
+03404	X.314:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 527
+0340B		CLRL  	AP
+0340D		CMPL  	S^#1,S^#5
+03410		BLEQ  	X.315
+03412		INCL  	AP
+03414	X.315:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 528
+0341B		CLRL  	AP
+0341D		CMPL  	S^#1,STATIC.+4		;   I
+03424		BLEQ  	X.316
+03426		INCL  	AP
+03428	X.316:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 529
+0342F		CLRL  	AP
+03431		CMPL  	STATIC.+4,STATIC.+8	;   I  J
+0343C		BGTR  	X.317
+0343E		INCL  	AP
+03440	X.317:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 530
+03447		CLRL  	AP
+03449		CMPL  	STATIC.+4,STATIC.+8	;   I  J
+03454		BGTR  	X.319
+03456		BLSS  	X.318
+03458		CMPL  	STATIC.+4,STATIC.+12	;   I  K
+03463		BNEQ  	X.318
+03465	X.319:	INCL  	AP
+03467	X.318:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 531
+0346E		CLRL  	AP
+03470		CMPL  	STATIC.+20,STATIC.+24	;   IPOS  JPOS
+0347B		BGTR  	X.320
+0347D		BLSS  	X.321
+0347F		CMPL  	STATIC.+20,STATIC.+28	;   IPOS  KPOS
+0348A		BEQL  	X.320
+0348C	X.321:	INCL  	AP
+0348E	X.320:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 532
+03495		CMPL  	S^#5,S^#10
+03498		BGTR  	X.322
+0349A		BLSS  	L.76
+0349C		CMPL  	S^#5,STATIC.+28		;   KPOS
+034A3		BNEQ  	L.76
+034A5	X.322:
+	L.75:	MOVAL 	T.6(FP),SP
+						; LINE 533
+034AA		MOVB  	K.1,STATIC.+56		;   SET1
+034B5		BRB   	L.77
+
+034B7	L.76:	MOVAL 	T.6(FP),SP
+						; LINE 535
+034BC		MOVW  	K.2,STATIC.+57		;   SET2
+
+034C7	L.77:					; LINE 536
+034C7		CLRL  	AP
+034C9		CMPL  	STATIC.+4,STATIC.+8	;   I  J
+034D4		BGTR  	X.324
+034D6		CMPL  	STATIC.+4,STATIC.+12	;   I  K
+034E1		BLSS  	X.323
+034E3		CMPL  	STATIC.+8,STATIC.+16	;   J  L
+034EE		BGTR  	X.323
+034F0	X.324:	INCL  	AP
+034F2	X.323:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 537
+034F9		CLRL  	AP
+034FB		CMPL  	S^#6,S^#9
+034FE		BGTR  	X.325
+03500		CMPL  	S^#6,S^#6
+03503		BLSS  	X.326
+03505		CMPL  	S^#9,S^#9
+03508		BLEQ  	X.325
+0350A	X.326:	INCL  	AP
+0350C	X.325:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 538
+03513		CLRL  	AP
+03515		MOVL  	STATIC.+8,R11		;   J
+0351C		BGEQ  	X.328
+0351E		CLRL  	R11
+03520	X.328:	DIVL2 	S^#8,R11
+03523		INCL  	R11
+03525		SUBL2 	R11,SP
+03528		MOVAB 	0(SP),R10
+0352B		PUSHL 	R11
+0352D		PUSHAB	0(R10)
+0352F		PUSHL 	S^#0
+03531		PUSHL 	STATIC.+8		;   J
+03537		PUSHL 	STATIC.+4		;   I
+0353D		CALLS 	S^#5,PAX$UTL.GENSET
+03544		MOVL  	R11,R0
+03547		CMPL  	R0,S^#2
+0354A		BLSS  	X.329
+0354C		MOVL  	S^#2,R0
+0354F	X.329:	DECL  	R0
+03551	X.330:	BICB2 	STATIC.+57[R0],0(R10)[R0]
+						;   SET2
+0355A		SOBGEQ	R0,X.330
+0355D		CMPC5 	S^#0,0(SP),S^#0,R11,0(R10)
+03563		BNEQ  	X.327
+03565		INCL  	AP
+03567	X.327:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 539
+0356E		CLRL  	AP
+03570		PUSHL 	S^#2
+03572		PUSHAB	-10(FP)
+03575		PUSHL 	S^#0
+03577		PUSHL 	S^#15
+03579		PUSHL 	STATIC.+4		;   I
+0357F		CALLS 	S^#5,PAX$UTL.GENSET
+03586		BICW2 	STATIC.+57,-10(FP)	;   SET2
+0358E		TSTW  	-10(FP)
+03591		BNEQ  	X.331
+03593		INCL  	AP
+03595	X.331:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 540
+0359C		CLRL  	AP
+0359E		MOVC3 	S^#13,K.47,-21(FP)
+035A7		MOVL  	S^#4,R0
+035AA	X.333:	BICB2 	STATIC.+66[R0],-21(FP)[R0]
+						;   SET5
+035B4		SOBGEQ	R0,X.333
+035B7		CMPC5 	S^#0,0(SP),S^#0,S^#13,-21(FP)
+035BE		BNEQ  	X.332
+035C0		INCL  	AP
+035C2	X.332:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 541
+035C9		CLRL  	AP
+035CB		CMPL  	STATIC.+4,STATIC.+8	;   I  J
+035D6		BGTR  	X.334
+035D8		CMPL  	STATIC.+4,S^#24		;   I  ^X18
+035DF		BLSS  	X.335
+035E1		SUBL3 	S^#24,STATIC.+8,R11	;   ^X18  J
+035E9		BGEQ  	X.336
+035EB		CLRL  	R11
+035ED	X.336:	DIVL2 	S^#8,R11
+035F0		INCL  	R11
+035F2		SUBL2 	R11,SP
+035F5		MOVAB 	0(SP),R10
+035F8		PUSHL 	R11
+035FA		PUSHAB	0(R10)
+035FC		PUSHL 	S^#24			;   ^X18
+035FE		PUSHL 	STATIC.+8		;   J
+03604		PUSHL 	STATIC.+4		;   I
+0360A		CALLS 	S^#5,PAX$UTL.GENSET
+03611		MOVL  	R11,R0
+03614		CMPL  	R0,S^#5
+03617		BLSS  	X.337
+03619		MOVL  	S^#5,R0
+0361C	X.337:	DECL  	R0
+0361E	X.338:	BICB2 	STATIC.+134[R0],0(R10)[R0]
+						;   SET_31_TO_56
+03627		SOBGEQ	R0,X.338
+0362A		CMPC5 	S^#0,0(SP),S^#0,R11,0(R10)
+03630		BEQL  	X.334
+03632	X.335:	INCL  	AP
+03634	X.334:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 542
+0363B		CLRL  	AP
+0363D		MOVL  	STATIC.+4,R11		;   I
+03644		CMPL  	R11,STATIC.+8		;   J
+0364B		BGEQ  	X.340
+0364D		MOVL  	STATIC.+8,R11		;   J
+03654	X.340:	TSTL  	R11
+03656		BGEQ  	X.341
+03658		CLRL  	R11
+0365A	X.341:	DIVL2 	S^#8,R11
+0365D		INCL  	R11
+0365F		SUBL2 	R11,SP
+03662		MOVAB 	0(SP),R10
+03665		MOVC5 	S^#0,0(SP),S^#0,R11,0(R10)
+0366B		MOVL  	STATIC.+4,R0		;   I
+03672		BLSS  	X.342
+03674		MULL3 	S^#8,R11,R1
+03678		CMPL  	R0,R1
+0367B		BGEQ  	X.342
+0367D		INSV  	S^#1,R0,S^#1,0(R10)
+03682	X.342:	MOVL  	STATIC.+8,R0		;   J
+03689		BLSS  	X.343
+0368B		MULL3 	S^#8,R11,R1
+0368F		CMPL  	R0,R1
+03692		BGEQ  	X.343
+03694		INSV  	S^#1,R0,S^#1,0(R10)
+03699	X.343:	MOVL  	STATIC.+24,R9		;   JPOS
+036A0		BGEQ  	X.344
+036A2		CLRL  	R9
+036A4	X.344:	DIVL2 	S^#8,R9
+036A7		INCL  	R9
+036A9		SUBL2 	R9,SP
+036AC		MOVAB 	0(SP),R8
+036AF		PUSHL 	R9
+036B1		PUSHAB	0(R8)
+036B3		PUSHL 	S^#0
+036B5		PUSHL 	STATIC.+24		;   JPOS
+036BB		PUSHL 	STATIC.+20		;   IPOS
+036C1		CALLS 	S^#5,PAX$UTL.GENSET
+036C8		MOVL  	R9,R0
+036CB		CMPL  	R0,R11
+036CE		BLSS  	X.345
+036D0		MOVL  	R11,R0
+036D3	X.345:	DECL  	R0
+036D5	X.346:	BICB2 	0(R10)[R0],0(R8)[R0]
+036DA		SOBGEQ	R0,X.346
+036DD		CMPC5 	S^#0,0(SP),S^#0,R9,0(R8)
+036E3		BNEQ  	X.339
+036E5		INCL  	AP
+036E7	X.339:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 543
+036EE		CLRL  	AP
+036F0		TSTB  	STATIC.+56		;   SET1
+036F6		BNEQ  	X.347
+036F8		INCL  	AP
+036FA	X.347:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 544
+03701		CLRL  	AP
+03703		MOVL  	STATIC.+4,R11		;   I
+0370A		CMPL  	R11,STATIC.+8		;   J
+03711		BGEQ  	X.349
+03713		MOVL  	STATIC.+8,R11		;   J
+0371A	X.349:	TSTL  	R11
+0371C		BGEQ  	X.350
+0371E		CLRL  	R11
+03720	X.350:	DIVL2 	S^#8,R11
+03723		INCL  	R11
+03725		SUBL2 	R11,SP
+03728		MOVAB 	0(SP),R10
+0372B		MOVC5 	S^#0,0(SP),S^#0,R11,0(R10)
+03731		MOVL  	STATIC.+4,R0		;   I
+03738		BLSS  	X.351
+0373A		MULL3 	S^#8,R11,R1
+0373E		CMPL  	R0,R1
+03741		BGEQ  	X.351
+03743		INSV  	S^#1,R0,S^#1,0(R10)
+03748	X.351:	MOVL  	STATIC.+8,R0		;   J
+0374F		BLSS  	X.352
+03751		MULL3 	S^#8,R11,R1
+03755		CMPL  	R0,R1
+03758		BGEQ  	X.352
+0375A		INSV  	S^#1,R0,S^#1,0(R10)
+0375F	X.352:	CMPC5 	S^#0,0(SP),S^#0,R11,0(R10)
+03765		BEQL  	X.348
+03767		INCL  	AP
+03769	X.348:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 545
+03770		CLRL  	AP
+03772		TSTW  	K.48
+03778		BEQL  	X.353
+0377A		INCL  	AP
+0377C	X.353:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 546
+03783		CLRL  	AP
+03785		MOVB  	S^#2,-9(FP)
+03789		BICB3 	-9(FP),STATIC.+56,R1	;   SET1
+03792		BNEQ  	X.354
+03794		INCL  	AP
+03796	X.354:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 547
+0379D		CLRL  	AP
+0379F		MOVC5 	S^#0,0(SP),S^#0,S^#3,-11(FP)
+037A6		INSV  	S^#1,STATIC.+32,S^#1,-11(FP)
+						;   I_0_TO_7
+037B0		MOVL  	S^#2,R0
+037B3	X.356:	BICB3 	-11(FP)[R0],STATIC.+59[R0],R1
+						;   SET3
+037BE		BNEQ  	X.357
+037C0		SOBGEQ	R0,X.356
+037C3		BRB   	X.355
+037C5	X.357:	INCL  	AP
+037C7	X.355:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 548
+037CE		CLRL  	AP
+037D0		MOVL  	STATIC.+4,R11		;   I
+037D7		CMPL  	R11,STATIC.+8		;   J
+037DE		BGEQ  	X.359
+037E0		MOVL  	STATIC.+8,R11		;   J
+037E7	X.359:	TSTL  	R11
+037E9		BGEQ  	X.360
+037EB		CLRL  	R11
+037ED	X.360:	DIVL2 	S^#8,R11
+037F0		INCL  	R11
+037F2		SUBL2 	R11,SP
+037F5		MOVAB 	0(SP),R10
+037F8		MOVC5 	S^#0,0(SP),S^#0,R11,0(R10)
+037FE		MOVL  	STATIC.+4,R0		;   I
+03805		BLSS  	X.361
+03807		MULL3 	S^#8,R11,R1
+0380B		CMPL  	R0,R1
+0380E		BGEQ  	X.361
+03810		INSV  	S^#1,R0,S^#1,0(R10)
+03815	X.361:	MOVL  	STATIC.+8,R0		;   J
+0381C		BLSS  	X.362
+0381E		MULL3 	S^#8,R11,R1
+03822		CMPL  	R0,R1
+03825		BGEQ  	X.362
+03827		INSV  	S^#1,R0,S^#1,0(R10)
+0382C	X.362:	SUBL2 	R11,SP
+0382F		MOVAB 	0(SP),R9
+03832		MOVC5 	S^#0,0(SP),S^#0,R11,0(R9)
+03838		MOVL  	STATIC.+12,R0		;   K
+0383F		BLSS  	X.363
+03841		MULL3 	S^#8,R11,R1
+03845		CMPL  	R0,R1
+03848		BGEQ  	X.363
+0384A		INSV  	S^#1,R0,S^#1,0(R9)
+0384F	X.363:	SUBL3 	S^#1,R11,R0
+03853	X.364:	BICB3 	0(R9)[R0],0(R10)[R0],R1
+03859		BNEQ  	X.358
+0385B		SOBGEQ	R0,X.364
+0385E		INCL  	AP
+03860	X.358:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 549
+03867		CLRL  	AP
+03869		MOVB  	S^#62,-9(FP)		;   ^X3E
+0386D		BICB3 	-9(FP),STATIC.+56,R1	;   SET1
+03876		BNEQ  	X.365
+03878		INCL  	AP
+0387A	X.365:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 550
+03881		CLRL  	AP
+03883		PUSHL 	S^#2
+03885		PUSHAB	-10(FP)
+03888		PUSHL 	S^#0
+0388A		PUSHL 	S^#15
+0388C		PUSHL 	STATIC.+4		;   I
+03892		CALLS 	S^#5,PAX$UTL.GENSET
+03899		BICW3 	-10(FP),STATIC.+57,R1	;   SET2
+038A2		BEQL  	X.366
+038A4		INCL  	AP
+038A6	X.366:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 551
+038AD		CLRL  	AP
+038AF		PUSHL 	S^#5
+038B1		PUSHAB	-13(FP)
+038B4		PUSHL 	S^#48			;   ^X30
+038B6		PUSHL 	STATIC.+44		;   I_48_TO_100
+038BC		PUSHL 	STATIC.+4		;   I
+038C2		CALLS 	S^#5,PAX$UTL.GENSET
+038C9		MOVL  	S^#4,R0
+038CC	X.368:	BICB3 	-13(FP)[R0],STATIC.+114[R0],R1
+						;   SET5_L6
+038D7		BNEQ  	X.367
+038D9		SOBGEQ	R0,X.368
+038DC		INCL  	AP
+038DE	X.367:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 552
+038E5		CLRL  	AP
+038E7		MOVL  	STATIC.+4,R11		;   I
+038EE		CMPL  	R11,STATIC.+8		;   J
+038F5		BGEQ  	X.370
+038F7		MOVL  	STATIC.+8,R11		;   J
+038FE	X.370:	TSTL  	R11
+03900		BGEQ  	X.371
+03902		CLRL  	R11
+03904	X.371:	DIVL2 	S^#8,R11
+03907		INCL  	R11
+03909		SUBL2 	R11,SP
+0390C		MOVAB 	0(SP),R10
+0390F		MOVC5 	S^#0,0(SP),S^#0,R11,0(R10)
+03915		MOVL  	STATIC.+4,R0		;   I
+0391C		BLSS  	X.372
+0391E		MULL3 	S^#8,R11,R1
+03922		CMPL  	R0,R1
+03925		BGEQ  	X.372
+03927		INSV  	S^#1,R0,S^#1,0(R10)
+0392C	X.372:	MOVL  	STATIC.+8,R0		;   J
+03933		BLSS  	X.373
+03935		MULL3 	S^#8,R11,R1
+03939		CMPL  	R0,R1
+0393C		BGEQ  	X.373
+0393E		INSV  	S^#1,R0,S^#1,0(R10)
+03943	X.373:	SUBL2 	R11,SP
+03946		MOVAB 	0(SP),R9
+03949		PUSHL 	R11
+0394B		PUSHAB	0(R9)
+0394D		PUSHL 	S^#0
+0394F		PUSHL 	STATIC.+16		;   L
+03955		PUSHL 	STATIC.+12		;   K
+0395B		CALLS 	S^#5,PAX$UTL.GENSET
+03962		SUBL3 	S^#1,R11,R0
+03966	X.374:	BICB3 	0(R9)[R0],0(R10)[R0],R1
+0396C		BNEQ  	X.369
+0396E		SOBGEQ	R0,X.374
+03971		INCL  	AP
+03973	X.369:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 553
+0397A		CLRL  	AP
+0397C		MOVB  	K.1,-9(FP)
+03984		BICB3 	-9(FP),STATIC.+56,R1	;   SET1
+0398D		BNEQ  	X.375
+0398F		INCL  	AP
+03991	X.375:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 554
+03998		CLRL  	AP
+0399A		MOVB  	STATIC.+57,-9(FP)	;   SET2
+039A2		BICB3 	-9(FP),STATIC.+56,R1	;   SET1
+039AB		BNEQ  	X.376
+039AD		INCL  	AP
+039AF	X.376:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 555
+039B6		CLRL  	AP
+039B8		MOVZBW	STATIC.+56,-10(FP)	;   SET1
+039C0		BICW3 	-10(FP),STATIC.+57,R1	;   SET2
+039C9		BNEQ  	X.377
+039CB		INCL  	AP
+039CD	X.377:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 556
+039D4		CLRL  	AP
+039D6		MOVC5 	S^#1,STATIC.+56,S^#0,S^#16,-24(FP)
+						;   SET1  ^X10
+039E1		MOVL  	S^#15,R0
+039E4	X.379:	BICB3 	-24(FP)[R0],STATIC.+92[R0],R1
+						;   SET16
+039EF		BNEQ  	X.378
+039F1		SOBGEQ	R0,X.379
+039F4		INCL  	AP
+039F6	X.378:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 557
+039FD		CLRL  	AP
+039FF		MOVC5 	S^#0,0(SP),S^#0,S^#6,-24(FP)
+03A06		MOVC5 	S^#5,STATIC.+114,S^#0,S^#10,-18(FP)
+						;   SET5_L6
+03A11		MOVL  	S^#15,R0
+03A14	X.381:	BICB3 	-24(FP)[R0],STATIC.+92[R0],R1
+						;   SET16
+03A1F		BNEQ  	X.380
+03A21		SOBGEQ	R0,X.381
+03A24		INCL  	AP
+03A26	X.380:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 558
+03A2D		CLRL  	AP
+03A2F		MOVC3 	S^#5,STATIC.+92+6,-13(FP)
+						;   SET16
+03A38		MOVL  	S^#4,R0
+03A3B	X.383:	BICB3 	-13(FP)[R0],STATIC.+114[R0],R1
+						;   SET5_L6
+03A46		BNEQ  	X.382
+03A48		SOBGEQ	R0,X.383
+03A4B		INCL  	AP
+03A4D	X.382:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 559
+03A54		CLRL  	AP
+03A56		MOVL  	STATIC.+4,R11		;   I
+03A5D		CMPL  	R11,STATIC.+8		;   J
+03A64		BGEQ  	X.385
+03A66		MOVL  	STATIC.+8,R11		;   J
+03A6D	X.385:	TSTL  	R11
+03A6F		BGEQ  	X.386
+03A71		CLRL  	R11
+03A73	X.386:	DIVL2 	S^#8,R11
+03A76		INCL  	R11
+03A78		SUBL2 	R11,SP
+03A7B		MOVAB 	0(SP),R10
+03A7E		MOVC5 	S^#0,0(SP),S^#0,R11,0(R10)
+03A84		MOVL  	STATIC.+4,R0		;   I
+03A8B		BLSS  	X.387
+03A8D		MULL3 	S^#8,R11,R1
+03A91		CMPL  	R0,R1
+03A94		BGEQ  	X.387
+03A96		INSV  	S^#1,R0,S^#1,0(R10)
+03A9B	X.387:	MOVL  	STATIC.+8,R0		;   J
+03AA2		BLSS  	X.388
+03AA4		MULL3 	S^#8,R11,R1
+03AA8		CMPL  	R0,R1
+03AAB		BGEQ  	X.388
+03AAD		INSV  	S^#1,R0,S^#1,0(R10)
+03AB2	X.388:	SUBL2 	R11,SP
+03AB5		MOVAB 	0(SP),R9
+03AB8		CMPL  	R11,S^#6
+03ABB		BGEQ  	X.389
+03ABD		MOVC5 	S^#0,0(SP),S^#0,R11,0(R9)
+03AC3		BRB   	X.390
+03AC5	X.389:	MOVC5 	S^#0,0(SP),S^#0,S^#6,0(R9)
+03ACB		SUBL3 	S^#6,R11,R0
+03ACF		MOVC5 	S^#5,STATIC.+114,S^#0,R0,6(R9)
+						;   SET5_L6
+03ADA	X.390:	SUBL3 	S^#1,R11,R0
+03ADE	X.391:	BICB3 	0(R9)[R0],0(R10)[R0],R1
+03AE4		BNEQ  	X.384
+03AE6		SOBGEQ	R0,X.391
+03AE9		INCL  	AP
+03AEB	X.384:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 560
+03AF2		CLRL  	AP
+03AF4		MOVC5 	S^#0,0(SP),S^#0,S^#5,-13(FP)
+03AFB		SUBL3 	S^#48,STATIC.+4,R0	;   ^X30  I
+03B03		BLSS  	X.393
+03B05		CMPL  	R0,S^#40		;   ^X28
+03B08		BGEQ  	X.393
+03B0A		INSV  	S^#1,R0,S^#1,-13(FP)
+03B10	X.393:	SUBL3 	S^#48,STATIC.+8,R0	;   ^X30  J
+03B18		BLSS  	X.394
+03B1A		CMPL  	R0,S^#40		;   ^X28
+03B1D		BGEQ  	X.394
+03B1F		INSV  	S^#1,R0,S^#1,-13(FP)
+03B25	X.394:	MOVC3 	S^#5,-13(FP),-18(FP)
+03B2B		MOVL  	S^#4,R0
+03B2E	X.395:	BICB3 	-18(FP)[R0],STATIC.+114[R0],R1
+						;   SET5_L6
+03B39		BNEQ  	X.392
+03B3B		SOBGEQ	R0,X.395
+03B3E		INCL  	AP
+03B40	X.392:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 561
+03B47		CLRL  	AP
+03B49		MOVZBL	STATIC.+56,-12(FP)	;   SET1
+03B51		BISW2 	STATIC.+57,-12(FP)	;   SET2
+03B59		BISL2 	STATIC.+62,-12(FP)	;   SET4
+03B61		MCOML 	STATIC.+92,R1		;   SET16
+03B68		BICL2 	R1,-12(FP)
+03B6C		MOVC5 	S^#0,0(SP),S^#0,S^#3,-16(FP)
+03B73		MOVB  	STATIC.+134,-13(FP)	;   SET_31_TO_56
+03B7B		BICL3 	-16(FP),STATIC.+92,-16(FP)
+						;   SET16
+03B85		CLRW  	-16(FP)
+03B88		MCOMW 	STATIC.+127,R1		;   SET_20_TO_39
+03B8F		BICW2 	R1,-14(FP)
+03B93		BISL2 	STATIC.+62,-16(FP)	;   SET4
+03B9B		MOVL  	-16(FP),-20(FP)
+03BA0		BICL3 	-20(FP),-12(FP),R1
+03BA6		BNEQ  	X.396
+03BA8		INCL  	AP
+03BAA	X.396:	MOVB  	AP,STATIC.+0		;   BOOL
+						; LINE 562
+03BB1		JMP   	PAX$MON.STOP
+
+	;
+	;	Constant Area:
+	;
+	;
+	;	Unaligned:
+	;
+
+03BB7	K.2:	.BYTE	^B01000011
+03BB8		.BYTE	^B01000011
+
+03BB9	K.3:	.BYTE	^B01000011
+03BBA		.BYTE	^B01000011
+03BBB		.BYTE	^B01000011
+
+03BBC	K.4:	.BYTE	^B01000011
+03BBD		.BYTE	^B01000011
+03BBE		.BYTE	^B01000011
+03BBF		.BYTE	^B01000011
+
+03BC0	K.5:	.BYTE	^B00000011
+03BC1		.BYTE	^B00000000
+03BC2		.BYTE	^B00000000
+03BC3		.BYTE	^B00000000
+03BC4		.BYTE	^B10000000
+
+03BC5	K.6:	.BYTE	^B00000011
+03BC6		.BYTE	^B00000000
+03BC7		.BYTE	^B00000000
+03BC8		.BYTE	^B00000000
+03BC9		.BYTE	^B00000000
+03BCA		.BYTE	^B00000000
+03BCB		.BYTE	^B10000000
+
+03BCC	K.7:	.BYTE	^B00000011
+03BCD		.BYTE	^B00000000
+03BCE		.BYTE	^B00000000
+03BCF		.BYTE	^B00000000
+03BD0		.BYTE	^B00000000
+03BD1		.BYTE	^B00000000
+03BD2		.BYTE	^B00000000
+03BD3		.BYTE	^B10000000
+
+03BD4	K.9:
+	K.8:	.BYTE	^B00000011
+03BD5		.BYTE	^B00000000
+03BD6		.BYTE	^B00000000
+03BD7		.BYTE	^B00000000
+03BD8		.BYTE	^B00000000
+03BD9		.BYTE	^B00000000
+03BDA		.BYTE	^B00000000
+03BDB		.BYTE	^B00000000
+03BDC		.BYTE	^B00000000
+03BDD		.BYTE	^B00000000
+03BDE		.BYTE	^B00000000
+03BDF		.BYTE	^B00000000
+03BE0		.BYTE	^B00000000
+03BE1		.BYTE	^B00000000
+03BE2		.BYTE	^B00000000
+03BE3		.BYTE	^B10000000
+
+03BE4	K.10:	.BYTE	^B10000110
+
+03BE5	K.11:
+	K.1:	.BYTE	^B01000011
+
+03BE6	K.12:	.BYTE	^B01010100
+
+03BE7	K.13:	.BYTE	^B11100000
+03BE8		.BYTE	^B11111111
+03BE9		.BYTE	^B01111111
+
+03BEA	K.14:	.BYTE	^B11100000
+03BEB		.BYTE	^B11111111
+03BEC		.BYTE	^B11111111
+
+03BED	K.15:	.BYTE	^B11111111
+03BEE		.BYTE	^B11111111
+03BEF		.BYTE	^B11111111
+03BF0		.BYTE	^B11111111
+03BF1		.BYTE	^B11111111
+
+03BF2	K.17:
+	K.16:	.BYTE	^B10000000
+03BF3		.BYTE	^B11111111
+03BF4		.BYTE	^B11111111
+03BF5		.BYTE	^B11111111
+03BF6		.BYTE	^B00000001
+
+03BF7	K.18:	.BYTE	^B11111111
+03BF8		.BYTE	^B11111111
+03BF9		.BYTE	^B11111111
+03BFA		.BYTE	^B11111111
+03BFB		.BYTE	^B11111111
+03BFC		.BYTE	^B11111111
+03BFD		.BYTE	^B11111111
+03BFE		.BYTE	^B11111111
+03BFF		.BYTE	^B11111111
+03C00		.BYTE	^B11111111
+03C01		.BYTE	^B11111111
+03C02		.BYTE	^B11111111
+03C03		.BYTE	^B11111111
+03C04		.BYTE	^B11111111
+03C05		.BYTE	^B11111111
+03C06		.BYTE	^B11111111
+
+03C07	K.19:	.BYTE	^B00000000
+03C08		.BYTE	^B00000000
+03C09		.BYTE	^B00000000
+03C0A		.BYTE	^B00000000
+03C0B		.BYTE	^B00000000
+03C0C		.BYTE	^B00000000
+03C0D		.BYTE	^B00000000
+03C0E		.BYTE	^B00000000
+03C0F		.BYTE	^B11111111
+03C10		.BYTE	^B11111111
+03C11		.BYTE	^B11111111
+03C12		.BYTE	^B11111111
+03C13		.BYTE	^B11111111
+03C14		.BYTE	^B11111111
+03C15		.BYTE	^B11111111
+03C16		.BYTE	^B11111111
+
+03C17	K.20:	.BYTE	^B00100001
+03C18		.BYTE	^B10000100
+
+03C19	K.21:	.BYTE	^B11111111
+03C1A		.BYTE	^B11111111
+03C1B		.BYTE	^B00000000
+03C1C		.BYTE	^B11111111
+03C1D		.BYTE	^B11111111
+
+03C1E	K.22:	.BYTE	^B10000000
+03C1F		.BYTE	^B00000000
+03C20		.BYTE	^B00000000
+03C21		.BYTE	^B00000000
+03C22		.BYTE	^B00000001
+
+03C23	K.26:
+	K.23:
+	K.24:
+	K.25:	.BYTE	^B00101001
+
+03C24	K.27:	.BYTE	^B00000000
+03C25		.BYTE	^B00010101
+
+03C26	K.28:	.BYTE	^B10101000
+03C27		.BYTE	^B00000010
+
+03C28	K.30:
+	K.29:	.BYTE	^B00000000
+03C29		.BYTE	^B00000000
+03C2A		.BYTE	^B00000000
+03C2B		.BYTE	^B00000000
+03C2C		.BYTE	^B00000000
+03C2D		.BYTE	^B00000000
+03C2E		.BYTE	^B01010000
+03C2F		.BYTE	^B00000001
+03C30	K.31:	.BYTE	^B00000000
+03C31		.BYTE	^B11111111
+03C32		.BYTE	^B11111111
+03C33		.BYTE	^B11111111
+03C34		.BYTE	^B11111111
+03C35		.BYTE	^B11111111
+03C36		.BYTE	^B11111111
+03C37		.BYTE	^B11111111
+03C38		.BYTE	^B11111111
+03C39		.BYTE	^B11111111
+03C3A		.BYTE	^B11111111
+03C3B		.BYTE	^B11111111
+03C3C		.BYTE	^B11111111
+03C3D		.BYTE	^B11111111
+03C3E		.BYTE	^B11111111
+03C3F		.BYTE	^B11111111
+
+03C40	K.32:	.BYTE	^B10000000
+
+03C41	K.34:
+	K.33:	.BYTE	^B00110100
+
+03C42	K.35:	.BYTE	^B11111111
+03C43		.BYTE	^B11111111
+
+03C44	K.39:	.BYTE	^B00111000
+
+03C45	K.44:
+	K.36:
+	K.37:
+	K.38:
+	K.40:
+	K.41:
+	K.42:
+	K.43:	.ASCII	"OUTPUT"
+
+03C4B	K.45:	.BYTE	^B01110000
+
+03C4C	K.46:	.BYTE	^B00100010
+03C4D		.BYTE	^B00000100
+
+03C4E	K.47:	.BYTE	^B11111111
+03C4F		.BYTE	^B11111111
+03C50		.BYTE	^B11111111
+03C51		.BYTE	^B11111111
+03C52		.BYTE	^B11111111
+03C53		.BYTE	^B11111111
+03C54		.BYTE	^B11111111
+03C55		.BYTE	^B11111111
+03C56		.BYTE	^B11111111
+03C57		.BYTE	^B11111111
+03C58		.BYTE	^B11111111
+03C59		.BYTE	^B11111111
+03C5A		.BYTE	^B00011111
+
+03C5B	K.48:	.BYTE	^B00100000
+03C5C		.BYTE	^B10000100
+
+	;
+	;    Code area:      3BB7 bytes (15287 decimal)
+	;    Constant area:  A6 bytes (166 decimal)
+	;    Static area:    40E bytes (1038 decimal)
+	;
+
+		.END
+    ma )ž

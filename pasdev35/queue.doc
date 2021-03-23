@@ -1,0 +1,11 @@
+#SYSTEM(QUEUE)
+#MODULE(QUEUE,07/07/82) This program prints the contents of each file
+named in "#####QUE.TMP", with the options specified, on the VAX line 
+printer. Note that "#####" is the last five digits of the current job number
+#REQUIREMENTS All file names in #####QUE.TMP should be preceded by
+"LPT:".
+#ALGORITHM QUEUE calls the RDLIB routine DO_CMD, which calls the VAX DCL 
+command, PRINT.
+#NOTES The counterpart of this program on the DEC-10 is SYS:QUEUE.
+#INCLUDE(DOCMD.INC)
+#END

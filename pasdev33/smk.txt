@@ -1,0 +1,1217 @@
+
+
+
+          M680000 Project - SMK                                                              Page 1
+          February 3, 1982
+
+
+          1  KENNEDY             _______
+
+
+
+              1.1 Intro to the M68000 and RDLIB
+
+
+                  Description: At the present I can not put much detail into my schedule as  to  the
+                               specific  tasks I will have.  For the near future the following items
+                               are topics in which I will be involved:
+
+                                1. Learning about the current RDLIB routines on both the  DEC10  and
+                                   the VAX;
+                                2. Finding out which RDLIB routines ANC uses;
+                                3. Learning the M68000 Assembler;
+                                4. Studying the relevant M68000 Spec documents;
+                                5. Determining  a  priority  (or  order)  for  working  on the RDLIB
+                                   routines that  will  be  needed,  and  expand  this  schedule  in
+                                   accordance with the determined order.
+
+
+                                 Start       Completion                               __________    __________
+
+                  Scheduled:     11/30/81    1/4/82
+
+                  Actual:        11/30/81    1/4/82
+
+
+                  Progress -- 1/4/82
+
+
+                       1. The available documentation on RDLIB has been read.
+
+
+
+
+
+
+
+
+
+          M680000 Project - SMK                                                              Page 2
+          February 3, 1982
+
+
+                       2. It  will most likely be more efficient for us to come up with our own list
+                          of routines we know ANC uses and present this list to ANC for  review  and
+                          modification.  There  are  some  (perhaps many) items that will have to be
+                          discussed with ANC to determine what they "need" and what will be possible
+                          to provide.
+
+                       3. I  have  read  and  gone over both the M68000 16-Bit Microprocessor User's
+                          Manual and the Resident Structured Assembler Reference Manual.
+
+                       4. I have read the M68000 design documents that  have  been  distributed  and
+                          have a general understanding of them.
+
+                       5. Once  we  come  up with our list of RDLIB routines for ANC a more specific
+                          schedule for studying, coding, implementing, and  testing  these  routines
+                          will be determined.
+
+
+
+
+
+              1.2 RDLIB Development Procedure
+
+
+                  Description: I  plan  to  draw  up a procedure that will be used in investigating,
+                               documenting (for both the M68000 RDLIB User Documentation and Program
+                               Notebook  Documentation),  coding,  and  testing  of individual RDLIB
+                               routines.  This is being done so that a standard procedure exists  in
+                               the  development  process,  with the goals being consistancy in RDLIB
+                               development.
+
+
+
+
+
+
+
+
+
+
+
+
+          M680000 Project - SMK                                                              Page 3
+          February 3, 1982
+
+
+                                 Start       Completion                               __________    __________
+
+                  Scheduled:     1/5/82      1/6/82
+
+                  Actual:        1/5/82      1/5/82
+
+
+                  Progress -- 1/5/82
+
+                      The procedure has  been  put  together  and  SCRMAC  input  can  be  found  in
+                      (PASDEV32)M68PRO.PMF.  A copy will be given to SMR and PJP.
+
+
+
+
+              1.3 Outline RDLIB
+
+
+                  Description: This  task  will  involve putting together a document which lists the
+                               RDLIB  routines  to  be  implemented  on  the  M68000,  and  a  brief
+                               description  of each routine.  Included in the description will be an
+                               indication of the language that was used to  code  the  corresponding
+                               routine  on  the VAX, whether the routine is system dependent, and if
+                               the routine can be coded as previously speced, or if some part of the
+                               spec needs to be defined.  Also included in the same document will be
+                               a list of issues that will have to be discussed with ANC to determine
+                               their  needs, and determine whether we can meet those needs directly,
+                               through some viable alternative, or not at all.
+
+                                 Start       Completion                               __________    __________
+
+                  Scheduled:     1/5/82      1/8/82
+
+
+
+
+
+
+
+
+
+          M680000 Project - SMK                                                              Page 4
+          February 3, 1982
+
+
+                  Rescheduled:   1/12/82     1/15/82
+
+                  Actual:        1/12/82     1/14/82
+
+
+                  Progress -- 1/12/82
+
+                      I was absent from work due to  illness  and  severe  weather  conditions  from
+                      1/6 thru 1/11, as a result this task was rescheduled as shown above.
+
+                  Progress -- 1/14/82
+
+                      The  document  has been completed and a copy was given to SMR and PJP.  SCRMAC
+                      input can be found in (PASDEV32)M68DOC.PMF.
+
+
+
+
+              1.4 Standard Macros
+
+
+                  Description: Macros used in assembly coding are needed to insure that the standard
+                               sequences  as  described  in  the Runtime Specification are followed.
+                               This will also make it convenient if  for  some  reason  any  of  the
+                               standard sequences have to be changed.
+
+                                 Start       Completion                               __________    __________
+
+                  Scheduled:     1/15/82     1/25/82
+
+                  Actual:        1/14/82     1/22/82
+
+
+
+
+
+
+
+
+
+
+          M680000 Project - SMK                                                              Page 5
+          February 3, 1982
+
+
+                  Progress -- 1/22/82
+
+                      The  macros  to  be  used in the assembly language coding of RDLIB subroutines
+                      have been written and put in  the  file  1002..RDLIBMAC.SA.  The  actual  work
+                      involved  was  less  than  originally  expected (accounting for being ahead of
+                      schedule).  Once I understood how the the entry and exit sequences are handled
+                      by  the  compiler  the writting of the macros was rather easy.  Also, I waited
+                      until all the macros were written before I entered  the  code,  thus  all  the
+                      sub-tasks below were completed on the same day.  (Friday 1/22/82).
+
+                  Progress -- 1/27/82
+
+                      A  number  of bugs were found in the macros once we started assembling - those
+                      bugs have been fixed.  In addition, I have added  a  number  of  other  macros
+                      besides  the  three  macros  listed  below.  Added  to  the macro file are the
+                      following new macros:
+
+                       1. RD$ADD_BLANK  this macro is used by RD$PGM_BLK to pad the end of filenames
+                                   less than six characters out to six characters.
+
+                       2. RD$PGM_BLK  this macro sets up the program block for the module (file).
+
+                       3. RD$MODULE   this macro sets up the beginning of the module with a standard
+                                   sequence of assembler directives and also sets up some convenient
+                                   symbols.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          M680000 Project - SMK                                                              Page 6
+          February 3, 1982
+
+
+                  1.4.1 Entry Sequence Macro
+
+
+                      Description: Write an entry sequence macro that conforms to the standard entry
+                                   sequence as stated in the M68000 Runtime Standard.
+
+                                     Start       Completion                                   __________    __________
+
+                      Scheduled:     1/18/82     1/20/82
+
+                      Actual:        1/18/82     1/22/82
+
+
+                      Progress -- 1/22/82
+
+                          Completed.
+
+
+
+                  1.4.2 Exit Sequence Macro
+
+
+                      Description: Write an exit sequence macro that conforns to the  standard  exit
+                                   sequence as stated in the M68000 Runtime Standard.
+
+                                     Start       Completion                                   __________    __________
+
+                      Scheduled:     1/19/82     1/21/82
+
+                      Actual:        1/19/82     1/22/82
+
+
+
+
+
+
+
+
+
+
+
+          M680000 Project - SMK                                                              Page 7
+          February 3, 1982
+
+
+                      Progress -- 1/22/82
+
+                          Completed.
+
+
+
+                  1.4.3 Procedure Block Macro
+
+
+                      Description: Write  a  macro to be the standard sequence of commands to set up
+                                   the procedure block.
+
+                                     Start       Completion                                   __________    __________
+
+                      Scheduled:     1/21/82     1/25/82
+
+                      Actual:        1/21/82     1/22/82
+
+
+                      Progress -- 1/22/82
+
+                          Completed.
+
+
+
+
+              1.5 Scheduling RDLIB Development
+
+
+                  Description: A schedule for the writing of the RDLIB routines will be  formed  and
+                               documented.  This  document will also include areas where 1) problems
+                               may exist that could lead to schedule extentions, 2) investigation is
+
+
+
+
+
+
+
+
+
+          M680000 Project - SMK                                                              Page 8
+          February 3, 1982
+
+
+                               needed,  or  3) consultation  is needed.  The schedule document, upon
+                               completion, will be translated to put in this schedule.
+
+                                 Start       Completion                               __________    __________
+
+                  Scheduled:     1/26/82     1/28/82
+
+                  Progress -- 1/22/82
+
+                      This task has been abandoned because it is  felt  that  the  documentation  of
+                      RDLIB  subroutine development can be sufficiently done in the schedule itself.
+                      The scheduling of RDLIB development will begin in the next task section.
+
+
+
+
+              1.6 RDLIB Subroutine Development
+
+
+                  Description:  This task involves the documentation, coding,  and  testing  of  the
+                               subroutines  in  the  RDLIB Package.  The development of each routine
+                               will be done as outlined in (PASDEV32)M68PRO.TXT.  Only a portion  of
+                               the  RDLIB  routines  will be scheduled at first and the rest will be
+                               scheduled as the library is built.
+
+                                 Start       Completion                               __________    __________
+
+                  Scheduled:     1/22/82     3/19/81
+
+                  Actual:        1/22/82     
+
+
+
+
+
+
+
+
+
+
+
+          M680000 Project - SMK                                                              Page 9
+          February 3, 1982
+
+
+                  Progress -- 1/22/82
+
+                      K. Palgut and I met today to talk about RDLIB.  Items discussed were:
+
+                       1. Header for the RDLIB Assembly source code.  [KMP]
+                       2. M68000 RDLIB Documentation
+                            a. User Documentation.
+                            b. Macros to be used in doing User Documentation.  [SMK]
+                            c. Program Notebook Documentation.
+                       3. Dividing up the responsibilities of RDLIB Delelopment
+
+                      My part of RDLIB will be documented as we divide up the routines for RDLIB.
+
+
+
+                  1.6.1 RDLIB User Documentation
+
+
+                      Description: Documentation of RDLIB will be a continuous task and will be done
+                                   as  routines  are  implemented.  Before  any documentation can be
+                                   done there are three sub-tasks that need to  be  completed;  they
+                                   are listed below.
+
+                                     Start       Completion                                   __________    __________
+
+                      Scheduled:     1/25/82     1/29/82
+
+                      Actual:        1/27/82/    1/29/82
+
+
+
+
+
+
+
+
+
+
+
+
+
+          M680000 Project - SMK                                                              Page 10
+          February 3, 1982
+
+
+                      Progress -- 1/29/82
+
+                          The  three sub-tasks listed below have been completed and documentation of
+                          the M68000 RDLIB routines may begin.
+
+
+
+                      1.6.1.1 Setting Up M68LIB.PMF
+
+
+                          Description: M68LIB.PMF will be  the  user  documentation  for  the  RDLIB
+                                       Package  [SCRMAC  input].  The  file  must  be  set up before
+                                       sections of documentation on routines can be inserted.
+
+                                         Start       Completion                                       __________    __________
+
+                          Scheduled:     1/25/82     1/25/82
+
+                          Actual:        1/27/82/    1/27/82
+
+
+
+                      1.6.1.2 RDLIB User Documentation Macros
+
+
+                          Description: The user documentation for the M68000 RDLIB will all be  done
+                                       in  a  standard  format.  To aid in adhering to this standard
+                                       format I will write a set of PMF macros that will  correspond
+                                       to  the  standard  items  found in a routine's documentation.
+                                       These macros will include:
+
+                                       #ENTRY  gives entry point name;
+
+
+
+
+
+
+
+
+
+          M680000 Project - SMK                                                              Page 11
+          February 3, 1982
+
+
+                                       #USE     starts a verbatim section to specify hoe the routine
+                                               is used;
+                                       #ENDUSE signals the end of the USE section;
+                                       #ARG    argument description;
+                                       #INPUT  sections off input arguments;
+                                       #OUTPUT sections off output arguments;
+                                       #RET    special case of #ARG for return values;
+                                       #INC    lists include files needed;
+                                       #OTHER  used  to  set  up  either a 'Requirements' section, a
+                                               'Notes' section, or a user named section.
+
+                                                 Start       Completion                                               __________    __________
+
+                                  Scheduled:     1/25/82     1/27/82
+
+                                  Actual:        1/27/82/    1/29/82
+
+
+                                  Progress -- 1/29/81
+
+                                      The macros listed above have been written and tested.  The PMF
+                                      library  file  compiled  from  the  macros  has  been  put  in
+                                      M68MAC.PML in each of the three  accounts  PASDEV4,  PASDEV25,
+                                      and  PASDEV32.  This  file  should  be used as the PMF library
+                                      file when running SCRMAC on a file which  uses  these  macros.
+                                      An  example  using  the  above macros can be found in the file
+                                      (PASDEV32)TEST.PMF,  with  the  SCRMAC  output  in  the   file
+                                      (PASDEV32)TEST.TXT.
+
+
+
+
+
+
+
+
+
+
+
+
+
+          M680000 Project - SMK                                                              Page 12
+          February 3, 1982
+
+
+                              1.6.1.3 Program Notebook Documentation
+
+
+                                  Description: The  outline  for  the program notebook documentation
+                                               needs to be done in the file (PASDEV4)M68LIB.NOT.
+
+                                                 Start       Completion                                               __________    __________
+
+                                  Scheduled:     1/25/82     1/25/82
+
+                                  Actual:        1/29/82/    1/29/82
+
+
+
+                          1.6.2 RDLIB Routine:  SLEEP
+
+
+                                                    Completion                                           __________    __________
+
+                              Scheduled:     1/28/82     2/3/82
+
+                              Actual:        2/1/82      
+
+
+
+                              1.6.2.1 Write User Documentation for SLEEP
+
+
+                                                 Start       Completion                                               __________    __________
+
+                                  Scheduled:     1/27/82     1/28/82
+
+
+
+
+
+
+
+
+
+
+          M680000 Project - SMK                                                              Page 13
+          February 3, 1982
+
+
+                                  Actual:        2/1/82      2/1/82
+
+
+
+                              1.6.2.2 Write SLEEP
+
+
+                                  Description: Code the SLEEP routine.
+
+                                                 Start       Completion                                               __________    __________
+
+                                  Scheduled:     1/28/82     2/1/82
+
+                                  Actual:        2/1/82      2/3/82
+
+
+
+                              1.6.2.3 Finalize SLEEP
+
+
+                                  Description: Put source code for SLEEP in account 1002;  Put  user
+                                               documentation  for SLEEP in (PASDEV4)M68LIB.PMF and a
+                                               copy in the  documentation  notebook;  Add  necessary
+                                               items to the M68000 RDLIB Program Notebook for SLEEP.
+
+                                                 Start       Completion                                               __________    __________
+
+                                  Scheduled:     2/3/82      2/3/82
+
+                                  Actual:        2/3/82      2/4/82
+
+
+
+
+
+
+
+
+
+
+
+          M680000 Project - SMK                                                              Page 14
+          February 3, 1982
+
+
+                          1.6.3 CMDUTL Routines
+
+
+                              Description: The  following sub-task sections outline what needs to be
+                                           done with the CMDUTL Package for the M68000 RDLIB.
+
+
+
+                              1.6.3.1 Documentation
+
+
+                                  Description: The documentation for the CMDUTL routines needs to be
+                                               added  to  the M68000 RDLIB Documentation.  This will
+                                               include all the routines for the CMDUTL package.
+
+                                                 Start       Completion                                               __________    __________
+
+                                  Scheduled:     2/4/82      2/4/82
+
+                                  Actual:        2/3/82      2/8/82
+
+
+
+                              1.6.3.2 Update CMD_FILE_NAME Source
+
+
+                                  Description: CMD_FILE_NAME is the  only  CMDUTL  routine  that  is
+                                               system  dependent and needs a version for the M68000.
+                                               Changes to the routine code  will  be  to  put  in  a
+                                               section  of  code that will conditionally compile for
+                                               the M68000 and will handle VERSADOS filenames.
+
+
+
+
+
+
+
+
+
+
+          M680000 Project - SMK                                                              Page 15
+          February 3, 1982
+
+
+                                                 Start       Completion                                               __________    __________
+
+                                  Scheduled:     2/4/82      2/8/82
+                                  Rescheduled:   2/4/82      2/18/82
+                                  Rescheduled:   2/4/82      2/26/82
+
+                                  Actual:        2/8/82      
+
+
+                                  Progress -- 2/9/82
+
+                                      This tast will entail more work  than  originally  thought.  I
+                                      will  have to put together a BNF representation for the M68000
+                                      file  formats.  This  BNF  representation  will  then  be  run
+                                      through  LEXGEN  to produce a table used by CMD_FILE_NAME (and
+                                      also FILUTL routines).
+
+                                  Progress -- 2/15/82
+
+                                      This task will involve much more work  than  even  thought  on
+                                      2/9/82.  After  looking  into  setting up a BNF representation
+                                      for  the  Motorola,  we  have  found  a  way  to  set  up  the
+                                      CMD_FILE_NAME  (and  PR_FILE_ID)  routine  so  that  only  the
+                                      include files for  the  routines  will  be  system  dependent.
+                                      Presently  all  systems have their own pascal source files for
+                                      CMD_FILE_NAME and PR_FILE_ID.  The plan now  is  to  make  one
+                                      system  independent  pascal source file for the above routines
+                                      and have system dependent include files for each system.
+
+
+
+
+
+
+
+
+
+
+
+
+
+          M680000 Project - SMK                                                              Page 16
+          February 3, 1982
+
+
+                                  Progress -- 3/1/82
+
+                                      Pascal source files for CMD_FILE_NAME and PR_FILE_ID have been
+                                      set  up  and  are  on  PASDEV2.  Four system dependent include
+                                      files have been put on the system accounts:  TYMSHARE-PASDEV2,
+                                      ADP-PASCAL10C,   VAX-PASDEV3,   and  M68-PASDEV4.  CMDUTL  and
+                                      FILUTL routines both compile for their specific  all  systems.
+                                      We  have  found  out  from ANC that these routines will not be
+                                      needed for their benchmarks, and therefore  testing  of  these
+                                      routines  will  be  postponed  until after the PASDIR routines
+                                      have been completed (PASDIR routines will be needed  in  ANC's
+                                      benchmarks).
+
+
+
+                              1.6.3.3 CMDUTL Finalization
+
+
+                                  Description: Put  source  code  for  CMDUTL routines in [???]; Put
+                                               user documentation for CMDUTL in  (PASDEV4)M68LIB.PMF
+                                               and   a  copy  in  the  documentation  notebook;  Add
+                                               necessary items to the M68000 RDLIB Program  Notebook
+                                               for CMDUTL.
+
+                                                 Start       Completion                                               __________    __________
+
+                                  Scheduled:     2/8/82      2/8/82
+                                  Rescheduled:   2/18/82     2/19/82
+                                  Rescheduled:   3/??/82     3/??/82
+
+                                  Actual:              
+
+
+
+
+
+
+
+
+
+
+          M680000 Project - SMK                                                              Page 17
+          February 3, 1982
+
+
+                          1.6.4 FILUTL Routines
+
+
+                              Description: The  following sub-task sections outline what needs to be
+                                           done with the FILUTL Package for the M68000 RDLIB.
+
+                                             Start       Completion                                           __________    __________
+
+                              Scheduled:     2/??/82     2/??/82
+
+
+                              1.6.4.1 RDLIB Routine:  PR_FILE_ID
+
+
+                                                 Start       Completion                                               __________    __________
+
+                                  Scheduled:     2/??/82     2/??/82
+
+
+                                  1.6.4.1.1 PR_FILE_ID Documentation
+
+
+                                      Description: Write  user  documentation  for  the   PR_FILE_ID
+                                                   Routine.
+
+                                                     Start       Completion                                                   __________    __________
+
+                                      Scheduled:     2/??/82     2/??/82
+
+                                      Actual:              
+
+
+
+
+
+
+
+
+
+
+
+          M680000 Project - SMK                                                              Page 18
+          February 3, 1982
+
+
+                                  1.6.4.1.2 PR_FILE_ID Source Code
+
+
+                                      Description: Alter  the current PASCAL code to incorporate the
+                                                   M68000 VERSADOS file syntax.
+
+                                                     Start       Completion                                                   __________    __________
+
+                                      Scheduled:     2/??/82     2/??/82
+
+                                      Actual:              
+
+
+
+                                  1.6.4.1.3 PR_FILE_ID Finalization
+
+
+                                      Description: Put source code for PR_FILE_ID routines in [???];
+                                                   Put   user   documentation   for   PR_FILE_ID  in
+                                                   (PASDEV4)M68LIB.PMF   and   a   copy    in    the
+                                                   documentation  notebook;  Add  necessary items to
+                                                   the M68000 RDLIB Program Notebook for PR_FILE_ID.
+
+                                                     Start       Completion                                                   __________    __________
+
+                                      Scheduled:     2/??/82     2/??/82
+
+                                      Actual:              
+
+
+
+
+
+
+
+
+
+
+
+
+
+          M680000 Project - SMK                                                              Page 19
+          February 3, 1982
+
+
+                              1.6.4.2 RDLIB ROUTINE:  OPEN_FILE
+
+
+                                                 Start       Completion                                               __________    __________
+
+                                  Scheduled:     2/??/82     2/??/82
+
+
+                                  1.6.4.2.1 OPEN_FILE Documentation
+
+
+                                      Description: Write  user  documentation  for   the   OPEN_FILE
+                                                   Routine.
+
+                                                     Start       Completion                                                   __________    __________
+
+                                      Scheduled:     2/??/82     2/??/82
+
+                                      Actual:              
+
+
+
+                                  1.6.4.2.2 OPEN_FILE Source Code
+
+
+                                      Description: Alter  the current PASCAL code to incorporate the
+                                                   M68000 VERSADOS file syntax.
+
+                                                     Start       Completion                                                   __________    __________
+
+                                      Scheduled:     2/??/82     2/??/82
+
+
+
+
+
+
+
+
+
+
+          M680000 Project - SMK                                                              Page 20
+          February 3, 1982
+
+
+                                      Actual:              
+
+
+
+                                  1.6.4.2.3 OPEN_FILE Finalization
+
+
+                                      Description: Put source code for OPEN_FILE routines in  [???];
+                                                   Put   user   documentation   for   OPEN_FILE   in
+                                                   (PASDEV4)M68LIB.PMF   and   a   copy    in    the
+                                                   documentation  notebook;  Add  necessary items to
+                                                   the M68000 RDLIB Program Notebook for OPEN_FILE.
+
+                                                     Start       Completion                                                   __________    __________
+
+                                      Scheduled:     2/??/82     2/??/82
+
+                                      Actual:              
+
+
+
+                              1.6.4.3 DIRPAS Routines
+
+
+                                  Description: The following sub-task sections outline what needs to
+                                               be done with the DIRPAS Package for the M68000 RDLIB.
+
+                                                 Start       Completion                                               __________    __________
+
+                                  Scheduled:     3/1/82      3/19/82
+
+
+
+
+
+
+
+
+
+
+
+          M680000 Project - SMK                                                              Page 21
+          February 3, 1982
+
+
+                                  1.6.4.3.1 RDLIB Routine:  DIR_OPEN
+
+
+                                                     Start       Completion                                                   __________    __________
+
+                                      Scheduled:     3/??/82     3/??/82
+
+
+                                      1.6.4.3.1.1 DIR_OPEN Documentation
+
+
+                                          Description: Write  user  documentation  for  the DIR_OPEN
+                                                       Routine.
+
+                                                         Start       Completion                                                       __________    __________
+
+                                          Scheduled:     3/??/82     3/??/82
+
+                                          Actual:              
+
+
+
+                                      1.6.4.3.1.2 DIR_OPEN Source Code
+
+
+                                          Description: Write  68000  assembler   routine   to   meet
+                                                       specification.   Note   any  changes  in  the
+                                                       documentation that need to be made  to  types
+                                                       or variables.
+
+
+
+
+
+
+
+
+
+
+
+
+          M680000 Project - SMK                                                              Page 22
+          February 3, 1982
+
+
+                                                         Start       Completion                                                       __________    __________
+
+                                          Scheduled:     3/??/82     3/??/82
+
+                                          Actual:              
+
+
+
+                                      1.6.4.3.1.3 DIR_OPEN Finalization
+
+
+                                          Description: Put  source  code  for  DIR_OPEN  routines in
+                                                       account  1002;  Put  user  documentation  for
+                                                       DIR_OPEN in (PASDEV4)M68LIB.PMF and a copy in
+                                                       the  documentation  notebook;  Add  necessary
+                                                       items  to  the  M68000 RDLIB Program Notebook
+                                                       for DIR_OPEN.
+
+                                                         Start       Completion                                                       __________    __________
+
+                                          Scheduled:     3/??/82     3/??/82
+
+                                          Actual:              
+
+
+
+                                  1.6.4.3.2 RDLIB Routine:  DIR_CLOSE
+
+
+                                                     Start       Completion                                                   __________    __________
+
+                                      Scheduled:     3/??/82     3/??/82
+
+
+
+
+
+
+
+
+
+          M680000 Project - SMK                                                              Page 23
+          February 3, 1982
+
+
+                                      1.6.4.3.2.1 DIR_CLOSE Documentation
+
+
+                                          Description: Write user documentation  for  the  DIR_CLOSE
+                                                       Routine.
+
+                                                         Start       Completion                                                       __________    __________
+
+                                          Scheduled:     3/??/82     3/??/82
+
+                                          Actual:              
+
+
+
+                                      1.6.4.3.2.2 DIR_CLOSE Source Code
+
+
+                                          Description: Write   68000   assembler   routine  to  meet
+                                                       specification.  Note  any  changes   in   the
+                                                       documentation  that  need to be made to types
+                                                       or variables.
+
+                                                         Start       Completion                                                       __________    __________
+
+                                          Scheduled:     3/??/82     3/??/82
+
+                                          Actual:              
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          M680000 Project - SMK                                                              Page 24
+          February 3, 1982
+
+
+                                      1.6.4.3.2.3 DIR_CLOSE Finalization
+
+
+                                          Description: Put source code  for  DIR_CLOSE  routines  in
+                                                       account  1002;  Put  user  documentation  for
+                                                       DIR_CLOSE in (PASDEV4)M68LIB.PMF and  a  copy
+                                                       in  the documentation notebook; Add necessary
+                                                       items to the M68000  RDLIB  Program  Notebook
+                                                       for DIR_CLOSE.
+
+                                                         Start       Completion                                                       __________    __________
+
+                                          Scheduled:     3/??/82     3/??/82
+
+                                          Actual:              
+
+
+
+                                  1.6.4.3.3 RDLIB Routine:  DIR_NEXT
+
+
+                                                     Start       Completion                                                   __________    __________
+
+                                      Scheduled:     3/??/82     3/??/82
+
+
+                                      1.6.4.3.3.1 DIR_NEXT Documentation
+
+
+                                          Description: Write  user  documentation  for  the DIR_NEXT
+                                                       Routine.
+
+
+
+
+
+
+
+
+
+
+          M680000 Project - SMK                                                              Page 25
+          February 3, 1982
+
+
+                                                         Start       Completion                                                       __________    __________
+
+                                          Scheduled:     3/??/82     3/??/82
+
+                                          Actual:              
+
+
+
+                                      1.6.4.3.3.2 DIR_NEXT Source Code
+
+
+                                          Description: Write  68000  assembler   routine   to   meet
+                                                       specification.   Note   any  changes  in  the
+                                                       documentation that need to be made  to  types
+                                                       or variables.
+
+                                                         Start       Completion                                                       __________    __________
+
+                                          Scheduled:     3/??/82     3/??/82
+
+                                          Actual:              
+
+
+
+                                      1.6.4.3.3.3 DIR_NEXT Finalization
+
+
+                                          Description: Put  source  code  for  DIR_NEXT  routines in
+                                                       account  1002;  Put  user  documentation  for
+                                                       DIR_NEXT in (PASDEV4)M68LIB.PMF and a copy in
+                                                       the  documentation  notebook;  Add  necessary
+                                                       items  to  the  M68000 RDLIB Program Notebook
+
+
+
+
+
+
+
+
+
+          M680000 Project - SMK                                                              Page 26
+          February 3, 1982
+
+
+                                                       for DIR_NEXT.
+
+                                                         Start       Completion                                                       __________    __________
+
+                                          Scheduled:     3/??/82     3/??/82
+
+                                          Actual:              
+
+
+
+                                  1.6.4.3.4 RDLIB Routine:  DIR_ATTR
+
+
+
+                                      1.6.4.3.4.1 DIR_ATTR Documentation
+
+
+                                          Description: Write user  documentation  for  the  DIR_ATTR
+                                                       Routine.
+
+                                                         Start       Completion                                                       __________    __________
+
+                                          Scheduled:     3/??/82     3/??/82
+
+                                          Actual:              
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          M680000 Project - SMK                                                              Page 27
+          February 3, 1982
+
+
+                                      1.6.4.3.4.2 DIR_ATTR Source Code
+
+
+                                          Description: Write   68000   assembler   routine  to  meet
+                                                       specification.  Note  any  changes   in   the
+                                                       documentation  that  need to be made to types
+                                                       or variables.
+
+                                                         Start       Completion                                                       __________    __________
+
+                                          Scheduled:     3/??/82     3/??/82
+
+                                          Actual:              
+
+
+
+                                      1.6.4.3.4.3 DIR_ATTR Finalization
+
+
+                                          Description: Put source  code  for  DIR_ATTR  routines  in
+                                                       account  1002;  Put  user  documentation  for
+                                                       DIR_ATTR in (PASDEV4)M68LIB.PMF and a copy in
+                                                       the  documentation  notebook;  Add  necessary
+                                                       items to the M68000  RDLIB  Program  Notebook
+                                                       for DIR_ATTR.
+
+                                                         Start       Completion                                                       __________    __________
+
+                                          Scheduled:     3/??/82     3/??/82
+
+                                          Actual:              
+
+
+
+
+
+
+
+
+   Z@

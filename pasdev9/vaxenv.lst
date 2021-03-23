@@ -1,0 +1,1284 @@
+        File DSK:VAXENV.PAS[31024,320167]   Compiled 16-Sep-82 10:35   Pascal, Version 2A(462)
+
+        File DSK:VAXENV.PAS[31024,320167]   Compiled 16-Sep-82 10:35   Pascal, Version 2A(462)
+
+        File DSK:VAXENV.PAS[31024,320167]   Compiled 16-Sep-82 10:35   Pascal, Version 2A(462)
+
+        File DSK:VAXENV.PAS[31024,320167]   Compiled 16-Sep-82 10:35   Pascal, Version 2A(462)
+
+
+
+
+
+    $   $    $$$    $   $           $$$$$   $   $   $   $    $$$    $$$$     $$$    $   $   $   $
+    $   $   $   $   $   $           $       $$  $   $   $     $     $   $   $   $   $$  $   $$ $$
+    $   $   $   $    $ $            $       $ $ $   $   $     $     $   $   $   $   $ $ $   $ $ $
+     $ $    $$$$$     $             $$$     $  $$    $ $      $     $$$$    $   $   $  $$   $ $ $
+     $ $    $   $    $ $            $       $   $    $ $      $     $ $     $   $   $   $   $   $
+      $     $   $   $   $           $       $   $     $       $     $  $    $   $   $   $   $   $
+      $     $   $   $   $   $$$$$   $$$$$   $   $     $      $$$    $   $    $$$    $   $   $   $
+
+
+		      Environment load/save routines for resident VAX compiler
+
+
+Options in effect: 
+
+	CHECK(ASSERTIONS, CASES), NOCHECK(COMPATIBIL, FIELDS, FILES, INPUT, POINTERS, STACK, 
+	STRINGS, SUBSCRIPTS, VALUES), SPECIAL, NOMAP, NOSYMBOLS, NOCALLS, NOASSEMBLY, NOXREF, TRACE, 
+	QBLOCKS, NOOPTIMIZE, CODE, NODEBUG, FINISH, NOGLOBAL, NOMAINSEG, NOOVERLAY, AUTOQUICK, 
+	SOURCE, NOSTANDARD, LENGTH (45), WIDTH (102), NOEXTLENGTH, STORAGE (2048), ALLOC (0), 
+	ENABLE(VAX)
+
+
+
+
+        File DSK:VAXENV.PAS[31024,320167]   Compiled 16-Sep-82 10:35   Pascal, Version 2A(462)
+
+        File DSK:VAXENV.PAS[31024,320167]   Compiled 16-Sep-82 10:35   Pascal, Version 2A(462)
+
+        File DSK:VAXENV.PAS[31024,320167]   Compiled 16-Sep-82 10:35   Pascal, Version 2A(462)
+
+        File DSK:VAXENV.PAS[31024,320167]   Compiled 16-Sep-82 10:35   Pascal, Version 2A(462)
+        File DSK:VAXENV.PAS[31024,320167]   Compiled 16-Sep-82 10:35   Pascal, Version 2A(462)
+
+        File DSK:VAXENV.PAS[31024,320167]   Compiled 16-Sep-82 10:35   Pascal, Version 2A(462)
+
+        File DSK:VAXENV.PAS[31024,320167]   Compiled 16-Sep-82 10:35   Pascal, Version 2A(462)
+
+        File DSK:VAXENV.PAS[31024,320167]   Compiled 16-Sep-82 10:35   Pascal, Version 2A(462)
+
+
+
+
+
+    $   $    $$$    $   $           $$$$$   $   $   $   $    $$$    $$$$     $$$    $   $   $   $
+    $   $   $   $   $   $           $       $$  $   $   $     $     $   $   $   $   $$  $   $$ $$
+    $   $   $   $    $ $            $       $ $ $   $   $     $     $   $   $   $   $ $ $   $ $ $
+     $ $    $$$$$     $             $$$     $  $$    $ $      $     $$$$    $   $   $  $$   $ $ $
+     $ $    $   $    $ $            $       $   $    $ $      $     $ $     $   $   $   $   $   $
+      $     $   $   $   $           $       $   $     $       $     $  $    $   $   $   $   $   $
+      $     $   $   $   $   $$$$$   $$$$$   $   $     $      $$$    $   $    $$$    $   $   $   $
+
+
+		      Environment load/save routines for resident VAX compiler
+
+
+Options in effect: 
+
+	CHECK(ASSERTIONS, CASES), NOCHECK(COMPATIBIL, FIELDS, FILES, INPUT, POINTERS, STACK, 
+	STRINGS, SUBSCRIPTS, VALUES), SPECIAL, NOMAP, NOSYMBOLS, NOCALLS, NOASSEMBLY, NOXREF, TRACE, 
+	QBLOCKS, NOOPTIMIZE, CODE, NODEBUG, FINISH, NOGLOBAL, NOMAINSEG, NOOVERLAY, AUTOQUICK, 
+	SOURCE, NOSTANDARD, LENGTH (45), WIDTH (102), NOEXTLENGTH, STORAGE (2048), ALLOC (0), 
+	ENABLE(VAX)
+
+
+
+
+        File DSK:VAXENV.PAS[31024,320167]   Compiled 16-Sep-82 10:35   Pascal, Version 2A(462)
+
+        File DSK:VAXENV.PAS[31024,320167]   Compiled 16-Sep-82 10:35   Pascal, Version 2A(462)
+
+        File DSK:VAXENV.PAS[31024,320167]   Compiled 16-Sep-82 10:35   Pascal, Version 2A(462)
+
+        File DSK:VAXENV.PAS[31024,320167]   Compiled 16-Sep-82 10:35   Pascal, Version 2A(462)
+MODULE  VAX_ENVIRONM Environment load/save routines for resident VAX compiler          16-Sep-82 10:35
+SECTION 0                                                                                       PAGE 1
+
+    1	$TITLE Environment load/save routines for resident VAX compiler
+    2	
+    3	module vax_environment options special (word, ptr, coercions), check (assertions, cases);MODULE  VAX_ENVIRONM Environment load/save routines for resident VAX compiler          16-Sep-82 10:35
+SECTION 1            includes                                                                   PAGE 2
+
+    2	$SYSTEM pascal.inc
+    3	$SYSTEM pasfil.inc
+    4	$SYSTEM pasist.inc
+    5	$SYSTEM ptmcon.inc
+    6	$SYSTEM pasmth.inc
+    7	$SYSTEM dtime.incMODULE  VAX_ENVIRONM Environment load/save routines for resident VAX compiler          16-Sep-82 10:35
+SECTION 2            declarations                                                               PAGE 3
+
+    2	const
+    3	  env_file_format_version = 1;  (* Insure consistancy *)
+    4	  fake_nil: val_ptr := ptr ( 0 );
+    5	  fixed_pointer_data_length = 23 * 4;
+    6	
+    7	  (* Byte offsets within symbol table records for all relevant pointer fields. *)
+    8	
+    9	  parent_offset :=
+   10	$IFNOT field_offset      0;
+   11 *	$IF    field_offset      field_offset ( block_node, parent ) div storage_unit_size );
+   12	  peer_offset :=
+   13	$IFNOT field_offset      4;
+   14 *	$IF    field_offset      field_offset ( block_node, peer ) div storage_unit_size );
+   15	  children_offset :=
+   16	$IFNOT field_offset      8;
+   17 *	$IF    field_offset      field_offset ( block_node, children ) div storage_unit_size );
+   18	  return_sym_offset :=
+   19	$IFNOT field_offset      25;
+   20 *	$IF    field_offset      field_offset ( block_node, return_sym ) div storage_unit_size );
+   21	  parm_list_offset :=
+   22	$IFNOT field_offset      29;
+   23 *	$IF    field_offset      field_offset ( block_node, parm_list ) div storage_unit_size );
+   24	  label_list_offset :=
+   25	$IFNOT field_offset      37;
+   26 *	$IF    field_offset      field_offset ( block_node, label_list ) div storage_unit_size );
+   27	  type_list_offset :=
+   28	$IFNOT field_offset      45;
+   29 *	$IF    field_offset      field_offset ( block_node, type_list ) div storage_unit_size );
+   30	  id_list_offset :=
+   31	$IFNOT field_offset      53;
+   32 *	$IF    field_offset      field_offset ( block_node, id_list ) div storage_unit_size );
+   33	  owner_offset :=
+   34	$IFNOT field_offset      68;
+   35 *	$IF    field_offset      field_offset ( block_node, owner ) div storage_unit_size );
+   36	  downward_call_thread_offset :=
+   37	$IFNOT field_offset      76;
+   38 *	$IF    field_offset      field_offset ( block_node, downward_call_thread ) div storage_unit_si
+	ze );
+   39	  upward_call_thread_offset :=
+   40	$IFNOT field_offset      80;
+   41 *	$IF    field_offset      field_offset ( block_node, upward_call_thread ) div storage_unit_size
+	 );MODULE  VAX_ENVIRONM Environment load/save routines for resident VAX compiler          16-Sep-82 10:35
+SECTION 2            declarations                                                               PAGE 4
+
+   42	  lex_thread_offset :=
+   43	$IFNOT field_offset      84;
+   44 *	$IF    field_offset      field_offset ( block_node, lex_thread ) div storage_unit_size );
+   45	  id_offset :=
+   46	$IFNOT field_offset      117;
+   47 *	$IF    field_offset      field_offset ( block_node, id ) div storage_unit_size );
+   48	  subr_sym_offset :=
+   49	$IFNOT field_offset      117;
+   50 *	$IF    field_offset      field_offset ( block_node, subr_sym ) div storage_unit_size );
+   51	  class_type_offset :=
+   52	$IFNOT field_offset      117;
+   53 *	$IF    field_offset      field_offset ( block_node, class_type ) div storage_unit_size );
+   54	  type_id_offset :=
+   55	$IFNOT field_offset      4;
+   56 *	$IF    field_offset      field_offset ( type_node, type_id ) div storage_unit_size );
+   57	  base_type_offset :=
+   58	$IFNOT field_offset      16;
+   59 *	$IF    field_offset      field_offset ( type_node, base_type ) div storage_unit_size );
+   60	  cst_list_offset :=
+   61	$IFNOT field_offset      28;
+   62 *	$IF    field_offset      field_offset ( type_node, cst_list ) div storage_unit_size );
+   63	  set_element_type_offset :=
+   64	$IFNOT field_offset      16;
+   65 *	$IF    field_offset      field_offset ( type_node, set_element_type ) div storage_unit_size );
+   66	  target_type_offset :=
+   67	$IFNOT field_offset      16;
+   68 *	$IF    field_offset      field_offset ( type_node, target_type ) div storage_unit_size );
+   69	  heap_class_offset :=
+   70	$IFNOT field_offset      20;
+   71 *	$IF    field_offset      field_offset ( type_node, heap_class ) div storage_unit_size );
+   72	  element_type_offset :=
+   73	$IFNOT field_offset      17;
+   74 *	$IF    field_offset      field_offset ( type_node, element_type ) div storage_unit_size );
+   75	  index_type_offset :=
+   76	$IFNOT field_offset      21;
+   77 *	$IF    field_offset      field_offset ( type_node, index_type ) div storage_unit_size );
+   78	  component_type_offset :=
+   79	$IFNOT field_offset      17;
+   80 *	$IF    field_offset      field_offset ( type_node, component_type ) div storage_unit_size );
+   81	  file_class_offset :=
+   82	$IFNOT field_offset      21;
+   83 *	$IF    field_offset      field_offset ( type_node, file_class ) div storage_unit_size );MODULE  VAX_ENVIRONM Environment load/save routines for resident VAX compiler          16-Sep-82 10:35
+SECTION 2            declarations                                                               PAGE 5
+
+   84	  field_list_offset :=
+   85	$IFNOT field_offset      16;
+   86 *	$IF    field_offset      field_offset ( type_node, field_list ) div storage_unit_size );
+   87	  variant_tag_offset :=
+   88	$IFNOT field_offset      20;
+   89 *	$IF    field_offset      field_offset ( type_node, variant_tag ) div storage_unit_size );
+   90	  tag_offset :=
+   91	$IFNOT field_offset      24;
+   92 *	$IF    field_offset      field_offset ( type_node, tag ) div storage_unit_size );
+   93	  next_variant_offset :=
+   94	$IFNOT field_offset      28;
+   95 *	$IF    field_offset      field_offset ( type_node, next_variant ) div storage_unit_size );
+   96	  tag_field_offset :=
+   97	$IFNOT field_offset      16;
+   98 *	$IF    field_offset      field_offset ( type_node, tag_field ) div storage_unit_size );
+   99	  tag_type_offset :=
+  100	$IFNOT field_offset      20;
+  101 *	$IF    field_offset      field_offset ( type_node, tag_type ) div storage_unit_size );
+  102	  tag_recvar_offset :=
+  103	$IFNOT field_offset      24;
+  104 *	$IF    field_offset      field_offset ( type_node, tag_recvar ) div storage_unit_size );
+  105	  first_variant_offset :=
+  106	$IFNOT field_offset      28;
+  107 *	$IF    field_offset      field_offset ( type_node, first_variant ) div storage_unit_size );
+  108	  class_block_offset :=
+  109	$IFNOT field_offset      17;
+  110 *	$IF    field_offset      field_offset ( type_node, class_block ) div storage_unit_size );
+  111	  return_type_offset :=
+  112	$IFNOT field_offset      21;
+  113 *	$IF    field_offset      field_offset ( type_node, return_type ) div storage_unit_size );
+  114	  params_offset :=
+  115	$IFNOT field_offset      33;
+  116 *	$IF    field_offset      field_offset ( type_node, params ) div storage_unit_size );
+  117	  actual_type_offset :=
+  118	$IFNOT field_offset      16;
+  119 *	$IF    field_offset      field_offset ( type_node, actual_type ) div storage_unit_size );
+  120	  parm_type_offset :=
+  121	$IFNOT field_offset      0;
+  122 *	$IF    field_offset      field_offset ( param_desc, parm_type ) div storage_unit_size );
+  123	  name_offset :=
+  124	$IFNOT field_offset      0;
+  125 *	$IF    field_offset      field_offset ( symbol_node, name ) div storage_unit_size );MODULE  VAX_ENVIRONM Environment load/save routines for resident VAX compiler          16-Sep-82 10:35
+SECTION 2            declarations                                                               PAGE 6
+
+  126	  block_offset :=
+  127	$IFNOT field_offset      4;
+  128 *	$IF    field_offset      field_offset ( symbol_node, block ) div storage_unit_size );
+  129	  next_offset :=
+  130	$IFNOT field_offset      8;
+  131 *	$IF    field_offset      field_offset ( symbol_node, next ) div storage_unit_size );
+  132	  type_desc_offset :=
+  133	$IFNOT field_offset      16;
+  134 *	$IF    field_offset      field_offset ( symbol_node, type_desc ) div storage_unit_size );
+  135	  fld_record_offset :=
+  136	$IFNOT field_offset      32;
+  137 *	$IF    field_offset      field_offset ( symbol_node, fld_record ) div storage_unit_size );
+  138	  fld_variant_offset :=
+  139	$IFNOT field_offset      36;
+  140 *	$IF    field_offset      field_offset ( symbol_node, fld_variant ) div storage_unit_size );
+  141	  init_value_offset :=
+  142	$IFNOT field_offset      43;
+  143 *	$IF    field_offset      field_offset ( symbol_node, init_value ) div storage_unit_size );
+  144	  first_offset :=
+  145	$IFNOT field_offset      0;
+  146 *	$IF    field_offset      field_offset ( sym_list, first ) div storage_unit_size );
+  147	  last_offset :=
+  148	$IFNOT field_offset      4;
+  149 *	$IF    field_offset      field_offset ( sym_list, last ) div storage_unit_size );
+  150	  valp_offset :=
+  151	$IFNOT field_offset      1;
+  152 *	$IF    field_offset      field_offset ( val, valp ) div storage_unit_size );
+  153	  blkp_offset :=
+  154	$IFNOT field_offset      1;
+  155 *	$IF    field_offset      field_offset ( val, blkp ) div storage_unit_size );
+  156	  struc_type_offset :=
+  157	$IFNOT field_offset      5;
+  158 *	$IF    field_offset      field_offset ( value_node, struc_type ) div storage_unit_size );
+  159	  elem_vals_offset :=
+  160	$IFNOT field_offset      13;
+  161 *	$IF    field_offset      field_offset ( value_node, elem_vals ) div storage_unit_size );
+  162	  alink_offset :=
+  163	$IFNOT field_offset      0;
+  164 *	$IF    field_offset      field_offset ( name_node, alink ) div storage_unit_size;
+  165	  zlink_offset :=
+  166	$IFNOT field_offset      4;
+  167 *	$IF    field_offset      field_offset ( name_node, zlink ) div storage_unit_size;MODULE  VAX_ENVIRONM Environment load/save routines for resident VAX compiler          16-Sep-82 10:35
+SECTION 2            declarations                                                               PAGE 7
+
+  168	  scopechain_offset :=
+  169	$IFNOT field_offset      8;
+  170 *	$IF    field_offset      field_offset ( name_node, scopechain ) div storage_unit_size;
+  171	MODULE  VAX_ENVIRONM Environment load/save routines for resident VAX compiler          16-Sep-82 10:35
+SECTION 3            vax_save_environment                                                       PAGE 8
+
+    2	(* VAX SAVE ENVIRONMENT is called by the resident VAX compiler to save
+    3	   the current environment in a file.  It returns a Boolean value indicating
+    4	   whether the save was successful. *)
+    5	
+    6	public function vax_save_environment: boolean;
+    7	
+    8	const
+    9	  bit_map_upb = 16383;          (* upperbound of bit map set *)
+   10	
+   11	var
+   12	  env_file: file of *;          (* the environment file itself *)
+   13	  file_index: integer;          (* cursor within the environment file *)
+   14	  bit_index: integer;           (* index to last entry made in bit map *)
+   15	  bit_map: set of 0 .. bit_map_upb;
+   16	  map_area: integer;            (* cursor into environment file where the
+   17	                                   next bit map is to be written *)
+   18	  node_base: integer;           (* offset in env file of start of variable
+   19	                                   length node area *)
+   20	  node_base_address: integer;   (* used to emit bit map relocation *)
+   21	  last_loc: integer;            (* offset in env file of byte following
+   22	                                   last relocated address (initially equal
+   23	                                   to NODE_BASE *)
+   24	  relocating: boolean;          (* TRUE => relocation pass, FALSE => emission pass *)MODULE  VAX_ENVIRONM Environment load/save routines for resident VAX compiler          16-Sep-82 10:35
+SECTION 4            initialize_environment, terminate_environment                              PAGE 9
+
+    2	procedure initialize_environment;
+    3	
+    4	begin
+    5	  rewrite ( env_file, '.ENV ' || rel_file, [seekok] );
+    6	  vax_save_environment := false;        (* Until all done *)
+    7	end (* initialize_environment *);
+    8	
+    9	procedure terminate_environment;
+   10	
+   11	begin
+   12	  close ( env_file );
+   13	  if iostatus = io_ok then
+   14	    vax_save_environment := true;       (* all done *)
+   15	end (* terminate_environment *);MODULE  VAX_ENVIRONM Environment load/save routines for resident VAX compiler          16-Sep-82 10:35
+SECTION 5            environment_header                                                        PAGE 10
+
+    2	(* ENVIRONMENT HEADER emits the environment name and version number. *)
+    3	
+    4	procedure environment_header;
+    5	
+    6	var
+    7	  len: integer;
+    8	
+    9	begin
+   10	  len := upperbound ( env_name^.text );
+   11	  write ( env_file, len: 1 );
+   12	  write ( env_file, env_name^.text: len );;
+   13	  file_index := ngm ( len + 1, 4 );
+   14	  seek ( env_file, file_index );        (* keep longword aligned *)
+   15	  write ( env_file, env_dtime );
+   16	  write ( env_file, env_file_format_version: 4 );
+   17	end (* environment_header *);MODULE  VAX_ENVIRONM Environment load/save routines for resident VAX compiler          16-Sep-82 10:35
+SECTION 6            initial_global_data                                                       PAGE 11
+
+    2	(* INITIAL GLOBAL DATA saves some initial global variables in the environment *)
+    3	
+    4	procedure initial_global_data;
+    5	
+    6	begin
+    7	  write ( env_file, sym_vl_number: 4 );
+    8	  write ( env_file, vl_base: 4 );
+    9	  write ( env_file, sym_nvl_number: 4 );
+   10	  write ( env_file, nvl_base: 4 );
+   11	end (* initial_global_data *);MODULE  VAX_ENVIRONM Enviro load/save routines for resident VAX compiler          16-Sep-82 10:35
+SECTION 7            prepare_for_relocation                                                    PAGE 12
+
+    2	(* PREPARE FOR RELOACTION  initializes everything for the relocation pass
+    3	   over the symbol table. *)
+    4	
+    5	procedure prepare_for_relocation;
+    6	
+    7	begin
+    8	
+    9	  (* Mark the base of the variable node area, reserving a longword for its length. *)
+   10	
+   11	  node_base := cursor ( env_file ) + 4 - 1;
+   12	  file_index := node_base;
+   13	
+   14	  (* Sanity check to insure all nodes are longword aligned in the file. *)
+   15	
+   16	  assert ( file_index mod 4 = 0 );
+   17	
+   18	  (* Identify relocation pass active. *)
+   19	
+   20	  relocating := true;
+   21	
+   22	end (* prepare_for_relocation *);MODULE  VAX_ENVIRONM Environment load/save routines for resident VAX compiler          16-Sep-82 10:35
+SECTION 8            prepare_for_emission                                                      PAGE 13
+
+    2	(* PREPARE FOR EMISSION closes down the relocating pass and prepares for
+    3	   the emission of the variable node area. *)
+    4	
+    5	procedure prepare_for_emission;
+    6	
+    7	var
+    8	  len: integer;
+    9	
+   10	begin
+   11	
+   12	  (* Set up bit map structure. *)
+   13	
+   14	  bit_map := [];
+   15	  bit_index := -1;
+   16	  map_area := file_index + fixed_pointer_data_length + 1;
+   17	  last_loc := node_base;
+   18	
+   19	  (* Emit the length of the variable node area. *)
+   20	
+   21	  len := file_index - node_base;
+   22	  write ( env_file, len: 4 );
+   23	
+   24	  (* Identify emission pass active. *)
+   25	
+   26	  relocating := false;
+   27	
+   28	end (* prepare_for_emission *);MODULE  VAX_ENVIRONM Environment load/save routines for resident VAX compiler          16-Sep-82 10:35
+SECTION 9            fixed_pointer_data                                                        PAGE 14
+
+    2	(* FIXED POINTER DATA emits the relative offsets for various important
+    3	   pointers. *)
+    4	
+    5	procedure fixed_pointer_data;
+    6	
+    7	var
+    8	  loc: integer;
+    9	  file_loc: integer;
+   10	
+   11	begin
+   12	  file_loc := cursor ( env_file );
+   13	  loc := root_name^.file_loc;
+   14	  write ( env_file, loc: 4 );
+   15	  loc := root_block^.file_loc;
+   16	  write ( env_file, loc: 4 );
+   17	  loc := file_chain^.file_loc;
+   18	  write ( env_file, loc: 4 );
+   19	  loc := io_opsym^.file_loc;
+   20	  write ( env_file, loc: 4 );
+   21	  loc := cdatesym^.file_loc;
+   22	  write ( env_file, loc: 4 );
+   23	  loc := ctimesym^.file_loc;
+   24	  write ( env_file, loc: 4 );
+   25	  loc := type_int^.file_loc;
+   26	  write ( env_file, loc: 4 );
+   27	  loc := type_fullword^.file_loc;
+   28	  write ( env_file, loc: 4 );
+   29	  loc := type_non_neg^.file_loc;
+   30	  write ( env_file, loc: 4 );
+   31	  loc := type_bool^.file_loc;
+   32	  write ( env_file, loc: 4 );
+   33	  loc := type_char^.file_loc;
+   34	  write ( env_file, loc: 4 );
+   35	  loc := type_real^.file_loc;
+   36	  write ( env_file, loc: 4 );
+   37	  loc := type_ptr^.file_loc;
+   38	  write ( env_file, loc: 4 );
+   39	  loc := type_text^.file_loc;
+   40	  write ( env_file, loc: 4 );
+   41	  loc := type_options^.file_loc;
+   42	  write ( env_file, loc: 4 );
+   43	  loc := stat_io^.file_loc;MODULE  VAX_ENVIRONM Environment load/save routines for resident VAX compiler          16-Sep-82 10:35
+SECTION 9            fixed_pointer_data                                                        PAGE 15
+
+   44	  write ( env_file, loc: 4 );
+   45	  loc := stat_program^.file_loc;
+   46	  write ( env_file, loc: 4 );
+   47	  loc := stat_math^.file_loc;
+   48	  write ( env_file, loc: 4 );
+   49	  loc := stat_special^.file_loc;
+   50	  write ( env_file, loc: 4 );
+   51	  loc := file_input^.file_loc;
+   52	  write ( env_file, loc: 4 );
+   53	  loc := file_output^.file_loc;
+   54	  write ( env_file, loc: 4 );
+   55	  loc := file_tty^.file_loc;
+   56	  write ( env_file, loc: 4 );
+   57	  loc := filettyoutput^.file_loc;
+   58	  write ( env_file, loc: 4 );
+   59	
+   60	  (* Double check that we have written precisely the number of bytes earlier
+   61	     reserved for this table. *)
+   62	
+   63	  assert ( cursor ( env_file ) - file_loc = fixed_pointer_data_length );
+   64	end (* fixed_pointer_data *);MODULE  VAX_ENVIRONM Environment load/save routines for resident VAX compiler          16-Sep-82 10:35
+SECTION 10           clear_map                                                                 PAGE 16
+
+    2	(* CLEAR MAP writes the current segment of the relocation bit map at the
+    3	   end of the environment file and resets the map to null.  It is left
+    4	   to the caller to reset BIT_INDEX. *)
+    5	
+    6	procedure clear_map;
+    7	
+    8	var
+    9	  save_position: integer;
+   10	
+   11	begin
+   12	  save_position := cursor ( env_file ); (* Remember where we were *)
+   13	  seek ( env_file, map_area );
+   14	  write ( env_file, bit_map );
+   15	  map_area := map_area + size ( bit_map );
+   16	  seek ( env_file, save_position );
+   17	  bit_map := [];
+   18	end (* clear_map *);MODULE  VAX_ENVIRONM Environment load/save routines for resident VAX compiler          16-Sep-82 10:35
+SECTION 11           emit_relocation_map                                                       PAGE 17
+
+    2	(* EMIT RELOCATION MAP dumps the last of the bit map, if any. *)
+    3	
+    4	procedure emit_relocation_map;
+    5	
+    6	begin
+    7	  if bit_index >= 0 then
+    8	    clear_map;
+    9	end (* emit_relocation_map *);MODULE  VAX_ENVIRONM Environment load/save routines for resident VAX compiler          16-Sep-82 10:35
+SECTION 12           relocate                                                                  PAGE 18
+
+    2	(* RELOCATE is passed the offset of a non-NIL pointer within the node
+    3	   currently being written to the environment file.  It emits a "1" bit
+    4	   in the appropriate place in the relocation bit map. *)
+    5	
+    6	procedure relocate ( offset: integer );
+    7	
+    8	var
+    9	  zero_bits: integer;
+   10	
+   11	begin
+   12	  zero_bits := node_base_address + offset - last_loc;
+   13	  while bit_index + zero_bits >= bit_map_upb do begin
+   14	    clear_map;
+   15	    bit_index := bit_index - bit_map_upb - 1;
+   16	  end;
+   17	  bit_index := bit_index + zero_bits + 1;
+   18	  bit_map := bit_map + [ bit_index ];
+   19	  last_loc := node_base_address + offset + 4;
+   20	end (* relocate *);MODULE  VAX_ENVIRONM Environment load/save routines for resident VAX compiler          16-Sep-82 10:35
+SECTION 13           set_context                                                               PAGE 19
+
+    2	(* SET CONTEXT establishes the base address, offset relative to its location
+    3	   within the environment file, of the next node record to be written.
+    4	   This information is used by RELOCATE to make bit map entries for pointers
+    5	   within this node which must be relocated. *)
+    6	
+    7	procedure set_context ( file_loc: integer );    (* offset within file *)
+    8	
+    9	begin
+   10	  node_base_address := file_loc;
+   11	end (* set_context *);MODULE  VAX_ENVIRONM Environment load/save routines for resident VAX compiler          16-Sep-82 10:35
+SECTION 14           file_location                                                             PAGE 20
+
+    2	(* FILE LOCATION returns a relative offset within the environment file
+    3	   variable node area at which a record is to be emitted.  This offset
+    4	   is always longword aligned. *)
+    5	
+    6	function file_location ( size: integer ): integer;
+    7	
+    8	begin
+    9	  file_location := file_index;
+   10	  file_index := ngm ( file_index + size, 4 );   (* Longword align always. *)
+   11	end (* file_location *);MODULE  VAX_ENVIRONM Environment load/save routines for resident VAX compiler          16-Sep-82 10:35
+SECTION 15           relocate pointer routines                                                 PAGE 21
+
+    2	(* Each of these routines is passed a pointer field (or a record field
+    3	   containing pointers) within the record currently being emitted to the 
+    4	   environment file, and the offset of that field from the start of the record.
+    5	   If the pointers are NIL then NIL is returned, otherwise they are converted
+    6	   to their relative offsets within the variable node area and tagged as
+    7	   requiring relocation when reloaded. *)
+    8	
+    9	function relocate_nam ( n: nam; offset: integer ): nam;
+   10	
+   11	begin
+   12	  if n = nil then
+   13	    relocate_nam := nil
+   14	  else begin
+   15	    relocate_nam := nam ( n^.file_loc );
+   16	    relocate ( offset );
+   17	  end;
+   18	end (* relocate_nam *);
+   19	
+   20	function relocate_blk ( b: blk; offset: integer ): blk;
+   21	
+   22	begin
+   23	  if b = nil then
+   24	    relocate_blk := nil
+   25	  else begin
+   26	    relocate_blk := blk ( b^.file_loc );
+   27	    relocate ( offset );
+   28	  end;
+   29	end (* relocate_blk *);
+   30	
+   31	function relocate_sym ( s: sym; offset: integer ): sym;
+   32	
+   33	begin
+   34	  if s = nil then
+   35	    relocate_sym := nil
+   36	  else begin
+   37	    relocate_sym := sym ( s^.file_loc );
+   38	    relocate ( offset );
+   39	  end;
+   40	end (* relocate_sym *);
+   41	
+   42	function relocate_sym_list ( list: sym_list; offset: integer ): sym_list;
+   43	MODULE  VAX_ENVIRONM Environment load/save routines for resident VAX compiler          16-Sep-82 10:35
+SECTION 15           relocate pointer routines                                                 PAGE 22
+
+   44	begin
+   45	  relocate_sym_list.first := relocate_sym ( list.first, offset + first_offset );
+   46	  relocate_sym_list.last := relocate_sym ( list.last, offset + last_offset );
+   47	end (* relocate_sym_list *);
+   48	
+   49	function relocate_typ ( t: typ; offset: integer ): typ;
+   50	
+   51	begin
+   52	  if t = nil then
+   53	    relocate_typ := nil
+   54	  else begin
+   55	    relocate_typ := typ ( t^.file_loc );
+   56	    relocate ( offset );
+   57	  end;
+   58	end (* relocate_typ *);
+   59	
+   60	function relocate_val_ptr ( v: val_ptr; offset: integer ): val_ptr;
+   61	
+   62	begin
+   63	  if v = nil then
+   64	    relocate_val_ptr := nil
+   65	  else begin
+   66	    relocate_val_ptr := v^.def_addr;
+   67	    relocate ( offset );
+   68	  end;
+   69	end (* relocate_val_ptr *);
+   70	
+   71	function relocate_val ( v: val; offset: integer ): val;
+   72	
+   73	begin
+   74	  relocate_val := v;
+   75	  with v do
+   76	    case kind of
+   77	
+   78	      real_cst,
+   79	      string_cst,
+   80	      set_cst,
+   81	      array_cst,
+   82	      record_cst:
+   83	        relocate_val.valp := relocate_val_ptr ( valp, offset + valp_offset );
+   84	
+   85	      subr_cst:MODULE  VAX_ENVIRONM Environment load/save routines for resident VAX compiler          16-Sep-82 10:35
+SECTION 15           relocate pointer routines                                                 PAGE 23
+
+   86	        relocate_val.blkp := relocate_blk ( blkp, offset + blkp_offset );
+   87	
+   88	      others:
+   89	
+   90	    end (* case *);
+   91	end (* relocate_val *);MODULE  VAX_ENVIRONM Environment load/save routines for resident VAX compiler          16-Sep-82 10:35
+SECTION 16           relocate_val_node                                                         PAGE 24
+
+    2	
+    3	procedure relocate_value_node ( v: val_ptr ); forward;
+    4	
+    5	procedure relocate_type_node ( t: typ ); forward;
+    6	
+    7	procedure relocate_block_node ( b: blk ); forward;
+    8	
+    9	procedure relocate_val_node ( v: val );
+   10	
+   11	begin
+   12	  with v do begin
+   13	    case kind of
+   14	
+   15	      subr_cst:
+   16	        ;       (* block node itself relocated elsewhere *)
+   17	
+   18	      real_cst, string_cst, set_cst, array_cst, record_cst: begin
+   19	        relocate_value_node ( valp );
+   20	      end;
+   21	
+   22	      others:
+   23	
+   24	    end (* case *);
+   25	  end (* with *);
+   26	end (* relocate_val_node *);MODULE  VAX_ENVIRONM Environment load/save routines for resident VAX compiler          16-Sep-82 10:35
+SECTION 17           relocate_value_node                                                       PAGE 25
+
+    2	(* RELOCATE VALUE NODE is similar to the rest of the relocation routines
+    3	   except for one point: there are no FILE_LOC and VISITED fields in the
+    4	   VALUE_NODE.  To overcome this lack we overload the DEF_ADDR pointer
+    5	   field (since it is only required during code generation) and use it
+    6	   for both FILE_LOC and VISITED.
+    7	
+    8	   In order to do this some minor atrocities are performed.  First we
+    9	   assume that DEF_ADDR is initially NIL, just as VISITED is initially
+   10	   FALSE in the other nodes.  During the relocation pass, whenever a
+   11	   VALUE_NODE with a NIL DEF_ADDR field is encountered it is immediately
+   12	   processed just as if its non-existant VISITED flag were FALSE. 
+   13	   The DEF_ADDR field is then set to FAKE_NIL while its other fields are 
+   14	   relocated (just as VISITED would be set to TRUE), after which it is
+   15	   used to store the value normally saved in FILE_LOC, incremented by 1.
+   16	   Since nodes are always longword aligned their relative offset in the
+   17	   environment file is even, and incrementing this offset allows the
+   18	   second or emission pass to check ODD ( ORD ( DEF_ADDR ) ) just as it
+   19	   checks VISITED in other nodes.  DEF_ADDR is then decremented to yield
+   20	   the proper file offset as well as to prevent undesired recusion,
+   21	   and the rest follows.        *)
+   22	
+   23	procedure relocate_value_node (* v: val_ptr *); (* forward declared *)
+   24	
+   25	var
+   26	  node_size, ix: integer;
+   27	  temp: val_ptr;
+   28	
+   29	  function value_node_size: integer;
+   30	
+   31	  begin
+   32	    case v^.kind of
+   33	
+   34	      scalar_cst:
+   35	        value_node_size := size ( value_node, scalar_cst );
+   36	
+   37	      real_cst:
+   38	        value_node_size := size ( value_node, real_cst );
+   39	
+   40	      string_cst:
+   41	        value_node_size := size ( value_node, string_cst, upperbound ( v^.str_val ) );
+   42	
+   43	      set_cst:MODULE  VAX_ENVIRONM Environment load/save routines for resident VAX compiler          16-Sep-82 10:35
+SECTION 17           relocate_value_node                                                       PAGE 26
+
+   44	        value_node_size := size ( value_node, set_cst, upperbound ( v^.set_val ) );
+   45	
+   46	      array_cst:
+   47	        value_node_size := size ( value_node, array_cst, upperbound ( v^.elem_vals ) );
+   48	
+   49	      record_cst:
+   50	        value_node_size := size ( value_node, record_cst, upperbound ( v^.elem_vals ) )
+   51	
+   52	    end (* case *);
+   53	    value_node_size := ngm ( value_node_size, 4 );
+   54	  end (* value_node_size *);
+   55	
+   56	begin
+   57	  if v <> nil then with v^ do begin
+   58	    if ( relocating and ( def_addr = nil ) ) orif
+   59	       ( not relocating andif odd ( ord ( def_addr ) ) ) then begin
+   60	      node_size := value_node_size;
+   61	      if relocating
+   62	        then def_addr := fake_nil
+   63	        else def_addr := val_ptr ( pred ( ord ( def_addr ) ) );
+   64	      case kind of
+   65	
+   66	        array_cst, record_cst: begin
+   67	          relocate_type_node ( struc_type );
+   68	          for ix := 1 to upperbound ( elem_vals ) do
+   69	            relocate_val_node ( elem_vals[ix] );
+   70	          if not relocating then begin
+   71	            set_context ( ord ( def_addr ) );
+   72	            struc_type := relocate_typ ( struc_type, struc_type_offset );
+   73	            for ix := 1 to upperbound ( elem_vals ) do
+   74	              elem_vals[ix] := relocate_val ( elem_vals[ix], elem_vals_offset + ( ix - 1 ) * s
+	ize ( val ) );
+   75	          end;
+   76	        end;
+   77	
+   78	        others:
+   79	
+   80	      end (* case *);
+   81	      if relocating then
+   82	        def_addr := val_ptr ( succ ( file_location ( node_size ) ) )
+   83	      else begin
+   84	        temp := def_addr;MODULE  VAX_ENVIRONM Environment load/save routines for resident VAX compiler          16-Sep-82 10:35
+SECTION 17           relocate_value_node                                                       PAGE 27
+
+   85	        def_addr := nil;
+   86	        write ( env_file, v^: node_size );
+   87	        def_addr := temp;
+   88	      end;
+   89	    end;
+   90	  end (* with *);
+   91	end (* relocate_value_node *);MODULE  VAX_ENVIRONM Environment load/save routines for resident VAX compiler          16-Sep-82 10:35
+SECTION 18           relocate_name_node                                                        PAGE 28
+
+    2	
+    3	procedure relocate_name_node ( n: nam );
+    4	
+    5	var
+    6	  node_size: integer;
+    7	
+    8	  function name_node_size: integer;
+    9	
+   10	  begin
+   11	    name_node_size := ngm ( size ( n^, upperbound ( n^.text ) ), 4 );
+   12	  end (* name_node_size *);
+   13	
+   14	begin
+   15	  if n <> nil then with n^ do begin
+   16	    if visited <> relocating then begin
+   17	      node_size := name_node_size;
+   18	      visited := relocating;
+   19	
+   20	      (* Assume that all name nodes will be referenced from processed
+   21	         symbol nodes so we need not recurse over the name tree during
+   22	         the relocation pass.  For the same reason SCOPE_CHAIN can be
+   23	         skipped the first time around. *)
+   24	
+   25	      if relocating then
+   26	        file_loc := file_location ( node_size )
+   27	      else begin
+   28	        set_context ( file_loc );
+   29	        alink := relocate_nam ( alink, alink_offset );
+   30	        zlink := relocate_nam ( zlink, zlink_offset );
+   31	        scopechain := relocate_sym ( scopechain, scopechain_offset );
+   32	        visited := false;
+   33	        write ( env_file, n^: node_size );
+   34	        visited := true;
+   35	      end;
+   36	    end;
+   37	  end (* with *);
+   38	end (* relocate_name_node *);MODULE  VAX_ENVIRONM Environment load/save routines for resident VAX compiler          16-Sep-82 10:35
+SECTION 19           relocate_symbol_nodes                                                     PAGE 29
+
+    2	
+    3	procedure relocate_symbol_nodes ( first, last: sym );
+    4	
+    5	var
+    6	  node_size: integer;
+    7	  current_sym, next_sym: sym;
+    8	
+    9	  function symbol_node_size: integer;
+   10	
+   11	  const
+   12	    sizes: array[sym_kind] of integer := (
+   13	                  size ( symbol_node, labels ),
+   14	                  size ( symbol_node, fields ),
+   15	                  size ( symbol_node, types ),
+   16	                  size ( symbol_node, consts ),
+   17	                  size ( symbol_node, vars ),
+   18	                  size ( symbol_node, values ),
+   19	                  size ( symbol_node, for_inds ),
+   20	                  size ( symbol_node, std_procs ),
+   21	                  size ( symbol_node, std_funcs ),
+   22	                  size ( symbol_node, conditions ),
+   23	                  size ( symbol_node, blocks ) );
+   24	
+   25	  begin
+   26	    symbol_node_size := ngm ( sizes[current_sym^.kind], 4 );
+   27	  end (* symbol_node_size *);
+   28	
+   29	begin
+   30	  current_sym := first;
+   31	  while current_sym <> nil do with current_sym^ do begin
+   32	    next_sym := current_sym^.next;
+   33	    if visited <> relocating then begin
+   34	      node_size := symbol_node_size;
+   35	      visited := relocating;
+   36	      relocate_name_node ( name );
+   37	      relocate_block_node ( block );
+   38	      assert ( scopechain = nil );
+   39	      relocate_type_node ( type_desc );
+   40	      case kind of
+   41	
+   42	        fields: begin
+   43	          relocate_type_node ( fld_record );MODULE  VAX_ENVIRONM Environment load/save routines for resident VAX compiler          16-Sep-82 10:35
+SECTION 19           relocate_symbol_nodes                                                     PAGE 30
+
+   44	          relocate_type_node ( fld_variant );
+   45	        end;
+   46	
+   47	        consts, vars, values, for_inds, conditions:
+   48	          relocate_val_node ( init_value );
+   49	
+   50	        others:
+   51	
+   52	      end (* case *);
+   53	      if relocating then
+   54	        file_loc := file_location ( node_size )
+   55	      else begin
+   56	        set_context ( file_loc );
+   57	        name := relocate_nam ( name, name_offset );
+   58	        block := relocate_blk ( block, block_offset );
+   59	        next := relocate_sym ( next, next_offset );
+   60	        type_desc := relocate_typ ( type_desc, type_desc_offset );
+   61	        case kind of
+   62	
+   63	          fields: begin
+   64	            fld_record := relocate_typ ( fld_record, fld_record_offset );
+   65	            fld_variant := relocate_typ ( fld_variant, fld_variant_offset );
+   66	          end;
+   67	
+   68	          consts, vars, values, for_inds, conditions:
+   69	            init_value := relocate_val ( init_value, init_value_offset );
+   70	
+   71	          others:
+   72	
+   73	        end (* case *);
+   74	        visited := false;
+   75	        write ( env_file, current_sym^: node_size );
+   76	        visited := true;
+   77	        next := next_sym;
+   78	      end (* if writing *);
+   79	    end;
+   80	  exit if current_sym = last;
+   81	    current_sym := next_sym;
+   82	  end;
+   83	end (* relocate_symbol_nodes *);MODULE  VAX_ENVIRONM Environment load/save routines for resident VAX compiler          16-Sep-82 10:35
+SECTION 20           relocate_type_node                                                        PAGE 31
+
+    2	
+    3	procedure relocate_type_node (* t: typ *);      (* forward declared *)
+    4	
+    5	var
+    6	  node_size, ix: integer;
+    7	
+    8	  function type_node_size: integer;
+    9	
+   10	  const
+   11	    sizes: array[type_kind] of integer := (
+   12	                  size ( type_node, scalars ),
+   13	                  size ( type_node, bools ),
+   14	                  size ( type_node, chars ),
+   15	                  size ( type_node, ints ),
+   16	                  size ( type_node, reals ),
+   17	                  size ( type_node, sets ),
+   18	                  size ( type_node, pointers ),
+   19	                  size ( type_node, files ),
+   20	                  size ( type_node, strings ),
+   21	                  size ( type_node, arrays ),
+   22	                  size ( type_node, records, records ),
+   23	                  size ( type_node, variants, variants ),
+   24	                  size ( type_node, tags ),
+   25	                  0,
+   26	                  0,
+   27	                  size ( type_node, unknown_type ),
+   28	                  size ( type_node, indirect_type ) );
+   29	
+   30	  begin
+   31	    case t^.kind of
+   32	
+   33	      procs:
+   34	        type_node_size := size ( t^, procs, upperbound ( t^.params ) );
+   35	
+   36	      funcs:
+   37	        type_node_size := size ( t^, funcs, upperbound ( t^.params ) );
+   38	
+   39	      others:
+   40	        type_node_size := sizes[t^.kind];
+   41	
+   42	    end (* case *);
+   43	    type_node_size := ngm ( type_node_size, 4 );MODULE  VAX_ENVIRONM Environment load/save routines for resident VAX compiler          16-Sep-82 10:35
+SECTION 20           relocate_type_node                                                        PAGE 32
+
+   44	  end (* type_node_size *);
+   45	
+   46	begin
+   47	  if ( t <> nil ) andif ( t^.visited <> relocating ) then with t^ do begin
+   48	    node_size := type_node_size;
+   49	    visited := relocating;
+   50	    relocate_symbol_nodes ( type_id, type_id );
+   51	    case kind of
+   52	
+   53	      bools, ints, chars, scalars: begin
+   54	        relocate_type_node ( base_type );
+   55	        case kind of
+   56	
+   57	          bools, scalars:
+   58	            relocate_symbol_nodes ( cst_list.first, cst_list.last );
+   59	
+   60	          others:
+   61	
+   62	        end;
+   63	      end;
+   64	
+   65	      sets:
+   66	        relocate_type_node ( set_element_type );
+   67	
+   68	      pointers: begin
+   69	        relocate_type_node ( target_type );
+   70	        relocate_symbol_nodes ( heap_class, heap_class );
+   71	      end;
+   72	
+   73	      arrays: begin
+   74	        relocate_type_node ( element_type );
+   75	        relocate_type_node ( index_type );
+   76	      end;
+   77	
+   78	      files: begin
+   79	        relocate_type_node ( component_type );
+   80	        relocate_symbol_nodes ( file_class, file_class );
+   81	      end;
+   82	
+   83	      records, variants: begin
+   84	        relocate_symbol_nodes ( field_list, field_list );
+   85	        relocate_type_node ( variant_tag );MODULE  VAX_ENVIRONM Environment load/save routines for resident VAX compiler          16-Sep-82 10:35
+SECTION 20           relocate_type_node                                                        PAGE 33
+
+   86	        if kind = variants then begin
+   87	          relocate_type_node ( tag );
+   88	          relocate_type_node ( next_variant );
+   89	        end;
+   90	      end;
+   91	
+   92	      tags: begin
+   93	        relocate_symbol_nodes ( tag_field, tag_field );
+   94	        relocate_type_node ( tag_type );
+   95	        relocate_type_node ( tag_recvar );
+   96	        relocate_type_node ( first_variant );
+   97	      end;
+   98	
+   99	      procs, funcs: begin
+  100	        relocate_block_node ( class_block );
+  101	        relocate_type_node ( return_type );
+  102	        for ix := 1 to upperbound ( params ) do
+  103	          relocate_type_node ( params[ix].parm_type );
+  104	      end;
+  105	
+  106	      unknown_type, indirect_type:
+  107	        relocate_type_node ( actual_type );
+  108	
+  109	      others:
+  110	
+  111	    end (* case *);
+  112	    if relocating then
+  113	      file_loc := file_location ( node_size )
+  114	    else begin
+  115	      set_context ( file_loc );
+  116	      type_id := relocate_sym ( type_id, type_id_offset );
+  117	      case kind of
+  118	
+  119	        bools, ints, chars, scalars: begin
+  120	          base_type := relocate_typ ( base_type, base_type_offset );
+  121	          case kind of
+  122	
+  123	            bools, scalars:
+  124	              cst_list := relocate_sym_list ( cst_list, cst_list_offset );
+  125	
+  126	            others:
+  127	MODULE  VAX_ENVIRONM Environment load/save routines for resident VAX compiler          16-Sep-82 10:35
+SECTION 20           relocate_type_node                                                        PAGE 34
+
+  128	          end;
+  129	        end;
+  130	
+  131	        sets:
+  132	          set_element_type := relocate_typ ( set_element_type, set_element_type_offset );
+  133	
+  134	        pointers: begin
+  135	          target_type := relocate_typ ( target_type, target_type_offset );
+  136	          heap_class := relocate_sym ( heap_class, heap_class_offset );
+  137	        end;
+  138	
+  139	        arrays: begin
+  140	          element_type := relocate_typ ( element_type, element_type_offset );
+  141	          index_type := relocate_typ ( index_type, index_type_offset );
+  142	        end;
+  143	
+  144	        files: begin
+  145	          component_type := relocate_typ ( component_type, component_type_offset );
+  146	          file_class := relocate_sym ( file_class, file_class_offset );
+  147	        end;
+  148	
+  149	        records, variants: begin
+  150	          field_list := relocate_sym ( field_list, field_list_offset );
+  151	          variant_tag := relocate_typ ( variant_tag, variant_tag_offset );
+  152	          if kind = variants then begin
+  153	            tag := relocate_typ ( tag, tag_offset );
+  154	            next_variant := relocate_typ ( next_variant, next_variant_offset );
+  155	          end;
+  156	        end;
+  157	
+  158	        tags: begin
+  159	          tag_field := relocate_sym ( tag_field, tag_field_offset );
+  160	          tag_type := relocate_typ ( tag_type, tag_type_offset );
+  161	          tag_recvar := relocate_typ ( tag_recvar, tag_recvar_offset );
+  162	          first_variant := relocate_typ ( first_variant, first_variant_offset );
+  163	        end;
+  164	
+  165	        procs, funcs: begin
+  166	          class_block := relocate_blk ( class_block, class_block_offset );
+  167	          return_type := relocate_typ ( return_type, return_type_offset );
+  168	          for ix := 1 to upperbound ( params ) do
+  169	            params[ix].parm_type := relocate_typ ( params[ix].parm_type, params_offset + parm_MODULE  VAX_ENVIRONM Environment load/save routines for resident VAX compiler          16-Sep-82 10:35
+SECTION 20           relocate_type_node                                                        PAGE 35
+
+	type_offset + ( ix - 1 ) * size ( param_desc ) );
+  170	        end;
+  171	
+  172	        unknown_type, indirect_type:
+  173	          actual_type := relocate_typ ( actual_type, actual_type_offset );
+  174	
+  175	        others:
+  176	
+  177	      end (* case *);
+  178	      visited := false;
+  179	      write ( env_file, t^: node_size );
+  180	      visited := true;
+  181	    end (* if writing *);
+  182	  end (* with *);
+  183	end (* relocate_type_node *);MODULE  VAX_ENVIRONM Environment load/save routines for resident VAX compiler          16-Sep-82 10:35
+SECTION 21           relocate_block_node                                                       PAGE 36
+
+    2	
+    3	procedure relocate_block_node (* b: blk *);     (* forward declared *)
+    4	
+    5	var
+    6	  node_size: integer;
+    7	
+    8	  function block_node_size: integer;
+    9	
+   10	  const
+   11	    sizes: array[block_kind] of integer := (
+   12	                  size ( block_node, root_blk ),
+   13	                  size ( block_node, program_blk ),
+   14	                  size ( block_node, module_blk ),
+   15	                  size ( block_node, subr_blk ),
+   16	                  size ( block_node, class_blk ),
+   17	                  size ( block_node, extern_blk ) );
+   18	
+   19	  begin
+   20	    block_node_size := ngm ( sizes[b^.kind], 4 );
+   21	  end (* block_node_size *);
+   22	
+   23	begin
+   24	  if ( b <> nil ) andif ( b^.visited <> relocating ) then with b^ do begin
+   25	    visited := relocating;
+   26	    node_size := block_node_size;
+   27	    relocate_block_node ( peer );
+   28	    relocate_block_node ( children );
+   29	    relocate_symbol_nodes ( return_sym, return_sym );
+   30	    relocate_symbol_nodes ( parm_list.first, parm_list.last );
+   31	    relocate_symbol_nodes ( label_list.first, label_list.last );
+   32	    relocate_symbol_nodes ( type_list.first, type_list.last );
+   33	    relocate_symbol_nodes ( id_list.first, id_list.last );
+   34	    assert ( calls = nil );
+   35	    case kind of
+   36	
+   37	      program_blk, module_blk:
+   38	        relocate_name_node ( id );
+   39	
+   40	      subr_blk:
+   41	        relocate_symbol_nodes ( subr_sym, subr_sym );
+   42	
+   43	      class_blk:MODULE  VAX_ENVIRONM Environment load/save routines for resident VAX compiler          16-Sep-82 10:35
+SECTION 21           relocate_block_node                                                       PAGE 37
+
+   44	        relocate_type_node ( class_type );
+   45	
+   46	      others:
+   47	
+   48	    end (* case *);
+   49	    if relocating then
+   50	      file_loc := file_location ( node_size )
+   51	    else begin  (* write record to environment file *)
+   52	      set_context ( file_loc );
+   53	      parent := relocate_blk ( parent, parent_offset );
+   54	      peer := relocate_blk ( peer, peer_offset );
+   55	      children := relocate_blk ( children, children_offset );
+   56	      return_sym := relocate_sym ( return_sym, return_sym_offset );
+   57	      parm_list := relocate_sym_list ( parm_list, parm_list_offset );
+   58	      label_list := relocate_sym_list ( label_list, label_list_offset );
+   59	      type_list := relocate_sym_list ( type_list, type_list_offset );
+   60	      id_list := relocate_sym_list ( id_list, id_list_offset );
+   61	
+   62	      (* ??? *)
+   63	
+   64	      dump_switches := nil;
+   65	
+   66	      owner := relocate_blk ( owner, owner_offset );
+   67	      downward_call_thread := relocate_blk ( downward_call_thread, downward_call_thread_offset
+	 );
+   68	      upward_call_thread := relocate_blk ( upward_call_thread, upward_call_thread_offset );
+   69	      lex_thread := relocate_blk ( lex_thread, lex_thread_offset );
+   70	      case kind of
+   71	
+   72	        program_blk, module_blk:
+   73	          id := relocate_nam ( id, id_offset );
+   74	
+   75	        subr_blk:
+   76	          subr_sym := relocate_sym ( subr_sym, subr_sym_offset );
+   77	
+   78	        class_blk:
+   79	          class_type := relocate_typ ( class_type, class_type_offset );
+   80	
+   81	        others:
+   82	
+   83	      end (* case *);
+   84	      visited := false;MODULE  VAX_ENVIRONM Environment load/save routines for resident VAX compiler          16-Sep-82 10:35
+SECTION 21           relocate_block_node                                                       PAGE 38
+
+   85	      write ( env_file, b^: node_size );
+   86	      visited := true;
+   87	    end (* if writing *);
+   88	  end (* with *);
+   89	end (* relocate_block_node *);MODULE  VAX_ENVIRONM Environment load/save routines for resident VAX compiler          16-Sep-82 10:35
+SECTION 22           vax_save_environment - body                                               PAGE 39
+
+    2	begin
+    3	
+    4	  (* Open the environment file and initialize data structures. *)
+    5	
+    6	  initialize_environment;
+    7	
+    8	  (* Emit header information. *)
+    9	
+   10	  environment_header;
+   11	
+   12	  (* Emit global data. *)
+   13	
+   14	  initial_global_data;
+   15	
+   16	  (* Set up for relocation walk of symbol table. *)
+   17	
+   18	  prepare_for_relocation;
+   19	
+   20	  (* Perform relocation pass over symbol table. *)
+   21	
+   22	  relocate_block_node ( root_block );
+   23	
+   24	  (* Set up for emission walk of symbol table. *)
+   25	
+   26	  prepare_for_emission;
+   27	
+   28	  (* Emit it. *)
+   29	
+   30	  relocate_block_node ( root_block );
+   31	
+   32	  (* Dump fixed length pointer data. *)
+   33	
+   34	  fixed_pointer_data;
+   35	
+   36	  (* Emit relocation bit map. *)
+   37	
+   38	  emit_relocation_map;
+   39	
+   40	  (* Clean up, close environment file, etc. *)
+   41	
+   42	  terminate_environment;
+   43	MODULE  VAX_ENVIRONM Environment load/save routines for resident VAX compiler          16-Sep-82 10:35
+SECTION 22           vax_save_environment - body                                               PAGE 40
+
+   44	  exception
+   45	
+   46	    io_error: begin
+   47	
+   48	      (* Some problem in writing the environment file.  Just return
+   49	         error indication. *)
+   50	
+   51	      return;
+   52	    end;
+   53	end (* vax_save_environment *).
+
+File   level   on page     name
+
+  0	 0	    1	DSK:VAXENV.PAS[31024,320167]
+  1	 1	    2	DSK:PASCAL.INC[31024,320155]
+  2	 2	    2	DSK:PASADR.TYP[31024,320155]
+  3	 1	    2	DSK:PASFIL.INC[31024,320155]
+  4	 2	    2	DSK:FIO.INC[31024,320156]
+  5	 3	    2	DSK:FIO.TYP[31024,320156]
+  6	 1	    2	DSK:PASIST.INC[31024,320155]
+  7	 2	    2	DSK:DTIME.TYP[31024,320156]
+  8	 2	    2	DSK:PASSPF.TYP[31024,320155]
+  9	 2	    2	DSK:PASIST.TYP[31024,320155]
+ 10	 1	    2	DSK:PTMCON.INC[31024,320155]
+ 11	 1	    2	DSK:PASMTH.INC[31024,320155]
+ 12	 1	    2	DSK:DTIME.INC[31024,320156]
+
+
+
+Section   in file   on page     title
+
+     6	      9	         2    block_node
+    10	      0	        16    clear_map
+     2	      0	         3    declarations
+    11	      0	        17    emit_relocation_map
+     5	      0	        10    environment_header
+    14	      0	        20    file_location
+     9	      0	        14    fixed_pointer_data
+     1	      0	         2    includes
+     4	      0	         9    initialize_environment, terminate_environment
+     6	      0	        11    initial_global_data
+     2	      9	         2    name_node
+     8	      0	        13    prepare_for_emission
+     7	      0	        12    prepare_for_relocation
+    12	      0	        18    relocate
+    15	      0	        21    relocate pointer routines
+    21	      0	        36    relocate_block_node
+    18	      0	        28    relocate_name_node
+    19	      0	        29    relocate_symbol_nodes
+    20	      0	        31    relocate_type_node
+    17	      0	        25    relocate_value_node
+    16	      0	        24    relocate_val_node
+    13	      0	        19    set_context
+     1	      9	         2    storage_class
+     4	      9	         2    symbol_node
+     5	      9	         2    type_nodeSection   in file   on page     title
+
+     3	      9	         2    value_node
+     3	      0	         8    vax_save_environment
+    22	      0	        39    vax_save_environment - body
+   vkfj]

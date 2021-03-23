@@ -1,0 +1,111 @@
+
+	search	rtsym
+	$module	rent - entry routine for single precision math routines
+	search	rtfor
+	$math ()
+	entry	r.ent
+
+;
+; R.ENT called by
+;
+;	PUSHJ	TOP,R.ENT
+;
+; adjusts the stack to cover the locals, advances the caller's return 
+; address past the first parameter which is loaded into R1 as well as
+; stored in a local, saves registers R2 - R7 and the destination register
+; address.
+;
+
+r.ent:
+	adjsp	top,-1+$maxlocals	;one loc used by return addr
+	$save	rsave,exp1,exp6
+	aos	r1,-1+filler		;bump return addr of caller
+	ldb	r0,[point 4,-1(r1),12]
+	move	r1,@-1(r1)		;get parameter
+	dmovem	r0,target		;save dest reg as well
+	jrst	@filler			;entry sequence done
+	prgend
+	search	rtsym
+	$module	dent - entry routine for double precision math routines
+	search	rtfor
+	$math ()
+	entry	d.ent
+
+;
+; D.ENT called by
+;
+;	PUSHJ	TOP,D.ENT
+;
+; adjusts the stack to cover the locals, advances the caller's return 
+; address past the first parameter which is loaded into R0-R1 as well as
+; stored in a local, saves registers R2 - R7 and the destination register
+; address.
+;
+
+d.ent:
+	adjsp	top,-1+$maxlocals	;one loc used by return addr
+	$save	rsave,exp1,exp6
+	aos	r1,-1+filler		;bump return addr of caller
+	ldb	r0,[point 4,-1(r1),12]
+	movem	r0,target		;save destingation register
+	dmove	r0,@-1(r1)		;get parameter
+	dmovem	r0,arg1
+	jrst	@filler			;entry sequence done
+	prgend
+	search	rtsym
+	search	rtfor
+	$module	rret - common return points for single precision math routines
+	$math ()
+	entry	r.ret0,r.ret1,r.ret2
+	search	rtfor
+
+r.ret0:		;called to return zero result
+	tdza	r0,r0
+
+r.ret1:		;called with result in R2
+	move	r0,r2
+
+r.ret2:		;called with result already in r0
+
+	$restore rsave,exp1,exp6
+	movem	r0,@target	;store in appropriate register
+	$unframe
+	popj	top,
+	prgend
+	search	rtsym
+	search	rtfor
+	$module	dret - common return points for double precision math routines
+	$math ()
+	entry	d.ret0,d.ret1,d.ret2
+	search	rtfor
+
+d.ret0:		;called to return zero result
+	setzb	r0,r1
+	jrst	d.ret2
+
+d.ret1:		;called with result in R2
+	dmove	r0,r2
+
+d.ret2:		;called with result already in r0
+
+	$restore rsave,exp1,exp6
+	dmovem	r0,@target	;store in appropriate register
+	$unframe
+	popj	top,
+	prgend
+	search	rtsym
+	search	rtfor
+	$module	mtherr - error return from math routines
+	$math	()
+	entry	mth.err
+	extern	die.
+
+;
+; MTH.ERR reached with address of error message in R0. Must unframe
+; locals to point to caller's return address.
+;
+
+mth.err:
+	$unframe
+	jrst	die.		; go report it
+	end

@@ -1,0 +1,312 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;									;
+;	This is a complete FORTRAN interface to TENIO.  Basically,	;
+;	all this does is build up an argument list that looks like	;
+;	a set of registers and an LUUO effective address and dispatch	;
+;	to the main body of TENIO.  Upon return, the return arguments	;
+;	are collected, registers 16 and 17 are restored, and a POPJ	;
+;	17,0 exit returns to the FORTRAN program.  See the comments	;
+;	in the assembly code interface (DISPAT) for a full description	;
+;	of the TENIO-dispatcher interface.				;
+;									;
+;	All useful entry points are provided by this implementation.	;
+;	(The single word entry points are not useful for FORTRAN.)	;
+;									;
+;	The basic protocol is as follows:  on entry, R17 is a stack	;
+;	pointer (PUSHJ 17 and all that) and R16 points to a parameter	;
+;	list.  The list is a set of address constants and type infor-	;
+;	mation; the addresses may be indirected.  (This interface ig-	;
+;	nores the type information.)  The word preceding the address	;
+;	constants is the argument count.  Only R17 is required to be	;
+;	restored; however, it turns out to be convenient to restore	;
+;	R16 as well.  All other registers are irrelevant and get	;
+;	smacked.							;
+;									;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+	TITLE	FORTEN - A Complete FORTRAN Interface for TENIO
+	SUBTTL	(CODE, MIS--They'll All Love It!)
+	ENTRY	OPENF,CLOSEF,NOTEF,POINTF,FLUSHF,TRUNCF; Control entries
+	ENTRY	RDBLK,WRBLK,RDBLKR,WRBLKR,NAMEF,NXTCHN; I/O entries, etc.
+	INTERN	ACS.,APOIN.,RETRN.,LEAVE.,LUOAD.,SKIP1.,SKIP2.; TENIO hooks
+	EXTERN	TENIO.		; Find the main module
+	SEARCH	OPDEFS		; The usual gang
+EXLENG==	2000		; Explicit string length, from TENIO
+	TWOSEG			; Always reentrant
+	RELOC	400000
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;									;
+;	RDBLK--Read sequential blocks from a file			;
+;	RDBLKR--Read random blocks from a file				;
+;	WRBLK--Write sequential blocks to a file			;
+;	WRBLKR--Write random blocks to a file				;
+;	Arguments for all are as follows:				;
+;	RET:	Return code (0 ==> error, 1 ==> write OK, read EOF,	;
+;		2 ==> read OK						;
+;	FILNUM:	Open file channel number				;
+;	BUFFER:	Array into which I/O will be done			;
+;	SUBSCR:	On entry, the starting I/O subscript within the array	;
+;		On exit, the subscript for the first location not hit	;
+;	LEN:	On entry, the number of words to I or O.  On exit, the	;
+;		remaining number of words not Ied or Oed.		;
+;	FILADR:	(RDBLKR, WRBLKR only) On entry, the word offset (start-	;
+;	ing from zero) within the file at which to begin I/O.  On exit,	;
+;	the offset of the next location in the file.			;
+;									;
+;	See TENIO for description of the AC, E, and return equivalents.	;
+;									;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+RDBLK:	MOVEI	1,RDBLK.##	; Where to go
+RDWRBL:	MOVEI	2,BLKXIT	; Where to return
+	JMP	BLOKIO		; The rest is suspiciously like random
+;
+RDBLKR:	MOVEI	1,RBLKR.##	; Where we're going
+RBLKIO:	MOVEI	2,BLKRXT	; Where we'll return
+	MOVE	3,@5(16)	; Set up file pointer
+	MOVEM	3,ACS.+2
+BLOKIO:	MOVEI	3,@2(16)	; Find buffer
+	ADD	3,@3(16)	; Add in offset
+	SUBI	3,1		; (FORTRAN counts from one, not zero)
+	MOVEM	3,BUFSAV	; Save for later calculations
+	MOVE	4,@4(16)	; Fetch length
+OPENGO:	DMOVEM	3,ACS.		; Set up first two ACs
+TAKOFF:	MOVEI	3,@1(16)	; All have a file number,
+	MOVEM	3,LUOAD.	; so point to it
+NOFILE:	CLEARM	RETRN.		; Initial no skip return
+	MOVEM	2,HIROAD	; Save return pointer
+	DMOVEM	16,ACSAVE	; Hang on to save pointers
+	JMP	0(1)		; Now do that thing!
+;
+WRBLK:	MOVEI	1,WBLK.##	; Write sequentially
+	JMP	RDWRBL		; Now do like RDBLK
+;
+WRBLKR:	MOVEI	1,WBLKR.##	; Where to go
+	JMP	RBLKIO		; The rest is similar to RDBLKR
+;
+SKIP2.:	AONS	RETRN.		; Double skip return
+SKIP1.:	AONS	RETRN.		; Single skip return
+LEAVE.:	DMOVE	16,ACSAVE	; We're back. Fetch save pointers
+	JMP	@HIROAD		; and split the return
+;
+;	Return from RDBLKR or WRBLKR.
+;
+BLKRXT:	MOVE	4,ACS.+2	; Return final file pointer
+	MOVEM	4,@5(16)
+;
+;	Return from RDBLK or WRBLK.
+;
+BLKXIT:	DMOVE	2,ACS.		; Fetch final buffer and length
+	SUB	2,BUFSAV	; Compute length read or written
+	ADDM	2,@3(16)	; and update subscript offset
+	MOVEM	3,@4(16)	; Return length
+POINXT:	MOVE	2,RETRN.	; Fetch return code
+RETXIT:	MOVEM	2,@0(16)	; and return it
+	POPJ	17,0		; Standard stack return
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;									;
+;	OPENF--Open a file.  Arguments as follows:			;
+;									;
+;	RET:	Return code.  100 ==> all went well; -1 to 35 or so	;
+;		==> error of some sort.  Code is operating system	;
+;		error code, or -1 if TENIO detected the error.		;
+;	FILNUM:	File number, either supplied or returned (if initially	;
+;		zero).							;
+;	BITS:	Option switch bits; see TENIO listing for details	;
+;		(only the low half word is used).			;
+;	STRING:	The file name string or internal block (as per BITS).	;
+;	LENGTH:	If an explicit length is required by option BITS, this	;
+;		is that length (in characters)				;
+;	BUF:	(Optional) A buffer for TENIO to use for its internal	;
+;		buffering.						;
+;									;
+;	See TENIO for further details.					;
+;									;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+OPENF:	MOVEI	1,OPENF.##	; Go hither to TENIO
+	HRLZ	3,@2(16)	; Gather option bits
+	CLEAR	4,0		; Assume no buffer
+	HLRE	5,-1(16)	; Fetch argument count
+	MOVN	5,5
+	TLNZ	3,EXLENG	; Explicit length given?
+	JMP	LFETCH		; Yes. Fetch it
+	HRRI	3,@3(16)	; No. Fourth argument is name or block
+	CAILE	5,4		; Is there a fifth argument?
+	MOVEI	4,@4(16)	; Yes. Must be a buffer
+CLZGO:	JSP	2,OPENGO	; Return here when done
+;
+;	Return from OPENF and CLOSEF.
+;
+OCLXIT:	MOVEI	2,^D100		; Assume all went well
+	SKIPNZ	RETRN.		; Did we skip return?
+	MOVE	2,ACS.		; No. Fetch AC error code
+	JMP	RETXIT		; and leave
+;
+;	Explicit length supplied; buffer (if any) will be sixth argument.
+;
+LFETCH:	MOVEI	6,@3(16)	; Fetch string pointer
+	MOVEM	6,ACS.+2	; (TENIO will supply byte stuff)
+	HRR	3,@4(16)	; Grab length
+	CAILE	5,5		; Is there a sixth argument?
+	MOVEI	4,@5(16)	; Yes. Must be a buffer
+	JMP	CLZGO
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;									;
+;	CLOSEF--Close a file.  Arguments as follows:			;
+;									;
+;	RET:	Return code.  100 ==> all went well; 0 to about 35 ==>	;
+;		operating system found a problem; -1 ==> TENIO detected	;
+;		an error.						;
+;	FILNUM:	Channel number of the file to close.			;
+;	CODE:	Close code; see TENIO for details.			;
+;	STRING:	A RENAME string or internal block, if CODE requires it.	;
+;	LENGTH:	Length of the file name string, if CODE needs it.	;
+;									;
+;	Again, see TENIO for further details.				;
+;									;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+CLOSEF:	MOVEI	1,COSEF.##	; TENIO internal name
+	HRRZ	3,@2(16)	; Fetch close code
+	CAIN	3,5		; Explicit length given?
+	JMP	CLZLEN		; Yes. Parameters in different places
+	CAILE	3,2		; Is there a RENAME string involved?
+	HRLI	3,@3(16)	; Yes. Point to it
+	JMP	CLZGO		; Rest is like open
+;
+CLZLEN:	MOVEI	4,@3(16)	; Length supplied. Set string pointer
+	HRL	3,@4(16)	; and fetch length
+	JMP	CLZGO		; Now take off like open
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;									;
+;	NOTEF--Read the current pointer status of a file		;
+;	POINTF--Set the sequential file pointer for a file		;
+;									;
+;	Arguments:							;
+;	RET:	Return code. 0 ==> trouble; 1 ==> all went well.	;
+;	FILNUM:	Integer file number of channel to NOTE or POINT.	;
+;	SEQPTR:	For POINTF, this is the new value for the sequential	;
+;		file pointer for the file.  For NOTEF, this will	;
+;		return the current sequential file pointer.		;
+;	EOF (NOTEF only):  The current end of file.			;
+;	SWITS (NOTEF only):  Current input and output status switches.	;
+;									;
+;	See TENIO for further details.					;
+;									;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+NOTEF:	MOVEI	1,NOTEF.##	; Where to go
+	MOVEI	2,NOTXIT	; Restore all registers on exit
+	MOVE	5,@4(16)	; Set up current switch register
+	MOVEM	5,ACS.+2	; so that failure will leave unchanged
+	MOVE	4,@3(16)	; Set up EOF
+POINGO:	MOVE	3,@2(16)	; and possible current file pointer
+	JMP	OPENGO		; Use standard stuff from here
+;
+POINTF:	MOVEI	1,PINTF.##	; The TENIO entry
+POIFLS:	MOVEI	2,POINXT	; Just leave fast
+	JMP	POINGO
+;
+NOTXIT:	DMOVE	3,ACS.		; Return from NOTE. Fetch return
+	MOVE	5,ACS.+2	; arguments
+	MOVEM	3,@2(16)	; Return sequential file pointer
+	MOVEM	4,@3(16)	; Return EOF
+	MOVEM	5,@4(16)	; Return switches
+	JMP	POINXT		; Return RET and leave
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;									;
+;	FLUSHF--Update buffers and directory for a file or files	;
+;									;
+;	Arguments:							;
+;	RET:	Return code.  0 ==> a goof; 1 ==> hunky dory.		;
+;	FILNUM:	File number.  Ignored if all files are to be flushed.	;
+;	SWITCH:	Option switches; see TENIO for details (as usual).	;
+;									;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+FLUSHF:	MOVEI	1,FUSHF.##	; Find where to go
+	JMP	POIFLS		; Otherwise just like POINTF
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;									;
+;	NAMEF--Return the internal file name for a file.  Arguments:	;
+;									;
+;	RET:	Return code (0 ==> file not open or error, 1 ==> all	;
+;		went well						;
+;	FILNUM:	Open file channel number				;
+;	BLOCK:	A block of 9 words in which the full actual internal	;
+;		file name will be returned (only 5 are needed if no	;
+;		SFDs will be used)					;
+;									;
+;	See TENIO for more details, as usual.				;
+;									;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+NAMEF:	MOVEI	1,NAMEF.##	; Where to go
+	MOVEI	2,POINXT	; Where to end up
+	MOVEI	3,@2(16)	; Find block
+	JMP	OPENGO		; and use standard stuff
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;									;
+;	TRUNCF--Truncate and (optionally) close a file.  Arguments:	;
+;									;
+;	RET:	Return code (100 ==> all went well; 0 to about 35 ==>	;
+;		operating system detected an error; -1 ==> TENIO found	;
+;		a problem)						;
+;	FILNUM:	Open file channel number				;
+;	POINTR:	The word offset within the file to which truncation	;
+;		(and sequential file pointer setting) should occur	;
+;	SWITCH:	A word of switches; bit 35 = 1 ==> the file should be	;
+;		closed after truncation					;
+;									;
+;	See TENIO for more stuff.					;
+;									;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+TRUNCF:	MOVEI	1,TUNCF.##	; Where to do it
+	MOVE	3,@2(16)	; Fetch EOF pointer
+	MOVE	4,@3(16)	; and switch
+	JMP	CLZGO		; Now handle like CLOSEF
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;									;
+;	NXTCHN--Subroutine to return the next available channel.	;
+;	Arguments:							;
+;									;
+;	RET:	Return code (0 ==> no channel available, 1 ==> OK)	;
+;	CHANNL:	Will have next TENIO channel number on success		;
+;									;
+;	That about says it.						;
+;									;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+NXTCHN:	MOVEI	1,FOSVC.##	; This is a File I/O supervisor call
+	CLEARM	LUOAD.		; #0
+	MOVE	2,@1(16)	; Copy current value in case of error
+	MOVEM	2,ACS.
+	JSP	2,NOFILE	; Now go
+;
+;	Return from FIOSVC
+;
+	MOVE	2,ACS.		; Return file number
+	MOVEM	2,@1(16)
+	JMP	POINXT		; and handle return code
+;
+	LIT			; Not much pool
+;
+APOIN.:	POINT	4,LUOAD.,12	; Make AC number 0
+	RELOC	0		; Dirty stuff
+ACS.:	BLOCK	3		; Only need that many
+HIROAD:	BLOCK	1		; Save pointer for special returns
+ACSAVE:	BLOCK	2		; Save Rs 16 and 17
+BUFSAV:	BLOCK	1		; Saved buffer address (for difference)
+RETRN.:	BLOCK	1		; Skip return counter
+LUOAD.:	BLOCK	1		; Effective address and AC fake
+;
+;	That's all.
+;
+	END
+ 

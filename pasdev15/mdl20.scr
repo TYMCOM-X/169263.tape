@@ -1,0 +1,145 @@
+$num off
+$page
+$cen
+ODMS Version 2.0
+MEMORY DESCRIPTION LANGUAGE (MDL)
+SUMMARY
+$ski 3 $jus $title right 'ODMS 2.0 MDL Summary/\' right 'May 1, 1980'
+The BNF used in this document is fairly standard.
+Square brackets indicate optional items on the right hand side of a production.
+Reserved words in the MDL are capitalized throughout.
+Parentheses are used to indicate a grouping of items, separated by
+vertical bars, of which exactly one is to be selected.
+The nonterminals <id> and <num> are defined at the end of this
+document.
+A literal character used in the language is delimited by apostrophes.
+Finally, the distinguished nonterminal is <mdl>.
+$ski
+A memory description consists of six sections, three of which are optional,
+followed by the keyword END.
+$ski $ver
+<mdl> ::= [ <machine section> ] [ <system section> ]
+          [ <area section> ] <module section>
+          <symbol section> <storage section> END
+$ski $jus
+The optional machine section gives the identification of the computer
+system for which the program is being overlaid. At the moment, the
+machine section, if present, is ignored.
+$ski $ver
+<machine section> ::= MACHINE <id>
+$ski $jus
+The optional system section gives the identification of the system
+being overlaid.
+If no system section is given, the name of the system is taken from
+the name of the MDL file.
+The system section is recommended for all MDL files, and is required
+for a system which is to run with the Pascal debugger.
+In order for the debugger to be included in the program, the keyword DEBUG
+must be given within the system section.
+$ski $ver
+<system section> ::= SYSTEM <id> [ DEBUG ]
+$ski $jus
+The optional area section associates identifiers with non-sharable overlay
+areas.
+These identifiers are used later to associate modules with a given area.
+An area can contain at most one non-sharable overlay at a time
+when the program is running; if a routine in another overlay associated
+with the same area is called when the area contains the first overlay,
+an overlay read operation occurs.
+The area section consists of the keyword AREAS, followed by one or more
+area definitions.
+An area definition gives the name of the area, an optional SIZE keyword, and
+a numeric argument giving the size of the overlay area in words.
+Note that all overlay areas are automatically rounded up to the nearest
+page (512 words).
+$ski $ver
+<area section> ::= AREAS <areadeflist>
+<areadeflist> ::= <areadef> [ <areadeflist> ]
+<areadef> ::= <id> [ SIZE ] <num>
+$ski $jus
+The required module section defines the overlays in the system.
+An overlay is a section of code with one or more entry points, whose
+presence at runtime is controlled by the overlay manager.
+Non-sharable overlays are associated with a single area defined in
+the area section.
+This association determines the concurrency relationship amongst
+the non-sharable overlays with respect to overlay reads, since each
+overlay must occupy an area to be accessible.
+Note that any routine in any overlay can be called in the Pascal overlay
+system, and that careless association of non-sharable overlays with
+overlay areas can result in an excessive number of overlay reads.
+Sharable overlays are identified by the keyword SHARABLE in place of
+the area specification for non-sharable overlays.
+Sharable overlays occupy a single section of memory; at run time, one
+sharable overlay is always present.
+The predefined sharable overlay MAIN contains the program block, and
+entry symbols defined as in any other overlay.
+The optional contains clause gives the ordering for symbols within
+the overlay.
+A FILLER entry is used to replace a deleted symbol without affecting
+the positions of the routines following the deleted one.
+New symbols may be added to the overlay at the end, again not
+affecting the positions of other symbols.
+By using a contains clause, users can add or delete
+symbols without invalidating previously built overlays.
+$ski $ver
+<module section> ::= MODULES <moddeflist>
+<moddeflist> ::= <moddef> [ <moddeflist> ]
+<moddef> ::= <id> <arearef> [ <cclause> ]
+<arearef> ::= ( SHARABLE | IN <id> )
+<cclause> ::= CONTAINS <idlist>
+<idlist> ::= ( <id> | FILLER ) [ ',' <idlist> ]
+$ski $jus
+The required symbol section enumerates all symbols known across overlays.
+Such symbols are defined in transfer vectors for the overlay containing
+them; other overlays reference the transfer vectors and not
+the actual entity.
+The entire symbol section has a size requirement, which defines the
+allocated size of the master transfer vector.
+When sharable overlays are included in the system, the size of the MTV
+affects the layout of the entire low segment.
+To minimize the impact of changing the MTV, a fixed size area is allocated
+for it, so that symbols may be added without moving other data structures
+in the low segment.
+Vars and consts can only be declared in the predefined sharable overlay MAIN.
+$ski
+A call to a symbol in a given overlay causes that overlay to become
+accessible.
+A certain class of symbols, called the RESIDENT, never require an overlay
+operation to become accessible.
+Resident routines, however, cannot call any defined entries in any overlay.
+A symbol defined without an in clause is assumed to be IN RESIDENT.
+The symbols in the Pascal runtime library used by non-sharable overlays
+must be defined as RESIDENT symbols in the MDL.
+$ski $ver
+<symbol section> ::= SYMBOLS [ [ SIZE ] <num> ] <symdeflist>
+<symdeflist> ::= <symdef> [ <symdeflist> ]
+<symdef> ::= ( FILLER | <symspec> ) [ <inclause> ]
+<symspec> ::= <id> ( VAR | CONST | PROCEDURE | FUNCTION )
+<inclause> ::= IN ( <id> | RESIDENT )
+$ski $jus
+The required storage section details the static storage requirements
+for each of the overlay modules.
+The entire program has a total requirement for all overlays, which is
+subdivided into allocations for each overlay.
+The static area for the predefined sharable overlay MAIN is not
+included here.
+The allocations for the overlays are made in the order in which
+their names appear in the storage section.
+If the total size of the overlay static area changes, the entire
+system, including all overlays, must be rebuilt.
+$ski $ver
+<storage section> ::= STORAGE [ SIZE ] <num> <storlist>
+<storlist> ::= <storspec> [ <storlist> ]
+<storspec> ::= <id> [ SIZE ] <num>
+$ski $jus
+Comments are delimited by "(*" and "*)" as in the Pascal language; however,
+comments do not nest in the MDL.
+Numeric quantities are denoted by the nonterminal <num>.
+Numeric quantities are decimal by default, or octal if followed
+by the letter "B".
+Identifiers are denoted by the nonterminal <id>.
+They are significant to six characters, and may begin with
+any alphabetic character, including "$", "%", and ".", and
+may contain any alphanumeric character including the special
+characters listed above.

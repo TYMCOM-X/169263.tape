@@ -1,0 +1,207 @@
+	title	PASPFH	Page Fault Handler for PASCAL Dynamic Memory
+	search	PASSYM
+	search	VIRSYM
+	$reloc
+
+	entry	PFINI.			; initialize RO p.f. handler
+	entry	PFDIS.,PFENA.		; disable/enable RO page faults
+	entry	PFDON.			; to flush out requests
+	entry	VPFH.			; start of handler for .JBPFH
+	entry	PFEND.			; end of handler for .JBPFH
+
+	extern	VORG.			; for the clean/dirty bit
+	extern	VBUF.			; for calculating buffer addr
+	extern	N%BUF			; for detecting illegal PF addresses
+	extern	TWAIT.,WRTPC.,DIE.	; for error reporting
+
+	RECORD=0			; if <> 0, count events
+
+	$low
+
+	ife	RECORD,< define COUNT(A) <>>  ; null definition
+
+	ifn	RECORD,<
+	  define COUNT(A) <
+	    AOS	0,A >
+	C$ROPF::exp	0		; count read-only page faults
+	C$PDIS::exp	0		; disable calls
+	C$PENA::exp	0		; enable calls
+	  >
+;
+; VPFH. -- virtual page fault handler.  After determining that the page
+;   fault was caused by a read-only violation in one of our buffers,
+;   clear the clean/dirty bit in the origin table, disarm the RO trap
+;   for the buffer, and split.
+
+VPFH.:	JRST	START			; just like in MC manual
+PFHPC:	exp	0			; PC where fault occured
+PFHWD:	exp	0			; magic word from monitor
+PVTIME:	exp	0			; time?
+PVRATE:	exp	0			; rate?
+JUNK:	block	4			; 3, plus one extra for safety
+
+	$high				; at last, sharable code!
+
+START:	MOVEM	BFIDX,PFSAVE		; gotta save registers
+	MOVE	BFIDX,[BFIDX+1,,PFSAVE+1]
+	BLT	BFIDX,PFSAVE+TOPP-BFIDX
+
+	HLRZ	FPAGE,PFHWD		; left half of monitor word
+	TRZ	FPAGE,400000		; clear high order bit, now page number
+	HRRE	R,PFHWD			; pick up fault type code
+	JUMPGE	R,PFERR			; we're only interested in negative codes
+	COUNT	C$ROPF			; count them negative page faults
+	MOVE	R2,VBUF.		; to calculate page number of 1st buffer
+	LSH	R2,-^o11		;   divide by page size
+	SUB	FPAGE,R2
+	ifn	OFIELD-^o11,
+	< LSH	FPAGE,-OFIELD+^o11>	; divide by pages per PASCAL page
+	CAIL	FPAGE,0			; test for bounds
+	CAML	FPAGE,N%BUF
+	JRST	PFERR
+
+	MOVEI	BFIDX,0(FPAGE)		; load index of faulted buffer
+	PUSHJ	TOPP,PFDIS.		; disable that page, mark as dirty
+	PUSHJ	TOPP,PFDON.		; flush out request
+	MOVS	BFIDX,[BFIDX+1,,PFSAVE+1]	; restore registers
+	BLT	BFIDX,TOPP
+	MOVE	BFIDX,PFSAVE
+	JRST	@PFHPC			; return
+;
+; PFINI. -- initialize page fault handler.  First we stomp on .JBPFH,
+;   then issue a funny ADP monitor call informing the world that we
+;   will handle read-only page faults.  That's all.
+
+PFINI.:	PUSH	TOPP,R			; get a register
+	MOVE	R,[PFEND.,,VPFH.]	; magic word
+	MOVEM	R,.JBPFH##		; fire up the PF handler
+
+	MOVE	R,[-3,,1]		; initialize for RO traps
+	PAGE.	R,0
+	JRST	PFERR			; can't do it
+	POP	TOPP,R			; OK, restore R and split
+	POPJ	TOPP,0
+;
+; PFENA. -- enable read-only page fault trap.  BFIDX has the buffer index
+;   of the buffer for which traps are to be set.  This involves setting
+;   the high-order bit (bit 0) of the origin table entry for that buffer
+;   index, and the preparation of list of PAGE. arguments to arm the trap.
+;   In general, such an enabling may involve a multi-word argument list.
+;   PFENA. saves all registers.
+
+PFENA.:	PUSH	TOPP,R			; get one
+	PUSH	TOPP,R2			;  and another
+	COUNT	C$PENA			; count trap enables
+	ADD	BFIDX,VORG.		; get origin table entry
+	HRLZI	R,CD.BIT		; get bit set, all others clear
+	ORM	R,0(BFIDX)		; set the bit in memory
+	SUB	BFIDX,VORG.		; back to buffer index
+	MOVEI	R,0(BFIDX)		; copy
+	LSH	R,OFIELD		; into offset from VBUF.
+	ADD	R,VBUF.			; now absolute addr of buffer
+	LSH	R,-^o11			; convert to page number
+	HRLI	R,400000		; high order bit as arg
+	PUSHJ	TOPP,PFARGS		; set up argument block
+	POP	TOPP,R2
+	POP	TOPP,R			; restore the reg
+	POPJ	TOPP,0			; bye
+;
+; PFDIS. -- disable read-only page fault trap.  BFIDX has the buffer index
+;   of the buffer for which traps are to be cleared.  Kind of the converse
+;   of PFENA.
+
+PFDIS.:	PUSH	TOPP,R			; save that reg
+	PUSH	TOPP,R2			;   and that one
+	COUNT	C$PDIS
+	ADD	BFIDX,VORG.		; table addr
+	HRLZI	R,CD.BIT		; get that bit
+	ANDCAM	R,0(BFIDX)		;   clear it in memory
+	SUB	BFIDX,VORG.		; back to table index
+	MOVEI	R,0(BFIDX)		; copy it
+	LSH	R,OFIELD		; get offset from VBUF.
+	ADD	R,VBUF.			; now addr of buffer
+	LSH	R,-^o11			; now page number of buffer
+	PUSHJ	TOPP,PFARGS		; set up arg block
+	POP	TOPP,R2
+	POP	TOPP,R			; restore
+	POPJ	TOPP,0
+;
+; PFARGS -- little helper to set up argument block.  Assumes R has argument
+;    word, to be incremented by one for each argument.  The number of args
+;    is contained in PFARG. from assembly time.  R2 is assumed available.
+
+PFARGS:	HRRZ	R2,PFPTR		; get pointer in PAGE. arg table
+	HRLI	R2,-<PAGSIZ/^D512>	;   and number of args to put
+
+PFLOOP:	MOVEM	R,0(R2)			; install arg word
+	AOBJP	R2,PFDONE		; if count exhausted, we're done
+	AOJA	R,PFLOOP		; else tick page number & go back
+
+PFDONE:	HRRZM	R2,PFPTR		; remember pointer for next time
+	CAIL	R2,PFBUFN		; did we fill up the buffer?
+	PUSHJ	TOPP,PFDON.		; yes, do the PAGE. call
+	POPJ	TOPP,0			;   and/or split
+;
+; PFDON. -- flush pending PAGE. operations.  First we must sort the list of
+;   arguments for that stupid PAGE. call, then do the call, and finally
+;   reset the argument block to be empty.
+
+PFDON.:	DMOVEM	R,RSAVE			; grab a few registers
+	MOVEM	R3,RSAVE+2
+
+	MOVE	R,PFPTR			; pick up current pointer
+	MOVEI	R2,PFARG.+1		;   and addr of first entry
+	SUBI	R,0(R2)			; R has number of args in table
+	JUMPE	R,PFOUT			; if zero, nothing to do
+	MOVEM	R,PFARG.		; put in number as first word of arg
+	ADDI	R,0(R2)			; R has last addr to sort
+
+PFSOR1:	SUBI	R,1			; dec down end addr
+	MOVEI	R2,PFARG.+1		; reinitialize search pointer
+	CAIG	R,PFARG.+1		; anything left?
+	JRST	PFDOIT			; nope, make call
+
+PFSORT:	MOVE	R3,0(R2)		; pick up current entry in table
+	CAMG	R3,1(R2)		; is it bigger than next one?
+	JRST	PFL2			; no, don't bother
+	EXCH	R3,1(R2)		; else exchange 1(R2) and 0(R2)
+	EXCH	R3,0(R2)
+
+PFL2:	ADDI	R2,1			; tick sort pointer
+	CAIGE	R2,0(R)			; are we done with this pass?
+	JRST	PFSORT			;   no, still more to do
+	JRST	PFSOR1			; yes, back off end addr up top
+
+PFDOIT:	MOVE	R,[-1,,PFARG.]		; get readonly argument for PAGE.
+	PAGE.	R,0
+	JRST	PFERR			; ecch
+PFOUT:	MOVEI	R,PFARG.+1		; reinitialize pointer
+	MOVEM	R,PFPTR
+	DMOVE	R,RSAVE
+	MOVE	R3,RSAVE+2
+	POPJ	TOPP,0			; bye
+;
+; random stuff
+
+PFERR:	PUSHJ	TOPP,TWAIT.		; wait on it
+	OUTSTR	[ asciz/
+?	Error in PASCAL page fault handler/]
+	MOVE	AC0,PFHPC		; load page fault addr
+	PUSHJ	TOPP,WRTPC.
+	JRST	DIE.
+
+PFEND.=.+1				; symbol for end of PFH
+
+	lit
+	$low
+
+PFARG.:	exp	0
+	block	^d20			; vary me
+PFBUFN:
+
+PFPTR:	exp	PFARG.+1		; initialized
+
+RSAVE:	block	3			; for saving on enable/disable calls
+
+PFSAVE:	block	TOPP-BFIDX+1		; register save area during faults
+	end

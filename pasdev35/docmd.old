@@ -1,0 +1,18 @@
+external function LIB$DO_COMMAND (command : string [256]): boolean 
+  options fortran;
+ 
+public procedure Do_Cmd (Cmd : string [256];
+			 var Result : boolean);
+
+(* DO_CMD calls the VAX runtime-library routine LIB$DO_COMMAND to
+   issue a VAX DCL command.  Note that the LIB$DO_COMMAND routine
+   is declared as an external FORTRAN function. This enables the 
+   Cmd parameter to be passed as a string descriptor, instead
+   of a value or result parameter.
+   If LIB$DO_COMMAND is successful, control does not return to the
+   calling program.  Otherwise, Result returns false.
+*)
+
+begin
+  Result := LIB$DO_COMMAND (Cmd);
+end.

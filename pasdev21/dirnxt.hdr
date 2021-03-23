@@ -1,0 +1,54 @@
+(*   +--------------------------------------------------------------+
+     |                                                              |
+     |                       D I R _ N E X T                        |
+     |                       - - - - - - - -                        |
+     |                                                              |
+     +--------------------------------------------------------------+
+     
+     MDSI, Company Confidential
+     
+     SYSTEM:  PASDIR Directory Manipulation Routines
+     
+     STARTED:  10/30/78
+     
+     PURPOSE:  This routine returns the next file in a directory in a
+        string format.
+     
+     USAGE:
+     
+        external procedure DIR_NEXT
+          ( var ERR: DIR_ERRORS;
+            INT_ID: DIR_INT_ID;
+            var FNAME: DIR_FNAME );
+     
+     INPUT:
+     
+        INT_ID      is  the index identifying the directory, returned
+                    from DIR_OPEN.
+     
+     OUTPUT:
+     
+        FNAME       is a string containing the name of the next  file
+                    in the directory.  If the error return (below) is
+                    DIR_OK, the string will always contain a  period,
+                    even  if  the  file  contains a null extension or
+                    file name.
+     
+        ERR         is the scalar error code.  Possible returns  are:
+                    (1)  DIR_OK  -  the  name  of  the  next  file is
+                    contained in  FNAME;  (2)  DIR_BAD_INT_ID  -  the
+                    index   INT_ID  is  out  of  range  or  otherwise
+                    invalid; (3) DIR_NOT_OPEN  -  there  is  no  open
+                    directory  associated  with INT_ID; (4) DIR_EOF -
+                    the end of the directory file has  been  reached,
+                    and FNAME is the null string.
+     
+     REQUIREMENTS:  none.
+     
+     NOTES:   Notice  that  the  end of directory return (DIR_EOF) is
+        taken on the call AFTER the one returning the  last  file  in
+        the directory.
+     
+     RESPONSIBLE:  Jerry Rosen -- PASCAL group
+     
+     ---------------------------------------------------------------- *)

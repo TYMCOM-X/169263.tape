@@ -1,0 +1,358 @@
+	title	PASVLC	Allocator for PASCAL Virtual Heap
+	search	VIRSYM
+	search	PASSYM
+	$reloc
+
+	entry	VNEW.,ANEW.,VDPS.,VMARK.,VRLES.,AREA.E
+	extern	PTINF.,ALCTB.,A.SHL
+	intern	NEW.,DSPOS.,MARK.,RLEAS.
+
+	extern	VBPTI.,VBVPI.,VATBL.,VMACC.
+	extern	TWAIT.,WRTPC.,DIE.,VORG.,OMASK.,VMRUP.
+	extern	VBUF.,VCHKM.
+	extern	CHHLM.,CHLLM.,VCRAT.,VCRPG.
+
+; a few allocation parameters
+
+	MINBLK=2			; the smallest block to allocate
+	SMALL=3				; the smallest remnant to leave
+		; note ** both of these include the control word
+
+; event counter
+
+	RECORD=0			; if <> 0, record events
+
+    ife RECORD, < define COUNT(A) <>>	; null definition if not enabled
+
+    ifn RECORD, <
+	define COUNT(A) <
+	  AOS 0,A >
+	$low
+	C$NEW::exp 0
+	C$DISP::exp 0
+	C$COAL::exp 0
+	C$SPLI::exp 0
+	C$EXAM::exp 0
+	C$XTND::exp 0  >
+	$high
+
+
+; VNEW. and ANEW. -- allocate a record, just like NEW. does. First we check
+;   all pages in the area for sufficient free space (via 17 bits in the
+;   page tables). If a page is found with enough, it is brought in and the
+;   allocation made, otherwise the area is extended. There is no way of
+;   really telling, in the general case, whether an allocation has changed
+;   the maximum free block on a page, so we must walk the entire free list
+;   to find out.
+
+VNEW.:	PUSHJ	TOPP,ALCSAV		; save important registers
+	MOVEI	AC1,DEFAREA		; pick up default number
+	SKIPN	0,VATBL.(AC1)		; does default area exist?
+	PUSHJ	TOPP,VCRAT.		; no, go create it now
+	JRST	CNEW
+
+ANEW.:	PUSHJ	TOPP,ALCSAV		; save regs
+	CAILE	AC1,0			; check area number for legality
+	CAIL	AC1,AMAX
+	JRST	BADAREA			; no go
+
+CNEW:	COUNT	C$NEW
+	CAIL	REG,PAGSIZ		; check desired size for legality
+	JRST	TOOBIG
+	CAIGE	REG,MINBLK		; is it too small?
+	MOVEI	REG,MINBLK		; yes, move up to minimum
+	MOVEI	ATBWD,VATBL.		; find right area table for first page
+	HLRZ	R,ALCTB.(AC1)		;   according to allocator table
+	LSH	R,-OFIELD		; get only page table offset
+	MOVEM	R,PGTEMP		; remember it
+
+CNVLOP:	SOJL	R,CNEW2			; we're done
+	SKIPE	ATBWD,0(ATBWD)		; pick it up, better be non-zero
+	JRST	CNVLOP
+	JRST	BADPAG			; else major screwup
+
+CNEW2:	ADDI	ATBWD,0(AC1)		; get pointer to area table entry
+	MOVEM	ATBWD,CHHLM.		; hang onto for later
+	SKIPN	PTBWD,0(ATBWD)		; is there an entry?
+	JRST	CNPOUT			; no, look for swapped-out page tables
+	TLNN	PTBWD,IND.BIT		; is the page table in core?
+	JRST	CN2NXT			; no, get next one
+	HLRZ	R,ALCTB.(AC1)		; pick up first page number again
+	ANDI	R,PAGSIZ-1		; modulo pagesize
+	ADDI	PTBWD,0(R)		; to start GO.FER at first legal entry
+	JSP	R,GO.FER		; do it
+
+CN2NXT:	AOS	0,PGTEMP		; tick counter of page table offsets
+	SUBI	ATBWD,0(AC1)		; back to start of area table
+	SKIPN	ATBWD,0(ATBWD)		; get next one
+	JRST	CNPOUT			; none there, check for other tables
+	ADDI	ATBWD,0(AC1)		; else get index of next PT entry
+	SKIPN	PTBWD,0(ATBWD)		; is there an entry?
+	JRST	CNPOUT			; no, we're done with incore PT's
+	TLNE	PTBWD,IND.BIT		; is page table in core?
+	JSP	R,GO.FER		; yes, see if it's OK
+	JRST	CN2NXT			; if no good, or not in, get next one
+
+CNPOUT:	HLRZ	R,ALCTB.(AC1)		; reset to first legal pge
+	LSH	R,-OFIELD		; just offset part
+	MOVEM	R,PGTEMP
+	MOVE	ATBWD,CHHLM.		; pick up saved addr of first entry
+	SKIPN	PTBWD,0(ATBWD)		; is there an entry?
+	JRST	CNXTND			; no, must extend space
+	TLNE	PTBWD,IND.BIT		; is table in core?
+	JRST	CN3NXT			; yes, we already checked it
+	PUSHJ	TOPP,VBPTI.		; no, bring it in
+	HLRZ	R,ALCTB.(AC1)		; compute starting place for GO.FER
+	ANDI	R,PAGSIZ-1		;   which is the proper entry for
+	ADDI	PTBWD,0(R)		;   the first legal page
+	JSP	R,GO.FER		; try it
+
+CN3NXT:	AOS	0,PGTEMP		; tick PT offset counter
+	SUBI	ATBWD,0(AC1)		; back to start of area table
+	SKIPN	ATBWD,0(ATBWD)		; is there another one?
+	JRST	CNXTND			; no, extend heap
+	ADDI	ATBWD,0(AC1)		; get addr of proper area entry
+	SKIPN	PTBWD,0(ATBWD)		; is there a page table?
+	JRST	CNXTND			; no, we're done
+	TLNE	PTBWD,IND.BIT		; is PT in core?
+	JRST	CN3NXT			; yes, we already checked it
+	PUSHJ	TOPP,VBPTI.		; else bring it in
+	JSP	R,GO.FER		; find one
+	JRST	CN3NXT			; else try next one
+
+CNXTND:	AOS	BFPTR,ALCTB.(AC1)	; tick highest, load in right half
+	COUNT	C$XTND
+	HRRZM	BFPTR,PGTEMP		; remember new page number
+	HLLI	BFPTR,0			; clear left half
+	PUSHJ	TOPP,VCRPG.		; and create the page
+
+NUFIND:	MOVEI	R,0(BFPTR)		; start at first word of block
+	ADDI	REG,1			; tick size to alloc. for control
+
+FINDIT:	SKIPG	R2,0(R)			; pick up size word
+	JRST	NUNEXT			;  allocated -- get next block
+	COUNT	C$EXAM
+	CAILE	REG,0(R2)		; is it big enough?
+	JRST	NUNEXT+1		;   no, get next, don't negate size
+	SUBI	R2,0(REG)		; get remnant size if split
+	CAIG	R2,SMALL		; is it worth splitting block?
+	JRST	NUXACT			; no, exact allocation
+	COUNT	C$SPLI
+	MOVEM	R2,0(R)			; install remnant size
+	ADDI	R,0(R2)			; get addr of record to allocate
+	MOVEM	REG,0(R)		; put in size
+
+NUXACT:	MOVNS	0,0(R)			; negate size word -- allocated record
+NUINIT:	MOVEI	AC0,1(R)		; save real address in AC0
+	SETZM	0,1(R)			; zero out first word
+	HRLI	R2,1(R)			; set up BLT ac word
+	HRRI	R2,2(R)
+	MOVEI	R3,-1(R)		; zero out one less than size words
+	ADDI	R3,0(REG)		; from start of block
+	BLT	R2,0(R3)
+
+	SETZ	R2,0			; initialize running largest
+	HRRZI	R,0(BFPTR)		; start at first block
+
+LGLOOP:	SKIPG	R3,0(R)			; pick up size word
+	JRST	LGNEXT			; negative -- forget about it
+	CAIGE	R2,0(R3)		; bigger than running one?
+	MOVEI	R2,0(R3)		; yes, put in R2 for later
+LGNEXT:	MOVM	R3,R3			; make sure size is positive
+	ADDI	R,0(r3)			;   and add on for addr next record
+	CAIGE	R,PAGSIZ(BFPTR)		; over end of buffer yet?
+	JRST	LGLOOP			; no, do it
+
+NUDONE:	SOSG	0,R2			; dec largest so it'll fit in PT
+	SETZ	R2,0			; don't let it be negative
+	DPB	R2,PTINF.		; put into age table
+	EXCH	AC1,AC0			; get real addr in AC0 for index reg.
+	MOVE	REG,PGTEMP		; get page number
+	MOVEI	R,0(AC1)		; pick up real address
+	ANDI	R,pagsiz-1		; leave only offset within page
+	LSH	REG,OFIELD		; shove page number into right field
+	ADD	REG,R			; compose virtual address
+	MOVE	R,AC0			; pick up area number
+	LSH	R,ofield+pfield		; shift into area field
+	OR	REG,R			; or into address
+	JRST	ALCRES			; and we're done
+
+NUNEXT:	MOVM	R2,R2			; get positive offset to next block
+	ADDI	R,0(R2)			; get address of next block
+	JRST	FINDIT			; and try again
+
+GO.FER:	LDB	R2,PTINF.		; pick up bits
+	CAIG	REG,0(R2)		; is big enuf?
+	JRST	GO.TIT			; yes!!!
+	AOS	0,PTBWD			; no, go for next entry in table
+	TRNN	PTBWD,PAGSIZ-1		; did we carry over end of table?
+	JRST	0(R)			; yes, go home in defeat
+	JRST	GO.FER			; else try next entry
+
+GO.TIT:	MOVEI	R,0(PTBWD)		; get addr of PT entry
+	ANDI	R,PAGSIZ-1		; modulo pagesize
+	MOVE	R2,PGTEMP		; get PT offset
+	LSH	R2,OFIELD		; multiply by page size
+	ADDI	R,0(R2)			;   to get actual page number
+	MOVEM	R,PGTEMP		;   for computing final V.A.
+	MOVE	BFPTR,0(PTBWD)		; pick up page table entry
+	TLNN	BFPTR,IND.BIT		; is it in?
+	PUSHJ	TOPP,VBVPI.		; no, read it in
+
+GO.MRU:	PUSHJ	TOPP,VMRUP.		; promote to MRU page
+	JRST	NUFIND			; and we're done, return to NUFIND
+
+; VDPS. -- free a block, then pass through page, concatenating
+;   whenever possible. Update maximum size free block on page when done.
+;
+VDPS.:	subi	reg,1		;get virtual addr of control block
+	pushj	topp,alcsav
+	move	ac1,reg		;translate supplied pointer
+	movei	reg,minblk	;that big only
+	count	c$disp
+	pushj	topp,vmacc.	;make accessible
+;
+; now have translated address in AC1 and buffer address in BFPTR.
+; check if really an allocated block.
+;
+	skipl	0(ac1)		;must be negative if allocated
+	jrst	dsperr
+	movms	0(ac1)		;mark as free
+;
+; Now recompute those things that the restoration of registers in VMACC killed.
+
+	HRRZI	BFPTR,0(AC1)	;copy of real addr
+	TRZ	BFPTR,PAGSIZ-1	;get buffer address
+	MOVEI	PTBWD,0(BFPTR)	;compute buffer index
+	SUB	PTBWD,VBUF.
+	LSH	PTBWD,-OFIELD
+	ADD	PTBWD,VORG.	;addr of entry in origin table
+	HLRZ	PTBWD,0(PTBWD)	;which contains backlink to page table
+	ifge	OFIELD-^o11,<
+	  TRZ	PTBWD,CD.BIT>	;clear CD bit if we're using it
+;
+; Scan over page. Use:
+;	ac0 = max free block size (negative)
+;	ac1 = search pointer
+;	reg = concatenation pointer
+;
+	movei	ac0,0
+	movei	ac1,0(bfptr)	;start search at first word of page
+vd.loop:
+	cail	ac1,pagsize(bfptr) ;check if block within page
+	jrst	vd.done		;done if not
+	skipl	reg,0(ac1)	;if not allocated then
+	jrst	vd.free		;  try to concatenate
+	sub	ac1,reg		;else try next block
+	jrst	vd.loop
+vd.free:
+	add	reg,ac1		;address of next block
+	caige	reg,pagsize(bfptr) ;if not within page
+	skipg	reg,0(reg)	;or if allocated 
+	jrst	vd.size		;then just check against max size
+	addb	reg,0(ac1)	;else concatenate blocks
+	count	c$coal
+	jrst	vd.free		;and continue check
+vd.size:
+	camg	ac0,0(ac1)	;check if this block the largest yet
+	move	ac0,0(ac1)		;appears so
+	add	ac1,0(ac1)	;addr of next block
+	jrst	vd.loop		;and continue
+vd.done:
+	subi	ac0,1		;deduct one so it'll fit into word
+	dpb	ac0,ptinf.	;store update max size
+	movei	reg,377777	;return nil
+	jrst	alcres
+
+	$low
+REGARE:	block	^o12
+	$high
+ALCSAV:	MOVE	0,[3,,REGAREA]
+	BLT	0,REGAREA+11
+	POPJ	TOPP,0
+
+ALCRES:	MOVS	0,[3,,REGAREA]
+	BLT	0,14
+	POPJ	TOPP,0
+
+; VMARK. and AMARK. -- we return the magic word in the allocator table,
+;   get a new page, and reset allocator table to point to it and only it.
+
+
+VMARK.:	PUSHJ	TOPP,ALCSAV		; save "with" registers
+	MOVEI	AC1,DEFAREA		; load up default area number
+	SKIPN	0,VATBL.(AC1)		; has it been created?
+	PUSHJ	TOPP,VCRAT.		; no, go do it
+	MOVE	REG,ALCTB.(AC1)		; pick up allocator word as return
+	HRRZI	BFPTR,1(REG)		; plus one is new first page
+	HRRM	BFPTR,ALCTB.(AC1)	; install in both halves of
+	HRLM	BFPTR,ALCTB.(AC1)	;   of allocator word
+	PUSHJ	TOPP,VCRPG.		; create a new page
+	JRST	ALCRES			; restore regs and split
+
+; VRLES. -- must discard all pages in any following heaps.
+
+VRLES.:	PUSHJ	TOPP,ALCSAV		; stupid with registers
+	HRRZM	REG,CHLLM.		; left half as lower limit for VCHKM.
+	AOS	R2,CHLLM.		; actually, one past that
+	HRRZ	R,ALCTB.+1		; get current top
+	MOVEM	R,CHHLM.		;   as high limit
+	CAILE	R2,0(R)			; make sure low limit is less than high
+	JRST	RLSERR
+	MOVEI	AC1,DEFAREA		; pony up area number
+	PUSHJ	TOPP,VCHKM.		; throw out pages
+	MOVEM	REG,ALCTB.+1		; restore passed control word
+	JRST	ALCRES			; restore and go home
+
+; AREA.E -- area extent. Pick up the allocator word, convert that to size
+;   in words, and return as function value.
+
+AREA.E:	HRRZ	R,ALCTB.(REG)		; right half is largest page
+	LSH	R,OFIELD		; multiply by page size
+	MOVEM	R,FV(TOPP)		; return as function value
+	POPJ	TOPP,0
+
+
+;
+; error routines
+
+DSPOS.:
+MARK.:
+NEW.:
+RLEAS.:	MOVEI	R,[asciz/
+?	Virtual heap program has non-virtual module/]
+	JRST	VLCOUT
+
+BADARE:	MOVEI	R,[asciz/
+?	Invalid area ID/]
+	JRST	VLCOUT
+
+BADPAG:	MOVEI	R,[asciz/
+?	Illegal page number in virtual allocator/]
+	JRST	VLCOUT
+
+TOOBIG:	MOVEI	R,[asciz/
+?	Cannot allocate record larger than page/]
+	JRST	VLCOUT
+
+RLSERR:	MOVEI	R,[asciz/
+?	Bad heapmark in virtual release/]
+	JRST	VLCOUT
+
+DSPERR:	MOVEI	R,[asciz/
+?	Bad pointer in virtual DISPOSE/]
+
+VLCOUT:	PUSHJ	TOPP,TWAIT.
+	OUTSTR	0(R)
+	MOVE	AC0,0(TOPP)
+	PUSHJ	TOPP,WRTPC.
+	JRST	DIE.
+
+
+	$low
+
+PGTEMP:	exp	0			; temp for making virtual address
+	$high
+	lit
+	end
+  

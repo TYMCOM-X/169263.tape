@@ -1,0 +1,258 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;									;
+;	This program recopies an interactively acquired file XXXXXX.MAC	;
+;	to itself, converting most of it to upper case.  All comments	;
+;	are left alone, as are ASCII, ASCIZ, SUBTTL, and TITLE lines.	;
+;	This program is somewhat experimental; we reserve the right to	;
+;	add and delete functions as may prove appropriate.		;
+;									;
+;	Since the above was written, we now recognize " and ' as the	;
+;	beginnings of character strings and thus refuse to capitalize	;
+;	from that point on.  US is recognized as a continuation char-	;
+;	acter and causes the next LF or FF to not reset the line.	;
+;	Finally, typing "/V" causes the version number to be typed	;
+;	(standards and all that).					;
+;									;
+;	12-7-78:  For version 1.2, we now recognize \ as a string	;
+;	delimiter (this means that using it in passing a macro argu-	;
+;	ment must be upper cased by hand).  Also, multi line ASCII	;
+;	and ASCIZ strings are handled properly.  (COMMENT is handled	;
+;	like REMARK, thus leaving secondary lines alone; that is	;
+;	thought to be a feature.)  Finally, a complete file name,	;
+;	with device, extension, and PPN may now be specified; .MAC	;
+;	will still be the default extension.				;
+;									;
+;	3-3-78:  PRINTX, REMARK, and UNIVERsal also work (actually,	;
+;	they have for quite a while; this merely updates the comments.)	;
+;	The RADIX 10 dependencies have been removed for ease in main-	;
+;	tenance and in use as a basis for new utilities.		;
+;									;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+	TITLE	CASEFX, 1.2 - Program to Selectively Capitalize MACRO Files
+	SUBTTL	(With Extensions to Keep Rosen Happy)
+;
+;	First, and foremost...
+;
+	SEARCH	OPDEFS		; DEC doth byte
+CTL==		37		; Largest control character
+;
+;	And we're off...
+;
+	EXTERN	TENIO.,BUF.1	; Find the file system
+	TWOSEG			; Reentrant. What the hell?
+	RELOC	400000		; Set to high segment address
+CASEFX:	SVC	RESET.		; Flush toilet first
+OUTLUP:	TTCALL	OUTCHR,["*"]	; Type prompting "*"
+	MOVE	1,[POINT 7,FILENM]; Set up filename byte pointer
+	MOVEI	2,NAMCNT	; and character count
+RDFILE:	JSP	17,GETCH	; Fetch next file name character
+	JMP	GOTNAM		; 0 Control. End name
+	CAIN	3,"/"		; 1 Start of command?
+	JMP	COMGET		; Yes. Process it
+	IDPB	3,1		; No. Accumulate string
+	SOJNM	2,RDFILE	; and fetch next character of file name
+;
+BADFIL:	TTCALL	CLRBFI,0	; Too many characters. Purge input
+	TTCALL	OUTSTR,BADMSG	; and gripe
+	JMP	OUTLUP		; If at first and all that...
+;
+;	Slash gotten; must be a command.  Just recognize /V(ersion) for
+;	now.
+;
+COMGET:	CAIN	2,NAMCNT	; At beginning of line?
+	JSP	17,GETCH	; Yes. Fetch next character
+	JMP	BADCOM		; 0 Control or not first char. Bitch
+	CAIE	3,"V"		; 1 Is it version request?
+	CAIN	3,"v"		; (either incarnation)
+	JMP	VERCHK		; Maybe
+BADCOM:	TTCALL	CLRBFI,0	; No. Purge input,
+	TTCALL	OUTSTR,BADSWT	; complain,
+	JMP	OUTLUP		; and retry
+;
+VERCHK:	JSP	17,GETCH	; Is next character control?
+	JMP	VERSIO		; Yes. Write version message
+	JMP	GETCH		; No. Purge rest of line
+;
+VERSIO:	TTCALL	OUTSTR,VERMSG	; "Version x.y"
+	JMP	OUTLUP
+;
+;	GETCH--Subroutine to read a character, purge the CR before LF,
+;	and check for control characters.  On exit, R3 has the input
+;	character.  Link by R17 if control, 1(17) otherwise.
+;
+GETCH:	TTCALL	INCHWL,3	; Read next character
+	CAIN	3,CR		; Is it CR?
+	TTCALL	INCHWL,3	; Yes. Step to LF
+	CAILE	3,CTL		; In control range?
+	JMP	1(17)		; No. Exit+1
+	JMP	0(17)		; Yes. Exit+0
+;
+GOTNAM:	CAIN	2,NAMCNT	; Null name?
+	SVC	EXIT.		; Yes. Blow out of here
+	CLEAR	5,0		; No. Terminate name cleanly
+	IDPB	5,1
+	MOVE	4,[720000,,MACNAM]; READ/WRITE/NODELETE/NOCREATE
+	OPENF	4,NUMIN		; Take it, TENIO
+	JMP	BADFIL		; 0 Something wrong
+	CLEARB	12,17		; 1 File open. Clear EOF switch and count
+	CLEAR	15,0		; Set output cursor to beginning
+;
+;	File is open; start reading characters.  R7 will contain the
+;	accumulated operator string; R4 will be the translation switch
+;	(convert lower to upper case if zero); R5 will count the number
+;	of characters in the operator.  R0 is all ones if a US has been
+;	encountered since the last LF or FF, the value of an ASCII or
+;	ASCIZ delimiter if we are in the middle of such a string, zero
+;	otherwise.
+;
+LOOP:	CLEARB	4,0		; Convert for a while
+FRESH:	CLEARB	7,10		; Null initial operator
+	MOVE	6,[POINT 6,7]	; Set for sixbit save
+	MOVEI	5,6		; Count the string length down
+SCAN:	JSP	16,INPUT	; Read, convert, copy, analyze a character
+	JUMPNZ	4,SWALLO	; Chug up to next LF if translation off
+	CAIN	2,":"		; Is this a colon?
+	JMP	FRESH		; Yes. Purge operator accumulator
+	CAILE	2,"Z"		; Above alphabet?
+	JMP	ASCHEK		; Yes. Operator found
+	CAIL	2,"A"		; In alphabet?
+	JMP	ACCUM		; Yes. Accumulate in operator string
+	CAILE	2,"9"		; Try numerics
+	JMP	SWALLO		; Not today. Cannot be desired operator
+	CAIL	2,"0"
+	JMP	ACCUM
+	CAIN	2,"."		; Try alphanumeric extenders
+	JMP	ACCUM
+	CAILE	2,"%"
+	JMP	SWALLO
+	CAIL	2,"$"
+	JMP	ACCUM
+ASCHEK:	JUMPZ	7,SCAN		; Operator ended. Try again if null
+	CAME	7,[SIXBIT 'ASCII']; If ASCII
+	CAMN	7,[SIXBIT 'ASCIZ']; or ASCIZ
+	JMP	ASCHUG		; zip to end of string
+	CAME	7,[SIXBIT 'SUBTTL']; Also SUBTTL
+	CAMN	7,[SIXBIT 'UNIVER']; Watch for the truncated one
+	SETOI	4,0		; Kill translation for all these
+	CAME	7,[SIXBIT 'PRINTX']; Look out for other randoms
+	CAMN	7,[SIXBIT 'TITLE']; and TITLE
+	SETOI	4,0
+	CAME	7,[SIXBIT 'COMMEN']
+	CAMN	7,[SIXBIT 'REMARK']
+NOMORE:	SETOI	4,0
+SWALLO:	JSP	16,INPUT	; Now do rest of line
+	JMP	SWALLO		; (INPUT will duck back when done)
+;
+ACCUM:	SOJM	5,UNVCHK	; If > 6 characters, it may not need us
+	SUBI	2,40		; Otherwise, convert to sixbit
+	IDPB	2,6		; and drop into R7
+	JMP	SCAN
+;
+UNVCHK:	CAME	7,[SIXBIT 'UNIVER']; Look like a UNIVERSAL
+	CAMN	7,[SIXBIT 'COMMEN']; or a COMMENT?
+	JMP	SCAN		; Yes. Keep converting up to blank
+	JMP	SWALLO		; Nope. Forget it
+;
+;	ASCII and ASCIZ may span lines, so we force translation off
+;	from the next non-blank character until its recurrence or
+;	the end of the file.
+;
+ASCHUG:	SETOI	4,0		; Kill translation
+	MOVEI	0,1		; and prevent line end check
+DELGET:	JSP	16,INPUT	; Look for the delimiter character
+	CAIE	2,HT		; Is it a tab
+	CAIN	2," "		; or space?
+	JMP	DELGET		; Yes. Loop to next character
+	MOVEI	0,0(2)		; No. Hang on to delimiter
+GULP:	JSP	16,INPUT	; Fetch next character
+	CAIE	0,0(2)		; At end of string?
+	JMP	GULP		; Not yet. Keep looping
+	CLEAR	0,0		; Yes. Turn line end check back on
+	JMP	SWALLO		; and look for it
+;
+;	End of file.  Close it and ask for more.
+;
+EOF:	TDZN	15,15		; Was anything written?
+	MOVEI	15,1		; No. Destroy it before it multiplies
+	CLOSEF	15,NUMIN
+	HALT	.		; 0 Close failed. Should not be
+	JMP	OUTLUP		; 1 Now get more
+;
+;	INPUT--Subroutine to read, translate, and copy next character.
+;	This routine uses blocked I/O for efficiency; on input, R12
+;	has the remaining character count and R3 has the current byte
+;	pointer.  If necessary, a buffer full of characters is acquired;
+;	the next character is read into R2, translated to upper case (if
+;	necessary), and recopied to the buffer.  If R0 is positive, the
+;	routine returns at this point; otherwise, the character is ana-
+;	lyzed.  If LF or FF, it returns to the loop top (if R0 is zero)
+;	or clears R0 and returns (if negative); if the character was a
+;	semicolon, prime, quotation mark, or backslash, it turns off
+;	translation and returns to SWALLO; otherwise it returns meekly.
+;	Link by R16.
+;
+INPUT:	SOJNM	12,GETNXT	; Is buffer empty?
+	JUMPNZ	17,EOF		; Yes. Quit if file is too
+	MOVEI	13,INBUF	; Not yet. Set input buffer pointer
+	MOVEI	14,200*BLKCNT	; and count
+	RDBLK	13,NUMIN	; Get next batch of goodies
+	HALT	.		; 0 Bad arguments. Ditch it
+	SETOI	17,0		; 1 EOF. Remember it
+	MOVN	14,14		; 2 Compute actual word count
+	MOVEI	12,200*BLKCNT(14)
+	JUMPZ	12,EOF		; Nothing read. Try no more
+	IMULI	12,5		; Something. Convert to characters
+	MOVE	3,[POINT 7,INBUF]; Set up initial byte pointer
+	SUBI	12,1		; Count first character
+GETNXT:	ILDB	2,3		; Fetch next character
+	JUMPNZ	4,NOTRNS	; Hop if no translation
+	CAIL	2,"a"		; Must translate. > or = "a"?
+	CAILE	2,"z"		; < or = "z"?
+	JMP	NOTRNS		; Not lower case. OK as is
+	ANDCMI	2,40		; Lower case. Convert to upper
+	DPB	2,3		; and restore it
+NOTRNS:	JUMPP	12,LFCHK	; If more in buffer, check for return
+	MOVEI	13,INBUF	; Buffer exhausted. Rewrite it
+	ADDI	14,200*BLKCNT	; Compute word count
+	WRBLKR	13,NUMIN	; Use random write
+	HALT	.		; 0 Odd difficulties
+LFCHK:	JUMPP	0,0(16)		; 1 Skip all checks if in literal string
+	CAIE	2,LF		; Is this line end?
+	CAIN	2,FF		; (Page end is similar)
+	JMP	ENDLIN		; Yes. Look for suppression
+	CAIE	2,";"		; No. Comment start or
+	CAIN	2,"'"		; string begin?
+	JMP	NOMORE		; Yes. Translate no more
+	CAIE	2,"\"		; Back slash or
+	CAIN	2,""""		; quotation mark?
+	JMP	NOMORE		; Yes. Treat like prime
+	CAIN	2,US		; US (continuation character)?
+	SETOI	0,0		; Yes. Set switch
+	JMP	0(16)		; Return to wherever
+;
+ENDLIN:	JUMPZ	0,LOOP		; Line end. Restart if no continuation
+	CLEAR	0,0		; US found first. Kill it
+	JMP	0(16)		; and keep doing our thing
+;
+	LIT			; Boot the literal pool
+;
+BADMSG:	ASCIZ	'Bad file; retry.
+'				; Warning in time
+VERMSG:	ASCIZ	'CASEFX, version 1.2 12-7-78
+'				; Why not?
+BADSWT:	ASCIZ	'Illegal /switch.
+'
+;
+	RELOC	0		; Set for scratch area
+MACNAM:	ASCII	'.MAC '		; Default extension to CASEFX
+FILENM:	BLOCK	6		; Scratch for filename
+NAMCNT==	<.-FILENM>*5-1	; Maximum number of typed characters
+NUMIN:	BLOCK	1		; File number storage
+BLKCNT==	3		; Count of disk blocks/swatch
+INBUF:	BLOCK	200*BLKCNT	; Input buffer for blocked I/O
+;
+;	And now...
+;
+	END	CASEFX		; Ta ta
+  

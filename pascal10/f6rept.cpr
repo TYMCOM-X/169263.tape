@@ -1,0 +1,415 @@
+			  PASCAL VALIDATION SUITE REPORT
+			  ------------------------------
+
+
+	   Pascal Processor Identification
+	   -------------------------------
+
+
+	   Computer:  Burroughs B6700
+
+	   Processor: B6700 Pascal version 2.9.001
+		      (University of Tasmania compiler)
+
+
+
+	   Test Conditions
+	   ---------------
+
+
+	   Tester:  R.A. Freak (implementation/maintenance team member)
+
+	   Date:    June 1979
+
+	   Validation Suite Version = 2.0
+
+
+
+	   Conformance Tests
+	   -----------------
+
+
+	   Number of tests passed:  =  112
+
+	   Number of tests failed:  =  21
+
+
+
+		Details of failed tests:
+		------------------------
+
+
+		Most of the failed tests fall into two categories - the
+		B6700  Pascal  I/O  is	non-standard and the passing of
+		procedure/function parameters has not been implemented.
+
+		Tests 6.4.2-3, 6.4.2.4-1, 6.4.2.4-2, 6.4.2.4-3,  6.5-1,
+		6.5.2.3-1,   6.6.4.1.1-3,   6.6.4.1.1-4,   6.6.4.1.1-5,
+		6.9-1, 6.9.1-2, 6.9.2-1, 6.9.3-3, 6.9.3-4, 6.9.3-7, all
+		fail  because  text has not been predefined, or the eof
+		action	 or   output	format	  is	not    strictly
+		standard-conforming.
+
+		Tests  6.6.3-3,  6.6.3-5,  6.6.3.3-1,	6.6.3.3-2   and
+
+
+
+
+
+
+
+
+
+								 PAGE 2
+
+
+
+		6.6.3.4-1     fail     because	   the	  passing    of
+		procedure/function parameters has not yet  been  imple-
+		mented.
+
+		Test 6.4.2.2-1 fails because an empty record containing
+		a semicolon produces a syntax error.
+
+
+
+	   Deviance Test
+	   -------------
+
+
+	   Number of deviations correctly detected:	      = 53
+
+	   Number of tests showing true extensions:	      = 4
+
+	   Number of tests not detecting erroneous deviations = 11
+	   (4 basic causes)
+
+
+
+		Details of extensions:
+		----------------------
+
+
+		Test 6.1.4-6 shows that the lower case e may be used in
+		real numbers (for example 1.602e-20)
+
+		Test 6.6.2-5 shows that a function without  an	assign-
+		ment  to  the function variable in its block compiles -
+		the error is detected at run time as  an  uninitialized
+		value.
+
+		Test 6.9.3-8 shows that integers may be  written  using
+		real formats.
+
+		Test 6.10-1 shows that the file parameters in the  pro-
+		gram heading are ignored in B6700 Pascal.
+
+
+
+		Details of deviations:
+		----------------------
+
+
+		Tests 6.2.1-4, 6.3-6 and 6.4-3 show that a common scope
+		error was not detected by the compiler.
+
+		Tests 6.4.4-2, 6.4.4-3, 6.4.4-4  and  6.4.4-5  indicate
+		that type compatibility is used with var parameter ele-
+		ments rather than enforcing identical types.
+
+
+
+
+
+
+
+
+
+
+								 PAGE 3
+
+
+
+		Tests 6.8.1.3-2, 6.8.1.3-3 and 6.8.1.3-4  show	that  a
+		goto between branches of a statement is permitted.
+
+		Test 6.9.3-9 shows that integers may  be  written  even
+		though	the  field  width  is too small, but the format
+		used is non-standard.
+
+
+
+	   Error Handling
+	   --------------
+
+
+	   Number of errors correctly detected = 23
+
+	   Number of errors not detected       = 22 (6 basic causes)
+
+
+
+		Details of errors not detected:
+		-------------------------------
+
+
+		The errors not detected fall into a number  of	catego-
+		ries:
+
+		Tests 6.4.2.2-5, 6.4.2.2-6, 6.4.2.2-7 and 6.4.2.2-8 in-
+		dicate	that  no checking is performed on the tag field
+		of variant records.
+
+		An assignment to an empty record  is  not  detected  in
+		test 6.4.2.2-12.
+
+		Tests 6.4.5-4, 6.4.5-5, 6.4.5-7, 6.4.5-8, 6.5.2.1-1 and
+		6.7.1.3-1 indicate that no bounds checking is performed
+		on array subscripts, subranges, or set operations.
+
+		Tests  6.6.4.1.1-1,   6.6.4.1.1-2,   6.6.4.1.1-6,   and
+		6.6.4.1.1-7  fail  because I/O has not been implemented
+		strictly according to the standard.
+
+		Tests	6.6.4.1.2-3,   6.6.4.1.2-4,   6.6.4.1.2-5   and
+		6.6.4.1.2-6  fail  because dispose always returns a nil
+		pointer in B6700 Pascal and no check  is  performed  on
+		the pointer parameter.
+
+		Tests 6.6.4.1.2-7, 6.6.4.1.2-8 and 6.6.4.1.2-9 fail be-
+		cause  no  checks  are inserted to check pointers after
+		they have been assigned a value using the variant  form
+		of new.
+
+
+
+
+
+
+
+
+
+
+
+
+								 PAGE 4
+
+
+
+	   Implementationdefined
+	   ---------------------
+
+
+	   Number of tests run		       = 15
+
+	   Number of tests incorrectly handled = 1
+
+
+
+		Details of implementation-dependence:
+		-------------------------------------
+
+
+		Test 6.4.1.1-7 shows maxint to be 549755813887.
+
+		Tests 6.4.2.3-2 and 6.4.2.3-4 show that the set  bounds
+		are 0 and 47.  A set of char is not permitted.
+
+		Test 6.6.4.2.1-11 details some machine	characteristics
+		regarding number formats.
+
+		Tests 6.7.1.2-2 and 6.7.1.2-3 show that boolean expres-
+		sions are fully evaluated.
+
+		Tests 6.8.1.1-1 and 6.8.1.1-2 show that a  variable  is
+		selected  before  the expression is evaluated in an as-
+		signment statement.
+
+		Tests 6.9.3-5 and 6.9.3-11 show that the  default  size
+		for  an  exponent  field  on  output  is 2;  for a real
+		number it is 15 and the size varies  for  integers  and
+		booleans according to the value being written.
+
+		Test 6.10-2 indicates that a rewrite  on  the  standard
+		file output is permissible.
+
+		Tests 6.11-1, 6.11-2, and 6.11-3 show that the alterna-
+		tive  comment delimiters have been implemented, as have
+		the alternative pointer symbols.  No  other  equivalent
+		symbols have been implemented.
+
+		Test 6.6.4.2-1 fails because function  parameters  have
+		not  been implemented, and therefore standard functions
+		cannot be used as procedure/function parameters.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+								 PAGE 5
+
+
+
+	   Quality Measurement
+	   -------------------
+
+
+	   Number of tests run		       = 21
+
+	   Number of tests incorrectly handled = 0
+
+
+		Results of tests:
+		-----------------
+
+
+		Test 6.1.2-3 shows that more than 20 significant  char-
+		acters may appear in an identifier, in fact, the number
+		of characters in a line is allowed.
+
+		A warning is produced if a semicolon is detected  in  a
+		comment (test 6.1.7-4).
+
+		Tests 6.2-8, 6.2-9 and 6.5-2 indicate that large  lists
+		of declarations may be made in each block.
+
+		Tests 6.6.1-7, 6.8.2.3.3-20  and  6.8.2.4-7  show  that
+		procedures, for statements and with statements may each
+		be nested to a depth greater than 15.
+
+		An array with an integer  indextype  is  not  permitted
+		(test 6.4.2.1-4).
+
+		Test 6.4.2.2-9 shows that variant fields  of  a  record
+		occupy the same space, using the declared order.
+
+		Tests	 6.6.4.2.1-6,	  6.6.4.2.1-7,	   6.6.4.2.1-8,
+		6.6.4.2.1-9  and  6.6.4.2.1-10	tested	the sqrt, atan,
+		exp, sin/cos and ln functions and all tests  were  com-
+		pleted	successfully, without any significant errors in
+		the values.
+
+		Test 6.7.11-4 shows that div has been implemented  con-
+		sistently  for negative operands, returning trunc.  mod
+		returns the remainder of div.
+
+		Tests 6.8.2.2.2-2 shows that case constants do not have
+		to  be	of  the  same  type  as  the case-index, if the
+		case-index is a subrange, but  the  constants  must  be
+		compatible with the case-index.
+
+		Test 6.8.2.2.2-8 shows	that  a  large	case  statement
+		(>256 selections) is permissible.
+
+		Test 6.8.2.3.3-18 indicates that range checking is  al-
+		ways  used in a case statement after a for statement to
+
+
+
+
+
+
+
+
+
+								 PAGE 6
+
+
+
+		check the for variable.
+
+		Test 6.9.3-10 shows that file buffers  are  flushed  at
+		the end of a block but test 6.9.3-14 indicates that re-
+		cursive I/O using the same file may produce  unexpected
+		results.
+
+
+
+	   Extensions
+	   ----------
+
+
+	   Number of tests run	=  0
+
+
+
+	   B6700 Pascal - Future Plans and Commentary on Results
+	   -----------------------------------------------------
+
+
+	   The validation suite has shown up a number of flaws	in  the
+	   Tasmania  B6700 compiler, as documented in the preceding re-
+	   port.  We expect that other compilers  will	typically  fare
+	   worse  in  the number of different flaws detected because we
+	   have had the benefit of experience (and fixing bugs)  as  we
+	   were  developing  the  suite.   This brief document outlines
+	   what we expect to do about them.
+
+
+	   (1)	Minor flaws
+		-----------
+
+
+	   Some of the reported flaws are easy to fix,	and  have  sur-
+	   vived to be reported to you only by an oversight, or because
+	   the relevant test has only recently been added to the suite.
+	   Examples  are semicolons in empty records, and incorrect var
+	   parameter typing.  These will be fixed as soon as  possible,
+	   and probably before this document is released.
+
+
+	   (2)	Substantial flaws
+		-----------------
+
+
+	   Two major flaws have survived because they require a reason-
+	   able  amount of work to repair.  These are the deviations of
+	   the I/O system, which seem to indicate a revision of the I/O
+	   run-time system, and procedure and function parameters which
+	   could not have been implemented until the draft standard so-
+	   lution was published due to the insecurities inherent in the
+	   original version.  These are under  revision,  and  will  be
+
+
+
+
+
+
+
+
+
+								 PAGE 7
+
+
+
+	   fixed  shortly.   Procedure and function parameters particu-
+	   larly should not take long.
+
+
+	   (3)	Long-term and medium-term improvements
+		--------------------------------------
+
+
+	   In the long term, we plan to implement techniques  which  we
+	   have  evolved or borrowed for improving the security of Pas-
+	   cal in our compiler, such  as  checking  bounds  efficiently
+	   outside the B6700 hardware checks, providing correct scoping
+	   checks, checking the validity of goto-statements etc.
+
+
+
+
+	   June 1979
+	   R.A.  Freak & A.H.J.  Sale    

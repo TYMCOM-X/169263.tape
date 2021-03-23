@@ -1,0 +1,2351 @@
+       File DSK:EXE008.PAS[31024,274425]   Compiled 10-Aug-82 10:45   Pascal, Version 2A(440)-1
+
+       File DSK:EXE008.PAS[31024,274425]   Compiled 10-Aug-82 10:45   Pascal, Version 2A(440)-1
+
+       File DSK:EXE008.PAS[31024,274425]   Compiled 10-Aug-82 10:45   Pascal, Version 2A(440)-1
+
+       File DSK:EXE008.PAS[31024,274425]   Compiled 10-Aug-82 10:45   Pascal, Version 2A(440)-1
+
+
+
+
+
+			    $$$$$   $   $   $$$$$     $$      $$     $$$ 
+			    $       $   $   $        $  $    $  $   $   $
+			    $        $ $    $        $  $    $  $   $   $
+			    $$$       $     $$$      $  $    $  $    $$$ 
+			    $        $ $    $        $  $    $  $   $   $
+			    $       $   $   $        $  $    $  $   $   $
+			    $$$$$   $   $   $$$$$     $$      $$     $$$ 
+
+
+				    DSK:EXE008.PAS[31024,274425]
+
+
+Options in effect: 
+
+	NOCHECK, NOSPECIAL, NOMAP, NOSYMBOLS, NOCALLS, ASSEMBLY, NOXREF, TRACE, QBLOCKS, NOOPTIMIZE, 
+	CODE, NODEBUG, FINISH, NOGLOBAL, NOMAINSEG, NOOVERLAY, AUTOQUICK, SOURCE, NOSTANDARD, 
+	LENGTH (45), WIDTH (102), NOEXTLENGTH, STORAGE (2048), ALLOC (0), ENABLE(M68)
+
+
+
+
+       File DSK:EXE008.PAS[31024,274425]   Compiled 10-Aug-82 10:45   Pascal, Version 2A(440)-1
+
+       File DSK:EXE008.PAS[31024,274425]   Compiled 10-Aug-82 10:45   Pascal, Version 2A(440)-1
+
+       File DSK:EXE008.PAS[31024,274425]   Compiled 10-Aug-82 10:45   Pascal, Version 2A(440)-1
+
+       File DSK:EXE008.PAS[31024,274425]   Compiled 10-Aug-82 10:45   Pascal, Version 2A(440)-1
+       File DSK:EXE008.PAS[31024,274425]   Compiled 10-Aug-82 10:45   Pascal, Version 2A(440)-1
+
+       File DSK:EXE008.PAS[31024,274425]   Compiled 10-Aug-82 10:45   Pascal, Version 2A(440)-1
+
+       File DSK:EXE008.PAS[31024,274425]   Compiled 10-Aug-82 10:45   Pascal, Version 2A(440)-1
+
+       File DSK:EXE008.PAS[31024,274425]   Compiled 10-Aug-82 10:45   Pascal, Version 2A(440)-1
+
+
+
+
+
+			    $$$$$   $   $   $$$$$     $$      $$     $$$ 
+			    $       $   $   $        $  $    $  $   $   $
+			    $        $ $    $        $  $    $  $   $   $
+			    $$$       $     $$$      $  $    $  $    $$$ 
+			    $        $ $    $        $  $    $  $   $   $
+			    $       $   $   $        $  $    $  $   $   $
+			    $$$$$   $   $   $$$$$     $$      $$     $$$ 
+
+
+				    DSK:EXE008.PAS[31024,274425]
+
+
+Options in effect: 
+
+	NOCHECK, NOSPECIAL, NOMAP, NOSYMBOLS, NOCALLS, ASSEMBLY, NOXREF, TRACE, QBLOCKS, NOOPTIMIZE, 
+	CODE, NODEBUG, FINISH, NOGLOBAL, NOMAINSEG, NOOVERLAY, AUTOQUICK, SOURCE, NOSTANDARD, 
+	LENGTH (45), WIDTH (102), NOEXTLENGTH, STORAGE (2048), ALLOC (0), ENABLE(M68)
+
+
+
+
+       File DSK:EXE008.PAS[31024,274425]   Compiled 10-Aug-82 10:45   Pascal, Version 2A(440)-1
+
+       File DSK:EXE008.PAS[31024,274425]   Compiled 10-Aug-82 10:45   Pascal, Version 2A(440)-1
+
+       File DSK:EXE008.PAS[31024,274425]   Compiled 10-Aug-82 10:45   Pascal, Version 2A(440)-1
+
+       File DSK:EXE008.PAS[31024,274425]   Compiled 10-Aug-82 10:45   Pascal, Version 2A(440)-1
+MODULE  EXE008       DSK:EXE008.PAS[31024,274425]                                      10-Aug-82 10:45
+SECTION 0                                                                                       PAGE 1
+
+    1	Program EXE008 Options nocheck;
+    2	
+    3	type
+    4	  three_byte_rec = packed record
+    5	    byte_1 : 0..255;
+    6	    byte_2 : 0..55;
+    7	    byte_3 : -128..127
+    8	  end;
+    9	
+   10	  three_word_rec = packed record
+   11	    word_1 : 0..1024;
+   12	    word_2 : 0..32767;
+   13	    word_3 : -256..255
+   14	  end;
+   15	
+   16	public var
+   17	  i,j,k : integer;
+   18	  i_byte, j_byte, k_byte : 0..255;
+   19	  i_word, j_word, k_word : 0..32767;
+   20	  x,y,z : real;
+   21	  xx,yy,zz : -10**10 .. 10**10 prec 10;
+   22	  flex_fstr : ^packed array [ 1..* ] of char;
+   23	  flex_vstr : ^string [ * ];
+   24	  fstr30 : packed array [ 1..30 ] of char;
+   25	  str30 : string [ 30 ];
+   26	  byte_rec : three_byte_rec;
+   27	  word_rec : three_word_rec;
+   28	  ch : char;
+   29	  bool, bool1, bool2, bool3, in_func4: boolean;
+   30	
+   31	function func_add ( a: integer; b: integer ) : integer;
+   32	  begin
+   33	    func_add := a + b
+   34	  end;
+   35	
+   36	procedure error ( num : integer );
+   37	  begin
+   38	    writeln ( ttyoutput , 'Error ' , num )
+   39	  end;
+   40	   
+   41	procedure r_eql (x, y: real; num: integer);
+   42	  beginMODULE  EXE008       DSK:EXE008.PAS[31024,274425]                                      10-Aug-82 10:45
+SECTION 0                                                                                       PAGE 2
+
+   43	    if abs (x - y) >= 0.000001 then error (num)
+   44	  end;
+   45	
+   46	function targ_test ( x : real ) : real;
+   47	
+   48	begin
+   49	  targ_test := x
+   50	end;
+   51	
+   52	function bool_func1 (b1, b2: boolean): boolean;
+   53	  begin
+   54	    if not b1 then error (403);
+   55	    if not b2 then error (404);
+   56	    bool_func1 := b1 andif b2
+   57	  end;
+   58	function bool_func2 (b1, b2: boolean): boolean;
+   59	  begin
+   60	    error (401) (* shouldn't ever be here *)
+   61	  end;
+   62	function bool_func3: boolean;
+   63	  begin
+   64	    error (402) (*    "       "   "   "   *)
+   65	  end;
+   66	function bool_func4 (b1: boolean): boolean;
+   67	  begin
+   68	    if not b1 then error (405);
+   69	    bool_func4 := b1;
+   70	    in_func4 := true
+   71	  end;
+   72	
+   73	begin
+   74	  rewrite ( ttyoutput );
+   75	  writeln ( ttyoutput , 'Begin EXE008' );
+   76	
+   77	  (* The following examples are not of targetting, but rather test some
+   78	     dynamic temps. The function call to "error" with a variable does
+   79	     show some targetting, though. *)
+   80	
+   81	  new ( flex_fstr , 300 );
+   82	  putstring ( flex_fstr^[1:10] , '1234567890' );
+   83	
+   84	  x := 3.1415926535;MODULE  EXE008       DSK:EXE008.PAS[31024,274425]                                      10-Aug-82 10:45
+SECTION 0                                                                                       PAGE 3
+
+   85	  xx := 3.141592653578;
+   86	
+   87	  for i := 1 to 7 do
+   88	    begin
+   89	      y := round ( x , index(uppercase(flex_fstr^), flex_fstr^[i] ));
+   90	      yy := round ( xx , index(uppercase(flex_fstr^),flex_fstr^[i] ));
+   91	      if y <> round ( x , i )
+   92	        then error ( 10+i );
+   93	      if yy <> round ( xx , i )
+   94	        then error ( 20+i );
+   95	      zz := round ( x , index(lowercase(flex_fstr^), flex_fstr^[i] ));
+   96	      z := round ( xx , index(lowercase(flex_fstr^), flex_fstr^[i] ));
+   97	      if zz <> round ( x , i )
+   98	        then error ( 30+i );
+   99	      if z <> round ( xx , i )
+  100	        then error ( 40+i )
+  101	    end;
+  102	
+  103	  (* lets try some targeting examples *)
+  104	
+  105	  i := 33;
+  106	  j := 66;
+  107	  k := i + j;
+  108	  if k <> 99 then error ( 101 );
+  109	  i := k + i + j;
+  110	  if i <> 198 then error ( 102 );
+  111	  j := j + j + j + j;
+  112	  if j <> 4*66 then error ( 103 );
+  113	  j := 66;
+  114	  i := 33;
+  115	  k := k + j div i;
+  116	  if k <> 101 then error ( 104 );
+  117	j := 123456;
+  118	  i := - j;
+  119	  if i <> -123456 then error ( 105 );
+  120	
+  121	  (* Test MOD function *)
+  122	  i := maximum (integer);
+  123	  j := 3;
+  124	  k := i mod j;
+  125	  if k <> 1 then error ( 106 );
+  126	  k := j mod i;MODULE  EXE008       DSK:EXE008.PAS[31024,274425]                                      10-Aug-82 10:45
+SECTION 0                                                                                       PAGE 4
+
+  127	  if k <> 3 then error ( 107 );
+  128	  j := maximum (integer) - 3;
+  129	  k := i mod j;
+  130	  if k <> 3 then error ( 108 );
+  131	
+  132	  
+  133	  i := func_add ( 1 , 2 );
+  134	  if i <> 3 then error ( 110 );
+  135	  i := func_add ( j , k );
+  136	  if i <> j + k then error ( 111 );
+  137	
+  138	  k := func_add ( 1+2 , 4*5+6 );
+  139	  if k <> 29 then error ( 120 );
+  140	  i := 3;
+  141	  j := 7;
+  142	  k := func_add ( i+j , i*i+j div j );
+  143	  if k <> 20 then error ( 121 );
+  144	
+  145	  i_byte := 1;
+  146	  j_byte := 33;
+  147	  k_byte := i_byte * ( j_byte * i_byte );
+  148	  if k_byte <> 33 then error ( 130 );
+  149	
+  150	  j := 22;
+  151	  i := 11;
+  152	  byte_rec.byte_1 := j + i;
+  153	  if byte_rec.byte_1 <> 33 then error ( 140 );
+  154	  byte_rec.byte_1 := 44;
+  155	  byte_rec.byte_2 := 55;
+  156	  byte_rec.byte_3 := byte_rec.byte_1 + 22 + byte_rec.byte_2;
+  157	  if byte_rec.byte_3 <> 121 then error ( 141 );
+  158	  byte_rec.byte_3 := - byte_rec.byte_1;
+  159	  if byte_rec.byte_3 <> -44 then error ( 142 );
+  160	
+  161	  if 3 <> func_add ( 1 , 2 ) then error ( 150 );
+  162	  x := 3.45;
+  163	  y := 1.55;
+  164	  z := x + y;
+  165	  r_eql (z, 5.0, 151);
+  166	
+  167	  i := trunc ( x );
+  168	  if i <> 3 then error ( 160 );MODULE  EXE008       DSK:EXE008.PAS[31024,274425]                                      10-Aug-82 10:45
+SECTION 0                                                                                       PAGE 5
+
+  169	  i := round ( y );
+  170	  if i <> 2 then error ( 161 );
+  171	  z := round ( x+.00999 , -1 );
+  172	  r_eql (z, 3.5, 162);
+  173	
+  174	  word_rec.word_1 := 32;
+  175	  byte_rec.byte_1 := 32;
+  176	  i := 32;
+  177	  x := 32;
+  178	  xx := 32;
+  179	
+  180	  (* assign all to a byte *)
+  181	  byte_rec.byte_3 := byte_rec.byte_1;
+  182	  if byte_rec.byte_3 <> 32 then error  ( 170 );
+  183	  byte_rec.byte_3 := word_rec.word_1;
+  184	  if byte_rec.byte_3 <> 32 then error ( 171 );
+  185	  byte_rec.byte_3 := i;
+  186	  if byte_rec.byte_3 <> 32 then error ( 172 );
+  187	  byte_rec.byte_3 := - byte_rec.byte_1;
+  188	  if byte_rec.byte_3 <> -32 then error ( 173 );
+  189	  byte_rec.byte_3 := - word_rec.word_1;
+  190	  if byte_rec.byte_3 <> -32 then error ( 174 );
+  191	  byte_rec.byte_3 := - i;
+  192	  if byte_rec.byte_3 <> -32 then error ( 175 );
+  193	  byte_rec.byte_3 := trunc ( x );
+  194	  if byte_rec.byte_3 <> 32 then error ( 176 );
+  195	  byte_rec.byte_3 := trunc ( xx );
+  196	  if byte_rec.byte_3 <> 32 then error ( 177 );
+  197	  byte_rec.byte_3 := - trunc ( x );
+  198	  if byte_rec.byte_3 <> -32 then error ( 178 );
+  199	  byte_rec.byte_3 := - trunc ( xx );
+  200	  if byte_rec.byte_3 <> -32 then error ( 179 );
+  201	
+  202	  (* assign to a word *)
+  203	  word_rec.word_3 := byte_rec.byte_1;
+  204	  if word_rec.word_3 <> 32 then error ( 180 );
+  205	  word_rec.word_3 := word_rec.word_1;
+  206	  if word_rec.word_3 <> 32 then error ( 181 );
+  207	  word_rec.word_3 := i;
+  208	  if word_rec.word_3 <> 32 then error ( 182 );
+  209	  word_rec.word_3 := - byte_rec.byte_1;
+  210	  if word_rec.word_3 <> -32 then error ( 183 );MODULE  EXE008       DSK:EXE008.PAS[31024,274425]                                      10-Aug-82 10:45
+SECTION 0                                                                                       PAGE 6
+
+  211	  word_rec.word_3 := - word_rec.word_1;
+  212	  if word_rec.word_3 <> -32 then error ( 184 );
+  213	  word_rec.word_3 := - i;
+  214	  if word_rec.word_3 <> -32 then error ( 185 );
+  215	  word_rec.word_3 := trunc ( x );
+  216	  if word_rec.word_3 <> 32 then error ( 186 );
+  217	  word_rec.word_3 := trunc ( xx );
+  218	  if word_rec.word_3 <> 32 then error ( 187 );
+  219	  word_rec.word_3 := - trunc ( x );
+  220	  if word_rec.word_3 <> -32 then error ( 188 );
+  221	  word_rec.word_3 := - trunc ( xx );
+  222	  if word_rec.word_3 <> -32 then error ( 189 );
+  223	
+  224	  (* All cases of integer *)
+  225	  j := byte_rec.byte_1;
+  226	  if j <> 32 then error ( 190 );
+  227	  j := word_rec.word_1;
+  228	  if j <> 32 then error ( 191 );
+  229	  j := i;
+  230	  if j <> 32 then error ( 192 );
+  231	  j := - byte_rec.byte_1;
+  232	  if j <> -32 then error ( 193 );
+  233	  j := - word_rec.word_1;
+  234	  if j <> -32 then error ( 194 );
+  235	  j := - i;
+  236	  if j <> -32 then error ( 195 );
+  237	  j := trunc ( x );
+  238	  if j <> 32 then error ( 196 );
+  239	  j := trunc ( xx );
+  240	  if j <> 32 then error ( 197 );
+  241	  j := - trunc ( x );
+  242	  if j <> -32 then error ( 198 );
+  243	  j := - trunc ( xx );
+  244	  if j <> -32 then error ( 199 );
+  245	
+  246	  (* Try single precision reals *)
+  247	  y := byte_rec.byte_1;
+  248	  if y <> 32.0 then error ( 200 );
+  249	  y := word_rec.word_1;
+  250	  if y <> 32.0 then error ( 201 );
+  251	  y := i;
+  252	  if y <> 32.0 then error ( 202 );MODULE  EXE008       DSK:EXE008.PAS[31024,274425]                                      10-Aug-82 10:45
+SECTION 0                                                                                       PAGE 7
+
+  253	  y := x;
+  254	  if y <> 32.0 then error ( 203 );
+  255	  y := xx;
+  256	  if y <> 32.0 then error ( 204 );
+  257	  y := - byte_rec.byte_1;
+  258	  if y <> -32.0 then error ( 205 );
+  259	  y := - word_rec.word_1;
+  260	  if y <> -32.0 then error ( 206 );
+  261	  y := - i;
+  262	  if y <> -32.0 then error ( 307 );
+  263	  y := -x;
+  264	  if y <> -32.0 then error ( 308 );
+  265	  y := - xx;
+  266	  if y <> -32.0 then error ( 309 );
+  267	
+  268	  (* try double precision reals *)
+  269	  yy := byte_rec.byte_1;
+  270	  if yy <> 32.0 then error ( 210 );
+  271	  yy := word_rec.word_1;
+  272	  if yy <> 32.0 then error ( 211 );
+  273	  yy := i;
+  274	  if yy <> 32.0 then error ( 212 );
+  275	  yy := x;
+  276	  if yy <> 32.0 then error ( 213 );
+  277	  yy := xx;
+  278	  if yy <> 32.0 then error ( 214 );
+  279	  yy := - byte_rec.byte_1;
+  280	  if yy <> -32.0  then error ( 215 );
+  281	  yy := - word_rec.word_1;
+  282	  if yy <> -32.0 then error ( 216 );
+  283	  yy := - i;
+  284	  if yy <> -32.0 then error ( 217 );
+  285	  yy := - x;
+  286	  if yy <> -32.0 then error ( 218 );
+  287	  yy := - xx;
+  288	  if yy <> -32.0 then error ( 219 );
+  289	
+  290	
+  291	  ch := 'a';
+  292	  i := ord ( ch );
+  293	  if i <> 97 then error ( 300 );
+  294	  MODULE  EXE008       DSK:EXE008.PAS[31024,274425]                                      10-Aug-82 10:45
+SECTION 0                                                                                       PAGE 8
+
+  295	  i := 122;
+  296	  ch := chr ( i );
+  297	  if ch <> 'z' then error ( 301 );
+  298	
+  299	  x := 0.0;
+  300	  y := tan ( x );
+  301	  if y <> 0.0 then error ( 302 );
+  302	
+  303	
+  304	  x := 16.000;
+  305	  y := sqrt ( x ) ;
+  306	  r_eql (y, 4.0, 303);
+  307	
+  308	  i_byte := 1;
+  309	  y := sqrt ( i_byte );
+  310	  r_eql (y, 1.0, 304);
+  311	
+  312	  i_word := 1;
+  313	  y := sqrt ( i_word );
+  314	  r_eql (y, 1.0, 305);
+  315	
+  316	  i := 4;
+  317	  y := sqrt ( i );
+  318	  r_eql (y, 2.0, 306);
+  319	
+  320	  i_byte := 3;
+  321	  y := targ_test ( i_byte );
+  322	  if Y <> 3.0 then error ( 307 );
+  323	
+  324	  i_word := 5;
+  325	  y := targ_test ( i_word );
+  326	  if y <> 5.0 then error ( 308 );
+  327	  
+  328	  i := 5;
+  329	  y := targ_test ( i );
+  330	  if y <> 5.0 then error ( 309 );
+  331	
+  332	  y := targ_test ( 1 );
+  333	  if y <> 1.0 then error ( 310 );
+  334	
+  335	
+  336	  y := random ( 1 );MODULE  EXE008       DSK:EXE008.PAS[31024,274425]                                      10-Aug-82 10:45
+SECTION 0                                                                                       PAGE 9
+
+  337	  y := random ( 0 );
+  338	
+  339	  i_byte := 1;
+  340	  y := random ( i_byte );
+  341	
+  342	  i_word := 1;
+  343	  y := random ( i_word );
+  344	
+  345	  bool1 := false;
+  346	  bool2 := true;
+  347	  bool3 := true;
+  348	  in_func4 := false;
+  349	  bool := bool_func1 (bool1 or (bool2 andif bool3),
+  350	                      bool2 andif (bool1 orif bool_func4 (bool1 orif bool3)) )
+  351	            orif
+  352	          bool_func2 (true, false andif bool_func3);
+  353	  if (not bool) or (not in_func4) then
+  354	    error (406);
+  355	
+  356	  writeln ( ttyoutput , 'End EXE008' );
+  357	end.
+
+File   level   on page     name
+
+  0	 0	    1	DSK:EXE008.PAS[31024,274425]
+                                                                                                                                                                                                                                                                                                                         		      EXE008     IDNT	   0,0
+		      *
+		      *		 MC68000 Checkout Code Generator,  Aug 10, 1982  10:46:22 am
+		      *
+	 00000002		 SECTION   2
+	 00000000     STATIC.	 EQU	   *
+	 0000000A		 SECTION   10
+	 00000000     CODE.	 EQU	   *
+00000000 C21DCB42     C.1	 DC.L	   $C21DCB42			       Date-time
+00000004 0000			 DC.W	   0				         $0
+00000006 455845303038		 DC.B	   'EXE008'
+	 00000002		 SECTION   2
+		      *
+		      *		 Unitialized static area
+		      *
+00000000 0000009E		 DS.B	   158
+				 XDEF	   I       
+		      I       	 EQU	   STATIC.+0
+				 XDEF	   J       
+		      J       	 EQU	   STATIC.+4
+				 XDEF	   K       
+		      K       	 EQU	   STATIC.+8
+				 XDEF	   I_BYTE  
+		      I_BYTE  	 EQU	   STATIC.+12
+				 XDEF	   J_BYTE  
+		      J_BYTE  	 EQU	   STATIC.+16
+				 XDEF	   K_BYTE  
+		      K_BYTE  	 EQU	   STATIC.+20
+				 XDEF	   I_WORD  
+		      I_WORD  	 EQU	   STATIC.+24
+				 XDEF	   J_WORD  
+		      J_WORD  	 EQU	   STATIC.+28
+				 XDEF	   K_WORD  
+		      K_WORD  	 EQU	   STATIC.+32
+				 XDEF	   X       
+		      X       	 EQU	   STATIC.+36
+				 XDEF	   Y       
+		      Y       	 EQU	   STATIC.+40
+				 XDEF	   Z       
+		      Z       	 EQU	   STATIC.+44
+				 XDEF	   XX      
+		      XX      	 EQU	   STATIC.+48
+				 XDEF	   YY      
+		      YY      	 EQU	   STATIC.+56
+				 XDEF	   ZZ      		      ZZ      	 EQU	   STATIC.+64
+				 XDEF	   FLEX_FST
+		      FLEX_FST	 EQU	   STATIC.+72
+				 XDEF	   FLEX_VST
+		      FLEX_VST	 EQU	   STATIC.+76
+				 XDEF	   FSTR30  
+		      FSTR30  	 EQU	   STATIC.+80
+				 XDEF	   STR30   
+		      STR30   	 EQU	   STATIC.+110
+				 XDEF	   BYTE_REC
+		      BYTE_REC	 EQU	   STATIC.+142
+				 XDEF	   WOC
+		      WORD_REC	 EQU	   STATIC.+146
+				 XDEF	   CH      
+		      CH      	 EQU	   STATIC.+152
+				 XDEF	   BOOL    
+		      BOOL    	 EQU	   STATIC.+153
+				 XDEF	   BOOL1   
+		      BOOL1   	 EQU	   STATIC.+154
+				 XDEF	   BOOL2   
+		      BOOL2   	 EQU	   STATIC.+155
+				 XDEF	   BOOL3   
+		      BOOL3   	 EQU	   STATIC.+156
+				 XDEF	   IN_FUNC4
+		      IN_FUNC4	 EQU	   STATIC.+157
+	 0000000A		 SECTION   10
+		      *
+		      *		 Begin subroutine FUNC_ADD
+		      *
+0000000C	      B.3
+		      *							       LINE 32
+		      *							       LINE 33
+0000000C 206EFFC2     L.3.1	 MOVEA.L   -62(A6),A0			         FUNC_ADD
+00000010 202EFFC6		 MOVE.L	   -58(A6),D0			         A
+00000014 D0AEFFCA		 ADD.L	   -54(A6),D0			         B
+00000018 2080			 MOVE.L	   D0,(A0)
+		      *							       LINE 34
+0000001A 4E75			 RTS	   
+		      *
+		      *		 Constant area for subroutine ERROR
+		      *
+0000001C 4572726F7220 K.1	 DC.B	   'Error '
+		      *
+		      *		 Begin subroutine ERROR
+		      *00000022	      B.4
+		      *							       LINE 37
+		      *							       LINE 38
+00000022 202D0000     L.4.1	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00000026 7206			 MOVEQ	   #6,D1			         $6
+00000028 3F01			 MOVE.W	   D1,-(A7)
+0000002A 7204			 MOVEQ	   #4,D1			         $4
+0000002C 3F01			 MOVE.W	   D1,-(A7)
+0000002E 487AFFEC		 PEA	   K.1(PC)			         CODE.+$1C
+00000032 2F00			 MOVE.L	   D0,-(A7)
+00000034 4EB900000000		 JSR	   T.WRITE
+0000003A 4267			 CLR.W	   -(A7)
+0000003C 486EFFCE		 PEA	   -50(A6)			         NUM
+00000040 2F00			 MOVE.L	   D0,-(A7)
+00000042 4EB900000000		 JSR	   T.WRITE
+00000048 2F00			 MOVE.L	   D0,-(A7)
+0000004A 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 39
+00000050 4E75			 RTS	   
+		      *
+		      *		 Constant area for subroutine R_EQL
+		      *
+00000052 8637BD05     K.2	 DC.L	   $8637BD05
+00000052 AF6C686D		 DC.L	   $AF6C686D				 0.000001
+		      *
+		      *		 Begin subroutine R_EQL
+		      *
+0000005A	      B.5
+		      *							       LINE 42
+		      *							       LINE 43
+0000005A 2F2EFFD2     L.5.1	 MOVE.L	   -46(A6),-(A7)		         X
+0000005E 2F2EFFD6		 MOVE.L	   -42(A6),-(A7)		         Y
+00000062 4EB900000000		 JSR	   F.SUB
+00000068 08AF00070003		 BCLR.B	   #7,3(A7)			         $7  $3
+0000006E 486EFFBA		 PEA	   -70(A6)			         $FFFFFFBA
+00000072 4EB900000000		 JSR	   F.DOUBLE
+00000078 486EFFBA		 PEA	   -70(A6)			         $FFFFFFBA
+0000007C 487AFFD4		 PEA	   K.2(PC)			         CODE.+$52
+00000080 4EB900000000		 JSR	   D.CMP
+00000086 6D08			 BLT.S	   L.5.3(PC)
+		      *							       LINE 43 (2)
+00000088 2D6EFFDAFFCE L.5.2	 MOVE.L	   -38(A6),-50(A6)		         NUM  $FFFFFFCE
+0000008E 6192			 BSR.S	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 44
+00000090 4E75	      L.5.3	 RTS	   		      *
+		      *		 Begin subroutine TARG_TEST
+		      *
+00000092	      B.6
+		      *							       LINE 48
+		      *							       LINE 49
+00000092 206EFFDE     L.6.1	 MOVEA.L   -34(A6),A0			         TARG_TEST
+00000096 20AEFFE2		 MOVE.L	   -30(A6),(A0)			         X
+		      *							       LINE 50
+0000009A 4E75			 RTS	   
+		      *
+		      *		 Begin subroutine BOOL_FUNC1
+		      *
+0000009C	      B.7
+		      *							       LINE 53
+		      *							       LINE 54
+0000009C 4A2EFFEA     L.7.1	 TST.B	   -22(A6)			         B1
+000000A0 660C			 BNE.S	   L.7.3(PC)
+		      *							       LINE 54 (2)
+000000A2 2D7C00000193 L.7.2	 MOVE.L	   #403,-50(A6)			         $193  $FFFFFFCE
+	 FFCE
+000000AA 6100FF76		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 55
+000000AE 4A2EFFEC     L.7.3	 TST.B	   -20(A6)			         B2
+000000B2 660C			 BNE.S	   L.7.5(PC)
+		      *							       LINE 55 (2)
+000000B4 2D7C00000194 L.7.4	 MOVE.L	   #404,-50(A6)			         $194  $FFFFFFCE
+	 FFCE
+000000BC 6100FF64		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 56
+000000C0 4A2EFFEA     L.7.5	 TST.B	   -22(A6)			         B1
+000000C4 670A			 BEQ.S	   L.7.8(PC)
+000000C6 4A2EFFEC     L.7.6	 TST.B	   -20(A6)			         B2
+000000CA 6704			 BEQ.S	   L.7.8(PC)
+000000CC 7001	      L.7.7	 MOVEQ	   #1,D0			         $1
+000000CE 6002			 BRA.S	   X.7.1(PC)
+000000D0 7000	      L.7.8	 MOVEQ	   #0,D0			         $0
+000000D2 206EFFE6     X.7.1	 MOVEA.L   -26(A6),A0			         BOOL_FUNC1
+000000D6 1080			 MOVE.B	   D0,(A0)
+		      *							       LINE 57
+000000D8 4E75			 RTS	   
+		      *
+		      *		 Begin subroutine BOOL_FUNC2
+		      *
+000000DA	      B.8		      *							       LINE 59
+		      *							       LINE 60
+000000DA 2D7C00000191 L.8.1	 MOVE.L	   #401,-50(A6)			         $191  $FFFFFFCE
+	 FFCE
+000000E2 6100FF3E		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 61
+000000E6 4E75			 RTS	   
+		      *
+		      *		 Begin subroutine BOOL_FUNC3
+		      *
+000000E8	      B.9
+		      *							       LINE 63
+		      *							       LINE 64
+000000E8 2D7C00000192 L.9.1	 MOVE.L	   #402,-50(A6)			         $192  $FFFFFFCE
+	 FFCE
+000000F0 6100FF30		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 65
+000000F4 4E75			 RTS	   
+		      *
+		      *		 Begin subroutine BOOL_FUNC4
+		      *
+000000F6	      B.10
+		      *							       LINE 67
+		      *							       LINE 68
+000000F6 4A2EFFFE     L.10.1	 TST.B	   -2(A6)			         B1
+000000FA 660C			 BNE.S	   L.10.3(PC)
+		      *							       LINE 68 (2)
+000000FC 2D7C00000195 L.10.2	 MOVE.L	   #405,-50(A6)			         $195  $FFFFFFCE
+	 FFCE
+00000104 6100FF1C		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 69
+00000108 206EFFFA     L.10.3	 MOVEA.L   -6(A6),A0			         BOOL_FUNC4
+0000010C 10AEFFFE		 MOVE.B	   -2(A6),(A0)			         B1
+		      *							       LINE 70
+00000110 7001			 MOVEQ	   #1,D0			         $1
+00000112 1B40809D		 MOVE.B	   D0,STATIC.+157-32768(A5)	         IN_FUNC4
+		      *							       LINE 71
+00000116 4E75			 RTS	   
+		      *
+		      *		 Constant area for program EXE008
+		      *
+00000118 23434E	      K.3	 DC.B	   '#CN'
+0000011B 00000001		 DS.B	   1
+0000011C 426567696E20 K.4	 DC.B	   'Begin EXE008'
+00000128 313233343536 K.5	 DC.B	   '1234567890'00000132 C90FDAA2     K.6	 DC.L	   $C90FDAA2
+00000132 08BA1E82		 DC.L	   $08BA1E82				 3.1415926535
+0000013A C90FDAA2     K.7	 DC.L	   $C90FDAA2
+0000013A 1E2AE282		 DC.L	   $1E2AE282				 3.141592653578
+00000142 DCCCCD42     K.8	 DC.L	   $DCCCCD42				 3.45
+00000146 C6666641     K.9	 DC.L	   $C6666641				 1.55
+0000014A A0000043     K.10	 DC.L	   $A0000043				 5.
+0000014E A3AD193A     K.11	 DC.L	   $A3AD193A				 0.00999
+00000152 E0000042     K.12	 DC.L	   $E0000042				 3.5
+00000156 80000046     K.13	 DC.L	   $80000046				 32.
+0000015A 80000046     K.14	 DC.L	   $80000046				 32.
+0000015E 80000046     K.15	 DC.L	   $80000046				 32.
+00000162 80000046     K.16	 DC.L	   $80000046				 32.
+00000166 80000046     K.17	 DC.L	   $80000046				 32.
+0000016A 800000C6     K.18	 DC.L	   $800000C6				 -32.
+0000016E 800000C6     K.19	 DC.L	   $800000C6				 -32.
+00000172 800000C6     K.20	 DC.L	   $800000C6				 -32.
+00000176 800000C6     K.21	 DC.L	   $800000C6				 -32.
+0000017A 800000C6     K.22	 DC.L	   $800000C6				 -32.
+0000017E 80000046     K.23	 DC.L	   $80000046				 32.
+00000182 80000046     K.24	 DC.L	   $80000046				 32.
+00000186 80000046     K.25	 DC.L	   $80000046				 32.
+0000018A 80000046     K.26	 DC.L	   $80000046				 32.
+0000018E 80000046     K.27	 DC.L	   $80000046				 32.
+00000192 800000C6     K.28	 DC.L	   $800000C6				 -32.
+00000196 800000C6     K.29	 DC.L	   $800000C6				 -32.
+0000019A 800000C6     K.30	 DC.L	   $800000C6				 -32.
+0000019E 800000C6     K.31	 DC.L	   $800000C6				 -32.
+000001A2 800000C6     K.32	 DC.L	   $800000C6				 -32.
+000001A6 00000000     K.33	 DC.L	   $00000000				 0.
+000001AA 00000000     K.34	 DC.L	   $00000000				 0.
+000001AE 80000045     K.35	 DC.L	   $80000045				 16.
+000001B2 80000043     K.36	 DC.L	   $80000043				 4.
+000001B6 80000041     K.37	 DC.L	   $80000041				 1.
+000001BA 80000041     K.38	 DC.L	   $80000041				 1.
+000001BE 80000042     K.39	 DC.L	   $80000042				 2.
+000001C2 C0000042     K.40	 DC.L	   $C0000042				 3.
+000001C6 A0000043     K.41	 DC.L	   $A0000043				 5.
+000001CA A0000043     K.42	 DC.L	   $A0000043				 5.
+000001CE 80000041     K.43	 DC.L	   $80000041				 1.
+000001D2 456E64204558 K.44	 DC.B	   'End EXE008'
+		      *
+		      *		 Begin program EXE008
+		      *
+				 XDEF	   M.START 000001DC	      M.START 
+000001DC 7010	      B.1	 MOVEQ	   #16,D0			         $10
+000001DE 2F00			 MOVE.L	   D0,-(A7)
+000001E0 610E			 BSR.S	   X.1.1(PC)
+000001E2 00000000		 DC.L	   C.1
+000001E6 0000			 DC.W	   0				         $0
+000001E8 0006			 DC.W	   6				       String length word
+000001EA 455845303038		 DC.B	   'EXE008'
+000001F0 42A7	      X.1.1	 CLR.L	   -(A7)
+000001F2 4E56FFA4		 LINK	   A6,#T.1			         -92
+000001F6 2D4FFFA4		 MOVE.L	   A7,ST.1(A6)			         -92
+		      *							       LINE 73
+		      *							       LINE 74
+000001FA 487AFF1C     L.1.1	 PEA	   K.3(PC)			         CODE.+$118
+000001FE 7003			 MOVEQ	   #3,D0			         $3
+00000200 3F00			 MOVE.W	   D0,-(A7)
+00000202 7032			 MOVEQ	   #50,D0			         $32
+00000204 3F00			 MOVE.W	   D0,-(A7)
+00000206 4EB900000000		 JSR	   T.REWRIT
+0000020C 2B5F0000		 MOVE.L	   (A7)+,TTYOUTPUT-32768(A5)	         TTYOUTPUT
+		      *							       LINE 75
+00000210 202D0000		 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00000214 720C			 MOVEQ	   #12,D1			         $C
+00000216 3F01			 MOVE.W	   D1,-(A7)
+00000218 7204			 MOVEQ	   #4,D1			         $4
+0000021A 3F01			 MOVE.W	   D1,-(A7)
+0000021C 487AFEFE		 PEA	   K.4(PC)			         CODE.+$11C
+00000220 2F00			 MOVE.L	   D0,-(A7)
+00000222 4EB900000000		 JSR	   T.WRITE
+00000228 2F00			 MOVE.L	   D0,-(A7)
+0000022A 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 81
+00000230 4878012E		 PEA	   302				         $12E
+00000234 4EB900000000		 JSR	   H.NEW
+0000023A 201F			 MOVE.L	   (A7)+,D0
+0000023C 2B408048		 MOVE.L	   D0,STATIC.+72-32768(A5)	         FLEX_FSTR
+00000240 2040			 MOVEA.L   D0,A0
+00000242 30BC012C		 MOVE.W	   #300,(A0)			         $12C
+		      *							       LINE 82
+00000246 206D8048		 MOVEA.L   STATIC.+72-32768(A5),A0	         FLEX_FSTR
+0000024A 3D7C000AFFAE		 MOVE.W	   #10,-82(A6)			         $A  $FFFFFFAE
+00000250 426EFFAC		 CLR.W	   -84(A6)			         $FFFFFFAC
+00000254 43EEFFB0		 LEA	   -80(A6),A1			         $FFFFFFB0
+00000258 2D49FFA8		 MOVE.L	   A1,-88(A6)			         $FFFFFFA8
+0000025C 700A			 MOVEQ	   #10,D0			         $A0000025E 3F00			 MOVE.W	   D0,-(A7)
+00000260 7004			 MOVEQ	   #4,D0			         $4
+00000262 3F00			 MOVE.W	   D0,-(A7)
+00000264 487AFEC2		 PEA	   K.5(PC)			         CODE.+$128
+00000268 486EFFA8		 PEA	   -88(A6)			         $FFFFFFA8
+0000026C 4EB900000000		 JSR	   I.PTSTRF
+00000272 486EFFA8		 PEA	   -88(A6)			         $FFFFFFA8
+00000276 4EB900000000		 JSR	   I.PTSTRD
+0000027C 48680002		 PEA	   2(A0)			         $2
+00000280 700A			 MOVEQ	   #10,D0			         $A
+00000282 3F00			 MOVE.W	   D0,-(A7)
+00000284 486EFFB0		 PEA	   -80(A6)			         $FFFFFFB0
+00000288 700A			 MOVEQ	   #10,D0			         $A
+0000028A 3F00			 MOVE.W	   D0,-(A7)
+0000028C 4EB900000000		 JSR	   C.MVFF
+		      *							       LINE 84
+00000292 487AFE9E		 PEA	   K.6(PC)			         CODE.+$132
+00000296 4EB900000000		 JSR	   D.SINGLE
+0000029C 2B5F8024		 MOVE.L	   (A7)+,STATIC.+36-32768(A5)	         X
+		      *							       LINE 85
+000002A0 41FAFE98		 LEA	   K.7(PC),A0			         CODE.+$13A
+000002A4 43ED8030		 LEA	   STATIC.+48-32768(A5),A1	         XX
+000002A8 22D8			 MOVE.L	   (A0)+,(A1)+
+000002AA 22D8			 MOVE.L	   (A0)+,(A1)+
+		      *							       LINE 87
+000002AC 7001	      L.1.2	 MOVEQ	   #1,D0			         $1
+000002AE 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         I
+000002B2	      L.1.3
+		      *							       LINE 88
+		      *							       LINE 89
+000002B2 2F2D8024     L.1.4	 MOVE.L	   STATIC.+36-32768(A5),-(A7)	         X
+000002B6 206D8048		 MOVEA.L   STATIC.+72-32768(A5),A0	         FLEX_FSTR
+000002BA 2D5FFFB6		 MOVE.L	   (A7)+,-74(A6)		         $FFFFFFB6
+000002BE 7000			 MOVEQ	   #0,D0			         $0
+000002C0 3010			 MOVE.W	   (A0),D0
+000002C2 5280			 ADDQ.L	   #1,D0			         $1
+000002C4 08800000		 BCLR.L	   #0,D0			         $0
+000002C8 9FC0			 SUBA.L	   D0,A7
+000002CA 224F			 MOVEA.L   A7,A1
+000002CC 4851			 PEA	   (A1)
+000002CE 3F10			 MOVE.W	   (A0),-(A7)
+000002D0 48680002		 PEA	   2(A0)			         $2
+000002D4 3F10			 MOVE.W	   (A0),-(A7)
+000002D6 4EB900000000		 JSR	   C.MVFFU
+000002DC 246D8048		 MOVEA.L   STATIC.+72-32768(A5),A2	         FLEX_FSTR000002E0 202D8000		 MOVE.L	   STATIC.+0-32768(A5),D0	         I
+000002E4 5380			 SUBQ.L	   #1,D0			         $1
+000002E6 1F320802		 MOVE.B	   2(A2,D0.L),-(A7)		         $2
+000002EA 4851			 PEA	   (A1)
+000002EC 3F10			 MOVE.W	   (A0),-(A7)
+000002EE 4EB900000000		 JSR	   C.IXFC
+000002F4 301F			 MOVE.W	   (A7)+,D0
+000002F6 48C0			 EXT.L	   D0
+000002F8 2F2EFFB6		 MOVE.L	   -74(A6),-(A7)		         $FFFFFFB6
+000002FC 2F00			 MOVE.L	   D0,-(A7)
+000002FE 4EB900000000		 JSR	   F.ROUND2
+00000304 2B5F8028		 MOVE.L	   (A7)+,STATIC.+40-32768(A5)	         Y
+		      *							       LINE 90
+00000308 206D8048		 MOVEA.L   STATIC.+72-32768(A5),A0	         FLEX_FSTR
+0000030C 7000			 MOVEQ	   #0,D0			         $0
+0000030E 3010			 MOVE.W	   (A0),D0
+00000310 5280			 ADDQ.L	   #1,D0			         $1
+00000312 08800000		 BCLR.L	   #0,D0			         $0
+00000316 9FC0			 SUBA.L	   D0,A7
+00000318 224F			 MOVEA.L   A7,A1
+0000031A 4851			 PEA	   (A1)
+0000031C 3F10			 MOVE.W	   (A0),-(A7)
+0000031E 48680002		 PEA	   2(A0)			         $2
+00000322 3F10			 MOVE.W	   (A0),-(A7)
+00000324 4EB900000000		 JSR	   C.MVFFU
+0000032A 246D8048		 MOVEA.L   STATIC.+72-32768(A5),A2	         FLEX_FSTR
+0000032E 202D8000		 MOVE.L	   STATIC.+0-32768(A5),D0	         I
+00000332 5380			 SUBQ.L	   #1,D0			         $1
+00000334 1F320802		 MOVE.B	   2(A2,D0.L),-(A7)		         $2
+00000338 4851			 PEA	   (A1)
+0000033A 3F10			 MOVE.W	   (A0),-(A7)
+0000033C 4EB900000000		 JSR	   C.IXFC
+00000342 301F			 MOVE.W	   (A7)+,D0
+00000344 486D8030		 PEA	   STATIC.+48-32768(A5)		         XX
+00000348 48C0			 EXT.L	   D0
+0000034A 2F00			 MOVE.L	   D0,-(A7)
+0000034C 486D8038		 PEA	   STATIC.+56-32768(A5)		         YY
+00000350 4EB900000000		 JSR	   D.ROUND2
+		      *							       LINE 91
+00000356 2F2D8028		 MOVE.L	   STATIC.+40-32768(A5),-(A7)	         Y
+0000035A 2F2D8024		 MOVE.L	   STATIC.+36-32768(A5),-(A7)	         X
+0000035E 2F2D8000		 MOVE.L	   STATIC.+0-32768(A5),-(A7)	         I
+00000362 4EB900000000		 JSR	   F.ROUND2
+00000368 4EB900000000		 JSR	   F.CMP
+0000036E 6712			 BEQ.S	   L.1.6(PC)00000370 2E6EFFA4     L.1.5	 MOVEA.L   ST.1(A6),A7			         -92
+		      *							       LINE 92
+00000374 700A			 MOVEQ	   #10,D0			         $A
+00000376 D0AD8000		 ADD.L	   STATIC.+0-32768(A5),D0	         I
+0000037A 2D40FFCE		 MOVE.L	   D0,-50(A6)			         $FFFFFFCE
+0000037E 6100FCA2		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+00000382 2E6EFFA4     L.1.6	 MOVEA.L   ST.1(A6),A7			         -92
+		      *							       LINE 93
+00000386 486D8038		 PEA	   STATIC.+56-32768(A5)		         YY
+0000038A 486D8030		 PEA	   STATIC.+48-32768(A5)		         XX
+0000038E 2F2D8000		 MOVE.L	   STATIC.+0-32768(A5),-(A7)	         I
+00000392 486EFFB2		 PEA	   -78(A6)			         $FFFFFFB2
+00000396 4EB900000000		 JSR	   D.ROUND2
+0000039C 486EFFB2		 PEA	   -78(A6)			         $FFFFFFB2
+000003A0 4EB900000000		 JSR	   D.CMP
+000003A6 670E			 BEQ.S	   L.1.8(PC)
+		      *							       LINE 94
+000003A8 7014	      L.1.7	 MOVEQ	   #20,D0			         $14
+000003AA D0AD8000		 ADD.L	   STATIC.+0-32768(A5),D0	         I
+000003AE 2D40FFCE		 MOVE.L	   D0,-50(A6)			         $FFFFFFCE
+000003B2 6100FC6E		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 95
+000003B6 2F2D8024     L.1.8	 MOVE.L	   STATIC.+36-32768(A5),-(A7)	         X
+000003BA 206D8048		 MOVEA.L   STATIC.+72-32768(A5),A0	         FLEX_FSTR
+000003BE 2D5FFFB6		 MOVE.L	   (A7)+,-74(A6)		         $FFFFFFB6
+000003C2 7000			 MOVEQ	   #0,D0			         $0
+000003C4 3010			 MOVE.W	   (A0),D0
+000003C6 5280			 ADDQ.L	   #1,D0			         $1
+000003C8 08800000		 BCLR.L	   #0,D0			         $0
+000003CC 9FC0			 SUBA.L	   D0,A7
+000003CE 224F			 MOVEA.L   A7,A1
+000003D0 4851			 PEA	   (A1)
+000003D2 3F10			 MOVE.W	   (A0),-(A7)
+000003D4 48680002		 PEA	   2(A0)			         $2
+000003D8 3F10			 MOVE.W	   (A0),-(A7)
+000003DA 4EB900000000		 JSR	   C.MVFFL
+000003E0 246D8048		 MOVEA.L   STATIC.+72-32768(A5),A2	         FLEX_FSTR
+000003E4 202D8000		 MOVE.L	   STATIC.+0-32768(A5),D0	         I
+000003E8 5380			 SUBQ.L	   #1,D0			         $1
+000003EA 1F320802		 MOVE.B	   2(A2,D0.L),-(A7)		         $2
+000003EE 4851			 PEA	   (A1)
+000003F0 3F10			 MOVE.W	   (A0),-(A7)
+000003F2 4EB900000000		 JSR	   C.IXFC
+000003F8 301F			 MOVE.W	   (A7)+,D0
+000003FA 48C0			 EXT.L	   D0000003FC 2F2EFFB6		 MOVE.L	   -74(A6),-(A7)		         $FFFFFFB6
+00000400 2F00			 MOVE.L	   D0,-(A7)
+00000402 4EB900000000		 JSR	   F.ROUND2
+00000408 486D8040		 PEA	   STATIC.+64-32768(A5)		         ZZ
+0000040C 4EB900000000		 JSR	   F.DOUBLE
+		      *							       LINE 96
+00000412 206D8048		 MOVEA.L   STATIC.+72-32768(A5),A0	         FLEX_FSTR
+00000416 7000			 MOVEQ	   #0,D0			         $0
+00000418 3010			 MOVE.W	   (A0),D0
+0000041A 5280			 ADDQ.L	   #1,D0			         $1
+0000041C 08800000		 BCLR.L	   #0,D0			         $0
+00000420 9FC0			 SUBA.L	   D0,A7
+00000422 224F			 MOVEA.L   A7,A1
+00000424 4851			 PEA	   (A1)
+00000426 3F10			 MOVE.W	   (A0),-(A7)
+00000428 48680002		 PEA	   2(A0)			         $2
+0000042C 3F10			 MOVE.W	   (A0),-(A7)
+0000042E 4EB900000000		 JSR	   C.MVFFL
+00000434 246D8048		 MOVEA.L   STATIC.+72-32768(A5),A2	         FLEX_FSTR
+00000438 202D8000		 MOVE.L	   STATIC.+0-32768(A5),D0	         I
+0000043C 5380			 SUBQ.L	   #1,D0			         $1
+0000043E 1F320802		 MOVE.B	   2(A2,D0.L),-(A7)		         $2
+00000442 4851			 PEA	   (A1)
+00000444 3F10			 MOVE.W	   (A0),-(A7)
+00000446 4EB900000000		 JSR	   C.IXFC
+0000044C 301F			 MOVE.W	   (A7)+,D0
+0000044E 486D8030		 PEA	   STATIC.+48-32768(A5)		         XX
+00000452 48C0			 EXT.L	   D0
+00000454 2F00			 MOVE.L	   D0,-(A7)
+00000456 486EFFB2		 PEA	   -78(A6)			         $FFFFFFB2
+0000045A 4EB900000000		 JSR	   D.ROUND2
+00000460 486EFFB2		 PEA	   -78(A6)			         $FFFFFFB2
+00000464 4EB900000000		 JSR	   D.SINGLE
+0000046A 2B5F802C		 MOVE.L	   (A7)+,STATIC.+44-32768(A5)	         Z
+		      *							       LINE 97
+0000046E 486D8040		 PEA	   STATIC.+64-32768(A5)		         ZZ
+00000472 2F2D8024		 MOVE.L	   STATIC.+36-32768(A5),-(A7)	         X
+00000476 2F2D8000		 MOVE.L	   STATIC.+0-32768(A5),-(A7)	         I
+0000047A 4EB900000000		 JSR	   F.ROUND2
+00000480 486EFFB2		 PEA	   -78(A6)			         $FFFFFFB2
+00000484 4EB900000000		 JSR	   F.DOUBLE
+0000048A 486EFFB2		 PEA	   -78(A6)			         $FFFFFFB2
+0000048E 4EB900000000		 JSR	   D.CMP
+00000494 6712			 BEQ.S	   L.1.10(PC)
+00000496 2E6EFFA4     L.1.9	 MOVEA.L   ST.1(A6),A7			         -92		      *							       LINE 98
+0000049A 701E			 MOVEQ	   #30,D0			         $1E
+0000049C D0AD8000		 ADD.L	   STATIC.+0-32768(A5),D0	         I
+000004A0 2D40FFCE		 MOVE.L	   D0,-50(A6)			         $FFFFFFCE
+000004A4 6100FB7C		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+000004A8 2E6EFFA4     L.1.10	 MOVEA.L   ST.1(A6),A7			         -92
+		      *							       LINE 99
+000004AC 2F2D802C		 MOVE.L	   STATIC.+44-32768(A5),-(A7)	         Z
+000004B0 486EFFB2		 PEA	   -78(A6)			         $FFFFFFB2
+000004B4 4EB900000000		 JSR	   F.DOUBLE
+000004BA 486EFFB2		 PEA	   -78(A6)			         $FFFFFFB2
+000004BE 486D8030		 PEA	   STATIC.+48-32768(A5)		         XX
+000004C2 2F2D8000		 MOVE.L	   STATIC.+0-32768(A5),-(A7)	         I
+000004C6 486EFFAA		 PEA	   -86(A6)			         $FFFFFFAA
+000004CA 4EB900000000		 JSR	   D.ROUND2
+000004D0 486EFFAA		 PEA	   -86(A6)			         $FFFFFFAA
+000004D4 4EB900000000		 JSR	   D.CMP
+000004DA 670E			 BEQ.S	   L.1.12(PC)
+		      *							       LINE 100
+000004DC 7028	      L.1.11	 MOVEQ	   #40,D0			         $28
+000004DE D0AD8000		 ADD.L	   STATIC.+0-32768(A5),D0	         I
+000004E2 2D40FFCE		 MOVE.L	   D0,-50(A6)			         $FFFFFFCE
+000004E6 6100FB3A		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 101
+000004EA 202D8000     L.1.12	 MOVE.L	   STATIC.+0-32768(A5),D0	         I
+000004EE 5280			 ADDQ.L	   #1,D0			         $1
+000004F0 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         I
+000004F4 7207			 MOVEQ	   #7,D1			         $7
+000004F6 B081			 CMP.L	   D1,D0
+000004F8 6F00FDB8		 BLE.L	   L.1.3(PC)
+		      *							       LINE 105
+000004FC 7021	      L.1.13	 MOVEQ	   #33,D0			         $21
+000004FE 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         I
+		      *							       LINE 106
+00000502 7042			 MOVEQ	   #66,D0			         $42
+00000504 2B408004		 MOVE.L	   D0,STATIC.+4-32768(A5)	         J
+		      *							       LINE 107
+00000508 202D8000		 MOVE.L	   STATIC.+0-32768(A5),D0	         I
+0000050C D0AD8004		 ADD.L	   STATIC.+4-32768(A5),D0	         J
+00000510 2B408008		 MOVE.L	   D0,STATIC.+8-32768(A5)	         K
+		      *							       LINE 108
+00000514 7063			 MOVEQ	   #99,D0			         $63
+00000516 B0AD8008		 CMP.L	   STATIC.+8-32768(A5),D0	         K
+0000051A 670C			 BEQ.S	   L.1.15(PC)
+		      *							       LINE 108 (2)0000051C 2D7C00000065 L.1.14	 MOVE.L	   #101,-50(A6)			         $65  $FFFFFFCE
+	 FFCE
+00000524 6100FAFC		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 109
+00000528 202D8008     L.1.15	 MOVE.L	   STATIC.+8-32768(A5),D0	         K
+0000052C D0AD8000		 ADD.L	   STATIC.+0-32768(A5),D0	         I
+00000530 D0AD8004		 ADD.L	   STATIC.+4-32768(A5),D0	         J
+00000534 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         I
+		      *							       LINE 110
+00000538 0CAD000000C6		 CMPI.L	   #198,STATIC.+0-32768(A5)	         $C6  I
+	 8000
+00000540 670C			 BEQ.S	   L.1.17(PC)
+		      *							       LINE 110 (2)
+00000542 2D7C00000066 L.1.16	 MOVE.L	   #102,-50(A6)			         $66  $FFFFFFCE
+	 FFCE
+0000054A 6100FAD6		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 111
+0000054E 202D8004     L.1.17	 MOVE.L	   STATIC.+4-32768(A5),D0	         J
+00000552 D0AD8004		 ADD.L	   STATIC.+4-32768(A5),D0	         J
+00000556 D0AD8004		 ADD.L	   STATIC.+4-32768(A5),D0	         J
+0000055A D0AD8004		 ADD.L	   STATIC.+4-32768(A5),D0	         J
+0000055E 2B408004		 MOVE.L	   D0,STATIC.+4-32768(A5)	         J
+		      *							       LINE 112
+00000562 0CAD00000108		 CMPI.L	   #264,STATIC.+4-32768(A5)	         $108  J
+	 8004
+0000056A 670C			 BEQ.S	   L.1.19(PC)
+		      *							       LINE 112 (2)
+0000056C 2D7C00000067 L.1.18	 MOVE.L	   #103,-50(A6)			         $67  $FFFFFFCE
+	 FFCE
+00000574 6100FAAC		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 113
+00000578 7042	      L.1.19	 MOVEQ	   #66,D0			         $42
+0000057A 2B408004		 MOVE.L	   D0,STATIC.+4-32768(A5)	         J
+		      *							       LINE 114
+0000057E 7021			 MOVEQ	   #33,D0			         $21
+00000580 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         I
+		      *							       LINE 115
+00000584 2F2D8004		 MOVE.L	   STATIC.+4-32768(A5),-(A7)	         J
+00000588 2F2D8000		 MOVE.L	   STATIC.+0-32768(A5),-(A7)	         I
+0000058C 4EB900000000		 JSR	   G.I4DIV
+00000592 202D8008		 MOVE.L	   STATIC.+8-32768(A5),D0	         K
+00000596 D09F			 ADD.L	   (A7)+,D0
+00000598 2B408008		 MOVE.L	   D0,STATIC.+8-32768(A5)	         K
+		      *							       LINE 116
+0000059C 7065			 MOVEQ	   #101,D0			         $650000059E B0AD8008		 CMP.L	   STATIC.+8-32768(A5),D0	         K
+000005A2 670C			 BEQ.S	   L.1.21(PC)
+		      *							       LINE 116 (2)
+000005A4 2D7C00000068 L.1.20	 MOVE.L	   #104,-50(A6)			         $68  $FFFFFFCE
+	 FFCE
+000005AC 6100FA74		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 117
+000005B0 2B7C0001E240 L.1.21	 MOVE.L	   #123456,STATIC.+4-32768(A5)	         $1E240  J
+	 8004
+		      *							       LINE 118
+000005B8 202D8004		 MOVE.L	   STATIC.+4-32768(A5),D0	         J
+000005BC 4480			 NEG.L	   D0
+000005BE 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         I
+		      *							       LINE 119
+000005C2 0CADFFFE1DC0		 CMPI.L	   #-123456,STATIC.+0-32768(A5)	         $FFFE1DC0  I
+	 8000
+000005CA 670C			 BEQ.S	   L.1.23(PC)
+		      *							       LINE 119 (2)
+000005CC 2D7C00000069 L.1.22	 MOVE.L	   #105,-50(A6)			         $69  $FFFFFFCE
+	 FFCE
+000005D4 6100FA4C		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 122
+000005D8 2B7C7FFFFFFF L.1.23	 MOVE.L	   #2147483647,STATIC.+0-32768(A5)       $7FFFFFFF  I
+	 8000
+		      *							       LINE 123
+000005E0 7003			 MOVEQ	   #3,D0			         $3
+000005E2 2B408004		 MOVE.L	   D0,STATIC.+4-32768(A5)	         J
+		      *							       LINE 124
+000005E6 2F2D8000		 MOVE.L	   STATIC.+0-32768(A5),-(A7)	         I
+000005EA 2F2D8004		 MOVE.L	   STATIC.+4-32768(A5),-(A7)	         J
+000005EE 4EB900000000		 JSR	   G.I4REM
+000005F4 2B5F8008		 MOVE.L	   (A7)+,STATIC.+8-32768(A5)	         K
+		      *							       LINE 125
+000005F8 7001			 MOVEQ	   #1,D0			         $1
+000005FA B0AD8008		 CMP.L	   STATIC.+8-32768(A5),D0	         K
+000005FE 670C			 BEQ.S	   L.1.25(PC)
+		      *							       LINE 125 (2)
+00000600 2D7C0000006A L.1.24	 MOVE.L	   #106,-50(A6)			         $6A  $FFFFFFCE
+	 FFCE
+00000608 6100FA18		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 126
+0000060C 2F2D8004     L.1.25	 MOVE.L	   STATIC.+4-32768(A5),-(A7)	         J
+00000610 2F2D8000		 MOVE.L	   STATIC.+0-32768(A5),-(A7)	         I
+00000614 4EB900000000		 JSR	   G.I4REM
+0000061A 2B5F8008		 MOVE.L	   (A7)+,STATIC.+8-32768(A5)	         K		      *							       LINE 127
+0000061E 7003			 MOVEQ	   #3,D0			         $3
+00000620 B0AD8008		 CMP.L	   STATIC.+8-32768(A5),D0	         K
+00000624 670C			 BEQ.S	   L.1.27(PC)
+		      *							       LINE 127 (2)
+00000626 2D7C0000006B L.1.26	 MOVE.L	   #107,-50(A6)			         $6B  $FFFFFFCE
+	 FFCE
+0000062E 6100F9F2		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 128
+00000632 2B7C7FFFFFFC L.1.27	 MOVE.L	   #2147483644,STATIC.+4-32768(A5)       $7FFFFFFC  J
+	 8004
+		      *							       LINE 129
+0000063A 2F2D8000		 MOVE.L	   STATIC.+0-32768(A5),-(A7)	         I
+0000063E 2F2D8004		 MOVE.L	   STATIC.+4-32768(A5),-(A7)	         J
+00000642 4EB900000000		 JSR	   G.I4REM
+00000648 2B5F8008		 MOVE.L	   (A7)+,STATIC.+8-32768(A5)	         K
+		      *							       LINE 130
+0000064C 7003			 MOVEQ	   #3,D0			         $3
+0000064E B0AD8008		 CMP.L	   STATIC.+8-32768(A5),D0	         K
+00000652 670C			 BEQ.S	   L.1.29(PC)
+		      *							       LINE 130 (2)
+00000654 2D7C0000006C L.1.28	 MOVE.L	   #108,-50(A6)			         $6C  $FFFFFFCE
+	 FFCE
+0000065C 6100F9C4		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 133
+00000660 2D7C00000002 L.1.29	 MOVE.L	   #2,-54(A6)			         $2  $FFFFFFCA
+	 FFCA
+00000668 2D7C00000001		 MOVE.L	   #1,-58(A6)			         $1  $FFFFFFC6
+	 FFC6
+00000670 41EEFFB6		 LEA	   -74(A6),A0			         $FFFFFFB6
+00000674 2D48FFC2		 MOVE.L	   A0,-62(A6)			         $FFFFFFC2
+00000678 6100F992		 BSR.L	   B.3(PC)			         FUNC_ADD = CODE.+$C
+0000067C 2B6EFFB68000		 MOVE.L	   -74(A6),STATIC.+0-32768(A5)	         $FFFFFFB6  I
+		      *							       LINE 134
+00000682 7003			 MOVEQ	   #3,D0			         $3
+00000684 B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         I
+00000688 670C			 BEQ.S	   L.1.31(PC)
+		      *							       LINE 134 (2)
+0000068A 2D7C0000006E L.1.30	 MOVE.L	   #110,-50(A6)			         $6E  $FFFFFFCE
+	 FFCE
+00000692 6100F98E		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 135
+00000696 2D6D8008FFCA L.1.31	 MOVE.L	   STATIC.+8-32768(A5),-54(A6)	         K  $FFFFFFCA
+0000069C 2D6D8004FFC6		 MOVE.L	   STATIC.+4-32768(A5),-58(A6)	         J  $FFFFFFC6
+000006A2 41EEFFB6		 LEA	   -74(A6),A0			         $FFFFFFB6000006A6 2D48FFC2		 MOVE.L	   A0,-62(A6)			         $FFFFFFC2
+000006AA 6100F960		 BSR.L	   B.3(PC)			         FUNC_ADD = CODE.+$C
+000006AE 2B6EFFB68000		 MOVE.L	   -74(A6),STATIC.+0-32768(A5)	         $FFFFFFB6  I
+		      *							       LINE 136
+000006B4 202D8004		 MOVE.L	   STATIC.+4-32768(A5),D0	         J
+000006B8 D0AD8008		 ADD.L	   STATIC.+8-32768(A5),D0	         K
+000006BC B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         I
+000006C0 670C			 BEQ.S	   L.1.33(PC)
+		      *							       LINE 136 (2)
+000006C2 2D7C0000006F L.1.32	 MOVE.L	   #111,-50(A6)			         $6F  $FFFFFFCE
+	 FFCE
+000006CA 6100F956		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 138
+000006CE 2D7C0000001A L.1.33	 MOVE.L	   #26,-54(A6)			         $1A  $FFFFFFCA
+	 FFCA
+000006D6 2D7C00000003		 MOVE.L	   #3,-58(A6)			         $3  $FFFFFFC6
+	 FFC6
+000006DE 41EEFFB6		 LEA	   -74(A6),A0			         $FFFFFFB6
+000006E2 2D48FFC2		 MOVE.L	   A0,-62(A6)			         $FFFFFFC2
+000006E6 6100F924		 BSR.L	   B.3(PC)			         FUNC_ADD = CODE.+$C
+000006EA 2B6EFFB68008		 MOVE.L	   -74(A6),STATIC.+8-32768(A5)	         $FFFFFFB6  K
+		      *							       LINE 139
+000006F0 701D			 MOVEQ	   #29,D0			         $1D
+000006F2 B0AD8008		 CMP.L	   STATIC.+8-32768(A5),D0	         K
+000006F6 670C			 BEQ.S	   L.1.35(PC)
+		      *							       LINE 139 (2)
+000006F8 2D7C00000078 L.1.34	 MOVE.L	   #120,-50(A6)			         $78  $FFFFFFCE
+	 FFCE
+00000700 6100F920		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 140
+00000704 7003	      L.1.35	 MOVEQ	   #3,D0			         $3
+00000706 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         I
+		      *							       LINE 141
+0000070A 7007			 MOVEQ	   #7,D0			         $7
+0000070C 2B408004		 MOVE.L	   D0,STATIC.+4-32768(A5)	         J
+		      *							       LINE 142
+00000710 2F2D8000		 MOVE.L	   STATIC.+0-32768(A5),-(A7)	         I
+00000714 2F2D8000		 MOVE.L	   STATIC.+0-32768(A5),-(A7)	         I
+00000718 4EB900000000		 JSR	   G.I4MULT
+0000071E 2F2D8004		 MOVE.L	   STATIC.+4-32768(A5),-(A7)	         J
+00000722 2F2D8004		 MOVE.L	   STATIC.+4-32768(A5),-(A7)	         J
+00000726 4EB900000000		 JSR	   G.I4DIV
+0000072C 201F			 MOVE.L	   (A7)+,D0
+0000072E D09F			 ADD.L	   (A7)+,D0
+00000730 2D40FFCA		 MOVE.L	   D0,-54(A6)			         $FFFFFFCA00000734 202D8000		 MOVE.L	   STATIC.+0-32768(A5),D0	         I
+00000738 D0AD8004		 ADD.L	   STATIC.+4-32768(A5),D0	         J
+0000073C 2D40FFC6		 MOVE.L	   D0,-58(A6)			         $FFFFFFC6
+00000740 41EEFFB6		 LEA	   -74(A6),A0			         $FFFFFFB6
+00000744 2D48FFC2		 MOVE.L	   A0,-62(A6)			         $FFFFFFC2
+00000748 6100F8C2		 BSR.L	   B.3(PC)			         FUNC_ADD = CODE.+$C
+0000074C 2B6EFFB68008		 MOVE.L	   -74(A6),STATIC.+8-32768(A5)	         $FFFFFFB6  K
+		      *							       LINE 143
+00000752 7014			 MOVEQ	   #20,D0			         $14
+00000754 B0AD8008		 CMP.L	   STATIC.+8-32768(A5),D0	         K
+00000758 670C			 BEQ.S	   L.1.37(PC)
+		      *							       LINE 143 (2)
+0000075A 2D7C00000079 L.1.36	 MOVE.L	   #121,-50(A6)			         $79  $FFFFFFCE
+	 FFCE
+00000762 6100F8BE		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 145
+00000766 7001	      L.1.37	 MOVEQ	   #1,D0			         $1
+00000768 2B40800C		 MOVE.L	   D0,STATIC.+12-32768(A5)	         I_BYTE
+		      *							       LINE 146
+0000076C 7021			 MOVEQ	   #33,D0			         $21
+0000076E 2B408010		 MOVE.L	   D0,STATIC.+16-32768(A5)	         J_BYTE
+		      *							       LINE 147
+00000772 302D8012		 MOVE.W	   STATIC.+16-32766(A5),D0	         J_BYTE
+00000776 C0ED800E		 MULU	   STATIC.+12-32766(A5),D0	         I_BYTE
+0000077A C0ED800E		 MULU	   STATIC.+12-32766(A5),D0	         I_BYTE
+0000077E 2B408014		 MOVE.L	   D0,STATIC.+20-32768(A5)	         K_BYTE
+		      *							       LINE 148
+00000782 7021			 MOVEQ	   #33,D0			         $21
+00000784 B0AD8014		 CMP.L	   STATIC.+20-32768(A5),D0	         K_BYTE
+00000788 670C			 BEQ.S	   L.1.39(PC)
+		      *							       LINE 148 (2)
+0000078A 2D7C00000082 L.1.38	 MOVE.L	   #130,-50(A6)			         $82  $FFFFFFCE
+	 FFCE
+00000792 6100F88E		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 150
+00000796 7016	      L.1.39	 MOVEQ	   #22,D0			         $16
+00000798 2B408004		 MOVE.L	   D0,STATIC.+4-32768(A5)	         J
+		      *							       LINE 151
+0000079C 700B			 MOVEQ	   #11,D0			         $B
+0000079E 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         I
+		      *							       LINE 152
+000007A2 202D8004		 MOVE.L	   STATIC.+4-32768(A5),D0	         J
+000007A6 D0AD8000		 ADD.L	   STATIC.+0-32768(A5),D0	         I
+000007AA 1B40808E		 MOVE.B	   D0,STATIC.+142-32768(A5)	         BYTE_REC
+		      *							       LINE 153000007AE 7021			 MOVEQ	   #33,D0			         $21
+000007B0 B02D808E		 CMP.B	   STATIC.+142-32768(A5),D0	         BYTE_REC
+000007B4 670C			 BEQ.S	   L.1.41(PC)
+		      *							       LINE 153 (2)
+000007B6 2D7C0000008C L.1.40	 MOVE.L	   #140,-50(A6)			         $8C  $FFFFFFCE
+	 FFCE
+000007BE 6100F862		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 154
+000007C2 702C	      L.1.41	 MOVEQ	   #44,D0			         $2C
+000007C4 1B40808E		 MOVE.B	   D0,STATIC.+142-32768(A5)	         BYTE_REC
+		      *							       LINE 155
+000007C8 7037			 MOVEQ	   #55,D0			         $37
+000007CA 1B40808F		 MOVE.B	   D0,STATIC.+142-32767(A5)	         BYTE_REC
+		      *							       LINE 156
+000007CE 7000			 MOVEQ	   #0,D0			         $0
+000007D0 102D808E		 MOVE.B	   STATIC.+142-32768(A5),D0	         BYTE_REC
+000007D4 7216			 MOVEQ	   #22,D1			         $16
+000007D6 D240			 ADD.W	   D0,D1
+000007D8 102D808F		 MOVE.B	   STATIC.+142-32767(A5),D0	         BYTE_REC
+000007DC 4880			 EXT.W	   D0
+000007DE D240			 ADD.W	   D0,D1
+000007E0 1B418090		 MOVE.B	   D1,STATIC.+142-32766(A5)	         BYTE_REC
+		      *							       LINE 157
+000007E4 7079			 MOVEQ	   #121,D0			         $79
+000007E6 B02D8090		 CMP.B	   STATIC.+142-32766(A5),D0	         BYTE_REC
+000007EA 670C			 BEQ.S	   L.1.43(PC)
+		      *							       LINE 157 (2)
+000007EC 2D7C0000008D L.1.42	 MOVE.L	   #141,-50(A6)			         $8D  $FFFFFFCE
+	 FFCE
+000007F4 6100F82C		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 158
+000007F8 102D808E     L.1.43	 MOVE.B	   STATIC.+142-32768(A5),D0	         BYTE_REC
+000007FC 4400			 NEG.B	   D0
+000007FE 1B408090		 MOVE.B	   D0,STATIC.+142-32766(A5)	         BYTE_REC
+		      *							       LINE 159
+00000802 70D4			 MOVEQ	   #-44,D0			         $FFFFFFD4
+00000804 B02D8090		 CMP.B	   STATIC.+142-32766(A5),D0	         BYTE_REC
+00000808 670C			 BEQ.S	   L.1.45(PC)
+		      *							       LINE 159 (2)
+0000080A 2D7C0000008E L.1.44	 MOVE.L	   #142,-50(A6)			         $8E  $FFFFFFCE
+	 FFCE
+00000812 6100F80E		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 161
+00000816 2D7C00000002 L.1.45	 MOVE.L	   #2,-54(A6)			         $2  $FFFFFFCA
+	 FFCA0000081E 2D7C00000001		 MOVE.L	   #1,-58(A6)			         $1  $FFFFFFC6
+	 FFC6
+00000826 41EEFFB6		 LEA	   -74(A6),A0			         $FFFFFFB6
+0000082A 2D48FFC2		 MOVE.L	   A0,-62(A6)			         $FFFFFFC2
+0000082E 6100F7DC		 BSR.L	   B.3(PC)			         FUNC_ADD = CODE.+$C
+00000832 7003			 MOVEQ	   #3,D0			         $3
+00000834 B0AEFFB6		 CMP.L	   -74(A6),D0			         $FFFFFFB6
+00000838 670C			 BEQ.S	   L.1.47(PC)
+		      *							       LINE 161 (2)
+0000083A 2D7C00000096 L.1.46	 MOVE.L	   #150,-50(A6)			         $96  $FFFFFFCE
+	 FFCE
+00000842 6100F7DE		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 162
+00000846 2B7AF8FA8024 L.1.47	 MOVE.L	   K.8(PC),STATIC.+36-32768(A5)	         CODE.+$142  X
+		      *							       LINE 163
+0000084C 2B7AF8F88028		 MOVE.L	   K.9(PC),STATIC.+40-32768(A5)	         CODE.+$146  Y
+		      *							       LINE 164
+00000852 2F2D8024		 MOVE.L	   STATIC.+36-32768(A5),-(A7)	         X
+00000856 2F2D8028		 MOVE.L	   STATIC.+40-32768(A5),-(A7)	         Y
+0000085A 4EB900000000		 JSR	   F.ADD
+00000860 2B5F802C		 MOVE.L	   (A7)+,STATIC.+44-32768(A5)	         Z
+		      *							       LINE 165
+00000864 2D7C00000097		 MOVE.L	   #151,-38(A6)			         $97  $FFFFFFDA
+	 FFDA
+0000086C 2D7AF8DCFFD6		 MOVE.L	   K.10(PC),-42(A6)		         CODE.+$14A  $FFFFFFD6
+00000872 2D6D802CFFD2		 MOVE.L	   STATIC.+44-32768(A5),-46(A6)	         Z  $FFFFFFD2
+00000878 6100F7E0		 BSR.L	   B.5(PC)			         R_EQL = CODE.+$5A
+		      *							       LINE 167
+0000087C 2F2D8024		 MOVE.L	   STATIC.+36-32768(A5),-(A7)	         X
+00000880 4EB900000000		 JSR	   F.TRUNC
+00000886 2B5F8000		 MOVE.L	   (A7)+,STATIC.+0-32768(A5)	         I
+		      *							       LINE 168
+0000088A 7003			 MOVEQ	   #3,D0			         $3
+0000088C B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         I
+00000890 670C			 BEQ.S	   L.1.49(PC)
+		      *							       LINE 168 (2)
+00000892 2D7C000000A0 L.1.48	 MOVE.L	   #160,-50(A6)			         $A0  $FFFFFFCE
+	 FFCE
+0000089A 6100F786		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 169
+0000089E 2F2D8028     L.1.49	 MOVE.L	   STATIC.+40-32768(A5),-(A7)	         Y
+000008A2 4EB900000000		 JSR	   F.ROUND
+000008A8 2B5F8000		 MOVE.L	   (A7)+,STATIC.+0-32768(A5)	         I
+		      *							       LINE 170
+000008AC 7002			 MOVEQ	   #2,D0			         $2000008AE B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         I
+000008B2 670C			 BEQ.S	   L.1.51(PC)
+		      *							       LINE 170 (2)
+000008B4 2D7C000000A1 L.1.50	 MOVE.L	   #161,-50(A6)			         $A1  $FFFFFFCE
+	 FFCE
+000008BC 6100F764		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 171
+000008C0 2F2D8024     L.1.51	 MOVE.L	   STATIC.+36-32768(A5),-(A7)	         X
+000008C4 2F3AF888		 MOVE.L	   K.11(PC),-(A7)		         CODE.+$14E
+000008C8 4EB900000000		 JSR	   F.ADD
+000008CE 70FF			 MOVEQ	   #-1,D0			         $FFFFFFFF
+000008D0 2F00			 MOVE.L	   D0,-(A7)
+000008D2 4EB900000000		 JSR	   F.ROUND2
+000008D8 2B5F802C		 MOVE.L	   (A7)+,STATIC.+44-32768(A5)	         Z
+		      *							       LINE 172
+000008DC 2D7C000000A2		 MOVE.L	   #162,-38(A6)			         $A2  $FFFFFFDA
+	 FFDA
+000008E4 2D7AF86CFFD6		 MOVE.L	   K.12(PC),-42(A6)		         CODE.+$152  $FFFFFFD6
+000008EA 2D6D802CFFD2		 MOVE.L	   STATIC.+44-32768(A5),-46(A6)	         Z  $FFFFFFD2
+000008F0 6100F768		 BSR.L	   B.5(PC)			         R_EQL = CODE.+$5A
+		      *							       LINE 174
+000008F4 7020			 MOVEQ	   #32,D0			         $20
+000008F6 3B408092		 MOVE.W	   D0,STATIC.+146-32768(A5)	         WORD_REC
+		      *							       LINE 175
+000008FA 7020			 MOVEQ	   #32,D0			         $20
+000008FC 1B40808E		 MOVE.B	   D0,STATIC.+142-32768(A5)	         BYTE_REC
+		      *							       LINE 176
+00000900 7020			 MOVEQ	   #32,D0			         $20
+00000902 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         I
+		      *							       LINE 177
+00000906 7020			 MOVEQ	   #32,D0			         $20
+00000908 2F00			 MOVE.L	   D0,-(A7)
+0000090A 4EB900000000		 JSR	   F.FLOAT
+00000910 2B5F8024		 MOVE.L	   (A7)+,STATIC.+36-32768(A5)	         X
+		      *							       LINE 178
+00000914 7020			 MOVEQ	   #32,D0			         $20
+00000916 2F00			 MOVE.L	   D0,-(A7)
+00000918 486D8030		 PEA	   STATIC.+48-32768(A5)		         XX
+0000091C 4EB900000000		 JSR	   D.FLOAT
+		      *							       LINE 181
+00000922 1B6D808E8090		 MOVE.B	   STATIC.+142-32768(A5),STATIC.+142-32766(A5)
+									         BYTE_REC  BYTE_REC
+		      *							       LINE 182
+00000928 7020			 MOVEQ	   #32,D0			         $20
+0000092A B02D8090		 CMP.B	   STATIC.+142-32766(A5),D0	         BYTE_REC0000092E 670C			 BEQ.S	   L.1.53(PC)
+		      *							       LINE 182 (2)
+00000930 2D7C000000AA L.1.52	 MOVE.L	   #170,-50(A6)			         $AA  $FFFFFFCE
+	 FFCE
+00000938 6100F6E8		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 183
+0000093C 1B6D80938090 L.1.53	 MOVE.B	   STATIC.+146-32767(A5),STATIC.+142-32766(A5)
+									         WORD_REC  BYTE_REC
+		      *							       LINE 184
+00000942 7020			 MOVEQ	   #32,D0			         $20
+00000944 B02D8090		 CMP.B	   STATIC.+142-32766(A5),D0	         BYTE_REC
+00000948 670C			 BEQ.S	   L.1.55(PC)
+		      *							       LINE 184 (2)
+0000094A 2D7C000000AB L.1.54	 MOVE.L	   #171,-50(A6)			         $AB  $FFFFFFCE
+	 FFCE
+00000952 6100F6CE		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 185
+00000956 1B6D80038090 L.1.55	 MOVE.B	   STATIC.+0-32765(A5),STATIC.+142-32766(A5)
+									         I  BYTE_REC
+		      *							       LINE 186
+0000095C 7020			 MOVEQ	   #32,D0			         $20
+0000095E B02D8090		 CMP.B	   STATIC.+142-32766(A5),D0	         BYTE_REC
+00000962 670C			 BEQ.S	   L.1.57(PC)
+		      *							       LINE 186 (2)
+00000964 2D7C000000AC L.1.56	 MOVE.L	   #172,-50(A6)			         $AC  $FFFFFFCE
+	 FFCE
+0000096C 6100F6B4		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 187
+00000970 102D808E     L.1.57	 MOVE.B	   STATIC.+142-32768(A5),D0	         BYTE_REC
+00000974 4400			 NEG.B	   D0
+00000976 1B408090		 MOVE.B	   D0,STATIC.+142-32766(A5)	         BYTE_REC
+		      *							       LINE 188
+0000097A 70E0			 MOVEQ	   #-32,D0			         $FFFFFFE0
+0000097C B02D8090		 CMP.B	   STATIC.+142-32766(A5),D0	         BYTE_REC
+00000980 670C			 BEQ.S	   L.1.59(PC)
+		      *							       LINE 188 (2)
+00000982 2D7C000000AD L.1.58	 MOVE.L	   #173,-50(A6)			         $AD  $FFFFFFCE
+	 FFCE
+0000098A 6100F696		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 189
+0000098E 302D8092     L.1.59	 MOVE.W	   STATIC.+146-32768(A5),D0	         WORD_REC
+00000992 4440			 NEG.W	   D0
+00000994 1B408090		 MOVE.B	   D0,STATIC.+142-32766(A5)	         BYTE_REC
+		      *							       LINE 190
+00000998 70E0			 MOVEQ	   #-32,D0			         $FFFFFFE00000099A B02D8090		 CMP.B	   STATIC.+142-32766(A5),D0	         BYTE_REC
+0000099E 670C			 BEQ.S	   L.1.61(PC)
+		      *							       LINE 190 (2)
+000009A0 2D7C000000AE L.1.60	 MOVE.L	   #174,-50(A6)			         $AE  $FFFFFFCE
+	 FFCE
+000009A8 6100F678		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 191
+000009AC 202D8000     L.1.61	 MOVE.L	   STATIC.+0-32768(A5),D0	         I
+000009B0 4480			 NEG.L	   D0
+000009B2 1B408090		 MOVE.B	   D0,STATIC.+142-32766(A5)	         BYTE_REC
+		      *							       LINE 192
+000009B6 70E0			 MOVEQ	   #-32,D0			         $FFFFFFE0
+000009B8 B02D8090		 CMP.B	   STATIC.+142-32766(A5),D0	         BYTE_REC
+000009BC 670C			 BEQ.S	   L.1.63(PC)
+		      *							       LINE 192 (2)
+000009BE 2D7C000000AF L.1.62	 MOVE.L	   #175,-50(A6)			         $AF  $FFFFFFCE
+	 FFCE
+000009C6 6100F65A		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 193
+000009CA 2F2D8024     L.1.63	 MOVE.L	   STATIC.+36-32768(A5),-(A7)	         X
+000009CE 4EB900000000		 JSR	   F.TRUNC
+000009D4 201F			 MOVE.L	   (A7)+,D0
+000009D6 1B408090		 MOVE.B	   D0,STATIC.+142-32766(A5)	         BYTE_REC
+		      *							       LINE 194
+000009DA 7020			 MOVEQ	   #32,D0			         $20
+000009DC B02D8090		 CMP.B	   STATIC.+142-32766(A5),D0	         BYTE_REC
+000009E0 670C			 BEQ.S	   L.1.65(PC)
+		      *							       LINE 194 (2)
+000009E2 2D7C000000B0 L.1.64	 MOVE.L	   #176,-50(A6)			         $B0  $FFFFFFCE
+	 FFCE
+000009EA 6100F636		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 195
+000009EE 486D8030     L.1.65	 PEA	   STATIC.+48-32768(A5)		         XX
+000009F2 4EB900000000		 JSR	   D.TRUNC
+000009F8 201F			 MOVE.L	   (A7)+,D0
+000009FA 1B408090		 MOVE.B	   D0,STATIC.+142-32766(A5)	         BYTE_REC
+		      *							       LINE 196
+000009FE 7020			 MOVEQ	   #32,D0			         $20
+00000A00 B02D8090		 CMP.B	   STATIC.+142-32766(A5),D0	         BYTE_REC
+00000A04 670C			 BEQ.S	   L.1.67(PC)
+		      *							       LINE 196 (2)
+00000A06 2D7C000000B1 L.1.66	 MOVE.L	   #177,-50(A6)			         $B1  $FFFFFFCE
+	 FFCE
+00000A0E 6100F612		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 19700000A12 2F2D8024     L.1.67	 MOVE.L	   STATIC.+36-32768(A5),-(A7)	         X
+00000A16 4EB900000000		 JSR	   F.TRUNC
+00000A1C 201F			 MOVE.L	   (A7)+,D0
+00000A1E 4480			 NEG.L	   D0
+00000A20 1B408090		 MOVE.B	   D0,STATIC.+142-32766(A5)	         BYTE_REC
+		      *							       LINE 198
+00000A24 70E0			 MOVEQ	   #-32,D0			         $FFFFFFE0
+00000A26 B02D8090		 CMP.B	   STATIC.+142-32766(A5),D0	         BYTE_REC
+00000A2A 670C			 BEQ.S	   L.1.69(PC)
+		      *							       LINE 198 (2)
+00000A2C 2D7C000000B2 L.1.68	 MOVE.L	   #178,-50(A6)			         $B2  $FFFFFFCE
+	 FFCE
+00000A34 6100F5EC		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 199
+00000A38 486D8030     L.1.69	 PEA	   STATIC.+48-32768(A5)		         XX
+00000A3C 4EB900000000		 JSR	   D.TRUNC
+00000A42 201F			 MOVE.L	   (A7)+,D0
+00000A44 4480			 NEG.L	   D0
+00000A46 1B408090		 MOVE.B	   D0,STATIC.+142-32766(A5)	         BYTE_REC
+		      *							       LINE 200
+00000A4A 70E0			 MOVEQ	   #-32,D0			         $FFFFFFE0
+00000A4C B02D8090		 CMP.B	   STATIC.+142-32766(A5),D0	         BYTE_REC
+00000A50 670C			 BEQ.S	   L.1.71(PC)
+		      *							       LINE 200 (2)
+00000A52 2D7C000000B3 L.1.70	 MOVE.L	   #179,-50(A6)			         $B3  $FFFFFFCE
+	 FFCE
+00000A5A 6100F5C6		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 203
+00000A5E 7000	      L.1.71	 MOVEQ	   #0,D0			         $0
+00000A60 102D808E		 MOVE.B	   STATIC.+142-32768(A5),D0	         BYTE_REC
+00000A64 3B408096		 MOVE.W	   D0,STATIC.+146-32764(A5)	         WORD_REC
+		      *							       LINE 204
+00000A68 7020			 MOVEQ	   #32,D0			         $20
+00000A6A B06D8096		 CMP.W	   STATIC.+146-32764(A5),D0	         WORD_REC
+00000A6E 670C			 BEQ.S	   L.1.73(PC)
+		      *							       LINE 204 (2)
+00000A70 2D7C000000B4 L.1.72	 MOVE.L	   #180,-50(A6)			         $B4  $FFFFFFCE
+	 FFCE
+00000A78 6100F5A8		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 205
+00000A7C 3B6D80928096 L.1.73	 MOVE.W	   STATIC.+146-32768(A5),STATIC.+146-32764(A5)
+									         WORD_REC  WORD_REC
+		      *							       LINE 206
+00000A82 7020			 MOVEQ	   #32,D0			         $20
+00000A84 B06D8096		 CMP.W	   STATIC.+146-32764(A5),D0	         WORD_REC00000A88 670C			 BEQ.S	   L.1.75(PC)
+		      *							       LINE 206 (2)
+00000A8A 2D7C000000B5 L.1.74	 MOVE.L	   #181,-50(A6)			         $B5  $FFFFFFCE
+	 FFCE
+00000A92 6100F58E		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 207
+00000A96 3B6D80028096 L.1.75	 MOVE.W	   STATIC.+0-32766(A5),STATIC.+146-32764(A5)
+									         I  WORD_REC
+		      *							       LINE 208
+00000A9C 7020			 MOVEQ	   #32,D0			         $20
+00000A9E B06D8096		 CMP.W	   STATIC.+146-32764(A5),D0	         WORD_REC
+00000AA2 670C			 BEQ.S	   L.1.77(PC)
+		      *							       LINE 208 (2)
+00000AA4 2D7C000000B6 L.1.76	 MOVE.L	   #182,-50(A6)			         $B6  $FFFFFFCE
+	 FFCE
+00000AAC 6100F574		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 209
+00000AB0 7000	      L.1.77	 MOVEQ	   #0,D0			         $0
+00000AB2 102D808E		 MOVE.B	   STATIC.+142-32768(A5),D0	         BYTE_REC
+00000AB6 4440			 NEG.W	   D0
+00000AB8 3B408096		 MOVE.W	   D0,STATIC.+146-32764(A5)	         WORD_REC
+		      *							       LINE 210
+00000ABC 70E0			 MOVEQ	   #-32,D0			         $FFFFFFE0
+00000ABE B06D8096		 CMP.W	   STATIC.+146-32764(A5),D0	         WORD_REC
+00000AC2 670C			 BEQ.S	   L.1.79(PC)
+		      *							       LINE 210 (2)
+00000AC4 2D7C000000B7 L.1.78	 MOVE.L	   #183,-50(A6)			         $B7  $FFFFFFCE
+	 FFCE
+00000ACC 6100F554		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 211
+00000AD0 302D8092     L.1.79	 MOVE.W	   STATIC.+146-32768(A5),D0	         WORD_REC
+00000AD4 4440			 NEG.W	   D0
+00000AD6 3B408096		 MOVE.W	   D0,STATIC.+146-32764(A5)	         WORD_REC
+		      *							       LINE 212
+00000ADA 70E0			 MOVEQ	   #-32,D0			         $FFFFFFE0
+00000ADC B06D8096		 CMP.W	   STATIC.+146-32764(A5),D0	         WORD_REC
+00000AE0 670C			 BEQ.S	   L.1.81(PC)
+		      *							       LINE 212 (2)
+00000AE2 2D7C000000B8 L.1.80	 MOVE.L	   #184,-50(A6)			         $B8  $FFFFFFCE
+	 FFCE
+00000AEA 6100F536		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 213
+00000AEE 202D8000     L.1.81	 MOVE.L	   STATIC.+0-32768(A5),D0	         I
+00000AF2 4480			 NEG.L	   D0
+00000AF4 3B408096		 MOVE.W	   D0,STATIC.+146-32764(A5)	         WORD_REC		      *							       LINE 214
+00000AF8 70E0			 MOVEQ	   #-32,D0			         $FFFFFFE0
+00000AFA B06D8096		 CMP.W	   STATIC.+146-32764(A5),D0	         WORD_REC
+00000AFE 670C			 BEQ.S	   L.1.83(PC)
+		      *							       LINE 214 (2)
+00000B00 2D7C000000B9 L.1.82	 MOVE.L	   #185,-50(A6)			         $B9  $FFFFFFCE
+	 FFCE
+00000B08 6100F518		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 215
+00000B0C 2F2D8024     L.1.83	 MOVE.L	   STATIC.+36-32768(A5),-(A7)	         X
+00000B10 4EB900000000		 JSR	   F.TRUNC
+00000B16 201F			 MOVE.L	   (A7)+,D0
+00000B18 3B408096		 MOVE.W	   D0,STATIC.+146-32764(A5)	         WORD_REC
+		      *							       LINE 216
+00000B1C 7020			 MOVEQ	   #32,D0			         $20
+00000B1E B06D8096		 CMP.W	   STATIC.+146-32764(A5),D0	         WORD_REC
+00000B22 670C			 BEQ.S	   L.1.85(PC)
+		      *							       LINE 216 (2)
+00000B24 2D7C000000BA L.1.84	 MOVE.L	   #186,-50(A6)			         $BA  $FFFFFFCE
+	 FFCE
+00000B2C 6100F4F4		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 217
+00000B30 486D8030     L.1.85	 PEA	   STATIC.+48-32768(A5)		         XX
+00000B34 4EB900000000		 JSR	   D.TRUNC
+00000B3A 201F			 MOVE.L	   (A7)+,D0
+00000B3C 3B408096		 MOVE.W	   D0,STATIC.+146-32764(A5)	         WORD_REC
+		      *							       LINE 218
+00000B40 7020			 MOVEQ	   #32,D0			         $20
+00000B42 B06D8096		 CMP.W	   STATIC.+146-32764(A5),D0	         WORD_REC
+00000B46 670C			 BEQ.S	   L.1.87(PC)
+		      *							       LINE 218 (2)
+00000B48 2D7C000000BB L.1.86	 MOVE.L	   #187,-50(A6)			         $BB  $FFFFFFCE
+	 FFCE
+00000B50 6100F4D0		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 219
+00000B54 2F2D8024     L.1.87	 MOVE.L	   STATIC.+36-32768(A5),-(A7)	         X
+00000B58 4EB900000000		 JSR	   F.TRUNC
+00000B5E 201F			 MOVE.L	   (A7)+,D0
+00000B60 4480			 NEG.L	   D0
+00000B62 3B408096		 MOVE.W	   D0,STATIC.+146-32764(A5)	         WORD_REC
+		      *							       LINE 220
+00000B66 70E0			 MOVEQ	   #-32,D0			         $FFFFFFE0
+00000B68 B06D8096		 CMP.W	   STATIC.+146-32764(A5),D0	         WORD_REC
+00000B6C 670C			 BEQ.S	   L.1.89(PC)
+		      *							       LINE 220 (2)00000B6E 2D7C000000BC L.1.88	 MOVE.L	   #188,-50(A6)			         $BC  $FFFFFFCE
+	 FFCE
+00000B76 6100F4AA		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 221
+00000B7A 486D8030     L.1.89	 PEA	   STATIC.+48-32768(A5)		         XX
+00000B7E 4EB900000000		 JSR	   D.TRUNC
+00000B84 201F			 MOVE.L	   (A7)+,D0
+00000B86 4480			 NEG.L	   D0
+00000B88 3B408096		 MOVE.W	   D0,STATIC.+146-32764(A5)	         WORD_REC
+		      *							       LINE 222
+00000B8C 70E0			 MOVEQ	   #-32,D0			         $FFFFFFE0
+00000B8E B06D8096		 CMP.W	   STATIC.+146-32764(A5),D0	         WORD_REC
+00000B92 670C			 BEQ.S	   L.1.91(PC)
+		      *							       LINE 222 (2)
+00000B94 2D7C000000BD L.1.90	 MOVE.L	   #189,-50(A6)			         $BD  $FFFFFFCE
+	 FFCE
+00000B9C 6100F484		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 225
+00000BA0 7000	      L.1.91	 MOVEQ	   #0,D0			         $0
+00000BA2 102D808E		 MOVE.B	   STATIC.+142-32768(A5),D0	         BYTE_REC
+00000BA6 2B408004		 MOVE.L	   D0,STATIC.+4-32768(A5)	         J
+		      *							       LINE 226
+00000BAA 7020			 MOVEQ	   #32,D0			         $20
+00000BAC B0AD8004		 CMP.L	   STATIC.+4-32768(A5),D0	         J
+00000BB0 670C			 BEQ.S	   L.1.93(PC)
+		      *							       LINE 226 (2)
+00000BB2 2D7C000000BE L.1.92	 MOVE.L	   #190,-50(A6)			         $BE  $FFFFFFCE
+	 FFCE
+00000BBA 6100F466		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 227
+00000BBE 302D8092     L.1.93	 MOVE.W	   STATIC.+146-32768(A5),D0	         WORD_REC
+00000BC2 48C0			 EXT.L	   D0
+00000BC4 2B408004		 MOVE.L	   D0,STATIC.+4-32768(A5)	         J
+		      *							       LINE 228
+00000BC8 7020			 MOVEQ	   #32,D0			         $20
+00000BCA B0AD8004		 CMP.L	   STATIC.+4-32768(A5),D0	         J
+00000BCE 670C			 BEQ.S	   L.1.95(PC)
+		      *							       LINE 228 (2)
+00000BD0 2D7C000000BF L.1.94	 MOVE.L	   #191,-50(A6)			         $BF  $FFFFFFCE
+	 FFCE
+00000BD8 6100F448		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 229
+00000BDC 2B6D80008004 L.1.95	 MOVE.L	   STATIC.+0-32768(A5),STATIC.+4-32768(A5)
+									         I  J
+		      *							       LINE 23000000BE2 7020			 MOVEQ	   #32,D0			         $20
+00000BE4 B0AD8004		 CMP.L	   STATIC.+4-32768(A5),D0	         J
+00000BE8 670C			 BEQ.S	   L.1.97(PC)
+		      *							       LINE 230 (2)
+00000BEA 2D7C000000C0 L.1.96	 MOVE.L	   #192,-50(A6)			         $C0  $FFFFFFCE
+	 FFCE
+00000BF2 6100F42E		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 231
+00000BF6 7000	      L.1.97	 MOVEQ	   #0,D0			         $0
+00000BF8 102D808E		 MOVE.B	   STATIC.+142-32768(A5),D0	         BYTE_REC
+00000BFC 4440			 NEG.W	   D0
+00000BFE 48C0			 EXT.L	   D0
+00000C00 2B408004		 MOVE.L	   D0,STATIC.+4-32768(A5)	         J
+		      *							       LINE 232
+00000C04 70E0			 MOVEQ	   #-32,D0			         $FFFFFFE0
+00000C06 B0AD8004		 CMP.L	   STATIC.+4-32768(A5),D0	         J
+00000C0A 670C			 BEQ.S	   L.1.99(PC)
+		      *							       LINE 232 (2)
+00000C0C 2D7C000000C1 L.1.98	 MOVE.L	   #193,-50(A6)			         $C1  $FFFFFFCE
+	 FFCE
+00000C14 6100F40C		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 233
+00000C18 302D8092     L.1.99	 MOVE.W	   STATIC.+146-32768(A5),D0	         WORD_REC
+00000C1C 4440			 NEG.W	   D0
+00000C1E 48C0			 EXT.L	   D0
+00000C20 2B408004		 MOVE.L	   D0,STATIC.+4-32768(A5)	         J
+		      *							       LINE 234
+00000C24 70E0			 MOVEQ	   #-32,D0			         $FFFFFFE0
+00000C26 B0AD8004		 CMP.L	   STATIC.+4-32768(A5),D0	         J
+00000C2A 670C			 BEQ.S	   L.1.101(PC)
+		      *							       LINE 234 (2)
+00000C2C 2D7C000000C2 L.1.100	 MOVE.L	   #194,-50(A6)			         $C2  $FFFFFFCE
+	 FFCE
+00000C34 6100F3EC		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 235
+00000C38 202D8000     L.1.101	 MOVE.L	   STATIC.+0-32768(A5),D0	         I
+00000C3C 4480			 NEG.L	   D0
+00000C3E 2B408004		 MOVE.L	   D0,STATIC.+4-32768(A5)	         J
+		      *							       LINE 236
+00000C42 70E0			 MOVEQ	   #-32,D0			         $FFFFFFE0
+00000C44 B0AD8004		 CMP.L	   STATIC.+4-32768(A5),D0	         J
+00000C48 670C			 BEQ.S	   L.1.103(PC)
+		      *							       LINE 236 (2)
+00000C4A 2D7C000000C3 L.1.102	 MOVE.L	   #195,-50(A6)			         $C3  $FFFFFFCE
+	 FFCE00000C52 6100F3CE		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 237
+00000C56 2F2D8024     L.1.103	 MOVE.L	   STATIC.+36-32768(A5),-(A7)	         X
+00000C5A 4EB900000000		 JSR	   F.TRUNC
+00000C60 2B5F8004		 MOVE.L	   (A7)+,STATIC.+4-32768(A5)	         J
+		      *							       LINE 238
+00000C64 7020			 MOVEQ	   #32,D0			         $20
+00000C66 B0AD8004		 CMP.L	   STATIC.+4-32768(A5),D0	         J
+00000C6A 670C			 BEQ.S	   L.1.105(PC)
+		      *							       LINE 238 (2)
+00000C6C 2D7C000000C4 L.1.104	 MOVE.L	   #196,-50(A6)			         $C4  $FFFFFFCE
+	 FFCE
+00000C74 6100F3AC		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 239
+00000C78 486D8030     L.1.105	 PEA	   STATIC.+48-32768(A5)		         XX
+00000C7C 4EB900000000		 JSR	   D.TRUNC
+00000C82 2B5F8004		 MOVE.L	   (A7)+,STATIC.+4-32768(A5)	         J
+		      *							       LINE 240
+00000C86 7020			 MOVEQ	   #32,D0			         $20
+00000C88 B0AD8004		 CMP.L	   STATIC.+4-32768(A5),D0	         J
+00000C8C 670C			 BEQ.S	   L.1.107(PC)
+		      *							       LINE 240 (2)
+00000C8E 2D7C000000C5 L.1.106	 MOVE.L	   #197,-50(A6)			         $C5  $FFFFFFCE
+	 FFCE
+00000C96 6100F38A		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 241
+00000C9A 2F2D8024     L.1.107	 MOVE.L	   STATIC.+36-32768(A5),-(A7)	         X
+00000C9E 4EB900000000		 JSR	   F.TRUNC
+00000CA4 4497			 NEG.L	   (A7)
+00000CA6 2B5F8004		 MOVE.L	   (A7)+,STATIC.+4-32768(A5)	         J
+		      *							       LINE 242
+00000CAA 70E0			 MOVEQ	   #-32,D0			         $FFFFFFE0
+00000CAC B0AD8004		 CMP.L	   STATIC.+4-32768(A5),D0	         J
+00000CB0 670C			 BEQ.S	   L.1.109(PC)
+		      *							       LINE 242 (2)
+00000CB2 2D7C000000C6 L.1.108	 MOVE.L	   #198,-50(A6)			         $C6  $FFFFFFCE
+	 FFCE
+00000CBA 6100F366		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 243
+00000CBE 486D8030     L.1.109	 PEA	   STATIC.+48-32768(A5)		         XX
+00000CC2 4EB900000000		 JSR	   D.TRUNC
+00000CC8 4497			 NEG.L	   (A7)
+00000CCA 2B5F8004		 MOVE.L	   (A7)+,STATIC.+4-32768(A5)	         J
+		      *							       LINE 244
+00000CCE 70E0			 MOVEQ	   #-32,D0			         $FFFFFFE000000CD0 B0AD8004		 CMP.L	   STATIC.+4-32768(A5),D0	         J
+00000CD4 670C			 BEQ.S	   L.1.111(PC)
+		      *							       LINE 244 (2)
+00000CD6 2D7C000000C7 L.1.110	 MOVE.L	   #199,-50(A6)			         $C7  $FFFFFFCE
+	 FFCE
+00000CDE 6100F342		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 247
+00000CE2 7000	      L.1.111	 MOVEQ	   #0,D0			         $0
+00000CE4 102D808E		 MOVE.B	   STATIC.+142-32768(A5),D0	         BYTE_REC
+00000CE8 2F00			 MOVE.L	   D0,-(A7)
+00000CEA 4EB900000000		 JSR	   F.FLOAT
+00000CF0 2B5F8028		 MOVE.L	   (A7)+,STATIC.+40-32768(A5)	         Y
+		      *							       LINE 248
+00000CF4 2F2D8028		 MOVE.L	   STATIC.+40-32768(A5),-(A7)	         Y
+00000CF8 2F3AF45C		 MOVE.L	   K.13(PC),-(A7)		         CODE.+$156
+00000CFC 4EB900000000		 JSR	   F.CMP
+00000D02 670C			 BEQ.S	   L.1.113(PC)
+		      *							       LINE 248 (2)
+00000D04 2D7C000000C8 L.1.112	 MOVE.L	   #200,-50(A6)			         $C8  $FFFFFFCE
+	 FFCE
+00000D0C 6100F314		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 249
+00000D10 302D8092     L.1.113	 MOVE.W	   STATIC.+146-32768(A5),D0	         WORD_REC
+00000D14 48C0			 EXT.L	   D0
+00000D16 2F00			 MOVE.L	   D0,-(A7)
+00000D18 4EB900000000		 JSR	   F.FLOAT
+00000D1E 2B5F8028		 MOVE.L	   (A7)+,STATIC.+40-32768(A5)	         Y
+		      *							       LINE 250
+00000D22 2F2D8028		 MOVE.L	   STATIC.+40-32768(A5),-(A7)	         Y
+00000D26 2F3AF432		 MOVE.L	   K.14(PC),-(A7)		         CODE.+$15A
+00000D2A 4EB900000000		 JSR	   F.CMP
+00000D30 670C			 BEQ.S	   L.1.115(PC)
+		      *							       LINE 250 (2)
+00000D32 2D7C000000C9 L.1.114	 MOVE.L	   #201,-50(A6)			         $C9  $FFFFFFCE
+	 FFCE
+00000D3A 6100F2E6		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 251
+00000D3E 2F2D8000     L.1.115	 MOVE.L	   STATIC.+0-32768(A5),-(A7)	         I
+00000D42 4EB900000000		 JSR	   F.FLOAT
+00000D48 2B5F8028		 MOVE.L	   (A7)+,STATIC.+40-32768(A5)	         Y
+		      *							       LINE 252
+00000D4C 2F2D8028		 MOVE.L	   STATIC.+40-32768(A5),-(A7)	         Y
+00000D50 2F3AF40C		 MOVE.L	   K.15(PC),-(A7)		         CODE.+$15E
+00000D54 4EB900000000		 JSR	   F.CMP
+00000D5A 670C			 BEQ.S	   L.1.117(PC)		      *							       LINE 252 (2)
+00000D5C 2D7C000000CA L.1.116	 MOVE.L	   #202,-50(A6)			         $CA  $FFFFFFCE
+	 FFCE
+00000D64 6100F2BC		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 253
+00000D68 2B6D80248028 L.1.117	 MOVE.L	   STATIC.+36-32768(A5),STATIC.+40-32768(A5)
+									         X  Y
+		      *							       LINE 254
+00000D6E 2F2D8028		 MOVE.L	   STATIC.+40-32768(A5),-(A7)	         Y
+00000D72 2F3AF3EE		 MOVE.L	   K.16(PC),-(A7)		         CODE.+$162
+00000D76 4EB900000000		 JSR	   F.CMP
+00000D7C 670C			 BEQ.S	   L.1.119(PC)
+		      *							       LINE 254 (2)
+00000D7E 2D7C000000CB L.1.118	 MOVE.L	   #203,-50(A6)			         $CB  $FFFFFFCE
+	 FFCE
+00000D86 6100F29A		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 255
+00000D8A 486D8030     L.1.119	 PEA	   STATIC.+48-32768(A5)		         XX
+00000D8E 4EB900000000		 JSR	   D.SINGLE
+00000D94 2B5F8028		 MOVE.L	   (A7)+,STATIC.+40-32768(A5)	         Y
+		      *							       LINE 256
+00000D98 2F2D8028		 MOVE.L	   STATIC.+40-32768(A5),-(A7)	         Y
+00000D9C 2F3AF3C8		 MOVE.L	   K.17(PC),-(A7)		         CODE.+$166
+00000DA0 4EB900000000		 JSR	   F.CMP
+00000DA6 670C			 BEQ.S	   L.1.121(PC)
+		      *							       LINE 256 (2)
+00000DA8 2D7C000000CC L.1.120	 MOVE.L	   #204,-50(A6)			         $CC  $FFFFFFCE
+	 FFCE
+00000DB0 6100F270		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 257
+00000DB4 7000	      L.1.121	 MOVEQ	   #0,D0			         $0
+00000DB6 102D808E		 MOVE.B	   STATIC.+142-32768(A5),D0	         BYTE_REC
+00000DBA 4440			 NEG.W	   D0
+00000DBC 48C0			 EXT.L	   D0
+00000DBE 2F00			 MOVE.L	   D0,-(A7)
+00000DC0 4EB900000000		 JSR	   F.FLOAT
+00000DC6 2B5F8028		 MOVE.L	   (A7)+,STATIC.+40-32768(A5)	         Y
+		      *							       LINE 258
+00000DCA 2F2D8028		 MOVE.L	   STATIC.+40-32768(A5),-(A7)	         Y
+00000DCE 2F3AF39A		 MOVE.L	   K.18(PC),-(A7)		         CODE.+$16A
+00000DD2 4EB900000000		 JSR	   F.CMP
+00000DD8 670C			 BEQ.S	   L.1.123(PC)
+		      *							       LINE 258 (2)
+00000DDA 2D7C000000CD L.1.122	 MOVE.L	   #205,-50(A6)			         $CD  $FFFFFFCE
+	 FFCE00000DE2 6100F23E		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 259
+00000DE6 302D8092     L.1.123	 MOVE.W	   STATIC.+146-32768(A5),D0	         WORD_REC
+00000DEA 4440			 NEG.W	   D0
+00000DEC 48C0			 EXT.L	   D0
+00000DEE 2F00			 MOVE.L	   D0,-(A7)
+00000DF0 4EB900000000		 JSR	   F.FLOAT
+00000DF6 2B5F8028		 MOVE.L	   (A7)+,STATIC.+40-32768(A5)	         Y
+		      *							       LINE 260
+00000DFA 2F2D8028		 MOVE.L	   STATIC.+40-32768(A5),-(A7)	         Y
+00000DFE 2F3AF36E		 MOVE.L	   K.19(PC),-(A7)		         CODE.+$16E
+00000E02 4EB900000000		 JSR	   F.CMP
+00000E08 670C			 BEQ.S	   L.1.125(PC)
+		      *							       LINE 260 (2)
+00000E0A 2D7C000000CE L.1.124	 MOVE.L	   #206,-50(A6)			         $CE  $FFFFFFCE
+	 FFCE
+00000E12 6100F20E		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 261
+00000E16 202D8000     L.1.125	 MOVE.L	   STATIC.+0-32768(A5),D0	         I
+00000E1A 4480			 NEG.L	   D0
+00000E1C 2F00			 MOVE.L	   D0,-(A7)
+00000E1E 4EB900000000		 JSR	   F.FLOAT
+00000E24 2B5F8028		 MOVE.L	   (A7)+,STATIC.+40-32768(A5)	         Y
+		      *							       LINE 262
+00000E28 2F2D8028		 MOVE.L	   STATIC.+40-32768(A5),-(A7)	         Y
+00000E2C 2F3AF344		 MOVE.L	   K.20(PC),-(A7)		         CODE.+$172
+00000E30 4EB900000000		 JSR	   F.CMP
+00000E36 670C			 BEQ.S	   L.1.127(PC)
+		      *							       LINE 262 (2)
+00000E38 2D7C00000133 L.1.126	 MOVE.L	   #307,-50(A6)			         $133  $FFFFFFCE
+	 FFCE
+00000E40 6100F1E0		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 263
+00000E44 202D8024     L.1.127	 MOVE.L	   STATIC.+36-32768(A5),D0	         X
+00000E48 4A80			 TST.L	   D0
+00000E4A 6704			 BEQ.S	   X.1.2(PC)
+00000E4C 08400007		 BCHG.L	   #7,D0			         $7
+00000E50 2B408028     X.1.2	 MOVE.L	   D0,STATIC.+40-32768(A5)	         Y
+		      *							       LINE 264
+00000E54 2F2D8028		 MOVE.L	   STATIC.+40-32768(A5),-(A7)	         Y
+00000E58 2F3AF31C		 MOVE.L	   K.21(PC),-(A7)		         CODE.+$176
+00000E5C 4EB900000000		 JSR	   F.CMP
+00000E62 670C			 BEQ.S	   L.1.129(PC)
+		      *							       LINE 264 (2)
+00000E64 2D7C00000134 L.1.128	 MOVE.L	   #308,-50(A6)			         $134  $FFFFFFCE	 FFCE
+00000E6C 6100F1B4		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 265
+00000E70 41ED8030     L.1.129	 LEA	   STATIC.+48-32768(A5),A0	         XX
+00000E74 43EEFFB2		 LEA	   -78(A6),A1			         $FFFFFFB2
+00000E78 22D8			 MOVE.L	   (A0)+,(A1)+
+00000E7A 22D8			 MOVE.L	   (A0)+,(A1)+
+00000E7C 4A2EFFB9		 TST.B	   -71(A6)			         $FFFFFFB9
+00000E80 6706			 BEQ.S	   X.1.3(PC)
+00000E82 086E0000FFB8		 BCHG.B	   #0,-72(A6)			         $0  $FFFFFFB8
+00000E88 486EFFB2     X.1.3	 PEA	   -78(A6)			         $FFFFFFB2
+00000E8C 4EB900000000		 JSR	   D.SINGLE
+00000E92 2B5F8028		 MOVE.L	   (A7)+,STATIC.+40-32768(A5)	         Y
+		      *							       LINE 266
+00000E96 2F2D8028		 MOVE.L	   STATIC.+40-32768(A5),-(A7)	         Y
+00000E9A 2F3AF2DE		 MOVE.L	   K.22(PC),-(A7)		         CODE.+$17A
+00000E9E 4EB900000000		 JSR	   F.CMP
+00000EA4 670C			 BEQ.S	   L.1.131(PC)
+		      *							       LINE 266 (2)
+00000EA6 2D7C00000135 L.1.130	 MOVE.L	   #309,-50(A6)			         $135  $FFFFFFCE
+	 FFCE
+00000EAE 6100F172		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 269
+00000EB2 7000	      L.1.131	 MOVEQ	   #0,D0			         $0
+00000EB4 102D808E		 MOVE.B	   STATIC.+142-32768(A5),D0	         BYTE_REC
+00000EB8 2F00			 MOVE.L	   D0,-(A7)
+00000EBA 486D8038		 PEA	   STATIC.+56-32768(A5)		         YY
+00000EBE 4EB900000000		 JSR	   D.FLOAT
+		      *							       LINE 270
+00000EC4 486D8038		 PEA	   STATIC.+56-32768(A5)		         YY
+00000EC8 2F3AF2B4		 MOVE.L	   K.23(PC),-(A7)		         CODE.+$17E
+00000ECC 486EFFB2		 PEA	   -78(A6)			         $FFFFFFB2
+00000ED0 4EB900000000		 JSR	   F.DOUBLE
+00000ED6 486EFFB2		 PEA	   -78(A6)			         $FFFFFFB2
+00000EDA 4EB900000000		 JSR	   D.CMP
+00000EE0 670C			 BEQ.S	   L.1.133(PC)
+		      *							       LINE 270 (2)
+00000EE2 2D7C000000D2 L.1.132	 MOVE.L	   #210,-50(A6)			         $D2  $FFFFFFCE
+	 FFCE
+00000EEA 6100F136		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 271
+00000EEE 302D8092     L.1.133	 MOVE.W	   STATIC.+146-32768(A5),D0	         WORD_REC
+00000EF2 48C0			 EXT.L	   D0
+00000EF4 2F00			 MOVE.L	   D0,-(A7)
+00000EF6 486D8038		 PEA	   STATIC.+56-32768(A5)		         YY00000EFA 4EB900000000		 JSR	   D.FLOAT
+		      *							       LINE 272
+00000F00 486D8038		 PEA	   STATIC.+56-32768(A5)		         YY
+00000F04 2F3AF27C		 MOVE.L	   K.24(PC),-(A7)		         CODE.+$182
+00000F08 486EFFB2		 PEA	   -78(A6)			         $FFFFFFB2
+00000F0C 4EB900000000		 JSR	   F.DOUBLE
+00000F12 486EFFB2		 PEA	   -78(A6)			         $FFFFFFB2
+00000F16 4EB900000000		 JSR	   D.CMP
+00000F1C 670C			 BEQ.S	   L.1.135(PC)
+		      *							       LINE 272 (2)
+00000F1E 2D7C000000D3 L.1.134	 MOVE.L	   #211,-50(A6)			         $D3  $FFFFFFCE
+	 FFCE
+00000F26 6100F0FA		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 273
+00000F2A 2F2D8000     L.1.135	 MOVE.L	   STATIC.+0-32768(A5),-(A7)	         I
+00000F2E 486D8038		 PEA	   STATIC.+56-32768(A5)		         YY
+00000F32 4EB900000000		 JSR	   D.FLOAT
+		      *							       LINE 274
+00000F38 486D8038		 PEA	   STATIC.+56-32768(A5)		         YY
+00000F3C 2F3AF248		 MOVE.L	   K.25(PC),-(A7)		         CODE.+$186
+00000F40 486EFFB2		 PEA	   -78(A6)			         $FFFFFFB2
+00000F44 4EB900000000		 JSR	   F.DOUBLE
+00000F4A 486EFFB2		 PEA	   -78(A6)			         $FFFFFFB2
+00000F4E 4EB900000000		 JSR	   D.CMP
+00000F54 670C			 BEQ.S	   L.1.137(PC)
+		      *							       LINE 274 (2)
+00000F56 2D7C000000D4 L.1.136	 MOVE.L	   #212,-50(A6)			         $D4  $FFFFFFCE
+	 FFCE
+00000F5E 6100F0C2		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 275
+00000F62 2F2D8024     L.1.137	 MOVE.L	   STATIC.+36-32768(A5),-(A7)	         X
+00000F66 486D8038		 PEA	   STATIC.+56-32768(A5)		         YY
+00000F6A 4EB900000000		 JSR	   F.DOUBLE
+		      *							       LINE 276
+00000F70 486D8038		 PEA	   STATIC.+56-32768(A5)		         YY
+00000F74 2F3AF214		 MOVE.L	   K.26(PC),-(A7)		         CODE.+$18A
+00000F78 486EFFB2		 PEA	   -78(A6)			         $FFFFFFB2
+00000F7C 4EB900000000		 JSR	   F.DOUBLE
+00000F82 486EFFB2		 PEA	   -78(A6)			         $FFFFFFB2
+00000F86 4EB900000000		 JSR	   D.CMP
+00000F8C 670C			 BEQ.S	   L.1.139(PC)
+		      *							       LINE 276 (2)
+00000F8E 2D7C000000D5 L.1.138	 MOVE.L	   #213,-50(A6)			         $D5  $FFFFFFCE
+	 FFCE
+00000F96 6100F08A		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22		      *							       LINE 277
+00000F9A 41ED8030     L.1.139	 LEA	   STATIC.+48-32768(A5),A0	         XX
+00000F9E 43ED8038		 LEA	   STATIC.+56-32768(A5),A1	         YY
+00000FA2 22D8			 MOVE.L	   (A0)+,(A1)+
+00000FA4 22D8			 MOVE.L	   (A0)+,(A1)+
+		      *							       LINE 278
+00000FA6 486D8038		 PEA	   STATIC.+56-32768(A5)		         YY
+00000FAA 2F3AF1E2		 MOVE.L	   K.27(PC),-(A7)		         CODE.+$18E
+00000FAE 486EFFB2		 PEA	   -78(A6)			         $FFFFFFB2
+00000FB2 4EB900000000		 JSR	   F.DOUBLE
+00000FB8 486EFFB2		 PEA	   -78(A6)			         $FFFFFFB2
+00000FBC 4EB900000000		 JSR	   D.CMP
+00000FC2 670C			 BEQ.S	   L.1.141(PC)
+		      *							       LINE 278 (2)
+00000FC4 2D7C000000D6 L.1.140	 MOVE.L	   #214,-50(A6)			         $D6  $FFFFFFCE
+	 FFCE
+00000FCC 6100F054		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 279
+00000FD0 7000	      L.1.141	 MOVEQ	   #0,D0			         $0
+00000FD2 102D808E		 MOVE.B	   STATIC.+142-32768(A5),D0	         BYTE_REC
+00000FD6 4440			 NEG.W	   D0
+00000FD8 48C0			 EXT.L	   D0
+00000FDA 2F00			 MOVE.L	   D0,-(A7)
+00000FDC 486D8038		 PEA	   STATIC.+56-32768(A5)		         YY
+00000FE0 4EB900000000		 JSR	   D.FLOAT
+		      *							       LINE 280
+00000FE6 486D8038		 PEA	   STATIC.+56-32768(A5)		         YY
+00000FEA 2F3AF1A6		 MOVE.L	   K.28(PC),-(A7)		         CODE.+$192
+00000FEE 486EFFB2		 PEA	   -78(A6)			         $FFFFFFB2
+00000FF2 4EB900000000		 JSR	   F.DOUBLE
+00000FF8 486EFFB2		 PEA	   -78(A6)			         $FFFFFFB2
+00000FFC 4EB900000000		 JSR	   D.CMP
+00001002 670C			 BEQ.S	   L.1.143(PC)
+		      *							       LINE 280 (2)
+00001004 2D7C000000D7 L.1.142	 MOVE.L	   #215,-50(A6)			         $D7  $FFFFFFCE
+	 FFCE
+0000100C 6100F014		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 281
+00001010 302D8092     L.1.143	 MOVE.W	   STATIC.+146-32768(A5),D0	         WORD_REC
+00001014 4440			 NEG.W	   D0
+00001016 48C0			 EXT.L	   D0
+00001018 2F00			 MOVE.L	   D0,-(A7)
+0000101A 486D8038		 PEA	   STATIC.+56-32768(A5)		         YY
+0000101E 4EB900000000		 JSR	   D.FLOAT
+		      *							       LINE 28200001024 486D8038		 PEA	   STATIC.+56-32768(A5)		         YY
+00001028 2F3AF16C		 MOVE.L	   K.29(PC),-(A7)		         CODE.+$196
+0000102C 486EFFB2		 PEA	   -78(A6)			         $FFFFFFB2
+00001030 4EB900000000		 JSR	   F.DOUBLE
+00001036 486EFFB2		 PEA	   -78(A6)			         $FFFFFFB2
+0000103A 4EB900000000		 JSR	   D.CMP
+00001040 670C			 BEQ.S	   L.1.145(PC)
+		      *							       LINE 282 (2)
+00001042 2D7C000000D8 L.1.144	 MOVE.L	   #216,-50(A6)			         $D8  $FFFFFFCE
+	 FFCE
+0000104A 6100EFD6		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 283
+0000104E 202D8000     L.1.145	 MOVE.L	   STATIC.+0-32768(A5),D0	         I
+00001052 4480			 NEG.L	   D0
+00001054 2F00			 MOVE.L	   D0,-(A7)
+00001056 486D8038		 PEA	   STATIC.+56-32768(A5)		         YY
+0000105A 4EB900000000		 JSR	   D.FLOAT
+		      *							       LINE 284
+00001060 486D8038		 PEA	   STATIC.+56-32768(A5)		         YY
+00001064 2F3AF134		 MOVE.L	   K.30(PC),-(A7)		         CODE.+$19A
+00001068 486EFFB2		 PEA	   -78(A6)			         $FFFFFFB2
+0000106C 4EB900000000		 JSR	   F.DOUBLE
+00001072 486EFFB2		 PEA	   -78(A6)			         $FFFFFFB2
+00001076 4EB900000000		 JSR	   D.CMP
+0000107C 670C			 BEQ.S	   L.1.147(PC)
+		      *							       LINE 284 (2)
+0000107E 2D7C000000D9 L.1.146	 MOVE.L	   #217,-50(A6)			         $D9  $FFFFFFCE
+	 FFCE
+00001086 6100EF9A		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 285
+0000108A 202D8024     L.1.147	 MOVE.L	   STATIC.+36-32768(A5),D0	         X
+0000108E 4A80			 TST.L	   D0
+00001090 6704			 BEQ.S	   X.1.4(PC)
+00001092 08400007		 BCHG.L	   #7,D0			         $7
+00001096 2F00	      X.1.4	 MOVE.L	   D0,-(A7)
+00001098 486D8038		 PEA	   STATIC.+56-32768(A5)		         YY
+0000109C 4EB900000000		 JSR	   F.DOUBLE
+		      *							       LINE 286
+000010A2 486D8038		 PEA	   STATIC.+56-32768(A5)		         YY
+000010A6 2F3AF0F6		 MOVE.L	   K.31(PC),-(A7)		         CODE.+$19E
+000010AA 486EFFB2		 PEA	   -78(A6)			         $FFFFFFB2
+000010AE 4EB900000000		 JSR	   F.DOUBLE
+000010B4 486EFFB2		 PEA	   -78(A6)			         $FFFFFFB2
+000010B8 4EB900000000		 JSR	   D.CMP
+000010BE 670C			 BEQ.S	   L.1.149(PC)		      *							       LINE 286 (2)
+000010C0 2D7C000000DA L.1.148	 MOVE.L	   #218,-50(A6)			         $DA  $FFFFFFCE
+	 FFCE
+000010C8 6100EF58		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 287
+000010CC 41ED8030     L.1.149	 LEA	   STATIC.+48-32768(A5),A0	         XX
+000010D0 43ED8038		 LEA	   STATIC.+56-32768(A5),A1	         YY
+000010D4 22D8			 MOVE.L	   (A0)+,(A1)+
+000010D6 22D8			 MOVE.L	   (A0)+,(A1)+
+000010D8 4A2D803F		 TST.B	   STATIC.+56-32761(A5)		         YY
+000010DC 6706			 BEQ.S	   X.1.5(PC)
+000010DE 086D0000803E		 BCHG.B	   #0,STATIC.+56-32762(A5)	         $0  YY
+		      *							       LINE 288
+000010E4 486D8038     X.1.5	 PEA	   STATIC.+56-32768(A5)		         YY
+000010E8 2F3AF0B8		 MOVE.L	   K.32(PC),-(A7)		         CODE.+$1A2
+000010EC 486EFFB2		 PEA	   -78(A6)			         $FFFFFFB2
+000010F0 4EB900000000		 JSR	   F.DOUBLE
+000010F6 486EFFB2		 PEA	   -78(A6)			         $FFFFFFB2
+000010FA 4EB900000000		 JSR	   D.CMP
+00001100 670C			 BEQ.S	   L.1.151(PC)
+		      *							       LINE 288 (2)
+00001102 2D7C000000DB L.1.150	 MOVE.L	   #219,-50(A6)			         $DB  $FFFFFFCE
+	 FFCE
+0000110A 6100EF16		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 291
+0000110E 7061	      L.1.151	 MOVEQ	   #97,D0			         $61
+00001110 1B408098		 MOVE.B	   D0,STATIC.+152-32768(A5)	         CH
+		      *							       LINE 292
+00001114 102D8098		 MOVE.B	   STATIC.+152-32768(A5),D0	         CH
+00001118 4880			 EXT.W	   D0
+0000111A 48C0			 EXT.L	   D0
+0000111C 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         I
+		      *							       LINE 293
+00001120 7061			 MOVEQ	   #97,D0			         $61
+00001122 B0AD8000		 CMP.L	   STATIC.+0-32768(A5),D0	         I
+00001126 670C			 BEQ.S	   L.1.153(PC)
+		      *							       LINE 293 (2)
+00001128 2D7C0000012C L.1.152	 MOVE.L	   #300,-50(A6)			         $12C  $FFFFFFCE
+	 FFCE
+00001130 6100EEF0		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 295
+00001134 707A	      L.1.153	 MOVEQ	   #122,D0			         $7A
+00001136 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         I
+		      *							       LINE 296
+0000113A 1B6D80038098		 MOVE.B	   STATIC.+0-32765(A5),STATIC.+152-32768(A5)									         I  CH
+		      *							       LINE 297
+00001140 707A			 MOVEQ	   #122,D0			         $7A
+00001142 B02D8098		 CMP.B	   STATIC.+152-32768(A5),D0	         CH
+00001146 670C			 BEQ.S	   L.1.155(PC)
+		      *							       LINE 297 (2)
+00001148 2D7C0000012D L.1.154	 MOVE.L	   #301,-50(A6)			         $12D  $FFFFFFCE
+	 FFCE
+00001150 6100EED0		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 299
+00001154 2B7AF0508024 L.1.155	 MOVE.L	   K.33(PC),STATIC.+36-32768(A5)         CODE.+$1A6  X
+		      *							       LINE 300
+0000115A 2F2D8024		 MOVE.L	   STATIC.+36-32768(A5),-(A7)	         X
+0000115E 4EB900000000		 JSR	   F.TAN
+00001164 2B5F8028		 MOVE.L	   (A7)+,STATIC.+40-32768(A5)	         Y
+		      *							       LINE 301
+00001168 2F2D8028		 MOVE.L	   STATIC.+40-32768(A5),-(A7)	         Y
+0000116C 2F3AF03C		 MOVE.L	   K.34(PC),-(A7)		         CODE.+$1AA
+00001170 4EB900000000		 JSR	   F.CMP
+00001176 670C			 BEQ.S	   L.1.157(PC)
+		      *							       LINE 301 (2)
+00001178 2D7C0000012E L.1.156	 MOVE.L	   #302,-50(A6)			         $12E  $FFFFFFCE
+	 FFCE
+00001180 6100EEA0		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 304
+00001184 2B7AF0288024 L.1.157	 MOVE.L	   K.35(PC),STATIC.+36-32768(A5)         CODE.+$1AE  X
+		      *							       LINE 305
+0000118A 2F2D8024		 MOVE.L	   STATIC.+36-32768(A5),-(A7)	         X
+0000118E 4EB900000000		 JSR	   F.SQT
+00001194 2B5F8028		 MOVE.L	   (A7)+,STATIC.+40-32768(A5)	         Y
+		      *							       LINE 306
+00001198 2D7C0000012F		 MOVE.L	   #303,-38(A6)			         $12F  $FFFFFFDA
+	 FFDA
+000011A0 2D7AF010FFD6		 MOVE.L	   K.36(PC),-42(A6)		         CODE.+$1B2  $FFFFFFD6
+000011A6 2D6D8028FFD2		 MOVE.L	   STATIC.+40-32768(A5),-46(A6)	         Y  $FFFFFFD2
+000011AC 6100EEAC		 BSR.L	   B.5(PC)			         R_EQL = CODE.+$5A
+		      *							       LINE 308
+000011B0 7001			 MOVEQ	   #1,D0			         $1
+000011B2 2B40800C		 MOVE.L	   D0,STATIC.+12-32768(A5)	         I_BYTE
+		      *							       LINE 309
+000011B6 2F2D800C		 MOVE.L	   STATIC.+12-32768(A5),-(A7)	         I_BYTE
+000011BA 4EB900000000		 JSR	   F.FLOAT
+000011C0 4EB900000000		 JSR	   F.SQT
+000011C6 2B5F8028		 MOVE.L	   (A7)+,STATIC.+40-32768(A5)	         Y
+		      *							       LINE 310000011CA 2D7C00000130		 MOVE.L	   #304,-38(A6)			         $130  $FFFFFFDA
+	 FFDA
+000011D2 2D7AEFE2FFD6		 MOVE.L	   K.37(PC),-42(A6)		         CODE.+$1B6  $FFFFFFD6
+000011D8 2D6D8028FFD2		 MOVE.L	   STATIC.+40-32768(A5),-46(A6)	         Y  $FFFFFFD2
+000011DE 6100EE7A		 BSR.L	   B.5(PC)			         R_EQL = CODE.+$5A
+		      *							       LINE 312
+000011E2 7001			 MOVEQ	   #1,D0			         $1
+000011E4 2B408018		 MOVE.L	   D0,STATIC.+24-32768(A5)	         I_WORD
+		      *							       LINE 313
+000011E8 2F2D8018		 MOVE.L	   STATIC.+24-32768(A5),-(A7)	         I_WORD
+000011EC 4EB900000000		 JSR	   F.FLOAT
+000011F2 4EB900000000		 JSR	   F.SQT
+000011F8 2B5F8028		 MOVE.L	   (A7)+,STATIC.+40-32768(A5)	         Y
+		      *							       LINE 314
+000011FC 2D7C00000131		 MOVE.L	   #305,-38(A6)			         $131  $FFFFFFDA
+	 FFDA
+00001204 2D7AEFB4FFD6		 MOVE.L	   K.38(PC),-42(A6)		         CODE.+$1BA  $FFFFFFD6
+0000120A 2D6D8028FFD2		 MOVE.L	   STATIC.+40-32768(A5),-46(A6)	         Y  $FFFFFFD2
+00001210 6100EE48		 BSR.L	   B.5(PC)			         R_EQL = CODE.+$5A
+		      *							       LINE 316
+00001214 7004			 MOVEQ	   #4,D0			         $4
+00001216 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         I
+		      *							       LINE 317
+0000121A 2F2D8000		 MOVE.L	   STATIC.+0-32768(A5),-(A7)	         I
+0000121E 4EB900000000		 JSR	   F.FLOAT
+00001224 4EB900000000		 JSR	   F.SQT
+0000122A 2B5F8028		 MOVE.L	   (A7)+,STATIC.+40-32768(A5)	         Y
+		      *							       LINE 318
+0000122E 2D7C00000132		 MOVE.L	   #306,-38(A6)			         $132  $FFFFFFDA
+	 FFDA
+00001236 2D7AEF86FFD6		 MOVE.L	   K.39(PC),-42(A6)		         CODE.+$1BE  $FFFFFFD6
+0000123C 2D6D8028FFD2		 MOVE.L	   STATIC.+40-32768(A5),-46(A6)	         Y  $FFFFFFD2
+00001242 6100EE16		 BSR.L	   B.5(PC)			         R_EQL = CODE.+$5A
+		      *							       LINE 320
+00001246 7003			 MOVEQ	   #3,D0			         $3
+00001248 2B40800C		 MOVE.L	   D0,STATIC.+12-32768(A5)	         I_BYTE
+		      *							       LINE 321
+0000124C 2F2D800C		 MOVE.L	   STATIC.+12-32768(A5),-(A7)	         I_BYTE
+00001250 4EB900000000		 JSR	   F.FLOAT
+00001256 2D5FFFE2		 MOVE.L	   (A7)+,-30(A6)		         $FFFFFFE2
+0000125A 41EEFFB6		 LEA	   -74(A6),A0			         $FFFFFFB6
+0000125E 2D48FFDE		 MOVE.L	   A0,-34(A6)			         $FFFFFFDE
+00001262 6100EE2E		 BSR.L	   B.6(PC)			         TARG_TEST = CODE.+$92
+00001266 2B6EFFB68028		 MOVE.L	   -74(A6),STATIC.+40-32768(A5)	         $FFFFFFB6  Y
+		      *							       LINE 3220000126C 2F2D8028		 MOVE.L	   STATIC.+40-32768(A5),-(A7)	         Y
+00001270 2F3AEF50		 MOVE.L	   K.40(PC),-(A7)		         CODE.+$1C2
+00001274 4EB900000000		 JSR	   F.CMP
+0000127A 670C			 BEQ.S	   L.1.159(PC)
+		      *							       LINE 322 (2)
+0000127C 2D7C00000133 L.1.158	 MOVE.L	   #307,-50(A6)			         $133  $FFFFFFCE
+	 FFCE
+00001284 6100ED9C		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 324
+00001288 7005	      L.1.159	 MOVEQ	   #5,D0			         $5
+0000128A 2B408018		 MOVE.L	   D0,STATIC.+24-32768(A5)	         I_WORD
+		      *							       LINE 325
+0000128E 2F2D8018		 MOVE.L	   STATIC.+24-32768(A5),-(A7)	         I_WORD
+00001292 4EB900000000		 JSR	   F.FLOAT
+00001298 2D5FFFE2		 MOVE.L	   (A7)+,-30(A6)		         $FFFFFFE2
+0000129C 41EEFFB6		 LEA	   -74(A6),A0			         $FFFFFFB6
+000012A0 2D48FFDE		 MOVE.L	   A0,-34(A6)			         $FFFFFFDE
+000012A4 6100EDEC		 BSR.L	   B.6(PC)			         TARG_TEST = CODE.+$92
+000012A8 2B6EFFB68028		 MOVE.L	   -74(A6),STATIC.+40-32768(A5)	         $FFFFFFB6  Y
+		      *							       LINE 326
+000012AE 2F2D8028		 MOVE.L	   STATIC.+40-32768(A5),-(A7)	         Y
+000012B2 2F3AEF12		 MOVE.L	   K.41(PC),-(A7)		         CODE.+$1C6
+000012B6 4EB900000000		 JSR	   F.CMP
+000012BC 670C			 BEQ.S	   L.1.161(PC)
+		      *							       LINE 326 (2)
+000012BE 2D7C00000134 L.1.160	 MOVE.L	   #308,-50(A6)			         $134  $FFFFFFCE
+	 FFCE
+000012C6 6100ED5A		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 328
+000012CA 7005	      L.1.161	 MOVEQ	   #5,D0			         $5
+000012CC 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         I
+		      *							       LINE 329
+000012D0 2F2D8000		 MOVE.L	   STATIC.+0-32768(A5),-(A7)	         I
+000012D4 4EB900000000		 JSR	   F.FLOAT
+000012DA 2D5FFFE2		 MOVE.L	   (A7)+,-30(A6)		         $FFFFFFE2
+000012DE 41EEFFB6		 LEA	   -74(A6),A0			         $FFFFFFB6
+000012E2 2D48FFDE		 MOVE.L	   A0,-34(A6)			         $FFFFFFDE
+000012E6 6100EDAA		 BSR.L	   B.6(PC)			         TARG_TEST = CODE.+$92
+000012EA 2B6EFFB68028		 MOVE.L	   -74(A6),STATIC.+40-32768(A5)	         $FFFFFFB6  Y
+		      *							       LINE 330
+000012F0 2F2D8028		 MOVE.L	   STATIC.+40-32768(A5),-(A7)	         Y
+000012F4 2F3AEED4		 MOVE.L	   K.42(PC),-(A7)		         CODE.+$1CA
+000012F8 4EB900000000		 JSR	   F.CMP
+000012FE 670C			 BEQ.S	   L.1.163(PC)
+		      *							       LINE 330 (2)00001300 2D7C00000135 L.1.162	 MOVE.L	   #309,-50(A6)			         $135  $FFFFFFCE
+	 FFCE
+00001308 6100ED18		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 332
+0000130C 7001	      L.1.163	 MOVEQ	   #1,D0			         $1
+0000130E 2F00			 MOVE.L	   D0,-(A7)
+00001310 4EB900000000		 JSR	   F.FLOAT
+00001316 2D5FFFE2		 MOVE.L	   (A7)+,-30(A6)		         $FFFFFFE2
+0000131A 41EEFFB6		 LEA	   -74(A6),A0			         $FFFFFFB6
+0000131E 2D48FFDE		 MOVE.L	   A0,-34(A6)			         $FFFFFFDE
+00001322 6100ED6E		 BSR.L	   B.6(PC)			         TARG_TEST = CODE.+$92
+00001326 2B6EFFB68028		 MOVE.L	   -74(A6),STATIC.+40-32768(A5)	         $FFFFFFB6  Y
+		      *							       LINE 333
+0000132C 2F2D8028		 MOVE.L	   STATIC.+40-32768(A5),-(A7)	         Y
+00001330 2F3AEE9C		 MOVE.L	   K.43(PC),-(A7)		         CODE.+$1CE
+00001334 4EB900000000		 JSR	   F.CMP
+0000133A 670C			 BEQ.S	   L.1.165(PC)
+		      *							       LINE 333 (2)
+0000133C 2D7C00000136 L.1.164	 MOVE.L	   #310,-50(A6)			         $136  $FFFFFFCE
+	 FFCE
+00001344 6100ECDC		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 336
+00001348 7001	      L.1.165	 MOVEQ	   #1,D0			         $1
+0000134A 2F00			 MOVE.L	   D0,-(A7)
+0000134C 4EB900000000		 JSR	   F.FLOAT
+00001352 4EB900000000		 JSR	   F.RANSET
+00001358 2B5F8028		 MOVE.L	   (A7)+,STATIC.+40-32768(A5)	         Y
+		      *							       LINE 337
+0000135C 42A7			 CLR.L	   -(A7)
+0000135E 4EB900000000		 JSR	   F.FLOAT
+00001364 4EB900000000		 JSR	   F.RANSET
+0000136A 2B5F8028		 MOVE.L	   (A7)+,STATIC.+40-32768(A5)	         Y
+		      *							       LINE 339
+0000136E 7001			 MOVEQ	   #1,D0			         $1
+00001370 2B40800C		 MOVE.L	   D0,STATIC.+12-32768(A5)	         I_BYTE
+		      *							       LINE 340
+00001374 2F2D800C		 MOVE.L	   STATIC.+12-32768(A5),-(A7)	         I_BYTE
+00001378 4EB900000000		 JSR	   F.FLOAT
+0000137E 4EB900000000		 JSR	   F.RANSET
+00001384 2B5F8028		 MOVE.L	   (A7)+,STATIC.+40-32768(A5)	         Y
+		      *							       LINE 342
+00001388 7001			 MOVEQ	   #1,D0			         $1
+0000138A 2B408018		 MOVE.L	   D0,STATIC.+24-32768(A5)	         I_WORD
+		      *							       LINE 343
+0000138E 2F2D8018		 MOVE.L	   STATIC.+24-32768(A5),-(A7)	         I_WORD00001392 4EB900000000		 JSR	   F.FLOAT
+00001398 4EB900000000		 JSR	   F.RANSET
+0000139E 2B5F8028		 MOVE.L	   (A7)+,STATIC.+40-32768(A5)	         Y
+		      *							       LINE 345
+000013A2 7000			 MOVEQ	   #0,D0			         $0
+000013A4 1B40809A		 MOVE.B	   D0,STATIC.+154-32768(A5)	         BOOL1
+		      *							       LINE 346
+000013A8 7001			 MOVEQ	   #1,D0			         $1
+000013AA 1B40809B		 MOVE.B	   D0,STATIC.+155-32768(A5)	         BOOL2
+		      *							       LINE 347
+000013AE 7001			 MOVEQ	   #1,D0			         $1
+000013B0 1B40809C		 MOVE.B	   D0,STATIC.+156-32768(A5)	         BOOL3
+		      *							       LINE 348
+000013B4 7000			 MOVEQ	   #0,D0			         $0
+000013B6 1B40809D		 MOVE.B	   D0,STATIC.+157-32768(A5)	         IN_FUNC4
+		      *							       LINE 349
+000013BA 4A2D809B		 TST.B	   STATIC.+155-32768(A5)	         BOOL2
+000013BE 670A			 BEQ.S	   L.1.168(PC)
+000013C0 4A2D809C     L.1.166	 TST.B	   STATIC.+156-32768(A5)	         BOOL3
+000013C4 6704			 BEQ.S	   L.1.168(PC)
+000013C6 7001	      L.1.167	 MOVEQ	   #1,D0			         $1
+000013C8 6002			 BRA.S	   X.1.6(PC)
+000013CA 7000	      L.1.168	 MOVEQ	   #0,D0			         $0
+000013CC 4A2D809B     X.1.6	 TST.B	   STATIC.+155-32768(A5)	         BOOL2
+000013D0 673A			 BEQ.S	   L.1.175(PC)
+000013D2 4A2D809A     L.1.169	 TST.B	   STATIC.+154-32768(A5)	         BOOL1
+000013D6 6630			 BNE.S	   L.1.174(PC)
+000013D8 4A2D809A     L.1.170	 TST.B	   STATIC.+154-32768(A5)	         BOOL1
+000013DC 660A			 BNE.S	   L.1.173(PC)
+000013DE 4A2D809C     L.1.171	 TST.B	   STATIC.+156-32768(A5)	         BOOL3
+000013E2 6604			 BNE.S	   L.1.173(PC)
+000013E4 7200	      L.1.172	 MOVEQ	   #0,D1			         $0
+000013E6 6002			 BRA.S	   X.1.7(PC)
+000013E8 7201	      L.1.173	 MOVEQ	   #1,D1			         $1
+000013EA 1D41FFFE     X.1.7	 MOVE.B	   D1,-2(A6)			         $FFFFFFFE
+000013EE 41EEFFB8		 LEA	   -72(A6),A0			         $FFFFFFB8
+000013F2 2D48FFFA		 MOVE.L	   A0,-6(A6)			         $FFFFFFFA
+000013F6 2D40FFB4		 MOVE.L	   D0,-76(A6)			         $FFFFFFB4
+000013FA 6100ECFA		 BSR.L	   B.10(PC)			         BOOL_FUNC4 = CODE.+$F
+000013FE 202EFFB4		 MOVE.L	   -76(A6),D0			         $FFFFFFB4
+00001402 4A2EFFB8		 TST.B	   -72(A6)			         $FFFFFFB8
+00001406 6704			 BEQ.S	   L.1.175(PC)
+00001408 7201	      L.1.174	 MOVEQ	   #1,D1			         $1
+0000140A 6002			 BRA.S	   X.1.8(PC)
+0000140C 7200	      L.1.175	 MOVEQ	   #0,D1			         $00000140E 1D41FFEC     X.1.8	 MOVE.B	   D1,-20(A6)			         $FFFFFFEC
+00001412 802D809A		 OR.B	   STATIC.+154-32768(A5),D0	         BOOL1
+00001416 1D40FFEA		 MOVE.B	   D0,-22(A6)			         $FFFFFFEA
+0000141A 41EEFFB2		 LEA	   -78(A6),A0			         $FFFFFFB2
+0000141E 2D48FFE6		 MOVE.L	   A0,-26(A6)			         $FFFFFFE6
+00001422 6100EC78		 BSR.L	   B.7(PC)			         BOOL_FUNC1 = CODE.+$9
+00001426 4A2EFFB2		 TST.B	   -78(A6)			         $FFFFFFB2
+0000142A 663A			 BNE.S	   L.1.181(PC)
+0000142C 6016	      L.1.176	 BRA.S	   L.1.179(PC)
+0000142E 41EEFFB0     L.1.177	 LEA	   -80(A6),A0			         $FFFFFFB0
+00001432 2D48FFF6		 MOVE.L	   A0,-10(A6)			         $FFFFFFF6
+00001436 6100ECB0		 BSR.L	   B.9(PC)			         BOOL_FUNC3 = CODE.+$E
+0000143A 4A2EFFB0		 TST.B	   -80(A6)			         $FFFFFFB0
+0000143E 6704			 BEQ.S	   L.1.179(PC)
+00001440 7001	      L.1.178	 MOVEQ	   #1,D0			         $1
+00001442 6002			 BRA.S	   X.1.9(PC)
+00001444 7000	      L.1.179	 MOVEQ	   #0,D0			         $0
+00001446 1D40FFF4     X.1.9	 MOVE.B	   D0,-12(A6)			         $FFFFFFF4
+0000144A 1D7C0001FFF2		 MOVE.B	   #1,-14(A6)			         $1  $FFFFFFF2
+00001450 41EEFFAE		 LEA	   -82(A6),A0			         $FFFFFFAE
+00001454 2D48FFEE		 MOVE.L	   A0,-18(A6)			         $FFFFFFEE
+00001458 6100EC80		 BSR.L	   B.8(PC)			         BOOL_FUNC2 = CODE.+$D
+0000145C 4A2EFFAE		 TST.B	   -82(A6)			         $FFFFFFAE
+00001460 6604			 BNE.S	   L.1.181(PC)
+00001462 7000	      L.1.180	 MOVEQ	   #0,D0			         $0
+00001464 6002			 BRA.S	   X.1.10(PC)
+00001466 7001	      L.1.181	 MOVEQ	   #1,D0			         $1
+00001468 1B408099     X.1.10	 MOVE.B	   D0,STATIC.+153-32768(A5)	         BOOL
+		      *							       LINE 353
+0000146C 4A2D8099		 TST.B	   STATIC.+153-32768(A5)	         BOOL
+00001470 6706			 BEQ.S	   L.1.183(PC)
+00001472 4A2D809D     L.1.182	 TST.B	   STATIC.+157-32768(A5)	         IN_FUNC4
+00001476 660C			 BNE.S	   L.1.184(PC)
+		      *							       LINE 354
+00001478 2D7C00000196 L.1.183	 MOVE.L	   #406,-50(A6)			         $196  $FFFFFFCE
+	 FFCE
+00001480 6100EBA0		 BSR.L	   B.4(PC)			         ERROR = CODE.+$22
+		      *							       LINE 356
+00001484 202D0000     L.1.184	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00001488 720A			 MOVEQ	   #10,D1			         $A
+0000148A 3F01			 MOVE.W	   D1,-(A7)
+0000148C 7204			 MOVEQ	   #4,D1			         $4
+0000148E 3F01			 MOVE.W	   D1,-(A7)
+00001490 487AED40		 PEA	   K.44(PC)			         CODE.+$1D2
+00001494 2F00			 MOVE.L	   D0,-(A7)00001496 4EB900000000		 JSR	   T.WRITE
+0000149C 2F00			 MOVE.L	   D0,-(A7)
+0000149E 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 357
+000014A4 4EB900000000		 JSR	   M.STOP
+				 XREF	   TTYOUTPU
+				 XREF	   T.WRITE
+				 XREF	   T.WRTLN
+				 XREF	   F.SUB
+				 XREF	   F.DOUBLE
+				 XREF	   D.CMP
+				 XREF	   T.REWRIT
+				 XREF	   H.NEW
+				 XREF	   I.PTSTRF
+				 XREF	   I.PTSTRD
+				 XREF	   C.MVFF
+				 XREF	   D.SINGLE
+				 XREF	   C.MVFFU
+				 XREF	   C.IXFC
+				 XREF	   F.ROUND2
+				 XREF	   D.ROUND2
+				 XREF	   F.CMP
+				 XREF	   C.MVFFL
+				 XREF	   G.I4DIV
+				 XREF	   G.I4REM
+				 XREF	   G.I4MULT
+				 XREF	   F.ADD
+				 XREF	   F.TRUNC
+				 XREF	   F.ROUND
+				 XREF	   F.FLOAT
+				 XREF	   D.FLOAT
+				 XREF	   D.TRUNC
+				 XREF	   F.TAN
+				 XREF	   F.SQT
+				 XREF	   F.RANSET
+				 XREF	   M.STOP
+		      *
+		      *		 Code area:      000013D8 bytes (5080 decimal)
+		      *		 Constant area:  000000D2 bytes (210 decimal)
+		      *		 Static area:    0000009E bytes (158 decimal)
+		      *
+	 00000000		 END
+    T \>

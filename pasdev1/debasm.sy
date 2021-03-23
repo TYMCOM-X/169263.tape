@@ -1,0 +1,6 @@
+*LD$BYTE    DEBAS$
+*ST$BYTE    DEBAS$
+*ABORT$     DEBAS$
+*TT$IN      DEBAS$
+*TT$OUT     DEBAS$
+*DEB$CALL   DEBAS$

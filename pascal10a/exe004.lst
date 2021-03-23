@@ -1,0 +1,1655 @@
+       File DSK:EXE004.PAS[31024,274425]   Compiled 10-Aug-82 10:37   Pascal, Version 2A(440)-1
+
+       File DSK:EXE004.PAS[31024,274425]   Compiled 10-Aug-82 10:37   Pascal, Version 2A(440)-1
+
+       File DSK:EXE004.PAS[31024,274425]   Compiled 10-Aug-82 10:37   Pascal, Version 2A(440)-1
+
+       File DSK:EXE004.PAS[31024,274425]   Compiled 10-Aug-82 10:37   Pascal, Version 2A(440)-1
+
+
+
+
+
+			    $$$$$   $   $   $$$$$     $$      $$       $ 
+			    $       $   $   $        $  $    $  $     $$ 
+			    $        $ $    $        $  $    $  $    $ $ 
+			    $$$       $     $$$      $  $    $  $   $  $ 
+			    $        $ $    $        $  $    $  $   $$$$$
+			    $       $   $   $        $  $    $  $      $ 
+			    $$$$$   $   $   $$$$$     $$      $$       $ 
+
+
+				    DSK:EXE004.PAS[31024,274425]
+
+
+Options in effect: 
+
+	CHECK, NOSPECIAL, NOMAP, NOSYMBOLS, NOCALLS, ASSEMBLY, NOXREF, TRACE, QBLOCKS, NOOPTIMIZE, 
+	CODE, NODEBUG, FINISH, NOGLOBAL, NOMAINSEG, NOOVERLAY, AUTOQUICK, SOURCE, NOSTANDARD, 
+	LENGTH (45), WIDTH (102), NOEXTLENGTH, STORAGE (2048), ALLOC (0), ENABLE(M68)
+
+
+
+
+       File DSK:EXE004.PAS[31024,274425]   Compiled 10-Aug-82 10:37   Pascal, Version 2A(440)-1
+
+       File DSK:EXE004.PAS[31024,274425]   Compiled 10-Aug-82 10:37   Pascal, Version 2A(440)-1
+
+       File DSK:EXE004.PAS[31024,274425]   Compiled 10-Aug-82 10:37   Pascal, Version 2A(440)-1
+
+       File DSK:EXE004.PAS[31024,274425]   Compiled 10-Aug-82 10:37   Pascal, Version 2A(440)-1
+       File DSK:EXE004.PAS[31024,274425]   Compiled 10-Aug-82 10:37   Pascal, Version 2A(440)-1
+
+       File DSK:EXE004.PAS[31024,274425]   Compiled 10-Aug-82 10:37   Pascal, Version 2A(440)-1
+
+       File DSK:EXE004.PAS[31024,274425]   Compiled 10-Aug-82 10:37   Pascal, Version 2A(440)-1
+
+       File DSK:EXE004.PAS[31024,274425]   Compiled 10-Aug-82 10:37   Pascal, Version 2A(440)-1
+
+
+
+
+
+			    $$$$$   $   $   $$$$$     $$      $$       $ 
+			    $       $   $   $        $  $    $  $     $$ 
+			    $        $ $    $        $  $    $  $    $ $ 
+			    $$$       $     $$$      $  $    $  $   $  $ 
+			    $        $ $    $        $  $    $  $   $$$$$
+			    $       $   $   $        $  $    $  $      $ 
+			    $$$$$   $   $   $$$$$     $$      $$       $ 
+
+
+				    DSK:EXE004.PAS[31024,274425]
+
+
+Options in effect: 
+
+	CHECK, NOSPECIAL, NOMAP, NOSYMBOLS, NOCALLS, ASSEMBLY, NOXREF, TRACE, QBLOCKS, NOOPTIMIZE, 
+	CODE, NODEBUG, FINISH, NOGLOBAL, NOMAINSEG, NOOVERLAY, AUTOQUICK, SOURCE, NOSTANDARD, 
+	LENGTH (45), WIDTH (102), NOEXTLENGTH, STORAGE (2048), ALLOC (0), ENABLE(M68)
+
+
+
+
+       File DSK:EXE004.PAS[31024,274425]   Compiled 10-Aug-82 10:37   Pascal, Version 2A(440)-1
+
+       File DSK:EXE004.PAS[31024,274425]   Compiled 10-Aug-82 10:37   Pascal, Version 2A(440)-1
+
+       File DSK:EXE004.PAS[31024,274425]   Compiled 10-Aug-82 10:37   Pascal, Version 2A(440)-1
+
+       File DSK:EXE004.PAS[31024,274425]   Compiled 10-Aug-82 10:37   Pascal, Version 2A(440)-1
+MODULE  EXE004       DSK:EXE004.PAS[31024,274425]                                      10-Aug-82 10:37
+SECTION 0                                                                                       PAGE 1
+
+    1	(* EXE004 - program to test code generation for sets. *)
+    2	
+    3	program EXE004;
+    4	
+    5	type
+    6	  color = (orange, purple, red, green, blue, yellow);
+    7	  alphanums = '0'..'Z';
+    8	  uppers = 'A'..'Z';
+    9	  numbers = '0'..'9';
+   10	  color_set = set of color;
+   11	  rgb_set = set of red..blue;
+   12	  zlen1set = set of 0..35;
+   13	  len1set = set of 1..36;
+   14	  s10to30 = set of 10..30;
+   15	  s50to100 = set of 50..100;
+   16	  s35to127 = set of 35..127;
+   17	  s50to75 = set of 50..75;
+   18	  s75to110 = set of 75..110;
+   19	  double_set = set of 0..63;
+   20	  single_set = set of 0..31;
+   21	  len2set = set of chr(0)..chr(71);
+   22	  len1_char_set = set of chr(0)..chr(31);
+   23	  len4_char_set = set of chr(0)..'z';
+   24	  len4_int_set  = set of 0..127;
+   25	  alphanums_set = set of alphanums;
+   26	  uppers_set = set of uppers;
+   27	  numbers_set = set of numbers;
+   28	  char_set = set of char;
+   29	  setrec1 = packed record
+   30	    f1: uppers_set;
+   31	    f2: numbers_set;
+   32	    f3: len1set
+   33	  end;
+   34	  setrec2 = packed record
+   35	    s1: rgb_set;
+   36	    s2: len2set;
+   37	    s3: alphanums_set
+   38	  end;
+   39	  setarr1 = packed array [1..3] of color_set;
+   40	  setarr2 = packed array [1..3] of alphanums_set;
+   41	  boolset = set of false..true;
+   42	  double_array = packed array [1..5] of double_set;MODULE  EXE004       DSK:EXE004.PAS[31024,274425]                                      10-Aug-82 10:37
+SECTION 0                                                                                       PAGE 2
+
+   43	  single_array = packed array [1..5] of single_set;
+   44	
+   45	const
+   46	  empty_set = [];
+   47	  empty_char_set: set of char = [];
+   48	  len1_ch_cons: len1_char_set = [chr(7)..chr(17), chr(30)];
+   49	  len1_ch_cons2: len1_char_set = [chr(0)..chr(31)];
+   50	  len4_ch_cons: len4_char_set = [chr(7)];
+   51	  color_cons: color_set := [red..yellow];
+   52	  rgb_cons: rgb_set := [red, green, blue];
+   53	  zlen1_cons: zlen1set := [0..8, 18..26];
+   54	  len2_cons: len2set := ['0'..'G'];
+   55	  uppers_cons: uppers_set := ['A','B'..'M'];
+   56	  numbers_cons: numbers_set := ['0'..'5'];
+   57	  rec1_cons: setrec1 := (['W'..'Z'],['0','2','4','6'],[1..36]);
+   58	  rec2_cons: setrec2 := ([red..green],[chr(0)..chr(35)],['3'..'C']);
+   59	  arr1_cons: setarr1 := ([red],[],[green,blue]);
+   60	  arr2_cons: setarr2 := (['0'..'9'],['A'..'Z'],[':'..'@']);
+   61	  boolset_cons: boolset := [true];
+   62	  nul: char := chr(0);
+   63	  slash: char := '/';
+   64	  double_cons: double_array := ([0..63], [], [32..63], [1..3,34..36],
+   65	                                [30..40]);
+   66	  single_cons: single_array := ([0..31], [2,4,6,8], [0..8,18..26], [7], []);
+   67	
+   68	
+   69	public var
+   70	  rgb_var: rgb_set;
+   71	  len1_var: len1set;
+   72	  len2_var: len2set;
+   73	  ln2_varb: len2set;
+   74	  len4_int_var: len4_int_set;
+   75	  alphanum_var: alphanums_set;
+   76	  uppers_var: uppers_set;
+   77	  numbers_var: numbers_set;
+   78	  rec1_var: setrec1;
+   79	  rec2_var: setrec2;
+   80	  arr1_var: setarr1;
+   81	  non_alpha_nums: char_set;
+   82	  double_arr: double_array;
+   83	  sa10to30, sb10to30: s10to30;
+   84	  s50to100a: s50to100;MODULE  EXE004       DSK:EXE004.PAS[31024,274425]                                      10-Aug-82 10:37
+SECTION 0                                                                                       PAGE 3
+
+   85	  s35to127a: s35to127;
+   86	  s50to75a: s50to75;
+   87	  s75to110a: s75to110;
+   88	  char1: char;
+   89	  char2: char;
+   90	  char3: char;
+   91	  color1: color;
+   92	  color2: color;
+   93	  i, j, k: integer;
+   94	  b: boolean;
+   95	
+   96	public procedure error (err_num: integer);
+   97	begin
+   98	  writeln (ttyoutput,'Error ',err_num);
+   99	  break (ttyoutput);
+  100	end;
+  101	
+  102	begin
+  103	  rewrite (ttyoutput);
+  104	  writeln( ttyoutput, 'Begin EXE004' );
+  105	  char1 := 'C';
+  106	  char2 := 'Q';
+  107	  char3 := 'A';
+  108	  color1 := red;
+  109	  color2 := blue;
+  110	  i := 3;
+  111	  j := 0;
+  112	  k := 127;
+  113	  len4_int_var := [0..29, 41..63];
+  114	  ln2_varb := [ chr(7)..chr(17), chr(30) ];
+  115	  sa10to30 := [10..20];
+  116	  s35to127a := [35..50, 100..127];
+  117	  rgb_var := [blue, red];
+  118	  uppers_var := ['Q', 'S', 'V'];
+  119	  alphanum_var := len2_cons;
+  120	  len2_var := [char3..char1, ' ', chr(0)..chr(10),'0', '7'];
+  121	  non_alpha_nums := [nul..slash, ':'..'@', '['..chr(127)];
+  122	  rec2_var := ( rgb_var, len2_cons, ['A', ':'..'?', '7'] );
+  123	  arr1_var := ( [color2..yellow], [orange..color1], [] );
+  124	  rec1_var := ( ['W'..'Z'], ['0', chr(i + 48)], [1..3, 34..36] );
+  125	  numbers_var := rec1_var.f2;
+  126	  len1_var := zlen1_cons - [0];MODULE  EXE004       DSK:EXE004.PAS[31024,274425]                                      10-Aug-82 10:37
+SECTION 0                                                                                       PAGE 4
+
+  127	  double_arr := double_cons;
+  128	
+  129	  if color_cons * rgb_cons <> [red..blue] then error (1);
+  130	  if not (non_alpha_nums * arr2_cons[3] = [':',';'..'?','@']) then error (2);
+  131	  if not ([] >= (boolset_cons * [false]) ) then error (3);
+  132	  if not (rec1_cons.f2 <= arr2_cons[1]) then error (4);
+  133	  if not (rec2_cons.s1 + arr1_cons[3] >= rgb_cons) then error (5);
+  134	  if not (uppers_cons * numbers_cons <= []) then error (6);
+  135	  if rec1_cons.f3 * len1_var <> len1_var then error (7);
+  136	  if not (char2 in uppers_var) then error (8);
+  137	  if color2 in arr1_cons[1] then error (9);
+  138	  if not ( nul in non_alpha_nums ) then error (10);
+  139	  if i in rec1_cons.f3 - len1_var then error (11);
+  140	  if not ( '3' in rec2_var.s2 - len2_var ) then error (12);
+  141	  if not ( arr1_var[1] * color_cons - [red,green] = arr1_var[1])
+  142	    then error (13);
+  143	  if not ( ( rec1_var.f2 + ['1', '2'] = ['0'..'3'] ) in [true] ) then error (14);
+  144	  if numbers_var <> ['0', '3'] then error (15);
+  145	  if color1 in [purple,green] then error ( 16 );
+  146	  if double_arr[ i + 2 ] <> [ 30..40 ] then error ( 17 );
+  147	  if not ( 34 in (double_cons[ 4 ] + double_arr[ 5 ]) ) then error ( 18 );
+  148	  if not (7 in single_cons[ i + 1 ]) then error ( 19 );
+  149	  if single_cons[ 3 ] <> zlen1_cons then error ( 20 );
+  150	  if double_arr[ 1 ] = empty_set then error ( 21 );
+  151	  if non_alpha_nums = empty_char_set then error ( 22 );
+  152	  if empty_set <> empty_char_set then error ( 23 );
+  153	  if empty_set <> [] then error ( 24 );
+  154	  if not ( [] = single_cons[ 5 ] ) then error ( 25 );
+  155	  if not ( double_arr[ 2 ] = [] ) then error ( 26 );
+  156	  if non_alpha_nums * uppers_var <> empty_set then error ( 27 );
+  157	  if single_cons[ 1 ] * single_cons[ 2 ] <> [2,4,6,8] then error ( 28 );
+  158	  if zlen1_cons - [30..35] <> single_cons[ 3 ] then error ( 29 );
+  159	  if rec1_var.f3 + [4..8] <> len1_var + [34..36] - [18..26] then error ( 30 );
+  160	  if single_cons[ 3 ] <> [0..8, 18..26] then error ( 31 );
+  161	  if rec1_var.f3 <> double_arr[ 4 ] then error ( 32 );
+  162	  if rec2_cons.s2 - [chr(32)..chr(35)] <> len1_ch_cons2 then error ( 33 );
+  163	  if ln2_varb <> len1_ch_cons then error ( 34 );
+  164	  if ln2_varb + [chr(0)..chr(6), chr(18)..chr(31)] <> len1_ch_cons2 
+  165	        then error ( 35 );
+  166	  if (len1_ch_cons - [chr(8)..chr(17),chr(30)]) <> len4_ch_cons then error ( 36 );
+  167	  if (double_arr[ 1 ] - double_cons[ 5 ] <> len4_int_var) then error ( 37 );
+  168	  if len2_cons * uppers_cons <> arr2_cons[ 2 ] - ['H'..'Z'] then error ( 38 );MODULE  EXE004       DSK:EXE004.PAS[31024,274425]                                      10-Aug-82 10:37
+SECTION 0                                                                                       PAGE 5
+
+  169	  if not (green in [green]) then error ( 39 );
+  170	  b := 4 in single_cons[ 2 ];
+  171	  if not b then error ( 40 );
+  172	  b := color1 in [orange..red];
+  173	  if not b then error ( 41 );
+  174	  b := 40 in double_arr[ 5 ] * double_cons[ 1 ];
+  175	  if not b then error ( 42 );
+  176	  sb10to30 := single_cons[ 1 ] + sa10to30;
+  177	  if sb10to30 <> [10..30] then error ( 43 );
+  178	  s50to100a := s35to127a * [j..k];
+  179	  if s50to100a <> [50, 100] then error ( 44 );
+  180	  s50to100a := [j..k];
+  181	  if s50to100a <> [50..100] then error ( 45 );
+  182	  sb10to30 := [0..50];
+  183	  if sb10to30 <> [10..30] then error ( 46 );
+  184	  s50to75a := [j..k];
+  185	  if 76 in s50to75a then error ( 47 );
+  186	  s35to127a := [0..20];
+  187	  if s35to127a <> [] then error ( 48 );
+  188	  s35to127a := [40..60] * [j..k];
+  189	  if s35to127a <> [40..60] then error ( 49 );
+  190	  sb10to30 := [0..31];
+  191	  if sb10to30 <> [10..30] then error ( 50 );
+  192	  s50to100a := [30..80] + double_arr[ 2 ];
+  193	  if s50to100a <> [50..80] then error ( 51 );
+  194	  s50to100a := [j..k] * double_arr[ 1 ];
+  195	  if s50to100a <> [50..63] then error ( 52 );
+  196	  s75to110a := [10..115];
+  197	  if s75to110a <> [75..110] then error ( 53 );
+  198	  s50to75a := [20..80];
+  199	  if s50to75a <> [50..75] then error ( 54 );
+  200	  s75to110a := [80..109];
+  201	  if s75to110a <> [80..109] then error ( 55 );
+  202	  writeln( ttyoutput, 'End EXE004' );
+  203	end.
+
+File   level   on page     name
+
+  0	 0	    1	DSK:EXE004.PAS[31024,274425]
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       		      EXE004     IDNT	   0,0
+		      *
+		      *		 MC68000 Checkout Code Generator,  Aug 10, 1982  10:38:05 am
+		      *
+	 00000002		 SECTION   2
+	 00000000     STATIC.	 EQU	   *
+	 0000000A		 SECTION   10
+	 00000000     CODE.	 EQU	   *
+00000000 C21DC595     C.1	 DC.L	   $C21DC595			       Date-time
+00000004 0000			 DC.W	   0				         $0
+00000006 455845303034		 DC.B	   'EXE004'
+	 00000002		 SECTION   2
+		      *
+		      *		 Unitialized static area
+		      *
+00000000 000000D0		 DS.B	   208
+				 XDEF	   RGB_VAR 
+		      RGB_VAR 	 EQU	   STATIC.+0
+				 XDEF	   LEN1_VAR
+		      LEN1_VAR	 EQU	   STATIC.+2
+				 XDEF	   LEN2_VAR
+		      LEN2_VAR	 EQU	   STATIC.+8
+				 XDEF	   LN2_VARB
+		      LN2_VARB	 EQU	   STATIC.+18
+				 XDEF	   LEN4_INT
+		      LEN4_INT	 EQU	   STATIC.+28
+				 XDEF	   ALPHANUM
+		      ALPHANUM	 EQU	   STATIC.+44
+				 XDEF	   UPPERS_V
+		      UPPERS_V	 EQU	   STATIC.+50
+				 XDEF	   NUMBERS_
+		      NUMBERS_	 EQU	   STATIC.+54
+				 XDEF	   REC1_VAR
+		      REC1_VAR	 EQU	   STATIC.+56
+				 XDEF	   REC2_VAR
+		      REC2_VAR	 EQU	   STATIC.+68
+				 XDEF	   ARR1_VAR
+		      ARR1_VAR	 EQU	   STATIC.+86
+				 XDEF	   NON_ALPH
+		      NON_ALPH	 EQU	   STATIC.+92
+				 XDEF	   DOUBLE_A
+		      DOUBLE_A	 EQU	   STATIC.+108
+				 XDEF	   SA10TO30
+		      SA10TO30	 EQU	   STATIC.+148
+				 XDEF	   SB10TO30		      SB10TO30	 EQU	   STATIC.+152
+				 XDEF	   S50TO100
+		      S50TO100	 EQU	   STATIC.+156
+				 XDEF	   S35TO127
+		      S35TO127	 EQU	   STATIC.+164
+				 XDEF	   S50TO75A
+		      S50TO75A	 EQU	   STATIC.+176
+				 XDEF	   S75TO110
+		      S75TO110	 EQU	   STATIC.+180
+				 XDEF	   CHAR1   
+		      CHAR1   	 EQU	   STATIC.+186
+				 XDEF	   CHAR2   
+		      CHAR2   	 EQU	   STATIC.+187
+				 XDEF	   CHAR3   
+		      CHAR3   	 EQU	   STATIC.+188
+				 XDEF	   COLOR1  
+		      COLOR1  	 EQU	   STATIC.+190
+				 XDEF	   COLOR2  
+		      COLOR2  	 EQU	   STATIC.+192
+				 XDEF	   I       
+		      I       	 EQU	   STATIC.+194
+				 XDEF	   J       
+		      J       	 EQU	   STATIC.+198
+				 XDEF	   K       
+		      K       	 EQU	   STATIC.+202
+				 XDEF	   B       
+		      B       	 EQU	   STATIC.+206
+	 0000000A		 SECTION   10
+		      *
+		      *		 Constant area for subroutine ERROR
+		      *
+0000000C 4572726F7220 K.1	 DC.B	   'Error '
+		      *
+		      *		 Begin subroutine ERROR
+		      *
+				 XDEF	   ERROR   
+00000012	      ERROR   
+00000012 7014	      B.3	 MOVEQ	   #20,D0			         $14
+00000014 2F00			 MOVE.L	   D0,-(A7)
+00000016 610E			 BSR.S	   X.3.1(PC)
+00000018 00000000		 DC.L	   C.1
+0000001C 0000			 DC.W	   0				         $0
+0000001E 0005			 DC.W	   5				       String length word
+00000020 4552524F52		 DC.B	   'ERROR'
+00000025 00000001		 DS.B	   1				       Fill byte00000026 203CFFFFFFFC X.3.1	 MOVE.L	   #T.3-4,D0			         0
+0000002C 4EB900000000		 JSR	   M.ENTRY
+		      *							       LINE 97
+		      *							       LINE 98
+00000032 202D0000     L.3.1	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00000036 4A80			 TST.L	   D0
+00000038 6606			 BNE.S	   X.3.2(PC)
+0000003A 4EB900000000		 JSR	   E.FILE
+00000040 7206	      X.3.2	 MOVEQ	   #6,D1			         $6
+00000042 3F01			 MOVE.W	   D1,-(A7)
+00000044 7204			 MOVEQ	   #4,D1			         $4
+00000046 3F01			 MOVE.W	   D1,-(A7)
+00000048 487AFFC2		 PEA	   K.1(PC)			         CODE.+$C
+0000004C 2F00			 MOVE.L	   D0,-(A7)
+0000004E 4EB900000000		 JSR	   T.WRITE
+00000054 4267			 CLR.W	   -(A7)
+00000056 486E0014		 PEA	   20(A6)			         ERR_NUM
+0000005A 2F00			 MOVE.L	   D0,-(A7)
+0000005C 4EB900000000		 JSR	   T.WRITE
+00000062 2F00			 MOVE.L	   D0,-(A7)
+00000064 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 99
+0000006A 202D0000		 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+0000006E 4A80			 TST.L	   D0
+00000070 6606			 BNE.S	   X.3.3(PC)
+00000072 4EB900000000		 JSR	   E.FILE
+00000078 2F00	      X.3.3	 MOVE.L	   D0,-(A7)
+0000007A 4EB900000000		 JSR	   T.BREAK
+		      *							       LINE 100
+00000080 4EB900000000		 JSR	   M.RETURN
+		      *
+		      *		 Constant area for program EXE004
+		      *
+00000086 23434E	      K.2	 DC.B	   '#CN'
+00000089 00000001		 DS.B	   1
+0000008A 426567696E20 K.3	 DC.B	   'Begin EXE004'
+00000096 FFFF	      K.4	 DC.W	   %1111111111111111
+00000098 FFFC			 DC.W	   %1111111111111100
+0000009A 007F			 DC.W	   %0000000001111111
+0000009C FFFF			 DC.W	   %1111111111111111
+0000009E 01FF	      K.5	 DC.W	   %0000000111111111
+000000A0 C002			 DC.W	   %1100000000000010
+000000A2 1FFF	      K.6	 DC.W	   %0001111111111111
+000000A4 E000			 DC.W	   %1110000000000000
+000000A6 0000			 DC.W	   %0000000000000000000000A8 0000			 DC.W	   %0000000000000000
+000000AA 0FFF			 DC.W	   %0000111111111111
+000000AC FFFF			 DC.W	   %1111111111111111
+000000AE 2800	      K.7	 DC.W	   %0010100000000000
+000000B0 5200	      K.8	 DC.W	   %01010010000
+000000B2 0000	      K.9	 DC.W	   %0000000000000000
+000000B4 0000			 DC.W	   %0000000000000000
+000000B6 0000			 DC.W	   %0000000000000000
+000000B8 FFFF			 DC.W	   %1111111111111111
+000000BA FF00			 DC.W	   %1111111100000000
+000000BC FFE0	      K.10	 DC.W	   %1111111111100000
+000000BE 0000			 DC.W	   %0000000000000000
+000000C0 8000			 DC.W	   %1000000000000000
+000000C2 8100			 DC.W	   %1000000100000000
+000000C4 FFFF	      K.11	 DC.W	   %1111111111111111
+000000C6 FFFF			 DC.W	   %1111111111111111
+000000C8 FFFF			 DC.W	   %1111111111111111
+000000CA 003F			 DC.W	   %0000000000111111
+000000CC 8000			 DC.W	   %1000000000000000
+000000CE 001F			 DC.W	   %0000000000011111
+000000D0 FFFF			 DC.W	   %1111111111111111
+000000D2 FFFF			 DC.W	   %1111111111111111
+000000D4 0000	      K.12	 DC.W	   %0000000000000000
+000000D6 0000			 DC.W	   %0000000000000000
+000000D8 0000			 DC.W	   %0000000000000000
+000000DA FFFF			 DC.W	   %1111111111111111
+000000DC FF00			 DC.W	   %1111111100000000
+000000DE 013F	      K.13	 DC.W	   %0000000100111111
+000000E0 4000			 DC.W	   %0100000000000000
+000000E2 0000			 DC.W	   %0000000000000000
+000000E4 0000	      K.14	 DC.W	   %0000000000000000
+000000E6 0000	      K.15	 DC.W	   %0000000000000000
+000000E8 01E0			 DC.W	   %0000000111100000
+000000EA 8000	      K.16	 DC.W	   %1000000000000000
+000000EC 7000	      K.17	 DC.W	   %0111000000000000
+000000EE 0000			 DC.W	   %0000000000000000
+000000F0 3800			 DC.W	   %0011100000000000
+000000F2 FF80	      K.18	 DC.W	   %1111111110000000
+000000F4 3FE0			 DC.W	   %0011111111100000
+000000F6 0000			 DC.W	   %0000000000000000
+000000F8 FFFF	      K.19	 DC.W	   %1111111111111111
+000000FA FFFF			 DC.W	   %1111111111111111
+000000FC FFFF			 DC.W	   %1111111111111111
+000000FE FFFF			 DC.W	   %1111111111111111
+00000100 0000			 DC.W	   %000000000000000000000102 0000			 DC.W	   %0000000000000000
+00000104 0000			 DC.W	   %0000000000000000
+00000106 0000			 DC.W	   %0000000000000000
+00000108 0000			 DC.W	   %0000000000000000
+0000010A 0000			 DC.W	   %0000000000000000
+0000010C FFFF			 DC.W	   %1111111111111111
+0000010E FFFF			 DC.W	   %1111111111111111
+00000110 7000			 DC.W	   %0111000000000000
+00000112 0000			 DC.W	   %0000000000000000
+00000114 3800			 DC.W	   %0011100000000000
+00000116 0000			 DC.W	   %0000000000000000
+00000118 0000			 DC.W	   %0000000000000000
+0000011A 0003			 DC.W	   %0000000000000011
+0000011C FF80			 DC.W	   %1111111110000000
+0000011E 0000			 DC.W	   %0000000000000000
+00000120 3C00	      K.20	 DC.W	   %0011110000000000
+00000122 3800	      K.21	 DC.W	   %0011100000000000
+00000124 FFC0	      K.22	 DC.W	   %1111111111000000
+00000126 0000			 DC.W	   %0000000000000000
+00000128 0000			 DC.W	   %0000000000000000
+0000012A 0000			 DC.W	   %0000000000000000
+0000012C 7FFF			 DC.W	   %0111111111111111
+0000012E FFE0			 DC.W	   %1111111111100000
+00000130 003F			 DC.W	   %0000000000111111
+00000132 8000			 DC.W	   %1000000000000000
+00000134 0000			 DC.W	   %0000000000000000
+00000136 003F	      K.23	 DC.W	   %0000000000111111
+00000138 8000			 DC.W	   %1000000000000000
+0000013A 4000	      K.24	 DC.W	   %0100000000000000
+0000013C 0000	      K.25	 DC.W	   %0000000000000000
+0000013E 01E0			 DC.W	   %0000000111100000
+00000140 AA00			 DC.W	   %1010101000000000
+00000142 7FFF			 DC.W	   %0111111111111111
+00000144 FFFF			 DC.W	   %1111111111111111
+00000146 F800			 DC.W	   %1111100000000000
+00000148 3000	      K.26	 DC.W	   %0011000000000000
+0000014A FFFF			 DC.W	   %1111111111111111
+0000014C FFFF			 DC.W	   %1111111111111111
+0000014E F000			 DC.W	   %1111000000000000
+00000150 0000			 DC.W	   %0000000000000000
+00000152 0000			 DC.W	   %0000000000000000
+00000154 1FFF			 DC.W	   %0001111111111111
+00000156 F000			 DC.W	   %1111000000000000
+00000158 0000			 DC.W	   %0000000000000000
+0000015A 2000	      K.27	 DC.W	   %00100000000000000000015C 0000			 DC.W	   %0000000000000000
+0000015E 1800			 DC.W	   %0001100000000000
+00000160 7FFC	      K.28	 DC.W	   %0111111111111100
+00000162 0000			 DC.W	   %0000000000000000
+00000164 FC00	      K.29	 DC.W	   %1111110000000000
+00000166 3000	      K.30	 DC.W	   %0011000000000000
+00000168 6000	      K.31	 DC.W	   %0110000000000000
+0000016A 9000	      K.32	 DC.W	   %1001000000000000
+0000016C 5000	      K.33	 DC.W	   %0101000000000000
+0000016E FFFF	      K.34	 DC.W	   %1111111111111111
+00000170 FFFF			 DC.W	   %1111111111111111
+00000172 2A80			 DC.W	   %0010101010000000
+00000174 0000			 DC.W	   %0000000000000000
+00000176 FF80			 DC.W	   %1111111110000000
+00000178 3FE0			 DC.W	   %0011111111100000
+0000017A 0100			 DC.W	   %0000000100000000
+0000017C 0000			 DC.W	   %0000000000000000
+0000017E 0000			 DC.W	   %0000000000000000
+00000180 0000			 DC.W	   %0000000000000000
+00000182 0000	      K.35	 DC.W	   %0000000000000000
+00000184 0000			 DC.W	   %0000000000000000
+00000186 0000			 DC.W	   %0000000000000000
+00000188 0000			 DC.W	   %0000000000000000
+0000018A 0000			 DC.W	   %0000000000000000
+0000018C 0000			 DC.W	   %0000000000000000
+0000018E 0000			 DC.W	   %0000000000000000
+00000190 0000			 DC.W	   %0000000000000000
+00000192 2A80	      K.36	 DC.W	   %0010101010000000
+00000194 0F80	      K.37	 DC.W	   %0000111110000000
+00000196 0000	      K.38	 DC.W	   %0000000000000000
+00000198 0000			 DC.W	   %0000000000000000
+0000019A 3800			 DC.W	   %0011100000000000
+0000019C FF80	      K.39	 DC.W	   %1111111110000000
+0000019E 3FE0			 DC.W	   %0011111111100000
+000001A0 FFFF	      K.40	 DC.W	   %1111111111111111
+000001A2 FFFF			 DC.W	   %1111111111111111
+000001A4 01FF	      K.41	 DC.W	   %0000000111111111
+000001A6 C002			 DC.W	   %1100000000000010
+000001A8 FE00	      K.42	 DC.W	   %1111111000000000
+000001AA 3FFF			 DC.W	   %0011111111111111
+000001AC 00FF	      K.43	 DC.W	   %0000000011111111
+000001AE C002			 DC.W	   %1100000000000010
+000001B0 0100	      K.44	 DC.W	   %0000000100000000
+000001B2 0000			 DC.W	   %0000000000000000
+000001B4 0000			 DC.W	   %0000000000000000000001B6 0000			 DC.W	   %0000000000000000
+000001B8 0000			 DC.W	   %0000000000000000
+000001BA 0000			 DC.W	   %0000000000000000
+000001BC 0000			 DC.W	   %0000000000000000
+000001BE 0000			 DC.W	   %0000000000000000
+000001C0 2000	      K.45	 DC.W	   %0010000000000000
+000001C2 0000			 DC.W	   %0000000000000000
+000001C4 0000			 DC.W	   %0000000000000000
+000001C6 0800			 DC.W	   %0000100000000000
+000001C8 3FFF	      K.46	 DC.W	   %0011111111111111
+000001CA FFFF			 DC.W	   %1111111111111111
+000001CC FFFF			 DC.W	   %1111111111111111
+000001CE F800			 DC.W	   %1111100000000000
+000001D0 3FFF	      K.47	 DC.W	   %0011111111111111
+000001D2 FFFF			 DC.W	   %1111111111111111
+000001D4 8000			 DC.W	   %1000000000000000
+000001D6 3FFF	      K.48	 DC.W	   %0011111111111111
+000001D8 FFFF			 DC.W	   %1111111111111111
+000001DA 8000			 DC.W	   %1000000000000000
+000001DC 001F	      K.49	 DC.W	   %0000000000011111
+000001DE FFFF			 DC.W	   %1111111111111111
+000001E0 FFFE			 DC.W	   %1111111111111110
+000001E2 001F	      K.50	 DC.W	   %0000000000011111
+000001E4 FFFF			 DC.W	   %1111111111111111
+000001E6 FFFE			 DC.W	   %1111111111111110
+000001E8 456E64204558 K.51	 DC.B	   'End EXE004'
+		      *
+		      *		 Begin program EXE004
+		      *
+				 XDEF	   M.START 
+000001F2	      M.START 
+000001F2 7010	      B.1	 MOVEQ	   #16,D0			         $10
+000001F4 2F00			 MOVE.L	   D0,-(A7)
+000001F6 610E			 BSR.S	   X.1.1(PC)
+000001F8 00000000		 DC.L	   C.1
+000001FC 0000			 DC.W	   0				         $0
+000001FE 0006			 DC.W	   6				       String length word
+00000200 455845303034		 DC.B	   'EXE004'
+00000206 203CFFFFFFEA X.1.1	 MOVE.L	   #T.1-4,D0			         -18
+0000020C 4EB900000000		 JSR	   M.ENTRY
+		      *							       LINE 102
+		      *							       LINE 103
+00000212 487AFE72     L.1.1	 PEA	   K.2(PC)			         CODE.+$86
+00000216 7003			 MOVEQ	   #3,D0			         $3
+00000218 3F00			 MOVE.W	   D0,-(A7)0000021A 7032			 MOVEQ	   #50,D0			         $32
+0000021C 3F00			 MOVE.W	   D0,-(A7)
+0000021E 4EB900000000		 JSR	   T.REWRIT
+00000224 2B5F0000		 MOVE.L	   (A7)+,TTYOUTPUT-32768(A5)	         TTYOUTPUT
+		      *							       LINE 104
+00000228 202D0000		 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+0000022C 4A80			 TST.L	   D0
+0000022E 6606			 BNE.S	   X.1.2(PC)
+00000230 4EB900000000		 JSR	   E.FILE
+00000236 720C	      X.1.2	 MOVEQ	   #12,D1			         $C
+00000238 3F01			 MOVE.W	   D1,-(A7)
+0000023A 7204			 MOVEQ	   #4,D1			         $4
+0000023C 3F01			 MOVE.W	   D1,-(A7)
+0000023E 487AFE4A		 PEA	   K.3(PC)			         CODE.+$8A
+00000242 2F00			 MOVE.L	   D0,-(A7)
+00000244 4EB900000000		 JSR	   T.WRITE
+0000024A 2F00			 MOVE.L	   D0,-(A7)
+0000024C 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 105
+00000252 7043			 MOVEQ	   #67,D0			         $43
+00000254 1B4080BA		 MOVE.B	   D0,STATIC.+186-32768(A5)	         CHAR1
+		      *							       LINE 106
+00000258 7051			 MOVEQ	   #81,D0			         $51
+0000025A 1B4080BB		 MOVE.B	   D0,STATIC.+187-32768(A5)	         CHAR2
+		      *							       LINE 107
+0000025E 7041			 MOVEQ	   #65,D0			         $41
+00000260 1B4080BC		 MOVE.B	   D0,STATIC.+188-32768(A5)	         CHAR3
+		      *							       LINE 108
+00000264 7002			 MOVEQ	   #2,D0			         $2
+00000266 3B4080BE		 MOVE.W	   D0,STATIC.+190-32768(A5)	         COLOR1
+		      *							       LINE 109
+0000026A 7004			 MOVEQ	   #4,D0			         $4
+0000026C 3B4080C0		 MOVE.W	   D0,STATIC.+192-32768(A5)	         COLOR2
+		      *							       LINE 110
+00000270 7003			 MOVEQ	   #3,D0			         $3
+00000272 2B4080C2		 MOVE.L	   D0,STATIC.+194-32768(A5)	         I
+		      *							       LINE 111
+00000276 7000			 MOVEQ	   #0,D0			         $0
+00000278 2B4080C6		 MOVE.L	   D0,STATIC.+198-32768(A5)	         J
+		      *							       LINE 112
+0000027C 707F			 MOVEQ	   #127,D0			         $7F
+0000027E 2B4080CA		 MOVE.L	   D0,STATIC.+202-32768(A5)	         K
+		      *							       LINE 113
+00000282 41FAFE12		 LEA	   K.4(PC),A0			         CODE.+$96
+00000286 43ED801C		 LEA	   STATIC.+28-32768(A5),A1	         LEN4_INT_VAR0000028A 22D8			 MOVE.L	   (A0)+,(A1)+
+0000028C 22D8			 MOVE.L	   (A0)+,(A1)+
+0000028E 4299			 CLR.L	   (A1)+
+00000290 4299			 CLR.L	   (A1)+
+		      *							       LINE 114
+00000292 41ED8012		 LEA	   STATIC.+18-32768(A5),A0	         LN2_VARB
+00000296 20FAFE06		 MOVE.L	   K.5(PC),(A0)+		         CODE.+$9E
+0000029A 4298			 CLR.L	   (A0)+
+0000029C 4258			 CLR.W	   (A0)+
+		      *							       LINE 115
+0000029E 2B7C003FF800		 MOVE.L	   #4192256,STATIC.+148-32768(A5)        $3FF800  SA10TO30
+	 8094
+		      *							       LINE 116
+000002A6 4CFA0007FDFA		 MOVEM.L   K.6(PC),#7			         CODE.+$A2  $7
+000002AC 48ED000780A4		 MOVEM.L   #7,STATIC.+164-32768(A5)	         $7  S35TO127A
+		      *							       LINE 117
+000002B2 3B7AFDFA8000		 MOVE.W	   K.7(PC),STATIC.+0-32768(A5)	         CODE.+$AE  RGB_VAR
+		      *							       LINE 118
+000002B8 426D8032		 CLR.W	   STATIC.+50-32768(A5)		         UPPERS_VAR
+000002BC 3B7AFDF28034		 MOVE.W	   K.8(PC),STATIC.+50-32766(A5)	         CODE.+$B0  UPPERS_VAR
+		      *							       LINE 119
+000002C2 2B7AFDF4802C		 MOVE.L	   K.9+6(PC),STATIC.+44-32768(A5)        CODE.+$B2  ALPHANUM_V
+000002C8 426D8030		 CLR.W	   STATIC.+44-32764(A5)		         ALPHANUM_VAR
+		      *							       LINE 120
+000002CC 486EFFF6		 PEA	   -10(A6)			         $FFFFFFF6
+000002D0 7005			 MOVEQ	   #5,D0			         $5
+000002D2 2F00			 MOVE.L	   D0,-(A7)
+000002D4 102D80BC		 MOVE.B	   STATIC.+188-32768(A5),D0	         CHAR3
+000002D8 4880			 EXT.W	   D0
+000002DA 48C0			 EXT.L	   D0
+000002DC 2F00			 MOVE.L	   D0,-(A7)
+000002DE 102D80BA		 MOVE.B	   STATIC.+186-32768(A5),D0	         CHAR1
+000002E2 4880			 EXT.W	   D0
+000002E4 48C0			 EXT.L	   D0
+000002E6 2F00			 MOVE.L	   D0,-(A7)
+000002E8 4EB900000000		 JSR	   S.RANZLB
+000002EE 203AFDCC		 MOVE.L	   K.10(PC),D0			         CODE.+$BC
+000002F2 81AEFFF6		 OR.L	   D0,-10(A6)			         $FFFFFFF6
+000002F6 203AFDC8		 MOVE.L	   K.10+4(PC),D0		         CODE.+$BC
+000002FA 81AEFFFA		 OR.L	   D0,-6(A6)			         $FFFFFFFA
+000002FE 4CAE001FFFF6		 MOVEM.W   -10(A6),#31			         $FFFFFFF6  $1F
+00000304 48AD001F8008		 MOVEM.W   #31,STATIC.+8-32768(A5)	         $1F  LEN2_VAR
+0000030A 026DFF008010		 ANDI.W	   #65280,STATIC.+8-32760(A5)	         $FF00  LEN2_VAR
+		      *							       LINE 121
+00000310 4CFA000FFDB2		 MOVEM.L   K.11(PC),#15			         CODE.+$C4  $F00000316 48ED000F805C		 MOVEM.L   #15,STATIC.+92-32768(A5)	         $F  NON_ALPHA_NUMS
+		      *							       LINE 122
+0000031C 3B6D80008044		 MOVE.W	   STATIC.+0-32768(A5),STATIC.+68-32768(A5)
+									         RGB_VAR  REC2_VAR
+00000322 4CBA001FFDB0		 MOVEM.W   K.12(PC),#31			         CODE.+$D4  $1F
+00000328 48AD001F8046		 MOVEM.W   #31,STATIC.+68-32766(A5)	         $1F  REC2_VAR
+0000032E 41FAFDAE		 LEA	   K.13(PC),A0			         CODE.+$DE
+00000332 43ED8050		 LEA	   STATIC.+68-32756(A5),A1	         REC2_VAR
+00000336 22D8			 MOVE.L	   (A0)+,(A1)+
+00000338 32D8			 MOVE.W	   (A0)+,(A1)+
+		      *							       LINE 123
+0000033A 486D8056		 PEA	   STATIC.+86-32768(A5)		         ARR1_VAR
+0000033E 7001			 MOVEQ	   #1,D0			         $1
+00000340 2F00			 MOVE.L	   D0,-(A7)
+00000342 302D80C0		 MOVE.W	   STATIC.+192-32768(A5),D0	         COLOR2
+00000346 48C0			 EXT.L	   D0
+00000348 2F00			 MOVE.L	   D0,-(A7)
+0000034A 7005			 MOVEQ	   #5,D0			         $5
+0000034C 2F00			 MOVE.L	   D0,-(A7)
+0000034E 4EB900000000		 JSR	   S.RANZLB
+00000354 486D8058		 PEA	   STATIC.+86-32766(A5)		         ARR1_VAR
+00000358 7001			 MOVEQ	   #1,D0			         $1
+0000035A 2F00			 MOVE.L	   D0,-(A7)
+0000035C 42A7			 CLR.L	   -(A7)
+0000035E 302D80BE		 MOVE.W	   STATIC.+190-32768(A5),D0	         COLOR1
+00000362 48C0			 EXT.L	   D0
+00000364 2F00			 MOVE.L	   D0,-(A7)
+00000366 4EB900000000		 JSR	   S.RANZLB
+0000036C 3B7AFD76805A		 MOVE.W	   K.14(PC),STATIC.+86-32764(A5)         CODE.+$E4  ARR1_VAR
+		      *							       LINE 124
+00000372 2B7AFD728038		 MOVE.L	   K.15(PC),STATIC.+56-32768(A5)         CODE.+$E6  REC1_VAR
+00000378 7030			 MOVEQ	   #48,D0			         $30
+0000037A D0AD80C2		 ADD.L	   STATIC.+194-32768(A5),D0	         I
+0000037E 4A80			 TST.L	   D0
+00000380 6C06			 BGE.S	   X.1.3(PC)
+00000382 4EB900000000 X.1.4	 JSR	   E.VALUE
+00000388 727F	      X.1.3	 MOVEQ	   #127,D1			         $7F
+0000038A B081			 CMP.L	   D1,D0
+0000038C 6EF4			 BGT.S	   X.1.4(PC)
+0000038E 3B7AFD5A803C		 MOVE.W	   K.16(PC),STATIC.+56-32764(A5)         CODE.+$EA  REC1_VAR
+00000394 2200			 MOVE.L	   D0,D1
+00000396 E681			 ASR.L	   #3,D1			         $3
+00000398 5D81			 SUBQ.L	   #6,D1			         $6
+0000039A 6D16			 BLT.S	   X.1.5(PC)
+0000039C 0C8100000002		 CMPI.L	   #2,D1			         $2000003A2 6C0E			 BGE.S	   X.1.5(PC)
+000003A4 7407			 MOVEQ	   #7,D2			         $7
+000003A6 C002			 AND.B	   D2,D0
+000003A8 9400			 SUB.B	   D0,D2
+000003AA 41ED803C		 LEA	   STATIC.+56-32764(A5),A0	         REC1_VAR
+000003AE 05F01800		 BSET.B	   D2,0(A0,D1.L)		         $0
+000003B2 026DFFC0803C X.1.5	 ANDI.W	   #65472,STATIC.+56-32764(A5)	         $FFC0  REC1_VAR
+000003B8 41FAFD32		 LEA	   K.17(PC),A0			         CODE.+$EC
+000003BC 43ED803E		 LEA	   STATIC.+56-32762(A5),A1	         REC1_VAR
+000003C0 22D8			 MOVE.L	   (A0)+,(A1)+
+000003C2 32D8			 MOVE.W	   (A0)+,(A1)+
+		      *							       LINE 125
+000003C4 3B6D803C8036		 MOVE.W	   STATIC.+56-32764(A5),STATIC.+54-32768(A5)
+									         REC1_VAR  NUMBERS_VAR
+		      *							       LINE 126
+000003CA 41FAFD26		 LEA	   K.18(PC),A0			         CODE.+$F2
+000003CE 43ED8002		 LEA	   STATIC.+2-32768(A5),A1	         LEN1_VAR
+000003D2 22D8			 MOVE.L	   (A0)+,(A1)+
+000003D4 32D8			 MOVE.W	   (A0)+,(A1)+
+000003D6 026D7FFF8002		 ANDI.W	   #32767,STATIC.+2-32768(A5)	         $7FFF  LEN1_VAR
+		      *							       LINE 127
+000003DC 4CFA03FFFD1A		 MOVEM.L   K.19(PC),#1023		         CODE.+$F8  $3FF
+000003E2 48ED03FF806C		 MOVEM.L   #1023,STATIC.+108-32768(A5)	         $3FF  DOUBLE_ARR
+		      *							       LINE 129
+000003E8 303AFD38		 MOVE.W	   K.21(PC),D0			         CODE.+$122
+000003EC C07AFD32		 AND.W	   K.20(PC),D0			         CODE.+$120
+000003F0 3D40FFFE		 MOVE.W	   D0,-2(A6)			         $FFFFFFFE
+000003F4 3D7C3800FFFC		 MOVE.W	   #14336,-4(A6)		         $3800  $FFFFFFFC
+000003FA 302EFFFE		 MOVE.W	   -2(A6),D0			         $FFFFFFFE
+000003FE B06EFFFC		 CMP.W	   -4(A6),D0			         $FFFFFFFC
+00000402 6708			 BEQ.S	   L.1.3(PC)
+		      *							       LINE 129 (2)
+00000404 7001	      L.1.2	 MOVEQ	   #1,D0			         $1
+00000406 2F00			 MOVE.L	   D0,-(A7)
+00000408 6100FC08		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 130
+0000040C 203AFD22     L.1.3	 MOVE.L	   K.22+12(PC),D0		         CODE.+$124
+00000410 C0AD8062		 AND.L	   STATIC.+92-32762(A5),D0	         NON_ALPHA_NUMS
+00000414 2D40FFFA		 MOVE.L	   D0,-6(A6)			         $FFFFFFFA
+00000418 303AFD1A		 MOVE.W	   K.22+16(PC),D0		         CODE.+$124
+0000041C C06D8066		 AND.W	   STATIC.+92-32758(A5),D0	         NON_ALPHA_NUMS
+00000420 3D40FFFE		 MOVE.W	   D0,-2(A6)			         $FFFFFFFE
+00000424 41EEFFFA		 LEA	   -6(A6),A0			         $FFFFFFFA
+00000428 43FAFD0C		 LEA	   K.23(PC),A1			         CODE.+$136
+0000042C B189			 CMPM.L	   (A0)+,(A1)+0000042E 6604			 BNE.S	   L.1.4(PC)
+00000430 4A58			 TST.W	   (A0)+
+00000432 6708			 BEQ.S	   L.1.5(PC)
+		      *							       LINE 130 (2)
+00000434 7002	      L.1.4	 MOVEQ	   #2,D0			         $2
+00000436 2F00			 MOVE.L	   D0,-(A7)
+00000438 6100FBD8		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 131
+0000043C 3D7C8000FFFE L.1.5	 MOVE.W	   #-32768,-2(A6)		         $FFFF8000  $FFFFFFFE
+00000442 303AFCF6		 MOVE.W	   K.24(PC),D0			         CODE.+$13A
+00000446 C16EFFFE		 AND.W	   D0,-2(A6)			         $FFFFFFFE
+0000044A 4A6EFFFE		 TST.W	   -2(A6)			         $FFFFFFFE
+0000044E 6708			 BEQ.S	   L.1.7(PC)
+		      *							       LINE 131 (2)
+00000450 7003	      L.1.6	 MOVEQ	   #3,D0			         $3
+00000452 2F00			 MOVE.L	   D0,-(A7)
+00000454 6100FBBC		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 132
+00000458 303AFCCA     L.1.7	 MOVE.W	   K.22(PC),D0			         CODE.+$124
+0000045C 4640			 NOT.W	   D0
+0000045E C07AFCE0		 AND.W	   K.25+4(PC),D0		         CODE.+$13C
+00000462 6708			 BEQ.S	   L.1.9(PC)
+		      *							       LINE 132 (2)
+00000464 7004	      L.1.8	 MOVEQ	   #4,D0			         $4
+00000466 2F00			 MOVE.L	   D0,-(A7)
+00000468 6100FBA8		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 133
+0000046C 303AFCF0     L.1.9	 MOVE.W	   K.27+4(PC),D0		         CODE.+$15A
+00000470 807AFCD6		 OR.W	   K.26(PC),D0			         CODE.+$148
+00000474 3D40FFFE		 MOVE.W	   D0,-2(A6)			         $FFFFFFFE
+00000478 302EFFFE		 MOVE.W	   -2(A6),D0			         $FFFFFFFE
+0000047C 4640			 NOT.W	   D0
+0000047E C07AFCA2		 AND.W	   K.21(PC),D0			         CODE.+$122
+00000482 6708			 BEQ.S	   L.1.11(PC)
+		      *							       LINE 133 (2)
+00000484 7005	      L.1.10	 MOVEQ	   #5,D0			         $5
+00000486 2F00			 MOVE.L	   D0,-(A7)
+00000488 6100FB88		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 134
+0000048C 6008	      L.1.11	 BRA.S	   L.1.13(PC)
+		      *							       LINE 134 (2)
+0000048E 7006	      L.1.12	 MOVEQ	   #6,D0			         $6
+00000490 2F00			 MOVE.L	   D0,-(A7)
+00000492 6100FB7E		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 13500000496 202D8002     L.1.13	 MOVE.L	   STATIC.+2-32768(A5),D0	         LEN1_VAR
+0000049A C0BAFCA6		 AND.L	   K.25+6(PC),D0		         CODE.+$13C
+0000049E 2D40FFFA		 MOVE.L	   D0,-6(A6)			         $FFFFFFFA
+000004A2 302D8006		 MOVE.W	   STATIC.+2-32764(A5),D0	         LEN1_VAR
+000004A6 C07AFC9E		 AND.W	   K.25+10(PC),D0		         CODE.+$13C
+000004AA 3D40FFFE		 MOVE.W	   D0,-2(A6)			         $FFFFFFFE
+000004AE 41EEFFFA		 LEA	   -6(A6),A0			         $FFFFFFFA
+000004B2 43ED8002		 LEA	   STATIC.+2-32768(A5),A1	         LEN1_VAR
+000004B6 B189			 CMPM.L	   (A0)+,(A1)+
+000004B8 6604			 BNE.S	   L.1.14(PC)
+000004BA B149			 CMPM.W	   (A0)+,(A1)+
+000004BC 6708			 BEQ.S	   L.1.15(PC)
+		      *							       LINE 135 (2)
+000004BE 7007	      L.1.14	 MOVEQ	   #7,D0			         $7
+000004C0 2F00			 MOVE.L	   D0,-(A7)
+000004C2 6100FB4E		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 136
+000004C6 102D80BB     L.1.15	 MOVE.B	   STATIC.+187-32768(A5),D0	         CHAR2
+000004CA 1200			 MOVE.B	   D0,D1
+000004CC E601			 ASR.B	   #3,D1			         $3
+000004CE 5101			 SUBQ.B	   #8,D1			         $8
+000004D0 6D18			 BLT.S	   L.1.16(PC)
+000004D2 0C010004		 CMPI.B	   #4,D1			         $4
+000004D6 6C12			 BGE.S	   L.1.16(PC)
+000004D8 7407			 MOVEQ	   #7,D2			         $7
+000004DA C002			 AND.B	   D2,D0
+000004DC 9400			 SUB.B	   D0,D2
+000004DE 41ED8032		 LEA	   STATIC.+50-32768(A5),A0	         UPPERS_VAR
+000004E2 4881			 EXT.W	   D1
+000004E4 05301000		 BTST.B	   D2,0(A0,D1.W)		         $0
+000004E8 6608			 BNE.S	   L.1.17(PC)
+		      *							       LINE 136 (2)
+000004EA 7008	      L.1.16	 MOVEQ	   #8,D0			         $8
+000004EC 2F00			 MOVE.L	   D0,-(A7)
+000004EE 6100FB22		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 137
+000004F2 302D80C0     L.1.17	 MOVE.W	   STATIC.+192-32768(A5),D0	         COLOR2
+000004F6 3200			 MOVE.W	   D0,D1
+000004F8 E641			 ASR.W	   #3,D1			         $3
+000004FA 7407			 MOVEQ	   #7,D2			         $7
+000004FC C002			 AND.B	   D2,D0
+000004FE 9400			 SUB.B	   D0,D2
+00000500 41FAFC58		 LEA	   K.27(PC),A0			         CODE.+$15A
+00000504 05301000		 BTST.B	   D2,0(A0,D1.W)		         $0
+00000508 6708			 BEQ.S	   L.1.19(PC)		      *							       LINE 137 (2)
+0000050A 7009	      L.1.18	 MOVEQ	   #9,D0			         $9
+0000050C 2F00			 MOVE.L	   D0,-(A7)
+0000050E 6100FB02		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 138
+00000512 082D0007805C L.1.19	 BTST.B	   #7,STATIC.+92-32768(A5)	         $7  NON_ALPHA_NUMS
+00000518 6608			 BNE.S	   L.1.21(PC)
+		      *							       LINE 138 (2)
+0000051A 700A	      L.1.20	 MOVEQ	   #10,D0			         $A
+0000051C 2F00			 MOVE.L	   D0,-(A7)
+0000051E 6100FAF2		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 139
+00000522 202D8002     L.1.21	 MOVE.L	   STATIC.+2-32768(A5),D0	         LEN1_VAR
+00000526 4680			 NOT.L	   D0
+00000528 C0BAFC18		 AND.L	   K.25+6(PC),D0		         CODE.+$13C
+0000052C 2D40FFFA		 MOVE.L	   D0,-6(A6)			         $FFFFFFFA
+00000530 302D8006		 MOVE.W	   STATIC.+2-32764(A5),D0	         LEN1_VAR
+00000534 4640			 NOT.W	   D0
+00000536 C07AFC0E		 AND.W	   K.25+10(PC),D0		         CODE.+$13C
+0000053A 3D40FFFE		 MOVE.W	   D0,-2(A6)			         $FFFFFFFE
+0000053E 202D80C2		 MOVE.L	   STATIC.+194-32768(A5),D0	         I
+00000542 2200			 MOVE.L	   D0,D1
+00000544 E681			 ASR.L	   #3,D1			         $3
+00000546 6D1C			 BLT.S	   L.1.23(PC)
+00000548 0C8100000006		 CMPI.L	   #6,D1			         $6
+0000054E 6C14			 BGE.S	   L.1.23(PC)
+00000550 7407			 MOVEQ	   #7,D2			         $7
+00000552 C002			 AND.B	   D2,D0
+00000554 9400			 SUB.B	   D0,D2
+00000556 053618FA		 BTST.B	   D2,-6(A6,D1.L)		         $FFFFFFFA
+0000055A 6708			 BEQ.S	   L.1.23(PC)
+		      *							       LINE 139 (2)
+0000055C 700B	      L.1.22	 MOVEQ	   #11,D0			         $B
+0000055E 2F00			 MOVE.L	   D0,-(A7)
+00000560 6100FAB0		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 140
+00000564 302D800E     L.1.23	 MOVE.W	   STATIC.+8-32762(A5),D0	         LEN2_VAR
+00000568 4640			 NOT.W	   D0
+0000056A C06D804C		 AND.W	   STATIC.+68-32760(A5),D0	         REC2_VAR
+0000056E 3D40FFFE		 MOVE.W	   D0,-2(A6)			         $FFFFFFFE
+00000572 082E0004FFFE		 BTST.B	   #4,-2(A6)			         $4  $FFFFFFFE
+00000578 6608			 BNE.S	   L.1.25(PC)
+		      *							       LINE 140 (2)
+0000057A 700C	      L.1.24	 MOVEQ	   #12,D0			         $C
+0000057C 2F00			 MOVE.L	   D0,-(A7)0000057E 6100FA92		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 141
+00000582 303AFB9C     L.1.25	 MOVE.W	   K.20(PC),D0			         CODE.+$120
+00000586 C06D8056		 AND.W	   STATIC.+86-32768(A5),D0	         ARR1_VAR
+0000058A 3D40FFFE		 MOVE.W	   D0,-2(A6)			         $FFFFFFFE
+0000058E 303AFBD6		 MOVE.W	   K.30(PC),D0			         CODE.+$166
+00000592 4640			 NOT.W	   D0
+00000594 C16EFFFE		 AND.W	   D0,-2(A6)			         $FFFFFFFE
+00000598 302EFFFE		 MOVE.W	   -2(A6),D0			         $FFFFFFFE
+0000059C B06D8056		 CMP.W	   STATIC.+86-32768(A5),D0	         ARR1_VAR
+000005A0 6708			 BEQ.S	   L.1.27(PC)
+		      *							       LINE 142
+000005A2 700D	      L.1.26	 MOVEQ	   #13,D0			         $D
+000005A4 2F00			 MOVE.L	   D0,-(A7)
+000005A6 6100FA6A		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 143
+000005AA 303AFBBC     L.1.27	 MOVE.W	   K.31(PC),D0			         CODE.+$168
+000005AE 806D803C		 OR.W	   STATIC.+56-32764(A5),D0	         REC1_VAR
+000005B2 3D40FFFE		 MOVE.W	   D0,-2(A6)			         $FFFFFFFE
+000005B6 7001			 MOVEQ	   #1,D0			         $1
+000005B8 3D7CF000FFFC		 MOVE.W	   #-4096,-4(A6)		         $FFFFF000  $FFFFFFFC
+000005BE 322EFFFE		 MOVE.W	   -2(A6),D1			         $FFFFFFFE
+000005C2 B26EFFFC		 CMP.W	   -4(A6),D1			         $FFFFFFFC
+000005C6 6702			 BEQ.S	   X.1.6(PC)
+000005C8 7000	      X.1.7	 MOVEQ	   #0,D0			         $0
+000005CA 7201	      X.1.6	 MOVEQ	   #1,D1			         $1
+000005CC B001			 CMP.B	   D1,D0
+000005CE 6708			 BEQ.S	   L.1.29(PC)
+		      *							       LINE 143 (2)
+000005D0 700E	      L.1.28	 MOVEQ	   #14,D0			         $E
+000005D2 2F00			 MOVE.L	   D0,-(A7)
+000005D4 6100FA3C		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 144
+000005D8 302D8036     L.1.29	 MOVE.W	   STATIC.+54-32768(A5),D0	         NUMBERS_VAR
+000005DC B07AFB8C		 CMP.W	   K.32(PC),D0			         CODE.+$16A
+000005E0 6708			 BEQ.S	   L.1.31(PC)
+		      *							       LINE 144 (2)
+000005E2 700F	      L.1.30	 MOVEQ	   #15,D0			         $F
+000005E4 2F00			 MOVE.L	   D0,-(A7)
+000005E6 6100FA2A		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 145
+000005EA 302D80BE     L.1.31	 MOVE.W	   STATIC.+190-32768(A5),D0	         COLOR1
+000005EE 3200			 MOVE.W	   D0,D1
+000005F0 E641			 ASR.W	   #3,D1			         $3
+000005F2 7407			 MOVEQ	   #7,D2			         $7000005F4 C002			 AND.B	   D2,D0
+000005F6 9400			 SUB.B	   D0,D2
+000005F8 41FAFB72		 LEA	   K.33(PC),A0			         CODE.+$16C
+000005FC 05301000		 BTST.B	   D2,0(A0,D1.W)		         $0
+00000600 6708			 BEQ.S	   L.1.33(PC)
+		      *							       LINE 145 (2)
+00000602 7010	      L.1.32	 MOVEQ	   #16,D0			         $10
+00000604 2F00			 MOVE.L	   D0,-(A7)
+00000606 6100FA0A		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 146
+0000060A 202D80C2     L.1.33	 MOVE.L	   STATIC.+194-32768(A5),D0	         I
+0000060E 5480			 ADDQ.L	   #2,D0			         $2
+00000610 4A80			 TST.L	   D0
+00000612 6E06			 BGT.S	   X.1.8(PC)
+00000614 4EB900000000 X.1.9	 JSR	   E.INDEX
+0000061A 7205	      X.1.8	 MOVEQ	   #5,D1			         $5
+0000061C B081			 CMP.L	   D1,D0
+0000061E 6EF4			 BGT.S	   X.1.9(PC)
+00000620 41ED806C		 LEA	   STATIC.+108-32768(A5),A0	         DOUBLE_ARR
+00000624 E780			 ASL.L	   #3,D0			         $3
+00000626 43EEFFF8		 LEA	   -8(A6),A1			         $FFFFFFF8
+0000062A 4259			 CLR.W	   (A1)+
+0000062C 22FC0003FF80		 MOVE.L	   #262016,(A1)+		         $3FF80
+00000632 4259			 CLR.W	   (A1)+
+00000634 41F008F8		 LEA	   -8(A0,D0.L),A0		         $FFFFFFF8
+00000638 43EEFFF8		 LEA	   -8(A6),A1			         $FFFFFFF8
+0000063C B189			 CMPM.L	   (A0)+,(A1)+
+0000063E 6604			 BNE.S	   L.1.34(PC)
+00000640 B189			 CMPM.L	   (A0)+,(A1)+
+00000642 6708			 BEQ.S	   L.1.35(PC)
+		      *							       LINE 146 (2)
+00000644 7011	      L.1.34	 MOVEQ	   #17,D0			         $11
+00000646 2F00			 MOVE.L	   D0,-(A7)
+00000648 6100F9C8		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 147
+0000064C 302D8090     L.1.35	 MOVE.W	   STATIC.+108-32732(A5),D0	         DOUBLE_ARR
+00000650 807AFAC2		 OR.W	   K.19+28(PC),D0		         CODE.+$F8
+00000654 3D40FFFE		 MOVE.W	   D0,-2(A6)			         $FFFFFFFE
+00000658 082E0005FFFE		 BTST.B	   #5,-2(A6)			         $5  $FFFFFFFE
+0000065E 6608			 BNE.S	   L.1.37(PC)
+		      *							       LINE 147 (2)
+00000660 7012	      L.1.36	 MOVEQ	   #18,D0			         $12
+00000662 2F00			 MOVE.L	   D0,-(A7)
+00000664 6100F9AC		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 14800000668 202D80C2     L.1.37	 MOVE.L	   STATIC.+194-32768(A5),D0	         I
+0000066C 5280			 ADDQ.L	   #1,D0			         $1
+0000066E 4A80			 TST.L	   D0
+00000670 6E06			 BGT.S	   X.1.10(PC)
+00000672 4EB900000000 X.1.11	 JSR	   E.INDEX
+00000678 7205	      X.1.10	 MOVEQ	   #5,D1			         $5
+0000067A B081			 CMP.L	   D1,D0
+0000067C 6EF4			 BGT.S	   X.1.11(PC)
+0000067E E580			 ASL.L	   #2,D0			         $2
+00000680 41FAFAE8		 LEA	   K.34-4(PC),A0		         CODE.+$16E
+00000684 083000000800		 BTST.B	   #0,0(A0,D0.L)		         $0  $0
+0000068A 6608			 BNE.S	   L.1.39(PC)
+		      *							       LINE 148 (2)
+0000068C 7013	      L.1.38	 MOVEQ	   #19,D0			         $13
+0000068E 2F00			 MOVE.L	   D0,-(A7)
+00000690 6100F980		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 149
+00000694 41FAFA5C     L.1.39	 LEA	   K.18(PC),A0			         CODE.+$F2
+00000698 43FAFADC		 LEA	   K.34+8(PC),A1		         CODE.+$16E
+0000069C B189			 CMPM.L	   (A0)+,(A1)+
+0000069E 6604			 BNE.S	   L.1.40(PC)
+000006A0 4A58			 TST.W	   (A0)+
+000006A2 6708			 BEQ.S	   L.1.41(PC)
+		      *							       LINE 149 (2)
+000006A4 7014	      L.1.40	 MOVEQ	   #20,D0			         $14
+000006A6 2F00			 MOVE.L	   D0,-(A7)
+000006A8 6100F968		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 150
+000006AC 41ED806C     L.1.41	 LEA	   STATIC.+108-32768(A5),A0	         DOUBLE_ARR
+000006B0 4A98			 TST.L	   (A0)+
+000006B2 660C			 BNE.S	   L.1.43(PC)
+000006B4 4A98			 TST.L	   (A0)+
+000006B6 6608			 BNE.S	   L.1.43(PC)
+		      *							       LINE 150 (2)
+000006B8 7015	      L.1.42	 MOVEQ	   #21,D0			         $15
+000006BA 2F00			 MOVE.L	   D0,-(A7)
+000006BC 6100F954		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 151
+000006C0 41ED805C     L.1.43	 LEA	   STATIC.+92-32768(A5),A0	         NON_ALPHA_NUMS
+000006C4 43FAFABC		 LEA	   K.35(PC),A1			         CODE.+$182
+000006C8 7003			 MOVEQ	   #3,D0			         $3
+000006CA B189	      X.1.12	 CMPM.L	   (A0)+,(A1)+
+000006CC 56C8FFFC		 DBNE	   D0,X.1.12(PC)
+000006D0 6608			 BNE.S	   L.1.45(PC)
+		      *							       LINE 151 (2)000006D2 7016	      L.1.44	 MOVEQ	   #22,D0			         $16
+000006D4 2F00			 MOVE.L	   D0,-(A7)
+000006D6 6100F93A		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 152
+000006DA 41FAFAA6     L.1.45	 LEA	   K.35(PC),A0			         CODE.+$182
+000006DE 7003			 MOVEQ	   #3,D0			         $3
+000006E0 4A98	      X.1.13	 TST.L	   (A0)+
+000006E2 56C8FFFC		 DBNE	   D0,X.1.13(PC)
+000006E6 6708			 BEQ.S	   L.1.47(PC)
+		      *							       LINE 152 (2)
+000006E8 7017	      L.1.46	 MOVEQ	   #23,D0			         $17
+000006EA 2F00			 MOVE.L	   D0,-(A7)
+000006EC 6100F924		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 153
+000006F0 6008	      L.1.47	 BRA.S	   L.1.49(PC)
+		      *							       LINE 153 (2)
+000006F2 7018	      L.1.48	 MOVEQ	   #24,D0			         $18
+000006F4 2F00			 MOVE.L	   D0,-(A7)
+000006F6 6100F91A		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 154
+000006FA 4AB90000017E L.1.49	 TST.L	   K.34+16			         CODE.+$16E
+00000700 6708			 BEQ.S	   L.1.51(PC)
+		      *							       LINE 154 (2)
+00000702 7019	      L.1.50	 MOVEQ	   #25,D0			         $19
+00000704 2F00			 MOVE.L	   D0,-(A7)
+00000706 6100F90A		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 155
+0000070A 41ED8074     L.1.51	 LEA	   STATIC.+108-32760(A5),A0	         DOUBLE_ARR
+0000070E 4A98			 TST.L	   (A0)+
+00000710 6604			 BNE.S	   L.1.52(PC)
+00000712 4A98			 TST.L	   (A0)+
+00000714 6708			 BEQ.S	   L.1.53(PC)
+		      *							       LINE 155 (2)
+00000716 701A	      L.1.52	 MOVEQ	   #26,D0			         $1A
+00000718 2F00			 MOVE.L	   D0,-(A7)
+0000071A 6100F8F6		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 156
+0000071E 202D8032     L.1.53	 MOVE.L	   STATIC.+50-32768(A5),D0	         UPPERS_VAR
+00000722 C0AD8064		 AND.L	   STATIC.+92-32760(A5),D0	         NON_ALPHA_NUMS
+00000726 2D40FFFC		 MOVE.L	   D0,-4(A6)			         $FFFFFFFC
+0000072A 4AAEFFFC		 TST.L	   -4(A6)			         $FFFFFFFC
+0000072E 6708			 BEQ.S	   L.1.55(PC)
+		      *							       LINE 156 (2)
+00000730 701B	      L.1.54	 MOVEQ	   #27,D0			         $1B
+00000732 2F00			 MOVE.L	   D0,-(A7)00000734 6100F8DC		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 157
+00000738 203AFA38     L.1.55	 MOVE.L	   K.34+4(PC),D0		         CODE.+$16E
+0000073C C0BAFA30		 AND.L	   K.34(PC),D0			         CODE.+$16E
+00000740 2D40FFFC		 MOVE.L	   D0,-4(A6)			         $FFFFFFFC
+00000744 41EEFFFC		 LEA	   -4(A6),A0			         $FFFFFFFC
+00000748 43FAFA48		 LEA	   K.36(PC),A1			         CODE.+$192
+0000074C B149			 CMPM.W	   (A0)+,(A1)+
+0000074E 6604			 BNE.S	   L.1.56(PC)
+00000750 4A58			 TST.W	   (A0)+
+00000752 6708			 BEQ.S	   L.1.57(PC)
+		      *							       LINE 157 (2)
+00000754 701C	      L.1.56	 MOVEQ	   #28,D0			         $1C
+00000756 2F00			 MOVE.L	   D0,-(A7)
+00000758 6100F8B8		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 158
+0000075C 426EFFFA     L.1.57	 CLR.W	   -6(A6)			         $FFFFFFFA
+00000760 2D7C0003F000		 MOVE.L	   #258048,-4(A6)		         $3F000  $FFFFFFFC
+	 FFFC
+00000768 202EFFFA		 MOVE.L	   -6(A6),D0			         $FFFFFFFA
+0000076C 4680			 NOT.L	   D0
+0000076E C0BAF982		 AND.L	   K.18(PC),D0			         CODE.+$F2
+00000772 2D40FFFA		 MOVE.L	   D0,-6(A6)			         $FFFFFFFA
+00000776 302EFFFE		 MOVE.W	   -2(A6),D0			         $FFFFFFFE
+0000077A 4640			 NOT.W	   D0
+0000077C C07AF978		 AND.W	   K.18+4(PC),D0		         CODE.+$F2
+00000780 3D40FFFE		 MOVE.W	   D0,-2(A6)			         $FFFFFFFE
+00000784 41EEFFFA		 LEA	   -6(A6),A0			         $FFFFFFFA
+00000788 43FAF9EC		 LEA	   K.34+8(PC),A1		         CODE.+$16E
+0000078C B189			 CMPM.L	   (A0)+,(A1)+
+0000078E 6604			 BNE.S	   L.1.58(PC)
+00000790 4A58			 TST.W	   (A0)+
+00000792 6708			 BEQ.S	   L.1.59(PC)
+		      *							       LINE 158 (2)
+00000794 701D	      L.1.58	 MOVEQ	   #29,D0			         $1D
+00000796 2F00			 MOVE.L	   D0,-(A7)
+00000798 6100F878		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 159
+0000079C 3D7AF9F6FFFA L.1.59	 MOVE.W	   K.37(PC),-6(A6)		         CODE.+$194  $FFFFFFFA
+000007A2 42AEFFFC		 CLR.L	   -4(A6)			         $FFFFFFFC
+000007A6 202D803E		 MOVE.L	   STATIC.+56-32762(A5),D0	         REC1_VAR
+000007AA 81AEFFFA		 OR.L	   D0,-6(A6)			         $FFFFFFFA
+000007AE 302D8042		 MOVE.W	   STATIC.+56-32758(A5),D0	         REC1_VAR
+000007B2 816EFFFE		 OR.W	   D0,-2(A6)			         $FFFFFFFE
+000007B6 203AF9DE		 MOVE.L	   K.38(PC),D0			         CODE.+$196000007BA 80AD8002		 OR.L	   STATIC.+2-32768(A5),D0	         LEN1_VAR
+000007BE 2D40FFF4		 MOVE.L	   D0,-12(A6)			         $FFFFFFF4
+000007C2 303AF9D6		 MOVE.W	   K.38+4(PC),D0		         CODE.+$196
+000007C6 806D8006		 OR.W	   STATIC.+2-32764(A5),D0	         LEN1_VAR
+000007CA 3D40FFF8		 MOVE.W	   D0,-8(A6)			         $FFFFFFF8
+000007CE 2D7C00003FE0		 MOVE.L	   #16352,-18(A6)		         $3FE0  $FFFFFFEE
+	 FFEE
+000007D6 426EFFF2		 CLR.W	   -14(A6)			         $FFFFFFF2
+000007DA 202EFFEE		 MOVE.L	   -18(A6),D0			         $FFFFFFEE
+000007DE 4680			 NOT.L	   D0
+000007E0 C1AEFFF4		 AND.L	   D0,-12(A6)			         $FFFFFFF4
+000007E4 302EFFF2		 MOVE.W	   -14(A6),D0			         $FFFFFFF2
+000007E8 4640			 NOT.W	   D0
+000007EA C16EFFF8		 AND.W	   D0,-8(A6)			         $FFFFFFF8
+000007EE 41EEFFFA		 LEA	   -6(A6),A0			         $FFFFFFFA
+000007F2 43EEFFF4		 LEA	   -12(A6),A1			         $FFFFFFF4
+000007F6 B189			 CMPM.L	   (A0)+,(A1)+
+000007F8 6604			 BNE.S	   L.1.60(PC)
+000007FA B149			 CMPM.W	   (A0)+,(A1)+
+000007FC 6708			 BEQ.S	   L.1.61(PC)
+		      *							       LINE 159 (2)
+000007FE 701E	      L.1.60	 MOVEQ	   #30,D0			         $1E
+00000800 2F00			 MOVE.L	   D0,-(A7)
+00000802 6100F80E		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 160
+00000806 203AF96E     L.1.61	 MOVE.L	   K.34+8(PC),D0		         CODE.+$16E
+0000080A B0BAF990		 CMP.L	   K.39(PC),D0			         CODE.+$19C
+0000080E 6708			 BEQ.S	   L.1.63(PC)
+		      *							       LINE 160 (2)
+00000810 701F	      L.1.62	 MOVEQ	   #31,D0			         $1F
+00000812 2F00			 MOVE.L	   D0,-(A7)
+00000814 6100F7FC		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 161
+00000818 41ED8084     L.1.63	 LEA	   STATIC.+108-32744(A5),A0	         DOUBLE_ARR
+0000081C 43ED803E		 LEA	   STATIC.+56-32762(A5),A1	         REC1_VAR
+00000820 B189			 CMPM.L	   (A0)+,(A1)+
+00000822 6608			 BNE.S	   L.1.64(PC)
+00000824 B149			 CMPM.W	   (A0)+,(A1)+
+00000826 6604			 BNE.S	   L.1.64(PC)
+00000828 4A58			 TST.W	   (A0)+
+0000082A 6708			 BEQ.S	   L.1.65(PC)
+		      *							       LINE 161 (2)
+0000082C 7020	      L.1.64	 MOVEQ	   #32,D0			         $20
+0000082E 2F00			 MOVE.L	   D0,-(A7)
+00000830 6100F7E0		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12		      *							       LINE 162
+00000834 41EEFFF6     L.1.65	 LEA	   -10(A6),A0			         $FFFFFFF6
+00000838 4298			 CLR.L	   (A0)+
+0000083A 30FCF000		 MOVE.W	   #-4096,(A0)+			         $FFFFF000
+0000083E 4298			 CLR.L	   (A0)+
+00000840 41EEFFF6		 LEA	   -10(A6),A0			         $FFFFFFF6
+00000844 43FAF904		 LEA	   K.26+2(PC),A1		         CODE.+$148
+00000848 45EEFFF6		 LEA	   -10(A6),A2			         $FFFFFFF6
+0000084C 7004			 MOVEQ	   #4,D0			         $4
+0000084E 3218	      X.1.14	 MOVE.W	   (A0)+,D1
+00000850 4641			 NOT.W	   D1
+00000852 C259			 AND.W	   (A1)+,D1
+00000854 34C1			 MOVE.W	   D1,(A2)+
+00000856 51C8FFF6		 DBF	   D0,X.1.14(PC)
+0000085A 41EEFFF6		 LEA	   -10(A6),A0			         $FFFFFFF6
+0000085E 43FAF940		 LEA	   K.40(PC),A1			         CODE.+$1A0
+00000862 B189			 CMPM.L	   (A0)+,(A1)+
+00000864 6608			 BNE.S	   L.1.66(PC)
+00000866 4A98			 TST.L	   (A0)+
+00000868 6604			 BNE.S	   L.1.66(PC)
+0000086A 4A58			 TST.W	   (A0)+
+0000086C 6708			 BEQ.S	   L.1.67(PC)
+		      *							       LINE 162 (2)
+0000086E 7021	      L.1.66	 MOVEQ	   #33,D0			         $21
+00000870 2F00			 MOVE.L	   D0,-(A7)
+00000872 6100F79E		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 163
+00000876 41ED8012     L.1.67	 LEA	   STATIC.+18-32768(A5),A0	         LN2_VARB
+0000087A 43FAF928		 LEA	   K.41(PC),A1			         CODE.+$1A4
+0000087E B189			 CMPM.L	   (A0)+,(A1)+
+00000880 6608			 BNE.S	   L.1.68(PC)
+00000882 4A98			 TST.L	   (A0)+
+00000884 6604			 BNE.S	   L.1.68(PC)
+00000886 4A58			 TST.W	   (A0)+
+00000888 6708			 BEQ.S	   L.1.69(PC)
+		      *							       LINE 163 (2)
+0000088A 7022	      L.1.68	 MOVEQ	   #34,D0			         $22
+0000088C 2F00			 MOVE.L	   D0,-(A7)
+0000088E 6100F782		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 164
+00000892 41EEFFF6     L.1.69	 LEA	   -10(A6),A0			         $FFFFFFF6
+00000896 20FAF910		 MOVE.L	   K.42(PC),(A0)+		         CODE.+$1A8
+0000089A 4298			 CLR.L	   (A0)+
+0000089C 4258			 CLR.W	   (A0)+
+0000089E 41ED8012		 LEA	   STATIC.+18-32768(A5),A0	         LN2_VARB000008A2 43EEFFF6		 LEA	   -10(A6),A1			         $FFFFFFF6
+000008A6 2018			 MOVE.L	   (A0)+,D0
+000008A8 8199			 OR.L	   D0,(A1)+
+000008AA 2018			 MOVE.L	   (A0)+,D0
+000008AC 8199			 OR.L	   D0,(A1)+
+000008AE 3018			 MOVE.W	   (A0)+,D0
+000008B0 8159			 OR.W	   D0,(A1)+
+000008B2 41EEFFF6		 LEA	   -10(A6),A0			         $FFFFFFF6
+000008B6 43FAF8E8		 LEA	   K.40(PC),A1			         CODE.+$1A0
+000008BA B189			 CMPM.L	   (A0)+,(A1)+
+000008BC 6608			 BNE.S	   L.1.70(PC)
+000008BE 4A98			 TST.L	   (A0)+
+000008C0 6604			 BNE.S	   L.1.70(PC)
+000008C2 4A58			 TST.W	   (A0)+
+000008C4 6708			 BEQ.S	   L.1.71(PC)
+		      *							       LINE 165
+000008C6 7023	      L.1.70	 MOVEQ	   #35,D0			         $23
+000008C8 2F00			 MOVE.L	   D0,-(A7)
+000008CA 6100F746		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 166
+000008CE 203AF8DC     L.1.71	 MOVE.L	   K.43(PC),D0			         CODE.+$1AC
+000008D2 4680			 NOT.L	   D0
+000008D4 C0BAF8CE		 AND.L	   K.41(PC),D0			         CODE.+$1A4
+000008D8 2D40FFFC		 MOVE.L	   D0,-4(A6)			         $FFFFFFFC
+000008DC 41FAF8D2		 LEA	   K.44(PC),A0			         CODE.+$1B0
+000008E0 43EEFFFC		 LEA	   -4(A6),A1			         $FFFFFFFC
+000008E4 B189			 CMPM.L	   (A0)+,(A1)+
+000008E6 660A			 BNE.S	   L.1.72(PC)
+000008E8 7002			 MOVEQ	   #2,D0			         $2
+000008EA 4A98	      X.1.15	 TST.L	   (A0)+
+000008EC 56C8FFFC		 DBNE	   D0,X.1.15(PC)
+000008F0 6708			 BEQ.S	   L.1.73(PC)
+		      *							       LINE 166 (2)
+000008F2 7024	      L.1.72	 MOVEQ	   #36,D0			         $24
+000008F4 2F00			 MOVE.L	   D0,-(A7)
+000008F6 6100F71A		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 167
+000008FA 203AF81C     L.1.73	 MOVE.L	   K.19+32(PC),D0		         CODE.+$F8
+000008FE 4680			 NOT.L	   D0
+00000900 C0AD806C		 AND.L	   STATIC.+108-32768(A5),D0	         DOUBLE_ARR
+00000904 2D40FFF8		 MOVE.L	   D0,-8(A6)			         $FFFFFFF8
+00000908 203AF812		 MOVE.L	   K.19+36(PC),D0		         CODE.+$F8
+0000090C 4680			 NOT.L	   D0
+0000090E C0AD8070		 AND.L	   STATIC.+108-32764(A5),D0	         DOUBLE_ARR
+00000912 2D40FFFC		 MOVE.L	   D0,-4(A6)			         $FFFFFFFC00000916 41ED801C		 LEA	   STATIC.+28-32768(A5),A0	         LEN4_INT_VAR
+0000091A 43EEFFF8		 LEA	   -8(A6),A1			         $FFFFFFF8
+0000091E B189			 CMPM.L	   (A0)+,(A1)+
+00000920 660C			 BNE.S	   L.1.74(PC)
+00000922 B189			 CMPM.L	   (A0)+,(A1)+
+00000924 6608			 BNE.S	   L.1.74(PC)
+00000926 4A98			 TST.L	   (A0)+
+00000928 6604			 BNE.S	   L.1.74(PC)
+0000092A 4A98			 TST.L	   (A0)+
+0000092C 6708			 BEQ.S	   L.1.75(PC)
+		      *							       LINE 167 (2)
+0000092E 7025	      L.1.74	 MOVEQ	   #37,D0			         $25
+00000930 2F00			 MOVE.L	   D0,-(A7)
+00000932 6100F6DE		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 168
+00000936 303AF828     L.1.75	 MOVE.W	   K.28(PC),D0			         CODE.+$160
+0000093A C07AF77E		 AND.W	   K.9+8(PC),D0			         CODE.+$B2
+0000093E 3D40FFFE		 MOVE.W	   D0,-2(A6)			         $FFFFFFFE
+00000942 426EFFF8		 CLR.W	   -8(A6)			         $FFFFFFF8
+00000946 2D7C00FFFFE0		 MOVE.L	   #16777184,-6(A6)		         $FFFFE0  $FFFFFFFA
+	 FFFA
+0000094E 202EFFF8		 MOVE.L	   -8(A6),D0			         $FFFFFFF8
+00000952 4680			 NOT.L	   D0
+00000954 C0BAF7D4		 AND.L	   K.22+6(PC),D0		         CODE.+$124
+00000958 2D40FFF8		 MOVE.L	   D0,-8(A6)			         $FFFFFFF8
+0000095C 302EFFFC		 MOVE.W	   -4(A6),D0			         $FFFFFFFC
+00000960 4640			 NOT.W	   D0
+00000962 C07AF7CA		 AND.W	   K.22+10(PC),D0		         CODE.+$124
+00000966 3D40FFFC		 MOVE.W	   D0,-4(A6)			         $FFFFFFFC
+0000096A 426EFFF4		 CLR.W	   -12(A6)			         $FFFFFFF4
+0000096E 3D6EFFFEFFF6		 MOVE.W	   -2(A6),-10(A6)		         $FFFFFFFE  $FFFFFFF6
+00000974 41EEFFF8		 LEA	   -8(A6),A0			         $FFFFFFF8
+00000978 43EEFFF4		 LEA	   -12(A6),A1			         $FFFFFFF4
+0000097C B189			 CMPM.L	   (A0)+,(A1)+
+0000097E 6604			 BNE.S	   L.1.76(PC)
+00000980 4A58			 TST.W	   (A0)+
+00000982 6708			 BEQ.S	   L.1.77(PC)
+		      *							       LINE 168 (2)
+00000984 7026	      L.1.76	 MOVEQ	   #38,D0			         $26
+00000986 2F00			 MOVE.L	   D0,-(A7)
+00000988 6100F688		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 169
+0000098C 6008	      L.1.77	 BRA.S	   L.1.79(PC)
+		      *							       LINE 169 (2)
+0000098E 7027	      L.1.78	 MOVEQ	   #39,D0			         $2700000990 2F00			 MOVE.L	   D0,-(A7)
+00000992 6100F67E		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 170
+00000996 083A0003F7DA L.1.79	 BTST.B	   #3,K.34+4(PC)		         $3  CODE.+$16E
+0000099C 56C0			 SNE	   D0
+0000099E C07C0001		 AND.W	   #1,D0			         $1
+000009A2 1B4080CE		 MOVE.B	   D0,STATIC.+206-32768(A5)	         B
+		      *							       LINE 171
+000009A6 4A2D80CE		 TST.B	   STATIC.+206-32768(A5)	         B
+000009AA 6608			 BNE.S	   L.1.81(PC)
+		      *							       LINE 171 (2)
+000009AC 7028	      L.1.80	 MOVEQ	   #40,D0			         $28
+000009AE 2F00			 MOVE.L	   D0,-(A7)
+000009B0 6100F660		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 172
+000009B4 7000	      L.1.81	 MOVEQ	   #0,D0			         $0
+000009B6 4A6D80BE		 TST.W	   STATIC.+190-32768(A5)	         COLOR1
+000009BA 6D0A			 BLT.S	   X.1.16(PC)
+000009BC 7202			 MOVEQ	   #2,D1			         $2
+000009BE B26D80BE		 CMP.W	   STATIC.+190-32768(A5),D1	         COLOR1
+000009C2 6D02			 BLT.S	   X.1.16(PC)
+000009C4 7001			 MOVEQ	   #1,D0			         $1
+000009C6 1B4080CE     X.1.16	 MOVE.B	   D0,STATIC.+206-32768(A5)	         B
+		      *							       LINE 173
+000009CA 4A2D80CE		 TST.B	   STATIC.+206-32768(A5)	         B
+000009CE 6608			 BNE.S	   L.1.83(PC)
+		      *							       LINE 173 (2)
+000009D0 7029	      L.1.82	 MOVEQ	   #41,D0			         $29
+000009D2 2F00			 MOVE.L	   D0,-(A7)
+000009D4 6100F63C		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 174
+000009D8 303AF722     L.1.83	 MOVE.W	   K.19+4(PC),D0		         CODE.+$F8
+000009DC C06D8090		 AND.W	   STATIC.+108-32732(A5),D0	         DOUBLE_ARR
+000009E0 3D40FFFE		 MOVE.W	   D0,-2(A6)			         $FFFFFFFE
+000009E4 082E0007FFFF		 BTST.B	   #7,-1(A6)			         $7  $FFFFFFFF
+000009EA 56C0			 SNE	   D0
+000009EC C07C0001		 AND.W	   #1,D0			         $1
+000009F0 1B4080CE		 MOVE.B	   D0,STATIC.+206-32768(A5)	         B
+		      *							       LINE 175
+000009F4 4A2D80CE		 TST.B	   STATIC.+206-32768(A5)	         B
+000009F8 6608			 BNE.S	   L.1.85(PC)
+		      *							       LINE 175 (2)
+000009FA 702A	      L.1.84	 MOVEQ	   #42,D0			         $2A
+000009FC 2F00			 MOVE.L	   D0,-(A7)
+000009FE 6100F612		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12		      *							       LINE 176
+00000A02 202D8094     L.1.85	 MOVE.L	   STATIC.+148-32768(A5),D0	         SA10TO30
+00000A06 80BAF766		 OR.L	   K.34(PC),D0			         CODE.+$16E
+00000A0A 2B408098		 MOVE.L	   D0,STATIC.+152-32768(A5)	         SB10TO30
+00000A0E 026D003F8098		 ANDI.W	   #63,STATIC.+152-32768(A5)	         $3F  SB10TO30
+00000A14 026DFFFE809A		 ANDI.W	   #65534,STATIC.+152-32766(A5)	         $FFFE  SB10TO30
+		      *							       LINE 177
+00000A1A 2D7C003FFFFE		 MOVE.L	   #4194302,-4(A6)		         $3FFFFE  $FFFFFFFC
+	 FFFC
+00000A22 202D8098		 MOVE.L	   STATIC.+152-32768(A5),D0	         SB10TO30
+00000A26 B0AEFFFC		 CMP.L	   -4(A6),D0			         $FFFFFFFC
+00000A2A 6708			 BEQ.S	   L.1.87(PC)
+		      *							       LINE 177 (2)
+00000A2C 702B	      L.1.86	 MOVEQ	   #43,D0			         $2B
+00000A2E 2F00			 MOVE.L	   D0,-(A7)
+00000A30 6100F5E0		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 178
+00000A34 486EFFF8     L.1.87	 PEA	   -8(A6)			         $FFFFFFF8
+00000A38 7004			 MOVEQ	   #4,D0			         $4
+00000A3A 2F00			 MOVE.L	   D0,-(A7)
+00000A3C 2F2D80C6		 MOVE.L	   STATIC.+198-32768(A5),-(A7)	         J
+00000A40 2F2D80CA		 MOVE.L	   STATIC.+202-32768(A5),-(A7)	         K
+00000A44 7030			 MOVEQ	   #48,D0			         $30
+00000A46 2F00			 MOVE.L	   D0,-(A7)
+00000A48 4EB900000000		 JSR	   S.RANNLB
+00000A4E 202D80A6		 MOVE.L	   STATIC.+164-32766(A5),D0	         S35TO127A
+00000A52 C0AEFFF8		 AND.L	   -8(A6),D0			         $FFFFFFF8
+00000A56 2B40809C		 MOVE.L	   D0,STATIC.+156-32768(A5)	         S50TO100A
+00000A5A 202D80AA		 MOVE.L	   STATIC.+164-32762(A5),D0	         S35TO127A
+00000A5E C0AEFFFC		 AND.L	   -4(A6),D0			         $FFFFFFFC
+00000A62 2B4080A0		 MOVE.L	   D0,STATIC.+156-32764(A5)	         S50TO100A
+00000A66 026D3FFF809C		 ANDI.W	   #16383,STATIC.+156-32768(A5)	         $3FFF  S50TO100A
+00000A6C 026DF80080A2		 ANDI.W	   #63488,STATIC.+156-32762(A5)	         $F800  S50TO100A
+		      *							       LINE 179
+00000A72 41ED809C		 LEA	   STATIC.+156-32768(A5),A0	         S50TO100A
+00000A76 43FAF748		 LEA	   K.45(PC),A1			         CODE.+$1C0
+00000A7A B189			 CMPM.L	   (A0)+,(A1)+
+00000A7C 6604			 BNE.S	   L.1.88(PC)
+00000A7E B189			 CMPM.L	   (A0)+,(A1)+
+00000A80 6708			 BEQ.S	   L.1.89(PC)
+		      *							       LINE 179 (2)
+00000A82 702C	      L.1.88	 MOVEQ	   #44,D0			         $2C
+00000A84 2F00			 MOVE.L	   D0,-(A7)
+00000A86 6100F58A		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 18000000A8A 486D809C     L.1.89	 PEA	   STATIC.+156-32768(A5)	         S50TO100A
+00000A8E 7004			 MOVEQ	   #4,D0			         $4
+00000A90 2F00			 MOVE.L	   D0,-(A7)
+00000A92 2F2D80C6		 MOVE.L	   STATIC.+198-32768(A5),-(A7)	         J
+00000A96 2F2D80CA		 MOVE.L	   STATIC.+202-32768(A5),-(A7)	         K
+00000A9A 7030			 MOVEQ	   #48,D0			         $30
+00000A9C 2F00			 MOVE.L	   D0,-(A7)
+00000A9E 4EB900000000		 JSR	   S.RANNLB
+00000AA4 026D3FFF809C		 ANDI.W	   #16383,STATIC.+156-32768(A5)	         $3FFF  S50TO100A
+00000AAA 026DF80080A2		 ANDI.W	   #63488,STATIC.+156-32762(A5)	         $F800  S50TO100A
+		      *							       LINE 181
+00000AB0 41FAF716		 LEA	   K.46(PC),A0			         CODE.+$1C8
+00000AB4 43EEFFF8		 LEA	   -8(A6),A1			         $FFFFFFF8
+00000AB8 22D8			 MOVE.L	   (A0)+,(A1)+
+00000ABA 22D8			 MOVE.L	   (A0)+,(A1)+
+00000ABC 41ED809C		 LEA	   STATIC.+156-32768(A5),A0	         S50TO100A
+00000AC0 43EEFFF8		 LEA	   -8(A6),A1			         $FFFFFFF8
+00000AC4 B189			 CMPM.L	   (A0)+,(A1)+
+00000AC6 6604			 BNE.S	   L.1.90(PC)
+00000AC8 B189			 CMPM.L	   (A0)+,(A1)+
+00000ACA 6708			 BEQ.S	   L.1.91(PC)
+		      *							       LINE 181 (2)
+00000ACC 702D	      L.1.90	 MOVEQ	   #45,D0			         $2D
+00000ACE 2F00			 MOVE.L	   D0,-(A7)
+00000AD0 6100F540		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 182
+00000AD4 2B7C003FFFFE L.1.91	 MOVE.L	   #4194302,STATIC.+152-32768(A5)        $3FFFFE  SB10TO30
+	 8098
+		      *							       LINE 183
+00000ADC 2D7C003FFFFE		 MOVE.L	   #4194302,-4(A6)		         $3FFFFE  $FFFFFFFC
+	 FFFC
+00000AE4 202D8098		 MOVE.L	   STATIC.+152-32768(A5),D0	         SB10TO30
+00000AE8 B0AEFFFC		 CMP.L	   -4(A6),D0			         $FFFFFFFC
+00000AEC 6708			 BEQ.S	   L.1.93(PC)
+		      *							       LINE 183 (2)
+00000AEE 702E	      L.1.92	 MOVEQ	   #46,D0			         $2E
+00000AF0 2F00			 MOVE.L	   D0,-(A7)
+00000AF2 6100F51E		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 184
+00000AF6 486D80B0     L.1.93	 PEA	   STATIC.+176-32768(A5)	         S50TO75A
+00000AFA 7002			 MOVEQ	   #2,D0			         $2
+00000AFC 2F00			 MOVE.L	   D0,-(A7)
+00000AFE 2F2D80C6		 MOVE.L	   STATIC.+198-32768(A5),-(A7)	         J
+00000B02 2F2D80CA		 MOVE.L	   STATIC.+202-32768(A5),-(A7)	         K
+00000B06 7030			 MOVEQ	   #48,D0			         $3000000B08 2F00			 MOVE.L	   D0,-(A7)
+00000B0A 4EB900000000		 JSR	   S.RANNLB
+00000B10 026D3FFF80B0		 ANDI.W	   #16383,STATIC.+176-32768(A5)	         $3FFF  S50TO75A
+00000B16 026DFFF080B2		 ANDI.W	   #65520,STATIC.+176-32766(A5)	         $FFF0  S50TO75A
+		      *							       LINE 185
+00000B1C 6008			 BRA.S	   L.1.95(PC)
+		      *							       LINE 185 (2)
+00000B1E 702F	      L.1.94	 MOVEQ	   #47,D0			         $2F
+00000B20 2F00			 MOVE.L	   D0,-(A7)
+00000B22 6100F4EE		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 186
+00000B26 41ED80A4     L.1.95	 LEA	   STATIC.+164-32768(A5),A0	         S35TO127A
+00000B2A 4298			 CLR.L	   (A0)+
+00000B2C 4298			 CLR.L	   (A0)+
+00000B2E 4298			 CLR.L	   (A0)+
+		      *							       LINE 187
+00000B30 41ED80A4		 LEA	   STATIC.+164-32768(A5),A0	         S35TO127A
+00000B34 7002			 MOVEQ	   #2,D0			         $2
+00000B36 4A98	      X.1.17	 TST.L	   (A0)+
+00000B38 56C8FFFC		 DBNE	   D0,X.1.17(PC)
+00000B3C 6708			 BEQ.S	   L.1.97(PC)
+		      *							       LINE 187 (2)
+00000B3E 7030	      L.1.96	 MOVEQ	   #48,D0			         $30
+00000B40 2F00			 MOVE.L	   D0,-(A7)
+00000B42 6100F4CE		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 188
+00000B46 2D7C00FFFFF8 L.1.97	 MOVE.L	   #16777208,-4(A6)		         $FFFFF8  $FFFFFFFC
+	 FFFC
+00000B4E 486EFFF8		 PEA	   -8(A6)			         $FFFFFFF8
+00000B52 7002			 MOVEQ	   #2,D0			         $2
+00000B54 2F00			 MOVE.L	   D0,-(A7)
+00000B56 2F2D80C6		 MOVE.L	   STATIC.+198-32768(A5),-(A7)	         J
+00000B5A 2F2D80CA		 MOVE.L	   STATIC.+202-32768(A5),-(A7)	         K
+00000B5E 7020			 MOVEQ	   #32,D0			         $20
+00000B60 2F00			 MOVE.L	   D0,-(A7)
+00000B62 4EB900000000		 JSR	   S.RANNLB
+00000B68 202EFFF8		 MOVE.L	   -8(A6),D0			         $FFFFFFF8
+00000B6C C1AEFFFC		 AND.L	   D0,-4(A6)			         $FFFFFFFC
+00000B70 41ED80A4		 LEA	   STATIC.+164-32768(A5),A0	         S35TO127A
+00000B74 20EEFFFC		 MOVE.L	   -4(A6),(A0)+			         $FFFFFFFC
+00000B78 4298			 CLR.L	   (A0)+
+00000B7A 4298			 CLR.L	   (A0)+
+		      *							       LINE 189
+00000B7C 41EEFFF4		 LEA	   -12(A6),A0			         $FFFFFFF4
+00000B80 20FC00FFFFF8		 MOVE.L	   #16777208,(A0)+		         $FFFFF800000B86 4298			 CLR.L	   (A0)+
+00000B88 4298			 CLR.L	   (A0)+
+00000B8A 41ED80A4		 LEA	   STATIC.+164-32768(A5),A0	         S35TO127A
+00000B8E 43EEFFF4		 LEA	   -12(A6),A1			         $FFFFFFF4
+00000B92 7002			 MOVEQ	   #2,D0			         $2
+00000B94 B189	      X.1.18	 CMPM.L	   (A0)+,(A1)+
+00000B96 56C8FFFC		 DBNE	   D0,X.1.18(PC)
+00000B9A 6708			 BEQ.S	   L.1.99(PC)
+		      *							       LINE 189 (2)
+00000B9C 7031	      L.1.98	 MOVEQ	   #49,D0			         $31
+00000B9E 2F00			 MOVE.L	   D0,-(A7)
+00000BA0 6100F470		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 190
+00000BA4 2B7C003FFFFE L.1.99	 MOVE.L	   #4194302,STATIC.+152-32768(A5)        $3FFFFE  SB10TO30
+	 8098
+		      *							       LINE 191
+00000BAC 2D7C003FFFFE		 MOVE.L	   #4194302,-4(A6)		         $3FFFFE  $FFFFFFFC
+	 FFFC
+00000BB4 202D8098		 MOVE.L	   STATIC.+152-32768(A5),D0	         SB10TO30
+00000BB8 B0AEFFFC		 CMP.L	   -4(A6),D0			         $FFFFFFFC
+00000BBC 6708			 BEQ.S	   L.1.101(PC)
+		      *							       LINE 191 (2)
+00000BBE 7032	      L.1.100	 MOVEQ	   #50,D0			         $32
+00000BC0 2F00			 MOVE.L	   D0,-(A7)
+00000BC2 6100F44E		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 192
+00000BC6 3D6D807AFFFA L.1.101	 MOVE.W	   STATIC.+108-32754(A5),-6(A6)	         DOUBLE_ARR  $FFFFFFFA
+00000BCC 42AEFFFC		 CLR.L	   -4(A6)			         $FFFFFFFC
+00000BD0 203AF5FE		 MOVE.L	   K.47(PC),D0			         CODE.+$1D0
+00000BD4 81AEFFFA		 OR.L	   D0,-6(A6)			         $FFFFFFFA
+00000BD8 303AF5FA		 MOVE.W	   K.47+4(PC),D0		         CODE.+$1D0
+00000BDC 816EFFFE		 OR.W	   D0,-2(A6)			         $FFFFFFFE
+00000BE0 41EEFFFA		 LEA	   -6(A6),A0			         $FFFFFFFA
+00000BE4 43ED809C		 LEA	   STATIC.+156-32768(A5),A1	         S50TO100A
+00000BE8 22D8			 MOVE.L	   (A0)+,(A1)+
+00000BEA 32D8			 MOVE.W	   (A0)+,(A1)+
+00000BEC 4259			 CLR.W	   (A1)+
+00000BEE 026D3FFF809C		 ANDI.W	   #16383,STATIC.+156-32768(A5)	         $3FFF  S50TO100A
+		      *							       LINE 193
+00000BF4 41FAF5E0		 LEA	   K.48(PC),A0			         CODE.+$1D6
+00000BF8 43EEFFF8		 LEA	   -8(A6),A1			         $FFFFFFF8
+00000BFC 22D8			 MOVE.L	   (A0)+,(A1)+
+00000BFE 32D8			 MOVE.W	   (A0)+,(A1)+
+00000C00 4259			 CLR.W	   (A1)+
+00000C02 41ED809C		 LEA	   STATIC.+156-32768(A5),A0	         S50TO100A00000C06 43EEFFF8		 LEA	   -8(A6),A1			         $FFFFFFF8
+00000C0A B189			 CMPM.L	   (A0)+,(A1)+
+00000C0C 6604			 BNE.S	   L.1.102(PC)
+00000C0E B189			 CMPM.L	   (A0)+,(A1)+
+00000C10 6708			 BEQ.S	   L.1.103(PC)
+		      *							       LINE 193 (2)
+00000C12 7033	      L.1.102	 MOVEQ	   #51,D0			         $33
+00000C14 2F00			 MOVE.L	   D0,-(A7)
+00000C16 6100F3FA		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 194
+00000C1A 486EFFFE     L.1.103	 PEA	   -2(A6)			         $FFFFFFFE
+00000C1E 7001			 MOVEQ	   #1,D0			         $1
+00000C20 2F00			 MOVE.L	   D0,-(A7)
+00000C22 2F2D80C6		 MOVE.L	   STATIC.+198-32768(A5),-(A7)	         J
+00000C26 2F2D80CA		 MOVE.L	   STATIC.+202-32768(A5),-(A7)	         K
+00000C2A 7030			 MOVEQ	   #48,D0			         $30
+00000C2C 2F00			 MOVE.L	   D0,-(A7)
+00000C2E 4EB900000000		 JSR	   S.RANNLB
+00000C34 302D8072		 MOVE.W	   STATIC.+108-32762(A5),D0	         DOUBLE_ARR
+00000C38 C16EFFFE		 AND.W	   D0,-2(A6)			         $FFFFFFFE
+00000C3C 41ED809C		 LEA	   STATIC.+156-32768(A5),A0	         S50TO100A
+00000C40 30EEFFFE		 MOVE.W	   -2(A6),(A0)+			         $FFFFFFFE
+00000C44 4298			 CLR.L	   (A0)+
+00000C46 4258			 CLR.W	   (A0)+
+00000C48 026D3FFF809C		 ANDI.W	   #16383,STATIC.+156-32768(A5)	         $3FFF  S50TO100A
+		      *							       LINE 195
+00000C4E 41EEFFF8		 LEA	   -8(A6),A0			         $FFFFFFF8
+00000C52 30FC3FFF		 MOVE.W	   #16383,(A0)+			         $3FFF
+00000C56 4298			 CLR.L	   (A0)+
+00000C58 4258			 CLR.W	   (A0)+
+00000C5A 41ED809C		 LEA	   STATIC.+156-32768(A5),A0	         S50TO100A
+00000C5E 43EEFFF8		 LEA	   -8(A6),A1			         $FFFFFFF8
+00000C62 B189			 CMPM.L	   (A0)+,(A1)+
+00000C64 6604			 BNE.S	   L.1.104(PC)
+00000C66 B189			 CMPM.L	   (A0)+,(A1)+
+00000C68 6708			 BEQ.S	   L.1.105(PC)
+		      *							       LINE 195 (2)
+00000C6A 7034	      L.1.104	 MOVEQ	   #52,D0			         $34
+00000C6C 2F00			 MOVE.L	   D0,-(A7)
+00000C6E 6100F3A2		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 196
+00000C72 41FAF568     L.1.105	 LEA	   K.49(PC),A0			         CODE.+$1DC
+00000C76 43ED80B4		 LEA	   STATIC.+180-32768(A5),A1	         S75TO110A
+00000C7A 22D8			 MOVE.L	   (A0)+,(A1)+
+00000C7C 32D8			 MOVE.W	   (A0)+,(A1)+		      *							       LINE 197
+00000C7E 41FAF562		 LEA	   K.50(PC),A0			         CODE.+$1E2
+00000C82 43EEFFFA		 LEA	   -6(A6),A1			         $FFFFFFFA
+00000C86 22D8			 MOVE.L	   (A0)+,(A1)+
+00000C88 32D8			 MOVE.W	   (A0)+,(A1)+
+00000C8A 41ED80B4		 LEA	   STATIC.+180-32768(A5),A0	         S75TO110A
+00000C8E 43EEFFFA		 LEA	   -6(A6),A1			         $FFFFFFFA
+00000C92 B189			 CMPM.L	   (A0)+,(A1)+
+00000C94 6604			 BNE.S	   L.1.106(PC)
+00000C96 B149			 CMPM.W	   (A0)+,(A1)+
+00000C98 6708			 BEQ.S	   L.1.107(PC)
+		      *							       LINE 197 (2)
+00000C9A 7035	      L.1.106	 MOVEQ	   #53,D0			         $35
+00000C9C 2F00			 MOVE.L	   D0,-(A7)
+00000C9E 6100F372		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 198
+00000CA2 2B7C3FFFFFF0 L.1.107	 MOVE.L	   #1073741808,STATIC.+176-32768(A5)     $3FFFFFF0  S50TO75A
+	 80B0
+		      *							       LINE 199
+00000CAA 2D7C3FFFFFF0		 MOVE.L	   #1073741808,-4(A6)		         $3FFFFFF0  $FFFFFFFC
+	 FFFC
+00000CB2 202D80B0		 MOVE.L	   STATIC.+176-32768(A5),D0	         S50TO75A
+00000CB6 B0AEFFFC		 CMP.L	   -4(A6),D0			         $FFFFFFFC
+00000CBA 6708			 BEQ.S	   L.1.109(PC)
+		      *							       LINE 199 (2)
+00000CBC 7036	      L.1.108	 MOVEQ	   #54,D0			         $36
+00000CBE 2F00			 MOVE.L	   D0,-(A7)
+00000CC0 6100F350		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 200
+00000CC4 426D80B4     L.1.109	 CLR.W	   STATIC.+180-32768(A5)	         S75TO110A
+00000CC8 2B7CFFFFFFFC		 MOVE.L	   #-4,STATIC.+180-32766(A5)	         $FFFFFFFC  S75TO110A
+	 80B6
+		      *							       LINE 201
+00000CD0 426EFFFA		 CLR.W	   -6(A6)			         $FFFFFFFA
+00000CD4 2D7CFFFFFFFC		 MOVE.L	   #-4,-4(A6)			         $FFFFFFFC  $FFFFFFFC
+	 FFFC
+00000CDC 41ED80B4		 LEA	   STATIC.+180-32768(A5),A0	         S75TO110A
+00000CE0 43EEFFFA		 LEA	   -6(A6),A1			         $FFFFFFFA
+00000CE4 B189			 CMPM.L	   (A0)+,(A1)+
+00000CE6 6604			 BNE.S	   L.1.110(PC)
+00000CE8 B149			 CMPM.W	   (A0)+,(A1)+
+00000CEA 6708			 BEQ.S	   L.1.111(PC)
+		      *							       LINE 201 (2)
+00000CEC 7037	      L.1.110	 MOVEQ	   #55,D0			         $37
+00000CEE 2F00			 MOVE.L	   D0,-(A7)00000CF0 6100F320		 BSR.L	   B.3(PC)			         ERROR = CODE.+$12
+		      *							       LINE 202
+00000CF4 202D0000     L.1.111	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00000CF8 4A80			 TST.L	   D0
+00000CFA 6606			 BNE.S	   X.1.19(PC)
+00000CFC 4EB900000000		 JSR	   E.FILE
+00000D02 720A	      X.1.19	 MOVEQ	   #10,D1			         $A
+00000D04 3F01			 MOVE.W	   D1,-(A7)
+00000D06 7204			 MOVEQ	   #4,D1			         $4
+00000D08 3F01			 MOVE.W	   D1,-(A7)
+00000D0A 487AF4DC		 PEA	   K.51(PC)			         CODE.+$1E8
+00000D0E 2F00			 MOVE.L	   D0,-(A7)
+00000D10 4EB900000000		 JSR	   T.WRITE
+00000D16 2F00			 MOVE.L	   D0,-(A7)
+00000D18 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 203
+00000D1E 4EB900000000		 JSR	   M.STOP
+				 XREF	   M.ENTRY
+				 XREF	   TTYOUTPU
+				 XREF	   E.FILE
+				 XREF	   T.WRITE
+				 XREF	   T.WRTLN
+				 XREF	   T.BREAK
+				 XREF	   M.RETURN
+				 XREF	   T.REWRIT
+				 XREF	   S.RANZLB
+				 XREF	   E.VALUE
+				 XREF	   E.INDEX
+				 XREF	   S.RANNLB
+				 XREF	   M.STOP
+		      *
+		      *		 Code area:      00000BB2 bytes (2994 decimal)
+		      *		 Constant area:  00000172 bytes (370 decimal)
+		      *		 Static area:    000000D0 bytes (208 decimal)
+		      *
+	 00000000		 END
+ 7 _Å

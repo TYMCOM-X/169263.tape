@@ -1,0 +1,1261 @@
+Cross Reference Listing for ODMS - Pascal Overlay System -- June 8, 1981			  Page 1
+											        8-Nov-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     ADDRESS     *SYS* 		ODMS        ODMS  
+
+     ALLOC       MMBLDS		BLD_MAIN    MMBLDP   ASSERT      *SYS* 
+				DO_MTV      MMBLDP   ASSM_WRITE  MMBLDS
+				DO_TABLES   MMBLDP   INIT_REC    MMBLDS
+				DROP_TEXT   MMBLDS   PUTSTRING   *SYS* 
+				PADOUT      MMBLDS
+
+     AREADEF     MMMDLP		AREASECT    MMMDLP   FIND        MMMSYM
+						     GETTOKEN    MMMDLS
+						     MDLERR      MMMDLP
+						     NEWAREA     MMMDLS
+						     NEWNAME     MMMDLS
+
+     AREASECT    MMMDLP		USEPRO      MMMDLP   AREADEF     MMMDLP
+						     DISPOSE     *SYS* 
+						     GETTOKEN    MMMDLS
+						     NEWAREA     MMMDLS
+
+     ARGNAM      MMBLDS		DO_MTV      MMBLDP   DROP_LINE   MMBLDS
+						     FINDSYM     MMBLDS
+						     REL_XWD     MMBLDS
+						     THE_CURREN  MMBLDS
+
+     ASSERT      *SYS* 		ALLOC       MMBLDS
+				NEWNAME     MMMDLS
+
+     ASSM_WRITE  MMBLDS		ALLOC       MMBLDS   WRITELN     *SYS* 
+				COMMENT     MMBLDS
+				DEFINE      MMBLDS
+				DO_LABEL    MMBLDS
+				DROP_LINE   MMBLDS
+				DROP_TEXT   MMBLDS
+				ENTRY       MMBLDS
+				EXTERN      MMBLDS
+				FINISHCODE  MMBLDS
+				HISEG       MMBLDS
+				LOSEG       MMBLDS
+				SETUPCODE   MMBLDSCross Reference Listing for ODMS - Pascal Overlay System -- June 8, 1981			  Page 2
+											        8-Nov-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     BLD_MAIN    MMBLDP		ODMS        ODMS     ALLOC       MMBLDS
+						     CLOSE       *SYS* 
+						     COMMENT     MMBLDS
+						     DO_MTV      MMBLDP
+						     DO_TABLES   MMBLDP
+						     ENTRY       MMBLDS
+						     EOF         *SYS* 
+						     EXTERN      MMBLDS
+						     FINISHCODE  MMBLDS
+						     FWORD       MMBLDS
+						     HISEG       MMBLDS
+						     HWORDS      MMBLDS
+						     JRST        MMBLDS
+						     JSP1        MMBLDS
+						     LOSEG       MMBLDS
+						     PADOUT      MMBLDS
+						     PORTAL      MMBLDS
+						     REWRITE     *SYS* 
+						     SETUPCODE   MMBLDS
+						     WRITELN     *SYS* 
+
+     BLD_MOD     MMBLDP		ODMS        ODMS     CLOSE       *SYS* 
+						     COMMENT     MMBLDS
+						     DEFINE      MMBLDS
+						     ENTRY       MMBLDS
+						     EOF         *SYS* 
+						     EXTERN      MMBLDS
+						     FINISHCODE  MMBLDS
+						     FWORD       MMBLDS
+						     HISEG       MMBLDS
+						     HWORDS      MMBLDS
+						     JRST        MMBLDS
+						     JSP1        MMBLDS
+						     PORTAL      MMBLDS
+						     REWRITE     *SYS* 
+						     SETUPCODE   MMBLDS
+						     WRITELN     *SYS* 
+
+     BREAK       *SYS* 		GETLINE     ODMS  Cross Reference Listing for ODMS - Pascal Overlay System -- June 8, 1981			  Page 3
+											        8-Nov-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     CCLAUSE     MMMDLP		MODDEF      MMMDLP   DISPOSE     *SYS* 
+						     FIND        MMMSYM
+						     GETTOKEN    MMMDLS
+						     MDLERR      MMMDLP
+						     NEWNAME     MMMDLS
+						     NEWSYM      MMMDLS
+
+     CHAINONEND  MMDBPR		PACKDB      MMPACK   DAYTIME     *UNDEF
+				UPD_OVL     MMDBOP   FINDVERSIO  MMDBPR
+						     GETSPACE    MMDBPR
+						     IOSTATUS    *SYS* 
+						     IO_ERROR    ODMS  
+						     MAXIMUM     *SYS* 
+						     READ        *SYS* 
+						     READRN      *SYS* 
+						     WRITE       *SYS* 
+						     WRITERN     *SYS* 
+
+     CHK_OPT     ODMS  		ODMS        ODMS     COMERR      ODMS  
+						     CUM_STR     ODMS  
+
+     CHK_REQ     ODMS  		ODMS        ODMS     COMERR      ODMS  
+						     CUM_STR     ODMS  
+
+     CHR         *SYS* 		ODMS        ODMS  
+
+     CLOSE       *SYS* 		BLD_MAIN    MMBLDP
+				BLD_MOD     MMBLDP
+				DBCLOSE     MMDBPR
+				DO_HELP     ODMS  
+				DO_USE      ODMS  
+				FINISHCODE  MMBLDS
+				MDLPRO      MDLPRO
+				ODMS        ODMS  
+				PACKDB      MMPACK
+				POST_PROCE  MDLPRO
+				SETUPCODE   MMBLDS
+				UPD_OVL     MMDBOP
+				VFYEXT      MMPACK
+				WRITE_MOD_  ODMS  Cross Reference Listing for ODMS - Pascal Overlay System -- June 8, 1981			  Page 4
+											        8-Nov-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     COMERR      ODMS  		CHK_OPT     ODMS     WRITELN     *SYS* 
+				CHK_REQ     ODMS  
+				DO_HELP     ODMS  
+				DO_USE      ODMS  
+				GETNUM      ODMS  
+				NO_SHAR     ODMS  
+				ODMS        ODMS  
+				TRIM_EQUAL  ODMS  
+				WRITE_MOD_  ODMS  
+
+     COMMENT     MMBLDS		BLD_MAIN    MMBLDP   ASSM_WRITE  MMBLDS
+				BLD_MOD     MMBLDP
+				DO_MTV      MMBLDP
+				DO_TABLES   MMBLDP
+				MTVENT      MMBLDS
+
+     COMSTR      ODMS  		CUM_STR     ODMS     LENGTH      *SYS* 
+				NO_SHAR     ODMS     SUBSTR      *SYS* 
+				ODMS        ODMS  
+
+     CUM_STR     ODMS  		CHK_OPT     ODMS     COMSTR      ODMS  
+				CHK_REQ     ODMS     MAXIMUM     *SYS* 
+						     MINIMUM     *SYS* 
+						     SUBSTR      *SYS* 
+
+     DAYTIME     *UNDEF		CHAINONEND  MMDBPR
+				MDLINIT     MMMDLS
+
+     DBCLOSE     MMDBPR		DEL_OVL     MMDBOP   CLOSE       *SYS* 
+				IO_ERROR    ODMS  
+				PACKDB      MMPACK
+				PRDBVERS    MMDBPR
+				REN_OVL     MMDBOP
+				UPD_OVL     MMDBOP
+				VFDBVERS    MMDBOP
+				VFYVERS     MMDBOP
+
+     DBINIT      MMDBPR		DEL_OVL     MMDBOP   EXTENT      *SYS* 
+				PACKDB      MMPACK   IOSTATUS    *SYS* 
+				REN_OVL     MMDBOP   IO_ERROR    ODMS  Cross Reference Listing for ODMS - Pascal Overlay System -- June 8, 1981			  Page 5
+											        8-Nov-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     DBINIT      MMDBPR (cont.)	UPD_OVL     MMDBOP   READ        *SYS* 
+				VFDBVERS    MMDBOP   UPDATE      *SYS* 
+						     WRITE       *SYS* 
+
+     DBOPEN      MMDBPR		PRDBVERS    MMDBPR   IOSTATUS    *SYS* 
+				VFYVERS     MMDBOP   IO_ERROR    ODMS  
+						     READ        *SYS* 
+						     RESET       *SYS* 
+
+     DC_EXT      *UNDEF		DELETEALL   MMDBPR
+				DEL_OVL     MMDBOP
+				DO_USE      ODMS  
+				PACKDB      MMPACK
+				PRDBVERS    MMDBPR
+				PRTPRG      MMPRNT
+				REN_OVL     MMDBOP
+				UPD_OVL     MMDBOP
+
+     DEFINE      MMBLDS		BLD_MOD     MMBLDP   ASSM_WRITE  MMBLDS
+						     FINDSYM     MMBLDS
+						     PUTSTRING   *SYS* 
+
+     DELETEALL   MMDBPR		DEL_OVL     MMDBOP   DC_EXT      *UNDEF
+						     DELVER      MMDBPR
+						     IOSTATUS    *SYS* 
+						     IO_ERROR    ODMS  
+						     READRN      *SYS* 
+						     WRITELN     *SYS* 
+
+     DELVER      MMDBPR		DELETEALL   MMDBPR   FREESPACE   MMDBPR
+				DEL_OVL     MMDBOP   IOSTATUS    *SYS* 
+				PACKDB      MMPACK   IO_ERROR    ODMS  
+				UPD_OVL     MMDBOP   READRN      *SYS* 
+						     WRITERN     *SYS* 
+
+     DEL_OVL     MMDBOP		ODMS        ODMS     DBCLOSE     MMDBPR
+						     DBINIT      MMDBPR
+						     DC_EXT      *UNDEF
+						     DELETEALL   MMDBPR
+						     DELVER      MMDBPRCross Reference Listing for ODMS - Pascal Overlay System -- June 8, 1981			  Page 6
+											        8-Nov-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     DEL_OVL     MMDBOP (cont.)			     FINDVERSIO  MMDBPR
+						     WRITELN     *SYS* 
+
+     DISPOSE     *SYS* 		AREASECT    MMMDLP
+				CCLAUSE     MMMDLP
+				DROP_SYMBO  MMBLDS
+				MDLDEL      MMMDLS
+				TREE_DELET  MMMDLS
+
+     DOLOOK      ODMS  		DO_HELP     ODMS     LOOKUP      MMMDLS
+				NON_MOD_CM  ODMS     MAXIMUM     *SYS* 
+				ODMS        ODMS  
+
+     DO_COMPILE  ODMS  		ODMS        ODMS     DO_USE      ODMS  
+						     MDLPRO      MDLPRO
+						     SUBSTR      *SYS* 
+
+     DO_HELP     ODMS  		ODMS        ODMS     CLOSE       *SYS* 
+						     COMERR      ODMS  
+						     DOLOOK      ODMS  
+						     EOF         *SYS* 
+						     READLN      *SYS* 
+						     RESET       *SYS* 
+						     SUBSTR      *SYS* 
+						     WRITELN     *SYS* 
+
+     DO_LABEL    MMBLDS		DO_TABLES   MMBLDP   ASSM_WRITE  MMBLDS
+						     EMIT_INTER  MMBLDS
+						     FINDSYM     MMBLDS
+						     THE_CURREN  MMBLDS
+
+     DO_MTV      MMBLDP		BLD_MAIN    MMBLDP   ALLOC       MMBLDS
+						     ARGNAM      MMBLDS
+						     COMMENT     MMBLDS
+						     DROP_ADDR   MMBLDS
+						     ENTRY       MMBLDS
+						     EXTERN      MMBLDS
+						     FWORD       MMBLDS
+						     JRST        MMBLDS
+						     JRSTADDR    MMBLDSCross Reference Listing for ODMS - Pascal Overlay System -- June 8, 1981			  Page 7
+											        8-Nov-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     DO_MTV      MMBLDP (cont.)			     JSP1        MMBLDS
+						     MTVENT      MMBLDS
+						     PUSHJ17     MMBLDS
+
+     DO_SYM      MDLPRO		POST_PROCE  MDLPRO   NEWSYM      MMMDLS
+
+     DO_TABLES   MMBLDP		BLD_MAIN    MMBLDP   ALLOC       MMBLDS
+						     COMMENT     MMBLDS
+						     DO_LABEL    MMBLDS
+						     DROP_TEXT   MMBLDS
+						     ENTRY       MMBLDS
+						     FWORD       MMBLDS
+						     HWORDS      MMBLDS
+						     LENGTH      *SYS* 
+						     NHWORD      MMBLDS
+						     PUTSTRING   *SYS* 
+						     SHWORD      MMBLDS
+						     WRITELN     *SYS* 
+
+     DO_USE      ODMS  		DO_COMPILE  ODMS     CLOSE       *SYS* 
+				ODMS        ODMS     COMERR      ODMS  
+						     DC_EXT      *UNDEF
+						     HPLOAD      *UNDEF
+						     INDEX       *SYS* 
+						     OPEN        *SYS* 
+						     REWRITE     *SYS* 
+						     SUBSTR      *SYS* 
+						     WRITELN     *SYS* 
+						     WRITE_MOD_  ODMS  
+
+     DROP_ADDR   MMBLDS		DO_MTV      MMBLDP   DROP_LINE   MMBLDS
+						     REL_XWD     MMBLDS
+						     SET_ADR     MMBLDS
+
+     DROP_ASCII  MMBLDS		DROP_TEXT   MMBLDS   INIT_REC    MMBLDS
+						     LENGTH      *SYS* 
+						     REL_WORD    MMBLDS
+						     SUBSTR      *SYS* 
+
+     DROP_CUR_R  MMBLDS		EMIT_INTER  MMBLDS   PUT         *SYS* Cross Reference Listing for ODMS - Pascal Overlay System -- June 8, 1981			  Page 8
+											        8-Nov-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     DROP_CUR_R  MMBLDS (cont.)	FINISHCODE  MMBLDS
+				INIT_REC    MMBLDS
+
+     DROP_LINE   MMBLDS		ARGNAM      MMBLDS   ASSM_WRITE  MMBLDS
+				DROP_ADDR   MMBLDS
+				FWORD       MMBLDS
+				HWORDS      MMBLDS
+				JRST        MMBLDS
+				JRST1       MMBLDS
+				JRSTADDR    MMBLDS
+				JSP1        MMBLDS
+				NHWORD      MMBLDS
+				PUSHJ17     MMBLDS
+				SHWORD      MMBLDS
+
+     DROP_SYMBO  MMBLDS		FINISHCODE  MMBLDS   DISPOSE     *SYS* 
+						     INIT_REC    MMBLDS
+						     POLISH_SYM  MMBLDS
+						     REG_SYMBOL  MMBLDS
+
+     DROP_TEXT   MMBLDS		DO_TABLES   MMBLDP   ALLOC       MMBLDS
+						     ASSM_WRITE  MMBLDS
+						     DROP_ASCII  MMBLDS
+						     LENGTH      *SYS* 
+
+     EMIT_INTER  MMBLDS		DO_LABEL    MMBLDS   DROP_CUR_R  MMBLDS
+				ENTRY       MMBLDS   INIT_REC    MMBLDS
+						     REL_INT     MMBLDS
+						     REL_XWD     MMBLDS
+						     THE_CURREN  MMBLDS
+
+     ENTRY       MMBLDS		BLD_MAIN    MMBLDP   ASSM_WRITE  MMBLDS
+				BLD_MOD     MMBLDP   EMIT_INTER  MMBLDS
+				DO_MTV      MMBLDP   FINDSYM     MMBLDS
+				DO_TABLES   MMBLDP   THE_CURREN  MMBLDS
+
+     EOF         *SYS* 		BLD_MAIN    MMBLDP
+				BLD_MOD     MMBLDP
+				DO_HELP     ODMS  
+				GETLINE     MMMDLSCross Reference Listing for ODMS - Pascal Overlay System -- June 8, 1981			  Page 9
+											        8-Nov-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     EOF         *SYS*  (cont.)	MDLPRO      MDLPRO
+				ODMS        ODMS  
+				PACKDB      MMPACK
+				POST_PROCE  MDLPRO
+				SETUPCODE   MMBLDS
+				UPD_OVL     MMDBOP
+				WRITE_MOD_  ODMS  
+
+     EXTENT      *SYS* 		DBINIT      MMDBPR
+
+     EXTERN      MMBLDS		BLD_MAIN    MMBLDP   ASSM_WRITE  MMBLDS
+				BLD_MOD     MMBLDP   FINDSYM     MMBLDS
+				DO_MTV      MMBLDP
+				PORTAL      MMBLDS
+
+     FILENAME    *SYS* 		MDLINIT     MMMDLS
+				MDLPRO      MDLPRO
+				PACKDB      MMPACK
+				VFDBVERS    MMDBOP
+				VFYEXT      MMPACK
+
+     FIND        MMMSYM		AREADEF     MMMDLP
+				CCLAUSE     MMMDLP
+				INCLAUSE    MMMDLP
+				MODDEF      MMMDLP
+				ODMS        ODMS  
+				POST_PROCE  MDLPRO
+				STORSPEC    MMMDLP
+				SYMSPEC     MMMDLP
+
+     FINDSYM     MMBLDS		ARGNAM      MMBLDS   NEW         *SYS* 
+				DEFINE      MMBLDS
+				DO_LABEL    MMBLDS
+				ENTRY       MMBLDS
+				EXTERN      MMBLDS
+				JRST1       MMBLDS
+				SET_ADR     MMBLDS
+
+     FINDVERSIO  MMDBPR		CHAINONEND  MMDBPR   IOSTATUS    *SYS* 
+				DEL_OVL     MMDBOP   IO_ERROR    ODMS  Cross Reference Listing for ODMS - Pascal Overlay System -- June 8, 1981			 Page 10
+											        8-Nov-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     FINDVERSIO  MMDBPR (cont.)	PACKDB      MMPACK   READRN      *SYS* 
+				REN_OVL     MMDBOP
+				UPD_OVL     MMDBOP
+				VFYVERS     MMDBOP
+
+     FIND_SHARA  ODMS  		FIND_SHARA  ODMS     FIND_SHARA  ODMS  
+				WRITE_MOD_  ODMS     WRITE_NAME  ODMS  
+
+     FINISHCODE  MMBLDS		BLD_MAIN    MMBLDP   ASSM_WRITE  MMBLDS
+				BLD_MOD     MMBLDP   CLOSE       *SYS* 
+						     DROP_CUR_R  MMBLDS
+						     DROP_SYMBO  MMBLDS
+						     INIT_REC    MMBLDS
+						     REL_XWD     MMBLDS
+
+     FREESPACE   MMDBPR		DELVER      MMDBPR   IOSTATUS    *SYS* 
+						     IO_ERROR    ODMS  
+						     WRITELN     *SYS* 
+						     WRITERN     *SYS* 
+
+     FWORD       MMBLDS		BLD_MAIN    MMBLDP   DROP_LINE   MMBLDS
+				BLD_MOD     MMBLDP   PUTSTRING   *SYS* 
+				DO_MTV      MMBLDP   REL_INT     MMBLDS
+				DO_TABLES   MMBLDP
+
+     GETCID      ODMS  		ODMS        ODMS     GETSTR      ODMS  
+						     INDEX       *SYS* 
+
+  *  GETLINE     MMMDLS		GETTOKEN    MMMDLS   EOF         *SYS* 
+						     READLN      *SYS* 
+
+  *  GETLINE     ODMS  		ODMS        ODMS     BREAK       *SYS* 
+						     LENGTH      *SYS* 
+						     OPEN        *SYS* 
+						     READ        *SYS* 
+						     READLN      *SYS* 
+						     SUBSTR      *SYS* 
+						     WRITE       *SYS* 
+						     WRITELN     *SYS* Cross Reference Listing for ODMS - Pascal Overlay System -- June 8, 1981			 Page 11
+											        8-Nov-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     GETNUM      ODMS  		ODMS        ODMS     COMERR      ODMS  
+						     GETSTR      ODMS  
+						     GETSTRING   *SYS* 
+						     IOSTATUS    *SYS* 
+						     LENGTH      *SYS* 
+						     SUBSTR      *SYS* 
+
+     GETRTL      MDLPRO		POST_PROCE  MDLPRO   INDEX       *SYS* 
+						     LENGTH      *SYS* 
+						     READLN      *SYS* 
+						     SUBSTR      *SYS* 
+						     UPPERCASE   *SYS* 
+
+     GETSPACE    MMDBPR		CHAINONEND  MMDBPR   IOSTATUS    *SYS* 
+						     IO_ERROR    ODMS  
+						     WRITERN     *SYS* 
+
+     GETSTR      ODMS  		GETCID      ODMS     INDEX       *SYS* 
+				GETNUM      ODMS     LENGTH      *SYS* 
+				ODMS        ODMS     SUBSTR      *SYS* 
+						     UPPERCASE   *SYS* 
+
+     GETSTRING   *SYS* 		GETNUM      ODMS  
+				GETTOKEN    MMMDLS
+
+     GETTOKEN    MMMDLS		AREADEF     MMMDLP   GETLINE     MMMDLS#
+				AREASECT    MMMDLP   GETSTRING   *SYS* 
+				CCLAUSE     MMMDLP   INDEX       *SYS* 
+				INCLAUSE    MMMDLP   IOSTATUS    *SYS* 
+				MACHSECT    MMMDLP   LENGTH      *SYS* 
+				MODDEF      MMMDLP   LOOKUP      MMMDLS
+				MODSECT     MMMDLP   SCANERR     MMMDLS
+				STORSECT    MMMDLP   SUBSTR      *SYS* 
+				STORSPEC    MMMDLP   UPPERCASE   *SYS* 
+				SYMDEF      MMMDLP   VERIFY      *SYS* 
+				SYMSECT     MMMDLP
+				SYMSPEC     MMMDLP
+				SYSSECT     MMMDLP
+				USEPRO      MMMDLPCross Reference Listing for ODMS - Pascal Overlay System -- June 8, 1981			 Page 12
+											        8-Nov-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     HISEG       MMBLDS		BLD_MAIN    MMBLDP   ASSM_WRITE  MMBLDS
+				BLD_MOD     MMBLDP   INIT_REC    MMBLDS
+						     PUTSTRING   *SYS* 
+
+     HPLOAD      *UNDEF		DO_USE      ODMS  
+
+     HPSAVE      *UNDEF		MDLPRO      MDLPRO
+
+     HWORDS      MMBLDS		BLD_MAIN    MMBLDP   DROP_LINE   MMBLDS
+				BLD_MOD     MMBLDP   PUTSTRING   *SYS* 
+				DO_TABLES   MMBLDP   REL_XWD     MMBLDS
+				MTVENT      MMBLDS
+
+     INCLAUSE    MMMDLP		SYMDEF      MMMDLP   FIND        MMMSYM
+						     GETTOKEN    MMMDLS
+						     MDLERR      MMMDLP
+
+     INDEX       *SYS* 		DO_USE      ODMS  
+				GETCID      ODMS  
+				GETRTL      MDLPRO
+				GETSTR      ODMS  
+				GETTOKEN    MMMDLS
+				MDLERR      MMMDLP
+				MDLINIT     MMMDLS
+				MDLPRO      MDLPRO
+				POST_PROCE  MDLPRO
+
+     INIT_REC    MMBLDS		ALLOC       MMBLDS   DROP_CUR_R  MMBLDS
+				DROP_ASCII  MMBLDS   REL_XWD     MMBLDS
+				DROP_SYMBO  MMBLDS   THE_CURREN  MMBLDS
+				EMIT_INTER  MMBLDS
+				FINISHCODE  MMBLDS
+				HISEG       MMBLDS
+				LOSEG       MMBLDS
+				POLISH_SYM  MMBLDS
+				REL_WORD    MMBLDS
+				SETUPCODE   MMBLDS
+
+     INSTALL     MMMDLS		NEWNAME     MMMDLS   NEW         *SYS* Cross Reference Listing for ODMS - Pascal Overlay System -- June 8, 1981			 Page 13
+											        8-Nov-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     IOSTATUS    *SYS* 		CHAINONEND  MMDBPR
+				DBINIT      MMDBPR
+				DBOPEN      MMDBPR
+				DELETEALL   MMDB			DELVER      MMDBPR
+				FINDVERSIO  MMDBPR
+				FREESPACE   MMDBPR
+				GETNUM      ODMS  
+				GETSPACE    MMDBPR
+				GETTOKEN    MMMDLS
+				NSOVFY      MMPACK
+				PACKDB      MMPACK
+				PRDBVERS    MMDBPR
+				REN_OVL     MMDBOP
+				VFYEXT      MMPACK
+
+     IO_ERROR    ODMS  		CHAINONEND  MMDBPR   DBCLOSE     MMDBPR
+				DBINIT      MMDBPR   WRITELN     *SYS* 
+				DBOPEN      MMDBPR
+				DELETEALL   MMDBPR
+				DELVER      MMDBPR
+				FINDVERSIO  MMDBPR
+				FREESPACE   MMDBPR
+				GETSPACE    MMDBPR
+				NSOVFY      MMPACK
+				PACKDB      MMPACK
+				PRDBVERS    MMDBPR
+				REN_OVL     MMDBOP
+				UPD_OVL     MMDBOP
+				VFDBVERS    MMDBOP
+
+     JOBINFO     *UNDEF		ODMS        ODMS  
+
+     JOBNUM      *UNDEF		ODMS        ODMS  
+				PACKDB      MMPACK
+
+     JRST        MMBLDS		BLD_MAIN    MMBLDP   DROP_LINE   MMBLDS
+				BLD_MOD     MMBLDP   REL_XWD     MMBLDS
+				DO_MTV      MMBLDP   SET_ADR     MMBLDSCross Reference Listing for ODMS - Pascal Overlay System -- June 8, 1981			 Page 14
+											        8-Nov-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     JRST1       MMBLDS		PORTAL      MMBLDS   DROP_LINE   MMBLDS
+						     FINDSYM     MMBLDS
+						     REL_XWD     MMBLDS
+						     SET_ADR     MMBLDS
+
+     JRSTADDR    MMBLDS		DO_MTV      MMBLDP   DROP_LINE   MMBLDS
+						     PUTSTRING   *SYS* 
+						     REL_XWD     MMBLDS
+
+     JSP1        MMBLDS		BLD_MAIN    MMBLDP   DROP_LINE   MMBLDS
+				BLD_MOD     MMBLDP   REL_XWD     MMBLDS
+				DO_MTV      MMBLDP   SET_ADR     MMBLDS
+				PORTAL      MMBLDS
+
+     LENGTH      *SYS* 		COMSTR      ODMS  
+				DO_TABLES   MMBLDP
+				DROP_ASCII  MMBLDS
+				DROP_TEXT   MMBLDS
+				GETLINE     ODMS  
+				GETNUM      ODMS  
+				GETRTL      MDLPRO
+				GETSTR      ODMS  
+				GETTOKEN    MMMDLS
+				NON_MOD_CM  ODMS  
+				ODMS        ODMS  
+				POLISH_SYM  MMBLDS
+				REG_SYMBOL  MMBLDS
+				TRIM_EQUAL  ODMS  
+				TRIM_LEADI  ODMS  
+
+     LOOKUP      MMMDLS		DOLOOK      ODMS     SUBSTR      *SYS* 
+				GETTOKEN    MMMDLS   UPPERCASE   *SYS* 
+
+     LOSEG       MMBLDS		BLD_MAIN    MMBLDP   ASSM_WRITE  MMBLDS
+						     INIT_REC    MMBLDS
+						     PUTSTRING   *SYS* 
+
+     MACHSECT    MMMDLP		USEPRO      MMMDLP   GETTOKEN    MMMDLS
+						     MDLERR      MMMDLPCross Reference Listing for ODMS - Pascal Overlay System -- June 8, 1981			 Page 15
+											        8-Nov-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     MAXIMUM     *SYS* 		CHAINONEND  MMDBPR
+				CUM_STR     ODMS  
+				DOLOOK      ODMS  
+
+     MDLDEL      MMMDLS		<NONE>               DISPOSE     *SYS* 
+						     TREE_DELET  MMMDLS
+
+     MDLERR      MMMDLP		AREADEF     MMMDLP   INDEX       *SYS* 
+				CCLAUSE     MMMDLP   SUBSTR      *SYS* 
+				INCLAUSE    MMMDLP   WRITELN     *SYS* 
+				MACHSECT    MMMDLP   WRTLINE     MMMDLS
+				MODDEF      MMMDLP
+				STORSECT    MMMDLP
+				STORSPEC    MMMDLP
+				SYMSECT     MMMDLP
+				SYMSPEC     MMMDLP
+				SYSSECT     MMMDLP
+				USEPRO      MMMDLP
+
+     MDLINIT     MMMDLS		USEPRO      MMMDLP   DAYTIME     *UNDEF
+						     FILENAME    *SYS* 
+						     INDEX       *SYS* 
+						     NEW         *SYS* 
+						     NEWMOD      MMMDLS
+						     NEWNAME     MMMDLS
+						     SUBSTR      *SYS* 
+
+     MDLPRO      MDLPRO		DO_COMPILE  ODMS     CLOSE       *SYS* 
+						     EOF         *SYS* 
+						     FILENAME    *SYS* 
+						     HPSAVE      *UNDEF
+						     INDEX       *SYS* 
+						     POST_PROCE  MDLPRO
+						     RESET       *SYS* 
+						     REWRITE     *SYS* 
+						     SCRATCH     *SYS* 
+						     SUBSTR      *SYS* 
+						     USEPRO      MMMDLP
+						     WRITELN     *SYS* Cross Reference Listing for ODMS - Pascal Overlay System -- June 8, 1981			 Page 16
+											        8-Nov-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     MINIMUM     *SYS* 		CUM_STR     ODMS  
+
+     MODDEF      MMMDLP		MODSECT     MMMDLP   CCLAUSE     MMMDLP
+						     FIND        MMMSYM
+						     GETTOKEN    MMMDLS
+						     MDLERR      MMMDLP
+						     NEWMOD      MMMDLS
+						     NEWNAME     MMMDLS
+
+     MODSECT     MMMDLP		USEPRO      MMMDLP   GETTOKEN    MMMDLS
+						     MODDEF      MMMDLP
+						     NEWMOD      MMMDLS
+
+     MTVENT      MMBLDS		DO_MTV      MMBLDP   COMMENT     MMBLDS
+						     HWORDS      MMBLDS
+						     PUSHJ17     MMBLDS
+
+     NEW         *SYS* 		FINDSYM     MMBLDS
+				INSTALL     MMMDLS
+				MDLINIT     MMMDLS
+				NEWAREA     MMMDLS
+				NEWMOD      MMMDLS
+				NEWSYM      MMMDLS
+
+     NEWAREA     MMMDLS		AREADEF     MMMDLP   NEW         *SYS* 
+				AREASECT    MMMDLP
+
+     NEWMOD      MMMDLS		MDLINIT     MMMDLS   NEW         *SYS* 
+				MODDEF      MMMDLP
+				MODSECT     MMMDLP
+
+     NEWNAME     MMMDLS		AREADEF     MMMDLP   ASSERT      *SYS* 
+				CCLAUSE     MMMDLP   INSTALL     MMMDLS
+				MDLINIT     MMMDLS
+				MODDEF      MMMDLP
+				POST_PROCE  MDLPRO
+				SYMSPEC     MMMDLP
+
+     NEWSYM      MMMDLS		CCLAUSE     MMMDLP   NEW         *SYS* 
+				DO_SYM      MDLPROCross Reference Listing for ODMS - Pascal Overlay System -- June 8, 1981			 Page 17
+											        8-Nov-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     NEWSYM      MMMDLS (cont.)	SYMDEF      MMMDLP
+				SYMSPEC     MMMDLP
+
+     NHWORD      MMBLDS		DO_TABLES   MMBLDP   DROP_LINE   MMBLDS
+						     REL_XWD     MMBLDS
+						     SET_ADR     MMBLDS
+
+     NON_MOD_CM  ODMS  		ODMS        ODMS     DOLOOK      ODMS  
+						     LENGTH      *SYS* 
+						     TRIM_LEADI  ODMS  
+
+     NO_SHAR     ODMS  		ODMS        ODMS     COMERR      ODMS  
+						     COMSTR      ODMS  
+
+     NSOVFY      MMPACK		VFDBVERS    MMDBOP   IOSTATUS    *SYS* 
+				VFYEXT      MMPACK   IO_ERROR    ODMS  
+				VFYVERS     MMDBOP   READ        *SYS* 
+						     VFYERR      MMPACK
+						     WRITELN     *SYS* 
+
+     ODMS        ODMS  		<NONE>               ADDRESS     *SYS* 
+						     BLD_MAIN    MMBLDP
+						     BLD_MOD     MMBLDP
+						     CHK_OPT     ODMS  
+						     CHK_REQ     ODMS  
+						     CHR         *SYS* 
+						     CLOSE       *SYS* 
+						     COMERR      ODMS  
+						     COMSTR      ODMS  
+						     DEL_OVL     MMDBOP
+						     DOLOOK      ODMS  
+						     DO_COMPILE  ODMS  
+						     DO_HELP     ODMS  
+						     DO_USE      ODMS  
+						     EOF         *SYS* 
+						     FIND        MMMSYM
+						     GETCID      ODMS  
+						     GETLINE     ODMS  #
+						     GETNUM      ODMS  
+						     GETSTR      ODMS  Cross Reference Listing for ODMS - Pascal Overlay System -- June 8, 1981			 Page 18
+											        8-Nov-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     ODMS        ODMS   (cont.)			     JOBINFO     *UNDEF
+						     JOBNUM      *UNDEF
+						     LENGTH      *SYS* 
+						     NON_MOD_CM  ODMS  
+						     NO_SHAR     ODMS  
+						     OPEN        *SYS* 
+						     ORD         *SYS* 
+						     PACKDB      MMPACK
+						     PRDBVERS    MMDBPR
+						     PRTINF      MMPRNT
+						     PRTSYM      MMPRNT
+						     READ        *SYS* 
+						     REN_OVL     MMDBOP
+						     RESET       *SYS* 
+						     REWRITE     *SYS* 
+						     SCRATCH     *SYS* 
+						     SUBSTR      *SYS* 
+						     TMPCOR      *UNDEF
+						     TRIM_EQUAL  ODMS  
+						     UPD_OVL     MMDBOP
+						     VFDBVERS    MMDBOP
+						     VFYEXT      MMPACK
+						     VFYVERS     MMDBOP
+						     WRITELN     *SYS* 
+
+     OPEN        *SYS* 		DO_USE      ODMS  
+				GETLINE     ODMS  
+				ODMS        ODMS  
+
+     ORD         *SYS* 		ODMS        ODMS  
+				REL_WORD    MMBLDS
+				TRIM_LEADI  ODMS  
+
+     PACKDB      MMPACK		ODMS        ODMS     CHAINONEND  MMDBPR
+						     CLOSE       *SYS* 
+						     DBCLOSE     MMDBPR
+						     DBINIT      MMDBPR
+						     DC_EXT      *UNDEF
+						     DELVER      MMDBPR
+						     EOF         *SYS* Cross Reference Listing for ODMS - Pascal Overlay System -- June 8, 1981			 Page 19
+											        8-Nov-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     PACKDB      MMPACK (cont.)			     FILENAME    *SYS* 
+						     FINDVERSIO  MMDBPR
+						     IOSTATUS    *SYS* 
+						     IO_ERROR    ODMS  
+						     JOBNUM      *UNDEF
+						     READRN      *SYS* 
+						     RENAME      *UNDEF
+						     RESET       *SYS* 
+						     REWRITE     *SYS* 
+						     SCRATCH     *SYS* 
+						     SEEK        *SYS* 
+						     WRITELN     *SYS* 
+
+     PADOUT      MMBLDS		BLD_MAIN    MMBLDP   ALLOC       MMBLDS
+
+     POLISH_SYM  MMBLDS		DROP_SYMBO  MMBLDS   INIT_REC    MMBLDS
+						     LENGTH      *SYS* 
+						     RADIX50     MMBLDS
+						     SUBSTR      *SYS* 
+
+     PORTAL      MMBLDS		BLD_MAIN    MMBLDP   EXTERN      MMBLDS
+				BLD_MOD     MMBLDP   JRST1       MMBLDS
+						     JSP1        MMBLDS
+
+     POSERR      MDLPRO		POST_PROCE  MDLPRO   WRITELN     *SYS* 
+
+     POST_PROCE  MDLPRO		MDLPRO      MDLPRO   CLOSE       *SYS* 
+						     DO_SYM      MDLPRO
+						     EOF         *SYS* 
+						     FIND        MMMSYM
+						     GETRTL      MDLPRO
+						     INDEX       *SYS* 
+						     NEWNAME     MMMDLS
+						     POSERR      MDLPRO
+						     RESET       *SYS* 
+						     SUBSTR      *SYS* 
+
+     PRDBVERS    MMDBPR		ODMS        ODMS     DBCLOSE     MMDBPR
+						     DBOPEN      MMDBPR
+						     DC_EXT      *UNDEFCross Reference Listing for ODMS - Pascal Overlay System -- June 8, 1981			 Page 20
+											        8-Nov-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     PRDBVERS    MMDBPR (cont.)			     IOSTATUS    *SYS* 
+						     IO_ERROR    ODMS  
+						     READRN      *SYS* 
+						     WRITELN     *SYS* 
+
+     PRTAREA     MMPRNT		PRTINF      MMPRNT   WRITELN     *SYS* 
+
+     PRTINF      MMPRNT		ODMS        ODMS     PRTAREA     MMPRNT
+						     PRTMOD      MMPRNT
+						     PRTPRG      MMPRNT
+						     WRITELN     *SYS* 
+
+     PRTMOD      MMPRNT		PRTINF      MMPRNT   WRITE       *SYS* 
+						     WRITELN     *SYS* 
+
+     PRTPRG      MMPRNT		PRTINF      MMPRNT   DC_EXT      *UNDEF
+						     WRITE       *SYS* 
+						     WRITELN     *SYS* 
+
+     PRTSYM      MMPRNT		ODMS        ODMS     WRITE       *SYS* 
+						     WRITELN     *SYS* 
+
+     PUSHJ17     MMBLDS		DO_MTV      MMBLDP   DROP_LINE   MMBLDS
+				MTVENT      MMBLDS   REL_XWD     MMBLDS
+						     SET_ADR     MMBLDS
+
+     PUT         *SYS* 		DROP_CUR_R  MMBLDS
+				SETUPCODE   MMBLDS
+				WRITE_NAME  ODMS  
+
+     PUTSTRING   *SYS* 		ALLOC       MMBLDS
+				DEFINE      MMBLDS
+				DO_TABLES   MMBLDP
+				FWORD       MMBLDS
+				HISEG       MMBLDS
+				HWORDS      MMBLDS
+				JRSTADDR    MMBLDS
+				LOSEG       MMBLDS
+				SHWORD      MMBLDS
+				VFDBVERS    MMDBOPCross Reference Listing for ODMS - Pascal Overlay System -- June 8, 1981			 Page 21
+											        8-Nov-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     RADIX50     MMBLDS		POLISH_SYM  MMBLDS
+				REG_SYMBOL  MMBLDS
+
+     READ        *SYS* 		CHAINONEND  MMDBPR
+				DBINIT      MMDBPR
+				DBOPEN      MMDBPR
+				GETLINE     ODMS  
+				NSOVFY      MMPACK
+				ODMS        ODMS  
+
+     READLN      *SYS* 		DO_HELP     ODMS  
+				GETLINE     MMMDLS
+				GETLINE     ODMS  
+				GETRTL      MDLPRO
+
+     READRN      *SYS* 		CHAINONEND  MMDBPR
+				DELETEALL   MMDBPR
+				DELVER      MMDBPR
+				FINDVERSIO  MMDBPR
+				PACKDB      MMPACK
+				PRDBVERS    MMDBPR
+				REN_OVL     MMDBOP
+				VFDBVERS    MMDBOP
+
+     REG_SYMBOL  MMBLDS		DROP_SYMBO  MMBLDS   LENGTH      *SYS* 
+						     RADIX50     MMBLDS
+						     REL_WORD    MMBLDS
+						     REL_XWD     MMBLDS
+						     SUBSTR      *SYS* 
+
+     REL_INT     MMBLDS		EMIT_INTER  MMBLDS   REL_WORD    MMBLDS
+				FWORD       MMBLDS
+
+     REL_WORD    MMBLDS		DROP_ASCII  MMBLDS   INIT_REC    MMBLDS
+				REG_SYMBOL  MMBLDS   ORD         *SYS* 
+				REL_INT     MMBLDS
+				REL_XWD     MMBLDS
+
+     REL_XWD     MMBLDS		ARGNAM      MMBLDS   REL_WORD    MMBLDS
+				DROP_ADDR   MMBLDSCross Reference Listing for ODMS - Pascal Overlay System -- June 8, 1981			 Page 22
+											        8-Nov-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     REL_XWD     MMBLDS (cont.)	EMIT_INTER  MMBLDS
+				FINISHCODE  MMBLDS
+				HWORDS      MMBLDS
+				INIT_REC    MMBLDS
+				JRST        MMBLDS
+				JRST1       MMBLDS
+				JRSTADDR    MMBLDS
+				JSP1        MMBLDS
+				NHWORD      MMBLDS
+				PUSHJ17     MMBLDS
+				REG_SYMBOL  MMBLDS
+				SHWORD      MMBLDS
+
+     RENAME      *UNDEF		PACKDB      MMPACK
+
+     REN_OVL     MMDBOP		ODMS        ODMS     DBCLOSE     MMDBPR
+						     DBINIT      MMDBPR
+						     DC_EXT      *UNDEF
+						     FINDVERSIO  MMDBPR
+						     IOSTATUS    *SYS* 
+						     IO_ERROR    ODMS  
+						     READRN      *SYS* 
+						     WRITELN     *SYS* 
+						     WRITERN     *SYS* 
+
+     RESET       *SYS* 		DBOPEN      MMDBPR
+				DO_HELP     ODMS  
+				MDLPRO      MDLPRO
+				ODMS        ODMS  
+				PACKDB      MMPACK
+				POST_PROCE  MDLPRO
+				UPD_OVL     MMDBOP
+				VFYEXT      MMPACK
+
+     REWRITE     *SYS* 		BLD_MAIN    MMBLDP
+				BLD_MOD     MMBLDP
+				DO_USE      ODMS  
+				MDLPRO      MDLPRO
+				ODMS        ODMS  
+				PACKDB      MMPACKCross Reference Listing for ODMS - Pascal Overlay System -- June 8, 1981			 Page 23
+											        8-Nov-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     REWRITE     *SYS*  (cont.)	SETUPCODE   MMBLDS
+				WRITE_MOD_  ODMS  
+
+     SCANERR     MMMDLS		GETTOKEN    MMMDLS   WRITELN     *SYS* 
+						     WRTLINE     MMMDLS
+
+     SCRATCH     *SYS* 		MDLPRO      MDLPRO
+				ODMS        ODMS  
+				PACKDB      MMPACK
+
+     SEEK        *SYS* 		PACKDB      MMPACK
+				VFDBVERS    MMDBOP
+				VFYVERS     MMDBOP
+
+     SETUPCODE   MMBLDS		BLD_MAIN    MMBLDP   ASSM_WRITE  MMBLDS
+				BLD_MOD     MMBLDP   CLOSE       *SYS* 
+						     EOF         *SYS* 
+						     INIT_REC    MMBLDS
+						     PUT         *SYS* 
+						     REWRITE     *SYS* 
+
+     SET_ADR     MMBLDS		DROP_ADDR   MMBLDS   FINDSYM     MMBLDS
+				JRST        MMBLDS   THE_CURREN  MMBLDS
+				JRST1       MMBLDS
+				JSP1        MMBLDS
+				NHWORD      MMBLDS
+				PUSHJ17     MMBLDS
+				SHWORD      MMBLDS
+
+     SHWORD      MMBLDS		DO_TABLES   MMBLDP   DROP_LINE   MMBLDS
+						     PUTSTRING   *SYS* 
+						     REL_XWD     MMBLDS
+						     SET_ADR     MMBLDS
+
+     STORSECT    MMMDLP		USEPRO      MMMDLP   GETTOKEN    MMMDLS
+						     MDLERR      MMMDLP
+						     STORSPEC    MMMDLP
+
+     STORSPEC    MMMDLP		STORSECT    MMMDLP   FIND        MMMSYM
+						     GETTOKEN    MMMDLSCross Reference Listing for ODMS - Pascal Overlay System -- June 8, 1981			 Page 24
+											        8-Nov-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     STORSPEC    MMMDLP (cont.)			     MDLERR      MMMDLP
+
+     SUBSTR      *SYS* 		COMSTR      ODMS  
+				CUM_STR     ODMS  
+				DO_COMPILE  ODMS  
+				DO_HELP     ODMS  
+				DO_USE      ODMS  
+				DROP_ASCII  MMBLDS
+				GETLINE     ODMS  
+				GETNUM      ODMS  
+				GETRTL      MDLPRO
+				GETSTR      ODMS  
+				GETTOKEN    MMMDLS
+				LOOKUP      MMMDLS
+				MDLERR      MMMDLP
+				MDLINIT     MMMDLS
+				MDLPRO      MDLPRO
+				ODMS        ODMS  
+				POLISH_SYM  MMBLDS
+				POST_PROCE  MDLPRO
+				REG_SYMBOL  MMBLDS
+
+     SYMDEF      MMMDLP		SYMSECT     MMMDLP   GETTOKEN    MMMDLS
+						     INCLAUSE    MMMDLP
+						     NEWSYM      MMMDLS
+						     SYMSPEC     MMMDLP
+
+     SYMSECT     MMMDLP		USEPRO      MMMDLP   GETTOKEN    MMMDLS
+						     MDLERR      MMMDLP
+						     SYMDEF      MMMDLP
+
+     SYMSPEC     MMMDLP		SYMDEF      MMMDLP   FIND        MMMSYM
+						     GETTOKEN    MMMDLS
+						     MDLERR      MMMDLP
+						     NEWNAME     MMMDLS
+						     NEWSYM      MMMDLS
+
+     SYSSECT     MMMDLP		USEPRO      MMMDLP   GETTOKEN    MMMDLS
+						     MDLERR      MMMDLPCross Reference Listing for ODMS - Pascal Overlay System -- June 8, 1981			 Page 25
+											        8-Nov-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     THE_CURREN  MMBLDS		ARGNAM      MMBLDS
+				DO_LABEL    MMBLDS
+				EMIT_INTER  MMBLDS
+				ENTRY       MMBLDS
+				INIT_REC    MMBLDS
+				SET_ADR     MMBLDS
+
+     TMPCOR      *UNDEF		ODMS        ODMS  
+
+     TREE_DELET  MMMDLS		MDLDEL      MMMDLS   DISPOSE     *SYS* 
+				TREE_DELET  MMMDLS   TREE_DELET  MMMDLS
+
+     TRIM_EQUAL  ODMS  		ODMS        ODMS     COMERR      ODMS  
+						     LENGTH      *SYS* 
+						     TRIM_LEADI  ODMS  
+
+     TRIM_LEADI  ODMS  		NON_MOD_CM  ODMS     LENGTH      *SYS* 
+				TRIM_EQUAL  ODMS     ORD         *SYS* 
+
+     UPDATE      *SYS* 		DBINIT      MMDBPR
+
+     UPD_OVL     MMDBOP		ODMS        ODMS     CHAINONEND  MMDBPR
+						     CLOSE       *SYS* 
+						     DBCLOSE     MMDBPR
+						     DBINIT      MMDBPR
+						     DC_EXT      *UNDEF
+						     DELVER      MMDBPR
+						     EOF         *SYS* 
+						     FINDVERSIO  MMDBPR
+						     IO_ERROR    ODMS  
+						     RESET       *SYS* 
+						     WRITELN     *SYS* 
+
+     UPPERCASE   *SYS* 		GETRTL      MDLPRO
+				GETSTR      ODMS  
+				GETTOKEN    MMMDLS
+				LOOKUP      MMMDLS
+
+     USEPRO      MMMDLP		MDLPRO      MDLPRO   AREASECT    MMMDLP
+						     GETTOKEN    MMMDLSCross Reference Listing for ODMS - Pascal Overlay System -- June 8, 1981			 Page 26
+											        8-Nov-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     USEPRO      MMMDLP (cont.)			     MACHSECT    MMMDLP
+						     MDLERR      MMMDLP
+						     MDLINIT     MMMDLS
+						     MODSECT     MMMDLP
+						     STORSECT    MMMDLP
+						     SYMSECT     MMMDLP
+						     SYSSECT     MMMDLP
+
+     VERIFY      *SYS* 		GETTOKEN    MMMDLS
+
+     VFDBVERS    MMDBOP		ODMS        ODMS     DBCLOSE     MMDBPR
+						     DBINIT      MMDBPR
+						     FILENAME    *SYS* 
+						     IO_ERROR    ODMS  
+						     NSOVFY      MMPACK
+						     PUTSTRING   *SYS* 
+						     READRN      *SYS* 
+						     SEEK        *SYS* 
+
+     VFYERR      MMPACK		NSOVFY      MMPACK   WRITELN     *SYS* 
+
+     VFYEXT      MMPACK		ODMS        ODMS     CLOSE       *SYS* 
+						     FILENAME    *SYS* 
+						     IOSTATUS    *SYS* 
+						     NSOVFY      MMPACK
+						     RESET       *SYS* 
+						     WRITELN     *SYS* 
+
+     VFYVERS     MMDBOP		ODMS        ODMS     DBCLOSE     MMDBPR
+						     DBOPEN      MMDBPR
+						     FINDVERSIO  MMDBPR
+						     NSOVFY      MMPACK
+						     SEEK        *SYS* 
+						     WRITELN     *SYS* 
+
+     WRITE       *SYS* 		CHAINONEND  MMDBPR
+				DBINIT      MMDBPR
+				GETLINE     ODMS  
+				PRTMOD      MMPRNT
+				PRTPRG      MMPRNTCross Reference Listing for ODMS - Pascal Overlay System -- June 8, 1981			 Page 27
+											        8-Nov-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     WRITE       *SYS*  (cont.)	PRTSYM      MMPRNT
+				WRITE_MOD_  ODMS  
+				WRITE_NAME  ODMS  
+
+     WRITELN     *SYS* 		ASSM_WRITE  MMBLDS
+				BLD_MAIN    MMBLDP
+				BLD_MOD     MMBLDP
+				COMERR      ODMS  
+				DELETEALL   MMDBPR
+				DEL_OVL     MMDBOP
+				DO_HELP     ODMS  
+				DO_TABLES   MMBLDP
+				DO_USE      ODMS  
+				FREESPACE   MMDBPR
+				GETLINE     ODMS  
+				IO_ERROR    ODMS  
+				MDLERR      MMMDLP
+				MDLPRO      MDLPRO
+				NSOVFY      MMPACK
+				ODMS        ODMS  
+				PACKDB      MMPACK
+				POSERR      MDLPRO
+				PRDBVERS    MMDBPR
+				PRTAREA     MMPRNT
+				PRTINF      MMPRNT
+				PRTMOD      MMPRNT
+				PRTPRG      MMPRNT
+				PRTSYM      MMPRNT
+				REN_OVL     MMDBOP
+				SCANERR     MMMDLS
+				UPD_OVL     MMDBOP
+				VFYERR      MMPACK
+				VFYEXT      MMPACK
+				VFYVERS     MMDBOP
+				WRITE_MOD_  ODMS  
+				WRITE_NAME  ODMS  
+				WRTLINE     MMMDLS
+
+     WRITERN     *SYS* 		CHAINONEND  MMDBPR
+				DELVER      MMDBPRCross Reference Listing for ODMS - Pascal Overlay System -- June 8, 1981			 Page 28
+											        8-Nov-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     WRITERN     *SYS*  (cont.)	FREESPACE   MMDBPR
+				GETSPACE    MMDBPR
+				REN_OVL     MMDBOP
+
+     WRITE_MOD_  ODMS  		DO_USE      ODMS     CLOSE       *SYS* 
+						     COMERR      ODMS  
+						     EOF         *SYS* 
+						     FIND_SHARA  ODMS  
+						     REWRITE     *SYS* 
+						     WRITE       *SYS* 
+						     WRITELN     *SYS* 
+						     WRITE_NAME  ODMS  
+
+     WRITE_NAME  ODMS  		FIND_SHARA  ODMS     PUT         *SYS* 
+				WRITE_MOD_  ODMS     WRITE       *SYS* 
+						     WRITELN     *SYS* 
+
+     WRTLINE     MMMDLS		MDLERR      MMMDLP   WRITELN     *SYS* 
+				SCANERR     MMMDLS
+Module Cross Reference Listing for ODMS - Pascal Overlay System -- June 8, 1981			  Page 1
+											        8-Nov-82
+     Module         #Procs  Called  #Procs      #Procs  Call    #Procs
+     ------         ------  ------  ------      ------  ------  ------
+
+     MDLPRO	         4  MDLPRO  2		     2  MDLPRO  4
+		         1  ODMS    1		     1  MMMDLP  1
+						     2  MMMDLS  2
+						     1  MMMSYM  1
+
+     MMBLDP	         2  MMBLDP  1		     1  MMBLDP  2
+		         2  ODMS    1		     4  MMBLDS  24
+
+     MMBLDS	        24  MMBLDP  4		    36  MMBLDS  23
+		        23  MMBLDS  36
+
+     MMDBOP	         5  ODMS    1		     5  MMDBPR  7
+						     2  MMPACK  1
+						     3  ODMS    1
+
+     MMDBPR	         7  MMDBOP  5		     4  MMDBPR  6
+		         6  MMDBPR  4		     9  ODMS    1
+		         5  MMPACK  1
+		         2  ODMS    2
+
+     MMMDLP	         1  MDLPRO  1		    14  MMMDLP  14
+		        14  MMMDLP  14		    15  MMMDLS  7
+						     6  MMMSYM  1
+
+     MMMDLS	         2  MDLPRO  2		     6  MMMDLS  8
+		         7  MMMDLP  15
+		         8  MMMDLS  6
+		         1  ODMS    1
+
+     MMMSYM	         1  MDLPRO  1
+		         1  MMMDLP  6
+		         1  ODMS    1
+
+     MMPACK	         1  MMDBOP  2		     1  MMDBPR  5
+		         2  MMPACK  2		     2  MMPACK  2
+		         2  ODMS    1		     2  ODMS    1
+
+     MMPRNT	         3  MMPRNT  1		     1  MMPRNT  3
+		         2  ODMS    1Module Cross Reference Listing for ODMS - Pascal Overlay System -- June 8, 1981			  Page 2
+											        8-Nov-82
+     Module         #Procs  Called  #Procs      #Procs  Call    #Procs
+     ------         ------  ------  ------      ------  ------  ------
+
+     ODMS  	         1  MMDBOP  3		     1  MDLPRO  1
+		         1  MMDBPR  9		     1  MMBLDP  2
+		         1  MMPACK  2		     1  MMDBOP  5
+		        20  ODMS    14		     2  MMDBPR  2
+						     1  MMMDLS  1
+						     1  MMMSYM  1
+						     1  MMPACK  2
+						     1  MMPRNT  2
+						    14  ODMS    20
+
+ ) Q

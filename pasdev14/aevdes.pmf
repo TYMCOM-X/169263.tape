@@ -1,0 +1,795 @@
+#document(ANC MicroEclipse Vehicle Design Notes,<:June 30, 1981:>)
+#sect(Introduction)
+This document describes a mechanism for transporting ANC 
+to a microEclipse.
+The fundamental problem which must be addressed by any such scheme is the
+limited address space (32K 16-bit words) of the Eclipse architecture.
+In the approach described here, the code will be overlaid to fit
+in a subset of the available address space.
+Overlaying the data is not feasible because data items may
+be passed by address to arbitrary subroutines.
+Direct addressing of data would permit extremely fast data
+referencing, but would impose an unacceptably small limit on the size 
+of the data used by the ANC program.
+Extended virtual addresses could be used to address data;
+however, this would require software interpretation of all
+data references.
+#par
+The approach adopted here to the data referencing problem
+is a blend of both approaches.
+MDSI Pascal will be extended to allow users to declare two classes
+of both static storage and heap storage.
+^UDirect static|U and ^Udirect heap|U storage will be directly addressable,
+though very limited in total size.
+^UVirtual static|U and ^Uvirtual heap|U storage must be fetched
+and stored to and from physical memory via subroutines which set
+the memory mapping registers.
+Stack storage, which is assumed to account for a high percentage of
+all data references, will always be directly addressed.
+One of the main benefits of this approach is that it permits ANC
+to optimize performance at the source code level.
+#sect(Memory Management)
+The basic implementation strategy for the memory management scheme
+proposed here is to divide the 32 Eclipse memory mapping registers
+(each of which controls the mapping of one 2K byte piece of the
+64K byte address space into physical memory) into groups
+with different purposes.
+Exact sizes of the groups may be adjustable to optimize
+memory use;
+these notes give estimates only.
+These groups are:
+Pascal code, the stack, the direct static and heap areas,
+"resident" runtime routines, and scratch registers used to
+access virtual areas and in-core overlaid runtime routines.
+#par
+Physical memory is also divided up into areas devoted to
+specific purposes.
+Some of these are kept permanently mapped into the address space;
+others are "virtual," and must be accessed by mapping them
+via a scratch register.
+The former areas include the stack, the resident runtime,
+and the direct static and heap.
+The latter areas include the virtual heap, the virtual static storage,
+and the in-core overlaid runtime.
+OZMOS takes some memory, of course;
+the remainder of memory is occupied by Pascal code,
+some of which is mapped into the address space
+(this is the currently executing overlay).
+#par
+The Pascal stack is kept entirely mapped in the address space.
+This puts a definite limit on its size, but allows fast access to
+local variables.
+It is assumed that references to local variables dominate all
+data references made in the program.
+#par
+The direct static and heap are also always mapped.
+References to these areas are also fast,
+and the areas' sizes are very tightly controlled.
+Virtual static and virtual heap, on the other hand,
+can be given large pieces of memory,
+but access to them will be much slower because one of the
+scratch registers must be mapped to the variable wanted
+before the access can be made.
+#par
+Constants may only be passed as parameters to Pascal routines
+by value.
+(This restriction does not apply to runtime calls.)
+This is necessary in order to ensure that they are not
+passed across overlay boundaries,
+so that they can be stored with code.
+References to public constants across overlay boundaries
+will not be allowed by the linker.
+It may be possible to add a switch to the compiler which
+would store in the virtual static area any constant which
+would be passed by address,
+thus allowing them to be passed as parameters.
+#par
+The Pascal runtime system for this scheme will come in two parts:
+"resident" and "in-core overlaid."
+Resident runtime contains small, very frequently used routines,
+including code to remap through scratch mapping registers
+(i.e. virtual address translation code).
+It also contains the entry points for all other runtime routines,
+which exist in the in-core overlaid section
+(or possibly are read in from disk).
+These entries establish addressability for the code of the runtime
+routine by allocating and mapping one of the scratch registers.
+#beginlevel
+#sect(Layout of Physical Memory)
+The following figure shows a sample layout of physical memory
+for the microEclipse.
+256K bytes of memory are shown;
+each column represents 1K bytes.
+#beginfigure(15,0)
+$tab 9,17,25,33,41,49,57,65,73
+$control off
+      8KB    16KB    24KB    32KB    40KB    48KB    56KB    64KB
++-------+-------+-------+-------+-------+-------+-------+-------+
+|			      OZMOS				|
++---------------+-------------------------------+---------------+
+|     Stack	|	  Virtual heap		|Virtual static |
++---------------+---------------+---+-----------+---------------+
+|   In-core overlaid runtime	|RR |  DS,DH	|     Code	|
++-------------------------------+---+-----------+---------------+
+|			      Code				|
++---------------------------------------------------------------+
+
+RR = Resident Runtime
+DS = Direct Static
+DH = Direct Heap
+$control on
+#endfigure
+#sect(Allocation of Address Space)
+The following figure shows an example of how the microEclipse
+64K byte address space would be allocated.
+As in the above figure, each column represents 1K bytes;
+therefore the range of each 2K byte mapping window is two columns.
+#beginfigure(6,0)
+$control off
+    6KB10KB      20KB			     48KB	     64KB
++-----+---+---------+---------------------------+---------------+
+| Scr |RR |  DS,DH  |		Code		|     Stack	|
++-----+---+---------+---------------------------+---------------+
+
+Scr = Scratch Mapping
+$control on
+#endfigure
+#sect(Virtual Address Format)
+A virtual address may be used to address an arbitrary Pascal data item;
+the data item may be directly addressable or may be in virtual static
+or heap storage.
+Virtual addresses refer to one of three data segments.
+Two virtual segments exist:  the ^Uvirtual heap segment|U
+and the ^Uvirtual static segment|U.
+Each of these is implemented as an OZMOS "segment."
+Segments are the units mapped to by the OZMOS memory mapping
+system calls.
+Preliminary OZMOS documentation indicates that they are limited
+in size to 128K words.
+The other data segment is the ^Udirect segment|U.
+This is not an OZMOS segment;
+it merely represents all the directly addressable data areas
+(the stack, the direct heap and direct static storage).
+#par
+A virtual address is a 32-bit object.
+A virtual address of an object in the direct segment consists
+of a zero word followed by a word containing an Eclipse 
+15-bit address (and a zero in bit zero of the word).
+A virtual address of an object in a virtual segment is
+shown below:
+#beginfigure(4)
+ 0      7 8     15 16  21  22     31
++--------+--------+------+----------+
+| segment|  page  | MBZ  |   offset |
++--------+--------+------+----------+
+#endfigure
+The first byte gives the segment number.
+The second byte gives the (1K word) page offset within
+the segment.
+Bits 16 through 21 must be zero and the final 10 bits
+are the word offset within the page.
+#par
+A virtual address (with a non-zero segment and page number) is translated by 
+first selecting a scratch memory mapping register to use.
+This register number together with the segment number and page
+offset are used to map the relevant page of the segment 
+via an OZMOS system call.
+The five bit map register number is then shifted left ten
+bits and inclusively ORed with the offset field of the virtual
+address to yield a direct Eclipse address.
+#par
+Displacements from virtual addresses may be calculated by
+adding the displacement to the offset field of the
+virtual address.
+This may result in bits 16 through 21 of the resulting virtual
+address being non-zero.
+This would imply that the page number in bits 8 through 15 was
+no longer correct.
+All virtual address translation routines must 'normalize'
+the virtual address passed in, i.e., the page field must be
+incremented by the value contained in bits 16 through 21, and 
+bits 16 through 21 must then be zeroed.
+#par
+This treatment of displacements from virtual addresses has two
+further implications.  
+First, a given location may be addressed by multiple virtual
+addresses.
+Thus virtual addresses must be normalized before they can
+be compared.
+Second, in order to avoid overflow when adding a displacement
+to a virtual address,
+the size of any Pascal data object must be limited to
+(2**16 - 2**10) words.
+#sect(Compiler Usage of Address Forms)
+In general the compiler will simply generate direct addresses
+for stack, direct static and direct heap variables.
+Virtual addresses will be used to address virtual static and
+heap variables.
+However, parameters passed by address must always use
+a virtual address.
+This is necessary because variables in both direct and
+virtual segments may be bound to the same formal parameter.
+This restriction applies to parameters passed by address to 
+both user subroutines and Pascal runtime routines.
+Note however that a virtual address into the direct segment
+may easily be detected and special cased in a
+runtime routine which accesses virtual memory.
+#endlevel
+#sect(Pascal Language Changes)
+The system described in these notes is for a special purpose,
+namely executing ANC on an Eclipse.
+It requires changes to the MDSI Pascal language to implement
+features of the system and to improve the system's efficiency.
+#beginlevel
+#sect(Language Restrictions)
+The Eclipse cross-compiler will compile all integer and integer-compatible
+data to 16-bit two's complement representation,
+rather than the 32-bit integers used in other MDSI Pascal compilers.
+This saves data space, and also code space and execution time
+since the Eclipse is a 16-bit processor.
+A compiler switch may be added which would cause integers
+to be compiled to a 32-bit representation.
+#par
+As mentioned above, constants must be passed by value only.
+This means that constants of data types which are passed
+by address cannot be passed as parameters.
+Tentatively, all scalar types will be passed by value to non-VAR formals;
+all aggregate and set types (and all VAR parameters) will be passed by address.
+#par
+Also, the initial implementation of this system will
+not include the MDSI Pascal debugger.
+As with the VAX cross-compiler, this may be added later
+as a separate project.
+#sect(Language Additions)
+The following additions will be required to the MDSI Pascal language.
+The keywords DIRECT and VIRTUAL will be used to distinguish direct and
+virtual static storage declarations.
+These keywords may be used before either the 'VAR' or 'STATIC VAR'
+keywords which must begin static variable declarations.
+These new keywords may be omitted;
+virtual static will be the default.
+#par
+A second pointer declaration symbol will be introduced to 
+distinguish between direct and virtual pointers.
+^UDirect pointers|U are 16-bit objects which represent the
+address of an object created at execution time on the direct heap.
+^UVirtual pointers|U are full 32-bit virtual addresses and
+may point to objects on either the direct heap or the virtual heap.
+The at-sign ('@') is used to declare direct pointers;
+the standard Pascal uparrow character ('^') is used to declare
+virtual pointers.
+These two pointer types represent incompatible types.
+However, implicit conversions of direct to virtual pointers
+will be permitted in pointer assignments and value
+parameter binding of pointers.
+Dereferencing a direct pointer and a virtual pointer yields
+compatible types only if the
+target types of the two pointers are identical.
+Note that two versions of the intrinsic function NEW are
+not required at the source code level.
+A call to NEW with a direct pointer will allocate an object on
+the direct heap;
+a call with a virtual pointer will allocate an object
+on the virtual heap.
+#endlevel
+#sect(Generated Code Format)
+Possible choices of code format to be produced by the Eclipse
+code generator include threaded code
+(that is, a list of subroutine addresses and arguments)
+and "hard" code
+(that is, Eclipse instructions generated in-line).
+In general, threaded code is smaller since the subroutines'
+code is shared among many callers (assuming the addresses
+and arguments are smaller than their hard code equivalents),
+but slower because of subroutine calling and argument fetching overhead.
+Threaded code schemes also have the advantage of flexibility,
+since the particular functions executed by the subroutines
+can be chosen to hide awkward features of the hardware
+architecture and system environment from the code generator.
+#par
+However, we have chosen to generate hard code,
+based on the following performance argument.
+We will show that the extra execution time caused by threaded code
+is likely to make ANC take longer to execute a COMPACT II
+program on the microEclipse than the program takes
+on current Nova-4C Series I systems.
+#par
+A COMPACT II benchmark program (LINK11B) was chosen and actual
+instruction counts were taken to execute the program on two systems:
+ANC compiled for the VAX-11,
+and COMPACT II running on the XDS 940 simulator written for the PDP-11.
+In the latter situation, the number of 940 instructions simulated
+was also counted.
+The number of VAX instructions executed was 9.3 times the number
+of 940 instructions simulated on the PDP-11
+(this figure counts instructions executed in VAX runtime
+libraries but not instructions executed in VAX system calls).
+The number of PDP-11 instructions executed was 65 times the number
+of 940 instructions simulated;
+in other words, the average number of PDP-11 instructions
+required to simulate a 940 instruction or system call
+for this COMPACT II program was 65.
+#par
+We assume that the number of instructions executed in
+the Eclipse COMPACT II system to run this program is the
+same as for the PDP-11.
+(Actual instruction counts cannot be taken on the Eclipse;
+on the VAX and PDP-11, hardware trace traps were used.)
+We further assume that the microEclipse has 2 times the processing power
+of the Nova-4C.
+On this basis, we can afford to execute a maximum of 130 microEclipse
+instructions per 940 instruction simulated in COMPACT II
+to stay within our constraint of being as fast as the Series I.
+#par
+Now we must convert our figures for ANC on the VAX to a
+comparable number.
+Here we must estimate the relative power of the VAX and
+Eclipse instruction sets.
+We have chosen a figure of 3 or 4 Eclipse instructions
+per VAX instruction on average,
+if we are compiling directly to Eclipse hard code.
+We also must allow for the overhead of translating software
+virtual addresses in accessing virtual data.
+This will take 100 to 150 instructions each time it happens
+since it involves a system call for remapping.
+If we guess that this will happen once in the equivalent
+of 20 or 30 VAX instructions of ANC, on average,
+then we must add 4 or 5 Eclipse instructions per VAX
+instruction to account for virtual memory access.
+This gives a total of about 8 Eclipse instructions to equal
+the power of an average VAX instruction in our scheme.
+8 times 9.3 yields about 74 Eclipse instructions
+per 940 instruction as an estimate of the efficiency of
+ANC on the Eclipse compiled for hard code.
+#par
+Any threaded code scheme will be complicated by the need to
+handle both direct and virtual addresses for arguments.
+In this situation, a set of thread routines which requires
+that the data values or addresses appear in-line will not
+be likely to save much code space.
+The alternative,
+an access routine scheme similar to that used in the Nova
+code generator design done recently
+(see "NOVA Pascal Implementation Notes", October 3, 1980),
+will require that we choose between a scheme that uses
+about 17 addressing modes
+(expanding the Nova design for two kinds of addresses),
+or a stack-based thread machine to keep the number of
+access routines to a manageable number.
+These considerations lead us to estimate that threaded code
+will be slower than hard code by a factor of at least 2.
+2 times 74 yields 148 Eclipse instructions per 940
+instruction simulated for the efficiency of ANC on the
+Eclipse under the assumption that code is generated for a thread machine.
+#par
+Thus we have exceeded our estimate of the number of
+instructions we can execute and still keep up with
+the Nova, if we generate threaded code.
+Furthermore, the above treatment deals with CPU time
+only;
+it doesn't count time for overlay swapping,
+either in-core or from disk.
+And given an overlaid environment, the space savings of
+threaded code may also be called into question,
+since the access routines may only be pooled over one 28K byte
+overlay in a program whose total size will be on the order
+of 600K bytes.
+These arguments combine to persuade us that threaded code
+is not a viable option in our scheme.
+#sect(Runtime System)
+The Pascal runtime support code will be provided as a
+separately linked program rather than as a searchable library.
+The user invokes ANC by running this program.
+The program initializes itself,
+opens the overlay file and reads in the disk record
+containing the overlay with the ANC program start address,
+maps this overlay and then passes control to it.
+Runtime calls transfer control back into the runtime code;
+these entries are through a transfer vector.
+The transfer vector is a large part of the resident runtime
+segment illustrated in the memory management section of
+this document;
+from the transfer vector, control passes to the runtime
+service routine, either directly if the routine is in the
+resident runtime,
+or via the runtime system's internal overlay manager if
+the routine is in an in-core or disk-based overlay.
+#par
+This transfer vector is necessary for two reasons.
+First, the majority of the runtime routines will be overlaid,
+and eno them has to be through a short wrapper to fetch
+the overlay in any case.
+Second, the requirement for independent linking of machine tool links
+means some type of runtime transfer vector must be provided;
+putting it into the pre-linked runtime program relieves the
+application programmer of having to construct it himself.
+#sect(Overlay System)
+In this scheme, unlike the DEC10 based Pascal overlay system,
+the whole program is linked together at once.
+This approach eliminates transfer vectors, which would
+be very space-consuming given the small maximum size of an overlay.
+It requires, however, that a special linker be written
+to link ANC into an executable image.
+#par
+This linker replaces the use of any Data General link
+editing program;
+it performs the full functions of relocating code and
+data as well as resolving references to global symbols
+and overlay processing.
+It accepts object files from the code generator
+and produces a file with the initial contents of
+virtual and direct storage, and the overlay-structured code.
+#par
+The overlay scheme does not include facilities to handle
+management of ANC machine tool links;
+these will be supported by a separate mechanism
+described elsewhere in this document.
+#beginlevel
+#sect(Overview)
+The overlay system in this scheme has two levels:
+disk records are read into physical memory areas,
+replacing the old contents,
+and the set of mapping registers devoted to code (14 of them
+in the example given above)
+is mapped onto different parts of a physical memory area.
+The address space is not divided into areas:
+any overlay swap causes the complete set of addressable code
+to be replaced with a new set.
+#sect(Disk Structures)
+Program code is grouped into units called ^Udisk records|U,
+which are the amount of code read in when an overlay must be
+fetched from disk.
+These records should be allocated contiguously on disk so that
+transfers are as fast as possible.
+Each record consists of one or more overlays,
+and is associated with a memory area.
+#sect(Memory Structures)
+Physical memory devoted to code is divided into one or more
+^Uareas|U.
+Each area is created as an OZMOS segment,
+and is the size of the largest disk record associated with it.
+An area holds one disk record at a time;
+the record is replaced with another only when a procedure
+in another record associated with the same area is called.
+#sect(Overlay Processing)
+Each disk record is divided into one or more overlays,
+no larger than the amount of address space allocated to code.
+Overlay boundaries in different disk records associated
+with the same area need not coincide.
+#par
+When a procedure in a different overlay is called,
+the overlay handler checks to see whether the overlay
+is in memory.
+(If it is in the same disk record as the caller, it will
+always be in memory;
+if it is in another disk record associated with the
+same memory area, it will never be.)
+If it is, the overlay system causes the code address
+space to be remapped to the overlay containing the called
+procedure.
+If not, the disk record containing the overlay is read in,
+replacing the old contents of the area with which it is associated,
+before the remapping is done.
+#par
+Note that where a memory area has only one disk record associated
+with it, the overlays in that record are essentially in-core
+overlays, since after they are first read in from disk they
+will never be displaced.
+#sect(The Linker)
+The linker takes as primary input a file listing the
+object files to be linked and grouping them into overlays,
+disk records and memory areas.
+It then reads the object files,
+allocating disk records to hold the overlays
+and allocating physical memory for the stack,
+virtual heap, virtual static, direct data
+(static and heap) and memory areas.
+Finally it writes the initial contents of
+virtual static, direct static and the overlays to an image
+file which will be read in and executed by the Pascal runtime
+system to execute the program.
+#par
+The linker will be written in Pascal and run on the host
+development system (the DEC-10).
+The image file it produces will be transmitted to the
+target system (the Eclipse) by a file transfer program.
+#beginlevel
+#sect(External Reference Resolution)
+The linker must resolve four kinds of references between
+compilation units:
+references to public virtual static data,
+references to public direct static data,
+references to runtime entry points,
+and references to public procedures and functions.
+References to externally defined virtual static will be
+resolved by virtual address.
+References to externally defined direct static and calls to runtime routines
+will be resolved by direct address.
+#par
+Calls to externally defined Pascal subroutines will
+be resolved by direct address if they are in the same overlay
+as the caller;
+if not, they will be resolved by an indirect call through
+a page zero location reserved by the linker for each
+overlay.
+These locations contain addresses of entry points in the overlay
+manager, unique to the overlay containing the Pascal subroutine
+to be called.
+The word following the call instruction will contain the
+address of the called subroutine in its overlay.
+This scheme keeps the size of an inter-overlay call equal to
+the size of an intra-overlay call.
+#par
+Public names will be significant only in their first ten characters.
+#sect(Data Allocation)
+As in other Pascal implementations, the linker does not
+allocate local variables or heap data since they are
+allocated and deallocated at runtime.
+The linker allocates static data;
+virtual static is relocated independently from direct static.
+The virtual static area can grow indefinitely from the linker's
+point of view;
+however, the direct static area has a fixed capacity
+which the linker enforces.
+#sect(Code Allocation)
+The linker relocates code according to the user's overlay
+specifications:
+object modules are grouped into overlays,
+which are grouped into disk records,
+which are associated with memory areas.
+Each overlay is relocated to the base direct address of
+the code area of the address space, and overlays are not permitted
+to overflow this code area.
+Disk records can grow indefinitely,
+and memory areas are given the size of the largest disk record
+they are to contain.
+Of course, availability of memory at runtime will constrain
+the total size of all the memory areas.
+#sect(Traceback Data Structures)
+In addition to the initial contents of memory
+(both data and code),
+the image file may contain data structures that allow
+procedure tracebacks and current statement identifications to
+be printed at runtime,
+if the user asks for this data at compile and link time.
+These data structures are not used unless a traceback
+or statement printout is requested, either by explicit
+user call or because of program termination due to a runtime error.
+These structures are grouped into tables.
+They will allow conversion from overlay module number and code address
+to module and routine name for tracebacks,
+and conversion from the same data to module, file, page and line
+names for statement identification.
+They will also allow the inverse conversions for debugging purposes.
+#sect(Implications for Object and Image File Formats)
+The object file format, or object language, must provide both
+the normal capabilities of specifying relocation areas and
+external reference resolution,
+and certain special capabilities made necessary by special
+features of the linker.
+#par
+Requests for the value of an external symbol must include
+a flag indicating whether the symbol is a virtual or direct
+address, so that mismatches can be detected.
+The object language must specify whether public definitions in
+the code area are constants or entry points,
+so that inter-overlay references to constants can be caught.
+It must also include records which contain the information
+which the linker will incorporate in the traceback tables.
+#par
+The image file must contain the initial contents of the
+virtual and direct static areas,
+the disk records containing code (broken down into overlays
+and with indications of the memory areas they are associated
+with),
+and the traceback tables.
+It will have a header, which will contain image identification
+information and a directory to locate the above-mentioned
+data structures.
+#endlevel
+#endlevel
+#sect(Link Management)
+The only software component of the ANC system on the microEclipse
+which must be independently updatable is the machine tool links.
+This design provides for a link management capability which
+is independent of the overlay system described
+elsewhere in this document.
+#beginlevel
+#sect(Overview)
+This scheme is similar to that used on the DEC10 and VAX in
+that it provides for separate linking of machine tool links
+and requires one transfer vector for references into MAIN and
+one transfer vector associated with each machine tool link
+for references from MAIN into the LINK.
+(Throughout this section on link management the term 'MAIN'
+is used to refer to all the code and data of ANC except that
+declared within machine tool links.
+The term 'LINK' will be used as an abbreviated form of
+'machine tool link'.)
+During the link of MAIN a 'place holder' module will be included
+to represent the LINK.
+This place holder module must be placed in an area of physical
+memory by itself, i.e., it must be an implicit in-core overlay.
+At execution time an association routine will load the
+code and LINK transfer vector into the OZMOS segment
+reserved for it by the overlay system.
+Both the transfer vector for MAIN and that of the LINK will
+reside in the overlay segment which also contains the 
+LINK's code.
+#sect(System components)
+The major components of the link management system are 
+described in this section.
+#beginlevel
+#sect(The place holder module)
+The place holder module is used to define MAIN's transfer
+vector and reserve space for the code, data and transfer 
+vector of the LINK;
+it is included in the link of MAIN.
+The figure below shows the information included in the
+place holder module.
+#beginfigure(22)
+ ^   +--------------------------+
+ |   |	 	MAIN's		|
+ |   |         transfer		|
+ |   |	 	vector		|
+ |   +--------------------------+
+ |   |      template for	|
+ |   |    LINK's transfer	|
+ |   |         vector		|
+28Kb +--------------------------+
+ |   |      dummy routine	|
+ |   + - - - - - - - - - - - - -+
+ |   |	  	space		|
+ |   |         reserved		|
+ |   |        for LINK's	|
+ |   |	  	code		|
+ V   +--------------------------+
+     |    space reserved for    |
+     |   LINK's direct static   |
+     +--------------------------+
+     |    space reserved for    |
+     |   LINK's virtual static  |
+     +--------------------------+
+#endfigure
+The transfer vector for MAIN is the first section of the
+place holder module.
+The second section is a template for the LINK's transfer vector.
+The actual LINK transfer vectors must be defined during the link
+of each machine tool link.
+The template does contain global labels for each entry point
+into the LINKs.
+These symbols serve to resolve the LINK entry point names during the
+link of MAIN and also define the fixed transfer vector offsets
+of each LINK entry point.
+The third section contains one dummy routine and reserves space
+for the code of the link.
+The dummy routine simply returns to its caller immediately;
+its function is discussed in the following section.
+These first three sections of the place holder routine
+are a direct image of the overlay section which will
+be mapped to whenever a LINK entry point routine is
+called.
+The remaining two sections simply reserve enough virtual and 
+direct static storage to satisfy the requirements of any LINK.
+#sect(The Initialization Routine)
+A link management initialization routine must be called by
+ANC before the LINK version association routine is ever called.
+This initialization routine will simply call the dummy routine
+defined in the place holder module.
+This will load the place holder routine into physical
+memory;
+in particular, MAIN's transfer vector will be loaded.
+After the initialization call the overlay system will
+view the link as permanently resident in memory.
+The loading of specific LINKs will be handled by the
+association routine.
+#sect(The Association Routine)
+The association routine is given an image file name for
+a LINK.
+It loads the code, transfer vector and initialized static
+for the LINK into physical memory.
+The LINK transfer vector and the LINK's code are loaded into
+the OZMOS segment reserved by the overlay system for 
+the overlay corresponding to the LINK.
+In order to do this, the association routine must have
+some means of obtaining the segment identifier associated
+with the LINK.
+One possibility is to define a runtime routine which
+takes an overlay module number and returns the segment
+identifier for the segment containing the overlay.
+The size of MAIN's transfer vector must also be known;
+this can be stored in the first word of MAIN's transfer
+vector.
+#par
+The association routine must also determine where the
+initialized direct and virtual static storage for the LINK
+is to be loaded into memory.
+This will be done by defining global symbols at the beginning
+of both areas in the place holder routine.
+The length of each area will be stored in the first word
+of each area.
+#endlevel
+#endlevel
+#sect(Discussion and Characteristics)
+Certain characteristics of this approach must be stressed,
+because they represent departures from past thinking
+or because they must be allowed for to use the approach
+successfully.
+This section points out how previous assumptions about
+the "ANC Portability Project" are changed,
+and gives guidelines and caveats for ANC if it uses
+the scheme described here.
+#par
+First of all, this approach is not portable to any
+processor other than those in the Eclipse family.
+It relies on specific characteristics of the Eclipse
+Memory Management Unit which are not shared by other
+16-bit minicomputers, e.g. the PDP-11.
+Since the PDP-11 64K byte address space is divided into only eight
+separately mappable sections,
+no adaptation of this scheme would be possible.
+#par
+Second, the Eclipse code generator produced will be tailored to ANC.
+The use of virtual addresses in passing parameters will introduce a
+substantial performance penalty.
+For applications smaller than ANC, where all the data can be directly
+addressed, this overhead is without any compensating benefit.
+In addition, since VIRTUAL is the default storage class, source
+code changes will be required to any program which wishes to use 
+direct storage.
+#par
+Third, this scheme requires widespread syntactic changes
+to ANC source code,
+and probably a great deal of executable code modification as well.
+Each static data item must be classified as virtual or direct,
+and each pointer data type must be classified as virtual or direct.
+Furthermore, since virtual storage will be very slow to access,
+but stack and direct storage will be tightly limited in size,
+a lot of work will be required to achieve a working balance,
+if indeed one can be found.
+The success of this scheme depends on ANC making very heavy use
+of procedure local variables, in preference to any other
+class of storage.
+#par
+The criterion that should be applied in making these classifications
+is to minimize the frequency of access to virtual items.
+Due to the small number of scratch mapping registers available,
+these references will cause memory remapping almost all the time.
+They will also consume more code space.
+Probably a significant amount of copying of virtual items
+into directly addressable storage for processing, and
+copying back when finished, will be justified.
+#par
+The small amount of address space available for code will
+probably necessitate considerable repackaging.
+This is particularly risky since we can not make any good estimate
+of the density of code the compiler will produce at this time.
+We can take the density of VAX code to be about the best
+possible case;
+at this density, about 7% of ANC will fit into addressable memory
+at once.
+Also at this density, 10 of ANC's modules exceed one quarter of
+addressable memory in size.
+In all likelihood, however, code density will be lower than it
+is on the VAX.
+#par
+Furthermore, map register switching at procedure calls
+to implement in-core overlaying may take a substantial
+amount of time.
+Therefore, judicious grouping of procedures into overlays
+may have a great impact on performance.
+#par
+Finally, the diagram of physical memory given in
+"Layout of Physical Memory" points out the
+necessity of providing more than 256K bytes of physical
+memory on the microEclipse.
+The amount of memory available for holding code on a 256K byte
+configuration is too small to avoid overlay thrashing during
+ANC execution.
+In our opinion, this requirement is not unique to this
+proposed ANC vehicle, but a universal requirement of
+any acceptable implementation of ANC on the microEclipse.
+$ski 3
+(pasdev14)aevdes.pmf
+#toc
+   ^ e#

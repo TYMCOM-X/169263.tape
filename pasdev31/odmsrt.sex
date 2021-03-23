@@ -1,0 +1,216 @@
+; ODMSRT.SEX -- runtime symbol file.  By secretly installing certain
+;   runtime symbols on the transfer vectors of a multiple-segment
+;   overlaid program, we can, invisibly to the user:
+;
+; -- cause asynchronous events (breaks, float traps, other ON conditions)
+;    to work correctly, even to bring in the overlay containing the most
+;    recently invoked handler.
+; -- allow routines to fake a PUSHJ to somewhere when the real PUSHJ
+;    return address would be invalidated by an overlay swap.
+; -- make debugging an overlaid system merely a matter of using the
+;    keyword DEBUG in the overlay MDL (with a few modules compiled in
+;    DEBUG mode, of course).
+; -- permit FORTRAN library routines to be loaded in the low segment.
+; -- perpetrate and perpetuate the total Hack atmosphere of ODMS.
+;
+; The first set of symbols are those used in the inline code to get
+;   to the debugger.  These are essentially RESIDENT procedures, and
+;   would have been included in the MDL if the DEBUG keyword didn't work.
+;
+stmt.
+
+; The second set of symbols are the so-called vectored runtime symbols.
+;   There are places in the runtime (and in the overlay manager) in
+;   which an address may be stored in the low segment and then jumped to
+;   after an overlay swap.  All that's necessary to make this work is to
+;   insure that the transfer vector address is stored.   Note that the
+;   PUSHJ instruction works in this manner -- storing a hiseg address
+;   in the loseg, so those have to be faked to make the POPJ work.
+;
+ovl				; the overlay manager central entry
+moe				; jump from FILLER entries on TVs
+int				; the attention handler onescape
+irp				; attention handler return point from SF$VFY
+msk				; handler for user-masked attentions
+ohp				; heap overflow runtime handler
+hrp				; heap ovflw hndlr return point from SF$VFY
+hfl				; heap overflow default handler
+ree				; the reenter addr stored in JBREN
+ddt				; the entrance to the debugger via .DDT
+lud				; TENIO's local UUO dispatcher
+opr				; overlaid procedure return to mgr
+hsr				; hiseg swap return to mgr
+sfv				; stack frame verify return from mgr
+bst				; backstep in runtime monitor
+atn				; rt handlers - attention
+mth				;	      - arithmetic
+stk				;	      - stack overflow
+spc				;	      - special
+exc				; ret point in excep manager from SF$VFY
+
+; The third set of symbols are those which the debugger references in
+;   the current high segment.  These have to be vectored.  But to make
+;   MAIN link up correctly to the vectors and NOT to the actual routines
+;   (which are present in the link), we have to post-process the debugger
+;   .REL files, replacing those names it references by pseudonyms.
+;   The first name on each line is the actual name, the second is its
+;   pseudonym.
+;
+m.rc,dbg01.
+m.fc,dbg02.
+m.fx,dbg03.
+m.rf,dbg04.
+m.ff,dbg05.
+m.rx,dbg06.
+csp.xf,dbg07.
+csp.ff,dbg08.
+csp.fc,dbg09.
+c.fc,dbg10.
+sr.fd,dbg11.
+mp.rc,dbg12.
+cstr.w,dbg13.
+in.vl,dbg14.
+sr.fo,dbg15.
+ix.fc,dbg16.
+mu.ff,dbg17.
+mp.rf,dbg18.
+mu.fx,dbg19.
+rd.ssn,dbg20.
+wr.svn,dbg21.
+d.flt,dbg22.
+dr.rnd,dbg23.
+vf.fo,dbg24.
+uw.rtn,dbg25.
+exit.,dbg26.
+pntry.,dbg27.
+prtrn.,dbg28.
+seek.,dbg29.
+iostl.,dbg30.
+iosta.,dbg31.
+close.,dbg32.
+mp.ff,dbg33.
+wr.svr,dbg34.
+db$ope,dbg36.
+;
+; I/O request symbols
+;
+real.r,dbg40.
+int.w,dbg41.
+real.w,dbg42.
+ld$ovl,dbg43.
+int.r,dbg44.		(* Note: really a filler entry!!! *)
+ld$ovl,dbg45.		(* Note: really a filler entry!!! *)
+ld$ovl,dbg46.		(* Note: really a filler entry!!! *)
+ld$ovl,dbg47.		(* Note: really a filler entry!!! *)
+ld$ovl,dbg48.		(* Note: really a filler entry!!! *)
+;  db$bas,dbg49.          (* I hope this works! JCI *)
+;  sav$io,dbg50.          (* I hope this works! JCI *)
+;  rt$bas,dbg51.          (* I hope this works! JCI *)
+;  st$len,dbg52.          (* I hope this works! JCI *)
+;  st$bas,dbg53.          (* I hope this works! JCI *)
+;  res$io,dbg54.          (* I hope this works! JCI *)
+;
+; debugger entry points, to detect unknown references
+;
+query$
+a$$ert
+writ$n
+abort$
+writ$e
+tt$in
+tt$out
+st$byt
+ld$byt
+writ$s
+writ$i
+debio$
+deble$
+set$br
+clr$br
+clr$al
+find$s
+get$fi
+get$pr
+info$s
+get$mo
+debbr$
+get$de
+set$si
+set$bo
+get$el
+check$
+comp$t
+set$ki
+set$fi
+lex$ke
+lex$sc
+sto$sc
+sto$se
+sto$le
+sto$st
+a$$bac
+debre$
+dmp$st
+dmp$sc
+dmp$lo
+dmp$br
+dmp$pa
+dmp$fi
+dmp$mo
+debdm$
+open$r
+open$f
+open$s
+load$o
+ret$ad
+call$b
+proc$n
+proc$b
+main$f
+open$d
+over$l
+sym$lo
+mod$lo
+next$m
+first$
+r50$as
+debsc$
+deref$
+st$fil
+st$ope
+st$ini
+debsy$
+a$$ign
+init$d
+ext$st
+ext$le
+ext$se
+ext$ad
+ext$re
+ext$sc
+mak$sc
+print$
+debpr$
+eval$b
+debbo$
+deb$ca
+rt$bas
+db$bas
+st$bas
+st$len
+res$io
+sav$io
+read$l
+;
+; Legitimate refs which need not be pseudonym-ed
+;
+p.rtba
+p.dbba
+p.stba
+
+; The final set of symbols are for those entries in the low segment
+;   which can be called from the hiseg.
+;
+doseg.
+
+;

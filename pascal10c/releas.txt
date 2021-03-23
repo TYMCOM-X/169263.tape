@@ -1,0 +1,416 @@
+
+
+
+          MDSI Pascal Version 2                                     Page 1
+          6 August 1981
+
+
+
+
+          To:       All MDSI Corporate Employees
+
+          From:     N.  Faiman/Programming Languages
+
+          Date:     6 August 1981
+
+          Subject:  MDSI Pascal Version 2
+
+
+
+
+
+
+          MDSI Pascal Version 2                                     Page 2
+          6 August 1981
+
+
+
+
+
+          1.  Release Schedule              _______ ________
+
+
+               Version 2  of  MDSI  Pascal  is  now  available  on  account
+          [52250,261]  on  ADP  systems  10  and  12, along with compatible
+          versions of the  Pascal  library  (PASLIB),  debugger,  utilities
+          library  (RDLIB),  and  utilities.  If  no  serious  problems are
+          reported with the new compiler system by Friday, 14 August,  then
+          between 4:00 pm and 6:00 pm on Friday, August 14:
+
+           1. Version  1U  of  the  compiler  system  will  be removed from
+              account [52250,234].
+           2. Version of 1V of the compiler system will be transferred from
+              account [52250,220] to account [52250,234].
+           3. Version  2  of  the  compiler system will be transferred from
+              account [52250,261] to account [52250,220].  Version  2  will
+              also remain on account [52250,261] until Friday, August 21.
+
+
+               Version  2  of  the  compiler  system  is  incompatible with
+          version 1.  Modules compiled with  the  two  versions  cannot  be
+          linked  together.  Environment  files  created  with  one version
+          cannot be  used  with  the  other.  Programs  compiled  with  one
+          version  cannot  be  loaded  with  the  PASLIB, RDLIB, or overlay
+          system from the other version.  However, no source  code  changes
+          are required to use the new compiler version.
+
+
+
+          2.  New Program Names              ___ _______ _____
+
+
+               The  main  program  of  the new compiler is now named PASCAL
+          rather than NEWPAS.  The program which reads the source files for
+          a  compilation  is  named  PASANL  rather  than P10DRV or VAXDRV.
+          (This may require EFA file changes for anyone who is using EFA to
+          control access to their source files.)
+
+
+
+          3.  Enhancements and Improvements              ____________ ___ ____________
+
+
+               The  biggest change in the version 2 Pascal compiler is that
+          it is now compiled by itself, rather than  by  the  "old  Pascal"
+          compiler (RND:PASCAL).
+
+
+
+
+
+          MDSI Pascal Version 2                                     Page 3
+          6 August 1981
+
+
+          3.1. :TARGET VAX
+
+               The   new   compiler  fully  supports  the  :TARGET VAX  and
+          :TARGET P10 compiler commands, and will generate  code  for  both
+          the  PDP-10  and  the  VAX-11.  VAX code from Pascal Version 2 is
+          compatible with the code from the  VAX-only  NEWPAS  Version  1C,
+          which  is on account [52250,227].  It is not compatible with code
+          from  the  VAX-only  NEWPAS  Version  1B,  which  is  on  account
+          [52250,274].
+
+
+          3.2. /SEARCH Switch
+
+               The  compiler  now  supports  a new command line switch, the
+          /SEARCH switch.  The SEARCH switch provides a generalized version
+          of  the  LIBRARY  feature  of  the  SETSRC  program.  It  may  be
+          specified in either of the following formats:
+
+               SEARCH ':' file-name-part
+               SEARCH '(' file-name-part [',' file-name-part]... ')'
+
+          A file-name-part is any file name, or some collection  of  pieces
+          of  a  file  name.  The  following  would  all be legal file name
+          parts:
+
+               ALPHA.PAS
+               .INC
+               [37256,401135]
+               DSKB:.AVR
+
+          When the compiler fails in its attempt  to  open  a  source  file
+          (either  the  main  source  file,  or  an included file), it will
+          repeat the attempt, using each  file-name-part  from  the  SEARCH
+          list to replace unspecified pieces of the source file name, until
+          it succeeds in opening a source  file,  or  exhausts  the  search
+          list.  A  search list file-name-part cannot replace an explicitly
+          specified piece of a source file name.  For example, suppose  the
+          search list is "(.DER,[123,335],.PAR[17,77])".  Upon encountering
+          the directive "$INCLUDE  AMD",  the  compiler  will  successively
+          attempt  to  open  AMD.INC in the current account, AMD.DER in the
+          current  account,  AMD.INC[123,335],  and  AMD.PAR[17,777].  Upon
+          encountering the directive "$INCLUDE VXR.INC", it will attempt to
+          open VXR.INC in the  current  account,  VXR.INC  in  the  current
+          account (again), VXR.INC[123,335], and VXR.INC[17,77].
+
+
+          3.3. Binary, Octal, and Hexadecimal Constants
+
+               The   compiler   will   now  recognize  binary,  octal,  and
+          hexadecimal constants, written as follows:
+
+               integer ::= binary-integer | octal-integer |
+                           decimal-integer | hexadecimal-integer
+
+
+
+          MDSI Pascal Version 2                                     Page 4
+          6 August 1981
+
+
+               binary-integer ::= '#B' binary-digit ...
+               octal-integer ::= '#O' octal-digit ...
+               decimal-integer ::= ['#D'] decimal-digit ...
+               hexadecimal-integer ::= '#H' hex-digit ...
+
+               binary-digit ::= '0' | '1'
+               octal-digit ::= '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7'
+               decimal-digit ::= octal-digit | '8' | '9'
+               hex-digit ::= decimal-digit | 'A' | 'B' | 'C' | 'D' | 'E' | 'F'
+
+               Example:  #B1011011 = #O133 = #D91 = 91 = #H5B
+
+          Radix codes (B, O, D, and H) and alphabetic hexadecimal  "digits"
+          (A through F) may be in either upper or lower case.  #para () The
+          old octal notation (digit ... 'B') will still  be  accepted,  but
+          ought to be converted to the new notation ('#B' digit ...).
+
+
+          3.4. Target Machine Conditional Compilation Switches
+
+               The   compiler   will  automatically  enable  a  conditional
+          compilation switch with the same name as the target  machine  the
+          code  is  being compiled for.  Thus, a program could contain code
+          such as:
+
+               $IF vax
+                  write (x:8:h);
+               $ENDIF
+               $IF p10
+                  write (x:6:o);
+               $ENDIF
+
+          which would be compiled differently,  depending  on  whether  the
+          target machine had been set to P10 or VAX.
+
+
+          3.5. Stack Frame Format
+
+               The  static  and dynamic (parent and caller) links have been
+          interchanged in word 2 of the PDP-10  stack  frame.  This  should
+          result in a slight speed improvement for Pascal programs.
+
+
+          3.6. PDP-10 Traceback
+
+               Following  a  fatal  error  or  a "control-C" interrupt in a
+          Pascal program running on the PDP-10, the REENTER monitor command
+          will  cause the Pascal runtime to print a stack traceback.  It is
+          no longer necessary to use both  the  REENTER  and  the  CONTINUE
+          commands.  In  fact,  if you get a stack traceback wth REENTER, a
+          CONTINUE will then attempt to  continue  the  program  (which  is
+          possible  following a control-C interrupt or an assertion or case
+          index error).
+
+
+
+          MDSI Pascal Version 2                                     Page 5
+          6 August 1981
+
+
+          4.  Bug Fixes              ___ _____
+
+
+               A great many bugs have been fixed in Pascal  Version  2.  In
+          the  notes  below,  VAX  refers  to  a  problem  in  the VAX code
+          generator, Q to a problem in the PDP-10  /QUICK  code  generator,
+          and NOQ to a problem in the PDP-10 /NOQUICK code generator.
+
+
+          4.1. Syntax Error Recovery
+
+               The  version  1  compiler  frequently died or looped when it
+          encountered  certain  syntax  errors  in  source  programs.  Such
+          failures  should  now  be  much  less  frequent.  In  particular,
+          compiler failure should no longer occur in the following cases:
+
+          o A standard procedure or function name is used as a parameter in
+            a procedure or function call.
+          o The keyword const is not followed by any constant declarations.                        _____
+          o The  name  of  a  formal parameter is omitted in a procedure or
+            function declaration.
+          o The tag field specification in a variant record declaration  is
+            badly mangled.
+          o A case statement doesn't contain at least one case.
+
+
+
+          4.2. Diagnostics
+
+               The  compiler  would  sometimes  print  an  incorrect  error
+          message, or fail to detect an error:
+
+          o The compiler would not allow a call  to  GET  or  PUT  with  no
+            arguments.  (These  are  legal,  with  INPUT  and OUTPUT as the
+            default arguments.)
+          o The compiler would not allow two integer subrange variables  to
+            be used in the same expression if one was a packed subrange and
+            the other was an unpacked subrange.
+          o If SF was a function returning a set, and S1 and  S2  were  set
+            variables, then the compiler would not allow "S1 := S2 * SF;".
+          o The compiler would not give an error message on "NEW(X)", where
+            X was a variable of type PTR.
+          o When an aggregate constructor contained a set expression (e.g.,
+            "X := (...,[A],...)", the compiler would give an erroneous "set
+            truncated" message.
+
+
+          4.3. Set Code Problems
+
+               The compiler generated bad code  for  many  expressions  and
+          statements involving sets:
+
+          o (Q) The empty set constant ("[]") was not passed correctly as a
+
+
+
+          MDSI Pascal Version 2                                     Page 6
+          6 August 1981
+
+
+            parameter when the formal parameter was a set with more than 72
+            elements.
+          o (Q)  An in test "if x in set_expr" would give incorrect results                    __
+            if the variable X was greater than 255.
+          o (NOQ)  Bad  code  was  generated  for  an  assignment  such  as
+            "S1:=S2",  where  S1  and  S2  were set variables with the same
+            lower bound, and S1 had  36  or  fewer  elements,  and  S2  had
+            between 37 and 72 elements.
+          o (NOQ)  An in test "constant in set_expr" gave incorrect results                      __
+            when the set_expr had more than 72 elements.
+          o (All) Set constants were created with one element too many.
+          o (NOQ) An in test "if x in set_expr", where  the  upperbound  of                     __
+            the  set  could  not be approximated at compile time (e.g., [l,
+            m..n]) gave bad results.
+          o (NOQ) Bad code was generated for functions which returned  sets
+            with more than 72 elements.
+          o (VAX)  The compiler failed when the function return symbol of a
+            set function was passed as a var parameter to another procedure
+            or function.
+          o (Q,NOQ) A comparison "if set_expr = []" gave incorrect results,
+            when the set expression had more than 72 elements.
+          o (Q,NOQ) A set constructor [0..-1], which ought to generate  the
+            empty set, was generating unpredictable results.
+          o (NOQ)   Set   equality   test   involving  arbitrary  long  set
+            expressions gave the wrong results.
+          o (NOQ) There were other miscellaneous  problems  involving  sets
+            with more than 72 elements.
+
+
+
+          4.4. Getstring and Putstring
+
+               The  PDP-10  /NOQUICK  code generator generated bad code for
+          getstring and putstring operations when the target string of  the
+          call  (i.e.,  the  string in the first argument) also occurred in
+          one of the subsequent arguments.  This has  now  been  fixed,  so
+          that  all  getstring and putstring calls should work as you would
+          expect with all code generators.
+
+
+          4.5. Assertion Failures
+
+               There were many cases where the compiler would  indicate  an
+          assertion failure in one of the code generators:
+
+          o (Q) A substring of a flexible string was assigned to a flexible
+            string.
+          o (Q) An aggregate constructor was assigned to a  flexible  array
+            variable.
+          o (Q) The target of a PUTSTRING was a flexible varying string.
+          o (VAX) Some PUTSTRING calls.
+          o (VAX)  An  UPPERCASE  call, whose argument was a function which
+            returned a character, was assigned to an element of an array of
+
+
+
+          MDSI Pascal Version 2                                     Page 7
+          6 August 1981
+
+
+            characters.
+          o (VAX,Q)  The  body  of  a  with  statement  ended  with  a goto
+            statement (i.e., WITH REC DO BEGIN ... GOTO 100 END).
+          o (Q) The first argument in a read  or  write  statement  was  an
+            expression  whose  evaluation  required runtime checking (e.g.,
+            READ (X^)).
+          o (Q) A with statement contains a call to a procedure which is  a
+            field of the with statement's record.
+
+
+
+          4.6. Miscellaneous Bad Code
+
+
+          o (All) Bad code was generated for the ALLOCATE function.
+          o (Q)  A  flexible  string  was  passed to a routine whose formal
+            parameter was a non-flexible string.
+          o (VAX,Q) The termination value in  a  FOR  loop  involved  array
+            indexing or pointer accesses.
+          o (Q)  Some  cases  when  a  procedure  name  was  assigned  to a
+            procedure variable or passed as a procedural parameter.
+          o (Q,NOQ) READ(x:n), where X was real,  would  not  stop  reading
+            after N characters.
+          o (All) A constant string which was produced by concatenating two
+            other constant strings (e.g., CONST S = 'ABC' ||  'DEF')  would
+            have the wrong value.
+          o (NOQ) Bad code was generated for ORD(NIL).
+          o (All)   Bad   code  was  frequently  generated  for  operations
+            involving zero-length objects (array[1..0], record end, set  of
+            1..0, string[0], etc.).
+          o (NOQ) Bad code was generated for an aggregate constructor for a
+            record ending with a flexible array or string.
+          o (All) Code was generated to check ASSERT statements, even  when
+            NOCHECK was specified.
+          o (VAX)   Value   string   parameters   were   sometimes   passed
+            incorrectly.
+          o (VAX) Long string constants were generated incorrectly.
+
+
+
+          4.7. Miscellaneous Improvements
+
+
+          o The contents of the SYM files written under the  GLOBAL  option
+            have been refined.
+          o The  new  compiler  will  no longer leave XRF and ERR temporary
+            files lying around.
+          o The VAX and PDP-10 assembly listings written under the ASSEMBLY
+            option have been improved.
+
+
+
+
+          MDSI Pascal Version 2
+          6 August 1981
+
+
+
+
+
+                                  Table of Contents                                  _____ __ ________
+
+
+          SECTION                                                    PAGE
+
+          1        RELEASE SCHEDULE                                    2
+
+
+          2        NEW PROGRAM NAMES                                   2
+
+
+          3        ENHANCEMENTS AND IMPROVEMENTS                       2
+
+          3.1      :TARGET VAX                                         3
+          3.2      /SEARCH Switch                                      3
+          3.3      Binary, Octal, and Hexadecimal Constants            3
+          3.4      Target Machine Conditional Compilation Switches     4
+          3.5      Stack Frame Format                                  4
+          3.6      PDP-10 Traceback                                    4
+
+          4        BUG FIXES                                           5
+
+          4.1      Syntax Error Recovery                               5
+          4.2      Diagnostics                                         5
+          4.3      Set Code Problems                                   5
+          4.4      Getstring and Putstring                             6
+          4.5      Assertion Failures                                  6
+          4.6      Miscellaneous Bad Code                              7
+          4.7      Miscellaneous Improvements                          7
+
+
+  

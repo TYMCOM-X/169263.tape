@@ -1,0 +1,78 @@
+	title	verror
+;    +--------------------------------------------------------------+
+;    |                                                              |
+;    |                         V E R R O R                          |
+;    |                         - - - - - -                          |
+;    |                                                              |
+;    +--------------------------------------------------------------+
+;    
+;    MDSI, Company Confidential
+;    
+;    SYSTEM:  PASCAL compiler
+;    
+;    STARTED:  November 27
+;    
+;    PURPOSE:  Error checking and reporting routines for the  virtual
+;       heap facility.
+;    
+;    ENTRY POINTS:
+;    
+;       VMERR.      reports an attempted translation of a bad virtual
+;                   pointer.
+;    
+;       ACHCK.       verifies that two virtual pointers have the  same
+;                   areaid and errors out if not.
+;    
+;       VOVFL.      checks a virtual pointer prior to assignment to a
+;                   packed offset and reports an error if there is an
+;                   overflow (i. e., the offset cannot be stored in a
+;                   halfword).
+;    
+;    RESPONSIBLE:  Compiler group
+;    
+;    ----------------------------------------------------------------
+	search	passym
+	search	virsym
+	$reloc
+	entry	achck.,vovfl.
+	entry	vnilo.,vnilw.
+	extern	wrtpc.,die.,twait.
+achck.:
+	hlrz	ac0,@0(topp)
+	ldb	ac0,bp
+	push	topp,ac0
+	hrrz	ac0,@-1(topp)
+	ldb	ac0,bp
+	came	ac0,0(topp)
+	jrst	err
+	pop	topp,
+	aos	0(topp)
+	popj	topp,
+err:
+	pop	topp,
+	pushj	topp,twait.
+	outstr	[asciz /
+?	Areaid conflict /]
+	move	ac0,0(topp)
+	pushj	topp,wrtpc.
+	jrst	die.
+vovfl.:	pushj	topp,twait.
+	outstr	[asciz /
+?	Overflow on assignment to packed offset /]
+	move	ac0,0(topp)
+	pushj	topp,wrtpc.
+	jrst	die.
+bp:	point	afield,@ac0,afield-1
+
+;
+; VNILW. is called to place a nil virtual pointer
+; in a register on loading an offset which is nil.
+; The register is determined from the instruction
+; following the call, which is skipped.
+;
+vnilo.:	exp	1_<^d36-afield>-1		;nil unpacked offset
+vnilw.:	ldb	t4,[point 4,@ac0,12]	;get register #
+	setom	0(t4)			;nil is -1
+	aos	ac0
+	jrst	@ac0		;skip return
+	end

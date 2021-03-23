@@ -1,0 +1,52 @@
+$ver
+PROGRAM: QED                                       DATE: 2/23/79
+VERSION: 1.5                                       AUTHOR: S. M. Roush
+APPROVED BY:
+$jus
+$skip 2
+&RELEASE SCHEDULE&
+$par
+QED version 1.5 is now in NRD: and will be moved to RND: on March 12.
+$skip 1
+&CHANGES&
+$ind +3
+$par -3 
+1.\The FIND command now prints the message 'Found xxx times' or, if
+confirmation is in effect, 'Found and confirmed xxx times'.
+This enables the user to distinguish between messages printed
+by the FIND command and the SUBSTITUTE command.
+(Change request #169)
+$ind -3
+$skip 1
+&BUG FIXES&
+$ind +3
+$par -3
+1.\The FIND command examined too few or too many lines when insertions
+or deletions were done under the control of the FIND.
+$ind -3
+$page
+$skip 2
+&FILES CHANGED&
+$par
+$ind +3
+QEDLN.TYP
+$par
+QED.PAS
+$par
+QEDCL.PAS
+$par
+QEDLN.PAS
+$par
+QSPRED.PAS
+$par
+QSPAT.PAS
+$par
+QPRINT.PAS
+$par
+QMARK.PAS
+$par
+QSUBST.PAS
+$par
+QSPLIT.PAS
+$par
+QJOIN.PAS

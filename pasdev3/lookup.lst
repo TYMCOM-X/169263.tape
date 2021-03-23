@@ -1,0 +1,246 @@
+        File DSK:LOOKUP.PAS[31024,320157]   Compiled 16-Jul-82 11:08   Pascal, Version 2A(436)
+
+        File DSK:LOOKUP.PAS[31024,320157]   Compiled 16-Jul-82 11:08   Pascal, Version 2A(436)
+
+        File DSK:LOOKUP.PAS[31024,320157]   Compiled 16-Jul-82 11:08   Pascal, Version 2A(436)
+
+        File DSK:LOOKUP.PAS[31024,320157]   Compiled 16-Jul-82 11:08   Pascal, Version 2A(436)
+
+
+
+
+
+			    $        $$$     $$$    $   $   $   $   $$$$ 
+			    $       $   $   $   $   $  $    $   $   $   $
+			    $       $   $   $   $   $ $     $   $   $   $
+			    $       $   $   $   $   $$      $   $   $$$$ 
+			    $       $   $   $   $   $ $     $   $   $    
+			    $       $   $   $   $   $  $    $   $   $    
+			    $$$$$    $$$     $$$    $   $    $$$    $    
+
+
+				    DSK:LOOKUP.PAS[31024,320157]
+
+
+Options in effect: 
+
+	NOCHECK, SPECIAL, NOMAP, NOSYMBOLS, NOCALLS, NOASSEMBLY, NOXREF, NOTRACE, QBLOCKS, 
+	NOOPTIMIZE, NOCODE, NODEBUG, FINISH, NOGLOBAL, NOMAINSEG, NOOVERLAY, AUTOQUICK, AUTOSOURCE, 
+	NOSTANDARD, LENGTH (45), WIDTH (102), NOEXTLENGTH, STORAGE (2048), ALLOC (0), ENABLE(VAX)
+
+
+
+
+        File DSK:LOOKUP.PAS[31024,320157]   Compiled 16-Jul-82 11:08   Pascal, Version 2A(436)
+
+        File DSK:LOOKUP.PAS[31024,320157]   Compiled 16-Jul-82 11:08   Pascal, Version 2A(436)
+
+        File DSK:LOOKUP.PAS[31024,320157]   Compiled 16-Jul-82 11:08   Pascal, Version 2A(436)
+
+        File DSK:LOOKUP.PAS[31024,320157]   Compiled 16-Jul-82 11:08   Pascal, Version 2A(436)
+        File DSK:LOOKUP.PAS[31024,320157]   Compiled 16-Jul-82 11:08   Pascal, Version 2A(436)
+
+        File DSK:LOOKUP.PAS[31024,320157]   Compiled 16-Jul-82 11:08   Pascal, Version 2A(436)
+
+        File DSK:LOOKUP.PAS[31024,320157]   Compiled 16-Jul-82 11:08   Pascal, Version 2A(436)
+
+        File DSK:LOOKUP.PAS[31024,320157]   Compiled 16-Jul-82 11:08   Pascal, Version 2A(436)
+
+
+
+
+
+			    $        $$$     $$$    $   $   $   $   $$$$ 
+			    $       $   $   $   $   $  $    $   $   $   $
+			    $       $   $   $   $   $ $     $   $   $   $
+			    $       $   $   $   $   $$      $   $   $$$$ 
+			    $       $   $   $   $   $ $     $   $   $    
+			    $       $   $   $   $   $  $    $   $   $    
+			    $$$$$    $$$     $$$    $   $    $$$    $    
+
+
+				    DSK:LOOKUP.PAS[31024,320157]
+
+
+Options in effect: 
+
+	NOCHECK, SPECIAL, NOMAP, NOSYMBOLS, NOCALLS, NOASSEMBLY, NOXREF, NOTRACE, QBLOCKS, 
+	NOOPTIMIZE, NOCODE, NODEBUG, FINISH, NOGLOBAL, NOMAINSEG, NOOVERLAY, AUTOQUICK, AUTOSOURCE, 
+	NOSTANDARD, LENGTH (45), WIDTH (102), NOEXTLENGTH, STORAGE (2048), ALLOC (0), ENABLE(VAX)
+
+
+
+
+        File DSK:LOOKUP.PAS[31024,320157]   Compiled 16-Jul-82 11:08   Pascal, Version 2A(436)
+
+        File DSK:LOOKUP.PAS[31024,320157]   Compiled 16-Jul-82 11:08   Pascal, Version 2A(436)
+
+        File DSK:LOOKUP.PAS[31024,320157]   Compiled 16-Jul-82 11:08   Pascal, Version 2A(436)
+
+        File DSK:LOOKUP.PAS[31024,320157]   Compiled 16-Jul-82 11:08   Pascal, Version 2A(436)
+MODULE  LOOKUP       DSK:LOOKUP.PAS[31024,320157]                                      16-Jul-82 11:08
+SECTION 0                                                                                       PAGE 1
+
+    1	(*   +--------------------------------------------------------------+
+    2	     I                                                              I
+    3	     I                        L O O K U P                           I
+    4	     I                        - - - - - -                           I
+    5	     I                                                              I
+    6	     +--------------------------------------------------------------+
+    7	
+    8	     MDSI, COMPANY CONFIDENTIAL
+    9	
+   10	     STARTED:  1-Aug-77
+   11	
+   12	     PURPOSE: extracts the next token  from  the  command  line,  and
+   13	        looks  the  token  up in a caller supplied list of command or
+   14	        option names.  Returns the index of the name,  if found.
+   15	
+   16	     USAGE:
+   17	        
+   18	        type
+   19	          cmdlist =
+   20	            record
+   21	              name: packed array[1..10] of char;  (* full name *)
+   22	              abbrev: 1..10                       (* min length *)
+   23	            end;
+   24	          caller_list: array [<scalar type>] of cmdlist;
+   25	
+   26	        external function lookup
+   27	            (line: cmdline; var lindex: cmdlineidx;
+   28	             var list: caller_list; maxscalar: <scalar type>;
+   29	             var nameidx: <scalar type>  ): boolean;
+   30	
+   31	     INPUT: 
+   32	
+   33	        line       is the line from which the command name  token  is
+   34	                   to be extracted.
+   35	
+   36	        lindex     is  the  parsing  cursor.  LOOKUP  scans from this
+   37	                   position for the token.
+   38	
+   39	        list       is the command list to be searched.
+   40	
+   41	        maxscalar  is the upper bound of the list  array.  The  value
+   42	                   "maximum (<scalar type>)" should be passed.MODULE  LOOKUP       DSK:LOOKUP.PAS[31024,320157]                                      16-Jul-82 11:08
+SECTION 0                                                                                       PAGE 2
+
+   43	
+   44	     OUTPUT:
+   45	
+   46	        lindex     If  the  token is found in the command list,  then
+   47	                   LINDEX is set to the character following  the  end
+   48	                   of the token;  if the token is not found then this
+   49	                   is set to the start of the token.  If there is  no
+   50	                   token,  this  is left pointing pass the end of the
+   51	                   line.
+   52	
+   53	        nameidx    is  the  scalar associated with the token.  Set if
+   54	                   the name is actually found.
+   55	
+   56	        <return value>   is true if a token is found and  appears  in
+   57	                   the command list;  false otherwise.
+   58	
+   59	     ALGORITHM: A  match  for  the token in the command list is found
+   60	        if: (1) the token is not longer than the  command  name,  (2)
+   61	        the token is not shorter than the minimum abbreviation of the
+   62	        name,  and (3) the token and name match to the length of  the
+   63	        token (upper and lower case are equivalent).
+   64	
+   65	     NOTES: To  use  this  routine with command lists associated with
+   66	        different scalar types,  it is necessary  to  declare  LOOKUP
+   67	        separately  for each scalar type to be used.  This is done by
+   68	        declaring and calling a lookupXXX,  where XXX is distinct for
+   69	        each scalar type.  The linker then links all these references
+   70	        to the common LOOKUP.  This is a  KLUDGE  to  be  fixed  when
+   71	        PASCAL allows.
+   72	
+   73	     RESPONSIBLE: Software Tools
+   74	
+   75	     CHANGES: NONE.
+   76	
+   77	     ---------------------------------------------------------------- *)MODULE  LOOKUP       DSK:LOOKUP.PAS[31024,320157]                                      16-Jul-82 11:08
+SECTION 0                                                                                       PAGE 3
+
+   79	module lookup
+   80	  options special;
+   81	$SYSTEM cmdutl.typ[31024,320156]MODULE  LOOKUP       DSK:LOOKUP.PAS[31024,320157]                                      16-Jul-82 11:08
+SECTION 0                                                                                       PAGE 4
+
+   83	type
+   84	  scalar = (s0,s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14,s15,s16,
+   85	            s17,s18,s19,s20,s21,s22,s23,s24,s25,s26,s27,s28,s29,s30,
+   86	            s31,s32,s33,s34,s35,s36,s37,s38,s39,s40,s41,s42,s43,s44,
+   87	            s45,s46,s47,s48,s49,s50,s51,s52,s53,s54,s55,s56,s57,s58,
+   88	            s59,s60,s61,s62,s63,s64,s65,s66,s67,s68,s69,s70,s71,s72,
+   89	            s73,s74,s75,s76,s77,s78,s79,s80,s81,s82,s83,s84,s85,s86,
+   90	            s87,s88,s89,s90,s91,s92,s93,s94,s95,s96,s97,s98,s99,s100,
+   91	            s101,s102,s103,s104,s105,s106,s107,s108,s109,s110,s111,s112,
+   92	            s113,s114,s115,s116,s117,s118,s119,s120,s121,s122,s123,s124,
+   93	            s125,s126,s127,s128,s129,s130,s131,s132,s133,s134,s135,s136,
+   94	            s137);
+   95	
+   96	  name_string = packed array[1..10] of char;
+   97	
+   98	  cmdlist =
+   99	    record
+  100	      name: name_string;
+  101	      abbrev: 1..10
+  102	    end;
+  103	
+  104	  lookup_list = array [scalar] of cmdlist;
+  105	
+  106	MODULE  LOOKUP       DSK:LOOKUP.PAS[31024,320157]                                      16-Jul-82 11:08
+SECTION 0                                                                                       PAGE 5
+
+  108	public function lookup
+  109	     (  line: cmdline; var lindex: cmdlineidx;
+  110	        var list: lookup_list; maxscalar: scalar;
+  111	        var nameidx: scalar                       ): boolean;
+  112	
+  113	 var name: name_string;
+  114	 var i: scalar;
+  115	 var l: cmdlineidx;
+  116	
+  117	 begin
+  118	  while (lindex <= length (line)) andif (line[lindex] <= ' ') do
+  119	    lindex := lindex + 1; (* treat control characters like blanks *)
+  120	
+  121	  if lindex > length (line) then begin (* no non-blanks in line *)
+  122	    lookup := false;
+  123	    return;
+  124	  end;
+  125	
+  126	  name := '';                                   (* get token, if not alphanumeric, then just o
+	ne char *)
+  127	  l := 0;
+  128	  repeat
+  129	    l := l + 1;
+  130	    if l <= length (name) then
+  131	      name[l] := uppercase (line[lindex]); (* there is at least one non-blank *)
+  132	    lindex := lindex + 1;
+  133	  until (lindex > length (line)) orif not (uppercase (line[lindex]) in ['A'..'Z']);
+  134	
+  135	  if l <= length (list[s0].name) then begin     (* length must be less than longest possible *
+	)
+  136	    for i := minimum (scalar) to maxscalar do   (* scan list *)
+  137	      if list[i].abbrev <= l then               (* must be longer than minimum *)
+  138	        if substr (list[i].name, 1, l) = name   (* must match to length of token *)
+  139	          then begin                            (* found it *)
+  140	            nameidx := i;
+  141	            lookup := true;
+  142	            return                              (* lindex left at character after token *)
+  143	          end
+  144	  end;                                          (* test on longest length *)
+  145	
+  146	  lookup := false;                              (* search failed *)
+  147	  lindex := lindex - l                          (* leave pointing to start of token  *)MODULE  LOOKUP       DSK:LOOKUP.PAS[31024,320157]                                      16-Jul-82 11:08
+SECTION 0                                                                                       PAGE 6
+
+  148	 end.
+
+File   level   on page     name
+
+  0	 0	    1	DSK:LOOKUP.PAS[31024,320157]
+  1	 1	    3	DSK:CMDUTL.TYP[31024,320156]
+  

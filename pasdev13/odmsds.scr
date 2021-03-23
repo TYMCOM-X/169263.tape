@@ -1,0 +1,194 @@
+$num off
+$page
+$center
+ODMS 3.0 RUNTIME DATA STRUCTURES
+JUNE 26, 1980
+$ski 3 $jus $control off
+The central data structure for the overlay support at runtime is emitted
+into the .SYM file of the program, by the BUILD MAIN command.
+This data structure serves as the PSA allocation for the overlay manager,
+since at initialization time the address of this low segment initialized
+area is stored in the PDA, and used by the overlay manager by loading
+PSA at all other times.
+The symbol OVSTA.\defines the start of the overlay manager's static,
+although only the initialization code (within the MAIN segment) uses it.
+$ski 2 $ver $ind left +10
+$trans '\' '\'
++------------------------------+
+| current overlay (init 0)     |
++------------------------------+
+| MRU counter (init 1)         |
++------------------------------+
+| dispatch from RDOVL          |
++------------------------------+
+| current channel in use       |
++------------------------------+
+| # n.s. overlays * 4          |
++------------------------------+
+_/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\_
+| n.s. module table            |
++------------------------------+
+| # shr. overlays * 2          |
++------------------------------+
+_/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\_
+| shr. module table            |
++------------------------------+
+| # overlay areas              |
++------------------------------+
+_/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\_
+| overlay area table           |
++------------------------------+
+| maximum # channels permitted |
++------------------------------+
+| current # channels in use    |
++------------------------------+
+| # files in file table        |
++------------------------------+
+_/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\_
+| file table                   |
++------------------------------+
+$ski 2 $jus $ind left 0
+$trans
+The current overlay cell is maintained by ODMS at all times.
+Its value represents the overlay of the code currently executing.
+Thus, its initial value of zero indicates that the MAIN segment,
+which contains the user's main program, is executing.
+The significance of the current overlay is that whenever a procedure
+call is made, the "overlay to restore" index which is placed on
+the stack along with the real return address is the current overlay,
+prior to the procedure call.
+The action of the call includes changing the current overlay to that
+of the procedure being called.
+Similarly, on procedure return to the overlay manager, the current
+overlay is reset to the "overlay to restore".
+Note well that the overlay manager assumes that the debugger will
+always replace the current overlay during any user interaction which
+causes the overlay manager to be invoked from the debugger, and not
+through the normal procedure call/return mechanism.
+$ski
+The MRU key is a cell whose value is loaded with the AOS instruction
+whenever an entry in the file table is used for an overlay read.
+This value is subsequently stored in the file table (see below).
+Its initial value must be non-zero to prevent conflicts with file
+table entries whose initial values are also non-zero.
+$ski
+The dispatch from RDOVL is a scalar value used to effect a "return" from
+the procedure RDOVL, which reads a needed overlay in.
+A POPJ should not be used in such a circumstance, since a segment swap
+could easily invalidate the return address.
+RDOVL is capable of swapping a segment, and is vectored through the
+code HSR (hiseg swap return) to return correctly.
+Subsequently, RDOVL dispatches its own return on the basis of the stored code.
+$ski
+The current channel in use simply provides a place in memory in which
+a channel number may be stored.
+The TENIO package is passed the address of this cell; the cell's purpose is
+primarily to avoid allocating a register for the same purpose.
+$ski
+The non-sharable overlay module table is preceded by a length word,
+which incidentally is the number of non-sharable overlays in the system
+multiplied by 4, the size of a non-sharable module table entry.
+A non-sharable module table entry looks like this:
+$ski 2 $ver $ind left +10
+$need 11
++------------------------------+
+| area tab ptr | file tab ptr  |
++------------------------------+
+| storig       | stend         |
++------------------------------+
+| version identification       |
++------------------------------+
+| x | database pointer         |
++------------------------------+
+$ski 2 $jus $ind left 0
+The area table pointer and file table pointer point to the appropriate
+entries in the static area.
+These will be initialized, and the first never changes during execution.
+Storig and stend are the first and last addresses respectively of
+the overlay's static area.
+These do not change curing execution.
+The version identification is initialized to zero, and indicates the
+version number of the version of the overlay currently in use.
+X represents the static initialization bit, which is set if the
+overlay's static area has already been initialized by a prior overlay read.
+Finally, the database pointer gives the word address of the overlay's
+EXE directory within the database, if any, with which this overlay
+has been associated.
+$ski
+The sharable overlay table immediately follows the non-sharable
+overlay table, and is preceded by a size word.
+Again, the size word is the number of sharable overlays multiplied
+by a sharable overlay module table entry's size (2).
+A sharable module table entry looks like this:
+$ski 2 $ver $ind left +10
+$need 7
++------------------------------+
+| x | mbz      | file tab ptr  |
++------------------------------+
+| storig       | stend         |
++------------------------------+
+$ski 2 $jus $ind left 0
+The fields in a sharable module table entry serve the same purpose
+as those in the non-sharable module table entry.
+(MBZ means Must Be Zero).
+$ski
+The area table contains one entry for every overlay area declared
+in the MDL for the system.
+An entry in the overlay area table looks like this:
+$ski 2 $ver $ind left +10
+$need 5
++------------------------------+
+| area origin  | area size     |
++------------------------------+
+$ski 2 $jus $ind left 0
+The area origin will always be rounded up (during the MDL processing)
+to the nearest page boundary.
+The area size, however, will be whatever the user declared in the MDL,
+and will be enforced regardless of any padding following the overlay area
+to round to the page boundary origin of the next area.
+$ski
+The maximum number of channels is set by ODMS according to the
+CHANNELS option on the BUILD MAIN command.
+If zero, no maximum is placed on the number of channels available
+to the overlay system.
+The current number of channels in use is maintained by ODMS, and is
+used to compare with the maximum permitted.
+$ski
+The file table is preceded by a word giving the number of entries
+in the table, as specified by the FILES option of the BUILD MAIN
+command, or as defaulted by ODMS.
+A file table entry looks like this:
+$ski 2 $ver $ind left +10
+$need 11
++------------------------------+
+| buffer ptr   | channel       |
++------------------------------+
+| MRU, zero if entry unused    |
++------------------------------+
+| length word of filename str  |
++------------------------------+
+| packed array [1..40] of char |
++------------------------------+
+$ski 2 $jus $ind left 0
+The buffer pointer is nonzero if the file is a database, zero otherwise.
+A buffer is needed for static initialization, or for database searches.
+The buffer for non-database files is forgotten after the static
+initialization, since TENIO will not need it to read only the code
+area of the overlay (page reads only).
+A database without a buffer has 400000 stored here.
+The channel cell contains the number of the open channel associated
+with the file table entry.
+If this cell is zero, the file is not open.
+The MRU cell contains the value of the master MRU cell (above) when
+this file was last used.
+Thus, the smallest value of this cell amongst all file table entries
+gives the least recently used file.
+When a channel is needed, and a maximum is being enforced and has
+been already been reached, the LRU file table entry is closed.
+If this entry is zero, the file table entry is available for allocation.
+Note that the default database, and files for sharable overlays, must
+have this value initialized non-zero, so that they are not allocated
+to the user via OVEXTF.
+The remaining 9 words of the file table entry contain the string\[40]
+filename associated with the entry.
+ 

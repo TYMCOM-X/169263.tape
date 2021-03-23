@@ -1,0 +1,160 @@
+#literal(#item_flag,)
+#literal(#margin_flag,)
+#literal(#padding,\\\\\\\\\\\\\\\)
+&
+&
+&
+&
+#define(#item_test,&
+#if("#item_flag,&
+#undef(#item_flag)&
+#enditem
+#endmargin)
+)
+&
+&
+&
+&
+#define(#margin_test,&
+#if("#margin_flag,&
+#undef(#margin_flag)&
+#endmargin)
+)
+&
+&
+&
+&
+#define(#entry,name,&
+#item_test
+$page
+$section
+$entry '            #upc(name)	\'
+^uENTRY|u: #upc(name)
+$skip&
+)
+&
+&
+&
+&
+#define(#use,&
+$skip 2
+Usage:
+#beginfigure(,5,,2)&
+)
+&
+&
+#define(#enduse,&
+#endfigure&
+)
+&
+&
+&
+&
+#define(#input,
+$skip
+$need 3
+Input arguments:
+#beginmargin(2,0,0,0)
+#beginitem(15,1,0)
+#literal(#item_flag,1)&&
+)
+&
+&
+&
+&
+#define(#output,&
+#item_test
+$skip
+$need 3
+Output arguments:
+#beginmargin(2,0,0,0)
+#beginitem(15,1,0)
+#literal(#item_flag,1)&&
+)
+&
+&
+&
+&
+#define(#arg,name,&
+#literal(#len,"#length(name))&
+#item(&
+#upc(name)&&
+#if("#ltn("#len,15),"#substr("#padding,1,"#num("14-#len)))&
+)&
+#undef(#len)&&
+)
+&
+&
+&
+&
+#define(#ret,&
+$skip 1
+$par -15
+<return value>\&
+)
+&
+&
+&
+&
+#define(#none,&
+$skip 1
+$par -15
+[ NONE ]
+)
+&
+&
+&
+&
+#define(#inc,file1,file2,file3,file4,file5,&
+#item_test
+#margin_test
+$skip 2
+INCLUDE files required:
+#if(file1,$par 0  $skip 1
+&\\&#upc(file1)[52250,220]
+#if(file2,$par 0
+&\\&#upc(file2)[52250,220]
+#if(file3,$par 0
+&\\&#upc(file3)[52250,220]
+#if(file4,$par 0
+&\\&#upc(file4)[52250,220]
+#if(file5,$par 0
+&\\&#upc(file5)[52250,220]
+)))))
+)
+&
+&
+&
+&
+#define(#other,type,&
+#item_test
+#margin_test
+$skip 2
+$need 3
+type&:
+#beginmargin(2,0,1,0)
+#literal(#margin_flag,1)
+)
+&
+&
+&
+&
+#define(#requirements,&
+#other(Requirements)&&
+)
+&
+&
+&
+&
+#define(#notes,&
+#other(Notes)&&
+)
+&
+&
+&
+&
+#define(#toc1,&
+#item_test
+#margin_test
+#toc&
+)

@@ -1,0 +1,79 @@
+$title left 'New Compiler Set Implementation' left '30 January 1979' left 'Page \'
+The new compiler supports sets over a finite base.
+This means that sets with any number of elements mapped from any nonnegative
+range are supported.
+(The prohibition against having negative elements in a set is arbitrary,
+and could be removed with little effort.)
+The usage rules and implementation of extended sets is necessarily different
+from that of the fixed length sets provided by the old compiler.
+These differences are such that programs utilizing sets will be both
+runtime and compile time incompatible under the two compilers.
+The following outlines the new compiler implementation and contrasts it
+with that of the old compiler.
+$skip
+A set which is a component of a packed record or array may not be passed
+as a var parameter;  the language definition allows use of only subarrays
+and subrecords in this context.  The old compiler permitted any datum which
+had a integral word length and word alignment to be passed.  Since sets
+were always 2 words long and aligned, they could therefore be passed.
+$skip
+A set is allocated such that its leftmost bit corresponds the the lowerbound
+of its element range.
+For example, in sv: &set& &of& lwb..upb, bit 0 of sv denotes membership of
+element "lwb".
+The dimension (upb - lwb + 1) determines the space, padding and alignment
+requirements of a set:
+$ind left 8
+$skip
+$par -3
+o\\For dimension (set) <= 36,
+if the set is a component of a packed structure, then the set is allocated in
+the minimum number of bits,
+with bit alignment and no padding.
+If the set is a regular variable or constant, or a component of an unpacked
+structure, then it is allocated in a single word with zero fill on the right.
+$skip
+$par -3
+o\\For 36 < dimension (set) <= 72,
+the set will be word aligned, and zero filled to a length of 2 words.
+Sets falling into this category and the one above are termed "short" sets,
+and are manipulated in registers.
+Short set parameters are passed in one or two registers,
+and returned in the function value location on the stack.
+$skip
+$par -3
+o\\For 72 < dimension (set),
+the set will be word aligned and zero filled to an integral word length.
+Sets in this category are termed "long" sets, and are manipulated
+out of line.  As parameters, they are passed and returned by address.
+$ind left 0
+$skip
+These rules for set allocation have two major impacts on compatibility.
+First, calling sequences involving sets will differ between the two compilers;
+assembly language routines accepting set parameters must be changed.
+Second, records (both packed and unpacked) which contain set fields
+may be mapped differently.
+$skip
+The final area of incompatibility involves correction of a number of
+subtle bugs present in the old compiler implementation.
+We may well have problems with programs which happen to
+take advantage of these quirks, or accidently work because of them.
+These bugs arise from three sources:
+(1) the introduction of stray bits from operations on sets with different
+ranges,
+(2) an implicit assumption that operands of &in& and set constructors, "[]",
+are halfwords,
+and (3) truncation of elements in generated sets (e.g. [i], where i >= 72).
+$skip
+There are two other implications of the new compiler set implementation which
+need to be mentioned.
+First, generation of an integer set in an unbounded context (e.g. [i..j] <= setvar)
+may produce a very large temporary.
+Second, an item declared as a set of character is a long set, meaning that most
+operations involving it will be out of line.
+Redeclaration of such sets as "&set& &of& '\'..'_'" is advisable if usage
+allows.
+Note that a constant set such as ['A'..'Z'] is a short set, and therefore
+is not an inefficient construct.
+$skip 3
+sets.scr[52250,261]

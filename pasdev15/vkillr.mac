@@ -1,0 +1,38 @@
+	TWOSEG
+	RELOC	400000
+;
+;  procedure VKILLR (string[80]);
+;
+;  error handler for VBUF/VALLOC
+;
+;  do a TWAIT., then OUTSTR the string, then JRST to DIE.
+;
+;
+VKILLR::PUSH	17,2			;save addr of strint on stack
+	PUSHJ	17,TWAIT.##		;clear out terminal activity
+
+	MOVE	2,0(17)			;restore string addr
+	MOVE	3,(2)			;get length of string
+	MOVEI	4,4(3)			;add four
+	IDIVI	4,5			;div by 5 for word length - 1
+
+	HRLZI	5,1(2)			;get addr of start of text left(5)
+	HRRI	5,MSGBFR		;right half as message buffer
+	BLT	5,MSGBFR(4)		;move message into buffer
+
+	MOVE	5,[POINT 7,MSGBFR,6]	;get byte pointer to first char
+	ADJBP	3,5			;adjust by length of string
+	SETZ	2,2			;zero a register (ugh!)
+	DPB	2,3			;put zero at end of message
+
+	OUTSTR	MSGBFR-1		;write message on terminal
+
+	JRST	DIE.##			;and never to return
+
+	LIT
+
+	RELOC	0
+	ASCII	/
+? 	/				;<CR>,<LF>,'?', BLANK, TAB
+MSGBFR: BLOCK	^O21			;enough for 81 characters
+	END

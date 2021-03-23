@@ -1,0 +1,3469 @@
+         File DSK:NEW.PAS[31024,332221]   Compiled 15-Jul-82 18:05   Pascal, Version 2A(436)
+
+         File DSK:NEW.PAS[31024,332221]   Compiled 15-Jul-82 18:05   Pascal, Version 2A(436)
+
+         File DSK:NEW.PAS[31024,332221]   Compiled 15-Jul-82 18:05   Pascal, Version 2A(436)
+
+         File DSK:NEW.PAS[31024,332221]   Compiled 15-Jul-82 18:05   Pascal, Version 2A(436)
+
+
+
+
+
+				    $$$$$    $$$     $$$    $   $
+				      $     $   $   $   $   $  $ 
+				      $     $   $   $       $ $  
+				      $     $$$$$    $$$    $$   
+				      $     $   $       $   $ $  
+				      $     $   $   $   $   $  $ 
+				      $     $   $    $$$    $   $
+
+
+				     DSK:NEW.PAS[31024,332221]
+
+
+Options in effect: 
+
+	CHECK, SPECIAL(COERCIONS, PTR), NOSPECIAL(WORD), NOMAP, NOSYMBOLS, NOCALLS, ASSEMBLY, 
+	NOXREF, TRACE, QBLOCKS, NOOPTIMIZE, CODE, NODEBUG, FINISH, NOGLOBAL, NOMAINSEG, NOOVERLAY, 
+	AUTOQUICK, SOURCE, NOSTANDARD, LENGTH (45), WIDTH (102), NOEXTLENGTH, STORAGE (2048), 
+	ALLOC (0), ENABLE(M68)
+
+
+
+
+         File DSK:NEW.PAS[31024,332221]   Compiled 15-Jul-82 18:05   Pascal, Version 2A(436)
+
+         File DSK:NEW.PAS[31024,332221]   Compiled 15-Jul-82 18:05   Pascal, Version 2A(436)
+
+         File DSK:NEW.PAS[31024,332221]   Compiled 15-Jul-82 18:05   Pascal, Version 2A(436)
+
+         File DSK:NEW.PAS[31024,332221]   Compiled 15-Jul-82 18:05   Pascal, Version 2A(436)
+         File DSK:NEW.PAS[31024,332221]   Compiled 15-Jul-82 18:05   Pascal, Version 2A(436)
+
+         File DSK:NEW.PAS[31024,332221]   Compiled 15-Jul-82 18:05   Pascal, Version 2A(436)
+
+         File DSK:NEW.PAS[31024,332221]   Compiled 15-Jul-82 18:05   Pascal, Version 2A(436)
+
+         File DSK:NEW.PAS[31024,332221]   Compiled 15-Jul-82 18:05   Pascal, Version 2A(436)
+
+
+
+
+
+				    $$$$$    $$$     $$$    $   $
+				      $     $   $   $   $   $  $ 
+				      $     $   $   $       $ $  
+				      $     $$$$$    $$$    $$   
+				      $     $   $       $   $ $  
+				      $     $   $   $   $   $  $ 
+				      $     $   $    $$$    $   $
+
+
+				     DSK:NEW.PAS[31024,332221]
+
+
+Options in effect: 
+
+	CHECK, SPECIAL(COERCIONS, PTR), NOSPECIAL(WORD), NOMAP, NOSYMBOLS, NOCALLS, ASSEMBLY, 
+	NOXREF, TRACE, QBLOCKS, NOOPTIMIZE, CODE, NODEBUG, FINISH, NOGLOBAL, NOMAINSEG, NOOVERLAY, 
+	AUTOQUICK, SOURCE, NOSTANDARD, LENGTH (45), WIDTH (102), NOEXTLENGTH, STORAGE (2048), 
+	ALLOC (0), ENABLE(M68)
+
+
+
+
+         File DSK:NEW.PAS[31024,332221]   Compiled 15-Jul-82 18:05   Pascal, Version 2A(436)
+
+         File DSK:NEW.PAS[31024,332221]   Compiled 15-Jul-82 18:05   Pascal, Version 2A(436)
+
+         File DSK:NEW.PAS[31024,332221]   Compiled 15-Jul-82 18:05   Pascal, Version 2A(436)
+
+         File DSK:NEW.PAS[31024,332221]   Compiled 15-Jul-82 18:05   Pascal, Version 2A(436)
+MODULE  TASK         DSK:NEW.PAS[31024,332221]                                         15-Jul-82 18:05
+SECTION 0                                                                                       PAGE 1
+
+    1	program task options special (ptr, coercions);
+    2	
+    3	$SYSTEM trap1
+    4	$SYSTEM trap3
+    5	$SYSTEM trap4
+    6	$SYSTEM inireg
+    7	
+    8	const
+    9	  null = chr (0);
+   10	  four_nulls = null || null || null || null;
+   11	  eight_nulls = four_nulls || four_nulls;
+   12	
+   13	type
+   14	  one_byte = 0 .. 2 ** 8 - 1;
+   15	  two_bytes = 0 .. 2 ** 16 - 1;
+   16	  four_bytes = integer;
+   17	  two_chars = packed array [1 .. 2] of char;
+   18	  four_chars = packed array [1 .. 4] of char;
+   19	  eight_chars = packed array [1 .. 8] of char;
+   20	  bucket_record = record
+   21	    module_name : string[8];
+   22	    page_number : four_bytes;
+   23	    start_PC : four_bytes;
+   24	    end_PC : four_bytes;
+   25	    count : four_bytes;
+   26	  end;
+   27	
+   28	var
+   29	  return_code : four_bytes;
+   30	  DELAY_amount : four_bytes;
+   31	  step_amount : four_bytes;
+   32	  step_count : four_bytes;
+   33	  ASR_address : four_bytes;
+   34	  M_RET_AD_address : four_bytes;
+   35	  program_start_PC : four_bytes;
+   36	  program_end_PC : four_bytes;
+   37	  number_buckets : four_bytes;
+   38	  runtime_count : four_bytes;
+   39	  unknown_count : four_bytes;
+   40	  trace_flag : boolean;
+   41	  single_step_flag : boolean;
+   42	  monitor_taskname : four_chars;MODULE  TASK         DSK:NEW.PAS[31024,332221]                                         15-Jul-82 18:05
+SECTION 0                                                                                       PAGE 2
+
+   43	  sub_task_taskname : four_chars;
+   44	  sub_task_filename : eight_chars;
+   45	  sub_task_session : four_chars;
+   46	  bucket_array : ^array [1..*] of bucket_record;
+   47	  bucket_file : text;
+   48	  result_file : text;
+   49	
+   50	public var
+   51	  flag : boolean;
+   52	  tr_nd : boolean; (* trap not done flag *)MODULE  TASK         DSK:NEW.PAS[31024,332221]                                         15-Jul-82 18:05
+SECTION 1            error                                                                      PAGE 3
+
+    2	procedure error (input_message : packed array [1..*] of char);
+    3	
+    4	begin
+    5	  writeln (tty, '<Monitor> Error: ', input_message);
+    6	  stop;
+    7	end (* error *);MODULE  TASK         DSK:NEW.PAS[31024,332221]                                         15-Jul-82 18:05
+SECTION 2            abort                                                                      PAGE 4
+
+    2	public procedure abort (input_message : packed array [1..*] of char);
+    3	
+    4	begin
+    5	  writeln (tty, '<Monitor> Abort: ', input_message,
+    6	           ', Return code = ', return_code:8:h);
+    7	  stop;
+    8	end (* abort *);MODULE  TASK         DSK:NEW.PAS[31024,332221]                                         15-Jul-82 18:05
+SECTION 3            get_file_names                                                             PAGE 5
+
+    2	procedure get_file_names;
+    3	
+    4	var
+    5	  bucket_file_name : file_name;
+    6	  result_file_name : file_name;
+    7	
+    8	begin
+    9	  write (tty, '<Monitor> Bucket File: ');
+   10	  break (tty);
+   11	  readln (tty);
+   12	  read (tty, bucket_file_name);
+   13	  if bucket_file_name = '' then
+   14	    stop;
+   15	  reset (bucket_file, '.BF ' || bucket_file_name);
+   16	  if iostatus (bucket_file) <> io_ok then
+   17	    error ('Bad bucket file.');
+   18	  write (tty, '<Monitor> Resulting Histogram File: ');
+   19	  break (tty);
+   20	  readln (tty);
+   21	  read (tty, result_file_name);
+   22	  if result_file_name = '' then
+   23	    stop;
+   24	  rewrite (result_file, '.HG ' || result_file_name);
+   25	  if iostatus (result_file) <> io_ok then
+   26	    error ('Bad result file.');
+   27	end (* get_file_names *);MODULE  TASK         DSK:NEW.PAS[31024,332221]                                         15-Jul-82 18:05
+SECTION 4            get_parameters                                                             PAGE 6
+
+    2	procedure get_parameters;
+    3	
+    4	var
+    5	  local_flag : boolean;
+    6	  local_buffer : string[80];
+    7	
+    8	begin
+    9	  local_flag := false;
+   10	  while not local_flag do begin
+   11	    write (tty, '<Monitor> Single Step or Delay Sampling mode (SS/DS): ');
+   12	    break (tty);
+   13	    readln (tty);
+   14	    read (tty, local_buffer);
+   15	    local_buffer := uppercase (local_buffer);
+   16	    if (length (local_buffer) >= 2) andif
+   17	       ((substr (local_buffer, 1, 2) = 'DS') or
+   18	        (substr (local_buffer, 1, 2) = 'SS')) then
+   19	      local_flag := true
+   20	    else
+   21	      writeln (tty, '<Monitor> Error in input, please enter "SS" or "DS".');
+   22	  end (* while *);
+   23	  if substr (local_buffer, 1, 2) = 'SS' then begin
+   24	    single_step_flag := true;
+   25	    local_flag := false;
+   26	    while not local_flag do begin
+   27	      write (tty, '<Monitor> Step increment (1-1000): ');
+   28	      break (tty);
+   29	      readln (tty);
+   30	      read (tty, local_buffer);
+   31	      getstring (local_buffer, step_amount);
+   32	      if (step_amount < 1) or
+   33	         (step_amount > 1000) then
+   34	        writeln (tty, '<Monitor> Error in input, please enter a number between ',
+   35	                 '1 and 1000.')
+   36	      else
+   37	        local_flag := true;
+   38	    end (* while *);
+   39	  end
+   40	  else begin
+   41	    single_step_flag := false;
+   42	    local_flag := false;
+   43	    while not local_flag do beginMODULE  TASK         DSK:NEW.PAS[31024,332221]                                         15-Jul-82 18:05
+SECTION 4            get_parameters                                                             PAGE 7
+
+   44	      write (tty, '<Monitor> Delay increment, in milliseconds (1-1000): ');
+   45	      break (tty);
+   46	      readln (tty);
+   47	      read (tty, local_buffer);
+   48	      getstring (local_buffer, DELAY_amount);
+   49	      if (DELAY_amount < 1) or
+   50	         (DELAY_amount > 1000) then
+   51	        writeln (tty, '<Monitor> Error in input, please enter a number between ',
+   52	                 '1 and 1000.')
+   53	      else
+   54	        local_flag := true;
+   55	    end (* while *);
+   56	  end (* else *);
+   57	  local_flag := false;
+   58	  while not local_flag do begin
+   59	    write (tty, '<Monitor> Trace mode (Y/N): ');
+   60	    break (tty);
+   61	    readln (tty);
+   62	    read (tty, local_buffer);
+   63	    local_buffer := uppercase (local_buffer);
+   64	    if (length (local_buffer) >= 1) andif
+   65	       ((substr (local_buffer, 1, 1) = 'Y') or
+   66	        (substr (local_buffer, 1, 1) = 'N')) then
+   67	      local_flag := true
+   68	    else
+   69	      writeln (tty, '<Monitor> Error in input, please enter "Y" or "N".');
+   70	  end (* while *);
+   71	  trace_flag := false;
+   72	  if substr (local_buffer, 1, 1) = 'Y' then
+   73	    trace_flag := true;
+   74	end (* get_parameters *);MODULE  TASK         DSK:NEW.PAS[31024,332221]                                         15-Jul-82 18:05
+SECTION 5            set_up_buckets                                                             PAGE 8
+
+    2	procedure set_up_buckets;
+    3	
+    4	var
+    5	  local_index : four_bytes;
+    6	  local_buffer : string[20];
+    7	  local_module_name : string[8];
+    8	
+    9	begin
+   10	  new (bucket_array, number_buckets);
+   11	  for local_index := 1 to number_buckets do begin
+   12	    readln (bucket_file, local_buffer);
+   13	    if substr (local_buffer, 1, 7) = 'Module' then begin
+   14	      local_module_name := substr (local_buffer, 8);
+   15	      readln (bucket_file, local_buffer);
+   16	    end (* if *);
+   17	    with bucket_array^[local_index] do begin
+   18	      module_name := local_module_name;
+   19	      getstring (substr (local_buffer, 1, 8), start_PC:8:h);
+   20	      getstring (substr (local_buffer, 10, 3), page_number:3);
+   21	      count := 0;
+   22	    end (* with bucket_array^[local_index] *);
+   23	  end (* for *);
+   24	  for local_index := 1 to number_buckets - 1 do
+   25	    bucket_array^[local_index].end_PC :=
+   26	      bucket_array^[local_index + 1].start_PC - 1;
+   27	  bucket_array^[number_buckets].end_PC := program_end_PC;
+   28	end (* set_up_buckets *);MODULE  TASK         DSK:NEW.PAS[31024,332221]                                         15-Jul-82 18:05
+SECTION 6            trace                                                                      PAGE 9
+
+    2	procedure trace (input_name : string[8];
+    3	                 input_before_flag : boolean);
+    4	
+    5	begin
+    6	  if not trace_flag then
+    7	    return;
+    8	  if input_before_flag then
+    9	    writeln (tty, '<Monitor> Before ', input_name)
+   10	  else
+   11	    writeln (tty, '<Monitor> After  ', input_name);
+   12	end (* trace *);MODULE  TASK         DSK:NEW.PAS[31024,332221]                                         15-Jul-82 18:05
+SECTION 7            GTASQ                                                                     PAGE 10
+
+    2	procedure GTASQ;
+    3	
+    4	var
+    5	  parameter_area : packed record
+    6	    taskname : four_chars;
+    7	    session : four_bytes;
+    8	    status : one_byte;
+    9	    message_length : one_byte;
+   10	    queue_length : four_bytes;
+   11	    ASR : four_bytes;
+   12	    receiving_area : four_bytes;
+   13	  end;
+   14	
+   15	begin
+   16	  with parameter_area do begin
+   17	    taskname := monitor_taskname;
+   18	    session := 0;
+   19	    status := #h05;  (* ASR ASQ ENABLED *)
+   20	    message_length := 255;
+   21	    queue_length := 100;
+   22	    ASR := ASR_address;
+   23	    receiving_area := 0;
+   24	  end (* with parameter_area *);
+   25	  trace ('GTASQ', true);
+   26	  if not trap1 (31, address (parameter_area), return_code) then
+   27	    abort ('GTASQ');
+   28	  trace ('GTASQ', false);
+   29	end (* GTASQ *);MODULE  TASK         DSK:NEW.PAS[31024,332221]                                         15-Jul-82 18:05
+SECTION 8            LOAD                                                                      PAGE 11
+
+    2	procedure LOAD;
+    3	
+    4	var
+    5	  local_file_name : file_name;
+    6	  local_user_number : four_bytes;
+    7	  parameter_area : packed record
+    8	    taskname : four_chars;
+    9	    session : four_bytes;
+   10	    CRTCB_options : two_bytes;
+   11	    monitor_taskname : four_chars;
+   12	    monitor_session : four_bytes;
+   13	    initial_priority : one_byte;
+   14	    limit_priority : one_byte;
+   15	    task_attributes : two_bytes;
+   16	    task_entry_point : four_bytes;
+   17	    user_id : two_chars;
+   18	    LOAD_options : two_bytes;
+   19	    command_line_length : one_byte;
+   20	    LUN_load_file : one_byte;
+   21	    reserved : eight_chars;
+   22	    command_line_address : four_bytes;
+   23	    FHS_code : one_byte;
+   24	    FHS_command : one_byte;
+   25	    FHS_options : two_bytes;
+   26	    FHS_status : one_byte;
+   27	    FHS_LUN : one_byte;
+   28	    FHS_volume_name : four_chars;
+   29	    FHS_user_number : two_bytes;
+   30	    FHS_catalog_name : eight_chars;
+   31	    FHS_file_name : eight_chars;
+   32	    FHS_extension : two_chars;
+   33	    FHS_reserved : two_bytes;
+   34	    FHS_write_code : one_byte;
+   35	    FHS_read_code : one_byte;
+   36	  end;
+   37	
+   38	begin
+   39	  with parameter_area do begin
+   40	    taskname := sub_task_taskname;
+   41	    session := 0;
+   42	    CRTCB_options := #h8000;  (* NEW TASK'S MONITOR IS SPECIFIED BY FIELDS THAT FOLLOW *)
+   43	    monitor_taskname := four_nulls;MODULE  TASK         DSK:NEW.PAS[31024,332221]                                         15-Jul-82 18:05
+SECTION 8            LOAD                                                                      PAGE 12
+
+   44	    monitor_session := 0;
+   45	    initial_priority := 0;
+   46	    limit_priority := 0;
+   47	    task_attributes := 0;
+   48	    task_entry_point := 0;
+   49	    user_id := substr (sub_task_taskname, 1, 2);
+   50	    LOAD_options := #h400C; (* SEE IO & FILE MGMT ADDENDUM PG 3 *)
+   51	    command_line_length := 0;
+   52	    LUN_load_file := 0;
+   53	    reserved := eight_nulls;
+   54	    command_line_address := 0;
+   55	    FHS_code := 0;
+   56	    FHS_command := 0;
+   57	    FHS_options := 0;
+   58	    FHS_status := 0;
+   59	    FHS_LUN := 0;
+   60	    FHS_volume_name := 'SYS ';
+   61	    local_file_name := filename (bucket_file);
+   62	    getstring (substr (local_file_name, 5, 4), local_user_number);
+   63	    FHS_user_number := local_user_number;
+   64	    FHS_catalog_name := '        ';
+   65	    FHS_file_name := sub_task_filename;
+   66	    FHS_extension := 'LO';
+   67	    FHS_reserved := 0;
+   68	    FHS_write_code := 0;
+   69	    FHS_read_code := 0;
+   70	  end (* with parameter_area *);
+   71	  trace ('LOAD', true);
+   72	  if not trap4 (1, address (parameter_area), return_code) then
+   73	    abort ('LOAD');
+   74	  trace ('LOAD', false);
+   75	end (* LOAD *);MODULE  TASK         DSK:NEW.PAS[31024,332221]                                         15-Jul-82 18:05
+SECTION 9            change_LUN                                                                PAGE 13
+
+    2	procedure change_LUN (input_LUN : one_byte);
+    3	
+    4	var
+    5	  parameter_area : packed record
+    6	    FHS_code : one_byte;
+    7	    FHS_command : one_byte;
+    8	    FHS_options : two_bytes;
+    9	    FHS_status : one_byte;
+   10	    FHS_old_LUN : one_byte;
+   11	    FHS_new_LUN : one_byte;
+   12	    FHS_filler : one_byte;
+   13	    FHS_taskname : four_chars;
+   14	    FHS_session : four_chars;
+   15	  end;
+   16	
+   17	begin
+   18	  with parameter_area do begin
+   19	    FHS_code := #h01;
+   20	    FHS_command := #h10;
+   21	    FHS_options := #h8000;
+   22	    FHS_status := 0;
+   23	    FHS_old_LUN := input_LUN;
+   24	    FHS_new_LUN := input_LUN;
+   25	    FHS_filler := 0;
+   26	    FHS_taskname := sub_task_taskname;
+   27	    FHS_session := sub_task_session;
+   28	  end (* with parameter_area *);
+   29	  trace ('LUN', true);
+   30	  if not trap3 (address (parameter_area), return_code) then
+   31	    abort ('LUN');
+   32	  trace ('LUN', false);
+   33	end (* change_LUN *);MODULE  TASK         DSK:NEW.PAS[31024,332221]                                         15-Jul-82 18:05
+SECTION 10           START                                                                     PAGE 14
+
+    2	procedure START;
+    3	
+    4	var
+    5	  local_record : record
+    6	    case boolean of
+    7	      true  : (char_var : four_chars);
+    8	      false : (byte_var : four_bytes);
+    9	  end;
+   10	  parameter_area : packed record
+   11	    taskname : four_chars;
+   12	    session : four_bytes;
+   13	    START_options : two_bytes;
+   14	    monitor_taskname : four_chars;
+   15	    monitor_session : four_bytes;
+   16	    registers : array [1..16] of four_bytes;
+   17	  end;
+   18	
+   19	begin
+   20	  with parameter_area do begin
+   21	    taskname := sub_task_taskname;
+   22	    session := 0;
+   23	    START_option#hA000;
+   24	    monitor_taskname := four_nulls;
+   25	    monitor_session := 0;
+   26	    registers := inireg;
+   27	    with local_record do begin
+   28	      char_var := sub_task_taskname;
+   29	      registers[9] := byte_var (* A0 gets taskname *);
+   30	      byte_var := registers[2] (* get session number from D1 *);
+   31	      sub_task_session := char_var;
+   32	    end (* with local_record *);
+   33	    change_LUN (5);
+   34	    change_LUN (6);
+   35	  end (* with parameter_area *);
+   36	  trace ('START', true);
+   37	  if not trap1 (13, address (parameter_area), return_code) then
+   38	    abort ('START');
+   39	  trace ('START', false);
+   40	end (* START *);MODULE  TASK         DSK:NEW.PAS[31024,332221]                                         15-Jul-82 18:05
+SECTION 11           EXMON                                                                     PAGE 15
+
+    2	procedure EXMON;
+    3	
+    4	var
+    5	  parameter_area : packed record
+    6	    taskname : four_chars;
+    7	    session : four_bytes;
+    8	    EXMON_taskname : four_chars;
+    9	    EXMON_session : four_bytes;
+   10	  end;
+   11	
+   12	begin
+   13	  with parameter_area do begin
+   14	    taskname := sub_task_taskname;
+   15	    session := 0;
+   16	    EXMON_taskname := monitor_taskname;
+   17	    EXMON_session := 0;
+   18	  end (* with parameter_area *);
+   19	  trace ('EXMON', true);
+   20	  if not trap1 (64, address (parameter_area), return_code) then
+   21	    abort ('EXMON');
+   22	  trace ('EXMON', false);
+   23	end (* EXMON *);MODULE  TASK         DSK:NEW.PAS[31024,332221]                                         15-Jul-82 18:05
+SECTION 12           EXMMSK                                                                    PAGE 16
+
+    2	procedure EXMMSK;
+    3	
+    4	var
+    5	  parameter_area : packed record
+    6	    taskname : four_chars;
+    7	    session : four_bytes;
+    8	    EXMON_mask : four_bytes;
+    9	  end;
+   10	
+   11	begin
+   12	  with parameter_area do begin
+   13	    taskname := sub_task_taskname;
+   14	    session := 0;
+   15	    EXMON_mask := #h10000000; (* ENABLE SINGLE STEP TRAP *)
+   16	  end (* with parameter_area *);
+   17	  trace ('EXMMSK', true);
+   18	  if not trap1 (66, address (parameter_area), return_code) then
+   19	    abort ('EXMMSK');
+   20	  trace ('EXMMSK', false);
+   21	end (* EXMMSK *);MODULE  TASK         DSK:NEW.PAS[31024,332221]                                         15-Jul-82 18:05
+SECTION 13           REXMON                                                                    PAGE 17
+
+    2	procedure REXMON;
+    3	
+    4	var
+    5	  parameter_area : packed record
+    6	    taskname : four_chars;
+    7	    session : four_bytes;
+    8	    buffer_address : ptr;
+    9	  end;
+   10	  buffer : packed record
+   11	    execution_options : two_bytes;
+   12	    value_location : four_bytes;
+   13	    value : four_bytes;
+   14	    value_mask : four_bytes;
+   15	    max_instruction_count : four_bytes;
+   16	  end;
+   17	
+   18	begin
+   19	  with parameter_area do begin
+   20	    taskname := sub_task_taskname;
+   21	    session := 0;
+   22	    buffer_address := address (buffer);
+   23	  end (* with parameter_area *);
+   24	  with buffer do begin
+   25	    execution_options := 0;
+   26	    value_location := 0;
+   27	    value := 0;
+   28	    value_mask := 0;
+   29	    max_instruction_count := 0;
+   30	    if single_step_flag then
+   31	      execution_options := #h1000; (* single step *)
+   32	  end (* with buffer *);
+   33	  trace ('REXMON', true);
+   34	  if not trap1 (69, address (parameter_area), return_code) then
+   35	    abort ('REXMON');
+   36	  trace ('REXMON', false);
+   37	end (* REXMON *);MODULE  TASK         DSK:NEW.PAS[31024,332221]                                         15-Jul-82 18:05
+SECTION 14           DELAY                                                                     PAGE 18
+
+    2	procedure DELAY;
+    3	
+    4	begin
+    5	  trace ('DELAY', true);
+    6	  if not trap1 (21, ptr (DELAY_amount), return_code) then
+    7	    abort ('DELAY');
+    8	  trace ('DELAY', false);
+    9	end (* DELAY *);MODULE  TASK         DSK:NEW.PAS[31024,332221]                                         15-Jul-82 18:05
+SECTION 15           initialize                                                                PAGE 19
+
+    2	procedure initialize;
+    3	
+    4	var
+    5	  local_buffer : string[10];
+    6	
+    7	begin
+    8	  get_file_names;
+    9	  get_parameters;
+   10	  readln (bucket_file, local_buffer);
+   11	  sub_task_filename := substr (local_buffer || '        ', 1, 8);
+   12	  if sub_task_filename = '' then
+   13	    error ('No filename specified.');
+   14	  readln (bucket_file, ASR_address:8:h);
+   15	  readln (bucket_file, M_RET_AD_address:8:h);
+   16	  readln (bucket_file, program_start_PC:8:h);
+   17	  readln (bucket_file, program_end_PC:8:h);
+   18	  readln (bucket_file, number_buckets);
+   19	  monitor_taskname := 'TASK';
+   20	  sub_task_taskname := substr (sub_task_filename, 1, 4);
+   21	  runtime_count := 0;
+   22	  unknown_count := 0;
+   23	  flag := true;
+   24	  set_up_buckets;
+   25	  GTASQ;
+   26	  LOAD;
+   27	  EXMON;
+   28	  EXMMSK;
+   29	  START;
+   30	  TR_ND := TRUE; (* SET NOT DONE FLAG BEFORE CALL TO REXMON *)
+   31	  REXMON;
+   32	end (* initialize *);MODULE  TASK         DSK:NEW.PAS[31024,332221]                                         15-Jul-82 18:05
+SECTION 16           RSTATE                                                                    PAGE 20
+
+    2	procedure RSTATE (var curr_PC : four_bytes);
+    3	
+    4	var
+    5	  parameter_area : packed record
+    6	    taskname : four_chars;
+    7	    session : four_bytes;
+    8	    buffer_address : ptr;
+    9	    registers : array [1..13] of four_bytes;
+   10	    PC : four_bytes;
+   11	    SR : two_bytes;
+   12	    EXMON_mask : four_bytes;
+   13	    task_status : four_bytes;
+   14	    execution_options : two_bytes;
+   15	    value_location : four_bytes;
+   16	    value : four_bytes;
+   17	    value_mask : four_bytes;
+   18	    max_instruction_count : four_bytes;
+   19	  end;
+   20	
+   21	begin
+   22	  with parameter_area do begin
+   23	    taskname := sub_task_taskname;
+   24	    session := 0;
+   25	    buffer_address := address (parameter_area);
+   26	  end (* with parameter_area *);
+   27	  trace ('RSTATE', true);
+   28	  if not trap1 (67, address (parameter_area), return_code) then
+   29	    abort ('RSTATE');
+   30	  curr_PC := parameter_area.PC;
+   31	  trace ('RSTATE', false);
+   32	end (* RSTATE *);MODULE  TASK         DSK:NEW.PAS[31024,332221]                                         15-Jul-82 18:05
+SECTION 17           MOVELL                                                                    PAGE 21
+
+    2	procedure MOVELL (var curr_PC : four_bytes);
+    3	
+    4	var
+    5	  local_PC : four_bytes;
+    6	  parameter_area : packed record
+    7	    source_taskname : four_chars;
+    8	    source_session : four_bytes;
+    9	    source_address : four_bytes;
+   10	    dest_taskname : four_chars;
+   11	    dest_session : four_bytes;
+   12	    dest_address : ptr;
+   13	    data_length : four_bytes;
+   14	  end;
+   15	
+   16	begin
+   17	  with parameter_area do begin
+   18	    source_taskname := sub_task_taskname;
+   19	    source_session := 0;
+   20	    source_address := M_RET_AD_address;
+   21	    dest_taskname := monitor_taskname;
+   22	    dest_session := 0;
+   23	    dest_address := address (local_PC);
+   24	    data_length := 4;
+   25	  end (* with parameter_area *);
+   26	  trace ('MOVELL', true);
+   27	  if not trap1 (6, address (parameter_area), return_code) then
+   28	    abort ('MOVELL');
+   29	  trace ('MOVELL', false);
+   30	  curr_PC := local_PC;
+   31	end (* MOVELL *);MODULE  TASK         DSK:NEW.PAS[31024,332221]                                         15-Jul-82 18:05
+SECTION 18           update_array                                                              PAGE 22
+
+    2	procedure update_array (input_PC : four_bytes);
+    3	
+    4	var
+    5	  low_bound : four_bytes;
+    6	  high_bound : four_bytes;
+    7	  curr_index : four_bytes;
+    8	  found_flag : boolean;
+    9	
+   10	begin
+   11	  low_bound := 1;
+   12	  high_bound := number_buckets;
+   13	  found_flag := false;
+   14	  while (not found_flag) and
+   15	        (low_bound <= high_bound) do begin
+   16	    curr_index := (low_bound + high_bound) div 2;
+   17	    if input_PC < bucket_array^[curr_index].start_PC then
+   18	      high_bound := curr_index
+   19	    else
+   20	      if input_PC > bucket_array^[curr_index].end_PC then
+   21	        low_bound := curr_index + 1
+   22	      else
+   23	        found_flag := true;
+   24	  end (* while *);
+   25	  bucket_array^[curr_index].count := bucket_array^[curr_index].count + 1;
+   26	end (* update_array *);MODULE  TASK         DSK:NEW.PAS[31024,332221]                                         15-Jul-82 18:05
+SECTION 19           read_PC                                                                   PAGE 23
+
+    2	procedure read_PC;
+    3	
+    4	var
+    5	  local_PC : four_bytes;
+    6	
+    7	begin
+    8	  local_PC := 0;
+    9	  RSTATE (local_PC);
+   10	  if local_PC < program_start_PC then begin
+   11	    runtime_count := runtime_count + 1;
+   12	    local_PC := 0;
+   13	    MOVELL (local_PC);
+   14	  end (* if *);
+   15	  if local_PC < program_start_PC then
+   16	    unknown_count := unknown_count + 1
+   17	  else
+   18	    update_array (local_PC);
+   19	end (* read_PC *);MODULE  TASK         DSK:NEW.PAS[31024,332221]                                         15-Jul-82 18:05
+SECTION 20           print_results                                                             PAGE 24
+
+    2	procedure print_results;
+    3	
+    4	var
+    5	  local_index : four_bytes;
+    6	
+    7	begin
+    8	  writeln (result_file, 'Task = ', sub_task_filename);
+    9	  if single_step_flag then
+   10	    writeln (result_file, 'Single step increment = ', step_amount)
+   11	  else
+   12	    writeln (result_file, 'Delay increment = ', DELAY_amount:0,
+   13	             ' millisecond(s)');
+   14	  if trace_flag then
+   15	    writeln (result_file, 'Trace on')
+   16	  else
+   17	    writeln (result_file, 'Trace off');
+   18	  writeln (result_file, 'Starting PC = ', program_start_PC:8:h);
+   19	  writeln (result_file, 'Ending PC = ', program_end_PC:8:h);
+   20	  writeln (result_file, 'Number of buckets = ', number_buckets);
+   21	  writeln (result_file, 'Number of runtime calls = ', runtime_count);
+   22	  writeln (result_file, 'Number of unknown calls = ', unknown_count);
+   23	  writeln (result_file);
+   24	  for local_index := 1 to number_buckets do begin
+   25	    with bucket_array^[local_index] do begin
+   26	      writeln (result_file, local_index:8, module_name:10, ' ',
+   27	               start_PC:8:h, ' ', end_PC:8:h, ' ', count:8);
+   28	    end (* with bucket_array^[local_index] *);
+   29	  end (* for *);
+   30	end (* print_results *);MODULE  TASK         DSK:NEW.PAS[31024,332221]                                         15-Jul-82 18:05
+SECTION 21           main                                                                      PAGE 25
+
+    2	begin
+    3	  initialize;
+    4	  while flag do begin
+    5	    read_PC;
+    6	    if single_step_flag then begin
+    7	      for step_count := 1 to step_amount do begin
+    8	        while tr_nd and flag do ;
+    9	        tr_nd := true;
+   10	        if flag then REXMON;
+   11	        end;
+   12	    end
+   13	    else
+   14	      DELAY;
+   15	  end (* while *);
+   16	  print_results;
+   17	end.
+
+File   level   on page     name
+
+  0	 0	    1	DSK:NEW.PAS[31024,332221]
+  1	 1	    1	DSK:TRAP1.INC[31024,332221]
+  2	 1	    1	DSK:TRAP3.INC[31024,332221]
+  3	 1	    1	DSK:TRAP4.INC[31024,332221]
+  4	 1	    1	DSK:INIREG.INC[31024,332221]
+
+
+
+Section   in file   on page     title
+
+     2	      0	         4    abort
+     9	      0	        13    change_LUN
+    14	      0	        18    DELAY
+     1	      0	         3    error
+    12	      0	        16    EXMMSK
+    11	      0	        15    EXMON
+     3	      0	         5    get_file_names
+     4	      0	         6    get_parameters
+     7	      0	        10    GTASQ
+    15	      0	        19    initialize
+     8	      0	        11    LOAD
+    21	      0	        25    main
+    17	      0	        21    MOVELL
+    20	      0	        24    print_results
+    19	      0	        23    read_PC
+    13	      0	        17    REXMON
+    16	      0	        20    RSTATE
+     5	      0	         8    set_up_buckets
+    10	      0	        14    START
+     6	      0	         9    trace
+    18	      0	        22    update_array
+   		      TASK       IDNT	   0,0
+		      *
+		      *		 MC68000 Checkout Code Generator,  Jul 15, 1982  06:05:43 pm
+		      *
+	 00000002		 SECTION   2
+	 00000000     STATIC.	 EQU	   *
+	 0000000A		 SECTION   10
+	 00000000     CODE.	 EQU	   *
+00000000 C1B703A0     C.1	 DC.L	   $C1B703A0			       Date-time
+00000004 0000			 DC.W	   0				         $0
+00000006 4E4557202020		 DC.B	   'NEW   '
+	 00000002		 SECTION   2
+		      *
+		      *		 Unitialized static area
+		      *
+00000000 00000054		 DS.B	   84
+				 XDEF	   FLAG    
+		      FLAG    	 EQU	   STATIC.+78
+				 XDEF	   TR_ND   
+		      TR_ND   	 EQU	   STATIC.+79
+	 0000000A		 SECTION   10
+		      *
+		      *		 Constant area for subroutine ABORT
+		      *
+0000000C 3C4D6F6E6974 K.1	 DC.B	   '<Monitor> Abort: '
+0000001D 00000001		 DS.B	   1
+0000001E 2C2052657475 K.2	 DC.B	   ', Return code = '
+		      *
+		      *		 Begin subroutine ABORT
+		      *
+				 XDEF	   ABORT   
+0000002E	      ABORT   
+0000002E 7016	      B.4	 MOVEQ	   #22,D0			         $16
+00000030 2F00			 MOVE.L	   D0,-(A7)
+00000032 610E			 BSR.S	   X.4.1(PC)
+00000034 00000000		 DC.L	   C.1
+00000038 0000			 DC.W	   0				         $0
+0000003A 0005			 DC.W	   5				       String length word
+0000003C 41424F5254		 DC.B	   'ABORT'
+00000041 00000001		 DS.B	   1				       Fill byte
+00000042 203CFFFFFFFC X.4.1	 MOVE.L	   #T.4-4,D0			         0
+00000048 4EB900000000		 JSR	   M.ENTRY
+		      *							       LINE 2/4
+		      *							       LINE 2/5
+0000004E 202D0000     L.4.1	 MOVE.L	   TTYOUTPUT(A5),D0		         TTYOUTPUT00000052 4A80			 TST.L	   D0
+00000054 6606			 BNE.S	   X.4.2(PC)
+00000056 4EB900000000		 JSR	   E.FILE
+0000005C 7211	      X.4.2	 MOVEQ	   #17,D1			         $11
+0000005E 3F01			 MOVE.W	   D1,-(A7)
+00000060 7204			 MOVEQ	   #4,D1			         $4
+00000062 3F01			 MOVE.W	   D1,-(A7)
+00000064 487AFFA6		 PEA	   K.1(PC)			         CODE.+$C
+00000068 2F00			 MOVE.L	   D0,-(A7)
+0000006A 4EB900000000		 JSR	   T.WRITE
+00000070 206E0016		 MOVEA.L   22(A6),A0			         INPUT_MESSAGE
+00000074 3F2E0014		 MOVE.W	   22-2(A6),-(A7)		         INPUT_MESSAGE
+00000078 7204			 MOVEQ	   #4,D1			         $4
+0000007A 3F01			 MOVE.W	   D1,-(A7)
+0000007C 4850			 PEA	   (A0)
+0000007E 2F00			 MOVE.L	   D0,-(A7)
+00000080 4EB900000000		 JSR	   T.WRITE
+00000086 7210			 MOVEQ	   #16,D1			         $10
+00000088 3F01			 MOVE.W	   D1,-(A7)
+0000008A 7204			 MOVEQ	   #4,D1			         $4
+0000008C 3F01			 MOVE.W	   D1,-(A7)
+0000008E 487AFF8E		 PEA	   K.2(PC)			         CODE.+$1E
+00000092 2F00			 MOVE.L	   D0,-(A7)
+00000094 4EB900000000		 JSR	   T.WRITE
+0000009A 7208			 MOVEQ	   #8,D1			         $8
+0000009C 2F01			 MOVE.L	   D1,-(A7)
+0000009E 7250			 MOVEQ	   #80,D1			         $50
+000000A0 3F01			 MOVE.W	   D1,-(A7)
+000000A2 486D0000		 PEA	   STATIC.+0(A5)		         RETURN_CODE
+000000A6 2F00			 MOVE.L	   D0,-(A7)
+000000A8 4EB900000000		 JSR	   T.WRITE
+000000AE 2F00			 MOVE.L	   D0,-(A7)
+000000B0 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 2/7
+000000B6 4EB900000000		 JSR	   M.STOP
+		      *
+		      *		 Constant area for subroutine TRACE
+		      *
+000000BC 3C4D6F6E6974 K.3	 DC.B	   '<Monitor> Before '
+000000CD 00000001		 DS.B	   1
+000000CE 3C4D6F6E6974 K.4	 DC.B	   '<Monitor> After  '
+000000DF 00000001		 DS.B	   1
+		      *
+		      *		 Begin subroutine TRACE
+		      *000000E0	      B.8
+		      *							       LINE 6/5
+		      *							       LINE 6/6
+000000E0 4A2D002C     L.8.1	 TST.B	   STATIC.+44(A5)		         TRACE_FLAG
+000000E4 6602			 BNE.S	   L.8.3(PC)
+		      *							       LINE 6/7
+000000E6 4E75	      L.8.2	 RTS	   
+		      *							       LINE 6/8
+000000E8 4A2EFFFE     L.8.3	 TST.B	   -2(A6)			         INPUT_BEFORE_FLAG
+000000EC 6742			 BEQ.S	   L.8.5(PC)
+		      *							       LINE 6/9
+000000EE 202D0000     L.8.4	 MOVE.L	   TTYOUTPUT(A5),D0		         TTYOUTPUT
+000000F2 4A80			 TST.L	   D0
+000000F4 6606			 BNE.S	   X.8.1(PC)
+000000F6 4EB900000000		 JSR	   E.FILE
+000000FC 7211	      X.8.1	 MOVEQ	   #17,D1			         $11
+000000FE 3F01			 MOVE.W	   D1,-(A7)
+00000100 7204			 MOVEQ	   #4,D1			         $4
+00000102 3F01			 MOVE.W	   D1,-(A7)
+00000104 487AFFB6		 PEA	   K.3(PC)			         CODE.+$BC
+00000108 2F00			 MOVE.L	   D0,-(A7)
+0000010A 4EB900000000		 JSR	   T.WRITE
+00000110 206EFFFA		 MOVEA.L   -6(A6),A0			         INPUT_NAME
+00000114 3F10			 MOVE.W	   (A0),-(A7)
+00000116 7203			 MOVEQ	   #3,D1			         $3
+00000118 3F01			 MOVE.W	   D1,-(A7)
+0000011A 48680002		 PEA	   2(A0)			         $2
+0000011E 2F00			 MOVE.L	   D0,-(A7)
+00000120 4EB900000000		 JSR	   T.WRITE
+00000126 2F00			 MOVE.L	   D0,-(A7)
+00000128 4EB900000000		 JSR	   T.WRTLN
+0000012E 6040			 BRA.S	   L.8.6(PC)
+		      *							       LINE 6/11
+00000130 202D0000     L.8.5	 MOVE.L	   TTYOUTPUT(A5),D0		         TTYOUTPUT
+00000134 4A80			 TST.L	   D0
+00000136 6606			 BNE.S	   X.8.2(PC)
+00000138 4EB900000000		 JSR	   E.FILE
+0000013E 7211	      X.8.2	 MOVEQ	   #17,D1			         $11
+00000140 3F01			 MOVE.W	   D1,-(A7)
+00000142 7204			 MOVEQ	   #4,D1			         $4
+00000144 3F01			 MOVE.W	   D1,-(A7)
+00000146 487AFF86		 PEA	   K.4(PC)			         CODE.+$CE
+0000014A 2F00			 MOVE.L	   D0,-(A7)
+0000014C 4EB900000000		 JSR	   T.WRITE
+00000152 206EFFFA		 MOVEA.L   -6(A6),A0			         INPUT_NAME00000156 3F10			 MOVE.W	   (A0),-(A7)
+00000158 7203			 MOVEQ	   #3,D1			         $3
+0000015A 3F01			 MOVE.W	   D1,-(A7)
+0000015C 48680002		 PEA	   2(A0)			         $2
+00000160 2F00			 MOVE.L	   D0,-(A7)
+00000162 4EB900000000		 JSR	   T.WRITE
+00000168 2F00			 MOVE.L	   D0,-(A7)
+0000016A 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 6/12
+00000170 4E75	      L.8.6	 RTS	   
+		      *
+		      *		 Constant area for subroutine REXMON
+		      *
+00000172 5245584D4F4E K.5	 DC.B	   'REXMON'
+00000178 5245584D4F4E K.6	 DC.B	   'REXMON'
+0000017E 5245584D4F4E K.7	 DC.B	   'REXMON'
+		      *
+		      *		 Begin subroutine REXMON
+		      *
+00000184	      B.15
+		      *							       LINE 13/18
+		      *							       LINE 13/19
+00000184	      L.15.1
+		      *							       LINE 13/19 (2)
+		      *							       LINE 13/20
+00000184 2D6D0032FFDC L.15.2	 MOVE.L	   STATIC.+50(A5),-36(A6)	         SUB_TASK_TASKNAME  PA
+		      *							       LINE 13/21
+0000018A 7000			 MOVEQ	   #0,D0			         $0
+0000018C 2D40FFE0		 MOVE.L	   D0,-36+4(A6)			         PARAMETER_AREA
+		      *							       LINE 13/22
+00000190 41EEFFCA		 LEA	   -54(A6),A0			         BUFFER
+00000194 2D48FFE4		 MOVE.L	   A0,-36+8(A6)			         PARAMETER_AREA
+		      *							       LINE 13/23
+		      *							       LINE 13/24
+		      *							       LINE 13/24 (2)
+		      *							       LINE 13/25
+00000198 7000	      L.15.3	 MOVEQ	   #0,D0			         $0
+0000019A 3D40FFCA		 MOVE.W	   D0,-54(A6)			         BUFFER
+		      *							       LINE 13/26
+0000019E 7000			 MOVEQ	   #0,D0			         $0
+000001A0 2D40FFCC		 MOVE.L	   D0,-54+2(A6)			         BUFFER
+		      *							       LINE 13/27
+000001A4 7000			 MOVEQ	   #0,D0			         $0
+000001A6 2D40FFD0		 MOVE.L	   D0,-54+6(A6)			         BUFFER
+		      *							       LINE 13/28000001AA 7000			 MOVEQ	   #0,D0			         $0
+000001AC 2D40FFD4		 MOVE.L	   D0,-54+10(A6)		         BUFFER
+		      *							       LINE 13/29
+000001B0 7000			 MOVEQ	   #0,D0			         $0
+000001B2 2D40FFD8		 MOVE.L	   D0,-54+14(A6)		         BUFFER
+		      *							       LINE 13/30
+000001B6 4A2D002D		 TST.B	   STATIC.+45(A5)		         SINGLE_STEP_FLAG
+000001BA 6706			 BEQ.S	   L.15.5(PC)
+		      *							       LINE 13/31
+000001BC 3D7C1000FFCA L.15.4	 MOVE.W	   #4096,-54(A6)		         $1000  BUFFER
+		      *							       LINE 13/32
+		      *							       LINE 13/33
+000001C2 1D7C0001FFFE L.15.5	 MOVE.B	   #1,-2(A6)			         $1  $FFFFFFFE
+000001C8 3D7C0006FF68		 MOVE.W	   #6,-152(A6)			         $6  $FFFFFF68
+000001CE 486EFF6A		 PEA	   -150(A6)			         $FFFFFF6A
+000001D2 3F2EFF68		 MOVE.W	   -152(A6),-(A7)		         $FFFFFF68
+000001D6 487AFF9A		 PEA	   K.5(PC)			         CODE.+$172
+000001DA 7006			 MOVEQ	   #6,D0			         $6
+000001DC 3F00			 MOVE.W	   D0,-(A7)
+000001DE 4EB900000000		 JSR	   C.MVFF
+000001E4 41EEFF68		 LEA	   -152(A6),A0			         $FFFFFF68
+000001E8 2D48FFFA		 MOVE.L	   A0,-6(A6)			         $FFFFFFFA
+000001EC 6100FEF2		 BSR.L	   B.8(PC)			         TRACE = CODE.+$E0
+		      *							       LINE 13/34
+000001F0 486D0000		 PEA	   STATIC.+0(A5)		         RETURN_CODE
+000001F4 41EEFFDC		 LEA	   -36(A6),A0			         PARAMETER_AREA
+000001F8 2F08			 MOVE.L	   A0,-(A7)
+000001FA 7045			 MOVEQ	   #69,D0			         $45
+000001FC 2F00			 MOVE.L	   D0,-(A7)
+000001FE 486EFF6E		 PEA	   -146(A6)			         $FFFFFF6E
+00000202 4EB900000000		 JSR	   TRAP1			         TRAP1
+00000208 4A2EFF6E		 TST.B	   -146(A6)			         $FFFFFF6E
+0000020C 660C			 BNE.S	   L.15.7(PC)
+		      *							       LINE 13/35
+0000020E 487AFF68     L.15.6	 PEA	   K.6(PC)			         CODE.+$178
+00000212 7006			 MOVEQ	   #6,D0			         $6
+00000214 3F00			 MOVE.W	   D0,-(A7)
+00000216 6100FE16		 BSR.L	   B.4(PC)			         ABORT = CODE.+$2E
+		      *							       LINE 13/36
+0000021A 422EFFFE     L.15.7	 CLR.B	   -2(A6)			         $FFFFFFFE
+0000021E 3D7C0006FF68		 MOVE.W	   #6,-152(A6)			         $6  $FFFFFF68
+00000224 486EFF6A		 PEA	   -150(A6)			         $FFFFFF6A
+00000228 3F2EFF68		 MOVE.W	   -152(A6),-(A7)		         $FFFFFF68
+0000022C 487AFF50		 PEA	   K.7(PC)			         CODE.+$17E
+00000230 7006			 MOVEQ	   #6,D0			         $600000232 3F00			 MOVE.W	   D0,-(A7)
+00000234 4EB900000000		 JSR	   C.MVFF
+0000023A 41EEFF68		 LEA	   -152(A6),A0			         $FFFFFF68
+0000023E 2D48FFFA		 MOVE.L	   A0,-6(A6)			         $FFFFFFFA
+00000242 6100FE9C		 BSR.L	   B.8(PC)			         TRACE = CODE.+$E0
+		      *							       LINE 13/37
+00000246 4E75			 RTS	   
+		      *
+		      *		 Constant area for subroutine DELAY
+		      *
+00000248 44454C4159   K.8	 DC.B	   'DELAY'
+0000024D 00000001		 DS.B	   1
+0000024E 44454C4159   K.9	 DC.B	   'DELAY'
+00000253 00000001		 DS.B	   1
+00000254 44454C4159   K.10	 DC.B	   'DELAY'
+00000259 00000001		 DS.B	   1
+		      *
+		      *		 Begin subroutine DELAY
+		      *
+0000025A	      B.16
+		      *							       LINE 14/4
+		      *							       LINE 14/5
+0000025A 1D7C0001FFFE L.16.1	 MOVE.B	   #1,-2(A6)			         $1  $FFFFFFFE
+00000260 3D7C0005FF68		 MOVE.W	   #5,-152(A6)			         $5  $FFFFFF68
+00000266 486EFF6A		 PEA	   -150(A6)			         $FFFFFF6A
+0000026A 3F2EFF68		 MOVE.W	   -152(A6),-(A7)		         $FFFFFF68
+0000026E 487AFFD8		 PEA	   K.8(PC)			         CODE.+$248
+00000272 7005			 MOVEQ	   #5,D0			         $5
+00000274 3F00			 MOVE.W	   D0,-(A7)
+00000276 4EB900000000		 JSR	   C.MVFF
+0000027C 41EEFF68		 LEA	   -152(A6),A0			         $FFFFFF68
+00000280 2D48FFFA		 MOVE.L	   A0,-6(A6)			         $FFFFFFFA
+00000284 6100FE5A		 BSR.L	   B.8(PC)			         TRACE = CODE.+$E0
+		      *							       LINE 14/6
+00000288 486D0000		 PEA	   STATIC.+0(A5)		         RETURN_CODE
+0000028C 2F2D0004		 MOVE.L	   STATIC.+4(A5),-(A7)		         DELAY_AMOUNT
+00000290 7015			 MOVEQ	   #21,D0			         $15
+00000292 2F00			 MOVE.L	   D0,-(A7)
+00000294 486EFF6E		 PEA	   -146(A6)			         $FFFFFF6E
+00000298 4EB900000000		 JSR	   TRAP1			         TRAP1
+0000029E 4A2EFF6E		 TST.B	   -146(A6)			         $FFFFFF6E
+000002A2 660C			 BNE.S	   L.16.3(PC)
+		      *							       LINE 14/7
+000002A4 487AFFA8     L.16.2	 PEA	   K.9(PC)			         CODE.+$24E
+000002A8 7005			 MOVEQ	   #5,D0			         $5000002AA 3F00			 MOVE.W	   D0,-(A7)
+000002AC 6100FD80		 BSR.L	   B.4(PC)			         ABORT = CODE.+$2E
+		      *							       LINE 14/8
+000002B0 422EFFFE     L.16.3	 CLR.B	   -2(A6)			         $FFFFFFFE
+000002B4 3D7C0005FF68		 MOVE.W	   #5,-152(A6)			         $5  $FFFFFF68
+000002BA 486EFF6A		 PEA	   -150(A6)			         $FFFFFF6A
+000002BE 3F2EFF68		 MOVE.W	   -152(A6),-(A7)		         $FFFFFF68
+000002C2 487AFF90		 PEA	   K.10(PC)			         CODE.+$254
+000002C6 7005			 MOVEQ	   #5,D0			         $5
+000002C8 3F00			 MOVE.W	   D0,-(A7)
+000002CA 4EB900000000		 JSR	   C.MVFF
+000002D0 41EEFF68		 LEA	   -152(A6),A0			         $FFFFFF68
+000002D4 2D48FFFA		 MOVE.L	   A0,-6(A6)			         $FFFFFFFA
+000002D8 6100FE06		 BSR.L	   B.8(PC)			         TRACE = CODE.+$E0
+		      *							       LINE 14/9
+000002DC 4E75			 RTS	   
+		      *
+		      *		 Constant area for subroutine ERROR
+		      *
+000002DE 3C4D6F6E6974 K.11	 DC.B	   '<Monitor> Error: '
+000002EF 00000001		 DS.B	   1
+		      *
+		      *		 Begin subroutine ERROR
+		      *
+000002F0	      B.3
+		      *							       LINE 1/4
+		      *							       LINE 1/5
+000002F0 202D0000     L.3.1	 MOVE.L	   TTYOUTPUT(A5),D0		         TTYOUTPUT
+000002F4 4A80			 TST.L	   D0
+000002F6 6606			 BNE.S	   X.3.1(PC)
+000002F8 4EB900000000		 JSR	   E.FILE
+000002FE 7211	      X.3.1	 MOVEQ	   #17,D1			         $11
+00000300 3F01			 MOVE.W	   D1,-(A7)
+00000302 7204			 MOVEQ	   #4,D1			         $4
+00000304 3F01			 MOVE.W	   D1,-(A7)
+00000306 487AFFD6		 PEA	   K.11(PC)			         CODE.+$2DE
+0000030A 2F00			 MOVE.L	   D0,-(A7)
+0000030C 4EB900000000		 JSR	   T.WRITE
+00000312 206EFFEA		 MOVEA.L   -22(A6),A0			         INPUT_MESSAGE
+00000316 3F2EFFE8		 MOVE.W	   -22-2(A6),-(A7)		         INPUT_MESSAGE
+0000031A 7204			 MOVEQ	   #4,D1			         $4
+0000031C 3F01			 MOVE.W	   D1,-(A7)
+0000031E 4850			 PEA	   (A0)
+00000320 2F00			 MOVE.L	   D0,-(A7)
+00000322 4EB900000000		 JSR	   T.WRITE00000328 2F00			 MOVE.L	   D0,-(A7)
+0000032A 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/6
+00000330 4EB900000000		 JSR	   M.STOP
+		      *
+		      *		 Constant area for subroutine GET_FILE_NAMES
+		      *
+00000336 3C4D6F6E6974 K.12	 DC.B	   '<Monitor> Bucket File: '
+0000034D 00000001		 DS.B	   1
+0000034E	      K.13
+0000034E 2E424620     K.14	 DC.B	   '.BF '
+00000352 426164206275 K.15	 DC.B	   'Bad bucket file.'
+00000362 3C4D6F6E6974 K.16	 DC.B	   '<Monitor> Resulting Histogram File: '
+00000386	      K.17
+00000386 2E484720     K.18	 DC.B	   '.HG '
+0000038A 426164207265 K.19	 DC.B	   'Bad result file.'
+		      *
+		      *		 Begin subroutine GET_FILE_NAMES
+		      *
+0000039A	      B.5
+		      *							       LINE 3/8
+		      *							       LINE 3/9
+0000039A 202D0000     L.5.1	 MOVE.L	   TTYOUTPUT(A5),D0		         TTYOUTPUT
+0000039E 4A80			 TST.L	   D0
+000003A0 6606			 BNE.S	   X.5.1(PC)
+000003A2 4EB900000000		 JSR	   E.FILE
+000003A8 7217	      X.5.1	 MOVEQ	   #23,D1			         $17
+000003AA 3F01			 MOVE.W	   D1,-(A7)
+000003AC 7204			 MOVEQ	   #4,D1			         $4
+000003AE 3F01			 MOVE.W	   D1,-(A7)
+000003B0 487AFF84		 PEA	   K.12(PC)			         CODE.+$336
+000003B4 2F00			 MOVE.L	   D0,-(A7)
+000003B6 4EB900000000		 JSR	   T.WRITE
+		      *							       LINE 3/10
+000003BC 202D0000		 MOVE.L	   TTYOUTPUT(A5),D0		         TTYOUTPUT
+000003C0 4A80			 TST.L	   D0
+000003C2 6606			 BNE.S	   X.5.2(PC)
+000003C4 4EB900000000		 JSR	   E.FILE
+000003CA 2F00	      X.5.2	 MOVE.L	   D0,-(A7)
+000003CC 4EB900000000		 JSR	   T.BREAK
+		      *							       LINE 3/11
+000003D2 202D0000		 MOVE.L	   TTY(A5),D0			         TTY
+000003D6 4A80			 TST.L	   D0
+000003D8 6606			 BNE.S	   X.5.3(PC)
+000003DA 4EB900000000		 JSR	   E.FILE000003E0 2F00	      X.5.3	 MOVE.L	   D0,-(A7)
+000003E2 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 3/12
+000003E8 202D0000		 MOVE.L	   TTY(A5),D0			         TTY
+000003EC 4A80			 TST.L	   D0
+000003EE 6606			 BNE.S	   X.5.4(PC)
+000003F0 4EB900000000		 JSR	   E.FILE
+000003F6 7224	      X.5.4	 MOVEQ	   #36,D1			         $24
+000003F8 3F01			 MOVE.W	   D1,-(A7)
+000003FA 720B			 MOVEQ	   #11,D1			         $B
+000003FC 3F01			 MOVE.W	   D1,-(A7)
+000003FE 486EFFC2		 PEA	   -62(A6)			         BUCKET_FILE_NAME
+00000402 2F00			 MOVE.L	   D0,-(A7)
+00000404 4EB900000000		 JSR	   T.READ
+		      *							       LINE 3/13
+0000040A 487AFF42		 PEA	   K.13(PC)			         CODE.+$34E
+0000040E 4267			 CLR.W	   -(A7)
+00000410 486EFFC4		 PEA	   -62+2(A6)			         BUCKET_FILE_NAME
+00000414 3F2EFFC2		 MOVE.W	   -62(A6),-(A7)		         BUCKET_FILE_NAME
+00000418 4EB900000000		 JSR	   C.CPFF
+0000041E 6606			 BNE.S	   L.5.3(PC)
+		      *							       LINE 3/14
+00000420 4EB900000000 L.5.2	 JSR	   M.STOP
+		      *							       LINE 3/15
+00000426 302EFFC2     L.5.3	 MOVE.W	   -62(A6),D0			         BUCKET_FILE_NAME
+0000042A 5840			 ADDQ.W	   #4,D0			         $4
+0000042C 486EFF74		 PEA	   -140(A6)			         $FFFFFF74
+00000430 7228			 MOVEQ	   #40,D1			         $28
+00000432 3F01			 MOVE.W	   D1,-(A7)
+00000434 487AFF18		 PEA	   K.14(PC)			         CODE.+$34E
+00000438 7204			 MOVEQ	   #4,D1			         $4
+0000043A 3F01			 MOVE.W	   D1,-(A7)
+0000043C 4EB900000000		 JSR	   C.MVFF
+00000442 486EFFC4		 PEA	   -62+2(A6)			         BUCKET_FILE_NAME
+00000446 3F2EFFC2		 MOVE.W	   -62(A6),-(A7)		         BUCKET_FILE_NAME
+0000044A 4EB900000000		 JSR	   C.MVFR
+00000450 486EFF74		 PEA	   -140(A6)			         $FFFFFF74
+00000454 3F00			 MOVE.W	   D0,-(A7)
+00000456 7031			 MOVEQ	   #49,D0			         $31
+00000458 3F00			 MOVE.W	   D0,-(A7)
+0000045A 4EB900000000		 JSR	   T.RESET
+00000460 2B5F0046		 MOVE.L	   (A7)+,STATIC.+70(A5)		         BUCKET_FILE
+		      *							       LINE 3/16
+00000464 202D0046		 MOVE.L	   STATIC.+70(A5),D0		         BUCKET_FILE
+00000468 4A80			 TST.L	   D00000046A 6606			 BNE.S	   X.5.5(PC)
+0000046C 4EB900000000		 JSR	   E.FILE
+00000472 2F00	      X.5.5	 MOVE.L	   D0,-(A7)
+00000474 4EB900000000		 JSR	   I.FILSTA
+0000047A 4A5F			 TST.W	   (A7)+
+0000047C 6712			 BEQ.S	   L.5.5(PC)
+		      *							       LINE 3/17
+0000047E 41FAFED2     L.5.4	 LEA	   K.15(PC),A0			         CODE.+$352
+00000482 2D48FFEA		 MOVE.L	   A0,-22(A6)			         $FFFFFFEA
+00000486 3D7C0010FFE8		 MOVE.W	   #16,-24(A6)			         $10  $FFFFFFE8
+0000048C 6100FE62		 BSR.L	   B.3(PC)			         ERROR = CODE.+$2F0
+		      *							       LINE 3/18
+00000490 202D0000     L.5.5	 MOVE.L	   TTYOUTPUT(A5),D0		         TTYOUTPUT
+00000494 4A80			 TST.L	   D0
+00000496 6606			 BNE.S	   X.5.6(PC)
+00000498 4EB900000000		 JSR	   E.FILE
+0000049E 7224	      X.5.6	 MOVEQ	   #36,D1			         $24
+000004A0 3F01			 MOVE.W	   D1,-(A7)
+000004A2 7204			 MOVEQ	   #4,D1			         $4
+000004A4 3F01			 MOVE.W	   D1,-(A7)
+000004A6 487AFEBA		 PEA	   K.16(PC)			         CODE.+$362
+000004AA 2F00			 MOVE.L	   D0,-(A7)
+000004AC 4EB900000000		 JSR	   T.WRITE
+		      *							       LINE 3/19
+000004B2 202D0000		 MOVE.L	   TTYOUTPUT(A5),D0		         TTYOUTPUT
+000004B6 4A80			 TST.L	   D0
+000004B8 6606			 BNE.S	   X.5.7(PC)
+000004BA 4EB900000000		 JSR	   E.FILE
+000004C0 2F00	      X.5.7	 MOVE.L	   D0,-(A7)
+000004C2 4EB900000000		 JSR	   T.BREAK
+		      *							       LINE 3/20
+000004C8 202D0000		 MOVE.L	   TTY(A5),D0			         TTY
+000004CC 4A80			 TST.L	   D0
+000004CE 6606			 BNE.S	   X.5.8(PC)
+000004D0 4EB900000000		 JSR	   E.FILE
+000004D6 2F00	      X.5.8	 MOVE.L	   D0,-(A7)
+000004D8 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 3/21
+000004DE 202D0000		 MOVE.L	   TTY(A5),D0			         TTY
+000004E2 4A80			 TST.L	   D0
+000004E4 6606			 BNE.S	   X.5.9(PC)
+000004E6 4EB900000000		 JSR	   E.FILE
+000004EC 7224	      X.5.9	 MOVEQ	   #36,D1			         $24
+000004EE 3F01			 MOVE.W	   D1,-(A7)
+000004F0 720B			 MOVEQ	   #11,D1			         $B000004F2 3F01			 MOVE.W	   D1,-(A7)
+000004F4 486EFF9C		 PEA	   -100(A6)			         RESULT_FILE_NAME
+000004F8 2F00			 MOVE.L	   D0,-(A7)
+000004FA 4EB900000000		 JSR	   T.READ
+		      *							       LINE 3/22
+00000500 487AFE84		 PEA	   K.17(PC)			         CODE.+$386
+00000504 4267			 CLR.W	   -(A7)
+00000506 486EFF9E		 PEA	   -100+2(A6)			         RESULT_FILE_NAME
+0000050A 3F2EFF9C		 MOVE.W	   -100(A6),-(A7)		         RESULT_FILE_NAME
+0000050E 4EB900000000		 JSR	   C.CPFF
+00000514 6606			 BNE.S	   L.5.7(PC)
+		      *							       LINE 3/23
+00000516 4EB900000000 L.5.6	 JSR	   M.STOP
+		      *							       LINE 3/24
+0000051C 302EFF9C     L.5.7	 MOVE.W	   -100(A6),D0			         RESULT_FILE_NAME
+00000520 5840			 ADDQ.W	   #4,D0			         $4
+00000522 486EFF74		 PEA	   -140(A6)			         $FFFFFF74
+00000526 7228			 MOVEQ	   #40,D1			         $28
+00000528 3F01			 MOVE.W	   D1,-(A7)
+0000052A 487AFE5A		 PEA	   K.18(PC)			         CODE.+$386
+0000052E 7204			 MOVEQ	   #4,D1			         $4
+00000530 3F01			 MOVE.W	   D1,-(A7)
+00000532 4EB900000000		 JSR	   C.MVFF
+00000538 486EFF9E		 PEA	   -100+2(A6)			         RESULT_FILE_NAME
+0000053C 3F2EFF9C		 MOVE.W	   -100(A6),-(A7)		         RESULT_FILE_NAME
+00000540 4EB900000000		 JSR	   C.MVFR
+00000546 486EFF74		 PEA	   -140(A6)			         $FFFFFF74
+0000054A 3F00			 MOVE.W	   D0,-(A7)
+0000054C 7032			 MOVEQ	   #50,D0			         $32
+0000054E 3F00			 MOVE.W	   D0,-(A7)
+00000550 4EB900000000		 JSR	   T.REWRIT
+00000556 2B5F004A		 MOVE.L	   (A7)+,STATIC.+74(A5)		         RESULT_FILE
+		      *							       LINE 3/25
+0000055A 202D004A		 MOVE.L	   STATIC.+74(A5),D0		         RESULT_FILE
+0000055E 4A80			 TST.L	   D0
+00000560 6606			 BNE.S	   X.5.10(PC)
+00000562 4EB900000000		 JSR	   E.FILE
+00000568 2F00	      X.5.10	 MOVE.L	   D0,-(A7)
+0000056A 4EB900000000		 JSR	   I.FILSTA
+00000570 4A5F			 TST.W	   (A7)+
+00000572 6712			 BEQ.S	   L.5.9(PC)
+		      *							       LINE 3/26
+00000574 41FAFE14     L.5.8	 LEA	   K.19(PC),A0			         CODE.+$38A
+00000578 2D48FFEA		 MOVE.L	   A0,-22(A6)			         $FFFFFFEA
+0000057C 3D7C0010FFE8		 MOVE.W	   #16,-24(A6)			         $10  $FFFFFFE800000582 6100FD6C		 BSR.L	   B.3(PC)			         ERROR = CODE.+$2F0
+		      *							       LINE 3/27
+00000586 4E75	      L.5.9	 RTS	   
+		      *
+		      *		 Constant area for subroutine GET_PARAMETERS
+		      *
+00000588 3C4D6F6E6974 K.20	 DC.B	   '<Monitor> Single Step or Delay Sampling mode (SS/DS): '
+000005BE 4453	      K.21	 DC.B	   'DS'
+000005C0 5353	      K.22	 DC.B	   'SS'
+000005C2 3C4D6F6E6974 K.23	 DC.B	   '<Monitor> Error in input, please enter "SS" or "DS".'
+000005F6 5353	      K.24	 DC.B	   'SS'
+000005F8 3C4D6F6E6974 K.25	 DC.B	   '<Monitor> Step increment (1-1000): '
+0000061B 00000001		 DS.B	   1
+0000061C 3C4D6F6E6974 K.26	 DC.B	   '<Monitor> Error in input, please enter a number between '
+00000654 3120616E6420 K.27	 DC.B	   '1 and 1000.'
+0000065F 00000001		 DS.B	   1
+00000660 3C4D6F6E6974 K.28	 DC.B	   '<Monitor> Delay increment, in milliseconds (1-1000): '
+00000695 00000001		 DS.B	   1
+00000696 3C4D6F6E6974 K.29	 DC.B	   '<Monitor> Error in input, please enter a number between '
+000006CE 3120616E6420 K.30	 DC.B	   '1 and 1000.'
+000006D9 00000001		 DS.B	   1
+000006DA 3C4D6F6E6974 K.31	 DC.B	   '<Monitor> Trace mode (Y/N): '
+000006F6 3C4D6F6E6974 K.32	 DC.B	   '<Monitor> Error in input, please enter "Y" or "N".'
+		      *
+		      *		 Begin subroutine GET_PARAMETERS
+		      *
+00000728	      B.6
+		      *							       LINE 4/8
+		      *							       LINE 4/9
+00000728 7000	      L.6.1	 MOVEQ	   #0,D0			         $0
+0000072A 1D40FFE7		 MOVE.B	   D0,-25(A6)			         LOCAL_FLAG
+		      *							       LINE 4/10
+0000072E 4A2EFFE7     L.6.2	 TST.B	   -25(A6)			         LOCAL_FLAG
+00000732 66000130		 BNE.L	   L.6.9(PC)
+		      *							       LINE 4/10 (2)
+		      *							       LINE 4/11
+00000736 202D0000     L.6.3	 MOVE.L	   TTYOUTPUT(A5),D0		         TTYOUTPUT
+0000073A 4A80			 TST.L	   D0
+0000073C 6606			 BNE.S	   X.6.1(PC)
+0000073E 4EB900000000		 JSR	   E.FILE
+00000744 7236	      X.6.1	 MOVEQ	   #54,D1			         $36
+00000746 3F01			 MOVE.W	   D1,-(A7)
+00000748 7204			 MOVEQ	   #4,D1			         $4
+0000074A 3F01			 MOVE.W	   D1,-(A7)
+0000074C 487AFE3A		 PEA	   K.20(PC)			         CODE.+$58800000750 2F00			 MOVE.L	   D0,-(A7)
+00000752 4EB900000000		 JSR	   T.WRITE
+		      *							       LINE 4/12
+00000758 202D0000		 MOVE.L	   TTYOUTPUT(A5),D0		         TTYOUTPUT
+0000075C 4A80			 TST.L	   D0
+0000075E 6606			 BNE.S	   X.6.2(PC)
+00000760 4EB900000000		 JSR	   E.FILE
+00000766 2F00	      X.6.2	 MOVE.L	   D0,-(A7)
+00000768 4EB900000000		 JSR	   T.BREAK
+		      *							       LINE 4/13
+0000076E 202D0000		 MOVE.L	   TTY(A5),D0			         TTY
+00000772 4A80			 TST.L	   D0
+00000774 6606			 BNE.S	   X.6.3(PC)
+00000776 4EB900000000		 JSR	   E.FILE
+0000077C 2F00	      X.6.3	 MOVE.L	   D0,-(A7)
+0000077E 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 4/14
+00000784 202D0000		 MOVE.L	   TTY(A5),D0			         TTY
+00000788 4A80			 TST.L	   D0
+0000078A 6606			 BNE.S	   X.6.4(PC)
+0000078C 4EB900000000		 JSR	   E.FILE
+00000792 7250	      X.6.4	 MOVEQ	   #80,D1			         $50
+00000794 3F01			 MOVE.W	   D1,-(A7)
+00000796 720B			 MOVEQ	   #11,D1			         $B
+00000798 3F01			 MOVE.W	   D1,-(A7)
+0000079A 486EFF94		 PEA	   -108(A6)			         LOCAL_BUFFER
+0000079E 2F00			 MOVE.L	   D0,-(A7)
+000007A0 4EB900000000		 JSR	   T.READ
+		      *							       LINE 4/15
+000007A6 3D6EFF94FF94		 MOVE.W	   -108(A6),-108(A6)		         LOCAL_BUFFER  LOCAL_B
+000007AC 486EFF96		 PEA	   -108+2(A6)			         LOCAL_BUFFER
+000007B0 7050			 MOVEQ	   #80,D0			         $50
+000007B2 3F00			 MOVE.W	   D0,-(A7)
+000007B4 486EFF96		 PEA	   -108+2(A6)			         LOCAL_BUFFER
+000007B8 3F2EFF94		 MOVE.W	   -108(A6),-(A7)		         LOCAL_BUFFER
+000007BC 4EB900000000		 JSR	   C.MVFFU
+		      *							       LINE 4/16
+000007C2 7002			 MOVEQ	   #2,D0			         $2
+000007C4 B06EFF94		 CMP.W	   -108(A6),D0			         LOCAL_BUFFER
+000007C8 626C			 BHI.S	   L.6.7(PC)
+000007CA 7000	      L.6.4	 MOVEQ	   #0,D0			         $0
+000007CC 302EFF94		 MOVE.W	   -108(A6),D0			         LOCAL_BUFFER
+000007D0 90BC00000000		 SUB.L	   #0,D0			         $0
+000007D6 0C8000000002		 CMPI.L	   #2,D0			         $2
+000007DC 6C06			 BGE.S	   X.6.6(PC)000007DE 4EB900000000 X.6.5	 JSR	   E.SUBSTR
+000007E4 487AFDD8     X.6.6	 PEA	   K.21(PC)			         CODE.+$5BE
+000007E8 7002			 MOVEQ	   #2,D0			         $2
+000007EA 3F00			 MOVE.W	   D0,-(A7)
+000007EC 486EFF96		 PEA	   -108+2(A6)			         LOCAL_BUFFER
+000007F0 7002			 MOVEQ	   #2,D0			         $2
+000007F2 3F00			 MOVE.W	   D0,-(A7)
+000007F4 4EB900000000		 JSR	   C.CPFF
+000007FA 6732			 BEQ.S	   L.6.6(PC)
+000007FC 7000	      L.6.5	 MOVEQ	   #0,D0			         $0
+000007FE 302EFF94		 MOVE.W	   -108(A6),D0			         LOCAL_BUFFER
+00000802 90BC00000000		 SUB.L	   #0,D0			         $0
+00000808 0C8000000002		 CMPI.L	   #2,D0			         $2
+0000080E 6C06			 BGE.S	   X.6.8(PC)
+00000810 4EB900000000 X.6.7	 JSR	   E.SUBSTR
+00000816 487AFDA8     X.6.8	 PEA	   K.22(PC)			         CODE.+$5C0
+0000081A 7002			 MOVEQ	   #2,D0			         $2
+0000081C 3F00			 MOVE.W	   D0,-(A7)
+0000081E 486EFF96		 PEA	   -108+2(A6)			         LOCAL_BUFFER
+00000822 7002			 MOVEQ	   #2,D0			         $2
+00000824 3F00			 MOVE.W	   D0,-(A7)
+00000826 4EB900000000		 JSR	   C.CPFF
+0000082C 6608			 BNE.S	   L.6.7(PC)
+		      *							       LINE 4/19
+0000082E 7001	      L.6.6	 MOVEQ	   #1,D0			         $1
+00000830 1D40FFE7		 MOVE.B	   D0,-25(A6)			         LOCAL_FLAG
+00000834 602A			 BRA.S	   L.6.8(PC)
+		      *							       LINE 4/21
+00000836 202D0000     L.6.7	 MOVE.L	   TTYOUTPUT(A5),D0		         TTYOUTPUT
+0000083A 4A80			 TST.L	   D0
+0000083C 6606			 BNE.S	   X.6.9(PC)
+0000083E 4EB900000000		 JSR	   E.FILE
+00000844 7234	      X.6.9	 MOVEQ	   #52,D1			         $34
+00000846 3F01			 MOVE.W	   D1,-(A7)
+00000848 7204			 MOVEQ	   #4,D1			         $4
+0000084A 3F01			 MOVE.W	   D1,-(A7)
+0000084C 487AFD74		 PEA	   K.23(PC)			         CODE.+$5C2
+00000850 2F00			 MOVE.L	   D0,-(A7)
+00000852 4EB900000000		 JSR	   T.WRITE
+00000858 2F00			 MOVE.L	   D0,-(A7)
+0000085A 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 4/22
+00000860 6000FECC     L.6.8	 BRA.L	   L.6.2(PC)
+		      *							       LINE 4/23
+00000864 7000	      L.6.9	 MOVEQ	   #0,D0			         $000000866 302EFF94		 MOVE.W	   -108(A6),D0			         LOCAL_BUFFER
+0000086A 90BC00000000		 SUB.L	   #0,D0			         $0
+00000870 0C8000000002		 CMPI.L	   #2,D0			         $2
+00000876 6C06			 BGE.S	   X.6.11(PC)
+00000878 4EB900000000 X.6.10	 JSR	   E.SUBSTR
+0000087E 487AFD76     X.6.11	 PEA	   K.24(PC)			         CODE.+$5F6
+00000882 7002			 MOVEQ	   #2,D0			         $2
+00000884 3F00			 MOVE.W	   D0,-(A7)
+00000886 486EFF96		 PEA	   -108+2(A6)			         LOCAL_BUFFER
+0000088A 7002			 MOVEQ	   #2,D0			         $2
+0000088C 3F00			 MOVE.W	   D0,-(A7)
+0000088E 4EB900000000		 JSR	   C.CPFF
+00000894 6600011C		 BNE.L	   L.6.18(PC)
+		      *							       LINE 4/23 (2)
+		      *							       LINE 4/24
+00000898 7001	      L.6.10	 MOVEQ	   #1,D0			         $1
+0000089A 1B40002D		 MOVE.B	   D0,STATIC.+45(A5)		         SINGLE_STEP_FLAG
+		      *							       LINE 4/25
+0000089E 7000			 MOVEQ	   #0,D0			         $0
+000008A0 1D40FFE7		 MOVE.B	   D0,-25(A6)			         LOCAL_FLAG
+		      *							       LINE 4/26
+000008A4 4A2EFFE7     L.6.11	 TST.B	   -25(A6)			         LOCAL_FLAG
+000008A8 66000104		 BNE.L	   L.6.17(PC)
+		      *							       LINE 4/26 (2)
+		      *							       LINE 4/27
+000008AC 202D0000     L.6.12	 MOVE.L	   TTYOUTPUT(A5),D0		         TTYOUTPUT
+000008B0 4A80			 TST.L	   D0
+000008B2 6606			 BNE.S	   X.6.12(PC)
+000008B4 4EB900000000		 JSR	   E.FILE
+000008BA 7223	      X.6.12	 MOVEQ	   #35,D1			         $23
+000008BC 3F01			 MOVE.W	   D1,-(A7)
+000008BE 7204			 MOVEQ	   #4,D1			         $4
+000008C0 3F01			 MOVE.W	   D1,-(A7)
+000008C2 487AFD34		 PEA	   K.25(PC)			         CODE.+$5F8
+000008C6 2F00			 MOVE.L	   D0,-(A7)
+000008C8 4EB900000000		 JSR	   T.WRITE
+		      *							       LINE 4/28
+000008CE 202D0000		 MOVE.L	   TTYOUTPUT(A5),D0		         TTYOUTPUT
+000008D2 4A80			 TST.L	   D0
+000008D4 6606			 BNE.S	   X.6.13(PC)
+000008D6 4EB900000000		 JSR	   E.FILE
+000008DC 2F00	      X.6.13	 MOVE.L	   D0,-(A7)
+000008DE 4EB900000000		 JSR	   T.BREAK
+		      *							       LINE 4/29
+000008E4 202D0000		 MOVE.L	   TTY(A5),D0			         TTY000008E8 4A80			 TST.L	   D0
+000008EA 6606			 BNE.S	   X.6.14(PC)
+000008EC 4EB900000000		 JSR	   E.FILE
+000008F2 2F00	      X.6.14	 MOVE.L	   D0,-(A7)
+000008F4 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 4/30
+000008FA 202D0000		 MOVE.L	   TTY(A5),D0			         TTY
+000008FE 4A80			 TST.L	   D0
+00000900 6606			 BNE.S	   X.6.15(PC)
+00000902 4EB900000000		 JSR	   E.FILE
+00000908 7250	      X.6.15	 MOVEQ	   #80,D1			         $50
+0000090A 3F01			 MOVE.W	   D1,-(A7)
+0000090C 720B			 MOVEQ	   #11,D1			         $B
+0000090E 3F01			 MOVE.W	   D1,-(A7)
+00000910 486EFF94		 PEA	   -108(A6)			         LOCAL_BUFFER
+00000914 2F00			 MOVE.L	   D0,-(A7)
+00000916 4EB900000000		 JSR	   T.READ
+		      *							       LINE 4/31
+0000091C 486EFF44		 PEA	   -188(A6)			         $FFFFFF44
+00000920 3F2EFF94		 MOVE.W	   -108(A6),-(A7)		         LOCAL_BUFFER
+00000924 486EFF96		 PEA	   -108+2(A6)			         LOCAL_BUFFER
+00000928 3F2EFF94		 MOVE.W	   -108(A6),-(A7)		         LOCAL_BUFFER
+0000092C 4EB900000000		 JSR	   C.MVFF
+00000932 3D6EFF94FF42		 MOVE.W	   -108(A6),-190(A6)		         LOCAL_BUFFER  $FFFFFF
+00000938 426EFF40		 CLR.W	   -192(A6)			         $FFFFFF40
+0000093C 41EEFF44		 LEA	   -188(A6),A0			         $FFFFFF44
+00000940 2D48FF3C		 MOVE.L	   A0,-196(A6)			         $FFFFFF3C
+00000944 4267			 CLR.W	   -(A7)
+00000946 486D0008		 PEA	   STATIC.+8(A5)		         STEP_AMOUNT
+0000094A 486EFF3C		 PEA	   -196(A6)			         $FFFFFF3C
+0000094E 4EB900000000		 JSR	   I.GETSTR
+		      *							       LINE 4/32
+00000954 4AAD0008		 TST.L	   STATIC.+8(A5)		         STEP_AMOUNT
+00000958 6F0A			 BLE.S	   L.6.14(PC)
+0000095A 0CAD000003E8 L.6.13	 CMPI.L	   #1000,STATIC.+8(A5)		         $3E8  STEP_AMOUNT
+	 0008
+00000962 6F40			 BLE.S	   L.6.15(PC)
+		      *							       LINE 4/34
+00000964 202D0000     L.6.14	 MOVE.L	   TTYOUTPUT(A5),D0		         TTYOUTPUT
+00000968 4A80			 TST.L	   D0
+0000096A 6606			 BNE.S	   X.6.16(PC)
+0000096C 4EB900000000		 JSR	   E.FILE
+00000972 7238	      X.6.16	 MOVEQ	   #56,D1			         $38
+00000974 3F01			 MOVE.W	   D1,-(A7)
+00000976 7204			 MOVEQ	   #4,D1			         $400000978 3F01			 MOVE.W	   D1,-(A7)
+0000097A 487AFCA0		 PEA	   K.26(PC)			         CODE.+$61C
+0000097E 2F00			 MOVE.L	   D0,-(A7)
+00000980 4EB900000000		 JSR	   T.WRITE
+00000986 720B			 MOVEQ	   #11,D1			         $B
+00000988 3F01			 MOVE.W	   D1,-(A7)
+0000098A 7204			 MOVEQ	   #4,D1			         $4
+0000098C 3F01			 MOVE.W	   D1,-(A7)
+0000098E 487AFCC4		 PEA	   K.27(PC)			         CODE.+$654
+00000992 2F00			 MOVE.L	   D0,-(A7)
+00000994 4EB900000000		 JSR	   T.WRITE
+0000099A 2F00			 MOVE.L	   D0,-(A7)
+0000099C 4EB900000000		 JSR	   T.WRTLN
+000009A2 6006			 BRA.S	   L.6.16(PC)
+		      *							       LINE 4/37
+000009A4 7001	      L.6.15	 MOVEQ	   #1,D0			         $1
+000009A6 1D40FFE7		 MOVE.B	   D0,-25(A6)			         LOCAL_FLAG
+		      *							       LINE 4/38
+000009AA 6000FEF8     L.6.16	 BRA.L	   L.6.11(PC)
+		      *							       LINE 4/39
+000009AE 60000118     L.6.17	 BRA.L	   L.6.27(PC)
+000009B2	      L.6.18
+		      *							       LINE 4/40
+		      *							       LINE 4/41
+000009B2 7000	      L.6.19	 MOVEQ	   #0,D0			         $0
+000009B4 1B40002D		 MOVE.B	   D0,STATIC.+45(A5)		         SINGLE_STEP_FLAG
+		      *							       LINE 4/42
+000009B8 7000			 MOVEQ	   #0,D0			         $0
+000009BA 1D40FFE7		 MOVE.B	   D0,-25(A6)			         LOCAL_FLAG
+		      *							       LINE 4/43
+000009BE 4A2EFFE7     L.6.20	 TST.B	   -25(A6)			         LOCAL_FLAG
+000009C2 66000104		 BNE.L	   L.6.26(PC)
+		      *							       LINE 4/43 (2)
+		      *							       LINE 4/44
+000009C6 202D0000     L.6.21	 MOVE.L	   TTYOUTPUT(A5),D0		         TTYOUTPUT
+000009CA 4A80			 TST.L	   D0
+000009CC 6606			 BNE.S	   X.6.17(PC)
+000009CE 4EB900000000		 JSR	   E.FILE
+000009D4 7235	      X.6.17	 MOVEQ	   #53,D1			         $35
+000009D6 3F01			 MOVE.W	   D1,-(A7)
+000009D8 7204			 MOVEQ	   #4,D1			         $4
+000009DA 3F01			 MOVE.W	   D1,-(A7)
+000009DC 487AFC82		 PEA	   K.28(PC)			         CODE.+$660
+000009E0 2F00			 MOVE.L	   D0,-(A7)
+000009E2 4EB900000000		 JSR	   T.WRITE		      *							       LINE 4/45
+000009E8 202D0000		 MOVE.L	   TTYOUTPUT(A5),D0		         TTYOUTPUT
+000009EC 4A80			 TST.L	   D0
+000009EE 6606			 BNE.S	   X.6.18(PC)
+000009F0 4EB900000000		 JSR	   E.FILE
+000009F6 2F00	      X.6.18	 MOVE.L	   D0,-(A7)
+000009F8 4EB900000000		 JSR	   T.BREAK
+		      *							       LINE 4/46
+000009FE 202D0000		 MOVE.L	   TTY(A5),D0			         TTY
+00000A02 4A80			 TST.L	   D0
+00000A04 6606			 BNE.S	   X.6.19(PC)
+00000A06 4EB900000000		 JSR	   E.FILE
+00000A0C 2F00	      X.6.19	 MOVE.L	   D0,-(A7)
+00000A0E 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 4/47
+00000A14 202D0000		 MOVE.L	   TTY(A5),D0			         TTY
+00000A18 4A80			 TST.L	   D0
+00000A1A 6606			 BNE.S	   X.6.20(PC)
+00000A1C 4EB900000000		 JSR	   E.FILE
+00000A22 7250	      X.6.20	 MOVEQ	   #80,D1			         $50
+00000A24 3F01			 MOVE.W	   D1,-(A7)
+00000A26 720B			 MOVEQ	   #11,D1			         $B
+00000A28 3F01			 MOVE.W	   D1,-(A7)
+00000A2A 486EFF94		 PEA	   -108(A6)			         LOCAL_BUFFER
+00000A2E 2F00			 MOVE.L	   D0,-(A7)
+00000A30 4EB900000000		 JSR	   T.READ
+		      *							       LINE 4/48
+00000A36 486EFF44		 PEA	   -188(A6)			         $FFFFFF44
+00000A3A 3F2EFF94		 MOVE.W	   -108(A6),-(A7)		         LOCAL_BUFFER
+00000A3E 486EFF96		 PEA	   -108+2(A6)			         LOCAL_BUFFER
+00000A42 3F2EFF94		 MOVE.W	   -108(A6),-(A7)		         LOCAL_BUFFER
+00000A46 4EB900000000		 JSR	   C.MVFF
+00000A4C 3D6EFF94FF42		 MOVE.W	   -108(A6),-190(A6)		         LOCAL_BUFFER  $FFFFFF
+00000A52 426EFF40		 CLR.W	   -192(A6)			         $FFFFFF40
+00000A56 41EEFF44		 LEA	   -188(A6),A0			         $FFFFFF44
+00000A5A 2D48FF3C		 MOVE.L	   A0,-196(A6)			         $FFFFFF3C
+00000A5E 4267			 CLR.W	   -(A7)
+00000A60 486D0004		 PEA	   STATIC.+4(A5)		         DELAY_AMOUNT
+00000A64 486EFF3C		 PEA	   -196(A6)			         $FFFFFF3C
+00000A68 4EB900000000		 JSR	   I.GETSTR
+		      *							       LINE 4/49
+00000A6E 4AAD0004		 TST.L	   STATIC.+4(A5)		         DELAY_AMOUNT
+00000A72 6F0A			 BLE.S	   L.6.23(PC)
+00000A74 0CAD000003E8 L.6.22	 CMPI.L	   #1000,STATIC.+4(A5)		         $3E8  DELAY_AMOUNT
+	 000400000A7C 6F40			 BLE.S	   L.6.24(PC)
+		      *							       LINE 4/51
+00000A7E 202D0000     L.6.23	 MOVE.L	   TTYOUTPUT(A5),D0		         TTYOUTPUT
+00000A82 4A80			 TST.L	   D0
+00000A84 6606			 BNE.S	   X.6.21(PC)
+00000A86 4EB900000000		 JSR	   E.FILE
+00000A8C 7238	      X.6.21	 MOVEQ	   #56,D1			         $38
+00000A8E 3F01			 MOVE.W	   D1,-(A7)
+00000A90 7204			 MOVEQ	   #4,D1			         $4
+00000A92 3F01			 MOVE.W	   D1,-(A7)
+00000A94 487AFC00		 PEA	   K.29(PC)			         CODE.+$696
+00000A98 2F00			 MOVE.L	   D0,-(A7)
+00000A9A 4EB900000000		 JSR	   T.WRITE
+00000AA0 720B			 MOVEQ	   #11,D1			         $B
+00000AA2 3F01			 MOVE.W	   D1,-(A7)
+00000AA4 7204			 MOVEQ	   #4,D1			         $4
+00000AA6 3F01			 MOVE.W	   D1,-(A7)
+00000AA8 487AFC24		 PEA	   K.30(PC)			         CODE.+$6CE
+00000AAC 2F00			 MOVE.L	   D0,-(A7)
+00000AAE 4EB900000000		 JSR	   T.WRITE
+00000AB4 2F00			 MOVE.L	   D0,-(A7)
+00000AB6 4EB900000000		 JSR	   T.WRTLN
+00000ABC 6006			 BRA.S	   L.6.25(PC)
+		      *							       LINE 4/54
+00000ABE 7001	      L.6.24	 MOVEQ	   #1,D0			         $1
+00000AC0 1D40FFE7		 MOVE.B	   D0,-25(A6)			         LOCAL_FLAG
+		      *							       LINE 4/55
+00000AC4 6000FEF8     L.6.25	 BRA.L	   L.6.20(PC)
+00000AC8	      L.6.26
+		      *							       LINE 4/56
+		      *							       LINE 4/57
+00000AC8 7000	      L.6.27	 MOVEQ	   #0,D0			         $0
+00000ACA 1D40FFE7		 MOVE.B	   D0,-25(A6)			         LOCAL_FLAG
+		      *							       LINE 4/58
+00000ACE 4A2EFFE7     L.6.28	 TST.B	   -25(A6)			         LOCAL_FLAG
+00000AD2 66000126		 BNE.L	   L.6.35(PC)
+		      *							       LINE 4/58 (2)
+		      *							       LINE 4/59
+00000AD6 202D0000     L.6.29	 MOVE.L	   TTYOUTPUT(A5),D0		         TTYOUTPUT
+00000ADA 4A80			 TST.L	   D0
+00000ADC 6606			 BNE.S	   X.6.22(PC)
+00000ADE 4EB900000000		 JSR	   E.FILE
+00000AE4 721C	      X.6.22	 MOVEQ	   #28,D1			         $1C
+00000AE6 3F01			 MOVE.W	   D1,-(A7)
+00000AE8 7204			 MOVEQ	   #4,D1			         $400000AEA 3F01			 MOVE.W	   D1,-(A7)
+00000AEC 487AFBEC		 PEA	   K.31(PC)			         CODE.+$6DA
+00000AF0 2F00			 MOVE.L	   D0,-(A7)
+00000AF2 4EB900000000		 JSR	   T.WRITE
+		      *							       LINE 4/60
+00000AF8 202D0000		 MOVE.L	   TTYOUTPUT(A5),D0		         TTYOUTPUT
+00000AFC 4A80			 TST.L	   D0
+00000AFE 6606			 BNE.S	   X.6.23(PC)
+00000B00 4EB900000000		 JSR	   E.FILE
+00000B06 2F00	      X.6.23	 MOVE.L	   D0,-(A7)
+00000B08 4EB900000000		 JSR	   T.BREAK
+		      *							       LINE 4/61
+00000B0E 202D0000		 MOVE.L	   TTY(A5),D0			         TTY
+00000B12 4A80			 TST.L	   D0
+00000B14 6606			 BNE.S	   X.6.24(PC)
+00000B16 4EB900000000		 JSR	   E.FILE
+00000B1C 2F00	      X.6.24	 MOVE.L	   D0,-(A7)
+00000B1E 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 4/62
+00000B24 202D0000		 MOVE.L	   TTY(A5),D0			         TTY
+00000B28 4A80			 TST.L	   D0
+00000B2A 6606			 BNE.S	   X.6.25(PC)
+00000B2C 4EB900000000		 JSR	   E.FILE
+00000B32 7250	      X.6.25	 MOVEQ	   #80,D1			         $50
+00000B34 3F01			 MOVE.W	   D1,-(A7)
+00000B36 720B			 MOVEQ	   #11,D1			         $B
+00000B38 3F01			 MOVE.W	   D1,-(A7)
+00000B3A 486EFF94		 PEA	   -108(A6)			         LOCAL_BUFFER
+00000B3E 2F00			 MOVE.L	   D0,-(A7)
+00000B40 4EB900000000		 JSR	   T.READ
+		      *							       LINE 4/63
+00000B46 3D6EFF94FF94		 MOVE.W	   -108(A6),-108(A6)		         LOCAL_BUFFER  LOCAL_B
+00000B4C 486EFF96		 PEA	   -108+2(A6)			         LOCAL_BUFFER
+00000B50 7050			 MOVEQ	   #80,D0			         $50
+00000B52 3F00			 MOVE.W	   D0,-(A7)
+00000B54 486EFF96		 PEA	   -108+2(A6)			         LOCAL_BUFFER
+00000B58 3F2EFF94		 MOVE.W	   -108(A6),-(A7)		         LOCAL_BUFFER
+00000B5C 4EB900000000		 JSR	   C.MVFFU
+		      *							       LINE 4/64
+00000B62 4A6EFF94		 TST.W	   -108(A6)			         LOCAL_BUFFER
+00000B66 6764			 BEQ.S	   L.6.33(PC)
+00000B68 7000	      L.6.30	 MOVEQ	   #0,D0			         $0
+00000B6A 302EFF94		 MOVE.W	   -108(A6),D0			         LOCAL_BUFFER
+00000B6E 90BC00000000		 SUB.L	   #0,D0			         $0
+00000B74 0C8000000001		 CMPI.L	   #1,D0			         $100000B7A 6C06			 BGE.S	   X.6.27(PC)
+00000B7C 4EB900000000 X.6.26	 JSR	   E.SUBSTR
+00000B82 7059	      X.6.27	 MOVEQ	   #89,D0			         $59
+00000B84 1F00			 MOVE.B	   D0,-(A7)
+00000B86 486EFF96		 PEA	   -108+2(A6)			         LOCAL_BUFFER
+00000B8A 7001			 MOVEQ	   #1,D0			         $1
+00000B8C 3F00			 MOVE.W	   D0,-(A7)
+00000B8E 4EB900000000		 JSR	   C.CPFC
+00000B94 672E			 BEQ.S	   L.6.32(PC)
+00000B96 7000	      L.6.31	 MOVEQ	   #0,D0			         $0
+00000B98 302EFF94		 MOVE.W	   -108(A6),D0			         LOCAL_BUFFER
+00000B9C 90BC00000000		 SUB.L	   #0,D0			         $0
+00000BA2 0C8000000001		 CMPI.L	   #1,D0			         $1
+00000BA8 6C06			 BGE.S	   X.6.29(PC)
+00000BAA 4EB900000000 X.6.28	 JSR	   E.SUBSTR
+00000BB0 704E	      X.6.29	 MOVEQ	   #78,D0			         $4E
+00000BB2 1F00			 MOVE.B	   D0,-(A7)
+00000BB4 486EFF96		 PEA	   -108+2(A6)			         LOCAL_BUFFER
+00000BB8 7001			 MOVEQ	   #1,D0			         $1
+00000BBA 3F00			 MOVE.W	   D0,-(A7)
+00000BBC 4EB900000000		 JSR	   C.CPFC
+00000BC2 6608			 BNE.S	   L.6.33(PC)
+		      *							       LINE 4/67
+00000BC4 7001	      L.6.32	 MOVEQ	   #1,D0			         $1
+00000BC6 1D40FFE7		 MOVE.B	   D0,-25(A6)			         LOCAL_FLAG
+00000BCA 602A			 BRA.S	   L.6.34(PC)
+		      *							       LINE 4/69
+00000BCC 202D0000     L.6.33	 MOVE.L	   TTYOUTPUT(A5),D0		         TTYOUTPUT
+00000BD0 4A80			 TST.L	   D0
+00000BD2 6606			 BNE.S	   X.6.30(PC)
+00000BD4 4EB900000000		 JSR	   E.FILE
+00000BDA 7232	      X.6.30	 MOVEQ	   #50,D1			         $32
+00000BDC 3F01			 MOVE.W	   D1,-(A7)
+00000BDE 7204			 MOVEQ	   #4,D1			         $4
+00000BE0 3F01			 MOVE.W	   D1,-(A7)
+00000BE2 487AFB12		 PEA	   K.32(PC)			         CODE.+$6F6
+00000BE6 2F00			 MOVE.L	   D0,-(A7)
+00000BE8 4EB900000000		 JSR	   T.WRITE
+00000BEE 2F00			 MOVE.L	   D0,-(A7)
+00000BF0 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 4/70
+00000BF6 6000FED6     L.6.34	 BRA.L	   L.6.28(PC)
+		      *							       LINE 4/71
+00000BFA 7000	      L.6.35	 MOVEQ	   #0,D0			         $0
+00000BFC 1B40002C		 MOVE.B	   D0,STATIC.+44(A5)		         TRACE_FLAG		      *							       LINE 4/72
+00000C00 7000			 MOVEQ	   #0,D0			         $0
+00000C02 302EFF94		 MOVE.W	   -108(A6),D0			         LOCAL_BUFFER
+00000C06 90BC00000000		 SUB.L	   #0,D0			         $0
+00000C0C 0C8000000001		 CMPI.L	   #1,D0			         $1
+00000C12 6C06			 BGE.S	   X.6.32(PC)
+00000C14 4EB900000000 X.6.31	 JSR	   E.SUBSTR
+00000C1A 7059	      X.6.32	 MOVEQ	   #89,D0			         $59
+00000C1C 1F00			 MOVE.B	   D0,-(A7)
+00000C1E 486EFF96		 PEA	   -108+2(A6)			         LOCAL_BUFFER
+00000C22 7001			 MOVEQ	   #1,D0			         $1
+00000C24 3F00			 MOVE.W	   D0,-(A7)
+00000C26 4EB900000000		 JSR	   C.CPFC
+00000C2C 6606			 BNE.S	   L.6.37(PC)
+		      *							       LINE 4/73
+00000C2E 7001	      L.6.36	 MOVEQ	   #1,D0			         $1
+00000C30 1B40002C		 MOVE.B	   D0,STATIC.+44(A5)		         TRACE_FLAG
+		      *							       LINE 4/74
+00000C34 4E75	      L.6.37	 RTS	   
+		      *
+		      *		 Constant area for subroutine SET_UP_BUCKETS
+		      *
+00000C36 4D6F64756C65 K.33	 DC.B	   'Module'
+		      *
+		      *		 Begin subroutine SET_UP_BUCKETS
+		      *
+00000C3C	      B.7
+		      *							       LINE 5/9
+		      *							       LINE 5/10
+00000C3C 202D0020     L.7.1	 MOVE.L	   STATIC.+32(A5),D0		         NUMBER_BUCKETS
+00000C40 4A80			 TST.L	   D0
+00000C42 6C06			 BGE.S	   X.7.1(PC)
+00000C44 4EB900000000		 JSR	   E.VALUE
+00000C4A 2F00	      X.7.1	 MOVE.L	   D0,-(A7)
+00000C4C 721A			 MOVEQ	   #26,D1			         $1A
+00000C4E 2F01			 MOVE.L	   D1,-(A7)
+00000C50 4EB900000000		 JSR	   G.I4MULT
+00000C56 221F			 MOVE.L	   (A7)+,D1
+00000C58 5881			 ADDQ.L	   #4,D1			         $4
+00000C5A 2F01			 MOVE.L	   D1,-(A7)
+00000C5C 4EB900000000		 JSR	   H.NEW
+00000C62 221F			 MOVE.L	   (A7)+,D1
+00000C64 2B410042		 MOVE.L	   D1,STATIC.+66(A5)		         BUCKET_ARRAY
+00000C68 2041			 MOVEA.L   D1,A0
+00000C6A 2080			 MOVE.L	   D0,(A0)		      *							       LINE 5/11
+00000C6C 202D0020		 MOVE.L	   STATIC.+32(A5),D0		         NUMBER_BUCKETS
+00000C70 2D40FFC0		 MOVE.L	   D0,-64(A6)			         V.37
+00000C74 4A80			 TST.L	   D0
+00000C76 6F0001FA		 BLE.L	   L.7.8(PC)
+00000C7A 7001	      L.7.2	 MOVEQ	   #1,D0			         $1
+00000C7C 2D40FFE4		 MOVE.L	   D0,-28(A6)			         LOCAL_INDEX
+00000C80	      L.7.3
+		      *							       LINE 5/11 (2)
+		      *							       LINE 5/12
+00000C80 202D0046     L.7.4	 MOVE.L	   STATIC.+70(A5),D0		         BUCKET_FILE
+00000C84 4A80			 TST.L	   D0
+00000C86 6606			 BNE.S	   X.7.2(PC)
+00000C88 4EB900000000		 JSR	   E.FILE
+00000C8E 7214	      X.7.2	 MOVEQ	   #20,D1			         $14
+00000C90 3F01			 MOVE.W	   D1,-(A7)
+00000C92 720B			 MOVEQ	   #11,D1			         $B
+00000C94 3F01			 MOVE.W	   D1,-(A7)
+00000C96 486EFFCE		 PEA	   -50(A6)			         LOCAL_BUFFER
+00000C9A 2F00			 MOVE.L	   D0,-(A7)
+00000C9C 4EB900000000		 JSR	   T.READ
+00000CA2 2F00			 MOVE.L	   D0,-(A7)
+00000CA4 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 5/13
+00000CAA 7000			 MOVEQ	   #0,D0			         $0
+00000CAC 302EFFCE		 MOVE.W	   -50(A6),D0			         LOCAL_BUFFER
+00000CB0 90BC00000000		 SUB.L	   #0,D0			         $0
+00000CB6 0C8000000007		 CMPI.L	   #7,D0			         $7
+00000CBC 6C06			 BGE.S	   X.7.4(PC)
+00000CBE 4EB900000000 X.7.3	 JSR	   E.SUBSTR
+00000CC4 487AFF70     X.7.4	 PEA	   K.33(PC)			         CODE.+$C36
+00000CC8 7006			 MOVEQ	   #6,D0			         $6
+00000CCA 3F00			 MOVE.W	   D0,-(A7)
+00000CCC 486EFFD0		 PEA	   -50+2(A6)			         LOCAL_BUFFER
+00000CD0 7007			 MOVEQ	   #7,D0			         $7
+00000CD2 3F00			 MOVE.W	   D0,-(A7)
+00000CD4 4EB900000000		 JSR	   C.CPFF
+00000CDA 666E			 BNE.S	   L.7.6(PC)
+		      *							       LINE 5/13 (2)
+		      *							       LINE 5/14
+00000CDC 7000	      L.7.5	 MOVEQ	   #0,D0			         $0
+00000CDE 302EFFCE		 MOVE.W	   -50(A6),D0			         LOCAL_BUFFER
+00000CE2 5280			 ADDQ.L	   #1,D0			         $1
+00000CE4 5180			 SUBQ.L	   #8,D0			         $8
+00000CE6 7200			 MOVEQ	   #0,D1			         $000000CE8 322EFFCE		 MOVE.W	   -50(A6),D1			         LOCAL_BUFFER
+00000CEC 4A80			 TST.L	   D0
+00000CEE 6D06			 BLT.S	   X.7.5(PC)
+00000CF0 5F81			 SUBQ.L	   #7,D1			         $7
+00000CF2 B280			 CMP.L	   D0,D1
+00000CF4 6C06			 BGE.S	   X.7.6(PC)
+00000CF6 4EB900000000 X.7.5	 JSR	   E.SUBSTR
+00000CFC 3200	      X.7.6	 MOVE.W	   D0,D1
+00000CFE 0C410008		 CMPI.W	   #8,D1			         $8
+00000D02 6F04			 BLE.S	   X.7.7(PC)
+00000D04 323C0008		 MOVE.W	   #8,D1			         $8
+00000D08 3D41FFC4     X.7.7	 MOVE.W	   D1,-60(A6)			         LOCAL_MODULE_NAME
+00000D0C 486EFFC6		 PEA	   -60+2(A6)			         LOCAL_MODULE_NAME
+00000D10 7208			 MOVEQ	   #8,D1			         $8
+00000D12 3F01			 MOVE.W	   D1,-(A7)
+00000D14 486EFFD7		 PEA	   -50+9(A6)			         LOCAL_BUFFER
+00000D18 3F00			 MOVE.W	   D0,-(A7)
+00000D1A 4EB900000000		 JSR	   C.MVFF
+		      *							       LINE 5/15
+00000D20 202D0046		 MOVE.L	   STATIC.+70(A5),D0		         BUCKET_FILE
+00000D24 4A80			 TST.L	   D0
+00000D26 6606			 BNE.S	   X.7.8(PC)
+00000D28 4EB900000000		 JSR	   E.FILE
+00000D2E 7214	      X.7.8	 MOVEQ	   #20,D1			         $14
+00000D30 3F01			 MOVE.W	   D1,-(A7)
+00000D32 720B			 MOVEQ	   #11,D1			         $B
+00000D34 3F01			 MOVE.W	   D1,-(A7)
+00000D36 486EFFCE		 PEA	   -50(A6)			         LOCAL_BUFFER
+00000D3A 2F00			 MOVE.L	   D0,-(A7)
+00000D3C 4EB900000000		 JSR	   T.READ
+00000D42 2F00			 MOVE.L	   D0,-(A7)
+00000D44 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 5/16
+		      *							       LINE 5/17
+00000D4A 202EFFE4     L.7.6	 MOVE.L	   -28(A6),D0			         LOCAL_INDEX
+00000D4E 4A80			 TST.L	   D0
+00000D50 6E06			 BGT.S	   X.7.9(PC)
+00000D52 4EB900000000 X.7.10	 JSR	   E.INDEX
+00000D58 222D0042     X.7.9	 MOVE.L	   STATIC.+66(A5),D1		         BUCKET_ARRAY
+00000D5C 4A81			 TST.L	   D1
+00000D5E 6606			 BNE.S	   X.7.11(PC)
+00000D60 4EB900000000		 JSR	   E.PTR
+00000D66 2041	      X.7.11	 MOVEA.L   D1,A0
+00000D68 B090			 CMP.L	   (A0),D0
+00000D6A 6EE6			 BGT.S	   X.7.10(PC)00000D6C 2F00			 MOVE.L	   D0,-(A7)
+00000D6E 701A			 MOVEQ	   #26,D0			         $1A
+00000D70 2F00			 MOVE.L	   D0,-(A7)
+00000D72 4EB900000000		 JSR	   G.I4MULT
+00000D78 D1DF			 ADDA.L	   (A7)+,A0
+00000D7A 43E8FFEA		 LEA	   -22(A0),A1			         $FFFFFFEA
+00000D7E 2D49FFA8		 MOVE.L	   A1,W.7(A6)			         -88
+		      *							       LINE 5/17 (2)
+		      *							       LINE 5/18
+00000D82 206EFFA8     L.7.7	 MOVEA.L   W.7(A6),A0			         -88
+00000D86 302EFFC4		 MOVE.W	   -60(A6),D0			         LOCAL_MODULE_NAME
+00000D8A 43EEFFC4		 LEA	   -60(A6),A1			         LOCAL_MODULE_NAME
+00000D8E 41D0			 LEA	   (A0),A0
+00000D90 5240			 ADDQ.W	   #1,D0			         $1
+00000D92 E248			 LSR.W	   #1,D0			         $1
+00000D94 30D9	      X.7.12	 MOVE.W	   (A1)+,(A0)+
+00000D96 51C8FFFC		 DBF	   D0,X.7.12(PC)
+		      *							       LINE 5/19
+00000D9A 7000			 MOVEQ	   #0,D0			         $0
+00000D9C 302EFFCE		 MOVE.W	   -50(A6),D0			         LOCAL_BUFFER
+00000DA0 90BC00000000		 SUB.L	   #0,D0			         $0
+00000DA6 0C8000000008		 CMPI.L	   #8,D0			         $8
+00000DAC 6C06			 BGE.S	   X.7.14(PC)
+00000DAE 4EB900000000 X.7.13	 JSR	   E.SUBSTR
+00000DB4 486EFFB4     X.7.14	 PEA	   -76(A6)			         $FFFFFFB4
+00000DB8 7008			 MOVEQ	   #8,D0			         $8
+00000DBA 3F00			 MOVE.W	   D0,-(A7)
+00000DBC 486EFFD0		 PEA	   -50+2(A6)			         LOCAL_BUFFER
+00000DC0 7008			 MOVEQ	   #8,D0			         $8
+00000DC2 3F00			 MOVE.W	   D0,-(A7)
+00000DC4 4EB900000000		 JSR	   C.MVFF
+00000DCA 3D7C0008FFB2		 MOVE.W	   #8,-78(A6)			         $8  $FFFFFFB2
+00000DD0 426EFFB0		 CLR.W	   -80(A6)			         $FFFFFFB0
+00000DD4 41EEFFB4		 LEA	   -76(A6),A0			         $FFFFFFB4
+00000DD8 2D48FFAC		 MOVE.L	   A0,-84(A6)			         $FFFFFFAC
+00000DDC 206EFFA8		 MOVEA.L   W.7(A6),A0			         -88
+00000DE0 7008			 MOVEQ	   #8,D0			         $8
+00000DE2 2F00			 MOVE.L	   D0,-(A7)
+00000DE4 7050			 MOVEQ	   #80,D0			         $50
+00000DE6 3F00			 MOVE.W	   D0,-(A7)
+00000DE8 4868000E		 PEA	   14(A0)			         $E
+00000DEC 486EFFAC		 PEA	   -84(A6)			         $FFFFFFAC
+00000DF0 4EB900000000		 JSR	   I.GETSTR
+		      *							       LINE 5/20
+00000DF6 7000			 MOVEQ	   #0,D0			         $000000DF8 302EFFCE		 MOVE.W	   -50(A6),D0			         LOCAL_BUFFER
+00000DFC 90BC00000009		 SUB.L	   #9,D0			         $9
+00000E02 0C8000000003		 CMPI.L	   #3,D0			         $3
+00000E08 6C06			 BGE.S	   X.7.16(PC)
+00000E0A 4EB900000000 X.7.15	 JSR	   E.SUBSTR
+00000E10 486EFFB8     X.7.16	 PEA	   -72(A6)			         $FFFFFFB8
+00000E14 7003			 MOVEQ	   #3,D0			         $3
+00000E16 3F00			 MOVE.W	   D0,-(A7)
+00000E18 486EFFD9		 PEA	   -50+11(A6)			         LOCAL_BUFFER
+00000E1C 7003			 MOVEQ	   #3,D0			         $3
+00000E1E 3F00			 MOVE.W	   D0,-(A7)
+00000E20 4EB900000000		 JSR	   C.MVFF
+00000E26 3D7C0003FFB6		 MOVE.W	   #3,-74(A6)			         $3  $FFFFFFB6
+00000E2C 426EFFB4		 CLR.W	   -76(A6)			         $FFFFFFB4
+00000E30 41EEFFB8		 LEA	   -72(A6),A0			         $FFFFFFB8
+00000E34 2D48FFB0		 MOVE.L	   A0,-80(A6)			         $FFFFFFB0
+00000E38 206EFFA8		 MOVEA.L   W.7(A6),A0			         -88
+00000E3C 7003			 MOVEQ	   #3,D0			         $3
+00000E3E 2F00			 MOVE.L	   D0,-(A7)
+00000E40 7010			 MOVEQ	   #16,D0			         $10
+00000E42 3F00			 MOVE.W	   D0,-(A7)
+00000E44 4868000A		 PEA	   10(A0)			         $A
+00000E48 486EFFB0		 PEA	   -80(A6)			         $FFFFFFB0
+00000E4C 4EB900000000		 JSR	   I.GETSTR
+		      *							       LINE 5/21
+00000E52 206EFFA8		 MOVEA.L   W.7(A6),A0			         -88
+00000E56 7000			 MOVEQ	   #0,D0			         $0
+00000E58 21400016		 MOVE.L	   D0,22(A0)			         $16
+		      *							       LINE 5/22
+00000E5C 206EFFA8		 MOVEA.L   W.7(A6),A0			         -88
+		      *							       LINE 5/23
+00000E60 202EFFE4		 MOVE.L	   -28(A6),D0			         LOCAL_INDEX
+00000E64 5280			 ADDQ.L	   #1,D0			         $1
+00000E66 2D40FFE4		 MOVE.L	   D0,-28(A6)			         LOCAL_INDEX
+00000E6A B0AEFFC0		 CMP.L	   -64(A6),D0			         V.37
+00000E6E 6F00FE10		 BLE.L	   L.7.3(PC)
+		      *							       LINE 5/24
+00000E72 202D0020     L.7.8	 MOVE.L	   STATIC.+32(A5),D0		         NUMBER_BUCKETS
+00000E76 5380			 SUBQ.L	   #1,D0			         $1
+00000E78 2D40FFBC		 MOVE.L	   D0,-68(A6)			         V.38
+00000E7C 4A80			 TST.L	   D0
+00000E7E 6F000084		 BLE.L	   L.7.11(PC)
+00000E82 7001	      L.7.9	 MOVEQ	   #1,D0			         $1
+00000E84 2D40FFE4		 MOVE.L	   D0,-28(A6)			         LOCAL_INDEX
+		      *							       LINE 5/2500000E88 202EFFE4     L.7.10	 MOVE.L	   -28(A6),D0			         LOCAL_INDEX
+00000E8C 4A80			 TST.L	   D0
+00000E8E 6E06			 BGT.S	   X.7.17(PC)
+00000E90 4EB900000000 X.7.18	 JSR	   E.INDEX
+00000E96 222D0042     X.7.17	 MOVE.L	   STATIC.+66(A5),D1		         BUCKET_ARRAY
+00000E9A 4A81			 TST.L	   D1
+00000E9C 6606			 BNE.S	   X.7.19(PC)
+00000E9E 4EB900000000		 JSR	   E.PTR
+00000EA4 2041	      X.7.19	 MOVEA.L   D1,A0
+00000EA6 B090			 CMP.L	   (A0),D0
+00000EA8 6EE6			 BGT.S	   X.7.18(PC)
+00000EAA 2F00			 MOVE.L	   D0,-(A7)
+00000EAC 701A			 MOVEQ	   #26,D0			         $1A
+00000EAE 2F00			 MOVE.L	   D0,-(A7)
+00000EB0 4EB900000000		 JSR	   G.I4MULT
+00000EB6 D1DF			 ADDA.L	   (A7)+,A0
+00000EB8 202EFFE4		 MOVE.L	   -28(A6),D0			         LOCAL_INDEX
+00000EBC 5280			 ADDQ.L	   #1,D0			         $1
+00000EBE 4A80			 TST.L	   D0
+00000EC0 6E06			 BGT.S	   X.7.20(PC)
+00000EC2 4EB900000000 X.7.21	 JSR	   E.INDEX
+00000EC8 222D0042     X.7.20	 MOVE.L	   STATIC.+66(A5),D1		         BUCKET_ARRAY
+00000ECC 4A81			 TST.L	   D1
+00000ECE 6606			 BNE.S	   X.7.22(PC)
+00000ED0 4EB900000000		 JSR	   E.PTR
+00000ED6 2241	      X.7.22	 MOVEA.L   D1,A1
+00000ED8 B091			 CMP.L	   (A1),D0
+00000EDA 6EE6			 BGT.S	   X.7.21(PC)
+00000EDC 2F00			 MOVE.L	   D0,-(A7)
+00000EDE 701A			 MOVEQ	   #26,D0			         $1A
+00000EE0 2F00			 MOVE.L	   D0,-(A7)
+00000EE2 4EB900000000		 JSR	   G.I4MULT
+00000EE8 D3DF			 ADDA.L	   (A7)+,A1
+00000EEA 2029FFF8		 MOVE.L	   -8(A1),D0			         $FFFFFFF8
+00000EEE 5380			 SUBQ.L	   #1,D0			         $1
+00000EF0 2140FFFC		 MOVE.L	   D0,-4(A0)			         $FFFFFFFC
+00000EF4 202EFFE4		 MOVE.L	   -28(A6),D0			         LOCAL_INDEX
+00000EF8 5280			 ADDQ.L	   #1,D0			         $1
+00000EFA 2D40FFE4		 MOVE.L	   D0,-28(A6)			         LOCAL_INDEX
+00000EFE B0AEFFBC		 CMP.L	   -68(A6),D0			         V.38
+00000F02 6F84			 BLE.S	   L.7.10(PC)
+		      *							       LINE 5/27
+00000F04 202D0020     L.7.11	 MOVE.L	   STATIC.+32(A5),D0		         NUMBER_BUCKETS
+00000F08 4A80			 TST.L	   D0
+00000F0A 6E06			 BGT.S	   X.7.23(PC)00000F0C 4EB900000000 X.7.24	 JSR	   E.INDEX
+00000F12 222D0042     X.7.23	 MOVE.L	   STATIC.+66(A5),D1		         BUCKET_ARRAY
+00000F16 4A81			 TST.L	   D1
+00000F18 6606			 BNE.S	   X.7.25(PC)
+00000F1A 4EB900000000		 JSR	   E.PTR
+00000F20 2041	      X.7.25	 MOVEA.L   D1,A0
+00000F22 B090			 CMP.L	   (A0),D0
+00000F24 6EE6			 BGT.S	   X.7.24(PC)
+00000F26 2F00			 MOVE.L	   D0,-(A7)
+00000F28 701A			 MOVEQ	   #26,D0			         $1A
+00000F2A 2F00			 MOVE.L	   D0,-(A7)
+00000F2C 4EB900000000		 JSR	   G.I4MULT
+00000F32 D1DF			 ADDA.L	   (A7)+,A0
+00000F34 216D001CFFFC		 MOVE.L	   STATIC.+28(A5),-4(A0)	         PROGRAM_END_PC  $FFFF
+		      *							       LINE 5/28
+00000F3A 4E75			 RTS	   
+		      *
+		      *		 Constant area for subroutine GTASQ
+		      *
+00000F3C 4754415351   K.34	 DC.B	   'GTASQ'
+00000F41 00000001		 DS.B	   1
+00000F42 4754415351   K.35	 DC.B	   'GTASQ'
+00000F47 00000001		 DS.B	   1
+00000F48 4754415351   K.36	 DC.B	   'GTASQ'
+00000F4D 00000001		 DS.B	   1
+		      *
+		      *		 Begin subroutine GTASQ
+		      *
+00000F4E	      B.9
+		      *							       LINE 7/15
+		      *							       LINE 7/16
+00000F4E	      L.9.1
+		      *							       LINE 7/16 (2)
+		      *							       LINE 7/17
+00000F4E 2D6D002EFFD2 L.9.2	 MOVE.L	   STATIC.+46(A5),-46(A6)	         MONITOR_TASKNAME  PAR
+		      *							       LINE 7/18
+00000F54 7000			 MOVEQ	   #0,D0			         $0
+00000F56 2D40FFD6		 MOVE.L	   D0,-46+4(A6)			         PARAMETER_AREA
+		      *							       LINE 7/19
+00000F5A 7005			 MOVEQ	   #5,D0			         $5
+00000F5C 1D40FFDA		 MOVE.B	   D0,-46+8(A6)			         PARAMETER_AREA
+		      *							       LINE 7/20
+00000F60 1D7C00FFFFDB		 MOVE.B	   #255,-46+9(A6)		         $FF  PARAMETER_AREA
+		      *							       LINE 7/21
+00000F66 7064			 MOVEQ	   #100,D0			         $6400000F68 2D40FFDC		 MOVE.L	   D0,-46+10(A6)		         PARAMETER_AREA
+		      *							       LINE 7/22
+00000F6C 2D6D0010FFE0		 MOVE.L	   STATIC.+16(A5),-46+14(A6)	         ASR_ADDRESS  PARAMETE
+		      *							       LINE 7/23
+00000F72 7000			 MOVEQ	   #0,D0			         $0
+00000F74 2D40FFE4		 MOVE.L	   D0,-46+18(A6)		         PARAMETER_AREA
+		      *							       LINE 7/24
+		      *							       LINE 7/25
+00000F78 1D7C0001FFFE		 MOVE.B	   #1,-2(A6)			         $1  $FFFFFFFE
+00000F7E 3D7C0005FF68		 MOVE.W	   #5,-152(A6)			         $5  $FFFFFF68
+00000F84 486EFF6A		 PEA	   -150(A6)			         $FFFFFF6A
+00000F88 3F2EFF68		 MOVE.W	   -152(A6),-(A7)		         $FFFFFF68
+00000F8C 487AFFAE		 PEA	   K.34(PC)			         CODE.+$F3C
+00000F90 7005			 MOVEQ	   #5,D0			         $5
+00000F92 3F00			 MOVE.W	   D0,-(A7)
+00000F94 4EB900000000		 JSR	   C.MVFF
+00000F9A 41EEFF68		 LEA	   -152(A6),A0			         $FFFFFF68
+00000F9E 2D48FFFA		 MOVE.L	   A0,-6(A6)			         $FFFFFFFA
+00000FA2 6100F13C		 BSR.L	   B.8(PC)			         TRACE = CODE.+$E0
+		      *							       LINE 7/26
+00000FA6 486D0000		 PEA	   STATIC.+0(A5)		         RETURN_CODE
+00000FAA 41EEFFD2		 LEA	   -46(A6),A0			         PARAMETER_AREA
+00000FAE 2F08			 MOVE.L	   A0,-(A7)
+00000FB0 701F			 MOVEQ	   #31,D0			         $1F
+00000FB2 2F00			 MOVE.L	   D0,-(A7)
+00000FB4 486EFF6E		 PEA	   -146(A6)			         $FFFFFF6E
+00000FB8 4EB900000000		 JSR	   TRAP1			         TRAP1
+00000FBE 4A2EFF6E		 TST.B	   -146(A6)			         $FFFFFF6E
+00000FC2 660C			 BNE.S	   L.9.4(PC)
+		      *							       LINE 7/27
+00000FC4 487AFF7C     L.9.3	 PEA	   K.35(PC)			         CODE.+$F42
+00000FC8 7005			 MOVEQ	   #5,D0			         $5
+00000FCA 3F00			 MOVE.W	   D0,-(A7)
+00000FCC 6100F060		 BSR.L	   B.4(PC)			         ABORT = CODE.+$2E
+		      *							       LINE 7/28
+00000FD0 422EFFFE     L.9.4	 CLR.B	   -2(A6)			         $FFFFFFFE
+00000FD4 3D7C0005FF68		 MOVE.W	   #5,-152(A6)			         $5  $FFFFFF68
+00000FDA 486EFF6A		 PEA	   -150(A6)			         $FFFFFF6A
+00000FDE 3F2EFF68		 MOVE.W	   -152(A6),-(A7)		         $FFFFFF68
+00000FE2 487AFF64		 PEA	   K.36(PC)			         CODE.+$F48
+00000FE6 7005			 MOVEQ	   #5,D0			         $5
+00000FE8 3F00			 MOVE.W	   D0,-(A7)
+00000FEA 4EB900000000		 JSR	   C.MVFF
+00000FF0 41EEFF68		 LEA	   -152(A6),A0			         $FFFFFF68
+00000FF4 2D48FFFA		 MOVE.L	   A0,-6(A6)			         $FFFFFFFA00000FF8 6100F0E6		 BSR.L	   B.8(PC)			         TRACE = CODE.+$E0
+		      *							       LINE 7/29
+00000FFC 4E75			 RTS	   
+		      *
+		      *		 Constant area for subroutine LOAD
+		      *
+00000FFE 4C4F4144     K.37	 DC.B	   'LOAD'
+00001002 4C4F4144     K.38	 DC.B	   'LOAD'
+00001006 4C4F4144     K.39	 DC.B	   'LOAD'
+		      *
+		      *		 Begin subroutine LOAD
+		      *
+0000100A	      B.10
+		      *							       LINE 8/38
+		      *							       LINE 8/39
+0000100A	      L.10.1
+		      *							       LINE 8/39 (2)
+		      *							       LINE 8/40
+0000100A 2D6D0032FF70 L.10.2	 MOVE.L	   STATIC.+50(A5),-144(A6)	         SUB_TASK_TASKNAME  PA
+		      *							       LINE 8/41
+00001010 7000			 MOVEQ	   #0,D0			         $0
+00001012 2D40FF74		 MOVE.L	   D0,-144+4(A6)		         PARAMETER_AREA
+		      *							       LINE 8/42
+00001016 3D7C8000FF78		 MOVE.W	   #32768,-144+8(A6)		         $8000  PARAMETER_AREA
+		      *							       LINE 8/43
+0000101C 42AEFF7A		 CLR.L	   -144+10(A6)			         PARAMETER_AREA
+		      *							       LINE 8/44
+00001020 7000			 MOVEQ	   #0,D0			         $0
+00001022 2D40FF7E		 MOVE.L	   D0,-144+14(A6)		         PARAMETER_AREA
+		      *							       LINE 8/45
+00001026 7000			 MOVEQ	   #0,D0			         $0
+00001028 1D40FF82		 MOVE.B	   D0,-144+18(A6)		         PARAMETER_AREA
+		      *							       LINE 8/46
+0000102C 7000			 MOVEQ	   #0,D0			         $0
+0000102E 1D40FF83		 MOVE.B	   D0,-144+19(A6)		         PARAMETER_AREA
+		      *							       LINE 8/47
+00001032 7000			 MOVEQ	   #0,D0			         $0
+00001034 3D40FF84		 MOVE.W	   D0,-144+20(A6)		         PARAMETER_AREA
+		      *							       LINE 8/48
+00001038 7000			 MOVEQ	   #0,D0			         $0
+0000103A 2D40FF86		 MOVE.L	   D0,-144+22(A6)		         PARAMETER_AREA
+		      *							       LINE 8/49
+0000103E 486EFF8A		 PEA	   -144+26(A6)			         PARAMETER_AREA
+00001042 7002			 MOVEQ	   #2,D0			         $2
+00001044 3F00			 MOVE.W	   D0,-(A7)00001046 486D0032		 PEA	   STATIC.+50(A5)		         SUB_TASK_TASKNAME
+0000104A 7002			 MOVEQ	   #2,D0			         $2
+0000104C 3F00			 MOVE.W	   D0,-(A7)
+0000104E 4EB900000000		 JSR	   C.MVFFP
+		      *							       LINE 8/50
+00001054 3D7C400CFF8C		 MOVE.W	   #16396,-144+28(A6)		         $400C  PARAMETER_AREA
+		      *							       LINE 8/51
+0000105A 7000			 MOVEQ	   #0,D0			         $0
+0000105C 1D40FF8E		 MOVE.B	   D0,-144+30(A6)		         PARAMETER_AREA
+		      *							       LINE 8/52
+00001060 7000			 MOVEQ	   #0,D0			         $0
+00001062 1D40FF8F		 MOVE.B	   D0,-144+31(A6)		         PARAMETER_AREA
+		      *							       LINE 8/53
+00001066 41EEFF90		 LEA	   -144+32(A6),A0		         PARAMETER_AREA
+0000106A 4298			 CLR.L	   (A0)+
+0000106C 4298			 CLR.L	   (A0)+
+		      *							       LINE 8/54
+0000106E 7000			 MOVEQ	   #0,D0			         $0
+00001070 2D40FF98		 MOVE.L	   D0,-144+40(A6)		         PARAMETER_AREA
+		      *							       LINE 8/55
+00001074 7000			 MOVEQ	   #0,D0			         $0
+00001076 1D40FF9C		 MOVE.B	   D0,-144+44(A6)		         PARAMETER_AREA
+		      *							       LINE 8/56
+0000107A 7000			 MOVEQ	   #0,D0			         $0
+0000107C 1D40FF9D		 MOVE.B	   D0,-144+45(A6)		         PARAMETER_AREA
+		      *							       LINE 8/57
+00001080 7000			 MOVEQ	   #0,D0			         $0
+00001082 3D40FF9E		 MOVE.W	   D0,-144+46(A6)		         PARAMETER_AREA
+		      *							       LINE 8/58
+00001086 7000			 MOVEQ	   #0,D0			         $0
+00001088 1D40FFA0		 MOVE.B	   D0,-144+48(A6)		         PARAMETER_AREA
+		      *							       LINE 8/59
+0000108C 7000			 MOVEQ	   #0,D0			         $0
+0000108E 1D40FFA1		 MOVE.B	   D0,-144+49(A6)		         PARAMETER_AREA
+		      *							       LINE 8/60
+00001092 2D7C53595320		 MOVE.L	   #1398362912,-144+50(A6)	         $53595320  PARAMETER_
+	 FFA2
+		      *							       LINE 8/61
+0000109A 2F2D0046		 MOVE.L	   STATIC.+70(A5),-(A7)		         BUCKET_FILE
+0000109E 486EFF4A		 PEA	   -182(A6)			         $FFFFFF4A
+000010A2 4EB900000000		 JSR	   I.FILNAM			         FILENAME
+000010A8 302EFF4A		 MOVE.W	   -182(A6),D0			         $FFFFFF4A
+000010AC 41EEFF4A		 LEA	   -182(A6),A0			         $FFFFFF4A
+000010B0 43EEFFC2		 LEA	   -62(A6),A1			         LOCAL_FILE_NAME
+000010B4 5240			 ADDQ.W	   #1,D0			         $1000010B6 E248			 LSR.W	   #1,D0			         $1
+000010B8 32D8	      X.10.1	 MOVE.W	   (A0)+,(A1)+
+000010BA 51C8FFFC		 DBF	   D0,X.10.1(PC)
+		      *							       LINE 8/62
+000010BE 7000			 MOVEQ	   #0,D0			         $0
+000010C0 302EFFC2		 MOVE.W	   -62(A6),D0			         LOCAL_FILE_NAME
+000010C4 5980			 SUBQ.L	   #4,D0			         $4
+000010C6 0C8000000004		 CMPI.L	   #4,D0			         $4
+000010CC 6C06			 BGE.S	   X.10.3(PC)
+000010CE 4EB900000000 X.10.2	 JSR	   E.SUBSTR
+000010D4 486EFF6C     X.10.3	 PEA	   -148(A6)			         $FFFFFF6C
+000010D8 7004			 MOVEQ	   #4,D0			         $4
+000010DA 3F00			 MOVE.W	   D0,-(A7)
+000010DC 486EFFC8		 PEA	   -62+6(A6)			         LOCAL_FILE_NAME
+000010E0 7004			 MOVEQ	   #4,D0			         $4
+000010E2 3F00			 MOVE.W	   D0,-(A7)
+000010E4 4EB900000000		 JSR	   C.MVFF
+000010EA 3D7C0004FF6A		 MOVE.W	   #4,-150(A6)			         $4  $FFFFFF6A
+000010F0 426EFF68		 CLR.W	   -152(A6)			         $FFFFFF68
+000010F4 41EEFF6C		 LEA	   -148(A6),A0			         $FFFFFF6C
+000010F8 2D48FF64		 MOVE.L	   A0,-156(A6)			         $FFFFFF64
+000010FC 4267			 CLR.W	   -(A7)
+000010FE 486EFFBE		 PEA	   -66(A6)			         LOCAL_USER_NUMBER
+00001102 486EFF64		 PEA	   -156(A6)			         $FFFFFF64
+00001106 4EB900000000		 JSR	   I.GETSTR
+		      *							       LINE 8/63
+0000110C 202EFFBE		 MOVE.L	   -66(A6),D0			         LOCAL_USER_NUMBER
+00001110 4A80			 TST.L	   D0
+00001112 6C06			 BGE.S	   X.10.4(PC)
+00001114 4EB900000000 X.10.5	 JSR	   E.VALUE
+0000111A 0C800000FFFF X.10.4	 CMPI.L	   #65535,D0			         $FFFF
+00001120 6EF2			 BGT.S	   X.10.5(PC)
+00001122 3D40FFA6		 MOVE.W	   D0,-144+54(A6)		         PARAMETER_AREA
+		      *							       LINE 8/64
+00001126 41EEFFA8		 LEA	   -144+56(A6),A0		         PARAMETER_AREA
+0000112A 20FC20202020		 MOVE.L	   #538976288,(A0)+		         $20202020
+00001130 20FC20202020		 MOVE.L	   #538976288,(A0)+		         $20202020
+		      *							       LINE 8/65
+00001136 41ED0036		 LEA	   STATIC.+54(A5),A0		         SUB_TASK_FILENAME
+0000113A 43EEFFB0		 LEA	   -144+64(A6),A1		         PARAMETER_AREA
+0000113E 22D8			 MOVE.L	   (A0)+,(A1)+
+00001140 22D8			 MOVE.L	   (A0)+,(A1)+
+		      *							       LINE 8/66
+00001142 3D7C4C4FFFB8		 MOVE.W	   #19535,-144+72(A6)		         $4C4F  PARAMETER_AREA
+		      *							       LINE 8/6700001148 7000			 MOVEQ	   #0,D0			         $0
+0000114A 3D40FFBA		 MOVE.W	   D0,-144+74(A6)		         PARAMETER_AREA
+		      *							       LINE 8/68
+0000114E 7000			 MOVEQ	   #0,D0			         $0
+00001150 1D40FFBC		 MOVE.B	   D0,-144+76(A6)		         PARAMETER_AREA
+		      *							       LINE 8/69
+00001154 7000			 MOVEQ	   #0,D0			         $0
+00001156 1D40FFBD		 MOVE.B	   D0,-144+77(A6)		         PARAMETER_AREA
+		      *							       LINE 8/70
+		      *							       LINE 8/71
+0000115A 1D7C0001FFFE		 MOVE.B	   #1,-2(A6)			         $1  $FFFFFFFE
+00001160 3D7C0004FF6A		 MOVE.W	   #4,-150(A6)			         $4  $FFFFFF6A
+00001166 486EFF6C		 PEA	   -148(A6)			         $FFFFFF6C
+0000116A 3F2EFF6A		 MOVE.W	   -150(A6),-(A7)		         $FFFFFF6A
+0000116E 487AFE8E		 PEA	   K.37(PC)			         CODE.+$FFE
+00001172 7004			 MOVEQ	   #4,D0			         $4
+00001174 3F00			 MOVE.W	   D0,-(A7)
+00001176 4EB900000000		 JSR	   C.MVFF
+0000117C 41EEFF6A		 LEA	   -150(A6),A0			         $FFFFFF6A
+00001180 2D48FFFA		 MOVE.L	   A0,-6(A6)			         $FFFFFFFA
+00001184 6100EF5A		 BSR.L	   B.8(PC)			         TRACE = CODE.+$E0
+		      *							       LINE 8/72
+00001188 486D0000		 PEA	   STATIC.+0(A5)		         RETURN_CODE
+0000118C 41EEFF70		 LEA	   -144(A6),A0			         PARAMETER_AREA
+00001190 2F08			 MOVE.L	   A0,-(A7)
+00001192 7001			 MOVEQ	   #1,D0			         $1
+00001194 2F00			 MOVE.L	   D0,-(A7)
+00001196 486EFF6E		 PEA	   -146(A6)			         $FFFFFF6E
+0000119A 4EB900000000		 JSR	   TRAP4			         TRAP4
+000011A0 4A2EFF6E		 TST.B	   -146(A6)			         $FFFFFF6E
+000011A4 660C			 BNE.S	   L.10.4(PC)
+		      *							       LINE 8/73
+000011A6 487AFE5A     L.10.3	 PEA	   K.38(PC)			         CODE.+$1002
+000011AA 7004			 MOVEQ	   #4,D0			         $4
+000011AC 3F00			 MOVE.W	   D0,-(A7)
+000011AE 6100EE7E		 BSR.L	   B.4(PC)			         ABORT = CODE.+$2E
+		      *							       LINE 8/74
+000011B2 422EFFFE     L.10.4	 CLR.B	   -2(A6)			         $FFFFFFFE
+000011B6 3D7C0004FF6A		 MOVE.W	   #4,-150(A6)			         $4  $FFFFFF6A
+000011BC 486EFF6C		 PEA	   -148(A6)			         $FFFFFF6C
+000011C0 3F2EFF6A		 MOVE.W	   -150(A6),-(A7)		         $FFFFFF6A
+000011C4 487AFE40		 PEA	   K.39(PC)			         CODE.+$1006
+000011C8 7004			 MOVEQ	   #4,D0			         $4
+000011CA 3F00			 MOVE.W	   D0,-(A7)
+000011CC 4EB900000000		 JSR	   C.MVFF000011D2 41EEFF6A		 LEA	   -150(A6),A0			         $FFFFFF6A
+000011D6 2D48FFFA		 MOVE.L	   A0,-6(A6)			         $FFFFFFFA
+000011DA 6100EF04		 BSR.L	   B.8(PC)			         TRACE = CODE.+$E0
+		      *							       LINE 8/75
+000011DE 4E75			 RTS	   
+		      *
+		      *		 Constant area for subroutine CHANGE_LUN
+		      *
+000011E0 4C554E	      K.40	 DC.B	   'LUN'
+000011E3 00000001		 DS.B	   1
+000011E4 4C554E	      K.41	 DC.B	   'LUN'
+000011E7 00000001		 DS.B	   1
+000011E8 4C554E	      K.42	 DC.B	   'LUN'
+000011EB 00000001		 DS.B	   1
+		      *
+		      *		 Begin subroutine CHANGE_LUN
+		      *
+000011EC	      B.11
+		      *							       LINE 9/17
+		      *							       LINE 9/18
+000011EC	      L.11.1
+		      *							       LINE 9/18 (2)
+		      *							       LINE 9/19
+000011EC 7001	      L.11.2	 MOVEQ	   #1,D0			         $1
+000011EE 1D40FF7E		 MOVE.B	   D0,-130(A6)			         PARAMETER_AREA
+		      *							       LINE 9/20
+000011F2 7010			 MOVEQ	   #16,D0			         $10
+000011F4 1D40FF7F		 MOVE.B	   D0,-130+1(A6)		         PARAMETER_AREA
+		      *							       LINE 9/21
+000011F8 3D7C8000FF80		 MOVE.W	   #32768,-130+2(A6)		         $8000  PARAMETER_AREA
+		      *							       LINE 9/22
+000011FE 7000			 MOVEQ	   #0,D0			         $0
+00001200 1D40FF82		 MOVE.B	   D0,-130+4(A6)		         PARAMETER_AREA
+		      *							       LINE 9/23
+00001204 1D6EFF91FF83		 MOVE.B	   -114+3(A6),-130+5(A6)	         INPUT_LUN  PARAMETER_
+		      *							       LINE 9/24
+0000120A 1D6EFF91FF84		 MOVE.B	   -114+3(A6),-130+6(A6)	         INPUT_LUN  PARAMETER_
+		      *							       LINE 9/25
+00001210 7000			 MOVEQ	   #0,D0			         $0
+00001212 1D40FF85		 MOVE.B	   D0,-130+7(A6)		         PARAMETER_AREA
+		      *							       LINE 9/26
+00001216 2D6D0032FF86		 MOVE.L	   STATIC.+50(A5),-130+8(A6)	         SUB_TASK_TASKNAME  PA
+		      *							       LINE 9/27
+0000121C 2D6D003EFF8A		 MOVE.L	   STATIC.+62(A5),-130+12(A6)	         SUB_TASK_SESSION  PAR
+		      *							       LINE 9/28		      *							       LINE 9/29
+00001222 1D7C0001FFFE		 MOVE.B	   #1,-2(A6)			         $1  $FFFFFFFE
+00001228 3D7C0003FF6A		 MOVE.W	   #3,-150(A6)			         $3  $FFFFFF6A
+0000122E 486EFF6C		 PEA	   -148(A6)			         $FFFFFF6C
+00001232 3F2EFF6A		 MOVE.W	   -150(A6),-(A7)		         $FFFFFF6A
+00001236 487AFFA8		 PEA	   K.40(PC)			         CODE.+$11E0
+0000123A 7003			 MOVEQ	   #3,D0			         $3
+0000123C 3F00			 MOVE.W	   D0,-(A7)
+0000123E 4EB900000000		 JSR	   C.MVFF
+00001244 41EEFF6A		 LEA	   -150(A6),A0			         $FFFFFF6A
+00001248 2D48FFFA		 MOVE.L	   A0,-6(A6)			         $FFFFFFFA
+0000124C 6100EE92		 BSR.L	   B.8(PC)			         TRACE = CODE.+$E0
+		      *							       LINE 9/30
+00001250 486D0000		 PEA	   STATIC.+0(A5)		         RETURN_CODE
+00001254 41EEFF7E		 LEA	   -130(A6),A0			         PARAMETER_AREA
+00001258 2F08			 MOVE.L	   A0,-(A7)
+0000125A 486EFF6E		 PEA	   -146(A6)			         $FFFFFF6E
+0000125E 4EB900000000		 JSR	   TRAP3			         TRAP3
+00001264 4A2EFF6E		 TST.B	   -146(A6)			         $FFFFFF6E
+00001268 660C			 BNE.S	   L.11.4(PC)
+		      *							       LINE 9/31
+0000126A 487AFF78     L.11.3	 PEA	   K.41(PC)			         CODE.+$11E4
+0000126E 7003			 MOVEQ	   #3,D0			         $3
+00001270 3F00			 MOVE.W	   D0,-(A7)
+00001272 6100EDBA		 BSR.L	   B.4(PC)			         ABORT = CODE.+$2E
+		      *							       LINE 9/32
+00001276 422EFFFE     L.11.4	 CLR.B	   -2(A6)			         $FFFFFFFE
+0000127A 3D7C0003FF6A		 MOVE.W	   #3,-150(A6)			         $3  $FFFFFF6A
+00001280 486EFF6C		 PEA	   -148(A6)			         $FFFFFF6C
+00001284 3F2EFF6A		 MOVE.W	   -150(A6),-(A7)		         $FFFFFF6A
+00001288 487AFF5E		 PEA	   K.42(PC)			         CODE.+$11E8
+0000128C 7003			 MOVEQ	   #3,D0			         $3
+0000128E 3F00			 MOVE.W	   D0,-(A7)
+00001290 4EB900000000		 JSR	   C.MVFF
+00001296 41EEFF6A		 LEA	   -150(A6),A0			         $FFFFFF6A
+0000129A 2D48FFFA		 MOVE.L	   A0,-6(A6)			         $FFFFFFFA
+0000129E 6100EE40		 BSR.L	   B.8(PC)			         TRACE = CODE.+$E0
+		      *							       LINE 9/33
+000012A2 4E75			 RTS	   
+		      *
+		      *		 Constant area for subroutine START
+		      *
+000012A4 5354415254   K.43	 DC.B	   'START'
+000012A9 00000001		 DS.B	   1
+000012AA 5354415254   K.44	 DC.B	   'START'000012AF 00000001		 DS.B	   1
+000012B0 5354415254   K.45	 DC.B	   'START'
+000012B5 00000001		 DS.B	   1
+		      *
+		      *		 Begin subroutine START
+		      *
+000012B6	      B.12
+		      *							       LINE 10/19
+		      *							       LINE 10/20
+000012B6	      L.12.1
+		      *							       LINE 10/20 (2)
+		      *							       LINE 10/21
+000012B6 2D6D0032FF92 L.12.2	 MOVE.L	   STATIC.+50(A5),-110(A6)	         SUB_TASK_TASKNAME  PA
+		      *							       LINE 10/22
+000012BC 7000			 MOVEQ	   #0,D0			         $0
+000012BE 2D40FF96		 MOVE.L	   D0,-110+4(A6)		         PARAMETER_AREA
+		      *							       LINE 10/23
+000012C2 3D7CA000FF9A		 MOVE.W	   #40960,-110+8(A6)		         $A000  PARAMETER_AREA
+		      *							       LINE 10/24
+000012C8 42AEFF9C		 CLR.L	   -110+10(A6)			         PARAMETER_AREA
+		      *							       LINE 10/25
+000012CC 7000			 MOVEQ	   #0,D0			         $0
+000012CE 2D40FFA0		 MOVE.L	   D0,-110+14(A6)		         PARAMETER_AREA
+		      *							       LINE 10/26
+000012D2 486EFF2A		 PEA	   -214(A6)			         $FFFFFF2A
+000012D6 4EB900000000		 JSR	   INIREG			         INIREG
+000012DC 41EEFF2A		 LEA	   -214(A6),A0			         $FFFFFF2A
+000012E0 43EEFFA4		 LEA	   -110+18(A6),A1		         PARAMETER_AREA
+000012E4 700F			 MOVEQ	   #15,D0			         $F
+000012E6 22D8	      X.12.1	 MOVE.L	   (A0)+,(A1)+
+000012E8 51C8FFFC		 DBF	   D0,X.12.1(PC)
+		      *							       LINE 10/27
+		      *							       LINE 10/27 (2)
+		      *							       LINE 10/28
+000012EC 2D6D0032FFE4 L.12.3	 MOVE.L	   STATIC.+50(A5),-28(A6)	         SUB_TASK_TASKNAME  LO
+		      *							       LINE 10/29
+000012F2 2D6EFFE4FFC4		 MOVE.L	   -28(A6),-110+50(A6)		         LOCAL_RECORD  PARAMET
+		      *							       LINE 10/30
+000012F8 2D6EFFA8FFE4		 MOVE.L	   -110+22(A6),-28(A6)		         PARAMETER_AREA  LOCAL
+		      *							       LINE 10/31
+000012FE 2B6EFFE4003E		 MOVE.L	   -28(A6),STATIC.+62(A5)	         LOCAL_RECORD  SUB_TAS
+		      *							       LINE 10/32
+		      *							       LINE 10/33
+00001304 2D7C00000005		 MOVE.L	   #5,-114(A6)			         $5  $FFFFFF8E
+	 FF8E0000130C 6100FEDE		 BSR.L	   B.11(PC)			         CHANGE_LUN = CODE.+$1
+		      *							       LINE 10/34
+00001310 2D7C00000006		 MOVE.L	   #6,-114(A6)			         $6  $FFFFFF8E
+	 FF8E
+00001318 6100FED2		 BSR.L	   B.11(PC)			         CHANGE_LUN = CODE.+$1
+		      *							       LINE 10/35
+		      *							       LINE 10/36
+0000131C 1D7C0001FFFE		 MOVE.B	   #1,-2(A6)			         $1  $FFFFFFFE
+00001322 3D7C0005FF62		 MOVE.W	   #5,-158(A6)			         $5  $FFFFFF62
+00001328 486EFF64		 PEA	   -156(A6)			         $FFFFFF64
+0000132C 3F2EFF62		 MOVE.W	   -158(A6),-(A7)		         $FFFFFF62
+00001330 487AFF72		 PEA	   K.43(PC)			         CODE.+$12A4
+00001334 7005			 MOVEQ	   #5,D0			         $5
+00001336 3F00			 MOVE.W	   D0,-(A7)
+00001338 4EB900000000		 JSR	   C.MVFF
+0000133E 41EEFF62		 LEA	   -158(A6),A0			         $FFFFFF62
+00001342 2D48FFFA		 MOVE.L	   A0,-6(A6)			         $FFFFFFFA
+00001346 6100ED98		 BSR.L	   B.8(PC)			         TRACE = CODE.+$E0
+		      *							       LINE 10/37
+0000134A 486D0000		 PEA	   STATIC.+0(A5)		         RETURN_CODE
+0000134E 41EEFF92		 LEA	   -110(A6),A0			         PARAMETER_AREA
+00001352 2F08			 MOVE.L	   A0,-(A7)
+00001354 700D			 MOVEQ	   #13,D0			         $D
+00001356 2F00			 MOVE.L	   D0,-(A7)
+00001358 486EFF68		 PEA	   -152(A6)			         $FFFFFF68
+0000135C 4EB900000000		 JSR	   TRAP1			         TRAP1
+00001362 4A2EFF68		 TST.B	   -152(A6)			         $FFFFFF68
+00001366 660C			 BNE.S	   L.12.5(PC)
+		      *							       LINE 10/38
+00001368 487AFF40     L.12.4	 PEA	   K.44(PC)			         CODE.+$12AA
+0000136C 7005			 MOVEQ	   #5,D0			         $5
+0000136E 3F00			 MOVE.W	   D0,-(A7)
+00001370 6100ECBC		 BSR.L	   B.4(PC)			         ABORT = CODE.+$2E
+		      *							       LINE 10/39
+00001374 422EFFFE     L.12.5	 CLR.B	   -2(A6)			         $FFFFFFFE
+00001378 3D7C0005FF62		 MOVE.W	   #5,-158(A6)			         $5  $FFFFFF62
+0000137E 486EFF64		 PEA	   -156(A6)			         $FFFFFF64
+00001382 3F2EFF62		 MOVE.W	   -158(A6),-(A7)		         $FFFFFF62
+00001386 487AFF28		 PEA	   K.45(PC)			         CODE.+$12B0
+0000138A 7005			 MOVEQ	   #5,D0			         $5
+0000138C 3F00			 MOVE.W	   D0,-(A7)
+0000138E 4EB900000000		 JSR	   C.MVFF
+00001394 41EEFF62		 LEA	   -158(A6),A0			         $FFFFFF62
+00001398 2D48FFFA		 MOVE.L	   A0,-6(A6)			         $FFFFFFFA
+0000139C 6100ED42		 BSR.L	   B.8(PC)			         TRACE = CODE.+$E0		      *							       LINE 10/40
+000013A0 4E75			 RTS	   
+		      *
+		      *		 Constant area for subroutine EXMON
+		      *
+000013A2 45584D4F4E   K.46	 DC.B	   'EXMON'
+000013A7 00000001		 DS.B	   1
+000013A8 45584D4F4E   K.47	 DC.B	   'EXMON'
+000013AD 00000001		 DS.B	   1
+000013AE 45584D4F4E   K.48	 DC.B	   'EXMON'
+000013B3 00000001		 DS.B	   1
+		      *
+		      *		 Begin subroutine EXMON
+		      *
+000013B4	      B.13
+		      *							       LINE 11/12
+		      *							       LINE 11/13
+000013B4	      L.13.1
+		      *							       LINE 11/13 (2)
+		      *							       LINE 11/14
+000013B4 2D6D0032FFD8 L.13.2	 MOVE.L	   STATIC.+50(A5),-40(A6)	         SUB_TASK_TASKNAME  PA
+		      *							       LINE 11/15
+000013BA 7000			 MOVEQ	   #0,D0			         $0
+000013BC 2D40FFDC		 MOVE.L	   D0,-40+4(A6)			         PARAMETER_AREA
+		      *							       LINE 11/16
+000013C0 2D6D002EFFE0		 MOVE.L	   STATIC.+46(A5),-40+8(A6)	         MONITOR_TASKNAME  PAR
+		      *							       LINE 11/17
+000013C6 7000			 MOVEQ	   #0,D0			         $0
+000013C8 2D40FFE4		 MOVE.L	   D0,-40+12(A6)		         PARAMETER_AREA
+		      *							       LINE 11/18
+		      *							       LINE 11/19
+000013CC 1D7C0001FFFE		 MOVE.B	   #1,-2(A6)			         $1  $FFFFFFFE
+000013D2 3D7C0005FF68		 MOVE.W	   #5,-152(A6)			         $5  $FFFFFF68
+000013D8 486EFF6A		 PEA	   -150(A6)			         $FFFFFF6A
+000013DC 3F2EFF68		 MOVE.W	   -152(A6),-(A7)		         $FFFFFF68
+000013E0 487AFFC0		 PEA	   K.46(PC)			         CODE.+$13A2
+000013E4 7005			 MOVEQ	   #5,D0			         $5
+000013E6 3F00			 MOVE.W	   D0,-(A7)
+000013E8 4EB900000000		 JSR	   C.MVFF
+000013EE 41EEFF68		 LEA	   -152(A6),A0			         $FFFFFF68
+000013F2 2D48FFFA		 MOVE.L	   A0,-6(A6)			         $FFFFFFFA
+000013F6 6100ECE8		 BSR.L	   B.8(PC)			         TRACE = CODE.+$E0
+		      *							       LINE 11/20
+000013FA 486D0000		 PEA	   STATIC.+0(A5)		         RETURN_CODE
+000013FE 41EEFFD8		 LEA	   -40(A6),A0			         PARAMETER_AREA00001402 2F08			 MOVE.L	   A0,-(A7)
+00001404 7040			 MOVEQ	   #64,D0			         $40
+00001406 2F00			 MOVE.L	   D0,-(A7)
+00001408 486EFF6E		 PEA	   -146(A6)			         $FFFFFF6E
+0000140C 4EB900000000		 JSR	   TRAP1			         TRAP1
+00001412 4A2EFF6E		 TST.B	   -146(A6)			         $FFFFFF6E
+00001416 660C			 BNE.S	   L.13.4(PC)
+		      *							       LINE 11/21
+00001418 487AFF8E     L.13.3	 PEA	   K.47(PC)			         CODE.+$13A8
+0000141C 7005			 MOVEQ	   #5,D0			         $5
+0000141E 3F00			 MOVE.W	   D0,-(A7)
+00001420 6100EC0C		 BSR.L	   B.4(PC)			         ABORT = CODE.+$2E
+		      *							       LINE 11/22
+00001424 422EFFFE     L.13.4	 CLR.B	   -2(A6)			         $FFFFFFFE
+00001428 3D7C0005FF68		 MOVE.W	   #5,-152(A6)			         $5  $FFFFFF68
+0000142E 486EFF6A		 PEA	   -150(A6)			         $FFFFFF6A
+00001432 3F2EFF68		 MOVE.W	   -152(A6),-(A7)		         $FFFFFF68
+00001436 487AFF76		 PEA	   K.48(PC)			         CODE.+$13AE
+0000143A 7005			 MOVEQ	   #5,D0			         $5
+0000143C 3F00			 MOVE.W	   D0,-(A7)
+0000143E 4EB900000000		 JSR	   C.MVFF
+00001444 41EEFF68		 LEA	   -152(A6),A0			         $FFFFFF68
+00001448 2D48FFFA		 MOVE.L	   A0,-6(A6)			         $FFFFFFFA
+0000144C 6100EC92		 BSR.L	   B.8(PC)			         TRACE = CODE.+$E0
+		      *							       LINE 11/23
+00001450 4E75			 RTS	   
+		      *
+		      *		 Constant area for subroutine EXMMSK
+		      *
+00001452 45584D4D534B K.49	 DC.B	   'EXMMSK'
+00001458 45584D4D534B K.50	 DC.B	   'EXMMSK'
+0000145E 45584D4D534B K.51	 DC.B	   'EXMMSK'
+		      *
+		      *		 Begin subroutine EXMMSK
+		      *
+00001464	      B.14
+		      *							       LINE 12/11
+		      *							       LINE 12/12
+00001464	      L.14.1
+		      *							       LINE 12/12 (2)
+		      *							       LINE 12/13
+00001464 2D6D0032FFDC L.14.2	 MOVE.L	   STATIC.+50(A5),-36(A6)	         SUB_TASK_TASKNAME  PA
+		      *							       LINE 12/14
+0000146A 7000			 MOVEQ	   #0,D0			         $0
+0000146C 2D40FFE0		 MOVE.L	   D0,-36+4(A6)			         PARAMETER_AREA		      *							       LINE 12/15
+00001470 2D7C10000000		 MOVE.L	   #268435456,-36+8(A6)		         $10000000  PARAMETER_
+	 FFE4
+		      *							       LINE 12/16
+		      *							       LINE 12/17
+00001478 1D7C0001FFFE		 MOVE.B	   #1,-2(A6)			         $1  $FFFFFFFE
+0000147E 3D7C0006FF68		 MOVE.W	   #6,-152(A6)			         $6  $FFFFFF68
+00001484 486EFF6A		 PEA	   -150(A6)			         $FFFFFF6A
+00001488 3F2EFF68		 MOVE.W	   -152(A6),-(A7)		         $FFFFFF68
+0000148C 487AFFC4		 PEA	   K.49(PC)			         CODE.+$1452
+00001490 7006			 MOVEQ	   #6,D0			         $6
+00001492 3F00			 MOVE.W	   D0,-(A7)
+00001494 4EB900000000		 JSR	   C.MVFF
+0000149A 41EEFF68		 LEA	   -152(A6),A0			         $FFFFFF68
+0000149E 2D48FFFA		 MOVE.L	   A0,-6(A6)			         $FFFFFFFA
+000014A2 6100EC3C		 BSR.L	   B.8(PC)			         TRACE = CODE.+$E0
+		      *							       LINE 12/18
+000014A6 486D0000		 PEA	   STATIC.+0(A5)		         RETURN_CODE
+000014AA 41EEFFDC		 LEA	   -36(A6),A0			         PARAMETER_AREA
+000014AE 2F08			 MOVE.L	   A0,-(A7)
+000014B0 7042			 MOVEQ	   #66,D0			         $42
+000014B2 2F00			 MOVE.L	   D0,-(A7)
+000014B4 486EFF6E		 PEA	   -146(A6)			         $FFFFFF6E
+000014B8 4EB900000000		 JSR	   TRAP1			         TRAP1
+000014BE 4A2EFF6E		 TST.B	   -146(A6)			         $FFFFFF6E
+000014C2 660C			 BNE.S	   L.14.4(PC)
+		      *							       LINE 12/19
+000014C4 487AFF92     L.14.3	 PEA	   K.50(PC)			         CODE.+$1458
+000014C8 7006			 MOVEQ	   #6,D0			         $6
+000014CA 3F00			 MOVE.W	   D0,-(A7)
+000014CC 6100EB60		 BSR.L	   B.4(PC)			         ABORT = CODE.+$2E
+		      *							       LINE 12/20
+000014D0 422EFFFE     L.14.4	 CLR.B	   -2(A6)			         $FFFFFFFE
+000014D4 3D7C0006FF68		 MOVE.W	   #6,-152(A6)			         $6  $FFFFFF68
+000014DA 486EFF6A		 PEA	   -150(A6)			         $FFFFFF6A
+000014DE 3F2EFF68		 MOVE.W	   -152(A6),-(A7)		         $FFFFFF68
+000014E2 487AFF7A		 PEA	   K.51(PC)			         CODE.+$145E
+000014E6 7006			 MOVEQ	   #6,D0			         $6
+000014E8 3F00			 MOVE.W	   D0,-(A7)
+000014EA 4EB900000000		 JSR	   C.MVFF
+000014F0 41EEFF68		 LEA	   -152(A6),A0			         $FFFFFF68
+000014F4 2D48FFFA		 MOVE.L	   A0,-6(A6)			         $FFFFFFFA
+000014F8 6100EBE6		 BSR.L	   B.8(PC)			         TRACE = CODE.+$E0
+		      *							       LINE 12/21
+000014FC 4E75			 RTS	   		      *
+		      *		 Constant area for subroutine INITIALIZE
+		      *
+000014FE 202020202020 K.52	 DC.B	   '        '
+00001506	      K.53
+00001506 4E6F2066696C K.54	 DC.B	   'No filename specified.'
+		      *
+		      *		 Begin subroutine INITIALIZE
+		      *
+0000151C	      B.17
+		      *							       LINE 15/7
+		      *							       LINE 15/8
+0000151C 6100EE7C     L.17.1	 BSR.L	   B.5(PC)			         GET_FILE_NAMES = CODE
+		      *							       LINE 15/9
+00001520 6100F206		 BSR.L	   B.6(PC)			         GET_PARAMETERS = CODE
+		      *							       LINE 15/10
+00001524 202D0046		 MOVE.L	   STATIC.+70(A5),D0		         BUCKET_FILE
+00001528 4A80			 TST.L	   D0
+0000152A 6606			 BNE.S	   X.17.1(PC)
+0000152C 4EB900000000		 JSR	   E.FILE
+00001532 720A	      X.17.1	 MOVEQ	   #10,D1			         $A
+00001534 3F01			 MOVE.W	   D1,-(A7)
+00001536 720B			 MOVEQ	   #11,D1			         $B
+00001538 3F01			 MOVE.W	   D1,-(A7)
+0000153A 486EFFEE		 PEA	   -18(A6)			         LOCAL_BUFFER
+0000153E 2F00			 MOVE.L	   D0,-(A7)
+00001540 4EB900000000		 JSR	   T.READ
+00001546 2F00			 MOVE.L	   D0,-(A7)
+00001548 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 15/11
+0000154E 302EFFEE		 MOVE.W	   -18(A6),D0			         LOCAL_BUFFER
+00001552 5040			 ADDQ.W	   #8,D0			         $8
+00001554 486EFF18		 PEA	   -232(A6)			         $FFFFFF18
+00001558 7212			 MOVEQ	   #18,D1			         $12
+0000155A 3F01			 MOVE.W	   D1,-(A7)
+0000155C 486EFFF0		 PEA	   -18+2(A6)			         LOCAL_BUFFER
+00001560 3F2EFFEE		 MOVE.W	   -18(A6),-(A7)		         LOCAL_BUFFER
+00001564 4EB900000000		 JSR	   C.MVFF
+0000156A 487AFF92		 PEA	   K.52(PC)			         CODE.+$14FE
+0000156E 7208			 MOVEQ	   #8,D1			         $8
+00001570 3F01			 MOVE.W	   D1,-(A7)
+00001572 4EB900000000		 JSR	   C.MVFR
+00001578 4840			 SWAP	   D0
+0000157A 4240			 CLR.W	   D0
+0000157C 4840			 SWAP	   D00000157E 2200			 MOVE.L	   D0,D1
+00001580 92BC00000000		 SUB.L	   #0,D1			         $0
+00001586 0C8100000008		 CMPI.L	   #8,D1			         $8
+0000158C 6C06			 BGE.S	   X.17.3(PC)
+0000158E 4EB900000000 X.17.2	 JSR	   E.SUBSTR
+00001594 486D0036     X.17.3	 PEA	   STATIC.+54(A5)		         SUB_TASK_FILENAME
+00001598 7008			 MOVEQ	   #8,D0			         $8
+0000159A 3F00			 MOVE.W	   D0,-(A7)
+0000159C 486EFF18		 PEA	   -232(A6)			         $FFFFFF18
+000015A0 7008			 MOVEQ	   #8,D0			         $8
+000015A2 3F00			 MOVE.W	   D0,-(A7)
+000015A4 4EB900000000		 JSR	   C.MVFFP
+		      *							       LINE 15/12
+000015AA 487AFF5A		 PEA	   K.53(PC)			         CODE.+$1506
+000015AE 4267			 CLR.W	   -(A7)
+000015B0 486D0036		 PEA	   STATIC.+54(A5)		         SUB_TASK_FILENAME
+000015B4 7008			 MOVEQ	   #8,D0			         $8
+000015B6 3F00			 MOVE.W	   D0,-(A7)
+000015B8 4EB900000000		 JSR	   C.CPFF
+000015BE 6612			 BNE.S	   L.17.3(PC)
+		      *							       LINE 15/13
+000015C0 41FAFF44     L.17.2	 LEA	   K.54(PC),A0			         CODE.+$1506
+000015C4 2D48FFEA		 MOVE.L	   A0,-22(A6)			         $FFFFFFEA
+000015C8 3D7C0016FFE8		 MOVE.W	   #22,-24(A6)			         $16  $FFFFFFE8
+000015CE 6100ED20		 BSR.L	   B.3(PC)			         ERROR = CODE.+$2F0
+		      *							       LINE 15/14
+000015D2 202D0046     L.17.3	 MOVE.L	   STATIC.+70(A5),D0		         BUCKET_FILE
+000015D6 4A80			 TST.L	   D0
+000015D8 6606			 BNE.S	   X.17.4(PC)
+000015DA 4EB900000000		 JSR	   E.FILE
+000015E0 7208	      X.17.4	 MOVEQ	   #8,D1			         $8
+000015E2 2F01			 MOVE.L	   D1,-(A7)
+000015E4 7250			 MOVEQ	   #80,D1			         $50
+000015E6 3F01			 MOVE.W	   D1,-(A7)
+000015E8 486D0010		 PEA	   STATIC.+16(A5)		         ASR_ADDRESS
+000015EC 2F00			 MOVE.L	   D0,-(A7)
+000015EE 4EB900000000		 JSR	   T.READ
+000015F4 2F00			 MOVE.L	   D0,-(A7)
+000015F6 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 15/15
+000015FC 202D0046		 MOVE.L	   STATIC.+70(A5),D0		         BUCKET_FILE
+00001600 4A80			 TST.L	   D0
+00001602 6606			 BNE.S	   X.17.5(PC)
+00001604 4EB900000000		 JSR	   E.FILE
+0000160A 7208	      X.17.5	 MOVEQ	   #8,D1			         $80000160C 2F01			 MOVE.L	   D1,-(A7)
+0000160E 7250			 MOVEQ	   #80,D1			         $50
+00001610 3F01			 MOVE.W	   D1,-(A7)
+00001612 486D0014		 PEA	   STATIC.+20(A5)		         M_RET_AD_ADDRESS
+00001616 2F00			 MOVE.L	   D0,-(A7)
+00001618 4EB900000000		 JSR	   T.READ
+0000161E 2F00			 MOVE.L	   D0,-(A7)
+00001620 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 15/16
+00001626 202D0046		 MOVE.L	   STATIC.+70(A5),D0		         BUCKET_FILE
+0000162A 4A80			 TST.L	   D0
+0000162C 6606			 BNE.S	   X.17.6(PC)
+0000162E 4EB900000000		 JSR	   E.FILE
+00001634 7208	      X.17.6	 MOVEQ	   #8,D1			         $8
+00001636 2F01			 MOVE.L	   D1,-(A7)
+00001638 7250			 MOVEQ	   #80,D1			         $50
+0000163A 3F01			 MOVE.W	   D1,-(A7)
+0000163C 486D0018		 PEA	   STATIC.+24(A5)		         PROGRAM_START_PC
+00001640 2F00			 MOVE.L	   D0,-(A7)
+00001642 4EB900000000		 JSR	   T.READ
+00001648 2F00			 MOVE.L	   D0,-(A7)
+0000164A 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 15/17
+00001650 202D0046		 MOVE.L	   STATIC.+70(A5),D0		         BUCKET_FILE
+00001654 4A80			 TST.L	   D0
+00001656 6606			 BNE.S	   X.17.7(PC)
+00001658 4EB900000000		 JSR	   E.FILE
+0000165E 7208	      X.17.7	 MOVEQ	   #8,D1			         $8
+00001660 2F01			 MOVE.L	   D1,-(A7)
+00001662 7250			 MOVEQ	   #80,D1			         $50
+00001664 3F01			 MOVE.W	   D1,-(A7)
+00001666 486D001C		 PEA	   STATIC.+28(A5)		         PROGRAM_END_PC
+0000166A 2F00			 MOVE.L	   D0,-(A7)
+0000166C 4EB900000000		 JSR	   T.READ
+00001672 2F00			 MOVE.L	   D0,-(A7)
+00001674 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 15/18
+0000167A 202D0046		 MOVE.L	   STATIC.+70(A5),D0		         BUCKET_FILE
+0000167E 4A80			 TST.L	   D0
+00001680 6606			 BNE.S	   X.17.8(PC)
+00001682 4EB900000000		 JSR	   E.FILE
+00001688 4267	      X.17.8	 CLR.W	   -(A7)
+0000168A 486D0020		 PEA	   STATIC.+32(A5)		         NUMBER_BUCKETS
+0000168E 2F00			 MOVE.L	   D0,-(A7)
+00001690 4EB900000000		 JSR	   T.READ00001696 2F00			 MOVE.L	   D0,-(A7)
+00001698 4EB900000000		 JSR	   T.READLN
+		      *							       LINE 15/19
+0000169E 2B7C5441534B		 MOVE.L	   #1413567307,STATIC.+46(A5)	         $5441534B  MONITOR_TA
+	 002E
+		      *							       LINE 15/20
+000016A6 486D0032		 PEA	   STATIC.+50(A5)		         SUB_TASK_TASKNAME
+000016AA 7004			 MOVEQ	   #4,D0			         $4
+000016AC 3F00			 MOVE.W	   D0,-(A7)
+000016AE 486D0036		 PEA	   STATIC.+54(A5)		         SUB_TASK_FILENAME
+000016B2 7004			 MOVEQ	   #4,D0			         $4
+000016B4 3F00			 MOVE.W	   D0,-(A7)
+000016B6 4EB900000000		 JSR	   C.MVFFP
+		      *							       LINE 15/21
+000016BC 7000			 MOVEQ	   #0,D0			         $0
+000016BE 2B400024		 MOVE.L	   D0,STATIC.+36(A5)		         RUNTIME_COUNT
+		      *							       LINE 15/22
+000016C2 7000			 MOVEQ	   #0,D0			         $0
+000016C4 2B400028		 MOVE.L	   D0,STATIC.+40(A5)		         UNKNOWN_COUNT
+		      *							       LINE 15/23
+000016C8 7001			 MOVEQ	   #1,D0			         $1
+000016CA 1B40004E		 MOVE.B	   D0,STATIC.+78(A5)		         FLAG
+		      *							       LINE 15/24
+000016CE 6100F56C		 BSR.L	   B.7(PC)			         SET_UP_BUCKETS = CODE
+		      *							       LINE 15/25
+000016D2 6100F87A		 BSR.L	   B.9(PC)			         GTASQ = CODE.+$F4E
+		      *							       LINE 15/26
+000016D6 6100F932		 BSR.L	   B.10(PC)			         LOAD = CODE.+$100A
+		      *							       LINE 15/27
+000016DA 6100FCD8		 BSR.L	   B.13(PC)			         EXMON = CODE.+$13B4
+		      *							       LINE 15/28
+000016DE 6100FD84		 BSR.L	   B.14(PC)			         EXMMSK = CODE.+$1464
+		      *							       LINE 15/29
+000016E2 6100FBD2		 BSR.L	   B.12(PC)			         START = CODE.+$12B6
+		      *							       LINE 15/30
+000016E6 7001			 MOVEQ	   #1,D0			         $1
+000016E8 1B40004F		 MOVE.B	   D0,STATIC.+79(A5)		         TR_ND
+		      *							       LINE 15/31
+000016EC 6100EA96		 BSR.L	   B.15(PC)			         REXMON = CODE.+$184
+		      *							       LINE 15/32
+000016F0 4E75			 RTS	   
+		      *
+		      *		 Constant area for subroutine RSTATE
+		      *
+000016F2 525354415445 K.55	 DC.B	   'RSTATE'000016F8 525354415445 K.56	 DC.B	   'RSTATE'
+000016FE 525354415445 K.57	 DC.B	   'RSTATE'
+		      *
+		      *		 Begin subroutine RSTATE
+		      *
+00001704	      B.18
+		      *							       LINE 16/21
+		      *							       LINE 16/22
+00001704	      L.18.1
+		      *							       LINE 16/22 (2)
+		      *							       LINE 16/23
+00001704 2D6D0032FF8A L.18.2	 MOVE.L	   STATIC.+50(A5),-118(A6)	         SUB_TASK_TASKNAME  PA
+		      *							       LINE 16/24
+0000170A 7000			 MOVEQ	   #0,D0			         $0
+0000170C 2D40FF8E		 MOVE.L	   D0,-118+4(A6)		         PARAMETER_AREA
+		      *							       LINE 16/25
+00001710 41EEFF8A		 LEA	   -118(A6),A0			         PARAMETER_AREA
+00001714 2D48FF92		 MOVE.L	   A0,-118+8(A6)		         PARAMETER_AREA
+		      *							       LINE 16/26
+		      *							       LINE 16/27
+00001718 1D7C0001FFFE		 MOVE.B	   #1,-2(A6)			         $1  $FFFFFFFE
+0000171E 3D7C0006FF68		 MOVE.W	   #6,-152(A6)			         $6  $FFFFFF68
+00001724 486EFF6A		 PEA	   -150(A6)			         $FFFFFF6A
+00001728 3F2EFF68		 MOVE.W	   -152(A6),-(A7)		         $FFFFFF68
+0000172C 487AFFC4		 PEA	   K.55(PC)			         CODE.+$16F2
+00001730 7006			 MOVEQ	   #6,D0			         $6
+00001732 3F00			 MOVE.W	   D0,-(A7)
+00001734 4EB900000000		 JSR	   C.MVFF
+0000173A 41EEFF68		 LEA	   -152(A6),A0			         $FFFFFF68
+0000173E 2D48FFFA		 MOVE.L	   A0,-6(A6)			         $FFFFFFFA
+00001742 6100E99C		 BSR.L	   B.8(PC)			         TRACE = CODE.+$E0
+		      *							       LINE 16/28
+00001746 486D0000		 PEA	   STATIC.+0(A5)		         RETURN_CODE
+0000174A 41EEFF8A		 LEA	   -118(A6),A0			         PARAMETER_AREA
+0000174E 2F08			 MOVE.L	   A0,-(A7)
+00001750 7043			 MOVEQ	   #67,D0			         $43
+00001752 2F00			 MOVE.L	   D0,-(A7)
+00001754 486EFF6E		 PEA	   -146(A6)			         $FFFFFF6E
+00001758 4EB900000000		 JSR	   TRAP1			         TRAP1
+0000175E 4A2EFF6E		 TST.B	   -146(A6)			         $FFFFFF6E
+00001762 660C			 BNE.S	   L.18.4(PC)
+		      *							       LINE 16/29
+00001764 487AFF92     L.18.3	 PEA	   K.56(PC)			         CODE.+$16F8
+00001768 7006			 MOVEQ	   #6,D0			         $6
+0000176A 3F00			 MOVE.W	   D0,-(A7)0000176C 6100E8C0		 BSR.L	   B.4(PC)			         ABORT = CODE.+$2E
+		      *							       LINE 16/30
+00001770 206EFFEA     L.18.4	 MOVEA.L   -22(A6),A0			         CURR_PC
+00001774 20AEFFCA		 MOVE.L	   -118+64(A6),(A0)		         PARAMETER_AREA
+		      *							       LINE 16/31
+00001778 422EFFFE		 CLR.B	   -2(A6)			         $FFFFFFFE
+0000177C 3D7C0006FF68		 MOVE.W	   #6,-152(A6)			         $6  $FFFFFF68
+00001782 486EFF6A		 PEA	   -150(A6)			         $FFFFFF6A
+00001786 3F2EFF68		 MOVE.W	   -152(A6),-(A7)		         $FFFFFF68
+0000178A 487AFF72		 PEA	   K.57(PC)			         CODE.+$16FE
+0000178E 7006			 MOVEQ	   #6,D0			         $6
+00001790 3F00			 MOVE.W	   D0,-(A7)
+00001792 4EB900000000		 JSR	   C.MVFF
+00001798 41EEFF68		 LEA	   -152(A6),A0			         $FFFFFF68
+0000179C 2D48FFFA		 MOVE.L	   A0,-6(A6)			         $FFFFFFFA
+000017A0 6100E93E		 BSR.L	   B.8(PC)			         TRACE = CODE.+$E0
+		      *							       LINE 16/32
+000017A4 4E75			 RTS	   
+		      *
+		      *		 Constant area for subroutine MOVELL
+		      *
+000017A6 4D4F56454C4C K.58	 DC.B	   'MOVELL'
+000017AC 4D4F56454C4C K.59	 DC.B	   'MOVELL'
+000017B2 4D4F56454C4C K.60	 DC.B	   'MOVELL'
+		      *
+		      *		 Begin subroutine MOVELL
+		      *
+000017B8	      B.19
+		      *							       LINE 17/16
+		      *							       LINE 17/17
+000017B8	      L.19.1
+		      *							       LINE 17/17 (2)
+		      *							       LINE 17/18
+000017B8 2D6D0032FFCA L.19.2	 MOVE.L	   STATIC.+50(A5),-54(A6)	         SUB_TASK_TASKNAME  PA
+		      *							       LINE 17/19
+000017BE 7000			 MOVEQ	   #0,D0			         $0
+000017C0 2D40FFCE		 MOVE.L	   D0,-54+4(A6)			         PARAMETER_AREA
+		      *							       LINE 17/20
+000017C4 2D6D0014FFD2		 MOVE.L	   STATIC.+20(A5),-54+8(A6)	         M_RET_AD_ADDRESS  PAR
+		      *							       LINE 17/21
+000017CA 2D6D002EFFD6		 MOVE.L	   STATIC.+46(A5),-54+12(A6)	         MONITOR_TASKNAME  PAR
+		      *							       LINE 17/22
+000017D0 7000			 MOVEQ	   #0,D0			         $0
+000017D2 2D40FFDA		 MOVE.L	   D0,-54+16(A6)		         PARAMETER_AREA
+		      *							       LINE 17/23000017D6 41EEFFE6		 LEA	   -26(A6),A0			         LOCAL_PC
+000017DA 2D48FFDE		 MOVE.L	   A0,-54+20(A6)		         PARAMETER_AREA
+		      *							       LINE 17/24
+000017DE 7004			 MOVEQ	   #4,D0			         $4
+000017E0 2D40FFE2		 MOVE.L	   D0,-54+24(A6)		         PARAMETER_AREA
+		      *							       LINE 17/25
+		      *							       LINE 17/26
+000017E4 1D7C0001FFFE		 MOVE.B	   #1,-2(A6)			         $1  $FFFFFFFE
+000017EA 3D7C0006FF68		 MOVE.W	   #6,-152(A6)			         $6  $FFFFFF68
+000017F0 486EFF6A		 PEA	   -150(A6)			         $FFFFFF6A
+000017F4 3F2EFF68		 MOVE.W	   -152(A6),-(A7)		         $FFFFFF68
+000017F8 487AFFAC		 PEA	   K.58(PC)			         CODE.+$17A6
+000017FC 7006			 MOVEQ	   #6,D0			         $6
+000017FE 3F00			 MOVE.W	   D0,-(A7)
+00001800 4EB900000000		 JSR	   C.MVFF
+00001806 41EEFF68		 LEA	   -152(A6),A0			         $FFFFFF68
+0000180A 2D48FFFA		 MOVE.L	   A0,-6(A6)			         $FFFFFFFA
+0000180E 6100E8D0		 BSR.L	   B.8(PC)			         TRACE = CODE.+$E0
+		      *							       LINE 17/27
+00001812 486D0000		 PEA	   STATIC.+0(A5)		         RETURN_CODE
+00001816 41EEFFCA		 LEA	   -54(A6),A0			         PARAMETER_AREA
+0000181A 2F08			 MOVE.L	   A0,-(A7)
+0000181C 7006			 MOVEQ	   #6,D0			         $6
+0000181E 2F00			 MOVE.L	   D0,-(A7)
+00001820 486EFF6E		 PEA	   -146(A6)			         $FFFFFF6E
+00001824 4EB900000000		 JSR	   TRAP1			         TRAP1
+0000182A 4A2EFF6E		 TST.B	   -146(A6)			         $FFFFFF6E
+0000182E 660C			 BNE.S	   L.19.4(PC)
+		      *							       LINE 17/28
+00001830 487AFF7A     L.19.3	 PEA	   K.59(PC)			         CODE.+$17AC
+00001834 7006			 MOVEQ	   #6,D0			         $6
+00001836 3F00			 MOVE.W	   D0,-(A7)
+00001838 6100E7F4		 BSR.L	   B.4(PC)			         ABORT = CODE.+$2E
+		      *							       LINE 17/29
+0000183C 422EFFFE     L.19.4	 CLR.B	   -2(A6)			         $FFFFFFFE
+00001840 3D7C0006FF68		 MOVE.W	   #6,-152(A6)			         $6  $FFFFFF68
+00001846 486EFF6A		 PEA	   -150(A6)			         $FFFFFF6A
+0000184A 3F2EFF68		 MOVE.W	   -152(A6),-(A7)		         $FFFFFF68
+0000184E 487AFF62		 PEA	   K.60(PC)			         CODE.+$17B2
+00001852 7006			 MOVEQ	   #6,D0			         $6
+00001854 3F00			 MOVE.W	   D0,-(A7)
+00001856 4EB900000000		 JSR	   C.MVFF
+0000185C 41EEFF68		 LEA	   -152(A6),A0			         $FFFFFF68
+00001860 2D48FFFA		 MOVE.L	   A0,-6(A6)			         $FFFFFFFA
+00001864 6100E87A		 BSR.L	   B.8(PC)			         TRACE = CODE.+$E0		      *							       LINE 17/30
+00001868 206EFFEE		 MOVEA.L   -18(A6),A0			         CURR_PC
+0000186C 20AEFFE6		 MOVE.L	   -26(A6),(A0)			         LOCAL_PC
+		      *							       LINE 17/31
+00001870 4E75			 RTS	   
+		      *
+		      *		 Begin subroutine UPDATE_ARRAY
+		      *
+00001872	      B.20
+		      *							       LINE 18/10
+		      *							       LINE 18/11
+00001872 7001	      L.20.1	 MOVEQ	   #1,D0			         $1
+00001874 2D40FFE6		 MOVE.L	   D0,-26(A6)			         LOW_BOUND
+		      *							       LINE 18/12
+00001878 2D6D0020FFE2		 MOVE.L	   STATIC.+32(A5),-30(A6)	         NUMBER_BUCKETS  HIGH_
+		      *							       LINE 18/13
+0000187E 7000			 MOVEQ	   #0,D0			         $0
+00001880 1D40FFDD		 MOVE.B	   D0,-35(A6)			         FOUND_FLAG
+		      *							       LINE 18/14
+00001884 4A2EFFDD     L.20.2	 TST.B	   -35(A6)			         FOUND_FLAG
+00001888 660000B4		 BNE.L	   L.20.11(PC)
+0000188C 202EFFE6     L.20.3	 MOVE.L	   -26(A6),D0			         LOW_BOUND
+00001890 B0AEFFE2		 CMP.L	   -30(A6),D0			         HIGH_BOUND
+00001894 6E0000A8		 BGT.L	   L.20.11(PC)
+		      *							       LINE 18/15
+		      *							       LINE 18/16
+00001898 202EFFE6     L.20.4	 MOVE.L	   -26(A6),D0			         LOW_BOUND
+0000189C D0AEFFE2		 ADD.L	   -30(A6),D0			         HIGH_BOUND
+000018A0 4A80			 TST.L	   D0
+000018A2 6A02			 BPL.S	   X.20.1(PC)
+000018A4 5280			 ADDQ.L	   #1,D0			         $1
+000018A6 E280	      X.20.1	 ASR.L	   #1,D0			         $1
+000018A8 2D40FFDE		 MOVE.L	   D0,-34(A6)			         CURR_INDEX
+		      *							       LINE 18/17
+000018AC 202EFFDE		 MOVE.L	   -34(A6),D0			         CURR_INDEX
+000018B0 4A80			 TST.L	   D0
+000018B2 6E06			 BGT.S	   X.20.2(PC)
+000018B4 4EB900000000 X.20.3	 JSR	   E.INDEX
+000018BA 222D0042     X.20.2	 MOVE.L	   STATIC.+66(A5),D1		         BUCKET_ARRAY
+000018BE 4A81			 TST.L	   D1
+000018C0 6606			 BNE.S	   X.20.4(PC)
+000018C2 4EB900000000		 JSR	   E.PTR
+000018C8 2041	      X.20.4	 MOVEA.L   D1,A0
+000018CA B090			 CMP.L	   (A0),D0
+000018CC 6EE6			 BGT.S	   X.20.3(PC)000018CE 2F00			 MOVE.L	   D0,-(A7)
+000018D0 701A			 MOVEQ	   #26,D0			         $1A
+000018D2 2F00			 MOVE.L	   D0,-(A7)
+000018D4 4EB900000000		 JSR	   G.I4MULT
+000018DA D1DF			 ADDA.L	   (A7)+,A0
+000018DC 202EFFF2		 MOVE.L	   -14(A6),D0			         INPUT_PC
+000018E0 B0A8FFF8		 CMP.L	   -8(A0),D0			         $FFFFFFF8
+000018E4 6C08			 BGE.S	   L.20.6(PC)
+		      *							       LINE 18/18
+000018E6 2D6EFFDEFFE2 L.20.5	 MOVE.L	   -34(A6),-30(A6)		         CURR_INDEX  HIGH_BOUN
+000018EC 604C			 BRA.S	   L.20.10(PC)
+		      *							       LINE 18/20
+000018EE 202EFFDE     L.20.6	 MOVE.L	   -34(A6),D0			         CURR_INDEX
+000018F2 4A80			 TST.L	   D0
+000018F4 6E06			 BGT.S	   X.20.5(PC)
+000018F6 4EB900000000 X.20.6	 JSR	   E.INDEX
+000018FC 222D0042     X.20.5	 MOVE.L	   STATIC.+66(A5),D1		         BUCKET_ARRAY
+00001900 4A81			 TST.L	   D1
+00001902 6606			 BNE.S	   X.20.7(PC)
+00001904 4EB900000000		 JSR	   E.PTR
+0000190A 2041	      X.20.7	 MOVEA.L   D1,A0
+0000190C B090			 CMP.L	   (A0),D0
+0000190E 6EE6			 BGT.S	   X.20.6(PC)
+00001910 2F00			 MOVE.L	   D0,-(A7)
+00001912 701A			 MOVEQ	   #26,D0			         $1A
+00001914 2F00			 MOVE.L	   D0,-(A7)
+00001916 4EB900000000		 JSR	   G.I4MULT
+0000191C D1DF			 ADDA.L	   (A7)+,A0
+0000191E 202EFFF2		 MOVE.L	   -14(A6),D0			         INPUT_PC
+00001922 B0A8FFFC		 CMP.L	   -4(A0),D0			         $FFFFFFFC
+00001926 6F0C			 BLE.S	   L.20.8(PC)
+		      *							       LINE 18/21
+00001928 202EFFDE     L.20.7	 MOVE.L	   -34(A6),D0			         CURR_INDEX
+0000192C 5280			 ADDQ.L	   #1,D0			         $1
+0000192E 2D40FFE6		 MOVE.L	   D0,-26(A6)			         LOW_BOUND
+00001932 6006			 BRA.S	   L.20.9(PC)
+		      *							       LINE 18/23
+00001934 7001	      L.20.8	 MOVEQ	   #1,D0			         $1
+00001936 1D40FFDD		 MOVE.B	   D0,-35(A6)			         FOUND_FLAG
+0000193A	      L.20.9
+		      *							       LINE 18/24
+0000193A 6000FF48     L.20.10	 BRA.L	   L.20.2(PC)
+		      *							       LINE 18/25
+0000193E 202EFFDE     L.20.11	 MOVE.L	   -34(A6),D0			         CURR_INDEX
+00001942 4A80			 TST.L	   D000001944 6E06			 BGT.S	   X.20.8(PC)
+00001946 4EB900000000 X.20.9	 JSR	   E.INDEX
+0000194C 222D0042     X.20.8	 MOVE.L	   STATIC.+66(A5),D1		         BUCKET_ARRAY
+00001950 4A81			 TST.L	   D1
+00001952 6606			 BNE.S	   X.20.10(PC)
+00001954 4EB900000000		 JSR	   E.PTR
+0000195A 2041	      X.20.10	 MOVEA.L   D1,A0
+0000195C B090			 CMP.L	   (A0),D0
+0000195E 6EE6			 BGT.S	   X.20.9(PC)
+00001960 2F00			 MOVE.L	   D0,-(A7)
+00001962 701A			 MOVEQ	   #26,D0			         $1A
+00001964 2F00			 MOVE.L	   D0,-(A7)
+00001966 4EB900000000		 JSR	   G.I4MULT
+0000196C D1DF			 ADDA.L	   (A7)+,A0
+0000196E 202EFFDE		 MOVE.L	   -34(A6),D0			         CURR_INDEX
+00001972 4A80			 TST.L	   D0
+00001974 6E06			 BGT.S	   X.20.11(PC)
+00001976 4EB900000000 X.20.12	 JSR	   E.INDEX
+0000197C 222D0042     X.20.11	 MOVE.L	   STATIC.+66(A5),D1		         BUCKET_ARRAY
+00001980 4A81			 TST.L	   D1
+00001982 6606			 BNE.S	   X.20.13(PC)
+00001984 4EB900000000		 JSR	   E.PTR
+0000198A 2241	      X.20.13	 MOVEA.L   D1,A1
+0000198C B091			 CMP.L	   (A1),D0
+0000198E 6EE6			 BGT.S	   X.20.12(PC)
+00001990 2F00			 MOVE.L	   D0,-(A7)
+00001992 701A			 MOVEQ	   #26,D0			         $1A
+00001994 2F00			 MOVE.L	   D0,-(A7)
+00001996 4EB900000000		 JSR	   G.I4MULT
+0000199C D3DF			 ADDA.L	   (A7)+,A1
+0000199E 2011			 MOVE.L	   (A1),D0
+000019A0 5280			 ADDQ.L	   #1,D0			         $1
+000019A2 2080			 MOVE.L	   D0,(A0)
+		      *							       LINE 18/26
+000019A4 4E75			 RTS	   
+		      *
+		      *		 Begin subroutine READ_PC
+		      *
+000019A6	      B.21
+		      *							       LINE 19/7
+		      *							       LINE 19/8
+000019A6 7000	      L.21.1	 MOVEQ	   #0,D0			         $0
+000019A8 2D40FFF6		 MOVE.L	   D0,-10(A6)			         LOCAL_PC
+		      *							       LINE 19/9
+000019AC 41EEFFF6		 LEA	   -10(A6),A0			         LOCAL_PC000019B0 2D48FFEA		 MOVE.L	   A0,-22(A6)			         $FFFFFFEA
+000019B4 6100FD4E		 BSR.L	   B.18(PC)			         RSTATE = CODE.+$1704
+		      *							       LINE 19/10
+000019B8 202EFFF6		 MOVE.L	   -10(A6),D0			         LOCAL_PC
+000019BC B0AD0018		 CMP.L	   STATIC.+24(A5),D0		         PROGRAM_START_PC
+000019C0 6C1C			 BGE.S	   L.21.3(PC)
+		      *							       LINE 19/10 (2)
+		      *							       LINE 19/11
+000019C2 202D0024     L.21.2	 MOVE.L	   STATIC.+36(A5),D0		         RUNTIME_COUNT
+000019C6 5280			 ADDQ.L	   #1,D0			         $1
+000019C8 2B400024		 MOVE.L	   D0,STATIC.+36(A5)		         RUNTIME_COUNT
+		      *							       LINE 19/12
+000019CC 7000			 MOVEQ	   #0,D0			         $0
+000019CE 2D40FFF6		 MOVE.L	   D0,-10(A6)			         LOCAL_PC
+		      *							       LINE 19/13
+000019D2 41EEFFF6		 LEA	   -10(A6),A0			         LOCAL_PC
+000019D6 2D48FFEE		 MOVE.L	   A0,-18(A6)			         $FFFFFFEE
+000019DA 6100FDDC		 BSR.L	   B.19(PC)			         MOVELL = CODE.+$17B8
+		      *							       LINE 19/14
+		      *							       LINE 19/15
+000019DE 202EFFF6     L.21.3	 MOVE.L	   -10(A6),D0			         LOCAL_PC
+000019E2 B0AD0018		 CMP.L	   STATIC.+24(A5),D0		         PROGRAM_START_PC
+000019E6 6C0C			 BGE.S	   L.21.5(PC)
+		      *							       LINE 19/16
+000019E8 202D0028     L.21.4	 MOVE.L	   STATIC.+40(A5),D0		         UNKNOWN_COUNT
+000019EC 5280			 ADDQ.L	   #1,D0			         $1
+000019EE 2B400028		 MOVE.L	   D0,STATIC.+40(A5)		         UNKNOWN_COUNT
+000019F2 600A			 BRA.S	   L.21.6(PC)
+		      *							       LINE 19/18
+000019F4 2D6EFFF6FFF2 L.21.5	 MOVE.L	   -10(A6),-14(A6)		         LOCAL_PC  $FFFFFFF2
+000019FA 6100FE76		 BSR.L	   B.20(PC)			         UPDATE_ARRAY = CODE.+
+		      *							       LINE 19/19
+000019FE 4E75	      L.21.6	 RTS	   
+		      *
+		      *		 Constant area for subroutine PRINT_RESULTS
+		      *
+00001A00 5461736B203D K.61	 DC.B	   'Task = '
+00001A07 00000001		 DS.B	   1
+00001A08 53696E676C65 K.62	 DC.B	   'Single step increment = '
+00001A20 44656C617920 K.63	 DC.B	   'Delay increment = '
+00001A32 206D696C6C69 K.64	 DC.B	   ' millisecond(s)'
+00001A41 00000001		 DS.B	   1
+00001A42 547261636520 K.65	 DC.B	   'Trace on'
+00001A4A 547261636520 K.66	 DC.B	   'Trace off'
+00001A53 00000001		 DS.B	   100001A54 537461727469 K.67	 DC.B	   'Starting PC = '
+00001A62 456E64696E67 K.68	 DC.B	   'Ending PC = '
+00001A6E 4E756D626572 K.69	 DC.B	   'Number of buckets = '
+00001A82 4E756D626572 K.70	 DC.B	   'Number of runtime calls = '
+00001A9C 4E756D626572 K.71	 DC.B	   'Number of unknown calls = '
+		      *
+		      *		 Begin subroutine PRINT_RESULTS
+		      *
+00001AB6	      B.22
+		      *							       LINE 20/7
+		      *							       LINE 20/8
+00001AB6 202D004A     L.22.1	 MOVE.L	   STATIC.+74(A5),D0		         RESULT_FILE
+00001ABA 4A80			 TST.L	   D0
+00001ABC 6606			 BNE.S	   X.22.1(PC)
+00001ABE 4EB900000000		 JSR	   E.FILE
+00001AC4 7207	      X.22.1	 MOVEQ	   #7,D1			         $7
+00001AC6 3F01			 MOVE.W	   D1,-(A7)
+00001AC8 7204			 MOVEQ	   #4,D1			         $4
+00001ACA 3F01			 MOVE.W	   D1,-(A7)
+00001ACC 487AFF32		 PEA	   K.61(PC)			         CODE.+$1A00
+00001AD0 2F00			 MOVE.L	   D0,-(A7)
+00001AD2 4EB900000000		 JSR	   T.WRITE
+00001AD8 7208			 MOVEQ	   #8,D1			         $8
+00001ADA 3F01			 MOVE.W	   D1,-(A7)
+00001ADC 7204			 MOVEQ	   #4,D1			         $4
+00001ADE 3F01			 MOVE.W	   D1,-(A7)
+00001AE0 486D0036		 PEA	   STATIC.+54(A5)		         SUB_TASK_FILENAME
+00001AE4 2F00			 MOVE.L	   D0,-(A7)
+00001AE6 4EB900000000		 JSR	   T.WRITE
+00001AEC 2F00			 MOVE.L	   D0,-(A7)
+00001AEE 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 20/9
+00001AF4 4A2D002D		 TST.B	   STATIC.+45(A5)		         SINGLE_STEP_FLAG
+00001AF8 673A			 BEQ.S	   L.22.3(PC)
+		      *							       LINE 20/10
+00001AFA 202D004A     L.22.2	 MOVE.L	   STATIC.+74(A5),D0		         RESULT_FILE
+00001AFE 4A80			 TST.L	   D0
+00001B00 6606			 BNE.S	   X.22.2(PC)
+00001B02 4EB900000000		 JSR	   E.FILE
+00001B08 7218	      X.22.2	 MOVEQ	   #24,D1			         $18
+00001B0A 3F01			 MOVE.W	   D1,-(A7)
+00001B0C 7204			 MOVEQ	   #4,D1			         $4
+00001B0E 3F01			 MOVE.W	   D1,-(A7)
+00001B10 487AFEF6		 PEA	   K.62(PC)			         CODE.+$1A08
+00001B14 2F00			 MOVE.L	   D0,-(A7)00001B16 4EB900000000		 JSR	   T.WRITE
+00001B1C 4267			 CLR.W	   -(A7)
+00001B1E 486D0008		 PEA	   STATIC.+8(A5)		         STEP_AMOUNT
+00001B22 2F00			 MOVE.L	   D0,-(A7)
+00001B24 4EB900000000		 JSR	   T.WRITE
+00001B2A 2F00			 MOVE.L	   D0,-(A7)
+00001B2C 4EB900000000		 JSR	   T.WRTLN
+00001B32 6050			 BRA.S	   L.22.4(PC)
+		      *							       LINE 20/12
+00001B34 202D004A     L.22.3	 MOVE.L	   STATIC.+74(A5),D0		         RESULT_FILE
+00001B38 4A80			 TST.L	   D0
+00001B3A 6606			 BNE.S	   X.22.3(PC)
+00001B3C 4EB900000000		 JSR	   E.FILE
+00001B42 7212	      X.22.3	 MOVEQ	   #18,D1			         $12
+00001B44 3F01			 MOVE.W	   D1,-(A7)
+00001B46 7204			 MOVEQ	   #4,D1			         $4
+00001B48 3F01			 MOVE.W	   D1,-(A7)
+00001B4A 487AFED4		 PEA	   K.63(PC)			         CODE.+$1A20
+00001B4E 2F00			 MOVE.L	   D0,-(A7)
+00001B50 4EB900000000		 JSR	   T.WRITE
+00001B56 42A7			 CLR.L	   -(A7)
+00001B58 7210			 MOVEQ	   #16,D1			         $10
+00001B5A 3F01			 MOVE.W	   D1,-(A7)
+00001B5C 486D0004		 PEA	   STATIC.+4(A5)		         DELAY_AMOUNT
+00001B60 2F00			 MOVE.L	   D0,-(A7)
+00001B62 4EB900000000		 JSR	   T.WRITE
+00001B68 720F			 MOVEQ	   #15,D1			         $F
+00001B6A 3F01			 MOVE.W	   D1,-(A7)
+00001B6C 7204			 MOVEQ	   #4,D1			         $4
+00001B6E 3F01			 MOVE.W	   D1,-(A7)
+00001B70 487AFEC0		 PEA	   K.64(PC)			         CODE.+$1A32
+00001B74 2F00			 MOVE.L	   D0,-(A7)
+00001B76 4EB900000000		 JSR	   T.WRITE
+00001B7C 2F00			 MOVE.L	   D0,-(A7)
+00001B7E 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 20/14
+00001B84 4A2D002C     L.22.4	 TST.B	   STATIC.+44(A5)		         TRACE_FLAG
+00001B88 672C			 BEQ.S	   L.22.6(PC)
+		      *							       LINE 20/15
+00001B8A 202D004A     L.22.5	 MOVE.L	   STATIC.+74(A5),D0		         RESULT_FILE
+00001B8E 4A80			 TST.L	   D0
+00001B90 6606			 BNE.S	   X.22.4(PC)
+00001B92 4EB900000000		 JSR	   E.FILE
+00001B98 7208	      X.22.4	 MOVEQ	   #8,D1			         $8
+00001B9A 3F01			 MOVE.W	   D1,-(A7)00001B9C 7204			 MOVEQ	   #4,D1			         $4
+00001B9E 3F01			 MOVE.W	   D1,-(A7)
+00001BA0 487AFEA0		 PEA	   K.65(PC)			         CODE.+$1A42
+00001BA4 2F00			 MOVE.L	   D0,-(A7)
+00001BA6 4EB900000000		 JSR	   T.WRITE
+00001BAC 2F00			 MOVE.L	   D0,-(A7)
+00001BAE 4EB900000000		 JSR	   T.WRTLN
+00001BB4 602A			 BRA.S	   L.22.7(PC)
+		      *							       LINE 20/17
+00001BB6 202D004A     L.22.6	 MOVE.L	   STATIC.+74(A5),D0		         RESULT_FILE
+00001BBA 4A80			 TST.L	   D0
+00001BBC 6606			 BNE.S	   X.22.5(PC)
+00001BBE 4EB900000000		 JSR	   E.FILE
+00001BC4 7209	      X.22.5	 MOVEQ	   #9,D1			         $9
+00001BC6 3F01			 MOVE.W	   D1,-(A7)
+00001BC8 7204			 MOVEQ	   #4,D1			         $4
+00001BCA 3F01			 MOVE.W	   D1,-(A7)
+00001BCC 487AFE7C		 PEA	   K.66(PC)			         CODE.+$1A4A
+00001BD0 2F00			 MOVE.L	   D0,-(A7)
+00001BD2 4EB900000000		 JSR	   T.WRITE
+00001BD8 2F00			 MOVE.L	   D0,-(A7)
+00001BDA 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 20/18
+00001BE0 202D004A     L.22.7	 MOVE.L	   STATIC.+74(A5),D0		         RESULT_FILE
+00001BE4 4A80			 TST.L	   D0
+00001BE6 6606			 BNE.S	   X.22.6(PC)
+00001BE8 4EB900000000		 JSR	   E.FILE
+00001BEE 720E	      X.22.6	 MOVEQ	   #14,D1			         $E
+00001BF0 3F01			 MOVE.W	   D1,-(A7)
+00001BF2 7204			 MOVEQ	   #4,D1			         $4
+00001BF4 3F01			 MOVE.W	   D1,-(A7)
+00001BF6 487AFE5C		 PEA	   K.67(PC)			         CODE.+$1A54
+00001BFA 2F00			 MOVE.L	   D0,-(A7)
+00001BFC 4EB900000000		 JSR	   T.WRITE
+00001C02 7208			 MOVEQ	   #8,D1			         $8
+00001C04 2F01			 MOVE.L	   D1,-(A7)
+00001C06 7250			 MOVEQ	   #80,D1			         $50
+00001C08 3F01			 MOVE.W	   D1,-(A7)
+00001C0A 486D0018		 PEA	   STATIC.+24(A5)		         PROGRAM_START_PC
+00001C0E 2F00			 MOVE.L	   D0,-(A7)
+00001C10 4EB900000000		 JSR	   T.WRITE
+00001C16 2F00			 MOVE.L	   D0,-(A7)
+00001C18 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 20/19
+00001C1E 202D004A		 MOVE.L	   STATIC.+74(A5),D0		         RESULT_FILE00001C22 4A80			 TST.L	   D0
+00001C24 6606			 BNE.S	   X.22.7(PC)
+00001C26 4EB900000000		 JSR	   E.FILE
+00001C2C 720C	      X.22.7	 MOVEQ	   #12,D1			         $C
+00001C2E 3F01			 MOVE.W	   D1,-(A7)
+00001C30 7204			 MOVEQ	   #4,D1			         $4
+00001C32 3F01			 MOVE.W	   D1,-(A7)
+00001C34 487AFE2C		 PEA	   K.68(PC)			         CODE.+$1A62
+00001C38 2F00			 MOVE.L	   D0,-(A7)
+00001C3A 4EB900000000		 JSR	   T.WRITE
+00001C40 7208			 MOVEQ	   #8,D1			         $8
+00001C42 2F01			 MOVE.L	   D1,-(A7)
+00001C44 7250			 MOVEQ	   #80,D1			         $50
+00001C46 3F01			 MOVE.W	   D1,-(A7)
+00001C48 486D001C		 PEA	   STATIC.+28(A5)		         PROGRAM_END_PC
+00001C4C 2F00			 MOVE.L	   D0,-(A7)
+00001C4E 4EB900000000		 JSR	   T.WRITE
+00001C54 2F00			 MOVE.L	   D0,-(A7)
+00001C56 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 20/20
+00001C5C 202D004A		 MOVE.L	   STATIC.+74(A5),D0		         RESULT_FILE
+00001C60 4A80			 TST.L	   D0
+00001C62 6606			 BNE.S	   X.22.8(PC)
+00001C64 4EB900000000		 JSR	   E.FILE
+00001C6A 7214	      X.22.8	 MOVEQ	   #20,D1			         $14
+00001C6C 3F01			 MOVE.W	   D1,-(A7)
+00001C6E 7204			 MOVEQ	   #4,D1			         $4
+00001C70 3F01			 MOVE.W	   D1,-(A7)
+00001C72 487AFDFA		 PEA	   K.69(PC)			         CODE.+$1A6E
+00001C76 2F00			 MOVE.L	   D0,-(A7)
+00001C78 4EB900000000		 JSR	   T.WRITE
+00001C7E 4267			 CLR.W	   -(A7)
+00001C80 486D0020		 PEA	   STATIC.+32(A5)		         NUMBER_BUCKETS
+00001C84 2F00			 MOVE.L	   D0,-(A7)
+00001C86 4EB900000000		 JSR	   T.WRITE
+00001C8C 2F00			 MOVE.L	   D0,-(A7)
+00001C8E 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 20/21
+00001C94 202D004A		 MOVE.L	   STATIC.+74(A5),D0		         RESULT_FILE
+00001C98 4A80			 TST.L	   D0
+00001C9A 6606			 BNE.S	   X.22.9(PC)
+00001C9C 4EB900000000		 JSR	   E.FILE
+00001CA2 721A	      X.22.9	 MOVEQ	   #26,D1			         $1A
+00001CA4 3F01			 MOVE.W	   D1,-(A7)
+00001CA6 7204			 MOVEQ	   #4,D1			         $400001CA8 3F01			 MOVE.W	   D1,-(A7)
+00001CAA 487AFDD6		 PEA	   K.70(PC)			         CODE.+$1A82
+00001CAE 2F00			 MOVE.L	   D0,-(A7)
+00001CB0 4EB900000000		 JSR	   T.WRITE
+00001CB6 4267			 CLR.W	   -(A7)
+00001CB8 486D0024		 PEA	   STATIC.+36(A5)		         RUNTIME_COUNT
+00001CBC 2F00			 MOVE.L	   D0,-(A7)
+00001CBE 4EB900000000		 JSR	   T.WRITE
+00001CC4 2F00			 MOVE.L	   D0,-(A7)
+00001CC6 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 20/22
+00001CCC 202D004A		 MOVE.L	   STATIC.+74(A5),D0		         RESULT_FILE
+00001CD0 4A80			 TST.L	   D0
+00001CD2 6606			 BNE.S	   X.22.10(PC)
+00001CD4 4EB900000000		 JSR	   E.FILE
+00001CDA 721A	      X.22.10	 MOVEQ	   #26,D1			         $1A
+00001CDC 3F01			 MOVE.W	   D1,-(A7)
+00001CDE 7204			 MOVEQ	   #4,D1			         $4
+00001CE0 3F01			 MOVE.W	   D1,-(A7)
+00001CE2 487AFDB8		 PEA	   K.71(PC)			         CODE.+$1A9C
+00001CE6 2F00			 MOVE.L	   D0,-(A7)
+00001CE8 4EB900000000		 JSR	   T.WRITE
+00001CEE 4267			 CLR.W	   -(A7)
+00001CF0 486D0028		 PEA	   STATIC.+40(A5)		         UNKNOWN_COUNT
+00001CF4 2F00			 MOVE.L	   D0,-(A7)
+00001CF6 4EB900000000		 JSR	   T.WRITE
+00001CFC 2F00			 MOVE.L	   D0,-(A7)
+00001CFE 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 20/23
+00001D04 202D004A		 MOVE.L	   STATIC.+74(A5),D0		         RESULT_FILE
+00001D08 4A80			 TST.L	   D0
+00001D0A 6606			 BNE.S	   X.22.11(PC)
+00001D0C 4EB900000000		 JSR	   E.FILE
+00001D12 2F00	      X.22.11	 MOVE.L	   D0,-(A7)
+00001D14 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 20/24
+00001D1A 202D0020		 MOVE.L	   STATIC.+32(A5),D0		         NUMBER_BUCKETS
+00001D1E 2D40FFF2		 MOVE.L	   D0,-14(A6)			         V.62
+00001D22 4A80			 TST.L	   D0
+00001D24 6F000112		 BLE.L	   L.22.12(PC)
+00001D28 7001	      L.22.8	 MOVEQ	   #1,D0			         $1
+00001D2A 2D40FFF6		 MOVE.L	   D0,-10(A6)			         LOCAL_INDEX
+00001D2E	      L.22.9
+		      *							       LINE 20/24 (2)
+		      *							       LINE 20/2500001D2E 202EFFF6     L.22.10	 MOVE.L	   -10(A6),D0			         LOCAL_INDEX
+00001D32 4A80			 TST.L	   D0
+00001D34 6E06			 BGT.S	   X.22.12(PC)
+00001D36 4EB900000000 X.22.13	 JSR	   E.INDEX
+00001D3C 222D0042     X.22.12	 MOVE.L	   STATIC.+66(A5),D1		         BUCKET_ARRAY
+00001D40 4A81			 TST.L	   D1
+00001D42 6606			 BNE.S	   X.22.14(PC)
+00001D44 4EB900000000		 JSR	   E.PTR
+00001D4A 2041	      X.22.14	 MOVEA.L   D1,A0
+00001D4C B090			 CMP.L	   (A0),D0
+00001D4E 6EE6			 BGT.S	   X.22.13(PC)
+00001D50 2F00			 MOVE.L	   D0,-(A7)
+00001D52 701A			 MOVEQ	   #26,D0			         $1A
+00001D54 2F00			 MOVE.L	   D0,-(A7)
+00001D56 4EB900000000		 JSR	   G.I4MULT
+00001D5C D1DF			 ADDA.L	   (A7)+,A0
+00001D5E 43E8FFEA		 LEA	   -22(A0),A1			         $FFFFFFEA
+00001D62 2D49FFEE		 MOVE.L	   A1,W.22(A6)			         -18
+		      *							       LINE 20/25 (2)
+		      *							       LINE 20/26
+00001D66 202D004A     L.22.11	 MOVE.L	   STATIC.+74(A5),D0		         RESULT_FILE
+00001D6A 4A80			 TST.L	   D0
+00001D6C 6606			 BNE.S	   X.22.15(PC)
+00001D6E 4EB900000000		 JSR	   E.FILE
+00001D74 7208	      X.22.15	 MOVEQ	   #8,D1			         $8
+00001D76 2F01			 MOVE.L	   D1,-(A7)
+00001D78 7210			 MOVEQ	   #16,D1			         $10
+00001D7A 3F01			 MOVE.W	   D1,-(A7)
+00001D7C 486EFFF6		 PEA	   -10(A6)			         LOCAL_INDEX
+00001D80 2F00			 MOVE.L	   D0,-(A7)
+00001D82 4EB900000000		 JSR	   T.WRITE
+00001D88 206EFFEE		 MOVEA.L   W.22(A6),A0			         -18
+00001D8C 720A			 MOVEQ	   #10,D1			         $A
+00001D8E 2F01			 MOVE.L	   D1,-(A7)
+00001D90 3F10			 MOVE.W	   (A0),-(A7)
+00001D92 7213			 MOVEQ	   #19,D1			         $13
+00001D94 3F01			 MOVE.W	   D1,-(A7)
+00001D96 48680002		 PEA	   2(A0)			         $2
+00001D9A 2F00			 MOVE.L	   D0,-(A7)
+00001D9C 4EB900000000		 JSR	   T.WRITE
+00001DA2 2040			 MOVEA.L   D0,A0
+00001DA4 2050			 MOVEA.L   (A0),A0
+00001DA6 7220			 MOVEQ	   #32,D1			         $20
+00001DA8 1081			 MOVE.B	   D1,(A0)
+00001DAA 2F00			 MOVE.L	   D0,-(A7)00001DAC 4EB900000000		 JSR	   T.PUT
+00001DB2 206EFFEE		 MOVEA.L   W.22(A6),A0			         -18
+00001DB6 7208			 MOVEQ	   #8,D1			         $8
+00001DB8 2F01			 MOVE.L	   D1,-(A7)
+00001DBA 7250			 MOVEQ	   #80,D1			         $50
+00001DBC 3F01			 MOVE.W	   D1,-(A7)
+00001DBE 4868000E		 PEA	   14(A0)			         $E
+00001DC2 2F00			 MOVE.L	   D0,-(A7)
+00001DC4 4EB900000000		 JSR	   T.WRITE
+00001DCA 2040			 MOVEA.L   D0,A0
+00001DCC 2050			 MOVEA.L   (A0),A0
+00001DCE 7220			 MOVEQ	   #32,D1			         $20
+00001DD0 1081			 MOVE.B	   D1,(A0)
+00001DD2 2F00			 MOVE.L	   D0,-(A7)
+00001DD4 4EB900000000		 JSR	   T.PUT
+00001DDA 206EFFEE		 MOVEA.L   W.22(A6),A0			         -18
+00001DDE 7208			 MOVEQ	   #8,D1			         $8
+00001DE0 2F01			 MOVE.L	   D1,-(A7)
+00001DE2 7250			 MOVEQ	   #80,D1			         $50
+00001DE4 3F01			 MOVE.W	   D1,-(A7)
+00001DE6 48680012		 PEA	   18(A0)			         $12
+00001DEA 2F00			 MOVE.L	   D0,-(A7)
+00001DEC 4EB900000000		 JSR	   T.WRITE
+00001DF2 2040			 MOVEA.L   D0,A0
+00001DF4 2050			 MOVEA.L   (A0),A0
+00001DF6 7220			 MOVEQ	   #32,D1			         $20
+00001DF8 1081			 MOVE.B	   D1,(A0)
+00001DFA 2F00			 MOVE.L	   D0,-(A7)
+00001DFC 4EB900000000		 JSR	   T.PUT
+00001E02 206EFFEE		 MOVEA.L   W.22(A6),A0			         -18
+00001E06 7208			 MOVEQ	   #8,D1			         $8
+00001E08 2F01			 MOVE.L	   D1,-(A7)
+00001E0A 7210			 MOVEQ	   #16,D1			         $10
+00001E0C 3F01			 MOVE.W	   D1,-(A7)
+00001E0E 48680016		 PEA	   22(A0)			         $16
+00001E12 2F00			 MOVE.L	   D0,-(A7)
+00001E14 4EB900000000		 JSR	   T.WRITE
+00001E1A 2F00			 MOVE.L	   D0,-(A7)
+00001E1C 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 20/28
+00001E22 206EFFEE		 MOVEA.L   W.22(A6),A0			         -18
+		      *							       LINE 20/29
+00001E26 202EFFF6		 MOVE.L	   -10(A6),D0			         LOCAL_INDEX
+00001E2A 5280			 ADDQ.L	   #1,D0			         $1
+00001E2C 2D40FFF6		 MOVE.L	   D0,-10(A6)			         LOCAL_INDEX00001E30 B0AEFFF2		 CMP.L	   -14(A6),D0			         V.62
+00001E34 6F00FEF8		 BLE.L	   L.22.9(PC)
+		      *							       LINE 20/30
+00001E38 4E75	      L.22.12	 RTS	   
+		      *
+		      *		 Begin program TASK
+		      *
+				 XDEF	   M.START 
+00001E3A	      M.START 
+00001E3A 7010	      B.1	 MOVEQ	   #16,D0			         $10
+00001E3C 2F00			 MOVE.L	   D0,-(A7)
+00001E3E 610C			 BSR.S	   X.1.1(PC)
+00001E40 00000000		 DC.L	   C.1
+00001E44 0000			 DC.W	   0				         $0
+00001E46 0004			 DC.W	   4				       String length word
+00001E48 5441534B		 DC.B	   'TASK'
+00001E4C 203CFFFFFF14 X.1.1	 MOVE.L	   #T.1-4,D0			         -232
+00001E52 4EB900000000		 JSR	   M.ENTRY
+		      *							       LINE 21/2
+		      *							       LINE 21/3
+00001E58 6100F6C2     L.1.1	 BSR.L	   B.17(PC)			         INITIALIZE = CODE.+$1
+		      *							       LINE 21/4
+00001E5C 4A2D004E     L.1.2	 TST.B	   STATIC.+78(A5)		         FLAG
+00001E60 6752			 BEQ.S	   L.1.17(PC)
+		      *							       LINE 21/4 (2)
+		      *							       LINE 21/5
+00001E62 6100FB42     L.1.3	 BSR.L	   B.21(PC)			         READ_PC = CODE.+$19A6
+		      *							       LINE 21/6
+00001E66 4A2D002D		 TST.B	   STATIC.+45(A5)		         SINGLE_STEP_FLAG
+00001E6A 6742			 BEQ.S	   L.1.15(PC)
+		      *							       LINE 21/6 (2)
+		      *							       LINE 21/7
+00001E6C 202D0008     L.1.4	 MOVE.L	   STATIC.+8(A5),D0		         STEP_AMOUNT
+00001E70 2B400050		 MOVE.L	   D0,STATIC.+80(A5)		         V.63
+00001E74 4A80			 TST.L	   D0
+00001E76 6F34			 BLE.S	   L.1.14(PC)
+00001E78 7001	      L.1.5	 MOVEQ	   #1,D0			         $1
+00001E7A 2B40000C		 MOVE.L	   D0,STATIC.+12(A5)		         STEP_COUNT
+00001E7E	      L.1.6
+00001E7E	      L.1.7
+		      *							       LINE 21/7 (2)
+		      *							       LINE 21/8
+00001E7E 4A2D004F     L.1.8	 TST.B	   STATIC.+79(A5)		         TR_ND
+00001E82 6708			 BEQ.S	   L.1.11(PC)
+00001E84 4A2D004E     L.1.9	 TST.B	   STATIC.+78(A5)		         FLAG00001E88 6702			 BEQ.S	   L.1.11(PC)
+		      *							       LINE 21/8 (2)
+00001E8A 60F2	      L.1.10	 BRA.S	   L.1.8(PC)
+		      *							       LINE 21/9
+00001E8C 7001	      L.1.11	 MOVEQ	   #1,D0			         $1
+00001E8E 1B40004F		 MOVE.B	   D0,STATIC.+79(A5)		         TR_ND
+		      *							       LINE 21/10
+00001E92 4A2D004E		 TST.B	   STATIC.+78(A5)		         FLAG
+00001E96 6704			 BEQ.S	   L.1.13(PC)
+		      *							       LINE 21/10 (2)
+00001E98 6100E2EA     L.1.12	 BSR.L	   B.15(PC)			         REXMON = CODE.+$184
+		      *							       LINE 21/11
+00001E9C 202D000C     L.1.13	 MOVE.L	   STATIC.+12(A5),D0		         STEP_COUNT
+00001EA0 5280			 ADDQ.L	   #1,D0			         $1
+00001EA2 2B40000C		 MOVE.L	   D0,STATIC.+12(A5)		         STEP_COUNT
+00001EA6 B0AD0050		 CMP.L	   STATIC.+80(A5),D0		         V.63
+00001EAA 6FD2			 BLE.S	   L.1.6(PC)
+		      *							       LINE 21/12
+00001EAC 6004	      L.1.14	 BRA.S	   L.1.16(PC)
+		      *							       LINE 21/14
+00001EAE 6100E3AA     L.1.15	 BSR.L	   B.16(PC)			         DELAY = CODE.+$25A
+		      *							       LINE 21/15
+00001EB2 60A8	      L.1.16	 BRA.S	   L.1.2(PC)
+		      *							       LINE 21/16
+00001EB4 6100FC00     L.1.17	 BSR.L	   B.22(PC)			         PRINT_RESULTS = CODE.
+		      *							       LINE 21/17
+00001EB8 4EB900000000		 JSR	   M.STOP
+				 XREF	   M.ENTRY
+				 XREF	   TTYOUTPU
+				 XREF	   E.FILE
+				 XREF	   T.WRITE
+				 XREF	   T.WRTLN
+				 XREF	   M.STOP
+				 XREF	   C.MVFF
+				 XREF	   TRAP1
+				 XREF	   T.BREAK
+				 XREF	   TTY
+				 XREF	   T.READLN
+				 XREF	   T.READ
+				 XREF	   C.CPFF
+				 XREF	   C.MVFR
+				 XREF	   T.RESET
+				 XREF	   I.FILSTA
+				 XREF	   T.REWRIT
+				 XREF	   C.MVFFU				 XREF	   E.SUBSTR
+				 XREF	   I.GETSTR
+				 XREF	   C.CPFC
+				 XREF	   E.VALUE
+				 XREF	   G.I4MULT
+				 XREF	   H.NEW
+				 XREF	   E.INDEX
+				 XREF	   E.PTR
+				 XREF	   C.MVFFP
+				 XREF	   I.FILNAM
+				 XREF	   TRAP4
+				 XREF	   TRAP3
+				 XREF	   INIREG
+				 XREF	   T.PUT
+		      *
+		      *		 Code area:      00001AE0 bytes (6880 decimal)
+		      *		 Constant area:  000003DE bytes (990 decimal)
+		      *		 Static area:    00000054 bytes (84 decimal)
+		      *
+	 00000000		 END
+  A YX

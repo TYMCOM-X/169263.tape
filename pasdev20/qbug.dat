@@ -1,0 +1,2521 @@
+$num off
+$foo left 'ALB,MCM,JMS:jms 8/1/79           - \ -'
+$cen
+$ski15
+&Advanced Numerical Control&
+$ski
+&User Requirement Document&
+$ski
+&Prototype Mill/Drill Link&
+$ski
+&Link Number 2542&
+$ski
+&"ANC MILL 1"&
+$ski5
+$jus left
+$ind left+55
+A.\Brushaber
+$par
+M.\Milgrom
+$par
+J.\Samford
+$ind left-55
+$title 'ANC PROTOTYPE MILL/DRILL LINK REQUIREMENTS' 'TABLE OF CONTENTS'
+$page
+$ind left+4
+1.0  Purpose
+$ski
+2.0  Machine/Control Configuration
+$ski
+$ind left +4
+2.1  General Description
+$par
+2.2  Model 180
+$par
+2.3  Models 200 and 600
+$par
+2.4  Model 800
+$ind left -4
+$ski
+3.0 Machine/Control Input Requirements
+$ski
+$ind left +4
+3.1  Diagram of Tape Format
+$par
+3.2  Description of Tape Format by Function
+$par
+3.3  Numerical Code Formats
+$par
+3.4  Additional Machine Features
+$ind left -4
+$ski
+4.0  General Link Requirements
+$ski
+$ind left +4
+4.1 Customer Requirements
+$par
+4.2 MDSI Requirements
+$ind left -4
+$ski
+5.0  Response to Requirements - COMPACT II Input Description
+$ski
+$ind lef +8
+$par-4
+5.1\Link Minor Word Definitions
+$par-4
+5.2\Link Minor Word Diagrams
+$par-4
+5.3\Diagrams and Functional Descriptions of COMPACT II Statements
+$par-4
+5.4\Link Minor Word Chronology
+$ski
+$ind left -8
+APPENDIX 1 - Relevant Exception/Enhancement Reports
+$ski
+APPENDIX 2 - Mill/Drill Sketches
+$ski
+APPENDIX 3 - Glossary
+$title 'ANC PROTOTYPE MILL/DRILL LINK REQUIREMENTS' '1.0 PURPOSE'
+$ind left-4
+$page
+$ind left+4
+$par5
+The purpose of this document is to present user requirements
+and a high level specification of a Prototype mill/drill link for the ANC system.
+This document is a baseline: a first approach to writing modular links in a PASCAL based system.
+Development of master links for use in a production environment will draw upon  this prototype.
+In the production environment in which the master links are used, it is
+envisioned that User Requirement
+Documents will be produced but on a smaller scale--perhaps only a few pages
+which differ from the User Requirement Document of a master link.
+$ind left+4
+$ski
+$par-4
+1.\\To demonstrate a representative but not necessarily consistent set of 
+mill/drill link features, not intended for any customer's usage.
+$ski
+$par-4
+2.\\To demonstrate the feasibility of ANC mill/drill links by generating output similar to a
+popular 940 link (KT MM CNC5, #1542), when a subset of the Prototype's features are used.
+$ski
+$par-4
+3.\\To provide an output medium for ANC system testing.
+$ski
+$par-4
+4.\\To run selected models of the Kearney && Trecker Milwaukee-Matic family of machine tools.
+$ski
+$ind left-4
+$par+5
+This prototype is intended for the ANC Field Release and is not intended to satisfy any real
+customer.
+Although it closely resembles link #1542, several additional features have been added.
+These features include:
+$ski
+$ind left+4
+$para -4
+1.\\ZSURF capability with ZSGL
+$ski
+$para -4
+2.\\The minor word SRTL
+$ski
+$para -4
+3.\\The minor word POSM
+$ind left-4
+$ski
+$par5
+Also, several minor changes have been made to the syntax and semantics of link minor words.
+These changes were made for consistency and simplification and are not to be construed as
+proposed changes to MDSI standard procedures unless they are mentioned in an Exception/Enhancement Report,
+see Appendix 1.
+$ind left-4
+$title 'ANC PROTOTYPE MILL/DRILL LINK REQUIREMENTS' '2.0 MACHINE/CONTROL CONFIGURATION'
+$page
+$ind left+4
+2.1 General Description
+$ind left +4
+$ski
+The target machines of this effort are the Kearney and Trecker Milwaukee-Matic family, consisting
+of Models 180, 200, 600 and 800.
+Machine tool axis nomenclature is based on the standard Cartesian coordinate system for all models.
+The X-axis is horizontal, the Y-axis is vertical, the Z-axis extends from front to back,
+and the B-axis rotates about the Y-axis.
+$ski
+$ind left -4
+2.2 Model 180
+$ski
+$ind left +4
+Limits:
+$ski
+$ver
+         X-axis    Y-axis    Z-axis
+------------------------------------
+inch   |  0/20   |  0/20   |  0/20
+------------------------------------
+metric |  0/508  |  0/508  |  0/508
+------------------------------------
+$just left
+$ski
+Collision Zone: The collision zone is the area in which the spindle head can collide with the table.
+To avoid this collision zone, the Y-Axis slide must be at a position greater than
+2.88 inches (74 mm) while the Z-Axis is less than 6.50 inches (165 mm) or vice versa.
+$ski
+Tables are of either 1 or .001 (rotary) degree indexing resolution.
+$ski
+RPM range is from 4 to 4000 rpms with a tapping range of 4 to 800 rpms.
+$ski
+Feedrates are .1 thru 400 IPM for linear motion in .1 increments, .1 thru 100 IPM for contouring
+in .1 increments.
+The table is indexed at 5400 DPM (15RPM).
+$ski
+The miscellaneous function M06 (automatic tool transfer) will cause the Y-axis to move at rapid
+traverse to 15 inches (382.2 mm).
+$ind left -4
+$page
+2.3 Models 200/600
+$ski
+$ind left +4
+There are two sets of axis travel limits available, the larger one is an option which can be
+purchased.
+The two sets follow:
+$ver
+$ski
+         X-axis    Y-axis    Z-axis
+------------------------------------
+inch    |  0/24   |  0/20   |  0/20
+OPTIONAL|  0/30   |  0/20   |  0/20
+------------------------------------
+metric  |  0/610  |  0/508  |  0/508
+OPTIONAL|  0/762  |  0/508  |  0/508
+------------------------------------
+$just left
+$ski
+Collision Zone: The collision zone is the area in which the spindle head can collide with the table.
+To avoid this collision zone, the Y-Axis slide must be at a position greater than 5.90 inches
+(150 mm) while the Z-Axis slide is less than 8.50 inches (216 mm), or vice versa.
+$ski
+Tables are of either 1 or .001 (rotary) degree resolution.
+$ski
+There are three headstocks available, giving three different available RPM ranges.
+Each of the three has a tapping range, in which the spindle is restricted to a
+subset of the range generally available.
+The three ranges follow:
+$ski
+$ver
+     Non-tapping            Tapping
+        Range                Range
+----------------------------------------
+      4 - 2400       |      4 - 638
+      4 - 3600       |      4 - 638
+      5 - 5000       |      5 - 507
+----------------------------------------
+$just left
+$ski
+If a spindle speed of 10 RPM or less is commanded, all axis motion will be inhibited.
+$ski
+Feedrates range for linear motion from .1 to 400.0 IPM in .1 IPM increments, .1 to 100.0 IPM for
+circular interpolation in .1 IPM increments, and 1 to 999 DPM for rotary motion in 1 DPM increments.
+$ski
+The miscellaneous function M06 (automatic tool transfer) will cause the Y-axis to move at rapid
+traverse to 12.00 inches (304.8 mm) for Model 200 and to 11.5 inches (292.1 mm) for Model 600.
+$ind left -4
+$page
+2.4 Model 800
+$ski
+$ind left +4
+Limits:
+$ski
+$ver
+            X-axis       Y-axis        Z-axis
+-------------------------------------------------
+inch   |  0/43.1535  |  0/35.4     |  5/36.5
+-------------------------------------------------
+metric |  0/1100     |  0/900.36   |  127/927.1
+-------------------------------------------------
+$just left
+$ski
+Collision Zone: The collision zone is the area in which the spindle head can collide with the table.
+To avoid this collision zone, the Y-Axis slide must be at a position greater than 4.00 inches
+(100 mm) while the Z-Axis slide is less than 19.50 inches (495 mm), or vice versa.
+$ski
+Table is of either 1 or .001 (rotary) degree resolution.
+$ski
+Feedrates range for linear motion from .1 to 400.0 IPM in .1 IPM increments, .1 to 100.0 IPM
+for circular interpolation in .1 IPM increments, and 1 to 999 DPM for rotary motion in 1 DPM
+increments.
+Maximum rapid traverse rate is 400 IPM.
+$ski
+The miscellaneous function M06 (automatic tool transfer) will cause the Y-Axis to move at rapid
+traverse to 13.75 inches (350.45 mm) and the Z-Axis to move at rapid traverse to 31.50 inches
+(800.10 mm).
+$ind left -4
+$ind left -4
+$title 'ANC PROTOTYPE MILL/DRILL LINK REQUIREMENTS'
+$page
+$cen
+$ski20
+3.0 MACHINE/CONTROL INPUT REQUIREMENTS
+$jus left
+$title 'ANC PROTOTYPE MILL/DRILL LINK REQUIREMENTS' '3.1 DIAGRAM OF TAPE FORMAT'
+$page
+$ski
+$title 'ANC PROTOTYPE MILL/DRILL LINK REQUIREMENTS' '3.2 DESCRIPTION OF TAPE FORMAT BY FUNCTION'
+$page
+$ind left +4
+$ind left+4
+$par-4
+1.\\&Leader&
+$ski
+$par4
+Tape leader is a length of tape consisting of one character, repeated sufficiently to call
+attention to itself.
+This character is ignored by the control and is used exclusively by the machine operator.
+$ski2
+$ind left-4
+2.\\&RWS Code&
+$ski
+$ind left+4
+$par4
+The rewind stop code is a character which causes the tape rewind mechanism to halt.
+$ski2
+$ind left-4
+3.\\&EOB Code&
+$ski
+$ind left+4
+The end-of-block code signals the beginning of control-readable data on the tape and is the last
+character in every tape block.
+$ind left-4
+$ski2
+4.\\&Block Delete Code&
+$ski
+$ind left+4
+If block delete mode is selected on the control console, any block beginning with this code
+will be ignored.
+$ind left-4
+$ski2
+5.\\&Sequence Number&
+$ski
+$ind left+4
+General form: N'n'
+$ski
+$par4
+'n' is a number from 0000 to 9999.
+It identifies blocks on a tape, e.g. for editing purposes.
+$ind left-4
+$ski2
+6.\\&Table Letter Address&
+$ski
+$ind left+4
+P, D, or T
+$ski
+$par4
+These three letters refer to one of three tables within the control's memory which can be loaded
+from tape prior to the execution of a machining tape.
+The three tables respectively contain information concerning
+$ind left+4
+1.\\Tool length compensation
+$par
+2.\\Cutter diameter compensation
+$par
+3.\\Tool pocket information.
+$ind left-4
+$ski
+$par4
+For more information about these three topics, refer to the "Ancillary Functions" portion of
+section 3.2.
+These tables can be loaded manually from the control console.
+$page
+$ind left-4
+7.\\&Table Entry Number&
+$ski
+$ind left+4
+$par4
+For loading the control's memory with tool length or cutter diameter compensation information,
+this number refers to an entry within the corresponding compensation table, ranging from 1 to 100.
+$ski
+$par4
+For loading the control's memory with tool pocket information, this two digit number refers to
+the pocket number in which a particular tool has been loaded.
+$ind left-4
+$ski3
+8.\\&Comma&
+$ski
+$ind left+4
+$par4
+This is the single code assigned to the punctuation character comma.
+It separates the table entry number and table entry value.
+$ind left-4
+$ski3
+9.\\&Table Entry Value&
+$ski
+$ind left+4
+$par4
+For loading the control's memory with tool length compensation or cutter diameter compensation
+information, this number is the value to be entered into the entry specified by the Table
+Entry Number in the table specified by the Table Letter Address.
+$ski
+$par4
+For example:
+$par
+$ind left+4
+$ski
+P06,5000
+$ski
+$ind left-4
+will load a value of .5 inches (mm) into entry 6 of the table of tool length compensations.
+Negative values are allowed.
+$ski
+$par4
+For loading the control's memory with tool pocket information, this value is the tool number
+located in the pocket specified by the Table Entry Number.
+$ski
+$par4
+For example:
+$par
+$ind left+4
+$ski
+T15,4444
+$ski
+$ind left-4
+means that tool number 4444 is in pocket 15.
+$ind left-4
+$ski3
+$need5
+10.\&Control Out Code&
+$ski
+$ind left+4
+$par4
+Messages to the operator can be included in a machining tape.
+When the control interprets the information from a tape and encounters a message, that message will
+be printed on the control's display.
+$ski
+$par4
+The Control Out Code signals the beginning of a message and is a left parenthesis for EIA coded
+tapes and a percent sign for ASCII coded tapes.
+$ind left-4
+$ski3
+11.\&Message Initiation Code&
+$ski
+$ind left+4
+$par4
+This code follows the Control Out Code in an operator message block body and is the following
+string of characters:
+$ind left+4
+$ski
+MSG,
+$ind left-4
+$ind left-4
+$ski3
+12.\&Text of Message&
+$ski
+$ind left+4
+$par4
+This string of alphanumeric characters will be written on the console display, not exceeding 64
+characters in length nor containing the characters "?" nor "@".
+$ind left-4
+$ski3
+13.\&Control In Code&
+$ski
+$ind left+4
+$par4
+This character ends the text to be displayed and for EIA coded tapes is a right parenthesis, for
+ASCII coded tapes is a percent sign.
+$ind left-4
+$page
+14.\&Linear Motion&
+$ski
+$ver
+$ind left +4
+G00  X 'x'  Y 'y'  Z 'z'  B 'b'  F 'f'
+G01
+$ski
+$just left
+G00 (positioning mode) specifies hockey stick motion with automatic deceleration near the end of
+the motion.
+Modal. Cancelled by G01.
+$ski
+G01 (continuous interpolation) specifies linear motion with no attempt to decelerate near the end
+of the motion.
+Modal. Cancelled by G00, M02 or M30.
+$ski
+'x', 'y', 'z', and 'b' specify the absolute coordinates of the motion (in G90 mode) or the motion
+distance (in G91 mode).
+(See descriptions of Absolute and Incremental Modes in "Mode Setting", portion 19 of this section.)
+$ski
+'f' specifies the feedrate to be applied to all axes.
+It is a four digit number ranging from 000.1 to the maximum feedrate possible in steps of .1, in
+Inch Mode (see "Mode Setting", portion 19 of this section) using a 3.1 format.
+In Metric Mode, the value ranges from 3 to the maximum feedrate possible in steps of 1 using a 4.0
+format.
+$ski
+The value programmed with F is either interpreted as a direct feedrate (distance divided by time)
+or as "inverse time" (velocity divided by distance) based upon the feedrate mode, G93 or G94 (see
+"Mode Setting", portion 19 of this section).
+$ski
+$ind left +4
+If 'f' = 0 then all axes will move at rapid traverse with no attempt to make the axes arrive at
+their endpoints simultaneously.
+An F0 cannot be specified on a block containing a circular interpolation command (see "Circular
+ Motion", portion 15 of this section).
+$ski
+If 'f' > 0 then all axes will move at the rate specified by 'f' and arrive at their endpoints
+simultaneously.
+$ind left -4
+$ski
+$ski
+F codes are modal and will remain in effect for subsequent blocks until another F word is
+programmed.
+$page
+The B word specifies motion of the table.
+The format for 'b' is 3.3 for both inch and metric mode.
+The sign of 'b' determines whether the motion is clockwise (positive) or counterclockwise
+(negative) as viewed from the top of the table in both Absolute and Incremental modes (see "Mode
+Setting", portion 19 of this section).
+$ski
+One variety of table is only capable of rapid motion to 72 equidistant points (an "indexing
+table"); thus, its smallest increment of motion is 5 degrees.
+Another variety of indexing table can position at one degree intervals.
+Still another variety of table is capable of more accurate positioning (.001 degree increments) and
+can move at a variety of speeds, specified by the F word.
+$ski
+When table motion is programmed in a block with motion in the X, Y and Z axes, the X, Y and B
+motions will occur simultaneously, followed by the Z motion.
+$ski
+In G93 mode (see "Mode Setting", portion 19 of this section), when B is the only axis motion in a
+block, the table will rotate as rapidly as possible, regardless of the feedrate (F word) in effect.
+In G94 mode (see "Mode Setting", portion 19 of this section) solitary B axis motion with an F word
+will be interpreted as degrees per minute, using a 3.0 format, ranging from F1 to F999 (or F0).
+$ski
+When linear motion is programmed in the same block as table &indexing& the feedrate must specify
+rapid traverse (F0).
+$ind left -4
+$page
+15.\&Circular Motion&
+$ind left +4
+$ver
+          G17   X 'x'   Y 'y'   I 'i'   J 'j'
+  G02
+          G18   X 'x'   Z 'z'   I 'i'   K 'k'     F 'f'
+  G03
+          G19   Y 'y'   Z 'z'   J 'j'   K 'k'
+$just left
+$ski
+G02 specifies clockwise circular interpolation.
+$ski
+G03 specifies counterclockwise circular interpolation.
+$ski
+$ski
+G17 specifies motion in the XY plane, the condition in effect when the control is started.
+$ski
+G18 specifies motion in the XZ plane.
+$ski
+G19 specifies motion in the YZ plane.
+$ski
+X, Y, and Z specify the endpoint of the arc.
+If the endpoint specified is exactly the same as the current tool location, then 360 degrees of arc
+is commanded and that position must be explicitly programmed (in Absolute mode, the absolute
+position and in Incremental mode, zeros for the axes in the plane of contouring--see "Mode
+Setting", portion 19 of this section).
+$ski
+In Absolute mode (see "Mode Setting" portion of this section), I, J, and K specify the absolute
+location of the center of the circle; in incremental mode (see "Mode Setting" portion of this
+section), I, J, and K are the distance from the starting point to the center of the circle.
+The starting radius (defined by I,J, and K) must equal the ending radius (defined by X, Y, and Z).
+$ski
+F specifies the feedrate as described in "Linear Motion", portion 14 of this section.
+The maximum feedrate allowable for a circular motion block is 100 Inches Per Minute, (2500 MMPM).
+$ski
+No table motion (B word) is allowed on a circular motion block.
+Tool length compensation (see "Ancillary Functions", portion 21 of this section) cannot be in
+effect for circular motion in the YZ or ZX planes.
+The minimum radius allowed is .001 inches.
+$ski
+$ind left+6
+$par-6
+NOTE:\If G17, G18, or G19 has been stated on a previous block, it may be omitted from the block.
+$ind left-6
+$ind left -4
+$page
+16.\&Helical Motion&
+$ski2
+$ver
+        G17
+G02
+        G18   X 'x'   Y 'y'   Z 'z'   I 'i'   J 'j'   K 'k'   F 'f'
+G03
+        G19
+$just left
+$ski
+$ind left +4
+Helical motion makes use of Circular Motion (see "Circular Motion", portion 15 of this section)
+but has a third motion component normal to the two which form the arc.
+The resultant motion forms a spiral shape, or helix.
+All remarks made about circular motion apply to helical motion.
+$ski
+The axis (X, Y, or Z) which is not in the plane of the arc specifies the linear distance to be
+traversed concurrent with the cutting of the arc.
+The offset (I, J, or K) which is not in the plane of the arc specifies the ratehe linear cut
+(measured in rise per radian).
+For more accurate feedrate control, Helical Motion should be performed in G93 mode.
+$ind left -4
+$page
+17.\&Canned Cycle&
+$ski2
+$ind left +4
+G81   X 'x'   Y 'y'   R 'r'   Z 'z'   F 'f'
+$ski
+G82   X 'x'   Y 'y'   R 'r'   Z 'z'   F 'f'
+$ski
+G83   X 'x'   Y 'y'   R 'r'   Z 'z'   E 'e'   F 'f'
+$ski
+G84   X 'x'   Y 'y'   R 'r'   Z 'z'   F 'f'
+$ski
+G85   X 'x'   Y 'y'   R 'r'   Z 'z'   F 'f'
+$ski
+G86   X 'x'   Y 'y'   R 'r'   Z 'z'   F 'f'
+$ski
+G87   X 'x'   Y 'y'   R 'r'   Z 'z'   E 'e'   F 'f'
+$ski
+G88   X 'x'   Y 'y'   R 'r'   Z 'z'   F 'f'
+$ski
+G89   X 'x'   Y 'y'   R 'r'   Z 'z'   F 'f'
+$ski
+These G functions represent a sequence of rapid and feed linear motions to accomplish various types
+of drilling, boring, and tapping operations.
+$ski
+A canned cycle is programmed by a block with a canned cycle G code (G81-G89), the location at which
+the operation is to occur in the XY plane (X and Y words), the Z axis clearance plane (R word), and
+the final Z depth (less R).
+Canned cycles operate as follows:
+$ski
+$ind left+8
+$par-4
+1.\\A rapid motion to the XY location
+$par-4
+2.\\A rapid motion to the Z axis clearance plane
+$par-4
+3.\\The particular canned cycle specified by the G code at the modal feedrate and spindle speed
+$par-4
+4.\\Rapid retraction to the Z axis clearance plane.
+$ind left-8
+$ski
+Following a canned cycle operation, the same cycle may be repeated by entering a new position (X,
+Y and/or B).
+The cycle will be repeated at the new position.
+Canned cycle repetition is cancelled by programming G80 in a block by itself, or by programming a
+block specifying a different canned cycle.
+Each block in which G81-G89 is programmed must contain X,Y,R,Z and E (if G83 or G87 is programmed).
+$page
+New values for R and Z may be programmed with any canned cycle block.
+When a new R word is programmed, the canned cycle motion described above occurs as follows:
+$ski
+$ind left+8
+$par-4
+1.\\If the new R word is less than that previously in effect, the tool will position rapidly to the
+X and Y location specified and then to the Z axis clearance plane.
+$ski
+$par-4
+2.\\If the new R word is greater than that previously in effect, the tool will  retract rapidly
+to that greater Z axis location and then position rapidly along the X and Y axes.
+$ind left-8
+$ski
+A description of the particular canned cycle specified by the G codes G81-G89 follows:
+$ski
+$ind left+8
+$par-4
+G81-&Drilling&: The tool feeds the distance specified by the Z word and retracts rapidly back to
+the point at which the feed motion began.
+$ski
+$par-4
+G82-&Spotfacing&: The tool feeds to within .010 of the Z depth.
+The spindle speed is changed to 100RPM and the remaining Z depth of .010 is drilled at .5 inches
+per minute.
+The tool pauses for a time (&not& under tape control) and is retracted rapidly back to the point
+the Spotfacing cycle began.
+The spindle speed will be restored to the speed in effect before the cycle changed it.
+$ski
+$par-4
+G83-&Chipbreaking&: The tool feeds the distance specified by the E word, pauses for a time (&not&
+under tape control), and feeds another increment specified by the E word until the total distance
+specified by the Z word has been reached.
+The tool then retracts rapidly to the point where the cycle began.
+$ski
+$par-4
+G84-&Tapping&: The tool feeds to the depth specified by the Z word.
+The spindle rotational direction is reversed and the tool pauses sufficiently long to achieve 80%
+of the programmed RPM.
+The tool feeds back to the point at which the cycle began and the spindle is reversed again.
+$ski
+$par-4
+G85-&Reaming&: The tool feeds the distance specified by the Z word and then feeds out the same
+distance.
+$ski
+$par-4
+G86-&Boring&: The tool feeds the distance specified by the Z word, the spindle is stopped and the
+tool rapids out the same distance it fed in.
+The spindle is then restarted.
+$ski
+$need9
+$par-4
+G87-&Deep Hole Drilling&: The tool feeds the distance specified by the E word, retracts rapidly
+to the point at which the cycle began, advances into the part to within .100 of the last E depth at
+99.9 inches per minute, feeds another E increment plus .100 and retracts back to the point where
+the cycle began.
+This repetition continues until the full depth specified by the Z word has been reached.
+The tool then retracts rapidly to the point the cycle began.
+$ski
+$par-4
+G88-&Boring Orientation&: The tool feeds the distance specified by the Z word and the spindle will
+be keylocked (rotation stopped with a specific orientation of the spindle in its stationary
+position).
+The tool moves .01 inches along the X axis and then retracts rapidly to the Z axis position at
+which the cycle began.
+The tool then moves back -.01 inches along the X axis and the spindle restarts, rotating in the
+clockwise direction.
+$ski
+$par-4
+G89-&Feed In/Delay/Feed Out&: The tool feeds the distance specified by the Z word, the control
+delays (&not& under tape control) and then the tool feeds out to the point where the cycle began.
+$ski
+$par-4
+$ind left-8
+Note:\A feedrate (F word) need not be included in a canned cycle block if previously stated.
+$ind left -4
+$page
+18.\&Dwell&
+$ski2
+$ind left +4
+G04\\\F 'f'
+$ski
+This G function initiates a machine pause, or dwell, with a duration of 'f' seconds, where 'f'
+ranges from .1 seconds to 400.0 seconds.
+G04 is &not& modal.
+The feedrate in use prior to the dwell block will be cancelled for the dwell block and reinstated
+following it.
+$ind left -4
+$page
+19.\&Mode Setting&
+$ski
+$ind left+4
+$ind left+4
+$par-4
+G70-&Inch Input&. Specifies that input for all linear axes is to be interpreted in inch units in a
+3.4 format.
+Modal.
+Cancelled by G71.
+Default.
+$ski
+$par-4
+G71-&Metric Input&. Specifies that input for all linear axes is to be interpreted in metric units
+(millimeters) in a 4.3 format.
+Modal.
+Cancelled by G70.
+$ski
+$par-4
+G90-&Absolute Mode&. Specifies that all axis input is to be interpreted as absolute distances from
+machine zero.
+Modal.
+Cancelled by G91.
+Default.
+$ski
+$par-4
+G91-&Incremental Mode&. Specifies that all axis input is to be interpreted as incremental
+departures from the previous commanded location.
+Modal.
+Cancelled by G90.
+$ski
+$par-4
+G94-&Direct Feedrate&. Specifies that feedrates (specified by the F word, see "Linear Motion",
+portion 14 of this section) are to be interpreted as distance (inches, millimeters or degrees)
+divided by time.
+The maximum feedrate for circular interpolation (see "Circular Motion", portion 15 of this section)
+is 100 Inches Per Minute (IPM) (or 2500 MMPM) in .1 IPM (1MMPM) increments.
+For rotary motion without concurrent linear motion, the F word format is 3.0, ranging from 1 to 999
+Degrees Per Minute (DPM).
+Simultaneous linear and rotary occuring in which the rotary axis motion is greater than 10% of the
+linear travel can most accurately be specified in G93 mode which cancels G94.
+G94 is modal, as are F codes while it is in effect.
+Default.
+$ski
+$par-4
+G93-&Inverse Time Feedrate&. Specifies that the feedrates given by the F word are to be interpreted
+as velocity divided by distance.
+In helical contouring (see "Helical Motion", portion 16 of this section), the feedrate is equal to
+velocity times the angle in radians divided by distance.
+In all cases, the F word is ten times the computed feedrate in G93 mode which is modal and
+cancelled by G94.
+F codes are &not& modal in G93 mode.
+$ski
+$par-4
+G98-&Axis Offset&. Overrides machine zero.
+The axis locations stated in the same block become the absolute coordinates which the control
+considers to be the current position.
+Only axis locations may be programmed in a block with G98.
+$ski
+$par-4
+G99-&Offset Cancel&. Cancels the effect of G98 mode and must be alone in a block. Modal.
+$ski
+$ind left-4
+$ind left+6
+$par-6
+Note:\The following pairs of mode setting G codes are mutually exclusive: (G70/G71), (G90/G91),
+(G94/G93), (G98/G99).
+Only one of each should appear in a single block, allowing a maximum of four G codes in a single
+mode setting block.
+$ind left-6
+$ind left-4
+$page
+20.\&Spindle Speed&
+$ind left+4
+$ski2
+$ver
+S's'\\M03\\M40
+\\\\\\M04\\M40
+$ski
+$just left
+The S word specifies the rotational speed of the tool in revolutions per minute, as a four digit
+number.
+A speed of at least 10RPM is required to enable axis motion.
+The directions of the rotation is specified by the miscellaneous functions M03 and M04 (see
+"Ancillary Functions", portion 21 of this section).
+The M40 is not required but if programmed will restrict the RPM to a selected range of rpms for
+tapping.
+Otherwise, the entire spindle speed range is accessible.
+$ind left-4
+$page
+21.\&Ancillary Functions&
+$ind left+4
+$ski2
+Ancillary Functions control a variety of machining operations and modes.
+Generally they are specified by an M word selecting the desired function, e.g. turning on coolant,
+starting spindle rotation, changing tools, etc.
+$ski
+For the purposes of this section, ancillary Functions are defined to be those
+functions specified by M codes (the "miscellaneous functions", see below for a
+complete list) and also some
+other codes which fall into the same "ancillary" category, i.e. Cutter Diameter
+Compensation, Tool Length Compensation and Tool Selection.
+Descriptions of each of these functions follow.
+$ski
+$ind left+4
+$par-4
+G41-&Cutter Diameter Compensation LEFT&.
+Commands the control to position the tool to the left of subsequent motion.
+Modal.
+Cancelled by G40 or G42.
+$ski
+$par-4
+G42-&Cutter Diameter Compensation RIGHT&.
+Identical to G41 except motion is compensated rightward.
+Modal.
+Cancelled by G40 or G41.
+$ski
+$par-4
+G40-&Cutter Diameter Compensation OFF&.
+Cancels G41 or G42.
+G40 must be programmed with motion and is modal.
+$ski
+$ind left-4
+$ind left+6
+$par-6
+Note:\Cutter Diameter Compensation allows the operator to dynamically correct the
+machining motions commanded by a tape containing CDC G codes (G41 and G42) by
+entering correction values into registers on the control.
+CDC is only operational in the XY plane.
+It can only be in effect with linear and circular motion.
+Offsets (see "Mode Setting", portion 19 of this section) can be in effect.
+The minimum axis motion necessary to apply (G41/G42) Cutter Diameter Compensation
+(sometimes called "ramping" due to the gradual application of the compensation
+during motion) and the minimum axis motion necessary to cancel (G40) Cutter
+Diameter Compensation is .10 inches (2.54 mm); the minimum time for ramping is .2
+seconds.
+Ramping cannot occur with circular interpolation (see "Circular Motion", portion
+15 of this section).
+$ski
+The amount of Cutter Diameter Compensation to be applied to motions subsequent to
+the application of G41 or G42 is specified by the D word in the block containing
+the G41 or G42.
+The number with D ranges from 1 to 100 and refers to a register in the control's
+memory which can be loaded from the control console or by a special tape (see "Table
+Load Block Body" in section 3.1, Diagram of Tape Format).
+$ind left-6
+$page
+&Tool Length Compensation&
+$ski
+Controlled by the P word, the control can dynamically change the Z axis value for
+all motions in a tape.
+P is programmed in the block with the first Z axis motion which is to be changed
+and can range from 0 to 100 (P0 cancels the compensation).
+The numbers 1 to 100 refer to one hundred registers in the control's memory set
+by the operator.
+For example, if the value -7.500 were entered in P register 3 and a tape block
+with G90 G00 Z9.1 P3 were read, the control would position the Z axis to 1.6,
+compensating for a difference in the length of the tool the tape was programmed
+for the actual tool length.
+$ski
+Values can either be entered into the P registers from the console or by a special
+tape--see "Table Load Block Body" description in the Diagram of Tape Format,
+section 3.1.
+$ski3
+&Tool Selection&
+$ski
+Tools are stored in a magazine which can be rotated under tape control.
+A particular tool in the magazine can be selected to be the next tool transferred
+into the spindle (an operation also under tape control).
+When a tape block contains a tool code number, (a T word) the magazine will rotate
+until the proper tool has been selected.
+Such selection may require more time than that required to complete th other
+operations specified by that block.
+In that case, subsequent blocks will be executed while magazine rotation continues.
+$ski
+At the point in the tape where tool transfer is required (specified by an M06 on
+tape), the control will wait until the tool has been selected, if that process
+is not complete.
+$ski
+Tools can be coded in three ways so that the control can select the proper one
+from the magazine: octal coding, binary coding and pocket coding.
+$ski
+In octal coding, tool select codes are five digit numbers from 00001 to 77777
+for a total of 32,767 possible tool numbers.
+Tools are identified by fifteen rings (ones) and spacers (zeros) on the collar
+of each tool holder which is read from the shank end by a tool reading head as
+the magazine is rotated.
+$ski
+The binary coding scheme is similar to octal.
+It consists of a four-digit number following the T code, ranging from T0101 to
+T3131 for a total of 1023 codes.
+The first two decimal digits are the group number, the second two are the tool
+number.
+Ten rings and spacers are read from the shank end of the tool to form the four
+digits: the first digit of the group number is coded by two positions containing
+either a ring or a spacer, the second digit by three positions.
+The tool number digits are formed similarly.
+$ski
+In both binary and octal coding schemes, the magazine rotates until a tool with
+a combination of rings and spacers matching that of the tool called for in a
+preselection T word is located.
+$ski
+Machines which are not equipped with a tool reader head (for use of octal or binary
+tool holder coding) can use tapered shank tooling in which the T word is a one to
+seven digit number, ranging from 1 to 8388607.
+With this scheme, the operator loads tools into the tool storage magazine and
+assigns each tool code (T number) to the corresponding pocket number in which it
+was placed (see "Table Load Block Body" definition in the Diagram of Tape Format,
+section 3.1).
+$ski3
+&M Codes&
+$ski
+$ind left+4
+$par-4
+M00-&Program Stop&: Stops axis motion, spindle rotation and coolant.
+$ski
+$par-4
+M01-&Optional Program Stop&: Same as M00 except Optional Stop On-Off switch must
+be set to ON by operator.
+$ski
+$par-4
+M02-&End of Program&: Same effect as M00.
+Additionally, all active storage areas in the control are cleared and reset to
+begin a new program.
+The functions G00, G17, G40, G80, G94, G90, M05, M09, M48 (M26 for rotary tables
+only) are automatically invoked.
+M02 must be programmed in a block by itself.
+$ski
+$par-4
+M03-&Spindle On Clockwise&: As viewed from the spindle toward the workpiece.
+Modal.
+Cancelled by M00, M01, M02, M04, M05, M06 and M30.
+$ski
+$par-4
+M04-&Spindle On Counterclockwise&: As viewed from the spindle toward the workpiece.
+Modal.
+Cancelled by M00, M01, M02, M03, M05, M06 and M30.
+$ski
+$par-4
+M05-&Spindle Stop&:Stops the rotation of the spindle.
+Modal.
+Cancels M03 or M04.
+Default.
+$ski
+$par-4
+M06-&Tool Transfer&: This function stops spindle rotation and positions the Y
+axis to the absolute position of the tool change.
+See Section 2 (Machine Configuration) for specific locations for each model.
+The tool previously selected (see "Tool Selection" portion of this section) will
+be automatically transfered into the spindle while the tool in the spindle will
+be returned to the magazine.
+An M06 has the following additional effects for the block in which it appears:
+$ind left+6
+$par-3
+1.\G00-Rapid Positioning
+$par-3
+2.\G90-Absolute Positioning
+$par-3
+3.\G94-IPM/MMPM at F0 (Rapid Traverse)
+$par-3
+4.\M25-Override of all axis offsets, i.e.
+$ind left+4
+$par-2
+a. Tool Length Compensation (P word)
+$par-2
+b. Cutter Diameter Compensation (D word)
+$par-2
+c. G98 axis offset programming
+$par-2
+d. Axis inversion
+$ind left-4
+$par-3
+5. M48-Feedrate Override Bypass Cancel
+$ind left-6
+$ski
+$ind left+6
+$par-6
+Note:\It is desirable to keylock the spindle (M19) prior to the first tool transfer.
+It is preferred that M06 be in a block by itself.
+$ind left-6
+$ski
+$par-4
+M07-&Mist Coolant On&: Modal.
+Cancelled by M09.
+Occurs &before& axis motion ("happens first" function).
+$ski
+$par-4
+M08-&Flood Coolant On&: Modal.
+Cancelled by M09.
+Happens first function.
+$ski
+$par-4
+M09-&Coolant Off&: Modal.
+Cancels M07, M08, M57, M59.
+Occurs &after& axis motion programmed in the same block ("happens last" function).
+Default.
+$ski
+$ind left+6
+$par-6
+Note:\If coolant on and coolant off are programmed in the same block, the coolant
+will be &on& during the execution of the block and then turned off.
+$ind left-6
+$ski
+$par-4
+M19-&Keylock&: Commands the spindle to stop and locates it in the keylock position.
+After a keylock, the RPM (S word) must be restated to insure correct spindle speed.
+Non-modal.
+$ski
+$par-4
+M25-&Bypass Offset Programming&: Causes all axes programmed in the same block to
+be unaffected by previously programmed absolute offset (G98), tool length compensation
+(H word), cutter diameter compensation (D word), or axis inversion.
+Used to position axes to positive or negative travel limits.
+Blocks containing an M25 will always be executed at rapid traverse (F0) and
+absolute positioning (G90); previously established feedrate and positioning modes
+will be restored.
+$ski
+$par-4
+M26-&Automatic B-Axis Clamp&: Firmly holds the B-Axis (table) in position when
+no table motion is programmed.
+Released for block with B word, reclamped upon completion of the block.
+Modal.
+Default.
+In effect at start-up.
+Cancelled by M27.
+$ski
+$par-4
+M27-&Disable B-Axis Clamp&: Releases automatic B-Axis holding.
+Cancelled by M26.
+Modal.
+$ski
+$par-4
+M30-&End of Program&: Same as M02 except the tape is rewound until a rewind stop
+code is encountered (this "rewinding" is done within the control's memory).
+Provides a pallet transfer if this function is available.
+$ski
+$par-4
+M40-&Select Tapping Range&: When programmed with a spindle speed (S word) makes
+available a special group of tapping spindle speeds.
+Cancelled by a block with a spindle speed &without& an M40.
+$ski
+$par-4
+M48-&Feedrate Override&: Enables the usage of manually set feedrate and spindle
+speed override selectors (useful when a tape is being run the first time to
+verify correctness).
+Modal.
+Default.
+Cancelled by M49.
+$ski
+$par-4
+M49-&Disable Feedrate Override&: Disables feedrate and spindle speed override
+selectors (automatically used in canned cycle tapping): causes 100% of speed and
+feed programmed.
+Cancelled by M48.
+Modal.
+$ski
+$par-4
+M57-&Auxiliary Coolant On&: This function activates a mist coolant through the
+tool (straight shank only) or through the spindle (taper shank only).
+It is cancelled by M09 and is a happens first function.
+Modal.
+$ski
+$par-4
+M58-&Auxiliary Coolant On&: This function activates a flood coolant through the
+tool or spindle similar to the mist (M57).
+Cancelled by M09.
+Happens first.
+Modal.
+$ski
+$par-4
+M59-&Auxiliary Coolant On&: This function activates a high pressure pulsating
+coolant through the tool or spindle similar to the mist (M57).
+Cancelled by M09.
+Happens first.
+Modal.
+$ski
+$ind left+6
+$par-6
+Note:\The maximum number of M codes allowed in any single block is four.
+Only one "happens last" M code is allowed in any single block.
+$ski
+The following sets of M codes are not allowed in the same block:
+$ind left+2
+(M00, M01, M02, M06, M30)
+$par
+(M03, M04, M19)
+$par
+(M23, M24)
+$par
+(M26, M27)
+$par
+(M07, M08, M57, M58, M59)
+$par
+(M48, M49)
+$par
+$ind left-2
+$ind left-6
+$ind left-4
+$ind left-4
+$title 'ANC PROTOTYPE MILL/DRILL LINK REQUIREMENTS' '3.3 NUMERICAL CODE FORMATS'
+$page
+$ind left+4
+$ski2
+$ver
+$tabs8,16
+	&Inch&	&Metric&
+$ski
+N	6	6
+
+G	2	2
+
+X	-3.4	-4.3
+
+Y	-3.4	-4.3
+
+Z	-3.4	-4.3
+
+R	-3.4	-4.3
+
+I	-3.4	-4.3
+
+J	-3.4	-4.3
+
+K	-3.4	-4.3
+
+B	-3.3	-3.3
+
+E	1.4	2.3
+
+F	3.1	4
+
+S	4	4
+
+T       5 (Octal Coding) 4 (Binary Coding) 2 (Socket Coding) Inch && Metric
+
+P	3	3
+
+D	3	3
+
+M	2	2
+$ski3
+$just left
+$ind left+6
+$par-6
+Note: Trailing zeros are mandatory for all directives.
+$ind left-6
+$ind left-4
+$title 'ANC PROTOTYPE MILL/DRILL LINK REQUIREMENTS' '3.4 ADDITIONAL MACHINING FEATURES'
+$page
+$ski2
+The following machining features, while available on the machine/control for which
+this prototype link is to be made, will not be supported.
+They are included here for completeness only.
+$ski3
+$ind left+4
+$par-4
+M23-&Advance Table&: To afford greater flexibility in machining large workpieces,
+it is possible to position the table in one of two positions, colinear with
+the Z axis.
+An M23 will advance the table toward the column holding the spindle.
+It will only be acted upon when the table is oriented in one of the following
+positions:
+0, 5, 175, 180, 185, 355 degrees.
+M23 must be alone in a block.
+$ski
+$par-4
+M24-&Retract Table&: Moves table away from column.
+(The table can only index when retracted).
+M24 must be alone in a block.
+$ski
+$par-4
+M60-&End of Program&. Same as M30 except no rewind.
+Only available for machines equipped with the Pallet Shuttle option.
+$ski
+$para-4
+G25-&Automatic Regrid Cycle&. When programmed with the sequence Z
+(retracted and keylocked), M06 (select tool probe), and a P
+register all followed by the G25 will automatically command the
+axis slide (XYZ) to position to the Target Bushing, placing
+the probe tool aproximately 0.3" away from the front surface
+of the bushing. The Z-axis will advance until the tool probe
+contacts the face of the bushing. It will then attempt a form
+of dead reckoning through sensing to determine if the machine
+has lost exact absolute location (usually through expansion
+and contraction).
+$ski
+$par-4
+G26-&Surface Detection&. Similar to G25 except used to find true
+absolute positioning of a part surface in respect to the axis
+desired. A G98 block is normally used to correct any inconsistencies found.
+$ski
+$para-4
+G27-&Automatic Position Between Surfaces&. Similar to G26 except
+used to find the center point between two surfaces in the X or Y axis. 
+$ski
+$para-4
+G28-&Coordinate(X,Y,Z) Detection&. Similar to G27 except it will
+verify the location of a previous programmed command. A feed
+of 200 IPM or less is recommended, and it is not to be 
+programmed with a fixed cycle (G81 through G89).
+$ski
+$para-4
+G29-&Cancel Coordinate Detection&. Cancels G28 and disables probe tool.
+$ski
+$para-4
+G36-&Storage of In-Process Inspection Data&. If G36 is in effect,
+the record of the spindle probing commands (G25 through G28)
+will be sent to a file named by the operator.
+$ski
+$para-4
+G37-&Cancel Storage of Inspection Data&. Cancels G36. (Modal).
+$ski
+$para-4
+G38-&Tool Check(Broken Tool Detection)&. When programmed with a
+S-word (indicating the total number of blades to be checked
+in one revolution of the cutter), the proximity switch will
+not be triggered if the cutter is broken and an alternate
+tool is required. To program, X,Y and Z are positioned to
+within 1.0 MM (0.040") of the proximity switch and a RPM
+is programmed (here the S-word indicates RPM) along with
+a M03 (spindle ON clockwise). In the next block the G38
+along with a S-word with a value equal to the number of
+blades or flutes in the cutter are programmed to activate
+the tool detection cycle. A S-word is not necessary for a single point cutter.
+$ski
+$para-4
+G51-&Adaptive Control ON&. This directive, when programmed with
+an H-word, will maximize the feeds and speeds in respect
+to the most efficient tool performance. This is accomplished
+by the information found in the H-word. The H-word is of
+a four digit format where the first digit represents the type of cutting material.
+$ski
+1 = High Speed Steel(H.S.S.)
+$par
+2 = Carbide
+$par
+(if omitted, the cutter material previously specified remains in effect).
+$ski
+The remaining three digits represent the Target Horsepower desired.
+$ski
+This feature will be disabled anytime a M49 (disable feedrate override) is active.
+$ski
+$para-4
+G50-&Adaptive Control OFF&. Cancels a G51 and is in effect at machine start-up.
+$ind left-4
+$ind left-4
+$title 'ANC PROTOTYPE MILL/DRILL LINK REQUIREMENTS' '4.0 GENERAL LINK REQUIREMENTS'
+$page
+$ski
+$ind left+8
+$par-4
+4.1\Customer Requirements
+$ski
+$ind left+4
+$par-4
+A.\\Link must translate COMPACT\II part programs into 
+a tape file which will cause the machine/control
+configuration described above to efficiently cut the programmed part.
+$ind left+4
+$par-4
+1.\\Effort will be made to avoid unnecessary output.
+$par-4
+2.\\Must be able to interpret both English and Metric units in the COMPACT\II program.
+$ind left-4
+$ski
+$par-4
+B.\\Link must calculate and display an accurate representation of the time it 
+will take the machine/control to execute the tape file.
+$ski
+$par-4
+C.\\Part programs must be easy to write, debug and maintain.
+$ind left+4
+$par-4
+1.\\Error messages must be easily understood and clearly related to the actual COMPACT\II
+statement which is in error.
+$par-4
+2.\\Plot of actual machine tool path must be available for any part program.
+$par-4
+3.\\Link minor words must be reasonable mnemonics for the functions that they cause.
+$ind left-4
+$ind left-4
+$ski
+$par-4
+4.2\MDSI Requirements
+$ski
+$ind left+4
+$par-4
+A.\\Cost of producing and maintaining ANC links must be
+less than like costs for 940 links.
+$ind left-4
+$ind left-8
+$title 'ANC PROTOTYPE MILL/DRILL LINK REQUIREMENTS' '5.0 RESPONSE TO REQUIREMENTS--COMPACT II INPUT DESCRIPTION'
+$page
+$ski
+$ind left+4
+This section of the User Requirement Document details the method by which a user
+of the Prototype Mill/Drill Link can use Compact II to utilize the mill/drill's
+capabilities previously detailed.
+$ski
+First, a list of words in the link's vocabulary is defined in section 5.1.
+Next, these words are divided into several semantically related categories in
+section 5.2.
+Finally, in section 5.3, major Compact II words are shown in statement diagrams
+showing from which categories link words programmed with them can be chosen.
+$title 'ANC PROTOTYPE MILL/DRILL LINK REQUIREMENTS' '5.1 LINK MINOR WORD DEFINITIONS'
+$page
+$ind left +4
+$ski
+ABSO
+$ski
+Specifies that X,Y,Z and T axis coordinates be output relative to the machine Control's
+current coordinate system origin.
+Default.
+$ski5
+$need11
+$ver
+BD\\[/ON]
+\\\\[/OFF]
+$jus left
+$ski
+BD/ON specifies to the link to output a block delete character
+preceding each tape block.
+$ski
+BD is the same as BD/ON except that it applies only to this statement.
+$ski
+BD/OFF specifies to the link to suppress output of a block delete 
+character preceding each tape block.
+Default.
+$ski5
+$need13
+$ver
+BYPASS\\[/ON]
+\\\\\\\\[/OFF]
+$jus lef
+$ski
+BYPASS/ON specifies that absolute offset, cutter diameter compensation and tool
+length compensation applied to an axis should be removed if that axis is
+commanded to its positive or negative limit, and then reapplied when that
+axis leaves the limit.
+This function will be ignored if the axis approaches the limit in a cutting mode
+rather than a positioning mode.
+$ski1
+BYPASS is the same as BYPASS/ON except that it applies only to this statement.
+$ski1
+BYPASS/OFF deactivates this feature and is the default.
+$ski5
+$need12
+$ver
+CANCYC\\[/ON]
+\\\\\\\\[/OFF]
+$jus lef
+$ski
+CANCYC/ON specifies the use the canned cycle drilling, boring and tapping capability
+of the control wherever possible.
+Default.
+$ski
+CANCYC is the same as CANCYC/ON, except that it applies only to this statement.
+$ski
+CANCYC/OFF prohibits the link from using the control's canned cycle
+capability.
+It must use a sequence of rapid and cutting motions instead.
+$ski5
+$need7
+$ver
+CDC<integer>\\1&<&integer&<&100
+\\\/OFF
+$jus left
+$ski
+The value programmed with this minor word specifies the cutter diameter compensation
+register to be associated with this tool.
+$ski1
+CDC/OFF deactivates this feature and is the default.
+$ski5
+$need6
+CDCL[<integer>]\\1&<&integer&<&100
+$ski
+This minor word specifies that cutter diameter compensation
+be applied to the left of the programmed cutter path.
+If not previously specified, a cutter diameter compensation
+register must be programmed with this word.
+(See CDC description.)
+$ski5
+$need4
+CDCR[<integer>]\\1&<&integer&<&100
+$ski
+Same as CDCL, except that the tool must stay to the right of the programmed cutter
+path.
+$ski5
+$need7
+$ver
+CLAMP[/ON]
+\\\\\[/OFF]
+$jus left
+$ski
+CLAMP/ON specifies that all axes that have the capability to clamp themselves in
+position should apply those clamps.
+Default.
+$ski
+CLAMP/OFF specifies that all axis clamps should be removed.
+$ski5
+$need19
+CMOD(<integer1>,<integer2>)\\integer1=1 or 2\\integer2=50 or 100
+$ski
+Defines the specific configuration of the control.
+$ski
+Two software levels exist in the K&&T control.
+$ski
+"Level C" software (specified by integer1 = 1) includes all of the functions and
+capabilities described in Section 3 of this document.
+$ski
+"Level B" software (specified by integer1 = 2) is a subset of Level C, including
+all functions except:
+$ski
+$ind left+8
+$par-4
+G25-(Automatic Regrid Cycle)
+$par-4
+G26-(Surface Detection)
+$par-4
+G27-(Auto Positioning Between Surfaces)
+$par-4
+G28-(Coordinate Detection)
+$par-4
+G29-(Cancel Coordinate Detection)
+$par-4
+G36-(Inspection Data Storage)
+$par-4
+G37-(Cancel Inspection Data Storage)
+$par-4
+G38-(Broken Tool Detection)
+$par-4
+G51-(Adaptive Control)
+$ind left-8
+$ski
+Compensation registers are available as a set of fifty or a set of one hundred.
+Which set the control has is specified by integer2.
+$ski5
+$need50
+COF
+$ski
+See COOL
+$ski5
+$need3
+CON
+$ski
+See COOL
+$ski5
+$need34
+$ver
+COOL[<integer>][/ON]
+\\\\[<integer>]/OFF\\integer = 0, 1, 2, 3, or 4
+$jus lef
+$ski
+Directs the link to turn on or off the coolant specified.
+The coolants available are flood, mist, and three auxiliary coolants,
+respectively specified by the five possible values.
+$ski
+If /OFF programmed then:
+$ski
+$ind left +4
+If programmed on an ATCHG or MTCHG statement then specified coolant will
+be turned off prior to or in conjunction with the motion to the
+tool change point.
+$ski
+Otherwise:
+$ski
+Specified coolant will be turned off after the programmed major operation.
+$ski
+$ind left -4
+If /ON programmed then:
+$ind left +4
+$ski
+If on an ATCHG or MTCHG statement then specified coolant is turned on after
+the tool exchange and prior to or in conjunction with the specified motion.
+$ski
+Otherwise:
+$ski
+Specified coolant is turned on prior to or in conjunction with the
+next motion.
+$ind left -4
+$ski
+For compatibility:
+$ski
+$ind lef +4
+$par-4
+1.\\COOL or COOL/ON are equivalent to COOL0/ON
+$par-4
+2.\\COOL/OFF will turn off all coolants.
+$par-4
+3.\\CONn is equivalent to COOLn/ON
+$par-4
+4.\\COFn is equivalent to COOLn/OFF
+$ind lef -4
+$ski5
+$need9
+$ver
+DECEL[/ON]
+\\\\\[/OFF]
+$jus lef
+$ski
+DECEL/ON directs the link to decelerate all motions generated.
+$ski1
+DECEL is the same as DECEL/ON except it applies to this statement only.
+$ski
+DECEL/OFF deactivates this feature.
+$ski5
+$need17
+DWELL<real number>\\0&<&real number
+$ski
+Specifies a DWELL in seconds.
+$ski
+If DWELL is programmed with DRL, BORE, FLT
+then DWELL will occur at the bottom of the feed stroke.
+$ski
+If DWELL is programmed with MOVE, CUT, ICON, OCON, CONT, FILET,
+CORNR or ROUND, then the dwell will occur upon the completion
+of the motion.
+$ski
+Else if DWELL is programmed with DPB
+then if DWELL is programmed with a particular element definition
+and that element is CUT with STK0, then DWELL will occur
+at the end of the machining motion for the element.
+$ski
+Else DWELL will occur after the programmed major operation.
+$ski5
+$ski5
+ERTL<integer>\\\\\\\1&<&integer&<&8388607
+$ski
+Specifies the tool to preselect at the end of the program.
+This preselection may occur before, with or after the motion to the setup location.
+The upper bound for integer depends upon the type of tooling specified with MOD.
+$ski5
+$need5
+ESTL<integer>\\\\\\\1&<&integer&<&8388607
+$ski
+Specifies the tool to be loaded into the spindle at the end of the program.
+This loading will be accomplished after the motion to the setup location.
+The upper bound for integer depends upon the type of tooling specified with MOD.
+$ski5
+$need4
+EXTAP<integer1>[/<integer2>]\\-50&<&integer1,integer2&<&50
+$ski
+Specifies the percentage of feedrate and stroke modification in (integer1) and/or
+out (integer2) for extension tapping.
+$ski5
+$need4
+FPM<real number>\\0<real number
+$ski
+FPM specifies the speed of the edge of the cutting tool in feet per minute.
+$ski5
+$need8
+$ver
+FRCMP<integer>/ON\\\integer=0, 1 or 2
+\\\\\\\\\\\\\\/OFF
+$jus left
+$ski
+The integer programmed with FRCMP/ON specifies the type of feedrate modification
+to be applied during circular contouring.
+$ind left+4
+$ski
+$par-2
+0-Reduce feed for ICON
+$par-2
+1-Reduce feed for ICON, Increase feed for OCON
+$par-2
+2-Increase feed for OCON
+$ind left-4
+$ski
+FRCMP/OFF deactivates this feature and is the default.
+$ski5
+$need13
+$ver
+FRO/ON
+\\\/OFF
+$jus lef
+$ski
+Specifies activation or deactivation of feedrate override by the machine operator.
+$ski
+FRO/ON specifies that the machine operator should have the capability to modify
+programmed feedrates.
+Such modification is usually accomplished by enabling a switch on the control
+console.
+Default.
+$ski
+FRO/OFF specifies that the machine operator should &not& be able to modify
+programmed feedrates.
+Such prohibition is usually accomplished by disabling a switch on the control
+console.
+$ski5
+$need4
+GL<real number>
+$ski
+Specifies the distance from the Z-axis reference point to the tip of the tool.
+$ski5
+$need4
+INCO
+$ski
+Specifies that X,Y,Z and T coordinates will be output as incremental departures
+from the current position (G91 mode).
+$ski5
+$need11
+IPM (MMPM)<real number>\\0<real number
+$ski
+On MOVE statements:
+$ski
+$ind left+4
+Directs the link to output the rapid traverse motion generated from
+this statement at the feed rate specified.
+$ind left-4
+$ski
+On DRL, BORE, CUT, CONT, ICON, OCON, CORNR, FILET, ROUND Statements:
+$ski
+$ind left+4
+Directs the link to output the cutting motion generated from this statement
+at the feedrate specified and to retain that feedrate as the new modal feedrate.
+$ind left-4
+$ski5
+$need5
+IPR (MMPR)<real number>\\0<real number
+$ski
+Specifies the feedrate which the link is to use for all subsequent cutting motions.
+This modal feedrate can be changed on an individual statement by programming IPM(MMPM).
+$ski5
+$need16
+$ver
+LIMIT[([X<real number1>/<real number2>][,]
+\\\\\\\[Y<real number3>/<real number4>][,]
+\\\\\\\[Z<real number5>/<real number6>][,]
+\\\\\\\[T<real number7>/<real number8>][,]
+\\\\\\\[YZ<real number9>/<real number10>])][/ON]
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\[/OFF]
+$jus lef
+$ski
+Specifies to the link the minimum and maximum absolute coordinates for the GLRP
+in each axis: X, Y, Z and T.
+In addition, the YZ collision zone values (the area in which the spindle head
+can collide with the table, see Section 2) can be modified: real number 9 is the
+minimum value for the Y axis and real number 10 is the minimum value for the Z
+axis.
+Should a subsequent motion cause the GLRP to exceed any of these limits,
+an error message will be output.
+Default coordinates are documented in Section 2.0.
+$ski5
+$need3
+MMPM
+$ski
+See IPM.
+$ski5
+$need3
+MMPR
+$ski
+See IPR.
+$ski
+$need20
+MOD(<integer1>,<integer2>,<integer3>,<integer4>,<integer5>,<integer6>)
+$ski
+Specifies the specific configuration of the machine.
+$ski
+$ind left+4
+$par-4
+1.\\Machine Model Number: 180, 200, 600, or 800, (integer 1).
+$ski
+$par-4
+2.\\Pallet size: 16, 18 or 24 inches square, (integer 2).
+$ski
+$par-4
+3.\\Axis travel: Only applies to models 200 and 600. 1 (standard) and 2 (extended),
+see Section 2.3, (integer 3).
+$ski
+$par-4
+4.\\Tooling: 2 (binary), 8 (octal) and 10 (decimal), see section 3.2, Tool Selection,
+(integer 4).
+$ski
+$par-4
+5.\\Spindle Speeds: Only applies to models 200 and 600. 2400, 3600 and 5000.
+See section 2.3, (integer 5).
+$ski
+$par-4
+6.\\Type of Rotary Table: 1 (indexer) or 2 (cutting table), see section 3.2, part
+14, (integer 6).
+$ind left-4
+$ind left+6
+$par-6
+Note:\While some possible combinations of the six integers do not specify actual
+machine/control combinations, &all& combinations are supported.
+$ind left-6
+$ski5
+$need4
+MPM<real number>\\\\\\\0<real number
+$ski
+MPM specifies the desired speed of the edge of the cutting tool in meters per minute.
+$ski5
+$need13
+NORWD
+$ski
+NORWD specifies that the tape being generated is not intended to be rewound after
+machining a part.
+$ski
+If NORWD is programmed in SETUP then
+$ind left+4
+a rewind stop code will not be output at the beginning of the tape,
+$par
+else a RWS will be output.
+$ind left-4
+$ski
+If NORWD was programmed on or prior to an END statement
+$ind left+4
+then end_of_program code will not rewind the tape,
+$par
+else the end_of_program code will rewind the tape.
+$ind left-4
+$ski5
+$need3
+NOT
+$ski
+Inhibits rotary axis for this statement.
+$ski5
+$need12
+OSTOP
+$ski
+OSTOP generates a tape code which will stop the machine if the operator has
+previously enabled a switch on the control console.
+$ski
+$ind lef +4
+$par-4
+1.\\On ATCHG, MTCHG Statements:
+$ski
+Directs the link to output an optional program stop after the 
+motion home and prior to the tool exchange.
+$ski
+$par-4
+2.\\Otherwise directs the link to output an optional program stop
+after the programmed major operation.
+$ind left -4
+$ski5
+$need6
+OTIME<real number>
+$ski
+Specifies the additional operator time to be added to the printed cycle time as
+calculated by the link.
+Operator time could be anticipated for such activities as manually changing
+tools and inspecting the workpiece.
+$ski5
+$need22
+$ver
+POSM/ON
+\\\\/OFF
+$jus lef
+$ski
+POSM allows the programmer to select a type of motion for all rapid traverse
+linear motions.
+Two types of motion are available:
+$ski
+$ind left+4
+$par-4
+1.\\Interpolated--specifies that all axes must arrive at their commanded endpoints
+simultaneously.
+$ski
+$par-4
+2.\\Non-interpolated--specifies that no attempt should be made to ensure
+simultaneous arrival of axes at their commanded endpoints.
+("Hockey Stick" motion.)
+$ind left-4
+$ski
+If /OFF is programmed then
+$ski
+$ind left +4
+Directs the link to ensure that all subsequent programmed linear
+departures are output as interpolated motion.
+$ski
+$ind left -4
+If /ON is programmed then
+$ski
+$ind left +4
+Allows the link to output subsequent, programmed rapid linear
+departures as non-interpolated motions.
+Default.
+$ind left -4
+$ski5
+$need6
+RDWELL<real number>\\0&<&real number
+$ski
+Specifies a DWELL in spindle revolutions.
+The real number specifies the number of revolutions.
+$ski
+The sequence of RDWELL output is identical to that of DWELL.
+$ski5
+$need8
+RPM
+$par
+RPMLH
+$par
+RPMRH<real number>\\0<real number
+$ski
+Specifies to the link the desired spindle speed and spindle direction.
+$par
+RPM, RPMRH specify right hand rotation, as viewed from the spindle toward the part.
+$par
+RPMLH specifies left hand rotation.
+$ski5
+$need18
+$ver
+SEQ[<integer1>][/<integer2>][/ON]\\\\\\\0 &<& integer1 < 1000000
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\[/OFF]\\\\\\0 &<& integer2 < 1000000
+$jus lef
+$ski
+Specifies sequence number options.
+$ski
+Integer1 specifies the number used to begin counting tape blocks, the default is 1.
+$ski
+Integer2 specifies the number used to increment the count of each tape block, the
+default is 1.
+$ski
+/ON specifies that the tape block count be output in each block.
+This is the default mode.
+$ski
+/OFF specifies no output of tape block count.
+$ski5
+$need12
+SPINP
+$ski
+Specifies that the spindle should be stopped and oriented to a known radial position.
+$ski
+When programmed in SETUP, SPINP specifies that the spindle should be stopped
+and oriented prior to every tool change.
+$ski
+If SPINP is programmed on a tool change statement, then the spindle will also be
+stopped and oriented prior to the next tool change.
+$ski5
+$need5
+SRTL<integer>\\\\\\\0<integer&<&8388607
+$ski
+Specifies the tool in the ready position at the start of the program.
+This feature eliminates the need to preselect and load a tool at the first tool
+change statement.
+$ski5
+$need15
+STOP
+$ski
+Specifies that the machine should be stopped.
+Machining can only be restarted by the operator.
+$ski
+On ATCHG, MTCHG statements:
+$ski
+$ind left+4
+Directs the link to output a program stop after the motion home
+and prior to the tool exchange.
+$ind left-4
+$ski
+Otherwise:
+$ski
+$ind left+4
+Directs the link to output a program stop after the programmed major operation.
+$ind left-4
+$ski5
+$need4
+STOPS
+$ski
+Specifies that the spindle must be stopped.
+$ski5
+$need4
+T<real number>
+$ski
+The value programmed with T specifies degrees of rotary axis motion.
+The sign of the value specifies direction of rotation.
+$ski5
+$need4
+TA<real number>
+$ski
+The value programmed with TA specifies an absolute rotary axis location relative
+to Compact II absolute zero.
+$ski5
+$need4
+TABS
+$ski
+Specifies that tab characters will be output between all non-repeating tape
+codes in every block on the tape.
+$ski5
+$need4
+TB<real number>
+$ski
+The value programmed with TB specifies an absolute rotary axis location relative
+to Compact II Base.
+$ski5
+$need6
+TCLDR<real number>\\\\\0&<&real number
+$ski
+The value programmed with TCLDR specifies inches (or mm) of leader tape to be output
+at tool changes, other than the first.
+The leader will be output following the tool transfer code.
+(Default is no leader tape at tool changes).
+$ski5
+$need6
+TD<real number>\\0&<&real number
+$ski
+The value programmed with TD specifies the diameter of the tool in the units of input.
+$ski
+TD can only be programmed on ATCHG, MTCHG or GLCHG statements.
+$ski5
+$need7
+TLCMP<integer>\\&0&<integer
+$ski
+Specifies the tool length compensation register to be
+associated with this tool and applies the compensation
+to subsequent Z-axis motion until the next tool change.
+Tool length compensation will be interrupted if RET is programmed to allow a full
+retraction, but will be reapplied following the retraction.
+$ski5
+$need6
+TLCR<real number>\\0&<&real number
+$ski
+The value programmed with TLCR specifies the tool corner radius of a ball-nosed
+tool (TLCR=TLR) or the corner radius of a flat-bottomed tool for tool positioning
+when machining relative to planes.
+$ski5
+$need5
+TLR<real number>\\0&<&real number
+$ski
+The value programmed with TLR specifies the radius of the tool in the units of input.
+TLR can only be programmed on ATCHG, MTCHG or GLCHG statements.
+$ski5
+$need6
+TOFF<real number>
+$ski
+The number programmed with TOFF specifies the distance between the absolute zero
+position of the machine's rotary table and Compact II absolute zero for the
+rotary axis.
+This word will generate a G98 block and no motion.
+$ski5
+$need9
+TOL<real number>\\0&<&real number
+$ski
+The word TOL specifies that all circular contouring in the statement should be
+accomplished using a method of chordal approximation.
+The value programmed with TOL is the maximum allowable distance from the chord to
+the true circle.
+TOL is used to determine the number of chords that will approximate a circle
+when circular interpolation is not available on the control or is not desired by
+the part programmer.
+$ski5
+$need12
+TOOL<integer>\\1&<&integer&<&8388607
+$ski
+The value programmed with TOOL specifies the number of the next desired tool.
+$ski
+$ind left +4
+$para -4
+1.\\On any statement except MTCHG and END, specifies the tool to
+be preselected and loaded at the next automatic tool change.
+The upper bound for integer depends upon the type of tooling specified with MOD.
+$ski
+$par-4
+2.\\On MTCHG:
+Specifies the tool that will be manually loaded into the spindle.
+$ski
+$par-4
+3.\\On END:
+Generates an error. (See ERTL and ESTL).
+$ind left -4
+$ski5
+$need6
+TPA<real number>\\0<real number<180
+$ski
+The value programmed with TPA specifies the included angle of the tool point, to
+enable the calculation of the length from the tip of the effective diameter of
+the tool.
+If not TPA is specified, a flat bottom tool is assumed.
+$ski5
+$need5
+XOFF<real number>
+$ski
+The number programmed with XOFF specifies the distance between the absolute zero
+position of the machine's X axis and Compact II absolute zero for the X axis.
+This word will generate a G98 block and no motion.
+$ski5
+$need15
+$ver
+XYZ[/ON]
+\\\[/OFF]
+$jus lef
+$ski
+XYZ/ON specifies that all positioning motions involving the X, Y and Z axes
+should be output as one motion block.
+$ski
+XYZ/OFF specifies that all positioning motions involving the X, Y and Z axes
+should be decomposed as follows:
+$ski
+$ind left+4
+If the Z-axis motion is in a direction away from the workpiece, then move Z first,
+then X and Y.
+$par
+If the Z-axis motion is in a direction toward the workpiece, then move X and Y
+first, then Z.
+$ind left-4
+$ski
+XYZ is the same as XYZ/ON except for this statement only.
+$ski5
+$need6
+YOFF<real number>
+$ski
+The number programmed with YOFF specifies the distance between the absolute zero
+position of the machine's Y axis and Compact II absolute zero for the Y axis.
+This word will generate a G98 block and no motion.
+$ski5
+$need11
+ZEROS<integer>\\integer = 0, 1, 2, or 3
+$ski
+The value programmed with ZEROS specifies whether leading zeros, trailing zeros,
+both, or decimal points must be output with axis coordinates and feedrates.
+$ski
+$ind left+8
+$par-8
+ZEROS\0\Specifies both leading and trailing zeros, no decimal points.
+$par-8
+ZEROS\1\Specifies leading zeros only.
+$par-8
+ZEROS\2\Specifies trailing zeros only.
+$par-8
+ZEROS\3\Specifies decimal point output with suppression of leading and trailing
+zeros on dimensional data.
+$ind left-8
+$ski5
+$need6
+ZOFF<real number>
+$ski
+The number programmed with ZOFF specifies the distance between the absolute zero
+position of the machine's Z axis and Compact II absolute zero for the Y axis.
+This word will generate a G98 block and no motion.
+$ski5
+$need6
+ZSGL<real number>\\0&<&real number
+$ski
+The value programmed with ZSGL specifies the gage length of the tool whose
+nulling point was specified by ZSURF.
+This gage length is programmed to allow limit checking to be performed along the
+Z-axis.
+$ski5
+$need12
+ZSURF<real number>
+$ski
+The value programmed with ZSURF represents the Compact II Z-axis coordinate at
+which the tip of the tool was "nulled".
+This means that the machine's Z-axis zero coordinate should be output whenever
+the tool tip is commanded to this location.
+$ski
+When ZSURF is programmed in SETUP, all tools are assumed to be nulled at the same
+location.
+$ski
+When ZSURF is programmed on a tool change statement, only the new tool is
+assumed to be nulled.
+$ind left -4
+$title 'ANC PROTOTYPE MILL/DRILL LINK REQUIREMENTS' '5.2 LINK MINOR WORD DIAGRAMS'
+$page
+$center
+&Group A&-Words allowed anywhere except SETUP
+$page
+&Group B&-Words allowed anywhere
+$page
+&Group C&-Words allowed only on SETUP
+$page
+&Group D&-Words allowed only on ATCHG, MTCHG, GLCHG, or SETUP
+$page
+&Group E&-Words allowed only on ATCHG, MTCHG, or GLCHG
+$page
+&Group F&-Words allowed only on ATCHG or MTCHG
+$ski5
+(No link words for the Mill/Drill prototype fall into this category.)
+$page
+&Group G&-Words allowed only on END
+$ski5
+(No link words for the Mill/Drill prototype fall into this category.)
+$page
+&Group H&-Words allowed anywhere except END
+$just left
+$title 'ANC PROTOTYPE MILL/DRILL LINK REQUIREMENTS' '5.3 DIAGRAMS AND FUNCTIONAL DESCRIPTIONS OF COMPACT II STATEMENTS'
+$page
+$ski
+$center
+ATCHG, MTCHG
+$jus lef
+$ski5
+$ind left+4
+These major words will generate the following:
+$ski
+$ind left+8
+$par-4
+1.\\Rapid LINEAR MOTION to the tool change point specified or if none is given,
+to the default tool change position.
+$ski
+$par-4
+2.\\A Tool Transfer code to load the preselected tool into the spindle for ATCHG
+or a Program Stop code for the operator to load a tool for MTCHG.
+$ind left-8
+$ski15
+Group A contains words allowed anywhere except SETUP.
+$ski
+Group B contains words allowed anywhere.
+$ski
+Group D contains words allowed only on ATCHG, MTCHG, GLCHG, or SETUP.
+$ski
+Group E contains words allowed only on ATCHG, MTCHG, or GLCHG.
+$ski
+Group H contains words allowed anywhere except END.
+$ind left-4
+$page
+$ski
+$center
+BASE, DCIR, DLN, DPB, DPT, DVR, DPAT
+$jus lef
+$ski5
+$ind left+4
+These major words allow the customer to define geometry and variables.
+Reference Chapter Three of the Compact II manual.
+No tape codes are directly generated by these major words.
+$ind left-4
+$page
+$center
+CLPLN
+$jus lef
+$ski5
+$ind left+4
+This major word allows the user to specify a Z-axis location at or beyond which
+the tool tip must be before rotary table motion may begin.
+$ski15
+Group A contains words allowed anywhere except SETUP.
+$ski
+Group B contains words allowed anywhere.
+$ski
+Group H contains words allowed anywhere except END.
+$ind left-4
+$page
+$ski
+$center
+CONT, ICON, OCON, CORNR, FILET, ROUND
+$jus lef
+$ski5
+$ind left+4
+These major words generate the following:
+$ind left+8
+$par-4
+1.\\A cutting or rapid (if "RAPID" is programmed) LINEAR MOTION to the initial
+point of the specified arc.
+$par-4
+2.\\The series of CIRCULAR MOTIONS which are necessary to cut the specified arc.
+$ind left-8
+$ski15
+Group A contains words allowed anywhere except SETUP.
+$ski
+Group B contains words allowed anywhere.
+$ski
+Group H contains words allowed anywhere except END.
+$ind left-4
+$page
+$ski
+$center
+CUT
+$jus lef
+$ski5
+$ind left+4
+This major word is used to generate linear motion at a programmed feedrate to the
+specified feed endpoint.
+If both a rapid endpoint specification and a feed endpoint specification are
+programmed, a linear motion at rapid traverse will precede the motion at programmed
+feedrate.
+$ski15
+Group A contains words allowed anywhere except SETUP.
+$ski
+Group B contains words allowed anywhere.
+$ski
+Group H contains words allowed anywhere except END.
+$ind left-4
+$page
+$ski
+$center
+DRAW
+$jus left
+$ski5
+$ind left+4
+This major word is used to specify various plotting options.
+Refer to Chapter Twenty One of the Compact II manual and to the Advanced
+Numerical Control Plotting User Requirement Document.
+$ind left-4
+$page
+$ski
+$center
+DRL, BORE, FLT
+$jus lef
+$ski5
+$ind left+4
+These major words generate a sequence of LINEAR MOTIONS and possibly DWELLS which
+constitute drilling cycles.
+See Compact II manual and ANC Mill Drilling Specification for specific details
+of which major and minor words are used to specify the canned cycles available
+with a specific machine/control configuration.
+$ski15
+Group A contains words allowed anywhere except SETUP.
+$ski
+Group B contains words allowed anywhere.
+$ski
+Group H contains words allowed anywhere except END.
+$ind left-4
+$page
+$ski
+$center
+END
+$jus lef
+$ski5
+$ind left+4
+This major word generates the following:
+$ind left+8
+$par-4
+1.\\A rapid LINEAR MOTION to the home position or the endpoint, if specified.
+$par-4
+2.\\A Tool Transfer code to load a tool into the spindle, if specified.
+$ind left-8
+$ski15
+Group A contains words allowed anywhere except SETUP.
+$ski
+Group B contains words allowed anywhere.
+$ind left-4
+$page
+$ski
+$center
+FROM
+$jus lef
+$ski5
+$ind left+4
+This major word is used to specify that the tool has been manually moved to the
+point specified.
+$ski15
+Group A contains words allowed anywhere except SETUP.
+$ski
+Group B contains words allowed anywhere.
+$ski
+Group H contains words allowed anywhere except END.
+$ind left-4
+$page
+$ski
+$center
+GLCHG
+$jus lef
+$ski5
+$ind left+4
+This major word is used to specify a change in the gage length and tool radius
+in effect for the tool currently in use.
+$ski15
+Group A contains words allowed anywhere except SETUP.
+$ski
+Group B contains words allowed anywhere.
+$ski
+Group D contains words allowed only on ATCHG, MTCHG, GLCHG, or SETUP.
+$ski
+Group E contains words allowed only on ATCHG, MTCHG, or GLCHG.
+$ski
+Group H contains words allowed anywhere except END.
+$ind left-4
+$page
+$ski
+$center
+HOME
+$jus lef
+$ski5
+$ind left+4
+This major word is used to generate a rapid LINEAR MOTION.
+If an endpoint is specified, a motion will be generated to that point.
+If an endpoint is not specified, then a motion will be generated to the machine
+setup location.
+$ski15
+Group A contains words allowed anywhere except SETUP.
+$ski
+Group B contains words allowed anywhere.
+$ski
+Group H contains words allowed anywhere except END.
+$ind left-4
+$page
+$center
+IDENT
+$jus lef
+$ski5
+$ind left+4
+This major word is used to specify a part program identification string.
+This string will prefix the tape produced by the ensuing part program in such a
+way that when the tape is punched, the string will be legible.
+$ind left-4
+$page
+$center
+INIT
+$jus left
+$ski5
+$ind left+4
+This major word specifies the input and/or output units to be used throughout the
+program (i.e. INCH or METRIC).
+$ind left-4
+$page
+$center
+INSRT
+$jus left
+$ski5
+$ind left+4
+This major word allows the insertion of text directly into the tape without
+processing by the Compact II system, link or applications.
+$ind left-4
+$page
+$center
+MACHIN
+$jus lef
+$ski5
+$ind left+4
+This major word is used to specify the machine tool link.
+$ind left-4
+$page
+$center
+MOVE
+$jus lef
+$ski5
+$ind left+4
+This major word is used to generate a rapid LINEAR MOTION to the endpoint specified.
+If no endpoint is specified, no motion will be generated.
+$ski15
+Group A contains words allowed anywhere except SETUP.
+$ski
+Group B contains words allowed anywhere.
+$ski
+Group H contains words allowed anywhere except END.
+$ind left-4
+$page
+$center
+RET
+$jus lef
+$ski5
+$ind left+4
+This major word generates a motion to the Z-axis setup location.
+If a Z-coordinate is specified, the motion will be to that location.
+$ski15
+Group A contains words allowed anywhere except SETUP.
+$ski
+Group B contains words allowed anywhere.
+$ski
+Group H contains words allowed anywhere except END.
+$ind left-4
+$page
+$center
+SETUP
+$jus lef
+$ski5
+$ind left+4
+This major word specifies the machine/control configuration and its initial state.
+$ski15
+Group B contains words allowed anywhere.
+$ski
+Group C contains words allowed only on SETUP.
+$ski
+Group D contains words allowed only on ATCHG, MTCHG, GLCHG, or SETUP.
+$ski
+Group H contains words allowed anywhere except END.
+$ind left-4
+$title 'ANC PROTOTYPE MILL/DRILL LINK REQUIREMENTS' '5.4 LINK MINOR WORD CHRONOLOGY'
+$page
+$ind left +4
+$ski
+The following link minor words have been identified as context-free
+words, and as such their relative chronology can be specified
+when programmed with any major word.
+These minor words are SEQ, DWELL, XOFF, YOFF, ZOFF, TOFF, OSTOP, SPINP, STOP, STOPS, BD,
+BD/ON, BD/OFF, and TOOL.
+$ski
+$ind left +4
+If all of these words were programmed on an ATCHG or MTCHG statement,
+their order of output would be:
+$ski
+$ind left +4
+$ver
+BD, BD/ON
+OFFSET (XOFF, YOFF, ZOFF, TOFF)
+TOOL
+STOPS
+SPINP
+(motion to the tool change position)
+STOP
+OSTOP
+Tool Transfer
+SEQ
+DWELL
+BD/OFF
+$jus lef
+$ski
+$ind left -4
+If all of these words were programmed on a DRL, BORE, or FLT statement,
+their order of output would be:
+$ski
+$ind left +4
+$ver
+BD, BD/ON
+SEQ
+OFFSET
+TOOL
+(motion to the bottom of the hole)
+STOPS
+SPINP
+DWELL
+(retract)
+STOP
+OSTOP
+BD/OFF
+$ind left -4
+$jus lef
+$ski
+For all other major operations after SETUP, their order of output would be:
+$ind left +4
+$ski
+$ver
+BD, BD/ON
+SEQ
+OFFSET
+TOOL
+STOPS
+SPINP
+(major operation)
+DWELL
+STOP
+OSTOP
+BD/OFF
+$jus lef
+$ind left -4
+$ind left -4
+$ind left -4
+$title 'ANC PROTOTYPE MILL/DRILL LINK REQUIREMENTS' 
+$page
+$ski20
+$center
+APPENDIX 1 - RELEVANT EXCEPTION/ENHANCEMENT REPORTS
+$jus lef
+$page
+$ski20
+$center
+APPENDIX 2 - MILL/DRILL SKETCHES
+$jus lef
+$page
+$ski20
+$center
+APPENDIX 3 - GLOSSARY
+$jus lef
+$title 'ANC PROTOTYPE MILL/DRILL LINK REQUIREMENTS' 'APPENDIX 3 - GLOSSARY'
+$page
+$indent left+4
+$indent left+4
+$par-4
+Auxiliary Coolants: In addition to mist and flood coolant, these machines are
+capable of accepting up to three additional coolant pumps to handle a variety of
+coolants.
+$indent left-4
+$ski3
+$indent left+4
+$par-4
+Flood Coolant: A stream of liquid intended to lubricate the cutting surface of a
+tool, as well as to remove heat and chips from the workpiece and tool.
+$indent left-4
+$ski3
+$indent left+4
+$par-4
+GLRP: Gage Length Reference Point.
+Specifies the X Y and Z axes coordinates corresponding to the face of the spindle.
+It is from this coordinate that all gage lengths are calculated.
+$indent left-4
+$ski3
+$indent left+4
+$par-4
+Happens After Motion Functions: Certain conditions must be met once machining or
+positioning has been accomplished.
+These conditions (functions) include turning off coolant and changing tools.
+$indent left-4
+$ski3
+$indent left+4
+$par-4
+Happens First Motion Functions: Certain conditions must be met before machining
+or positioning can take place.
+These conditions (functions) include turning on coolant and starting the spindle.
+$indent left-4
+$ski3
+$indent left+4
+$par-4
+Hockey Stick Motion: Resultant path produced by two axes traveling at the same
+rate through unequal distances.
+$indent left-4
+$ski3
+$indent left+4
+$par-4
+Mist Coolant: A stream of air, with some fluid added, which performs a function
+similar to that of flood coolant.
+$indent left-4
+$ski3
+$indent left+4
+$par-4
+Rotary Axis: The rotary axis on these machines is a B-axis, which is rotation about
+the Y-axis.
+This allows machining on all exposed faces of the workpiece in a single setup.
+$indent left-4
+$ski3
+$indent left+4
+$par-4
+Tool Point: The tip of the tool which does the cutting.
+$indent left-4
+$page
+$indent left+4
+$par-4
+Units of Input: Specifies the measuring system used to dimension the workpiece
+being programmed.
+Recognized measuring systems are English and metric.
+$indent left-4
+$ski3
+$indent left+4
+$par-4
+Units of Output: Specifies the measuring system used for all tape output of axis
+coordinates.
+Recognized measuring systems are English and metric.
+$indent left-4
+$ski3
+$indent left+4
+$par-4
+X Movable Table: On these machines, the table which holds the workpiece (and
+which moves along the X-axis) has the capability to move towards and away from the
+spindle.
+There are two positions available: "in" and "out".
+$indent left-4
+$indent left-4
+$page
+    2@

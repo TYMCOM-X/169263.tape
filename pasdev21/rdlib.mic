@@ -1,0 +1,11 @@
+.pro<055>rdlib.rel
+.del rdlib.rel
+.r fudge5
+*rdlib=pasdir,diratr,dirlok,
+*nsd1,nst1,ecext,dcext,chars2,ecdcda,ecdcti,ecdtim,dcdtim,
+*nsd2,dtime,cvbins,dcmont,dayofw,ecdate,dcdate,ectime,dctime,
+*infpac,douuo,lookup,filutl,query,iorese,pathna,prgdir,run
+*/a^[
+*rdlib=rdlib/x^[
+*$$break
+.pro<355>rdlib.rel

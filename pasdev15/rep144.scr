@@ -1,0 +1,265 @@
+$ver
+14.4\\Typed Input and Output
+$ski $jus
+So far this discussion has concerned textfile input and output,
+that is, files containing lines of characters.
+While it is possible to read and write
+character strings
+representing integers, reals, and more complex structures such as sets,
+records, and arrays, it is simpler and more efficient to read and write
+the actual bit patterns to and from memory.
+Typed files provide a facility for such input and output.
+$ski
+All file types are bound to a component type.
+This type effectively defines the template
+for interpreting fixed length bit patterns
+in physical files as Pascal data entities.
+As with text files, typed files have an associated buffer component, f^,
+which contains the current file element.
+For typed files, f^ is of the file's component type.
+$ski 2
+$verb
+14.4.1\\The Pascal Typed File Model
+$ski $jus
+A file composed of fixed length elements is best conceptualized
+as an array with an unlimited upper bound.
+The operations on typed files transfer individual elements of the array
+to and from the buffer.
+Thay also affect certain
+attributes and state information associated with the file variable.
+An axiomatic definition of typed file operations
+is presented below.
+$ski 2
+A typed file, defined by:
+$ski $ind left +5 $ver
+&var& f: &file of& <type>
+$ski $ind left -5
+has the following associated entities:
+$ski $ind left +5
+f.mode: ( readonly, writeonly, readwrite );
+f.extent: 0 .. *;
+f.cursor: 0 .. *;
+f.data: &array& [1 .. f.extent] &of& <type>
+f.buffer: <type>
+$ski  $ind left -5 $jus
+Mode is a state variable which retains from association time
+the permissible operations
+on the file variable.
+Extent is the number of elements in the file, while cursor
+selects one element as the current one.
+Data is the conceptual array, indexed by cursor,
+ which represents the physical file itself,
+and buffer is the buffer component described above.
+The programmer accesses these data as follows:
+$ski $ver $ind left +5
+EXTENT(f)         returns f.extent
+CURSOR(f)         returns f.cursor
+EOF(f)            returns (f.cursor > f.extent)
+f^                references f.buffer
+$ski 2 $ind left -5 $jus
+Note that CURSOR for a textfile is different from CURSOR for a
+typed file.
+Here, CURSOR represents the current index in the virtual array f.data.
+Note also that EOF does not provide a mechanism for error detection
+as with text files,
+since it only reflects the position of the cursor relative to
+the end of the file.
+$ski 2 $ver
+$need 3
+14.4.2\\Association of Typed Files
+$ski $jus
+The association operations for typed file variables are defined
+as follows:
+$ski 2 $ver
+$need 7
+RESET (f)    (* initialize for input only *)
+$ski $ind left +5
+f.mode := readonly;
+f.extent := "the number of records in the file";
+f.cursor := 1;
+&if& f.cursor <= f.extent &then&
+  f.buffer := f.data [f.cursor]
+$ski 2 $ind left -5 $need 8
+REWRITE (f)  (* initialize for output only *)
+$ski $ind left +5
+f.mode := writeonly;
+&if& "preserve in open options" 
+  &then& f.extent := "the number of records in the file"
+  &else& f.extent := 0;
+f.cursor := f.extent + 1;
+f.buffer := "undefined"
+$ski 2 $ind left -5 $need 7
+UPDATE (f)   (* initialize for input/output *)
+$ski $ind left +5
+f.mode := readwrite;
+f.extent := "the number of records in the file";
+f.cursor := 1;
+&if& f.cursor <= f.extent &then&
+  f.buffer := f.data [f.cursor]
+$ski 2 $ind left -5 $jus
+The OPEN operation is not provided for typed files, since
+it was created specifically for interactive terminals.
+The quoted strings above represent operations whose form is
+dependent on the implementation but whose
+meanings should be clear; for example, "the number of records
+in the file" is the file size if the file is not empty, and zero
+if the file is either empty or does not exist.
+If f.extent is zero, the error code returned (see Section 14.6)
+will distinguish the two cases.
+$ski 2 $ver $need 3
+14.4.3\\Data Transfer Operations for Typed Files
+$ski $jus
+The data transfer operations for typed files are defined as follows:
+$ski 2 $ver
+$need 7
+GET (f)      (* input *)
+$ski $ind left +5
+&if& f.mode = writeonly &then& error;
+&if& f.cursor > f.extent &then& error;
+f.cursor := f.cursor + 1;
+&if& f.cursor <= f.extent &then&
+  f.buffer := f.data [f.cursor]
+$ski 2 $ind left -5 $need 6
+PUT (f)      (* output *)
+$ski $ind left +5
+&if& f.mode = readonly &then& error;
+&if& f.cursor > f.extent &then& f.extent := f.cursor;
+f.data [f.cursor] := f.buffer;
+f.cursor := f.cursor + 1
+$ski 2 $ind left -5 $jus
+The word "error" above implies that the operation terminates
+immediately, setting an error code (see Section 14.6).
+$ski
+The primitive operations above are sufficient for sequential
+input and output.
+Several points are worthy of note.
+On input operations, CURSOR is incremented before the
+actual transfer operation, while on output operations, it
+is incremented after the transfer.
+In both cases, CURSOR represents the current index into the virtual array
+f.data.
+Notice that the intialization condition from RESET effectively
+performs the first GET operation by filling the buffer with the
+first datum in the file.
+Also, a GET which increments f.cursor past f.extent does not
+fill the buffer, and sets EOF true.
+This also holds for a RESET of a file which exists but is empty.
+Finally, note that PUT extends the file if necessary.
+$ski 2 $ver
+14.4.5\\Random File Operations
+$ski $jus
+Random access is provided through the SEEK operator for all files
+associated with the SEEKOK option.
+SEEKOK is assumed for files associated with UPDATE.
+SEEK is defined below:
+$ski 2 $need 5 $ver
+SEEK (f, n)
+$ski $ind left +5
+f.cursor := n;
+&if& (f.mode <> writeonly) &and& (f.cursor <= f.extent) &then&
+  f.buffer := f.data [f.cursor]
+$ski 2 $ind left -5 $jus
+SEEK is used to reposition CURSOR to another place in the file.
+Notice that if input is permitted, SEEK will perform an input
+operation if the new CURSOR value is within the file,
+thus insuring f^ is always defined.
+The programmer should make every effort to avoid redundant
+GET operations by remembering that SEEK keeps f^ updated.
+For example, the sequence "SEEK(n); GET; f^..." contains an unnecessary
+GET, since a SEEK(n+1) would have loaded f^ as desired.
+Similarly, to update the n-th element of an update file, the
+sequence "SEEK(n); fix(f^); PUT" suffices; no GET is needed.
+Notice, however, that after the PUT, even though f.cursor is now n+1,
+f^ contains the (new) n-th element.
+At this point, to update the (n+1)th element, a "SEEK(n+1)" is
+required to load f^; a GET would increment f.cursor before loading
+f^, loading the (n+2)th element instead of the (n+1)th.
+$ski
+For convenience, the following shorthand translations
+are provided (read "=>" as "is equivalent to"):
+$ski $ind left +5 $ver $need 2
+$tab 32
+^4uread (f, x)  =>	x := f^; GET (f)
+^5uwrite (f, x)  =>	f^ := x; PUT (f)
+$ski $need 2
+&read& (f, x1, ... , xn)  =>	&read& (f, x1); ...; &read& (f, xn)
+&write& (f, x1, ... , xn)  =>	&write& (f, x1); ...; &write& (f, xn)
+$ski $need 2
+&readrn&(f, m, x1, ..., xn)  =>	SEEK (f, m); &read&(f, x1, ..., xn)
+&writern&(f, m, x1, ..., xn)  =>	SEEK (f, m); &write&(f, x1, ..., xn)
+$tab $ski 2 $ind left -5 $jus
+The &read& and &write& functions are most useful for sequential
+operations over the entire file, or over several contiguous elements.
+Notice that a &read& (or &readrn&) operation always GETs the next
+element after the one just read.
+Thus, compared to explicit use of the file buffer,
+a sequence of reads performs an extra input operation
+unless the user code terminates when
+the end of the file is reached.
+In conclusion, careful maintenance of the file cursor position
+ can avoid redundant
+operations both at the source code level and at the support level.
+$ski 2 $ver
+14.5\\Binary Files
+$ski $jus
+On many systems, the user may read and write blocks of data of
+arbitrary size.
+The file type which is bound to no component type ("&file of& *") provides
+this capability.
+Such binary files may be defined in terms of the model presented
+in the previous section (Section 14.4).
+The difference is that there are no restrictions
+on the types of elements written or read 
+(typed files require compatibility with the component).
+$ski 2 $ver
+14.5.1\\Extension of the Typed Formalism for Binary Files
+$ski $jus
+Any variable x can be viewed as an array with upperbound
+SIZE(x) of "storageunits", where a storageunit is the
+smallest addressible unit of storage for a given machine.
+Assuming for the moment that storageunit is a primitive type
+(which, of course, it is not), and that x.[i] references
+a unit of storage whose address is "ADDRESS(x)+i-1"
+within variable x, we may define the various binary
+file operators (read "=>" as "is conceptually") as:
+$ski 2 $ver  $tab 32 $need 7 $ind left +5
+&file of& *  =>	&file of& storageunit
+$ski
+&read& (f, x:m)  =>	&for& i := 1 &to& m &do read& (f, x.[i])
+&write& (f, x:m)  =>	&for& i := 1 &to& m &do write&(f, x.[i])
+$ski
+&read& (f, x)  =>	&read& (f, x: SIZE (x))
+&write& (f, x)  =>	&write& (f, x: SIZE (x))
+$ski 2 $ind left -5 $jus
+The operations &readrn& and &writern&, as well as &read& and &write&
+with a list of arguments, are defined in terms of a single element
+&read&, &write&, and the SEEK operation.
+Unlike typed files, however, these three operations are the primitives
+for binary files,
+and cannot be subdivided into more basic user operations.
+SEEK sets the file cursor for the next operation, and &read&
+and &write& effect input and output transfers respectively.
+$ski
+Binary files may be viewed as having a "virtual buffer"
+which is not directly accessible.
+GET, PUT, and the file buffer f^, which are used to define the
+&read& and &write& operations for typed files,
+cannot be used with binary files.
+The model given for typed file operations, however, is still valid
+for binary files if the programmer conceptualizes the operations in terms
+of the storageunit type and its virtual buffer.
+For example, after a RESET on a binary file, CURSOR is 1 (and is
+subsequently adjusted in storageunit increments),
+and the virtual buffer contains the first storageunit.
+If a &read& is then performed, for a variable which is one storageunit in size,
+the first storageunit in the file will be transferred into the
+variable from the virtual buffer, and the next storageunit in the
+file is read into the virtual buffer.
+Through a similar line of reasoning, the operation &readrn& (f, 3, x)
+will get x starting at the third storageunit in the file.
+Note, however, that the virtual buffer is indeed conceptual,
+and that the &read& operation does not really load the
+next file element into it.
+The statement about avoiding redundant GET operations with
+typed files therefore does not apply to binary files.
+  

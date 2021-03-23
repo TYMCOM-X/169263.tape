@@ -1,0 +1,22 @@
+external procedure mth_hadd(var h_real;h_real;h_real)options fortran;
+external procedure mth_hsub(var h_real;h_real;h_real)options fortran;
+external procedure mth_hmult(var h_real;h_real;h_real)options fortran;
+external procedure mth_hdiv(var h_real;h_real;h_real)options fortran;
+external procedure mth_hpwr(var h_real;h_real;h_real)options fortran;
+external procedure mth_hipwr(var integer;h_real;h_real)options fortran;
+external procedure mth_hpwri(var h_real;h_real;integer)options fortran;
+external procedure mth_hsign(var integer;h_real)options fortran;
+external procedure mth$hsin(var h_real;h_real)options fortran;
+external procedure mth$hcos(var h_real;h_real)options fortran;
+external procedure mth$htan(var h_real;h_real)options fortran;
+external procedure mth$hasin(var h_real;h_real)options fortran;
+external procedure mth$hacos(var h_real;h_real)options fortran;
+external procedure mth$hatan(var h_real;h_real)options fortran;
+external procedure mth$hsinh(var h_real;h_real)options fortran;
+external procedure mth$hcosh(var h_real;h_real)options fortran;
+external procedure mth$htanh(var h_real;h_real)options fortran;
+external procedure mth$hexp(var h_real;h_real)options fortran;
+external procedure mth$hlog(var h_real;h_real)options fortran;
+external procedure mth$hlog10(var h_real;h_real)options fortran;
+external procedure mth$hsqrt(var h_real;h_real)options fortran;
+ 

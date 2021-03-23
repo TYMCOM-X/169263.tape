@@ -1,0 +1,2846 @@
+        File DSK:EXE009.PAS[31024,274425]   Compiled 23-Sep-82 10:48   Pascal, Version 2A(436)
+
+        File DSK:EXE009.PAS[31024,274425]   Compiled 23-Sep-82 10:48   Pascal, Version 2A(436)
+
+        File DSK:EXE009.PAS[31024,274425]   Compiled 23-Sep-82 10:48   Pascal, Version 2A(436)
+
+        File DSK:EXE009.PAS[31024,274425]   Compiled 23-Sep-82 10:48   Pascal, Version 2A(436)
+
+
+
+
+
+			    $$$$$   $   $   $$$$$     $$      $$     $$$ 
+			    $       $   $   $        $  $    $  $   $   $
+			    $        $ $    $        $  $    $  $   $  $$
+			    $$$       $     $$$      $  $    $  $    $$ $
+			    $        $ $    $        $  $    $  $       $
+			    $       $   $   $        $  $    $  $      $ 
+			    $$$$$   $   $   $$$$$     $$      $$     $$  
+
+
+				    DSK:EXE009.PAS[31024,274425]
+
+
+Options in effect: 
+
+	CHECK, NOSPECIAL, NOMAP, NOSYMBOLS, NOCALLS, ASSEMBLY, NOXREF, TRACE, QBLOCKS, NOOPTIMIZE, 
+	CODE, NODEBUG, FINISH, NOGLOBAL, NOMAINSEG, NOOVERLAY, AUTOQUICK, SOURCE, NOSTANDARD, 
+	LENGTH (45), WIDTH (102), NOEXTLENGTH, STORAGE (2048), ALLOC (0), ENABLE(VAX)
+
+
+
+
+        File DSK:EXE009.PAS[31024,274425]   Compiled 23-Sep-82 10:48   Pascal, Version 2A(436)
+
+        File DSK:EXE009.PAS[31024,274425]   Compiled 23-Sep-82 10:48   Pascal, Version 2A(436)
+
+        File DSK:EXE009.PAS[31024,274425]   Compiled 23-Sep-82 10:48   Pascal, Version 2A(436)
+
+        File DSK:EXE009.PAS[31024,274425]   Compiled 23-Sep-82 10:48   Pascal, Version 2A(436)
+        File DSK:EXE009.PAS[31024,274425]   Compiled 23-Sep-82 10:48   Pascal, Version 2A(436)
+
+        File DSK:EXE009.PAS[31024,274425]   Compiled 23-Sep-82 10:48   Pascal, Version 2A(436)
+
+        File DSK:EXE009.PAS[31024,274425]   Compiled 23-Sep-82 10:48   Pascal, Version 2A(436)
+
+        File DSK:EXE009.PAS[31024,274425]   Compiled 23-Sep-82 10:48   Pascal, Version 2A(436)
+
+
+
+
+
+			    $$$$$   $   $   $$$$$     $$      $$     $$$ 
+			    $       $   $   $        $  $    $  $   $   $
+			    $        $ $    $        $  $    $  $   $  $$
+			    $$$       $     $$$      $  $    $  $    $$ $
+			    $        $ $    $        $  $    $  $       $
+			    $       $   $   $        $  $    $  $      $ 
+			    $$$$$   $   $   $$$$$     $$      $$     $$  
+
+
+				    DSK:EXE009.PAS[31024,274425]
+
+
+Options in effect: 
+
+	CHECK, NOSPECIAL, NOMAP, NOSYMBOLS, NOCALLS, ASSEMBLY, NOXREF, TRACE, QBLOCKS, NOOPTIMIZE, 
+	CODE, NODEBUG, FINISH, NOGLOBAL, NOMAINSEG, NOOVERLAY, AUTOQUICK, SOURCE, NOSTANDARD, 
+	LENGTH (45), WIDTH (102), NOEXTLENGTH, STORAGE (2048), ALLOC (0), ENABLE(VAX)
+
+
+
+
+        File DSK:EXE009.PAS[31024,274425]   Compiled 23-Sep-82 10:48   Pascal, Version 2A(436)
+
+        File DSK:EXE009.PAS[31024,274425]   Compiled 23-Sep-82 10:48   Pascal, Version 2A(436)
+
+        File DSK:EXE009.PAS[31024,274425]   Compiled 23-Sep-82 10:48   Pascal, Version 2A(436)
+
+        File DSK:EXE009.PAS[31024,274425]   Compiled 23-Sep-82 10:48   Pascal, Version 2A(436)
+MODULE  EXE009       DSK:EXE009.PAS[31024,274425]                                      23-Sep-82 10:48
+SECTION 0                                                                                       PAGE 1
+
+    1	program exe009 options check;
+    2	const
+    3	   max_integer = maximum(integer);
+    4	   max_real    = maximum(real);MODULE  EXE009       DSK:EXE009.PAS[31024,274425]                                      23-Sep-82 10:48
+SECTION 1            initialize                                                                 PAGE 2
+
+    2	public procedure initialize;
+    3	begin
+    4	   rewrite(tty);
+    5	   writeln(tty,'Begin EXE009');
+    6	   break(tty);
+    7	end;MODULE  EXE009       DSK:EXE009.PAS[31024,274425]                                      23-Sep-82 10:48
+SECTION 2            error                                                                      PAGE 3
+
+    2	public procedure error (error_number : integer);
+    3	begin
+    4	   writeln(tty,'Error ',error_number);
+    5	   break(tty);
+    6	end;MODULE  EXE009       DSK:EXE009.PAS[31024,274425]                                      23-Sep-82 10:48
+SECTION 3            test_integer_overflow                                                      PAGE 4
+
+    2	public procedure test_integer_overflow;
+    3	var
+    4	   integer_1 : integer;
+    5	   integer_2 : integer;
+    6	begin
+    7	   integer_1:=max_integer;
+    8	   integer_2:=max_integer;
+    9	   integer_1:=integer_2*integer_2;
+   10	   error(100);
+   11	   exception
+   12	      math_error    : if mathstatus<>math_int_ovf then
+   13	                         error(101);
+   14	      allconditions : error(102);
+   15	end;MODULE  EXE009       DSK:EXE009.PAS[31024,274425]                                      23-Sep-82 10:48
+SECTION 4            test_real_overflow                                                         PAGE 5
+
+    2	public procedure test_real_overflow;
+    3	var
+    4	   real_1 : real;
+    5	   real_2 : real;
+    6	begin
+    7	   real_1:=max_real;
+    8	   real_2:=max_real;
+    9	   real_1:=real_2*real_2;
+   10	   error(110);
+   11	   exception
+   12	      math_error    : if mathstatus<>math_flt_ovf then
+   13	                         error(111);
+   14	      allconditions : error(112);
+   15	end;
+   16 *	$IFANY (P10,M68)
+   17 *	$PAGE test_real_underflow
+   18 *	public procedure test_real_underflow;
+   19 *	var
+   20 *	   real_1 : real;
+   21 *	   real_2 : real;
+   22 *	begin
+   23 *	   real_1:=1/max_real;
+   24 *	   real_2:=max_real;
+   25 *	   real_1:=real_1/real_2;
+   26 *	   error(120);
+   27 *	   exception
+   28 *	      math_error    : if mathstatus<>math_flt_und then
+   29 *	                         error(121);
+   30 *	      allconditions : error(122);
+   31 *	end;
+   32 *	$ENDIFMODULE  EXE009       DSK:EXE009.PAS[31024,274425]                                      23-Sep-82 10:48
+SECTION 5            test_integer_divide_by_zero                                                PAGE 6
+
+    2	public procedure test_integer_divide_by_zero;
+    3	var
+    4	   integer_1 : integer;
+    5	   integer_2 : integer;
+    6	begin
+    7	   integer_1:=max_integer;
+    8	   integer_2:=0;
+    9	   integer_1:=integer_1 div integer_2;
+   10	   error(130);
+   11	   exception
+   12	      math_error    : if mathstatus<>math_zero_divide then
+   13	                         error(131);
+   14	      allconditions : error(132);
+   15	end;MODULE  EXE009       DSK:EXE009.PAS[31024,274425]                                      23-Sep-82 10:48
+SECTION 6            test_real_divide_by_zero                                                   PAGE 7
+
+    2	public procedure test_real_divide_by_zero;
+    3	var
+    4	   real_1 : real;
+    5	   real_2 : real;
+    6	begin
+    7	   real_1:=max_real;
+    8	   real_2:=0;
+    9	   real_1:=real_1/real_2;
+   10	   error(140);
+   11	   exception
+   12	      math_error    : if mathstatus<>math_zero_divide then
+   13	                         error(141);
+   14	      allconditions : error(142);
+   15	end;MODULE  EXE009       DSK:EXE009.PAS[31024,274425]                                      23-Sep-82 10:48
+SECTION 7            test_arcsin                                                                PAGE 8
+
+    2	public procedure test_arcsin;
+    3	var
+    4	   local_argument : minimum(real)..maximum(real) prec 4;
+    5	begin
+    6	   local_argument:=max_real;
+    7	   local_argument:=arcsin(local_argument);
+    8	   error(150);
+    9	   exception
+   10	      math_error:
+   11 *	$IF P10                 if mathstatus <> math_arg_arcsin then
+   12	$IFANY (VAX,M68)        if mathstatus <> math_bad_arg then
+   13	                         error(151);
+   14	      allconditions : error(152);
+   15	end;MODULE  EXE009       DSK:EXE009.PAS[31024,274425]                                      23-Sep-82 10:48
+SECTION 8            test_arccos                                                                PAGE 9
+
+    2	public procedure test_arccos;
+    3	var
+    4	   local_argument : minimum(real)..maximum(real) prec 4;
+    5	begin
+    6	   local_argument:=max_real;
+    7	   local_argument:=arccos(local_argument);
+    8	   error(160);
+    9	   exception
+   10	       math_error :
+   11 *	$IF P10                 if mathstatus <> math_arg_arccos then
+   12	$IFANY (VAX,M68)        if mathstatus <> math_bad_arg then
+   13	                         error(161);
+   14	      allconditions : error(162);
+   15	end;MODULE  EXE009       DSK:EXE009.PAS[31024,274425]                                      23-Sep-82 10:48
+SECTION 9            test_stack_overflow                                                       PAGE 10
+
+    2 *	$IFNOT VAX
+    3 *	public procedure test_stack_overflow;
+    4 *	
+    5 *	   procedure local_procedure;
+    6 *	   var
+    7 *	      local_array : array [1..10000] of integer;
+    8 *	   begin
+    9 *	      local_procedure;
+   10 *	   end;
+   11 *	
+   12 *	begin
+   13 *	   local_procedure;
+   14 *	   error(170);
+   15 *	   exception
+   16 *	        stack_overflow  : ;
+   17 *	        allconditions    : error(171);
+   18 *	end;
+   19 *	$ENDIFMODULE  EXE009       DSK:EXE009.PAS[31024,274425]                                      23-Sep-82 10:48
+SECTION 10           test_heap_overflow                                                        PAGE 11
+
+    2	public procedure test_heap_overflow;
+    3	type
+    4	   local_record = record
+    5	      next_record : ^local_record;
+    6	      data_array  : array [1..1000] of integer;
+    7	   end;
+    8	var
+    9	   list_head : ^local_record;
+   10	   curr_node : ^local_record;
+   11	   next_node : ^local_record;
+   12	begin
+   13	   new(list_head);
+   14	   new(curr_node);
+   15	   list_head^.next_record:=curr_node;
+   16	   loop
+   17	      new(next_node);
+   18	      curr_node^.next_record:=next_node;
+   19	      next_node^.next_record:=nil;
+   20	      curr_node:=next_node;
+   21	   end;
+   22	   exception
+   23	      storage_overflow : begin
+   24	                            curr_node:=list_head;
+   25	                            while curr_node<>nil do
+   26	                            begin
+   27	                               next_node:=curr_node^.next_record;
+   28	                               dispose(curr_node);
+   29	                               curr_node:=next_node;
+   30	                            end;
+   31	                         end;
+   32	      allconditions    : error(180);
+   33	end;MODULE  EXE009       DSK:EXE009.PAS[31024,274425]                                      23-Sep-82 10:48
+SECTION 11           test_explicit_signal                                                      PAGE 12
+
+    2	public procedure test_explicit_signal;
+    3	exception
+    4	   explicit_signal;
+    5	begin
+    6	   signal(explicit_signal);
+    7	   error(190);
+    8	   exception
+    9	      explicit_signal : ;
+   10	      allconditions   : error(191);
+   11	end;MODULE  EXE009       DSK:EXE009.PAS[31024,274425]                                      23-Sep-82 10:48
+SECTION 12           test_aggregate                                                            PAGE 13
+
+    2	public procedure test_aggregate;
+    3	type
+    4	   local_record = record
+    5	      field_1 : integer;
+    6	      field_2 : array [1..*] of integer;
+    7	   end;
+    8	var
+    9	   pointer_1 : ^local_record;
+   10	   pointer_2 : ^local_record;
+   11	begin
+   12	   new(pointer_1,10);
+   13	   new(pointer_2,20);
+   14	   pointer_1^:=pointer_2^;
+   15	   error(200);
+   16	   dispose(pointer_1);
+   17	   dispose(pointer_2);
+   18	   exception
+   19	      program_error : begin
+   20	                         dispose(pointer_1);
+   21	                         dispose(pointer_2);
+   22	                         if programstatus<>program_compatibility then
+   23	                            error(201);
+   24	                      end;
+   25	      allconditions : begin
+   26	                         dispose(pointer_1);
+   27	                         dispose(pointer_2);
+   28	                         error(202);
+   29	                      end;
+   30	end;MODULE  EXE009       DSK:EXE009.PAS[31024,274425]                                      23-Sep-82 10:48
+SECTION 13           test_aggregate_nocheck                                                    PAGE 14
+
+    2	public procedure test_aggregate_nocheck options nocheck;
+    3	type
+    4	   local_record = record
+    5	      field_1 : integer;
+    6	      field_2 : array [1..*] of integer;
+    7	   end;
+    8	var
+    9	   pointer_1 : ^local_record;
+   10	   pointer_2 : ^local_record;
+   11	begin
+   12	   new(pointer_1,10);
+   13	   new(pointer_2,20);
+   14	   pointer_1^:=pointer_2^;
+   15	   dispose(pointer_1);
+   16	   dispose(pointer_2);
+   17	   exception
+   18	      program_error : error(205);
+   19	$IF vax
+   20	      special_error : if specialstatus <> special_disp_twice then
+   21	                        error ( 206 );
+   22	$ENDIF
+   23	      allconditions : begin
+   24	                        error (207);
+   25	                        exception_message;
+   26	                      end;
+   27	end;MODULE  EXE009       DSK:EXE009.PAS[31024,274425]                                      23-Sep-82 10:48
+SECTION 14           test_assertion                                                            PAGE 15
+
+    2	public procedure test_assertion;
+    3	var
+    4	   local_flag : boolean;
+    5	begin
+    6	   local_flag:=false;
+    7	   assert(local_flag);
+    8	   error(210);
+    9	   exception
+   10	      program_error : if programstatus<>program_assertion then
+   11	                         error(211);
+   12	      allconditions : error(212);
+   13	end;MODULE  EXE009       DSK:EXE009.PAS[31024,274425]                                      23-Sep-82 10:48
+SECTION 15           test_assertion_nocheck                                                    PAGE 16
+
+    2	public procedure test_assertion_nocheck options nocheck;
+    3	var
+    4	   local_flag : boolean;
+    5	begin
+    6	   local_flag:=false;
+    7	   assert(local_flag);
+    8	   exception
+    9	      program_error : error(215);
+   10	      allconditions : error(216);
+   11	end;MODULE  EXE009       DSK:EXE009.PAS[31024,274425]                                      23-Sep-82 10:48
+SECTION 16           test_case                                                                 PAGE 17
+
+    2	public procedure test_case;
+    3	var
+    4	   case_index : integer;
+    5	begin
+    6	   case_index:=max_integer;
+    7	   case case_index of
+    8	      1 : case_index:=0;
+    9	      2 : case_index:=0;
+   10	   end;
+   11	   error(220);
+   12	   exception
+   13	      program_error : if programstatus<>program_case then
+   14	                         error(221);
+   15	      allconditions : error(222);
+   16	end;MODULE  EXE009       DSK:EXE009.PAS[31024,274425]                                      23-Sep-82 10:48
+SECTION 17           test_case_nocheck                                                         PAGE 18
+
+    2	public procedure test_case_nocheck options nocheck;
+    3	var
+    4	   case_index : integer;
+    5	begin
+    6	   case_index:=max_integer;
+    7	   case case_index of
+    8	      1 : case_index:=0;
+    9	      2 : case_index:=0;
+   10	   end;
+   11	   exception
+   12	      program_error : error(225);
+   13	      allconditions : error(226);
+   14	end;MODULE  EXE009       DSK:EXE009.PAS[31024,274425]                                      23-Sep-82 10:48
+SECTION 18           test_file_errors                                                          PAGE 19
+
+    2	public procedure test_file_errors;
+    3	var
+    4	   nil_file : text;
+    5	begin
+    6	   nil_file:=nilf;
+    7	   writeln(nil_file);
+    8	   error(230);
+    9	   exception
+   10	      program_error : if programstatus<>program_file then
+   11	                         error(231);
+   12	      allconditions : error(232);
+   13	end;MODULE  EXE009       DSK:EXE009.PAS[31024,274425]                                      23-Sep-82 10:48
+SECTION 19           test_file_errors_nocheck                                                  PAGE 20
+
+    2	public procedure test_file_errors_nocheck options nocheck;
+    3	var
+    4	   nil_file : text;
+    5	begin
+    6	   nil_file:=nilf;
+    7	   writeln(nil_file);
+    8	   exception
+    9	      program_error : begin
+   10	                        error (235);
+   11	                        exception_message;
+   12	                      end;
+   13	      io_error :  if exiostatus <> io_povf
+   14	                   then error(236);
+   15	$IF vax
+   16	      special_error : if specialstatus <> special_ill_mem_ref then
+   17	                        error (237);
+   18	$ENDIF
+   19	      allconditions : begin
+   20	                        error (238);
+   21	                        exception_message;
+   22	                      end;
+   23	end;MODULE  EXE009       DSK:EXE009.PAS[31024,274425]                                      23-Sep-82 10:48
+SECTION 20           test_pointer                                                              PAGE 21
+
+    2	public procedure test_pointer;
+    3	var
+    4	   local_pointer : ^integer;
+    5	begin
+    6	   local_pointer:=nil;
+    7	   local_pointer^:=0;
+    8	   error(240);
+    9	   exception
+   10	      program_error : if programstatus<>program_pointer then
+   11	                         error(241);
+   12	      allconditions : error(242);
+   13	end;MODULE  EXE009       DSK:EXE009.PAS[31024,274425]                                      23-Sep-82 10:48
+SECTION 21           test_pointer_nocheck                                                      PAGE 22
+
+    2	public procedure test_pointer_nocheck options nocheck;
+    3	var
+    4	   local_pointer : ^integer;
+    5	begin
+    6	   local_pointer:=nil;
+    7	   local_pointer^:=0;
+    8	   exception
+    9	      program_error : error(245);
+   10	      special_error : if specialstatus <> special_ill_mem_ref then 
+   11	                        error (246);
+   12	  llconditions : begin
+   13	                        error (247);
+   14	                        exception_message;
+   15	                      end;
+   16	end;MODULE  EXE009       DSK:EXE009.PAS[31024,274425]                                      23-Sep-82 10:48
+SECTION 22           test_range                                                                PAGE 23
+
+    2	public procedure test_range;
+    3	var
+    4	   local_integer : 1..2;
+    5	begin
+    6	   local_integer:=2;
+    7	   local_integer:=local_integer+local_integer;
+    8	   error(250);
+    9	   exception
+   10	      program_error : if programstatus<>program_value then
+   11	                         error(251);
+   12	      allconditions : error(252);
+   13	end;MODULE  EXE009       DSK:EXE009.PAS[31024,274425]                                      23-Sep-82 10:48
+SECTION 23           test_range_nocheck                                                        PAGE 24
+
+    2	public procedure test_range_nocheck options nocheck;
+    3	var
+    4	   local_integer : 1..2;
+    5	begin
+    6	   local_integer:=2;
+    7	   local_integer:=local_integer+local_integer;
+    8	   exception
+    9	      program_error : error(255);
+   10	      allconditions : error(256);
+   11	end;MODULE  EXE009       DSK:EXE009.PAS[31024,274425]                                      23-Sep-82 10:48
+SECTION 24           test_subscript                                                            PAGE 25
+
+    2	public procedure test_subscript;
+    3	var
+    4	   local_array : array [1..2] of integer;
+    5	   subscript   : integer;
+    6	begin
+    7	   subscript:=max_integer;
+    8	   local_array[subscript]:=0;
+    9	   error(260);
+   10	   exception
+   11	      program_error : if programstatus<>program_subscript then
+   12	                         error(261);
+   13	$IFNOT P10
+   14	      special_error : if specialstatus<>special_vax_index then
+   15	                         error(262);
+   16	$ENDIF
+   17	      allconditions : error(263);
+   18	end;MODULE  EXE009       DSK:EXE009.PAS[31024,274425]                                      23-Sep-82 10:48
+SECTION 25           test_subscript_nocheck                                                    PAGE 26
+
+    2	public procedure test_subscript_nocheck options nocheck;
+    3	var
+    4	   local_array : array [1..2] of integer;
+    5	   subscript   : integer;
+    6	begin
+    7	   subscript:=max_integer;
+    8	   local_array[subscript]:=0;
+    9	   exception
+   10	      stack_overflow : ;
+   11	      program_error : error (256);
+   12	$IFNOT P10
+   13	      special_error : error(266);
+   14	$ENDIF
+   15	      allconditions : error(267);
+   16	end;MODULE  EXE009       DSK:EXE009.PAS[31024,274425]                                      23-Sep-82 10:48
+SECTION 26           test_substring                                                            PAGE 27
+
+    2	public procedure test_substring;
+    3	type
+    4	   string_two = string[2];
+    5	var
+    6	   local_string  : string_two;
+    7	   string_length : integer;
+    8	begin
+    9	   string_length:=max_integer;
+   10	   writeln(tty,substr(local_string,1,string_length));
+   11	   error(270);
+   12	   exception
+   13	      program_error : if programstatus<>program_substring then
+   14	                         error(271);
+   15	      allconditions : error(272);
+   16	end;MODULE  EXE009       DSK:EXE009.PAS[31024,274425]                                      23-Sep-82 10:48
+SECTION 27           test_substring_nocheck                                                    PAGE 28
+
+    2	public procedure test_substring_nocheck options nocheck;
+    3	type
+    4	   string_two = string[2];
+    5	var
+    6	   local_string  : string_two;
+    7	   string_length : integer;
+    8	   f             : text;
+    9	begin
+   10	   rewrite (f, 'EXE009.tmp');
+   11	   string_length:=max_integer;
+   12	   writeln(f,substr(local_string,1,string_length));
+   13	   exception
+   14	      program_error : error(275);
+   15	$IF vax
+   16	      math_error : if mathstatus <> math_int_ovf then
+   17	                     error (276);
+   18	$ENDIF
+   19 *	$IF M68
+   20 *	      special_error : if specialstatus <> special_ill_mem_ref then
+   21 *	                        error (277);
+   22 *	$ENDIF
+   23	      allconditions : begin
+   24	                        error (278);
+   25	                        exception_message;
+   26	                      end;
+   27	end;MODULE  EXE009       DSK:EXE009.PAS[31024,274425]                                      23-Sep-82 10:48
+SECTION 28           test_illegal_memory_reference                                             PAGE 29
+
+    2	public procedure test_illegal_memory_reference options special(coercions);
+    3	const
+    4	$IF VAX illegal_address = 1;
+    5 *	$IF P10 illegal_address = #o400000;
+    6 *	$IF M68 illegal_address = #h7fffffff;
+    7	var
+    8	   local_pointer : ^integer;
+    9	begin
+   10	   local_pointer:=ptr(illegal_address);
+   11	   local_pointer^:=0;
+   12	   error(280);
+   13	   exception
+   14	      special_error : if specialstatus<>special_ill_mem_ref then
+   15	                         error(281);
+   16	      allconditions : error(282);
+   17	end;MODULE  EXE009       DSK:EXE009.PAS[31024,274425]                                      23-Sep-82 10:48
+SECTION 29           test_dispose_bad_ptr                                                      PAGE 30
+
+    2	public procedure test_dispose_bad_ptr options special(coercions);
+    3	var
+    4	   local_pointer : ^integer;
+    5	begin
+    6	   local_pointer:=ptr(15);
+    7	   dispose(local_pointer);
+    8	   error(290);
+    9	   exception
+   10	      special_error : if specialstatus<>special_disp_ptr then
+   11	                         error(291);
+   12	      allconditions : error(292);
+   13	end;MODULE  EXE009       DSK:EXE009.PAS[31024,274425]                                      23-Sep-82 10:48
+SECTION 30           test_dispose_twice                                                        PAGE 31
+
+    2	public procedure test_dispose_twice;
+    3	type
+    4	   local_record = record
+    5	      data : integer;
+    6	   end;
+    7	var
+    8	   local_ptr : ^local_record;
+    9	begin
+   10	   new(local_ptr);
+   11	   dispose(local_ptr);
+   12	   dispose(local_ptr);
+   13	   error(300);
+   14	   exception
+   15	      special_error : if specialstatus<>special_disp_twice then
+   16	                         error(301);
+   17	      allconditions : error(302);
+   18	end;MODULE  EXE009       DSK:EXE009.PAS[31024,274425]                                      23-Sep-82 10:48
+SECTION 31           perform_tests                                                             PAGE 32
+
+    2	public procedure perform_tests;
+    3	begin
+    4	
+    5	   (* math_error tests *)
+    6	
+    7	   test_integer_overflow;
+    8	   test_real_overflow;
+    9 *	$IFNOT VAX
+   10 *	   test_real_underflow;
+   11 *	$ENDIF
+   12	   test_integer_divide_by_zero;
+   13	   test_real_divide_by_zero;
+   14	   test_arcsin;
+   15	   test_arccos;
+   16	
+   17	   (* stack_overflow tests *)
+   18	
+   19 *	$IFNOT VAX
+   20 *	   test_stack_overflow;
+   21 *	$ENDIF
+   22	   test_heap_overflow;
+   23	
+   24	   (* explicit signal test *)
+   25	
+   26	   test_explicit_signal;
+   27	
+   28	   (* program_error tests with and without check option *)
+   29	
+   30	   test_aggregate;
+   31	   test_aggregate_nocheck;
+   32	   test_assertion;
+   33	   test_assertion_nocheck;
+   34	   test_case;
+   35	   test_case_nocheck;
+   36	   test_file_errors;
+   37	   test_file_errors_nocheck;
+   38	   test_pointer;
+   39	   test_pointer_nocheck;
+   40	   test_range;
+   41	   test_range_nocheck;
+   42	   test_subscript;
+   43	   test_substring;MODULE  EXE009       DSK:EXE009.PAS[31024,274425]                                      23-Sep-82 10:48
+SECTION 31           perform_tests                                                             PAGE 33
+
+   44	   test_substring_nocheck;
+   45	
+   46	   (* special_error tests *)
+   47	
+   48	   test_illegal_memory_reference;
+   49	   test_dispose_bad_ptr;
+   50	   test_dispose_twice;
+   51	
+   52	   (* handler to catch any undetected exceptions *)
+   53	
+   54	   exception
+   55	      allconditions : begin
+   56	                         writeln(tty,'Undetected exception occurred');
+   57	                         exception_message;
+   58	                      end;
+   59	end;MODULE  EXE009       DSK:EXE009.PAS[31024,274425]                                      23-Sep-82 10:48
+SECTION 32           wrapup                                                                    PAGE 34
+
+    2	public procedure wrapup;
+    3	begin
+    4	   writeln(tty,'End EXE009');
+    5	end;MODULE  EXE009       DSK:EXE009.PAS[31024,274425]                                      23-Sep-82 10:48
+SECTION 33           main                                                                      PAGE 35
+
+    2	begin
+    3	   initialize;
+    4	   perform_tests;
+    5	   wrapup;
+    6	end.
+    7	
+
+File   level   on page     name
+
+  0	 0	    1	DSK:EXE009.PAS[31024,274425]
+
+
+
+Section   in file   on page     title
+
+     2	      0	         3    error
+     1	      0	         2    initialize
+    33	      0	        35    main
+    31	      0	        32    perform_tests
+    12	      0	        13    test_aggregate
+    13	      0	        14    test_aggregate_nocheck
+     8	      0	         9    test_arccos
+     7	      0	         8    test_arcsin
+    14	      0	        15    test_assertion
+    15	      0	        16    test_assertion_nocheck
+    16	      0	        17    test_case
+    17	      0	        18    test_case_nocheck
+    29	      0	        30    test_dispose_bad_ptr
+    30	      0	        31    test_dispose_twice
+    11	      0	        12    test_explicit_signal
+    18	      0	        19    test_file_errors
+    19	      0	        20    test_file_errors_nocheck
+    10	      0	        11    test_heap_overflow
+    28	      0	        29    test_illegal_memory_reference
+     5	      0	         6    test_integer_divide_by_zero
+     3	      0	         4    test_integer_overflow
+    20	      0	        21    test_pointer
+    21	      0	        22    test_pointer_nocheck
+    22	      0	        23    test_range
+    23	      0	        24    test_range_nocheck
+     6	      0	         7    test_real_divide_by_zero
+     4	      0	         5    test_real_overflow
+     9	      0	        10    test_stack_overflow
+    24	      0	        25    test_subscript
+    25	      0	        26    test_subscript_nocheck
+    26	      0	        27    test_substring
+    27	      0	        28    test_substring_nocheck
+    32	      0	        34    wrapup
+                                                                                                                                                  		.TITLE	EXE009
+	;
+	;	VAX Checkout Code Generator,  Sep 23, 1982  10:48:55 am
+	;
+
+		.PSECT	PAX_STATIC,LONG,CON,NOEXE,LCL,PIC,NOSHR,RD,WRT,REL
+	STATIC.:
+00000		.ADDRESS STATIC.+0		; EXPLICIT_SIGNAL
+	;
+	;	Begin subroutine INITIALIZE
+	;
+
+		.PSECT	PAX_CODE......B,LONG,CON,EXE,LCL,PIC,SHR,RD,NOWRT,REL
+
+00000	C.1:	.WORD	C.1-C.1
+00002		.WORD	10
+00004		.ASCII	"INITIALIZE"
+
+0000E	B.3:	.ENTRY	INITIALIZE,^M<IV>
+00010		CLRL  	-(SP)
+00012		PUSHAL	C.1
+
+00015	L.1:					; LINE 1/3
+						; LINE 1/4
+00015		MOVZWL	I^#1152,-(SP)		;   ^X480
+0001A		PUSHL 	S^#10
+0001C		PUSHAB	K.1
+00022		CALLS 	S^#3,PAX_FVM.REWRT
+00029		MOVL  	R0,AP
+0002C		MOVL  	AP,TTYOUTPUT		;   TTYOUTPUT
+						; LINE 1/5
+00033		TSTL  	TTYOUTPUT		;   TTYOUTPUT
+00039		BNEQ  	X.1
+0003B	X.2:	JSB   	PAX_MON.FVERR
+00041	X.1:	CMPL  	I^#-268435456,TTYOUTPUT	;   TTYOUTPUT
+0004C		BEQL  	X.2
+0004E		PUSHL 	TTYOUTPUT		;   TTYOUTPUT
+00054		PUSHL 	S^#12
+00056		PUSHAB	K.2
+0005C		PUSHL 	I^#262144		;   ^X40000
+00062		CALLS 	S^#4,PAX_TXT.WRITE
+00069		PUSHL 	TTYOUTPUT		;   TTYOUTPUT
+0006F		CALLS 	S^#1,PAX_TXT.WRLN
+						; LINE 1/6
+00076		TSTL  	TTYOUTPUT		;   TTYOUTPUT0007C		BNEQ  	X.3
+0007E	X.4:	JSB   	PAX_MON.FVERR
+00084	X.3:	CMPL  	I^#-268435456,TTYOUTPUT	;   TTYOUTPUT
+0008F		BEQL  	X.4
+00091		PUSHL 	TTYOUTPUT		;   TTYOUTPUT
+00097		CALLS 	S^#1,PAX_FIO.BREAK
+						; LINE 1/7
+0009E		RET   	
+
+	;
+	;	Begin subroutine ERROR
+	;
+
+0009F	C.2:	.WORD	C.2-C.2
+000A1		.WORD	5
+000A3		.ASCII	"ERROR"
+
+000A8	B.4:	.ENTRY	ERROR,^M<IV>
+000AA		CLRL  	-(SP)
+000AC		PUSHAL	C.2
+
+000AF	L.1:					; LINE 2/3
+						; LINE 2/4
+000AF		TSTL  	TTYOUTPUT		;   TTYOUTPUT
+000B5		BNEQ  	X.1
+000B7	X.2:	JSB   	PAX_MON.FVERR
+000BD	X.1:	CMPL  	I^#-268435456,TTYOUTPUT	;   TTYOUTPUT
+000C8		BEQL  	X.2
+000CA		PUSHL 	TTYOUTPUT		;   TTYOUTPUT
+000D0		PUSHL 	S^#6
+000D2		PUSHAB	K.3
+000D8		PUSHL 	I^#262144		;   ^X40000
+000DE		CALLS 	S^#4,PAX_TXT.WRITE
+000E5		PUSHL 	TTYOUTPUT		;   TTYOUTPUT
+000EB		PUSHL 	4(AP)			;   ERROR_NUMBER
+000EE		PUSHL 	S^#0
+000F0		CALLS 	S^#3,PAX_TXT.WRITE
+000F7		PUSHL 	TTYOUTPUT		;   TTYOUTPUT
+000FD		CALLS 	S^#1,PAX_TXT.WRLN
+						; LINE 2/5
+00104		TSTL  	TTYOUTPUT		;   TTYOUTPUT
+0010A		BNEQ  	X.3
+0010C	X.4:	JSB   	PAX_MON.FVERR
+00112	X.3:	CMPL  	I^#-268435456,TTYOUTPUT	;   TTYOUTPUT
+0011D		BEQL  	X.40011F		PUSHL 	TTYOUTPUT		;   TTYOUTPUT
+00125		CALLS 	S^#1,PAX_FIO.BREAK
+						; LINE 2/6
+0012C		RET   	
+
+	;
+	;	Begin subroutine TEST_INTEGER_OVERFLOW
+	;
+
+0012D	C.3:	.WORD	C.3-C.3
+0012F		.WORD	21
+00131		.ASCII	"TEST_INTEGER_OVERFLOW"
+
+00146	B.5:	.ENTRY	TEST_INTEGER_OVERFLOW,^M<IV>
+00148		CLRL  	-(SP)
+0014A		PUSHAL	C.3
+0014D		SUBL2 	S^#20,SP		;   ^X14
+
+00150	L.1:					; LINE 3/6
+00150		PUSHAL	H.2
+00156		CALLS 	S^#1,PAX_EXC.SET
+						; LINE 3/7
+0015D		MOVL  	I^#2147483647,-16(FP)	;   ^X7FFFFFFF  INTEGER_1
+						; LINE 3/8
+00165		MOVL  	I^#2147483647,-20(FP)	;   ^X7FFFFFFF  INTEGER_2
+						; LINE 3/9
+0016D		MULL3 	-20(FP),-20(FP),-16(FP)	;   INTEGER_2  INTEGER_2  INTEGER_1
+						; LINE 3/10
+00174		MOVZBL	I^#100,-(SP)		;   ^X64
+00178		CALLS 	S^#1,B.4
+0017D		BRB   	L.7
+
+0017F	L.2:					; LINE 3/11
+0017F		MOVAL 	-28(FP),SP
+00183		JMP   	0(R0)
+
+00185	H.2:	.WORD	^M<IV>
+00187		JSB   	PAX_EXC.VAXCOND
+0018D	X.1:	.WORD	0
+0018F		.WORD	-28
+00191	X.2:	.WORD	L.2-X.2
+00193	X.3:	.ADDRESS PAX_EXC.MATH		; MATH_ERROR
+	X.4:	.WORD	L.3-X.4
+00199		.LONG	-2
+0019D	X.5:	.WORD	L.6-X.50019F	L.3:					; LINE 3/12
+0019F		CALLS 	S^#0,PAX_EXC.MATHSTAT
+001A6		MOVZBL	R0,AP
+001A9		CMPB  	AP,S^#3
+001AC		BEQL  	L.5
+
+001AE	L.4:					; LINE 3/13
+001AE		MOVZBL	I^#101,-(SP)		;   ^X65
+001B2		CALLS 	S^#1,B.4
+
+001B7	L.5:	BRB   	L.7
+
+001B9	L.6:					; LINE 3/14
+001B9		MOVZBL	I^#102,-(SP)		;   ^X66
+001BD		CALLS 	S^#1,B.4
+
+001C2	L.7:	PUSHL 	S^#0
+001C4		CALLS 	S^#1,PAX_EXC.RESTORE
+						; LINE 3/15
+001CB		RET   	
+
+	;
+	;	Begin subroutine TEST_REAL_OVERFLOW
+	;
+
+001CC	C.4:	.WORD	C.4-C.4
+001CE		.WORD	18
+001D0		.ASCII	"TEST_REAL_OVERFLOW"
+
+001E2	B.6:	.ENTRY	TEST_REAL_OVERFLOW,^M<IV>
+001E4		CLRL  	-(SP)
+001E6		PUSHAL	C.4
+001E9		SUBL2 	S^#20,SP		;   ^X14
+
+001EC	L.1:					; LINE 4/6
+001EC		PUSHAL	H.2
+001F0		CALLS 	S^#1,PAX_EXC.SET
+						; LINE 4/7
+001F7		MOVF  	K.4,-16(FP)		;   REAL_1
+						; LINE 4/8
+001FF		MOVF  	K.4,-20(FP)		;   REAL_2
+						; LINE 4/9
+00207		MULF3 	-20(FP),-20(FP),-16(FP)	;   REAL_2  REAL_2  REAL_1
+						; LINE 4/10
+0020E		MOVZBL	I^#110,-(SP)		;   ^X6E00212		CALLS 	S^#1,B.4
+00217		BRB   	L.7
+
+00219	L.2:					; LINE 4/11
+00219		MOVAL 	-28(FP),SP
+0021D		JMP   	0(R0)
+
+0021F	H.2:	.WORD	^M<IV>
+00221		JSB   	PAX_EXC.VAXCOND
+00227	X.1:	.WORD	0
+00229		.WORD	-28
+0022B	X.2:	.WORD	L.2-X.2
+0022D	X.3:	.ADDRESS PAX_EXC.MATH		; MATH_ERROR
+	X.4:	.WORD	L.3-X.4
+00233		.LONG	-2
+00237	X.5:	.WORD	L.6-X.5
+
+00239	L.3:					; LINE 4/12
+00239		CALLS 	S^#0,PAX_EXC.MATHSTAT
+00240		MOVZBL	R0,AP
+00243		CMPB  	AP,S^#2
+00246		BEQL  	L.5
+
+00248	L.4:					; LINE 4/13
+00248		MOVZBL	I^#111,-(SP)		;   ^X6F
+0024C		CALLS 	S^#1,B.4
+
+00251	L.5:	BRB   	L.7
+
+00253	L.6:					; LINE 4/14
+00253		MOVZBL	I^#112,-(SP)		;   ^X70
+00257		CALLS 	S^#1,B.4
+
+0025C	L.7:	PUSHL 	S^#0
+0025E		CALLS 	S^#1,PAX_EXC.RESTORE
+						; LINE 4/15
+00265		RET   	
+
+	;
+	;	Begin subroutine TEST_INTEGER_DIVIDE_BY_ZERO
+	;
+
+00266	C.5:	.WORD	C.5-C.5
+00268		.WORD	27
+0026A		.ASCII	"TEST_INTEGER_DIVIDE_BY_ZERO"00285	B.7:	.ENTRY	TEST_INTEGER_DIVIDE_BY_ZERO,^M<IV>
+00287		CLRL  	-(SP)
+00289		PUSHAL	C.5
+0028C		SUBL2 	S^#20,SP		;   ^X14
+
+0028F	L.1:					; LINE 5/6
+0028F		PUSHAL	H.2
+00293		CALLS 	S^#1,PAX_EXC.SET
+						; LINE 5/7
+0029A		MOVL  	I^#2147483647,-16(FP)	;   ^X7FFFFFFF  INTEGER_1
+						; LINE 5/8
+002A2		CLRL  	-20(FP)			;   INTEGER_2
+						; LINE 5/9
+002A5		DIVL3 	-20(FP),-16(FP),-16(FP)	;   INTEGER_2  INTEGER_1  INTEGER_1
+						; LINE 5/10
+002AC		MOVZBL	I^#130,-(SP)		;   ^X82
+002B0		CALLS 	S^#1,B.4
+002B5		BRB   	L.7
+
+002B7	L.2:					; LINE 5/11
+002B7		MOVAL 	-28(FP),SP
+002BB		JMP   	0(R0)
+
+002BD	H.2:	.WORD	^M<IV>
+002BF		JSB   	PAX_EXC.VAXCOND
+002C5	X.1:	.WORD	0
+002C7		.WORD	-28
+002C9	X.2:	.WORD	L.2-X.2
+002CB	X.3:	.ADDRESS PAX_EXC.MATH		; MATH_ERROR
+	X.4:	.WORD	L.3-X.4
+002D1		.LONG	-2
+002D5	X.5:	.WORD	L.6-X.5
+
+002D7	L.3:					; LINE 5/12
+002D7		CALLS 	S^#0,PAX_EXC.MATHSTAT
+002DE		MOVZBL	R0,AP
+002E1		CMPB  	AP,S^#4
+002E4		BEQL  	L.5
+
+002E6	L.4:					; LINE 5/13
+002E6		MOVZBL	I^#131,-(SP)		;   ^X83
+002EA		CALLS 	S^#1,B.4
+
+002EF	L.5:	BRB   	L.7002F1	L.6:					; LINE 5/14
+002F1		MOVZBL	I^#132,-(SP)		;   ^X84
+002F5		CALLS 	S^#1,B.4
+
+002FA	L.7:	PUSHL 	S^#0
+002FC		CALLS 	S^#1,PAX_EXC.RESTORE
+						; LINE 5/15
+00303		RET   	
+
+	;
+	;	Begin subroutine TEST_REAL_DIVIDE_BY_ZERO
+	;
+
+00304	C.6:	.WORD	C.6-C.6
+00306		.WORD	24
+00308		.ASCII	"TEST_REAL_DIVIDE_BY_ZERO"
+
+00320	B.8:	.ENTRY	TEST_REAL_DIVIDE_BY_ZERO,^M<IV>
+00322		CLRL  	-(SP)
+00324		PUSHAL	C.6
+00327		SUBL2 	S^#20,SP		;   ^X14
+
+0032A	L.1:					; LINE 6/6
+0032A		PUSHAL	H.2
+0032E		CALLS 	S^#1,PAX_EXC.SET
+						; LINE 6/7
+00335		MOVF  	K.4,-16(FP)		;   REAL_1
+						; LINE 6/8
+0033D		CVTLF 	S^#0,-20(FP)		;   REAL_2
+						; LINE 6/9
+00341		DIVF3 	-20(FP),-16(FP),-16(FP)	;   REAL_2  REAL_1  REAL_1
+						; LINE 6/10
+00348		MOVZBL	I^#140,-(SP)		;   ^X8C
+0034C		CALLS 	S^#1,B.4
+00351		BRB   	L.7
+
+00353	L.2:					; LINE 6/11
+00353		MOVAL 	-28(FP),SP
+00357		JMP   	0(R0)
+
+00359	H.2:	.WORD	^M<IV>
+0035B		JSB   	PAX_EXC.VAXCOND
+00361	X.1:	.WORD	0
+00363		.WORD	-28
+00365	X.2:	.WORD	L.2-X.200367	X.3:	.ADDRESS PAX_EXC.MATH		; MATH_ERROR
+	X.4:	.WORD	L.3-X.4
+0036D		.LONG	-2
+00371	X.5:	.WORD	L.6-X.5
+
+00373	L.3:					; LINE 6/12
+00373		CALLS 	S^#0,PAX_EXC.MATHSTAT
+0037A		MOVZBL	R0,AP
+0037D		CMPB  	AP,S^#4
+00380		BEQL  	L.5
+
+00382	L.4:					; LINE 6/13
+00382		MOVZBL	I^#141,-(SP)		;   ^X8D
+00386		CALLS 	S^#1,B.4
+
+0038B	L.5:	BRB   	L.7
+
+0038D	L.6:					; LINE 6/14
+0038D		MOVZBL	I^#142,-(SP)		;   ^X8E
+00391		CALLS 	S^#1,B.4
+
+00396	L.7:	PUSHL 	S^#0
+00398		CALLS 	S^#1,PAX_EXC.RESTORE
+						; LINE 6/15
+0039F		RET   	
+
+	;
+	;	Begin subroutine TEST_ARCSIN
+	;
+
+003A0	C.7:	.WORD	C.7-C.7
+003A2		.WORD	11
+003A4		.ASCII	"TEST_ARCSIN"
+
+003AF	B.9:	.ENTRY	TEST_ARCSIN,^M<IV>
+003B1		CLRL  	-(SP)
+003B3		PUSHAL	C.7
+003B6		SUBL2 	S^#16,SP		;   ^X10
+
+003B9	L.1:					; LINE 7/5
+003B9		PUSHAL	H.2
+003BD		CALLS 	S^#1,PAX_EXC.SET
+						; LINE 7/6
+003C4		MOVF  	K.4,-16(FP)		;   LOCAL_ARGUMENT
+						; LINE 7/7003CC		PUSHAL	-16(FP)			;   LOCAL_ARGUMENT
+003CF		CALLS 	S^#1,MTH$ASIN
+003D6		MOVF  	R0,-16(FP)		;   LOCAL_ARGUMENT
+						; LINE 7/8
+003DA		MOVZBL	I^#150,-(SP)		;   ^X96
+003DE		CALLS 	S^#1,B.4
+003E3		BRB   	L.7
+
+003E5	L.2:					; LINE 7/9
+003E5		MOVAL 	-24(FP),SP
+003E9		JMP   	0(R0)
+
+003EB	H.2:	.WORD	^M<IV>
+003ED		JSB   	PAX_EXC.VAXCOND
+003F3	X.1:	.WORD	0
+003F5		.WORD	-24
+003F7	X.2:	.WORD	L.2-X.2
+003F9	X.3:	.ADDRESS PAX_EXC.MATH		; MATH_ERROR
+	X.4:	.WORD	L.3-X.4
+003FF		.LONG	-2
+00403	X.5:	.WORD	L.6-X.5
+
+00405	L.3:					; LINE 7/12
+00405		CALLS 	S^#0,PAX_EXC.MATHSTAT
+0040C		MOVZBL	R0,AP
+0040F		CMPB  	AP,S^#9
+00412		BEQL  	L.5
+
+00414	L.4:					; LINE 7/13
+00414		MOVZBL	I^#151,-(SP)		;   ^X97
+00418		CALLS 	S^#1,B.4
+
+0041D	L.5:	BRB   	L.7
+
+0041F	L.6:					; LINE 7/14
+0041F		MOVZBL	I^#152,-(SP)		;   ^X98
+00423		CALLS 	S^#1,B.4
+
+00428	L.7:	PUSHL 	S^#0
+0042A		CALLS 	S^#1,PAX_EXC.RESTORE
+						; LINE 7/15
+00431		RET   	
+
+	;
+	;	Begin subroutine TEST_ARCCOS	;
+
+00432	C.8:	.WORD	C.8-C.8
+00434		.WORD	11
+00436		.ASCII	"TEST_ARCCOS"
+
+00441	B.10:	.ENTRY	TEST_ARCCOS,^M<IV>
+00443		CLRL  	-(SP)
+00445		PUSHAL	C.8
+00448		SUBL2 	S^#16,SP		;   ^X10
+
+0044B	L.1:					; LINE 8/5
+0044B		PUSHAL	H.2
+0044F		CALLS 	S^#1,PAX_EXC.SET
+						; LINE 8/6
+00456		MOVF  	K.4,-16(FP)		;   LOCAL_ARGUMENT
+						; LINE 8/7
+0045E		PUSHAL	-16(FP)			;   LOCAL_ARGUMENT
+00461		CALLS 	S^#1,MTH$ACOS
+00468		MOVF  	R0,-16(FP)		;   LOCAL_ARGUMENT
+						; LINE 8/8
+0046C		MOVZBL	I^#160,-(SP)		;   ^XA0
+00470		CALLS 	S^#1,B.4
+00475		BRB   	L.7
+
+00477	L.2:					; LINE 8/9
+00477		MOVAL 	-24(FP),SP
+0047B		JMP   	0(R0)
+
+0047D	H.2:	.WORD	^M<IV>
+0047F		JSB   	PAX_EXC.VAXCOND
+00485	X.1:	.WORD	0
+00487		.WORD	-24
+00489	X.2:	.WORD	L.2-X.2
+0048B	X.3:	.ADDRESS PAX_EXC.MATH		; MATH_ERROR
+	X.4:	.WORD	L.3-X.4
+00491		.LONG	-2
+00495	X.5:	.WORD	L.6-X.5
+
+00497	L.3:					; LINE 8/12
+00497		CALLS 	S^#0,PAX_EXC.MATHSTAT
+0049E		MOVZBL	R0,AP
+004A1		CMPB  	AP,S^#9
+004A4		BEQL  	L.5004A6	L.4:					; LINE 8/13
+004A6		MOVZBL	I^#161,-(SP)		;   ^XA1
+004AA		CALLS 	S^#1,B.4
+
+004AF	L.5:	BRB   	L.7
+
+004B1	L.6:					; LINE 8/14
+004B1		MOVZBL	I^#162,-(SP)		;   ^XA2
+004B5		CALLS 	S^#1,B.4
+
+004BA	L.7:	PUSHL 	S^#0
+004BC		CALLS 	S^#1,PAX_EXC.RESTORE
+						; LINE 8/15
+004C3		RET   	
+
+	;
+	;	Begin subroutine TEST_HEAP_OVERFLOW
+	;
+
+004C4	C.9:	.WORD	C.9-C.9
+004C6		.WORD	18
+004C8		.ASCII	"TEST_HEAP_OVERFLOW"
+
+004DA	B.11:	.ENTRY	TEST_HEAP_OVERFLOW,^M<IV>
+004DC		CLRL  	-(SP)
+004DE		PUSHAL	C.9
+004E1		SUBL2 	S^#24,SP		;   ^X18
+
+004E4	L.1:					; LINE 10/12
+004E4		PUSHAL	H.4
+004EA		CALLS 	S^#1,PAX_EXC.SET
+						; LINE 10/13
+004F1		MOVZWL	I^#4004,-(SP)		;   ^XFA4
+004F6		CALLS 	S^#1,PAX_UTL.NEW
+004FD		MOVL  	R0,-16(FP)		;   LIST_HEAD
+						; LINE 10/14
+00501		MOVZWL	I^#4004,-(SP)		;   ^XFA4
+00506		CALLS 	S^#1,PAX_UTL.NEW
+0050D		MOVL  	R0,-20(FP)		;   CURR_NODE
+						; LINE 10/15
+00511		TSTL  	-16(FP)			;   LIST_HEAD
+00514		BNEQ  	X.1
+00516	X.2:	JSB   	PAX_MON.PTRER
+0051C	X.1:	CMPL  	I^#-268435456,-16(FP)	;   LIST_HEAD
+00524		BEQL  	X.200526		MOVL  	-20(FP),@-16(FP)	;   CURR_NODE  LIST_HEAD
+
+0052B	L.2:					; LINE 10/16
+						; LINE 10/17
+0052B		MOVZWL	I^#4004,-(SP)		;   ^XFA4
+00530		CALLS 	S^#1,PAX_UTL.NEW
+00537		MOVL  	R0,-24(FP)		;   NEXT_NODE
+						; LINE 10/18
+0053B		TSTL  	-20(FP)			;   CURR_NODE
+0053E		BNEQ  	X.3
+00540	X.4:	JSB   	PAX_MON.PTRER
+00546	X.3:	CMPL  	I^#-268435456,-20(FP)	;   CURR_NODE
+0054E		BEQL  	X.4
+00550		MOVL  	-24(FP),@-20(FP)	;   NEXT_NODE  CURR_NODE
+						; LINE 10/19
+00555		TSTL  	-24(FP)			;   NEXT_NODE
+00558		BNEQ  	X.5
+0055A	X.6:	JSB   	PAX_MON.PTRER
+00560	X.5:	CMPL  	I^#-268435456,-24(FP)	;   NEXT_NODE
+00568		BEQL  	X.6
+0056A		MOVL  	I^#-268435456,@-24(FP)	;   NEXT_NODE
+						; LINE 10/20
+00572		MOVL  	-24(FP),-20(FP)		;   NEXT_NODE  CURR_NODE
+00577		BRB   	L.2
+
+00579	L.3:					; LINE 10/21
+00579		BRB   	L.11
+
+0057B	L.4:					; LINE 10/22
+0057B		MOVAL 	-32(FP),SP
+0057F		JMP   	0(R0)
+
+00581	H.4:	.WORD	^M<IV>
+00583		JSB   	PAX_EXC.VAXCOND
+00589	X.7:	.WORD	0
+0058B		.WORD	-32
+0058D	X.8:	.WORD	L.4-X.8
+0058F	X.9:	.ADDRESS PAX_EXC.STOR		; STORAGE_OVERFLOW
+	X.10:	.WORD	L.5-X.10
+00595		.LONG	-2
+00599	X.11:	.WORD	L.10-X.11
+
+0059B	L.5:
+	L.6:					; LINE 10/23
+						; LINE 10/240059B		MOVL  	-16(FP),-20(FP)		;   LIST_HEAD  CURR_NODE
+
+005A0	L.7:					; LINE 10/25
+005A0		CMPL  	-20(FP),I^#-268435456	;   CURR_NODE
+005A8		BEQL  	L.9
+
+005AA	L.8:					; LINE 10/26
+						; LINE 10/27
+005AA		TSTL  	-20(FP)			;   CURR_NODE
+005AD		BNEQ  	X.12
+005AF	X.13:	JSB   	PAX_MON.PTRER
+005B5	X.12:	CMPL  	I^#-268435456,-20(FP)	;   CURR_NODE
+005BD		BEQL  	X.13
+005BF		MOVL  	@-20(FP),-24(FP)	;   CURR_NODE  NEXT_NODE
+						; LINE 10/28
+005C4		PUSHL 	-20(FP)			;   CURR_NODE
+005C7		CALLS 	S^#1,PAX_UTL.DSPOS
+						; LINE 10/29
+005CE		MOVL  	-24(FP),-20(FP)		;   NEXT_NODE  CURR_NODE
+						; LINE 10/30
+005D3		BRB   	L.7
+
+005D5	L.9:					; LINE 10/31
+005D5		BRB   	L.11
+
+005D7	L.10:					; LINE 10/32
+005D7		MOVZBL	I^#180,-(SP)		;   ^XB4
+005DB		CALLS 	S^#1,B.4
+
+005E0	L.11:	PUSHL 	S^#0
+005E2		CALLS 	S^#1,PAX_EXC.RESTORE
+						; LINE 10/33
+005E9		RET   	
+
+	;
+	;	Begin subroutine TEST_EXPLICIT_SIGNAL
+	;
+
+005EA	C.10:	.WORD	C.10-C.10
+005EC		.WORD	20
+005EE		.ASCII	"TEST_EXPLICIT_SIGNAL"
+
+00602	B.12:	.ENTRY	TEST_EXPLICIT_SIGNAL,^M<IV>
+00604		CLRL  	-(SP)
+00606		PUSHAL	C.1000609		SUBL2 	S^#12,SP
+
+0060C	L.1:					; LINE 11/5
+0060C		PUSHAL	H.2
+00610		CALLS 	S^#1,PAX_EXC.SET
+						; LINE 11/6
+00617		PUSHAL	STATIC.+0		;   EXPLICIT_SIGNAL
+0061D		CALLS 	S^#1,PAX_EXC.SIGNAL
+						; LINE 11/7
+00624		MOVZBL	I^#190,-(SP)		;   ^XBE
+00628		CALLS 	S^#1,B.4
+0062D		BRB   	L.5
+
+0062F	L.2:					; LINE 11/8
+0062F		MOVAL 	-20(FP),SP
+00633		JMP   	0(R0)
+
+00635	H.2:	.WORD	^M<IV>
+00637		JSB   	PAX_EXC.VAXCOND
+0063D	X.1:	.WORD	0
+0063F		.WORD	-20
+00641	X.2:	.WORD	L.2-X.2
+00643	X.3:	.LONG	STATIC.+0-X.3		; EXPLICIT_SIGNAL
+00647	X.4:	.WORD	L.3-X.4
+00649		.LONG	-2
+0064D	X.5:	.WORD	L.4-X.5
+
+0064F	L.3:					; LINE 11/9
+0064F		BRB   	L.5
+
+00651	L.4:					; LINE 11/10
+00651		MOVZBL	I^#191,-(SP)		;   ^XBF
+00655		CALLS 	S^#1,B.4
+
+0065A	L.5:	PUSHL 	S^#0
+0065C		CALLS 	S^#1,PAX_EXC.RESTORE
+						; LINE 11/11
+00663		RET   	
+
+	;
+	;	Begin subroutine TEST_AGGREGATE
+	;
+
+00664	C.11:	.WORD	C.11-C.11
+00666		.WORD	1400668		.ASCII	"TEST_AGGREGATE"
+
+00676	B.13:	.ENTRY	TEST_AGGREGATE,^M<R2,R3,R4,R5,R11,IV>
+00678		CLRL  	-(SP)
+0067A		PUSHAL	C.11
+0067D		SUBL2 	S^#20,SP		;   ^X14
+
+00680	L.1:					; LINE 12/11
+00680		PUSHAL	H.2
+00684		CALLS 	S^#1,PAX_EXC.SET
+						; LINE 12/12
+0068B		MULL3 	S^#4,S^#10,AP
+0068F		ADDL3 	S^#8,AP,-(SP)
+00693		CALLS 	S^#1,PAX_UTL.NEW
+0069A		MOVL  	R0,-16(FP)		;   POINTER_1
+0069E		MOVAB 	@-16(FP),AP		;   POINTER_1
+006A2		MOVL  	S^#10,4(AP)
+						; LINE 12/13
+006A6		MULL3 	S^#4,S^#20,AP		;   ^X14
+006AA		ADDL3 	S^#8,AP,-(SP)
+006AE		CALLS 	S^#1,PAX_UTL.NEW
+006B5		MOVL  	R0,-20(FP)		;   POINTER_2
+006B9		MOVAB 	@-20(FP),AP		;   POINTER_2
+006BD		MOVL  	S^#20,4(AP)		;   ^X14
+						; LINE 12/14
+006C1		TSTL  	-16(FP)			;   POINTER_1
+006C4		BNEQ  	X.1
+006C6	X.2:	JSB   	PAX_MON.PTRER
+006CC	X.1:	CMPL  	I^#-268435456,-16(FP)	;   POINTER_1
+006D4		BEQL  	X.2
+006D6		TSTL  	-20(FP)			;   POINTER_2
+006D9		BNEQ  	X.3
+006DB	X.4:	JSB   	PAX_MON.PTRER
+006E1	X.3:	CMPL  	I^#-268435456,-20(FP)	;   POINTER_2
+006E9		BEQL  	X.4
+006EB		MOVAB 	@-16(FP),AP		;   POINTER_1
+006EF		MOVAB 	@-20(FP),R11		;   POINTER_2
+006F3		CMPL  	4(AP),4(R11)
+006F8		BEQL  	X.5
+006FA		JSB   	PAX_MON.CMERR
+00700	X.5:	MOVAB 	@-20(FP),AP		;   POINTER_2
+00704		MULL3 	S^#4,4(AP),R1
+00709		ADDL2 	S^#8,R1
+0070C		MOVC3 	R1,@-20(FP),@-16(FP)	;   POINTER_2  POINTER_1
+						; LINE 12/1500712		MOVZBL	I^#200,-(SP)		;   ^XC8
+00716		CALLS 	S^#1,B.4
+						; LINE 12/16
+0071B		PUSHL 	-16(FP)			;   POINTER_1
+0071E		CALLS 	S^#1,PAX_UTL.DSPOS
+						; LINE 12/17
+00725		PUSHL 	-20(FP)			;   POINTER_2
+00728		CALLS 	S^#1,PAX_UTL.DSPOS
+0072F		BRB   	L.9
+
+00731	L.2:					; LINE 12/18
+00731		MOVAL 	-28(FP),SP
+00735		JMP   	0(R0)
+
+00737	H.2:	.WORD	^M<IV>
+00739		JSB   	PAX_EXC.VAXCOND
+0073F	X.6:	.WORD	0
+00741		.WORD	-28
+00743	X.7:	.WORD	L.2-X.7
+00745	X.8:	.ADDRESS PAX_EXC.USER		; PROGRAM_ERROR
+	X.9:	.WORD	L.3-X.9
+0074B		.LONG	-2
+0074F	X.10:	.WORD	L.7-X.10
+
+00751	L.3:
+	L.4:					; LINE 12/19
+						; LINE 12/20
+00751		PUSHL 	-16(FP)			;   POINTER_1
+00754		CALLS 	S^#1,PAX_UTL.DSPOS
+						; LINE 12/21
+0075B		PUSHL 	-20(FP)			;   POINTER_2
+0075E		CALLS 	S^#1,PAX_UTL.DSPOS
+						; LINE 12/22
+00765		CALLS 	S^#0,PAX_EXC.PROGSTAT
+0076C		MOVZBL	R0,AP
+0076F		CMPB  	AP,S^#3
+00772		BEQL  	L.6
+
+00774	L.5:					; LINE 12/23
+00774		MOVZBL	I^#201,-(SP)		;   ^XC9
+00778		CALLS 	S^#1,B.4
+
+0077D	L.6:					; LINE 12/24
+0077D		BRB   	L.90077F	L.7:
+	L.8:					; LINE 12/25
+						; LINE 12/26
+0077F		PUSHL 	-16(FP)			;   POINTER_1
+00782		CALLS 	S^#1,PAX_UTL.DSPOS
+						; LINE 12/27
+00789		PUSHL 	-20(FP)			;   POINTER_2
+0078C		CALLS 	S^#1,PAX_UTL.DSPOS
+						; LINE 12/28
+00793		MOVZBL	I^#202,-(SP)		;   ^XCA
+00797		CALLS 	S^#1,B.4
+						; LINE 12/29
+
+0079C	L.9:	PUSHL 	S^#0
+0079E		CALLS 	S^#1,PAX_EXC.RESTORE
+						; LINE 12/30
+007A5		RET   	
+
+	;
+	;	Begin subroutine TEST_AGGREGATE_NOCHECK
+	;
+
+007A6	C.12:	.WORD	C.12-C.12
+007A8		.WORD	22
+007AA		.ASCII	"TEST_AGGREGATE_NOCHECK"
+
+007C0	B.14:	.ENTRY	TEST_AGGREGATE_NOCHECK,^M<R2,R3,R4,R5,IV>
+007C2		CLRL  	-(SP)
+007C4		PUSHAL	C.12
+007C7		SUBL2 	S^#20,SP		;   ^X14
+
+007CA	L.1:					; LINE 13/11
+007CA		PUSHAL	H.2
+007CE		CALLS 	S^#1,PAX_EXC.SET
+						; LINE 13/12
+007D5		MULL3 	S^#4,S^#10,AP
+007D9		ADDL3 	S^#8,AP,-(SP)
+007DD		CALLS 	S^#1,PAX_UTL.NEW
+007E4		MOVL  	R0,-16(FP)		;   POINTER_1
+007E8		MOVAB 	@-16(FP),AP		;   POINTER_1
+007EC		MOVL  	S^#10,4(AP)
+						; LINE 13/13
+007F0		MULL3 	S^#4,S^#20,AP		;   ^X14
+007F4		ADDL3 	S^#8,AP,-(SP)
+007F8		CALLS 	S^#1,PAX_UTL.NEW007FF		MOVL  	R0,-20(FP)		;   POINTER_2
+00803		MOVAB 	@-20(FP),AP		;   POINTER_2
+00807		MOVL  	S^#20,4(AP)		;   ^X14
+						; LINE 13/14
+0080B		MOVAB 	@-20(FP),AP		;   POINTER_2
+0080F		MULL3 	S^#4,4(AP),R1
+00814		ADDL2 	S^#8,R1
+00817		MOVC3 	R1,@-20(FP),@-16(FP)	;   POINTER_2  POINTER_1
+						; LINE 13/15
+0081D		PUSHL 	-16(FP)			;   POINTER_1
+00820		CALLS 	S^#1,PAX_UTL.DSPOS
+						; LINE 13/16
+00827		PUSHL 	-20(FP)			;   POINTER_2
+0082A		CALLS 	S^#1,PAX_UTL.DSPOS
+00831		BRB   	L.9
+
+00833	L.2:					; LINE 13/17
+00833		MOVAL 	-28(FP),SP
+00837		JMP   	0(R0)
+
+00839	H.2:	.WORD	^M<IV>
+0083B		JSB   	PAX_EXC.VAXCOND
+00841	X.1:	.WORD	0
+00843		.WORD	-28
+00845	X.2:	.WORD	L.2-X.2
+00847	X.3:	.ADDRESS PAX_EXC.SPEC		; SPECIAL_ERROR
+	X.4:	.WORD	L.4-X.4
+0084D	X.5:	.ADDRESS PAX_EXC.USER		; PROGRAM_ERROR
+	X.6:	.WORD	L.3-X.6
+00853		.LONG	-2
+00857	X.7:	.WORD	L.7-X.7
+
+00859	L.3:					; LINE 13/18
+00859		MOVZBL	I^#205,-(SP)		;   ^XCD
+0085D		CALLS 	S^#1,B.4
+00862		BRB   	L.9
+
+00864	L.4:					; LINE 13/20
+00864		CALLS 	S^#0,PAX_EXC.SPECSTAT
+0086B		MOVZBL	R0,AP
+0086E		CMPB  	AP,S^#5
+00871		BEQL  	L.6
+
+00873	L.5:					; LINE 13/21
+00873		MOVZBL	I^#206,-(SP)		;   ^XCE00877		CALLS 	S^#1,B.4
+
+0087C	L.6:	BRB   	L.9
+
+0087E	L.7:
+	L.8:					; LINE 13/23
+						; LINE 13/24
+0087E		MOVZBL	I^#207,-(SP)		;   ^XCF
+00882		CALLS 	S^#1,B.4
+						; LINE 13/25
+00887		CALLS 	S^#0,PAX_EXC.MSG
+						; LINE 13/26
+
+0088E	L.9:	PUSHL 	S^#0
+00890		CALLS 	S^#1,PAX_EXC.RESTORE
+						; LINE 13/27
+00897		RET   	
+
+	;
+	;	Begin subroutine TEST_ASSERTION
+	;
+
+00898	C.13:	.WORD	C.13-C.13
+0089A		.WORD	14
+0089C		.ASCII	"TEST_ASSERTION"
+
+008AA	B.15:	.ENTRY	TEST_ASSERTION,^M<IV>
+008AC		CLRL  	-(SP)
+008AE		PUSHAL	C.13
+008B1		SUBL2 	S^#16,SP		;   ^X10
+
+008B4	L.1:					; LINE 14/5
+008B4		PUSHAL	H.4
+008B8		CALLS 	S^#1,PAX_EXC.SET
+						; LINE 14/6
+008BF		CLRB  	-13(FP)			;   LOCAL_FLAG
+						; LINE 14/7
+008C2		TSTB  	-13(FP)			;   LOCAL_FLAG
+008C5		BNEQ  	L.3
+
+008C7	L.2:	JSB   	PAX_MON.ASSER
+
+008CD	L.3:					; LINE 14/8
+008CD		MOVZBL	I^#210,-(SP)		;   ^XD2
+008D1		CALLS 	S^#1,B.4008D6		BRB   	L.9
+
+008D8	L.4:					; LINE 14/9
+008D8		MOVAL 	-24(FP),SP
+008DC		JMP   	0(R0)
+
+008DE	H.4:	.WORD	^M<IV>
+008E0		JSB   	PAX_EXC.VAXCOND
+008E6	X.1:	.WORD	0
+008E8		.WORD	-24
+008EA	X.2:	.WORD	L.4-X.2
+008EC	X.3:	.ADDRESS PAX_EXC.USER		; PROGRAM_ERROR
+	X.4:	.WORD	L.5-X.4
+008F2		.LONG	-2
+008F6	X.5:	.WORD	L.8-X.5
+
+008F8	L.5:					; LINE 14/10
+008F8		CALLS 	S^#0,PAX_EXC.PROGSTAT
+008FF		MOVZBL	R0,AP
+00902		CMPB  	AP,S^#1
+00905		BEQL  	L.7
+
+00907	L.6:					; LINE 14/11
+00907		MOVZBL	I^#211,-(SP)		;   ^XD3
+0090B		CALLS 	S^#1,B.4
+
+00910	L.7:	BRB   	L.9
+
+00912	L.8:					; LINE 14/12
+00912		MOVZBL	I^#212,-(SP)		;   ^XD4
+00916		CALLS 	S^#1,B.4
+
+0091B	L.9:	PUSHL 	S^#0
+0091D		CALLS 	S^#1,PAX_EXC.RESTORE
+						; LINE 14/13
+00924		RET   	
+
+	;
+	;	Begin subroutine TEST_ASSERTION_NOCHECK
+	;
+
+00925	C.14:	.WORD	C.14-C.14
+00927		.WORD	22
+00929		.ASCII	"TEST_ASSERTION_NOCHECK"0093F	B.16:	.ENTRY	TEST_ASSERTION_NOCHECK,^M<IV>
+00941		CLRL  	-(SP)
+00943		PUSHAL	C.14
+00946		SUBL2 	S^#16,SP		;   ^X10
+
+00949	L.1:					; LINE 15/5
+00949		PUSHAL	H.2
+0094D		CALLS 	S^#1,PAX_EXC.SET
+						; LINE 15/6
+00954		CLRB  	-13(FP)			;   LOCAL_FLAG
+						; LINE 15/7
+00957		BRB   	L.5
+
+00959	L.2:					; LINE 15/8
+00959		MOVAL 	-24(FP),SP
+0095D		JMP   	0(R0)
+
+0095F	H.2:	.WORD	^M<IV>
+00961		JSB   	PAX_EXC.VAXCOND
+00967	X.1:	.WORD	0
+00969		.WORD	-24
+0096B	X.2:	.WORD	L.2-X.2
+0096D	X.3:	.ADDRESS PAX_EXC.USER		; PROGRAM_ERROR
+	X.4:	.WORD	L.3-X.4
+00973		.LONG	-2
+00977	X.5:	.WORD	L.4-X.5
+
+00979	L.3:					; LINE 15/9
+00979		MOVZBL	I^#215,-(SP)		;   ^XD7
+0097D		CALLS 	S^#1,B.4
+00982		BRB   	L.5
+
+00984	L.4:					; LINE 15/10
+00984		MOVZBL	I^#216,-(SP)		;   ^XD8
+00988		CALLS 	S^#1,B.4
+
+0098D	L.5:	PUSHL 	S^#0
+0098F		CALLS 	S^#1,PAX_EXC.RESTORE
+						; LINE 15/11
+00996		RET   	
+
+	;
+	;	Begin subroutine TEST_CASE
+	;00997	C.15:	.WORD	C.15-C.15
+00999		.WORD	9
+0099B		.ASCII	"TEST_CASE"
+
+009A4	B.17:	.ENTRY	TEST_CASE,^M<IV>
+009A6		CLRL  	-(SP)
+009A8		PUSHAL	C.15
+009AB		SUBL2 	S^#16,SP		;   ^X10
+
+009AE	L.1:					; LINE 16/5
+009AE		PUSHAL	H.6
+009B4		CALLS 	S^#1,PAX_EXC.SET
+						; LINE 16/6
+009BB		MOVL  	I^#2147483647,-16(FP)	;   ^X7FFFFFFF  CASE_INDEX
+						; LINE 16/7
+009C3		CASEL 	-16(FP),S^#1,S^#1	;   CASE_INDEX
+009C8	X.1:	.WORD	L.2-X.1
+009CA		.WORD	L.3-X.1
+009CC		BRB   	L.4
+
+009CE	L.2:					; LINE 16/8
+009CE		CLRL  	-16(FP)			;   CASE_INDEX
+009D1		BRB   	L.5
+
+009D3	L.3:					; LINE 16/9
+009D3		CLRL  	-16(FP)			;   CASE_INDEX
+009D6		BRB   	L.5
+
+009D8	L.4:	JSB   	PAX_MON.CASERR
+
+009DE	L.5:					; LINE 16/10
+						; LINE 16/11
+009DE		MOVZBL	I^#220,-(SP)		;   ^XDC
+009E2		CALLS 	S^#1,B.4
+009E7		BRB   	L.11
+
+009E9	L.6:					; LINE 16/12
+009E9		MOVAL 	-24(FP),SP
+009ED		JMP   	0(R0)
+
+009EF	H.6:	.WORD	^M<IV>
+009F1		JSB   	PAX_EXC.VAXCOND
+009F7	X.2:	.WORD	0
+009F9		.WORD	-24
+009FB	X.3:	.WORD	L.6-X.3009FD	X.4:	.ADDRESS PAX_EXC.USER		; PROGRAM_ERROR
+	X.5:	.WORD	L.7-X.5
+00A03		.LONG	-2
+00A07	X.6:	.WORD	L.10-X.6
+
+00A09	L.7:					; LINE 16/13
+00A09		CALLS 	S^#0,PAX_EXC.PROGSTAT
+00A10		MOVZBL	R0,AP
+00A13		CMPB  	AP,S^#2
+00A16		BEQL  	L.9
+
+00A18	L.8:					; LINE 16/14
+00A18		MOVZBL	I^#221,-(SP)		;   ^XDD
+00A1C		CALLS 	S^#1,B.4
+
+00A21	L.9:	BRB   	L.11
+
+00A23	L.10:					; LINE 16/15
+00A23		MOVZBL	I^#222,-(SP)		;   ^XDE
+00A27		CALLS 	S^#1,B.4
+
+00A2C	L.11:	PUSHL 	S^#0
+00A2E		CALLS 	S^#1,PAX_EXC.RESTORE
+						; LINE 16/16
+00A35		RET   	
+
+	;
+	;	Begin subroutine TEST_CASE_NOCHECK
+	;
+
+00A36	C.16:	.WORD	C.16-C.16
+00A38		.WORD	17
+00A3A		.ASCII	"TEST_CASE_NOCHECK"
+
+00A4B	B.18:	.ENTRY	TEST_CASE_NOCHECK,^M<IV>
+00A4D		CLRL  	-(SP)
+00A4F		PUSHAL	C.16
+00A52		SUBL2 	S^#16,SP		;   ^X10
+
+00A55	L.1:					; LINE 17/5
+00A55		PUSHAL	H.5
+00A5B		CALLS 	S^#1,PAX_EXC.SET
+						; LINE 17/6
+00A62		MOVL  	I^#2147483647,-16(FP)	;   ^X7FFFFFFF  CASE_INDEX
+						; LINE 17/700A6A		CASEL 	-16(FP),S^#1,S^#1	;   CASE_INDEX
+00A6F	X.1:	.WORD	L.2-X.1
+00A71		.WORD	L.3-X.1
+00A73		BRB   	L.4
+
+00A75	L.2:					; LINE 17/8
+00A75		CLRL  	-16(FP)			;   CASE_INDEX
+00A78		BRB   	L.4
+
+00A7A	L.3:					; LINE 17/9
+00A7A		CLRL  	-16(FP)			;   CASE_INDEX
+
+00A7D	L.4:	BRB   	L.8
+
+00A7F	L.5:					; LINE 17/11
+00A7F		MOVAL 	-24(FP),SP
+00A83		JMP   	0(R0)
+
+00A85	H.5:	.WORD	^M<IV>
+00A87		JSB   	PAX_EXC.VAXCOND
+00A8D	X.2:	.WORD	0
+00A8F		.WORD	-24
+00A91	X.3:	.WORD	L.5-X.3
+00A93	X.4:	.ADDRESS PAX_EXC.USER		; PROGRAM_ERROR
+	X.5:	.WORD	L.6-X.5
+00A99		.LONG	-2
+00A9D	X.6:	.WORD	L.7-X.6
+
+00A9F	L.6:					; LINE 17/12
+00A9F		MOVZBL	I^#225,-(SP)		;   ^XE1
+00AA3		CALLS 	S^#1,B.4
+00AA8		BRB   	L.8
+
+00AAA	L.7:					; LINE 17/13
+00AAA		MOVZBL	I^#226,-(SP)		;   ^XE2
+00AAE		CALLS 	S^#1,B.4
+
+00AB3	L.8:	PUSHL 	S^#0
+00AB5		CALLS 	S^#1,PAX_EXC.RESTORE
+						; LINE 17/14
+00ABC		RET   	
+
+	;
+	;	Begin subroutine TEST_FILE_ERRORS
+	;00ABD	C.17:	.WORD	C.17-C.17
+00ABF		.WORD	16
+00AC1		.ASCII	"TEST_FILE_ERRORS"
+
+00AD1	B.19:	.ENTRY	TEST_FILE_ERRORS,^M<IV>
+00AD3		CLRL  	-(SP)
+00AD5		PUSHAL	C.17
+00AD8		SUBL2 	S^#16,SP		;   ^X10
+
+00ADB	L.1:					; LINE 18/5
+00ADB		PUSHAL	H.2
+00ADF		CALLS 	S^#1,PAX_EXC.SET
+						; LINE 18/6
+00AE6		MOVL  	I^#-268435456,-16(FP)	;   NIL_FILE
+						; LINE 18/7
+00AEE		TSTL  	-16(FP)			;   NIL_FILE
+00AF1		BNEQ  	X.1
+00AF3	X.2:	JSB   	PAX_MON.FVERR
+00AF9	X.1:	CMPL  	I^#-268435456,-16(FP)	;   NIL_FILE
+00B01		BEQL  	X.2
+00B03		PUSHL 	-16(FP)			;   NIL_FILE
+00B06		CALLS 	S^#1,PAX_TXT.WRLN
+						; LINE 18/8
+00B0D		MOVZBL	I^#230,-(SP)		;   ^XE6
+00B11		CALLS 	S^#1,B.4
+00B16		BRB   	L.7
+
+00B18	L.2:					; LINE 18/9
+00B18		MOVAL 	-24(FP),SP
+00B1C		JMP   	0(R0)
+
+00B1E	H.2:	.WORD	^M<IV>
+00B20		JSB   	PAX_EXC.VAXCOND
+00B26	X.3:	.WORD	0
+00B28		.WORD	-24
+00B2A	X.4:	.WORD	L.2-X.4
+00B2C	X.5:	.ADDRESS PAX_EXC.USER		; PROGRAM_ERROR
+	X.6:	.WORD	L.3-X.6
+00B32		.LONG	-2
+00B36	X.7:	.WORD	L.6-X.7
+
+00B38	L.3:					; LINE 18/10
+00B38		CALLS 	S^#0,PAX_EXC.PROGSTAT
+00B3F		MOVZBL	R0,AP
+00B42		CMPB  	AP,S^#400B45		BEQL  	L.5
+
+00B47	L.4:					; LINE 18/11
+00B47		MOVZBL	I^#231,-(SP)		;   ^XE7
+00B4B		CALLS 	S^#1,B.4
+
+00B50	L.5:	BRB   	L.7
+
+00B52	L.6:					; LINE 18/12
+00B52		MOVZBL	I^#232,-(SP)		;   ^XE8
+00B56		CALLS 	S^#1,B.4
+
+00B5B	L.7:	PUSHL 	S^#0
+00B5D		CALLS 	S^#1,PAX_EXC.RESTORE
+						; LINE 18/13
+00B64		RET   	
+
+	;
+	;	Begin subroutine TEST_FILE_ERRORS_NOCHECK
+	;
+
+00B65	C.18:	.WORD	C.18-C.18
+00B67		.WORD	24
+00B69		.ASCII	"TEST_FILE_ERRORS_NOCHECK"
+
+00B81	B.20:	.ENTRY	TEST_FILE_ERRORS_NOCHECK,^M<IV>
+00B83		CLRL  	-(SP)
+00B85		PUSHAL	C.18
+00B88		SUBL2 	S^#16,SP		;   ^X10
+
+00B8B	L.1:					; LINE 19/5
+00B8B		PUSHAL	H.2
+00B8F		CALLS 	S^#1,PAX_EXC.SET
+						; LINE 19/6
+00B96		MOVL  	I^#-268435456,-16(FP)	;   NIL_FILE
+						; LINE 19/7
+00B9E		PUSHL 	-16(FP)			;   NIL_FILE
+00BA1		CALLS 	S^#1,PAX_TXT.WRLN
+00BA8		BRW   	L.13
+
+00BAB	L.2:					; LINE 19/8
+00BAB		MOVAL 	-24(FP),SP
+00BAF		JMP   	0(R0)
+
+00BB1	H.2:	.WORD	^M<IV>00BB3		JSB   	PAX_EXC.VAXCOND
+00BB9	X.1:	.WORD	0
+00BBB		.WORD	-24
+00BBD	X.2:	.WORD	L.2-X.2
+00BBF	X.3:	.ADDRESS PAX_EXC.SPEC		; SPECIAL_ERROR
+	X.4:	.WORD	L.8-X.4
+00BC5	X.5:	.ADDRESS PAX_EXC.IO		; IO_ERROR
+	X.6:	.WORD	L.5-X.6
+00BCB	X.7:	.ADDRESS PAX_EXC.USER		; PROGRAM_ERROR
+	X.8:	.WORD	L.3-X.8
+00BD1		.LONG	-2
+00BD5	X.9:	.WORD	L.11-X.9
+
+00BD7	L.3:
+	L.4:					; LINE 19/9
+						; LINE 19/10
+00BD7		MOVZBL	I^#235,-(SP)		;   ^XEB
+00BDB		CALLS 	S^#1,B.4
+						; LINE 19/11
+00BE0		CALLS 	S^#0,PAX_EXC.MSG
+						; LINE 19/12
+00BE7		BRB   	L.13
+
+00BE9	L.5:					; LINE 19/13
+00BE9		CALLS 	S^#0,PAX_EXC.EXIOSTAT
+00BF0		MOVZBL	R0,AP
+00BF3		CMPB  	AP,S^#2
+00BF6		BEQL  	L.7
+
+00BF8	L.6:					; LINE 19/14
+00BF8		MOVZBL	I^#236,-(SP)		;   ^XEC
+00BFC		CALLS 	S^#1,B.4
+
+00C01	L.7:	BRB   	L.13
+
+00C03	L.8:					; LINE 19/16
+00C03		CALLS 	S^#0,PAX_EXC.SPECSTAT
+00C0A		MOVZBL	R0,AP
+00C0D		CMPB  	AP,S^#1
+00C10		BEQL  	L.10
+
+00C12	L.9:					; LINE 19/17
+00C12		MOVZBL	I^#237,-(SP)		;   ^XED
+00C16		CALLS 	S^#1,B.400C1B	L.10:	BRB   	L.13
+
+00C1D	L.11:
+	L.12:					; LINE 19/19
+						; LINE 19/20
+00C1D		MOVZBL	I^#238,-(SP)		;   ^XEE
+00C21		CALLS 	S^#1,B.4
+						; LINE 19/21
+00C26		CALLS 	S^#0,PAX_EXC.MSG
+						; LINE 19/22
+
+00C2D	L.13:	PUSHL 	S^#0
+00C2F		CALLS 	S^#1,PAX_EXC.RESTORE
+						; LINE 19/23
+00C36		RET   	
+
+	;
+	;	Begin subroutine TEST_POINTER
+	;
+
+00C37	C.19:	.WORD	C.19-C.19
+00C39		.WORD	12
+00C3B		.ASCII	"TEST_POINTER"
+
+00C47	B.21:	.ENTRY	TEST_POINTER,^M<IV>
+00C49		CLRL  	-(SP)
+00C4B		PUSHAL	C.19
+00C4E		SUBL2 	S^#16,SP		;   ^X10
+
+00C51	L.1:					; LINE 20/5
+00C51		PUSHAL	H.2
+00C55		CALLS 	S^#1,PAX_EXC.SET
+						; LINE 20/6
+00C5C		MOVL  	I^#-268435456,-16(FP)	;   LOCAL_POINTER
+						; LINE 20/7
+00C64		TSTL  	-16(FP)			;   LOCAL_POINTER
+00C67		BNEQ  	X.1
+00C69	X.2:	JSB   	PAX_MON.PTRER
+00C6F	X.1:	CMPL  	I^#-268435456,-16(FP)	;   LOCAL_POINTER
+00C77		BEQL  	X.2
+00C79		CLRL  	@-16(FP)		;   LOCAL_POINTER
+						; LINE 20/8
+00C7C		MOVZBL	I^#240,-(SP)		;   ^XF0
+00C80		CALLS 	S^#1,B.4
+00C85		BRB   	L.700C87	L.2:					; LINE 20/9
+00C87		MOVAL 	-24(FP),SP
+00C8B		JMP   	0(R0)
+
+00C8D	H.2:	.WORD	^M<IV>
+00C8F		JSB   	PAX_EXC.VAXCOND
+00C95	X.3:	.WORD	0
+00C97		.WORD	-24
+00C99	X.4:	.WORD	L.2-X.4
+00C9B	X.5:	.ADDRESS PAX_EXC.USER		; PROGRAM_ERROR
+	X.6:	.WORD	L.3-X.6
+00CA1		.LONG	-2
+00CA5	X.7:	.WORD	L.6-X.7
+
+00CA7	L.3:					; LINE 20/10
+00CA7		CALLS 	S^#0,PAX_EXC.PROGSTAT
+00CAE		MOVZBL	R0,AP
+00CB1		CMPB  	AP,S^#5
+00CB4		BEQL  	L.5
+
+00CB6	L.4:					; LINE 20/11
+00CB6		MOVZBL	I^#241,-(SP)		;   ^XF1
+00CBA		CALLS 	S^#1,B.4
+
+00CBF	L.5:	BRB   	L.7
+
+00CC1	L.6:					; LINE 20/12
+00CC1		MOVZBL	I^#242,-(SP)		;   ^XF2
+00CC5		CALLS 	S^#1,B.4
+
+00CCA	L.7:	PUSHL 	S^#0
+00CCC		CALLS 	S^#1,PAX_EXC.RESTORE
+						; LINE 20/13
+00CD3		RET   	
+
+	;
+	;	Begin subroutine TEST_POINTER_NOCHECK
+	;
+
+00CD4	C.20:	.WORD	C.20-C.20
+00CD6		.WORD	20
+00CD8		.ASCII	"TEST_POINTER_NOCHECK"
+
+00CEC	B.22:	.ENTRY	TEST_POINTER_NOCHECK,^M<IV>
+00CEE		CLRL  	-(SP)00CF0		PUSHAL	C.20
+00CF3		SUBL2 	S^#16,SP		;   ^X10
+
+00CF6	L.1:					; LINE 21/5
+00CF6		PUSHAL	H.2
+00CFA		CALLS 	S^#1,PAX_EXC.SET
+						; LINE 21/6
+00D01		MOVL  	I^#-268435456,-16(FP)	;   LOCAL_POINTER
+						; LINE 21/7
+00D09		CLRL  	@-16(FP)		;   LOCAL_POINTER
+00D0C		BRB   	L.9
+
+00D0E	L.2:					; LINE 21/8
+00D0E		MOVAL 	-24(FP),SP
+00D12		JMP   	0(R0)
+
+00D14	H.2:	.WORD	^M<IV>
+00D16		JSB   	PAX_EXC.VAXCOND
+00D1C	X.1:	.WORD	0
+00D1E		.WORD	-24
+00D20	X.2:	.WORD	L.2-X.2
+00D22	X.3:	.ADDRESS PAX_EXC.SPEC		; SPECIAL_ERROR
+	X.4:	.WORD	L.4-X.4
+00D28	X.5:	.ADDRESS PAX_EXC.USER		; PROGRAM_ERROR
+	X.6:	.WORD	L.3-X.6
+00D2E		.LONG	-2
+00D32	X.7:	.WORD	L.7-X.7
+
+00D34	L.3:					; LINE 21/9
+00D34		MOVZBL	I^#245,-(SP)		;   ^XF5
+00D38		CALLS 	S^#1,B.4
+00D3D		BRB   	L.9
+
+00D3F	L.4:					; LINE 21/10
+00D3F		CALLS 	S^#0,PAX_EXC.SPECSTAT
+00D46		MOVZBL	R0,AP
+00D49		CMPB  	AP,S^#1
+00D4C		BEQL  	L.6
+
+00D4E	L.5:					; LINE 21/11
+00D4E		MOVZBL	I^#246,-(SP)		;   ^XF6
+00D52		CALLS 	S^#1,B.4
+
+00D57	L.6:	BRB   	L.900D59	L.7:
+	L.8:					; LINE 21/12
+						; LINE 21/13
+00D59		MOVZBL	I^#247,-(SP)		;   ^XF7
+00D5D		CALLS 	S^#1,B.4
+						; LINE 21/14
+00D62		CALLS 	S^#0,PAX_EXC.MSG
+						; LINE 21/15
+
+00D69	L.9:	PUSHL 	S^#0
+00D6B		CALLS 	S^#1,PAX_EXC.RESTORE
+						; LINE 21/16
+00D72		RET   	
+
+	;
+	;	Begin subroutine TEST_RANGE
+	;
+
+00D73	C.21:	.WORD	C.21-C.21
+00D75		.WORD	10
+00D77		.ASCII	"TEST_RANGE"
+
+00D81	B.23:	.ENTRY	TEST_RANGE,^M<IV>
+00D83		CLRL  	-(SP)
+00D85		PUSHAL	C.21
+00D88		SUBL2 	S^#16,SP		;   ^X10
+
+00D8B	L.1:					; LINE 22/5
+00D8B		PUSHAL	H.2
+00D8F		CALLS 	S^#1,PAX_EXC.SET
+						; LINE 22/6
+00D96		MOVL  	S^#2,-16(FP)		;   LOCAL_INTEGER
+						; LINE 22/7
+00D9A		ADDL3 	-16(FP),-16(FP),AP	;   LOCAL_INTEGER  LOCAL_INTEGER
+00DA0		CMPL  	AP,S^#1
+00DA3		BGEQ  	X.1
+00DA5	X.2:	JSB   	PAX_MON.VALER
+00DAB	X.1:	CMPL  	AP,S^#2
+00DAE		BGTR  	X.2
+00DB0		MOVL  	AP,-16(FP)		;   LOCAL_INTEGER
+						; LINE 22/8
+00DB4		MOVZBL	I^#250,-(SP)		;   ^XFA
+00DB8		CALLS 	S^#1,B.4
+00DBD		BRB   	L.700DBF	L.2:					; LINE 22/9
+00DBF		MOVAL 	-24(FP),SP
+00DC3		JMP   	0(R0)
+
+00DC5	H.2:	.WORD	^M<IV>
+00DC7		JSB   	PAX_EXC.VAXCOND
+00DCD	X.3:	.WORD	0
+00DCF		.WORD	-24
+00DD1	X.4:	.WORD	L.2-X.4
+00DD3	X.5:	.ADDRESS PAX_EXC.USER		; PROGRAM_ERROR
+	X.6:	.WORD	L.3-X.6
+00DD9		.LONG	-2
+00DDD	X.7:	.WORD	L.6-X.7
+
+00DDF	L.3:					; LINE 22/10
+00DDF		CALLS 	S^#0,PAX_EXC.PROGSTAT
+00DE6		MOVZBL	R0,AP
+00DE9		CMPB  	AP,S^#8
+00DEC		BEQL  	L.5
+
+00DEE	L.4:					; LINE 22/11
+00DEE		MOVZBL	I^#251,-(SP)		;   ^XFB
+00DF2		CALLS 	S^#1,B.4
+
+00DF7	L.5:	BRB   	L.7
+
+00DF9	L.6:					; LINE 22/12
+00DF9		MOVZBL	I^#252,-(SP)		;   ^XFC
+00DFD		CALLS 	S^#1,B.4
+
+00E02	L.7:	PUSHL 	S^#0
+00E04		CALLS 	S^#1,PAX_EXC.RESTORE
+						; LINE 22/13
+00E0B		RET   	
+
+	;
+	;	Begin subroutine TEST_RANGE_NOCHECK
+	;
+
+00E0C	C.22:	.WORD	C.22-C.22
+00E0E		.WORD	18
+00E10		.ASCII	"TEST_RANGE_NOCHECK"
+
+00E22	B.24:	.ENTRY	TEST_RANGE_NOCHECK,^M<IV>
+00E24		CLRL  	-(SP)00E26		PUSHAL	C.22
+00E29		SUBL2 	S^#16,SP		;   ^X10
+
+00E2C	L.1:					; LINE 23/5
+00E2C		PUSHAL	H.2
+00E30		CALLS 	S^#1,PAX_EXC.SET
+						; LINE 23/6
+00E37		MOVL  	S^#2,-16(FP)		;   LOCAL_INTEGER
+						; LINE 23/7
+00E3B		ADDL3 	-16(FP),-16(FP),-16(FP)	;   LOCAL_INTEGER  LOCAL_INTEGER  LOCAL_INTEGER
+00E42		BRB   	L.5
+
+00E44	L.2:					; LINE 23/8
+00E44		MOVAL 	-24(FP),SP
+00E48		JMP   	0(R0)
+
+00E4A	H.2:	.WORD	^M<IV>
+00E4C		JSB   	PAX_EXC.VAXCOND
+00E52	X.1:	.WORD	0
+00E54		.WORD	-24
+00E56	X.2:	.WORD	L.2-X.2
+00E58	X.3:	.ADDRESS PAX_EXC.USER		; PROGRAM_ERROR
+	X.4:	.WORD	L.3-X.4
+00E5E		.LONG	-2
+00E62	X.5:	.WORD	L.4-X.5
+
+00E64	L.3:					; LINE 23/9
+00E64		MOVZBL	I^#255,-(SP)		;   ^XFF
+00E68		CALLS 	S^#1,B.4
+00E6D		BRB   	L.5
+
+00E6F	L.4:					; LINE 23/10
+00E6F		MOVZWL	I^#256,-(SP)		;   ^X100
+00E74		CALLS 	S^#1,B.4
+
+00E79	L.5:	PUSHL 	S^#0
+00E7B		CALLS 	S^#1,PAX_EXC.RESTORE
+						; LINE 23/11
+00E82		RET   	
+
+	;
+	;	Begin subroutine TEST_SUBSCRIPT
+	;
+
+00E83	C.23:	.WORD	C.23-C.2300E85		.WORD	14
+00E87		.ASCII	"TEST_SUBSCRIPT"
+
+00E95	B.25:	.ENTRY	TEST_SUBSCRIPT,^M<IV>
+00E97		CLRL  	-(SP)
+00E99		PUSHAL	C.23
+00E9C		SUBL2 	S^#24,SP		;   ^X18
+
+00E9F	L.1:					; LINE 24/6
+00E9F		PUSHAL	H.2
+00EA3		CALLS 	S^#1,PAX_EXC.SET
+						; LINE 24/7
+00EAA		MOVL  	I^#2147483647,-24(FP)	;   ^X7FFFFFFF  SUBSCRIPT
+						; LINE 24/8
+00EB2		INDEX 	-24(FP),S^#1,S^#2,S^#1,I^#-1,AP
+						;   SUBSCRIPT
+00EBE		CLRL  	-20(FP)[AP]		;   LOCAL_ARRAY
+						; LINE 24/9
+00EC2		MOVZWL	I^#260,-(SP)		;   ^X104
+00EC7		CALLS 	S^#1,B.4
+00ECC		BRB   	L.10
+
+00ECE	L.2:					; LINE 24/10
+00ECE		MOVAL 	-32(FP),SP
+00ED2		JMP   	0(R0)
+
+00ED4	H.2:	.WORD	^M<IV>
+00ED6		JSB   	PAX_EXC.VAXCOND
+00EDC	X.1:	.WORD	0
+00EDE		.WORD	-32
+00EE0	X.2:	.WORD	L.2-X.2
+00EE2	X.3:	.ADDRESS PAX_EXC.SPEC		; SPECIAL_ERROR
+	X.4:	.WORD	L.6-X.4
+00EE8	X.5:	.ADDRESS PAX_EXC.USER		; PROGRAM_ERROR
+	X.6:	.WORD	L.3-X.6
+00EEE		.LONG	-2
+00EF2	X.7:	.WORD	L.9-X.7
+
+00EF4	L.3:					; LINE 24/11
+00EF4		CALLS 	S^#0,PAX_EXC.PROGSTAT
+00EFB		MOVZBL	R0,AP
+00EFE		CMPB  	AP,S^#7
+00F01		BEQL  	L.5
+
+00F03	L.4:					; LINE 24/1200F03		MOVZWL	I^#261,-(SP)		;   ^X105
+00F08		CALLS 	S^#1,B.4
+
+00F0D	L.5:	BRB   	L.10
+
+00F0F	L.6:					; LINE 24/14
+00F0F		CALLS 	S^#0,PAX_EXC.SPECSTAT
+00F16		MOVZBL	R0,AP
+00F19		CMPB  	AP,S^#7
+00F1C		BEQL  	L.8
+
+00F1E	L.7:					; LINE 24/15
+00F1E		MOVZWL	I^#262,-(SP)		;   ^X106
+00F23		CALLS 	S^#1,B.4
+
+00F28	L.8:	BRB   	L.10
+
+00F2A	L.9:					; LINE 24/17
+00F2A		MOVZWL	I^#263,-(SP)		;   ^X107
+00F2F		CALLS 	S^#1,B.4
+
+00F34	L.10:	PUSHL 	S^#0
+00F36		CALLS 	S^#1,PAX_EXC.RESTORE
+						; LINE 24/18
+00F3D		RET   	
+
+	;
+	;	Begin subroutine TEST_SUBSCRIPT_NOCHECK
+	;
+
+00F3E	C.24:	.WORD	C.24-C.24
+00F40		.WORD	22
+00F42		.ASCII	"TEST_SUBSCRIPT_NOCHECK"
+
+00F58	B.26:	.ENTRY	TEST_SUBSCRIPT_NOCHECK,^M<IV>
+00F5A		CLRL  	-(SP)
+00F5C		PUSHAL	C.24
+00F5F		SUBL2 	S^#24,SP		;   ^X18
+
+00F62	L.1:					; LINE 25/6
+00F62		PUSHAL	H.2
+00F66		CALLS 	S^#1,PAX_EXC.SET
+						; LINE 25/7
+00F6D		MOVL  	I^#2147483647,-24(FP)	;   ^X7FFFFFFF  SUBSCRIPT
+						; LINE 25/800F75		SUBL3 	S^#1,-24(FP),AP		;   SUBSCRIPT
+00F7A		CLRL  	-20(FP)[AP]		;   LOCAL_ARRAY
+00F7E		BRB   	L.7
+
+00F80	L.2:					; LINE 25/9
+00F80		MOVAL 	-32(FP),SP
+00F84		JMP   	0(R0)
+
+00F86	H.2:	.WORD	^M<IV>
+00F88		JSB   	PAX_EXC.VAXCOND
+00F8E	X.1:	.WORD	0
+00F90		.WORD	-32
+00F92	X.2:	.WORD	L.2-X.2
+00F94	X.3:	.ADDRESS PAX_EXC.SPEC		; SPECIAL_ERROR
+	X.4:	.WORD	L.5-X.4
+00F9A	X.5:	.ADDRESS PAX_EXC.USER		; PROGRAM_ERROR
+	X.6:	.WORD	L.4-X.6
+00FA0	X.7:	.ADDRESS PAX_EXC.STK		; STACK_OVERFLOW
+	X.8:	.WORD	L.3-X.8
+00FA6		.LONG	-2
+00FAA	X.9:	.WORD	L.6-X.9
+
+00FAC	L.3:					; LINE 25/10
+00FAC		BRB   	L.7
+
+00FAE	L.4:					; LINE 25/11
+00FAE		MOVZWL	I^#256,-(SP)		;   ^X100
+00FB3		CALLS 	S^#1,B.4
+00FB8		BRB   	L.7
+
+00FBA	L.5:					; LINE 25/13
+00FBA		MOVZWL	I^#266,-(SP)		;   ^X10A
+00FBF		CALLS 	S^#1,B.4
+00FC4		BRB   	L.7
+
+00FC6	L.6:					; LINE 25/15
+00FC6		MOVZWL	I^#267,-(SP)		;   ^X10B
+00FCB		CALLS 	S^#1,B.4
+
+00FD0	L.7:	PUSHL 	S^#0
+00FD2		CALLS 	S^#1,PAX_EXC.RESTORE
+						; LINE 25/16
+00FD9		RET   	
+
+	;	;	Begin subroutine TEST_SUBSTRING
+	;
+
+00FDA	C.25:	.WORD	C.25-C.25
+00FDC		.WORD	14
+00FDE		.ASCII	"TEST_SUBSTRING"
+
+00FEC	B.27:	.ENTRY	TEST_SUBSTRING,^M<IV>
+00FEE		CLRL  	-(SP)
+00FF0		PUSHAL	C.25
+00FF3		SUBL2 	S^#20,SP		;   ^X14
+
+00FF6	L.1:					; LINE 26/8
+00FF6		PUSHAL	H.2
+00FFA		CALLS 	S^#1,PAX_EXC.SET
+						; LINE 26/9
+01001		MOVL  	I^#2147483647,-20(FP)	;   ^X7FFFFFFF  STRING_LENGTH
+						; LINE 26/10
+01009		TSTL  	TTYOUTPUT		;   TTYOUTPUT
+0100F		BNEQ  	X.1
+01011	X.2:	JSB   	PAX_MON.FVERR
+01017	X.1:	CMPL  	I^#-268435456,TTYOUTPUT	;   TTYOUTPUT
+01022		BEQL  	X.2
+01024		TSTL  	-20(FP)			;   STRING_LENGTH
+01027		BLSS  	X.3
+01029		CVTWL 	-16(FP),AP		;   LOCAL_STRING
+0102D		CMPL  	-20(FP),AP		;   STRING_LENGTH
+01031		BLEQ  	X.4
+01033	X.3:	JSB   	PAX_MON.STRER
+01039	X.4:	PUSHL 	TTYOUTPUT		;   TTYOUTPUT
+0103F		MOVZWL	-20(FP),-(SP)		;   STRING_LENGTH
+01043		PUSHAB	-16+2(FP)		;   LOCAL_STRING
+01046		PUSHL 	I^#262144		;   ^X40000
+0104C		CALLS 	S^#4,PAX_TXT.WRITE
+01053		PUSHL 	TTYOUTPUT		;   TTYOUTPUT
+01059		CALLS 	S^#1,PAX_TXT.WRLN
+						; LINE 26/11
+01060		MOVZWL	I^#270,-(SP)		;   ^X10E
+01065		CALLS 	S^#1,B.4
+0106A		BRB   	L.7
+
+0106C	L.2:					; LINE 26/12
+0106C		MOVAL 	-28(FP),SP
+01070		JMP   	0(R0)01072	H.2:	.WORD	^M<IV>
+01074		JSB   	PAX_EXC.VAXCOND
+0107A	X.5:	.WORD	0
+0107C		.WORD	-28
+0107E	X.6:	.WORD	L.2-X.6
+01080	X.7:	.ADDRESS PAX_EXC.USER		; PROGRAM_ERROR
+	X.8:	.WORD	L.3-X.8
+01086		.LONG	-2
+0108A	X.9:	.WORD	L.6-X.9
+
+0108C	L.3:					; LINE 26/13
+0108C		CALLS 	S^#0,PAX_EXC.PROGSTAT
+01093		MOVZBL	R0,AP
+01096		CMPB  	AP,S^#6
+01099		BEQL  	L.5
+
+0109B	L.4:					; LINE 26/14
+0109B		MOVZWL	I^#271,-(SP)		;   ^X10F
+010A0		CALLS 	S^#1,B.4
+
+010A5	L.5:	BRB   	L.7
+
+010A7	L.6:					; LINE 26/15
+010A7		MOVZWL	I^#272,-(SP)		;   ^X110
+010AC		CALLS 	S^#1,B.4
+
+010B1	L.7:	PUSHL 	S^#0
+010B3		CALLS 	S^#1,PAX_EXC.RESTORE
+						; LINE 26/16
+010BA		RET   	
+
+	;
+	;	Begin subroutine TEST_SUBSTRING_NOCHECK
+	;
+
+010BB	C.26:	.WORD	C.26-C.26
+010BD		.WORD	22
+010BF		.ASCII	"TEST_SUBSTRING_NOCHECK"
+
+010D5	B.28:	.ENTRY	TEST_SUBSTRING_NOCHECK,^M<IV>
+010D7		CLRL  	-(SP)
+010D9		PUSHAL	C.26
+010DC		SUBL2 	S^#24,SP		;   ^X18
+
+010DF	L.1:					; LINE 27/9010DF		PUSHAL	H.2
+010E3		CALLS 	S^#1,PAX_EXC.SET
+						; LINE 27/10
+010EA		MOVZWL	I^#1152,-(SP)		;   ^X480
+010EF		PUSHL 	S^#10
+010F1		PUSHAB	K.5
+010F7		CALLS 	S^#3,PAX_FVM.REWRT
+010FE		MOVL  	R0,AP
+01101		MOVL  	AP,-24(FP)		;   F
+						; LINE 27/11
+01105		MOVL  	I^#2147483647,-20(FP)	;   ^X7FFFFFFF  STRING_LENGTH
+						; LINE 27/12
+0110D		PUSHL 	-24(FP)			;   F
+01110		MOVZWL	-20(FP),-(SP)		;   STRING_LENGTH
+01114		PUSHAB	-16+2(FP)		;   LOCAL_STRING
+01117		PUSHL 	I^#262144		;   ^X40000
+0111D		CALLS 	S^#4,PAX_TXT.WRITE
+01124		PUSHL 	-24(FP)			;   F
+01127		CALLS 	S^#1,PAX_TXT.WRLN
+0112E		BRB   	L.9
+
+01130	L.2:					; LINE 27/13
+01130		MOVAL 	-32(FP),SP
+01134		JMP   	0(R0)
+
+01136	H.2:	.WORD	^M<IV>
+01138		JSB   	PAX_EXC.VAXCOND
+0113E	X.1:	.WORD	0
+01140		.WORD	-32
+01142	X.2:	.WORD	L.2-X.2
+01144	X.3:	.ADDRESS PAX_EXC.MATH		; MATH_ERROR
+	X.4:	.WORD	L.4-X.4
+0114A	X.5:	.ADDRESS PAX_EXC.USER		; PROGRAM_ERROR
+	X.6:	.WORD	L.3-X.6
+01150		.LONG	-2
+01154	X.7:	.WORD	L.7-X.7
+
+01156	L.3:					; LINE 27/14
+01156		MOVZWL	I^#275,-(SP)		;   ^X113
+0115B		CALLS 	S^#1,B.4
+01160		BRB   	L.9
+
+01162	L.4:					; LINE 27/16
+01162		CALLS 	S^#0,PAX_EXC.MATHSTAT
+01169		MOVZBL	R0,AP0116C		CMPB  	AP,S^#3
+0116F		BEQL  	L.6
+
+01171	L.5:					; LINE 27/17
+01171		MOVZWL	I^#276,-(SP)		;   ^X114
+01176		CALLS 	S^#1,B.4
+
+0117B	L.6:	BRB   	L.9
+
+0117D	L.7:
+	L.8:					; LINE 27/23
+						; LINE 27/24
+0117D		MOVZWL	I^#278,-(SP)		;   ^X116
+01182		CALLS 	S^#1,B.4
+						; LINE 27/25
+01187		CALLS 	S^#0,PAX_EXC.MSG
+						; LINE 27/26
+
+0118E	L.9:	PUSHL 	S^#0
+01190		CALLS 	S^#1,PAX_EXC.RESTORE
+						; LINE 27/27
+01197		RET   	
+
+	;
+	;	Begin subroutine TEST_ILLEGAL_MEMORY_REFERENCE
+	;
+
+01198	C.27:	.WORD	C.27-C.27
+0119A		.WORD	29
+0119C		.ASCII	"TEST_ILLEGAL_MEMORY_REFERENCE"
+
+011B9	B.29:	.ENTRY	TEST_ILLEGAL_MEMORY_REFERENCE,^M<IV>
+011BB		CLRL  	-(SP)
+011BD		PUSHAL	C.27
+011C0		SUBL2 	S^#16,SP		;   ^X10
+
+011C3	L.1:					; LINE 28/9
+011C3		PUSHAL	H.2
+011C7		CALLS 	S^#1,PAX_EXC.SET
+						; LINE 28/10
+011CE		MOVL  	S^#1,-16(FP)		;   LOCAL_POINTER
+						; LINE 28/11
+011D2		TSTL  	-16(FP)			;   LOCAL_POINTER
+011D5		BNEQ  	X.1
+011D7	X.2:	JSB   	PAX_MON.PTRER011DD	X.1:	CMPL  	I^#-268435456,-16(FP)	;   LOCAL_POINTER
+011E5		BEQL  	X.2
+011E7		CLRL  	@-16(FP)		;   LOCAL_POINTER
+						; LINE 28/12
+011EA		MOVZWL	I^#280,-(SP)		;   ^X118
+011EF		CALLS 	S^#1,B.4
+011F4		BRB   	L.7
+
+011F6	L.2:					; LINE 28/13
+011F6		MOVAL 	-24(FP),SP
+011FA		JMP   	0(R0)
+
+011FC	H.2:	.WORD	^M<IV>
+011FE		JSB   	PAX_EXC.VAXCOND
+01204	X.3:	.WORD	0
+01206		.WORD	-24
+01208	X.4:	.WORD	L.2-X.4
+0120A	X.5:	.ADDRESS PAX_EXC.SPEC		; SPECIAL_ERROR
+	X.6:	.WORD	L.3-X.6
+01210		.LONG	-2
+01214	X.7:	.WORD	L.6-X.7
+
+01216	L.3:					; LINE 28/14
+01216		CALLS 	S^#0,PAX_EXC.SPECSTAT
+0121D		MOVZBL	R0,AP
+01220		CMPB  	AP,S^#1
+01223		BEQL  	L.5
+
+01225	L.4:					; LINE 28/15
+01225		MOVZWL	I^#281,-(SP)		;   ^X119
+0122A		CALLS 	S^#1,B.4
+
+0122F	L.5:	BRB   	L.7
+
+01231	L.6:					; LINE 28/16
+01231		MOVZWL	I^#282,-(SP)		;   ^X11A
+01236		CALLS 	S^#1,B.4
+
+0123B	L.7:	PUSHL 	S^#0
+0123D		CALLS 	S^#1,PAX_EXC.RESTORE
+						; LINE 28/17
+01244		RET   	
+
+	;
+	;	Begin subroutine TEST_DISPOSE_BAD_PTR	;
+
+01245	C.28:	.WORD	C.28-C.28
+01247		.WORD	20
+01249		.ASCII	"TEST_DISPOSE_BAD_PTR"
+
+0125D	B.30:	.ENTRY	TEST_DISPOSE_BAD_PTR,^M<IV>
+0125F		CLRL  	-(SP)
+01261		PUSHAL	C.28
+01264		SUBL2 	S^#16,SP		;   ^X10
+
+01267	L.1:					; LINE 29/5
+01267		PUSHAL	H.2
+0126B		CALLS 	S^#1,PAX_EXC.SET
+						; LINE 29/6
+01272		MOVL  	S^#15,-16(FP)		;   LOCAL_POINTER
+						; LINE 29/7
+01276		PUSHL 	-16(FP)			;   LOCAL_POINTER
+01279		CALLS 	S^#1,PAX_UTL.DSPOS
+						; LINE 29/8
+01280		MOVZWL	I^#290,-(SP)		;   ^X122
+01285		CALLS 	S^#1,B.4
+0128A		BRB   	L.7
+
+0128C	L.2:					; LINE 29/9
+0128C		MOVAL 	-24(FP),SP
+01290		JMP   	0(R0)
+
+01292	H.2:	.WORD	^M<IV>
+01294		JSB   	PAX_EXC.VAXCOND
+0129A	X.1:	.WORD	0
+0129C		.WORD	-24
+0129E	X.2:	.WORD	L.2-X.2
+012A0	X.3:	.ADDRESS PAX_EXC.SPEC		; SPECIAL_ERROR
+	X.4:	.WORD	L.3-X.4
+012A6		.LONG	-2
+012AA	X.5:	.WORD	L.6-X.5
+
+012AC	L.3:					; LINE 29/10
+012AC		CALLS 	S^#0,PAX_EXC.SPECSTAT
+012B3		MOVZBL	R0,AP
+012B6		CMPB  	AP,S^#4
+012B9		BEQL  	L.5
+
+012BB	L.4:					; LINE 29/11012BB		MOVZWL	I^#291,-(SP)		;   ^X123
+012C0		CALLS 	S^#1,B.4
+
+012C5	L.5:	BRB   	L.7
+
+012C7	L.6:					; LINE 29/12
+012C7		MOVZWL	I^#292,-(SP)		;   ^X124
+012CC		CALLS 	S^#1,B.4
+
+012D1	L.7:	PUSHL 	S^#0
+012D3		CALLS 	S^#1,PAX_EXC.RESTORE
+						; LINE 29/13
+012DA		RET   	
+
+	;
+	;	Begin subroutine TEST_DISPOSE_TWICE
+	;
+
+012DB	C.29:	.WORD	C.29-C.29
+012DD		.WORD	18
+012DF		.ASCII	"TEST_DISPOSE_TWICE"
+
+012F1	B.31:	.ENTRY	TEST_DISPOSE_TWICE,^M<IV>
+012F3		CLRL  	-(SP)
+012F5		PUSHAL	C.29
+012F8		SUBL2 	S^#16,SP		;   ^X10
+
+012FB	L.1:					; LINE 30/9
+012FB		PUSHAL	H.2
+012FF		CALLS 	S^#1,PAX_EXC.SET
+						; LINE 30/10
+01306		PUSHL 	S^#4
+01308		CALLS 	S^#1,PAX_UTL.NEW
+0130F		MOVL  	R0,-16(FP)		;   LOCAL_PTR
+						; LINE 30/11
+01313		PUSHL 	-16(FP)			;   LOCAL_PTR
+01316		CALLS 	S^#1,PAX_UTL.DSPOS
+						; LINE 30/12
+0131D		PUSHL 	-16(FP)			;   LOCAL_PTR
+01320		CALLS 	S^#1,PAX_UTL.DSPOS
+						; LINE 30/13
+01327		MOVZWL	I^#300,-(SP)		;   ^X12C
+0132C		CALLS 	S^#1,B.4
+01331		BRB   	L.701333	L.2:					; LINE 30/14
+01333		MOVAL 	-24(FP),SP
+01337		JMP   	0(R0)
+
+01339	H.2:	.WORD	^M<IV>
+0133B		JSB   	PAX_EXC.VAXCOND
+01341	X.1:	.WORD	0
+01343		.WORD	-24
+01345	X.2:	.WORD	L.2-X.2
+01347	X.3:	.ADDRESS PAX_EXC.SPEC		; SPECIAL_ERROR
+	X.4:	.WORD	L.3-X.4
+0134D		.LONG	-2
+01351	X.5:	.WORD	L.6-X.5
+
+01353	L.3:					; LINE 30/15
+01353		CALLS 	S^#0,PAX_EXC.SPECSTAT
+0135A		MOVZBL	R0,AP
+0135D		CMPB  	AP,S^#5
+01360		BEQL  	L.5
+
+01362	L.4:					; LINE 30/16
+01362		MOVZWL	I^#301,-(SP)		;   ^X12D
+01367		CALLS 	S^#1,B.4
+
+0136C	L.5:	BRB   	L.7
+
+0136E	L.6:					; LINE 30/17
+0136E		MOVZWL	I^#302,-(SP)		;   ^X12E
+01373		CALLS 	S^#1,B.4
+
+01378	L.7:	PUSHL 	S^#0
+0137A		CALLS 	S^#1,PAX_EXC.RESTORE
+						; LINE 30/18
+01381		RET   	
+
+	;
+	;	Begin subroutine PERFORM_TESTS
+	;
+
+01382	C.30:	.WORD	C.30-C.30
+01384		.WORD	13
+01386		.ASCII	"PERFORM_TESTS"
+
+01393	B.32:	.ENTRY	PERFORM_TESTS,^M<IV>
+01395		CLRL  	-(SP)01397		PUSHAL	C.30
+0139A		SUBL2 	S^#12,SP
+
+0139D	L.1:					; LINE 31/3
+0139D		PUSHAL	H.2
+013A1		CALLS 	S^#1,PAX_EXC.SET
+						; LINE 31/7
+013A8		CALLS 	S^#0,B.5
+						; LINE 31/8
+013AD		CALLS 	S^#0,B.6
+						; LINE 31/12
+013B2		CALLS 	S^#0,B.7
+						; LINE 31/13
+013B7		CALLS 	S^#0,B.8
+						; LINE 31/14
+013BC		CALLS 	S^#0,B.9
+						; LINE 31/15
+013C1		CALLS 	S^#0,B.10
+						; LINE 31/22
+013C6		CALLS 	S^#0,B.11
+						; LINE 31/26
+013CB		CALLS 	S^#0,B.12
+						; LINE 31/30
+013D0		CALLS 	S^#0,B.13
+						; LINE 31/31
+013D5		CALLS 	S^#0,B.14
+						; LINE 31/32
+013DA		CALLS 	S^#0,B.15
+						; LINE 31/33
+013DF		CALLS 	S^#0,B.16
+						; LINE 31/34
+013E4		CALLS 	S^#0,B.17
+						; LINE 31/35
+013E9		CALLS 	S^#0,B.18
+						; LINE 31/36
+013EE		CALLS 	S^#0,B.19
+						; LINE 31/37
+013F3		CALLS 	S^#0,B.20
+						; LINE 31/38
+013F8		CALLS 	S^#0,B.21
+						; LINE 31/39
+013FD		CALLS 	S^#0,B.22
+						; LINE 31/40
+01402		CALLS 	S^#0,B.23
+						; LINE 31/4101407		CALLS 	S^#0,B.24
+						; LINE 31/42
+0140C		CALLS 	S^#0,B.25
+						; LINE 31/43
+01411		CALLS 	S^#0,B.27
+						; LINE 31/44
+01416		CALLS 	S^#0,B.28
+						; LINE 31/48
+0141B		CALLS 	S^#0,B.29
+						; LINE 31/49
+01420		CALLS 	S^#0,B.30
+						; LINE 31/50
+01425		CALLS 	S^#0,B.31
+0142A		BRB   	L.5
+
+0142C	L.2:					; LINE 31/54
+0142C		MOVAL 	-20(FP),SP
+01430		JMP   	0(R0)
+
+01432	H.2:	.WORD	^M<IV>
+01434		JSB   	PAX_EXC.VAXCOND
+0143A	X.1:	.WORD	0
+0143C		.WORD	-20
+0143E	X.2:	.WORD	L.2-X.2
+01440		.LONG	-2
+01444	X.3:	.WORD	L.3-X.3
+
+01446	L.3:
+	L.4:					; LINE 31/55
+						; LINE 31/56
+01446		TSTL  	TTYOUTPUT		;   TTYOUTPUT
+0144C		BNEQ  	X.4
+0144E	X.5:	JSB   	PAX_MON.FVERR
+01454	X.4:	CMPL  	I^#-268435456,TTYOUTPUT	;   TTYOUTPUT
+0145F		BEQL  	X.5
+01461		PUSHL 	TTYOUTPUT		;   TTYOUTPUT
+01467		PUSHL 	S^#29			;   ^X1D
+01469		PUSHAB	K.6
+0146F		PUSHL 	I^#262144		;   ^X40000
+01475		CALLS 	S^#4,PAX_TXT.WRITE
+0147C		PUSHL 	TTYOUTPUT		;   TTYOUTPUT
+01482		CALLS 	S^#1,PAX_TXT.WRLN
+						; LINE 31/57
+01489		CALLS 	S^#0,PAX_EXC.MSG
+						; LINE 31/5801490	L.5:	PUSHL 	S^#0
+01492		CALLS 	S^#1,PAX_EXC.RESTORE
+						; LINE 31/59
+01499		RET   	
+
+	;
+	;	Begin subroutine WRAPUP
+	;
+
+0149A	C.31:	.WORD	C.31-C.31
+0149C		.WORD	6
+0149E		.ASCII	"WRAPUP"
+
+014A4	B.33:	.ENTRY	WRAPUP,^M<IV>
+014A6		CLRL  	-(SP)
+014A8		PUSHAL	C.31
+
+014AB	L.1:					; LINE 32/3
+						; LINE 32/4
+014AB		TSTL  	TTYOUTPUT		;   TTYOUTPUT
+014B1		BNEQ  	X.1
+014B3	X.2:	JSB   	PAX_MON.FVERR
+014B9	X.1:	CMPL  	I^#-268435456,TTYOUTPUT	;   TTYOUTPUT
+014C4		BEQL  	X.2
+014C6		PUSHL 	TTYOUTPUT		;   TTYOUTPUT
+014CC		PUSHL 	S^#10
+014CE		PUSHAB	K.7
+014D4		PUSHL 	I^#262144		;   ^X40000
+014DA		CALLS 	S^#4,PAX_TXT.WRITE
+014E1		PUSHL 	TTYOUTPUT		;   TTYOUTPUT
+014E7		CALLS 	S^#1,PAX_TXT.WRLN
+						; LINE 32/5
+014EE		RET   	
+
+	;
+	;	Begin program EXE009
+	;
+
+014EF	C.32:	.WORD	C.32-C.32
+014F1		.WORD	6
+014F3		.ASCII	"EXE009"
+
+014F9	B.1:	.ENTRY	PAX_PROGRAM.,^M<IV>
+014FB		CLRL  	-(SP)
+014FD		PUSHAL	C.3201500		JSB   	PAX_MON.MAINFRA
+
+01506	L.1:					; LINE 33/2
+						; LINE 33/3
+01506		CALLS 	S^#0,B.3
+						; LINE 33/4
+0150B		CALLS 	S^#0,B.32
+						; LINE 33/5
+01510		CALLS 	S^#0,B.33
+						; LINE 33/6
+01515		JMP   	PAX_MON.STOP
+
+	;
+	;	Constant Area:
+	;
+	;
+	;	Single and multiple longwords:
+	;
+0151B		.BYTE	0
+
+0151C	K.4:	.FLOAT	1.7E+38
+	;
+	;	Unaligned:
+	;
+
+01520	K.1:	.ASCII	"PAX_OUTPUT"
+
+0152A	K.2:	.ASCII	"Begin EXE009"
+
+01536	K.3:	.ASCII	"Error "
+
+0153C	K.5:	.ASCII	"EXE009.tmp"
+
+01546	K.6:	.ASCII	"Undetected exception occurred"
+
+01563	K.7:	.ASCII	"End EXE009"
+
+	;
+	;    Code area:      151B bytes (5403 decimal)
+	;    Constant area:  52 bytes (82 decimal)
+	;    Static area:    4 bytes (4 decimal)
+	;
+
+		.END
+%Wtó

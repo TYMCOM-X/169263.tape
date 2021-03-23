@@ -1,0 +1,217 @@
+$num off
+$verbatim
+To:\\\\\\\C. Hutchins, D. Redding
+$skip
+From:\\\\\J. Broughton, A. Kortesoja
+$skip
+Date:\\\\\6 January 1978
+$skip
+Subject:\\Support Software Development
+$title left 'Support Software Development' left '6 January 1978' left 'Page \'
+$skip 2
+$justify
+The kinds of support software which we will implement fall into three general
+categories:
+cross-machine support, host resident development tools, and
+product support routines.
+$skip
+Cross-support software for a machine includes all software required to realize
+the chosen technique for porting programs:
+a compiler to translate the program into executable (or interpretable) form,
+a linker, runtime and/or simulator, etc.
+$skip
+Host resident development tools are programs used to facilitate the development
+process.
+Examples are the so-called librarian and the Pascal debugger.
+As they are intended to reside only on the host system,
+they need not be portable.
+$skip
+Product support routines are library routines which implement
+common functions needed by the products.
+They serve a dual purpose:
+to facilitate development and to isolate obvious machine dependencies.
+This group includes primitives for editing, data base management, input/output,
+command analysis and so forth.
+They have the property that they must be separately implemented on the development
+system and each delivery system for the products which use them.
+$skip
+This document discusses each of the three categories, outlining
+immediate and secondary requirements. In all, the emphasis is placed on
+consolidating the PDP-10 development environment.
+$skip 2
+&Cross Support Software&
+$skip
+It is premature to propose a complete implementation for any new machines at
+this time.
+When, where or how products will be ported is not known.
+As a result, development of any particular porting technique would be ill advised.
+$skip
+It is sensable, however, to begin work on the portions of a compiler which ar independent
+of the final representation (e.g. syntax and semantic analysis),
+because a translation step will certainly be required with any approach.
+$skip
+The intention is &not& that this be the "first pass" of a fully general,
+optimizing compiler producing hard code for any machine.
+Such requirements are fallacious.
+$skip
+The notion that MDSI needs to produce code for "any" machine is unnecessary
+because the products will be moved to only certain machines in the forseeable
+future.
+Furthermore, a hard code implementation will not be required for many target
+machines since the method of porting will be interpretation of psuedo-machine code.
+$skip
+General purpose compilation techniques are of limited applicability and
+effectiveness.
+Machine dependencies impact the entire compiler;
+as a result, the general usefulness of any one module or phase is limited
+at best, and
+at worst, as in the case of code generation, is nil.
+Machine independent techniques are beyond established technology.
+Furthermore, compiler development requires substantial effort to define
+the code sequences to be generated and to create a new runtime library;
+such work cannot be avoided with any technique.
+$skip
+Global optimization is also questionable.
+First, the kind of optimization desirable is a function of the machine.
+Space/time tradeoffs are at issue here.
+Second, for the kinds of programs that we propose to write,
+global optimizations have been shown to yield only small improvements;
+local, machine dependent optimizations are much more effective.
+$skip
+The best that we can hope to do, then, is to create a family of compilers,
+whose translation components are, whereever feasible, nearly identical, and
+whose code generation components are largely different.
+$skip
+Once the skeleton first pass is completed,
+a new code generator for the PDP-10 should be considered.
+The features provided by the existing compiler are sufficient for the time being.
+However, if new features are needed by products,
+they would be far simpler to incorporate in a new compiler.
+$skip 2
+&Host Resident Development Tools&
+$skip
+One such tool is a source language debugger.
+To date, programs have been debugged using  stack and statement trace
+utilities, special purpose dumps controlled by the program itself,
+and write statements (conditionally) compiled into the program.
+These techniques have been found extremely effective, despite their simplicity
+and small cost.
+$skip
+A full debugger serves primarily to streamline these functions
+and, as a result, gives only a small increase in effectiveness.
+Weighed against this gain are several problems.
+It would be an intricate program, costly to develop, expensive to use,
+and requiring intimate knowledge of the runtime enviroment of Pascal --
+hence, we must know what system, or more correctly, what compiler it will
+be used with.
+$skip
+At this time, the problems outweigh the potential benefits.
+We should therefore not even consider development of a bebugger until
+(1) the compiler stabilizes and (2) more important components of the
+development environment have been completed.
+$skip
+The popular conception of the "librarian" mistakenly merges the functions
+of updating, software management, and a program development system.
+These, in fact, should be separated.
+$skip
+The updating of target systems is not of immediate concern, as there are no
+products to distribute.
+Further, updating is product specific and not amenable to general solution.
+The machine (or machines) to be updated,
+the form of programs and data to be transmitted, the transmission medium,
+the entities (entire files, segments of a data base, etc.) to be updated
+are all unknown and are likely to differ between products.
+$skip
+A software management system to keep track of source, object, build, 
+documentation and other files has several benefits:
+it can reduce chances of lost files and simultaneous changes,
+provide auditing of updates and management control,
+organize files in a convenient manner, and catalogue cross references.
+Such services are of immediate value, as the current, disorganized methods
+are quickly becoming intolerable.
+$skip
+A program development system integrates access to the software management
+system, compiler, loader and editor through a single, coherent command
+structure.
+This is a useful, but not critical tool.
+$skip
+A comprehensive design for both the software management  and 
+program development systems should be conducted in the near future.
+The features should be modularized so that implementation can progress in several stages.
+Simple directory maintainance tools would be brought up first to
+meet the most pressing needs.
+Cross referencing and other more sophiscated features would follow.
+Initially, these software management functions would exist in a stand alone subsystem;
+later, a full program development enviroment would be implemented on ADP
+as a special CL much like the EXC940 program.
+$skip
+One philisophical point:
+the "librarian" is only &part& of the overall approach to managing program
+design, review and evolution.
+It provides the framework in which to deal with the problems of software development;
+it does not solve them.
+Administrative resolve and training are essential.
+$skip 2
+&Product Support Routines&
+$skip
+The support routines have the highest development priority,
+as they are to be used in the initial development of products.
+Should we delay implementation at this time,
+the programmers working on products will have to continue to improvise.
+$skip
+The routines which are certain to be needed by the products are:
+modular QED, PUDMS, command analysis, file I/O,
+terminal I/O, filename processing,
+enviromental enquiry (calendar clock, interval timing, runtime statistics),
+exceptional conditional handling, plotter drivers, and simple debugging
+utilities.
+$skip
+These proposed routines are quite properly viewed as adjuncts to the runtime
+system.
+They form the nucleus of the portable enviroment, but need not be themselves
+portable.
+In many cases, they must make use of special assembly language or
+machine dependent Pascal programs to interface with the target (operating) system.
+Further, different implementations of the same function may employ
+algoritmically different strategies to function effectively on their respective
+targets.
+$skip
+It is important that these utility routines be designed in such a way as
+to permit their function to be altered, i.e. to be subset 
+or replaced with an equivalent technique.
+The modular QED provides a good example.
+The intraline editor is a stand alone module and its use and description are
+orthogonal to other editor components.
+On one system, it may use control characters; on others, an entirely
+different mechanism may be appropriate.
+Search patterns, line designators, and substitution primatives are similarly
+interfaced.
+We could, for example, use a simple subset of the search patterns in an 
+editor for a small machine.
+$skip
+Constructing a library of alternative modules differing in algorithm or 
+approach is a powerful technique for delivering compatable software on widely
+different systems.
+This applies both to the nuclear utilities and to the &products&.
+Structuring programs in this way is a matter of training and foresight.
+$skip
+Generation of these routines requires three steps.
+(1) Design. All groups must be involved in the process,
+so that their particular requirements are met.
+(2) Implementation. Once the interface has been specified and agreed upon,
+the utility can be coded by programmers from any group;
+this is particularly true for enhancements.
+Note that at this time, implementation is required only for the PDP-10.
+A delivery system implementation should await a product which will actually
+use it.
+(3) Use. Existing programs which could use the utilities must be modified,
+and steps to insure use of the utilities in programs yet to be written must be taken.
+This means that
+our programmers must be sensitized to the value of sharing code,
+so that they will take the trouble to learn about and to use the common
+support routines.
+It is also imperative, that everyone try to identify routines of common value
+when designing their products.
+$skip 3
+sftdev.mem[52250,240]
+    

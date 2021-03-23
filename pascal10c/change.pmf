@@ -1,0 +1,330 @@
+#document (Proposed Pascal Changes,14 October 1981)
+#sect_default (3,2,2,1,2,1)
+#par_default (1,5)
+#memo (MDSI Pascal Users,N.\Faiman/Development Software,14 October 1981,Proposed Pascal Changes)
+This memo outlines some proposed changes to the MDSI Pascal language.
+Some of these changes add new features to the language;
+some remove existing features which have turned out not to be useful;
+some redefine the runtime behaviour of existing features of the language.
+Some changes are being considered for implementation in the near future,
+while others would go on a list of improvements to be made when time
+permits.
+Please take a look at this list, and return any comments (favorable or
+unfavorable) to Neil Faiman.
+#sect (Generic Array Parameters)
+Generic array parameters (array [*] of ...) would be removed from the language.
+#beginlevel
+#sect (Rationale)
+Generic array parameters provide more flexibility than is needed for some
+problems, and less than is needed for others.
+They do not appear to be a good solution to any problem,
+and have been almost completely unused.
+#sect (Changes to Existing Programs)
+Any existing programs which use generic arrays (if there are any) would
+have to be modified to do without them.
+#endlevel
+#sect (Data Modules)
+The ^udatamodule|u keyword and the concept of a data module would be
+removed from the language.
+Modules would no longer be required to contain at least one public procedure
+or function definition.
+Thus, there would no longer be one class of modules which must contain
+executable code, and another class of modules which must not contain
+executable code.
+#beginlevel
+#sect (Rationale)
+There is no logical reason for the distinction between modules and data
+modules.
+#sect (Changes to Existing Programs)
+The keyword ^udatamodule|u would have to be changed to ^umodule|u at the
+start of any existing data modules.
+#endlevel
+#sect (Environment Modules)
+The keyword ^uenvmodule|u would be removed from the language.
+Environments would be created by compiling an ordinary module containing
+the desired declarations and using a new /ENVIRONMENT switch on the
+command line or in the options clause of the module header.
+#beginlevel
+#sect (Rationale)
+Precompiled declarations are a concept which belongs more naturally at the
+option level than in the Pascal language itself.
+#sect (Changes to Existing Programs)
+Minor source code changes would be required in existing
+environment modules.
+#endlevel
+#sect (Repeat Counts)
+Repetition counts would be allowed in structured expressions (parenthesized
+lists of expressions that represent array or record values).
+Within a structured expression, the notation "<constant>\^uof|u\<expression>"
+would represent the indicated number of repetitions of the expression.
+For example, "(3\OF\(2\OF\1,\0))" would be equivalent to "((1,\1,\0),
+(1,\1,\0), (1,\1,\0))".
+#beginlevel
+#sect (Rationale)
+A repetition count notation would simplify the writing of large structured
+expressions.
+It would be particularly useful for initializing array variables:
+#beginfigure
+VAR X: ARRAY [1..100] OF INTEGER := (100 OF 0);
+#endfigure
+#sect (Changes to Existing Programs)
+No changes would be required in any existing program.
+#endlevel
+#sect (Row-Major Array Expressions)
+Array expressions would have to be written with all logically required
+parentheses.
+A three-by-three array of integers, which can now be written as
+"(1, 2, 3, 4, 5, 6, 7, 8, 9)", would have to be written as
+"((1, 2, 3), (4, 5, 6), (7, 8, 9))".
+#beginlevel
+#sect (Rationale)
+This change is necessary to avoid ambiguity when repeat counts are added to the
+language.
+It is not a bad idea in any case, since the extra parentheses clarify
+the structure of a structured expression.
+#sect (Changes to Existing Programs)
+Any array expressions which have been written with omitted parentheses would
+have to be re-written with all the required parentheses.
+#endlevel
+#sect (Octal Constants with "B" Suffix)
+It would no longer be legal to write octal constants as "<digits>B".
+The newer "#O<digits>" notation would have to be used instead.
+#beginlevel
+#sect (Rationale)
+The new "#" notation is sufficient not only for octal constants, but
+also for binary and hexadecimal constants.
+The "B" notation is unnecessary, unintuitive (B would logically denote
+a binary constant), and inconsistent with the binary and hexadecimal
+notation.
+#sect (Changes to Existing Programs)
+Any octal constants which have been written with the "B" notation would
+have to be changed to use the "#O" notation.
+#endlevel
+^c
+#sect (WITH Statements)
+Whenever the compiler found an identifier reference in a WITH statement
+which would have a different meaning if the WITH statement were not in effect,
+it would print a warning message.
+#beginlevel
+#sect (Rationale)
+It is very easy to forget that the record in a WITH statement contains a
+field whose name is the same as the name of some local variable or a field
+in the record of an outer WITH statement.
+Such errors can be terribly perplexing.
+#sect (Changes to Existing Programs)
+It would not be absolutely necessary to change any existing programs;
+however, it would probably be desirable to make such name changes as
+might be necessary to eliminate any new warning messages.
+#endlevel
+|c
+#sect (CONTROL Option for Text Files)
+The CONTROL option would be removed from the collection of options
+which can be specified when opening a file (i.e., CONTROL would be
+removed from the standard type IO_OPTIONS.
+#beginlevel
+#sect (Rationale)
+The meaning of the CONTROL option has never been well defined.
+The option simply has not been used.
+#sect (Changes to Existing Programs)
+Any programs which use the CONTROL option (if there are any) would have
+to be rewritten to do without it.
+#endlevel
+#sect (IMAGE Option for Text Files)
+^c
+The IMAGE option would not be allowed when opening a text file.
+|c
+#beginlevel
+#sect (Rationale)
+IMAGE input/output has never been implemented for either the DEC-10 or the VAX.
+The existing PUT8BITS and GET8BITS routines, which are used by all existing
+programs that need image mode i/o, provide all the power that was proposed
+for the IMAGE option, without requiring any enhancement of the Pascal i/o
+system.
+#sect (Changes to Existing Programs)
+No changes would be required in any existing program.
+#endlevel
+^c
+#sect (IMAGE Option for Binary Files)
+The IMAGE option would be allowed when opening a typeless binary file
+(FILE\OF\*).
+The rules for typeless binary i/o, with and without IMAGE, would be changed
+slightly:
+(1) When a typeless binary file is opened without the IMAGE option, i/o
+with the file will be exactly as specified in the MDSI Pascal Report.
+Programs which use binary i/o without IMAGE should be machine-independent
+and portable.
+However, the relation between the data written to such a file by a Pascal
+and the form of the data as it appears on disk will be implementation
+dependent.
+(2) When a typeless binary file is opened with the IMAGE option, the
+extent of a written file may be greater than would be indicated by the
+Report.
+However, the relation between the data written to or read from such a file
+and the form of the data as it appears on disk may be closer than for a
+non-IMAGE file (although it will still be implementation dependent).
+#beginlevel
+#sect (Rationale)
+Many file systems cannot directly support the Pascal typeless binary file
+model.
+Implementation of binary files on such a system may force a trade-off between
+adherence to the Pascal model and the degree of similarity between the data
+on disk and the data read and written by Pascal.
+Normal binary i/o would support the Pascal model and allow portable 
+programming, while systems programs could use IMAGE binary i/o to read
+and write files whose disk format was determined by system constraints
+(e.g., object files, whose format is determined by the system linker).
+#sect (Changes to Existing Programs)
+No change would be required in any existing program.
+IMAGE and non-IMAGE binary i/o would be identical on the DEC-10.
+The VAX implementation already supports IMAGE binary i/o.
+#endlevel
+#sect (ASCII Option for Text Files on the DEC-10)
+At present, when a text file is read with the ASCII option on the DEC-10,
+carriage return (CR) is treated as an ordinary text character, and line
+feed (LF) is treated as an end-of-line character.
+Most text lines end with a CR-LF pair; thus, when a text line is read with
+ASCII, the last character in the line appears to be CR, and when EOLN
+becomes true, LF is in the file buffer.
+#par
+The treatment of end-of-line characters under the ASCII option would be
+changed as follows:
+(1) A CR that is not followed by an LF would be treated as an ordinary
+text character, just as it is now.
+(2) An LF that is not preceded by a CR would be treated as an end-of-line
+character, just as it is now.
+(3) A CR-LF pair would be treated as a single end-of-line character.
+The CR would be placed in the file buffer, the LF would be discarded,
+and the EOLN condition for the file would be set TRUE.
+#beginlevel
+#sect (Rationale)
+Programming to deal with end of line conditions can be quite difficult with
+the present implementation of ASCII.
+It is particularly awkward that when EOLN is true and there is an LF in the
+file buffer, the previous character may or may not be part of the text
+of the input line (depending on whether or not it is a CR).
+The suggested implementation would simplify this problem.
+Note that no ambiguity would be introduced:
+CR by itself would still not be an end-of-line character, so a CR
+in the buffer when EOLN was true would always indicate a CR-LF pair.
+#sect (Changes to Existing Programs)
+End-of-line handling code would have to be changed in existing programs which
+use the ASCII option.
+Fortunately, the new code would probably be simpler than the old code
+that it would replace.
+#endlevel
+|c
+#sect (TTY and TTYOUTPUT)
+The standard file variables TTY and TTYOUTPUT would automatically be
+associated with the user's terminal at the start of execution.
+^c
+The user's terminal would never be closed;
+a CLOSE call on the terminal input file would simply be ignored, while
+a CLOSE on the terminal output file would be equivalent to a BREAK call.
+|c
+Since there are only single input and output files for the user's
+terminal, any RESET, OPEN, or REWRITE call with a file name denoting
+the user's terminal will associate the specified file variable with the
+existing terminal input or output file.
+Such a call will, however, change the ASCII and RETRY options on the
+associated file in accordance with the options parameter in the call.
+#beginlevel
+#sect (Rationale)
+(1) Almost every Pascal program begins by opening TTY and TTYOUTPUT.
+Eliminating this requirement would not be important, but it would be
+pleasant.
+(2) The restriction to a single terminal input file and a single terminal
+output file, regardless of how many times the terminal is opened, is
+already present in both implementations.
+(3) This leads to the potentially serious problem that closing one
+file which is associated with the terminal will close all files which
+are associated with the terminal.
+This frequently leads to code such as "IF OUTPUT\<>\TTYOUTPUT THEN
+CLOSE\(OUTPUT)".
+#sect (Changes to Existing Programs)
+No changes would be required in any existing program.
+#endlevel
+^c
+#sect (REPLACE Procedure for Updating Files)
+A new file handling procedure, REPLACE, would be defined.
+REPLACE would only be allowed with files which had been opened with
+UPDATE.
+Its semantics would be defined as follows (the notation is consistent
+with section 14.4.3 of the MDSI Pascal Report):
+#beginfigure (6)
+IF f.mode <> readwrite THEN error;
+IF f.cursor > f.extent THEN error;
+f.data [f.cursor] := f.buffer;
+f.cursor := f.cursor + 1;
+IF f.cursor <= f.extent THEN
+  f.buffer := f.data [f.cursor];
+#endfigure
+Thus, REPLACE would combine the effects of GET and PUT, writing the current
+file buffer to the current cursor (like PUT), incrementing the cursor (like
+both PUT and GET), and reading from the new cursor into the file buffer
+(like GET).
+#beginlevel
+#sect (Rationale)
+Using GET, PUT, and SEEK, the only way to step through a file, replacing
+each element of the file by some modified element, is with some code
+such as the following:
+#beginfigure (6)
+update (f);
+while not eof (f) do begin
+  f^ := modified value of f^;
+  put (f);
+  seek (f, cursor (f));
+end;
+#endfigure
+Both GET and PUT increment the cursor, so after a PUT call has written
+element N, a subsequent GET call will read element N+2 rather than element
+N+1.
+The REPLACE call would simultaneously write element N and read element N+1,
+allowing the same rourtine to be written:
+#beginfigure (5)
+update (f);
+while not eof (f) do begin
+  f^ := modified value of f^;
+  replace (f);
+end;
+#endfigure
+#sect (Changes to Existing Programs)
+No changes would be required in any existing program.
+#endlevel
+|c
+#sect (Set Truncation)
+It would be a runtime error (whose detection would be controlled by
+a sub-option of the CHECK option) if a set expression were assigned
+to a set variable, and the expression contained elements outside the
+range of the variable.
+For example, "X\:=\X\+\[I]" would be in error if X was declared as a
+"SET\OF\1..10", and I was 20.
+#beginlevel
+#sect (Rationale)
+This change would bring MDSI Pascal into line with standard Pascal.
+More important, it would fix the curious fact that when a program
+executes statements such as "X\:=\[I]; IF\I\IN\X\THEN\..." the assignment
+will always be performed, but the result of the IF test will depend on
+the declared range of the set X.
+#sect (Changes to Existing Programs)
+There are probably existing programs which work only because of the
+automatic truncation of set expressions.
+All such programs would have to be changed.
+Fortunately, the required changes would become apparent very quickly
+(when the program dies with a ?SET\TRUNCATION error), and would be trivial
+to make.
+#endlevel
+^c
+#sect (Set Operations)
+(1) The operator "NOT\IN" would be added, where "I\NOT\IN\X" would have the
+same meaning as "NOT\(I\IN\X)".
+(2) A new standard function, CARD, would return the number of elements
+in any set expression.
+#beginlevel
+#sect (Rationale)
+Both of these would be useful features and natural extensions, and neither
+would be very difficult to implement.
+#sect (Changes to Existing Programs)
+No changes would be required in any existing program.
+#endlevel
+|c
+  

@@ -1,0 +1,48 @@
+(*   +--------------------------------------------------------------+
+     |                                                              |
+     |                         P A S C M D                          |
+     |                         - - - - - -                          |
+     |                                                              |
+     +--------------------------------------------------------------+
+     
+     MDSI, Company Confidential
+     
+     SYSTEM:  PASCAL Compiler
+     
+     STARTED:  3/12/79
+     
+     PURPOSE:  This is the command line manager module, which is used
+        by  NEWPAS to manipulate an internal list of pending commands
+        from auto-startup and indirect command files.
+     
+     ENTRY POINTS:
+     
+        cmd_name_stack
+                    is the stack of  file  names  of  active  command
+                    files.
+     
+        cmd_list    is  the  list of pending command lines which have
+                    been read from command files.
+     
+        last_cmd    is a pointer to the eof  entry  for  the  current
+                    file in the pending command list.
+     
+        rd_cmd_file copies  lines  from  a  specified  file  into the
+                    pending command list, and pushes the command file
+                    name on the command file name stack.
+     
+        rd_tmpcor   copies  lines  from a buffer containing text read
+                    from a tmpcor file, and pushes the tmpcor name on
+                    the command file name stack.
+     
+        cmd_save    writes  the command list and file name stack to a
+                    specified file.
+     
+        cmd_load    reads the command list and file name  stack  back
+                    in from a specified file.
+     
+        cmd_clear   disposes of the command list and file name stack.
+     
+     RESPONSIBLE:  Compiler Group
+     
+     ---------------------------------------------------------------- *)

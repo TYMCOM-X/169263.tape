@@ -1,0 +1,1242 @@
+          <INPUT>            ::=   <COMMAND> '<BREAK>';
+          <COMMAND>          ::=    !
+                                  'DEBUG' <DEBUG SPEC> !
+                                  'DEVICE' <DEVICE NUMBER> !
+                                  'DRAW' <DRAW SPEC> !
+                                  'ERASES' <SETTING> !
+                                  'ESTIMATE' <TIME> !
+                                  'EXIT' !
+                                  'HARD' <COPY> <SETTING> !
+                                  'HELP' <HELP KEYWORD> !
+                                  'MAP' <MAP CMD SPEC> !
+                                  'OUTPUT' <FILE SPEC> !
+                                   'PARAMETERS' !
+                                  'PEN' <PEN CMD SPEC> !
+                                  'READ' <FILE SPEC> !
+                                  'RESET' !
+                                  'SCALE' <SCALE FACTOR> !
+                                  'SETUP' <SET SPEC> !
+                                  'STATISTICS' !
+                                  'SYMBOLS' <SETTING> !
+                                  'TRANSLATE' <TRANS CMD SPEC> !
+                                  'USE' <FILE SPEC> !
+                                  'WINDOW' <WINDOW CMD SPEC>;
+          <DEBUG SPEC>       ::=   <ONUM> !
+                                  'SCANNER' <SETTING> !
+                                  'SYNTHESIZE' <SETTING> !
+                                  'PARSER' <SETTING> !
+                                  'PLOT' <SETTING>;
+          <DEVICE NUMBER>    ::=   '<INUM>' !
+                                   <DEVICE KEYWORD>;
+          <DEVICE KEYWORD>   ::=  'GENERAL' !
+                                  'HELP' !
+                                  'OFFLINE' !
+                                  'UNIVERSAL';
+          <COPY>             ::= !
+                                  'COPY';
+          <TIME>             ::=    !
+                                  'TIME' !
+                                  'PLOT TIME';
+          <HELP KEYWORD>     ::=    !
+                                  'DEVICE' !
+                                  'DRAW' !
+                                  'ESTIMATE' !
+                                  'EXIT' !
+                                  'HELP' !
+                                  'MAP' !
+                                  'OUTPUT' !
+                                  'PARAMETERS' !
+                                  'PEN' !
+                                  'READ' !
+                                  'RESET' !
+                                  'SCALE' !
+                                  'SETUP' !
+                                  'STATISTICS' !
+                                  'SYMBOLS' !
+                                  'TRANSLATE' !
+                                  'USE' !
+                                  'WINDOW';
+          <MAP CMD SPEC>     ::=   <PEN> <PEN 1> 'TO' <PEN> <PEN 2>;
+          <PEN>              ::=   !
+                                   'PEN';
+          <PEN 1>            ::=   '<INUM>';
+          <PEN 2>            ::=   '<INUM>';
+          <PEN CMD SPEC>     ::=   <CHANGES> <SETTING>;
+          <CHANGES>          ::=    !
+                                   'CHANGES';
+          <SETTING>          ::=   'ON' !
+                                   'OFF';
+          <DRAW SPEC>        ::=   'GRIDS' !
+                                   <SEARCH ADDR RANGE>;
+          <SEARCH ADDR RANGE>::=    !
+                                   <SA 1> 'TO' <SA 2>;
+          <SA 1>             ::=   '<INUM>';
+          <SA 2>             ::=   '<INUM>';
+          <SCALE FACTOR>     ::=   <NUMBER> !
+                                   'X' <NUMBER> !
+                                   'Y' <NUMBER>;
+          <SET SPEC>         ::=    !
+                                   <FILE SPEC>;
+          <TRANS CMD SPEC>   ::=   '(' <X1> ',' <Y1> ')';
+          <WINDOW CMD SPEC>  ::=   '(' <X1> ',' <Y1> 'TO' <X2> ',' <Y2> ')';
+          <X1>               ::=   <NUMBER>;
+          <X2>               ::=   <NUMBER>;
+          <Y1>               ::=   <NUMBER>;
+          <Y2>               ::=   <NUMBER>;
+          <FILE SPEC>        ::=   <FILE> <DEVICE> <FILENAME> <FILEEXT> <PPN>;
+          <FILE>             ::=   'FROM' !
+                                   'TO' !
+                                   'TO' '!';
+          <DEVICE>           ::= !
+                                   '<DEV:>' ':';
+          <FILENAME>         ::=   '<WORD>';
+          <FILEEXT>          ::= !
+                                   '.' '<WORD>';
+          <PPN>              ::= !
+                                   <OPPN> <ONUM> <SPPN> <ONUM> <CPPN>;
+          <OPPN>             ::=   '(' !
+                                   '[';
+          <SPPN>             ::=   ',' !
+                                   '-';
+          <CPPN>             ::= !
+                                   ')' !
+                                   ']';
+          <ONUM>             ::=   '<INUM>';
+          <NUMBER>           ::=   '<INUM>' !
+                                   '<RNUM>'
+
+   1 !  -1 -2 -3 -4 -5 -6 -7 -8 -9-10-11-12-13-14-15-16-17-18-19-20-21-22
+   2 !   0 -2 -3 -4 -5 -6 -7 -8 -9-10-11-12-13-14-15-16-17-18-19-20-21-22
+   3 ! -23-24-25-26-27
+   4 !  -9-27-28-29-30
+   5 !   0-27-38
+   6 ! -36-37
+   7 !   0-32-33
+   8 !   0-31
+   9 !   0 -3 -4 -6 -7 -9-10-11-12-13-14-15-16-17-18-19-20-21-22
+  10 ! -13-27
+  11 ! -34-44
+  12 ! -35-36-37
+  13 ! -27-39-40-53
+  14 !   0-34-44
+  15 ! -41
+  16 ! -41
+  17 ! -27
+  18 !  -9-28-29-30
+  19 !   0-13
+  20 ! -27
+  21 ! -27
+  22 !   0-35
+  23 !   0-27
+  24 ! -27
+  25 ! -27
+  26 ! -27-53
+  27 ! -27-53
+  28 ! -27-53
+  29 ! -27-53
+  30 ! -27-53
+  31 ! -34-44
+  32 !   0-46
+  33 ! -48
+  34 !   0-49
+  35 !   0-41-50
+  36 ! -41-50
+  37 ! -42-51
+  38 !   0-43-52
+       1:**************
+          <S'> ::= . <INPUT> 
+          <INPUT> ::= . <COMMAND> '<BREAK>' 
+          <COMMAND> ::= . 
+          *****FOLLOW: '<BREAK>' 
+          <COMMAND> ::= . 'DEBUG' <DEBUG SPEC> 
+          <COMMAND> ::= . 'DEVICE' <DEVICE NUMBER> 
+          <COMMAND> ::= . 'DRAW' <DRAW SPEC> 
+          <COMMAND> ::= . 'ERASES' <SETTING> 
+          <COMMAND> ::= . 'ESTIMATE' <TIME> 
+          <COMMAND> ::= . 'EXIT' 
+          <COMMAND> ::= . 'HARD' <COPY> <SETTING> 
+          <COMMAND> ::= . 'HELP' <HELP KEYWORD> 
+          <COMMAND> ::= . 'MAP' <MAP CMD SPEC> 
+          <COMMAND> ::= . 'OUTPUT' <FILE SPEC> 
+          <COMMAND> ::= . 'PARAMETERS' 
+          <COMMAND> ::= . 'PEN' <PEN CMD SPEC> 
+          <COMMAND> ::= . 'READ' <FILE SPEC> 
+          <COMMAND> ::= . 'RESET' 
+          <COMMAND> ::= . 'SCALE' <SCALE FACTOR> 
+          <COMMAND> ::= . 'SETUP' <SET SPEC> 
+          <COMMAND> ::= . 'STATISTICS' 
+          <COMMAND> ::= . 'SYMBOLS' <SETTING> 
+          <COMMAND> ::= . 'TRANSLATE' <TRANS CMD SPEC> 
+          <COMMAND> ::= . 'USE' <FILE SPEC> 
+          <COMMAND> ::= . 'WINDOW' <WINDOW CMD SPEC> 
+
+       2:**************
+          <S'> ::= <INPUT> . 
+          *****FOLLOW: '' 
+
+       3:**************
+          <INPUT> ::= <COMMAND> . '<BREAK>' 
+
+       4:**************
+          <COMMAND> ::= 'DEBUG' . <DEBUG SPEC> 
+          <DEBUG SPEC> ::= . <ONUM> 
+          <DEBUG SPEC> ::= . 'SCANNER' <SETTING> 
+          <DEBUG SPEC> ::= . 'SYNTHESIZE' <SETTING> 
+          <DEBUG SPEC> ::= . 'PARSER' <SETTING> 
+          <DEBUG SPEC> ::= . 'PLOT' <SETTING> 
+          <ONUM> ::= . '<INUM>' 
+
+       5:**************
+          <COMMAND> ::= 'DEVICE' . <DEVICE NUMBER> 
+          <DEVICE NUMBER> ::= . '<INUM>' 
+          <DEVICE NUMBER> ::= . <DEVICE KEYWORD> 
+          <DEVICE KEYWORD> ::= . 'GENERAL' 
+          <DEVICE KEYWORD> ::= . 'HELP' 
+          <DEVICE KEYWORD> ::= . 'OFFLINE' 
+          <DEVICE KEYWORD> ::= . 'UNIVERSAL' 
+
+       6:**************
+          <COMMAND> ::= 'DRAW' . <DRAW SPEC> 
+          <DRAW SPEC> ::= . 'GRIDS' 
+          <DRAW SPEC> ::= . <SEARCH ADDR RANGE> 
+          <SEARCH ADDR RANGE> ::= . 
+          *****FOLLOW: '<BREAK>' 
+          <SEARCH ADDR RANGE> ::= . <SA 1> 'TO' <SA 2> 
+          <SA 1> ::= . '<INUM>' 
+
+       7:**************
+          <COMMAND> ::= 'ERASES' . <SETTING> 
+          <SETTING> ::= . 'ON' 
+          <SETTING> ::= . 'OFF' 
+
+       8:**************
+          <COMMAND> ::= 'ESTIMATE' . <TIME> 
+          <TIME> ::= . 
+          *****FOLLOW: '<BREAK>' 
+          <TIME> ::= . 'TIME' 
+          <TIME> ::= . 'PLOT TIME' 
+
+       9:**************
+          <COMMAND> ::= 'EXIT' . 
+          *****FOLLOW: '<BREAK>' 
+
+      10:**************
+          <COMMAND> ::= 'HARD' . <COPY> <SETTING> 
+          <COPY> ::= . 
+          *****FOLLOW: 'ON' 'OFF' 
+          <COPY> ::= . 'COPY' 
+
+      11:**************
+          <COMMAND> ::= 'HELP' . <HELP KEYWORD> 
+          <HELP KEYWORD> ::= . 
+          *****FOLLOW: '<BREAK>' 
+          <HELP KEYWORD> ::= . 'DEVICE' 
+          <HELP KEYWORD> ::= . 'DRAW' 
+          <HELP KEYWORD> ::= . 'ESTIMATE' 
+          <HELP KEYWORD> ::= . 'EXIT' 
+          <HELP KEYWORD> ::= . 'HELP' 
+          <HELP KEYWORD> ::= . 'MAP' 
+          <HELP KEYWORD> ::= . 'OUTPUT' 
+          <HELP KEYWORD> ::= . 'PARAMETERS' 
+          <HELP KEYWORD> ::= . 'PEN' 
+          <HELP KEYWORD> ::= . 'READ' 
+          <HELP KEYWORD> ::= . 'RESET' 
+          <HELP KEYWORD> ::= . 'SCALE' 
+          <HELP KEYWORD> ::= . 'SETUP' 
+          <HELP KEYWORD> ::= . 'STATISTICS' 
+          <HELP KEYWORD> ::= . 'SYMBOLS' 
+          <HELP KEYWORD> ::= . 'TRANSLATE' 
+          <HELP KEYWORD> ::= . 'USE' 
+          <HELP KEYWORD> ::= . 'WINDOW' 
+
+      12:**************
+          <COMMAND> ::= 'MAP' . <MAP CMD SPEC> 
+          <MAP CMD SPEC> ::= . <PEN> <PEN 1> 'TO' <PEN> <PEN 2> 
+          <PEN> ::= . 
+          *****FOLLOW: '<INUM>' 
+          <PEN> ::= . 'PEN' 
+
+      13:**************
+          <COMMAND> ::= 'OUTPUT' . <FILE SPEC> 
+          <FILE SPEC> ::= . <FILE> <DEVICE> <FILENAME> <FILEEXT> <PPN> 
+          <FILE> ::= . 'FROM' 
+          <FILE> ::= . 'TO' 
+          <FILE> ::= . 'TO' '!' 
+
+      14:**************
+          <COMMAND> ::= 'PARAMETERS' . 
+          *****FOLLOW: '<BREAK>' 
+
+      15:**************
+          <COMMAND> ::= 'PEN' . <PEN CMD SPEC> 
+          <PEN CMD SPEC> ::= . <CHANGES> <SETTING> 
+          <CHANGES> ::= . 
+          *****FOLLOW: 'ON' 'OFF' 
+          <CHANGES> ::= . 'CHANGES' 
+
+      16:**************
+          <COMMAND> ::= 'READ' . <FILE SPEC> 
+          <FILE SPEC> ::= . <FILE> <DEVICE> <FILENAME> <FILEEXT> <PPN> 
+          <FILE> ::= . 'FROM' 
+          <FILE> ::= . 'TO' 
+          <FILE> ::= . 'TO' '!' 
+
+      17:**************
+          <COMMAND> ::= 'RESET' . 
+          *****FOLLOW: '<BREAK>' 
+
+      18:**************
+          <COMMAND> ::= 'SCALE' . <SCALE FACTOR> 
+          <SCALE FACTOR> ::= . <NUMBER> 
+          <SCALE FACTOR> ::= . 'X' <NUMBER> 
+          <SCALE FACTOR> ::= . 'Y' <NUMBER> 
+          <NUMBER> ::= . '<INUM>' 
+          <NUMBER> ::= . '<RNUM>' 
+
+      19:**************
+          <COMMAND> ::= 'SETUP' . <SET SPEC> 
+          <SET SPEC> ::= . 
+          *****FOLLOW: '<BREAK>' 
+          <SET SPEC> ::= . <FILE SPEC> 
+          <FILE SPEC> ::= . <FILE> <DEVICE> <FILENAME> <FILEEXT> <PPN> 
+          <FILE> ::= . 'FROM' 
+          <FILE> ::= . 'TO' 
+          <FILE> ::= . 'TO' '!' 
+
+      20:**************
+          <COMMAND> ::= 'STATISTICS' . 
+          *****FOLLOW: '<BREAK>' 
+
+      21:**************
+          <COMMAND> ::= 'SYMBOLS' . <SETTING> 
+          <SETTING> ::= . 'ON' 
+          <SETTING> ::= . 'OFF' 
+
+      22:**************
+          <COMMAND> ::= 'TRANSLATE' . <TRANS CMD SPEC> 
+          <TRANS CMD SPEC> ::= . '(' <X1> ',' <Y1> ')' 
+
+      23:**************
+          <COMMAND> ::= 'USE' . <FILE SPEC> 
+          <FILE SPEC> ::= . <FILE> <DEVICE> <FILENAME> <FILEEXT> <PPN> 
+          <FILE> ::= . 'FROM' 
+          <FILE> ::= . 'TO' 
+          <FILE> ::= . 'TO' '!' 
+
+      24:**************
+          <COMMAND> ::= 'WINDOW' . <WINDOW CMD SPEC> 
+          <WINDOW CMD SPEC> ::= . '(' <X1> ',' <Y1> 'TO' <X2> ',' <Y2> ')' 
+
+      25:**************
+          <INPUT> ::= <COMMAND> '<BREAK>' . 
+          *****FOLLOW: '' 
+
+      26:**************
+          <COMMAND> ::= 'DEBUG' <DEBUG SPEC> . 
+          *****FOLLOW: '<BREAK>' 
+
+      27:**************
+          <DEBUG SPEC> ::= <ONUM> . 
+          *****FOLLOW: '<BREAK>' 
+
+      28:**************
+          <DEBUG SPEC> ::= 'SCANNER' . <SETTING> 
+          <SETTING> ::= . 'ON' 
+          <SETTING> ::= . 'OFF' 
+
+      29:**************
+          <DEBUG SPEC> ::= 'SYNTHESIZE' . <SETTING> 
+          <SETTING> ::= . 'ON' 
+          <SETTING> ::= . 'OFF' 
+
+      30:**************
+          <DEBUG SPEC> ::= 'PARSER' . <SETTING> 
+          <SETTING> ::= . 'ON' 
+          <SETTING> ::= . 'OFF' 
+
+      31:**************
+          <DEBUG SPEC> ::= 'PLOT' . <SETTING> 
+          <SETTING> ::= . 'ON' 
+          <SETTING> ::= . 'OFF' 
+
+      32:**************
+          <ONUM> ::= '<INUM>' . 
+          *****FOLLOW: '<BREAK>' ',' ')' '-' ']' 
+
+      33:**************
+          <COMMAND> ::= 'DEVICE' <DEVICE NUMBER> . 
+          *****FOLLOW: '<BREAK>' 
+
+      34:**************
+          <DEVICE NUMBER> ::= '<INUM>' . 
+          *****FOLLOW: '<BREAK>' 
+
+      35:**************
+          <DEVICE NUMBER> ::= <DEVICE KEYWORD> . 
+          *****FOLLOW: '<BREAK>' 
+
+      36:**************
+          <DEVICE KEYWORD> ::= 'GENERAL' . 
+          *****FOLLOW: '<BREAK>' 
+
+      37:**************
+          <DEVICE KEYWORD> ::= 'HELP' . 
+          *****FOLLOW: '<BREAK>' 
+
+      38:**************
+          <DEVICE KEYWORD> ::= 'OFFLINE' . 
+          *****FOLLOW: '<BREAK>' 
+
+      39:**************
+          <DEVICE KEYWORD> ::= 'UNIVERSAL' . 
+          *****FOLLOW: '<BREAK>' 
+
+      40:**************
+          <COMMAND> ::= 'DRAW' <DRAW SPEC> . 
+          *****FOLLOW: '<BREAK>' 
+
+      41:**************
+          <DRAW SPEC> ::= 'GRIDS' . 
+          *****FOLLOW: '<BREAK>' 
+
+      42:**************
+          <DRAW SPEC> ::= <SEARCH ADDR RANGE> . 
+          *****FOLLOW: '<BREAK>' 
+
+      43:**************
+          <SEARCH ADDR RANGE> ::= <SA 1> . 'TO' <SA 2> 
+
+      44:**************
+          <SA 1> ::= '<INUM>' . 
+          *****FOLLOW: 'TO' 
+
+      45:**************
+          <COMMAND> ::= 'ERASES' <SETTING> . 
+          *****FOLLOW: '<BREAK>' 
+
+      46:**************
+          <SETTING> ::= 'ON' . 
+          *****FOLLOW: '<BREAK>' 
+
+      47:**************
+          <SETTING> ::= 'OFF' . 
+          *****FOLLOW: '<BREAK>' 
+
+      48:**************
+          <COMMAND> ::= 'ESTIMATE' <TIME> . 
+          *****FOLLOW: '<BREAK>' 
+
+      49:**************
+          <TIME> ::= 'TIME' . 
+          *****FOLLOW: '<BREAK>' 
+
+      50:**************
+          <TIME> ::= 'PLOT TIME' . 
+          *****FOLLOW: '<BREAK>' 
+
+      51:**************
+          <COMMAND> ::= 'HARD' <COPY> . <SETTING> 
+          <SETTING> ::= . 'ON' 
+          <SETTING> ::= . 'OFF' 
+
+      52:**************
+          <COPY> ::= 'COPY' . 
+          *****FOLLOW: 'ON' 'OFF' 
+
+      53:**************
+          <COMMAND> ::= 'HELP' <HELP KEYWORD> . 
+          *****FOLLOW: '<BREAK>' 
+
+      54:**************
+          <HELP KEYWORD> ::= 'DEVICE' . 
+          *****FOLLOW: '<BREAK>' 
+
+      55:**************
+          <HELP KEYWORD> ::= 'DRAW' . 
+          *****FOLLOW: '<BREAK>' 
+
+      56:**************
+          <HELP KEYWORD> ::= 'ESTIMATE' . 
+          *****FOLLOW: '<BREAK>' 
+
+      57:**************
+          <HELP KEYWORD> ::= 'EXIT' . 
+          *****FOLLOW: '<BREAK>' 
+
+      58:**************
+          <HELP KEYWORD> ::= 'HELP' . 
+          *****FOLLOW: '<BREAK>' 
+
+      59:**************
+          <HELP KEYWORD> ::= 'MAP' . 
+          *****FOLLOW: '<BREAK>' 
+
+      60:**************
+          <HELP KEYWORD> ::= 'OUTPUT' . 
+          *****FOLLOW: '<BREAK>' 
+
+      61:**************
+          <HELP KEYWORD> ::= 'PARAMETERS' . 
+          *****FOLLOW: '<BREAK>' 
+
+      62:**************
+          <HELP KEYWORD> ::= 'PEN' . 
+          *****FOLLOW: '<BREAK>' 
+
+      63:**************
+          <HELP KEYWORD> ::= 'READ' . 
+          *****FOLLOW: '<BREAK>' 
+
+      64:**************
+          <HELP KEYWORD> ::= 'RESET' . 
+          *****FOLLOW: '<BREAK>' 
+
+      65:**************
+          <HELP KEYWORD> ::= 'SCALE' . 
+          *****FOLLOW: '<BREAK>' 
+
+      66:**************
+          <HELP KEYWORD> ::= 'SETUP' . 
+          *****FOLLOW: '<BREAK>' 
+
+      67:**************
+          <HELP KEYWORD> ::= 'STATISTICS' . 
+          *****FOLLOW: '<BREAK>' 
+
+      68:**************
+          <HELP KEYWORD> ::= 'SYMBOLS' . 
+          *****FOLLOW: '<BREAK>' 
+
+      69:**************
+          <HELP KEYWORD> ::= 'TRANSLATE' . 
+          *****FOLLOW: '<BREAK>' 
+
+      70:**************
+          <HELP KEYWORD> ::= 'USE' . 
+          *****FOLLOW: '<BREAK>' 
+
+      71:**************
+          <HELP KEYWORD> ::= 'WINDOW' . 
+          *****FOLLOW: '<BREAK>' 
+
+      72:**************
+          <COMMAND> ::= 'MAP' <MAP CMD SPEC> . 
+          *****FOLLOW: '<BREAK>' 
+
+      73:**************
+          <MAP CMD SPEC> ::= <PEN> . <PEN 1> 'TO' <PEN> <PEN 2> 
+          <PEN 1> ::= . '<INUM>' 
+
+      74:**************
+          <PEN> ::= 'PEN' . 
+          *****FOLLOW: '<INUM>' 
+
+      75:**************
+          <COMMAND> ::= 'OUTPUT' <FILE SPEC> . 
+          *****FOLLOW: '<BREAK>' 
+
+      76:**************
+          <FILE SPEC> ::= <FILE> . <DEVICE> <FILENAME> <FILEEXT> <PPN> 
+          <DEVICE> ::= . 
+          *****FOLLOW: '<WORD>' 
+          <DEVICE> ::= . '<DEV:>' ':' 
+
+      77:**************
+          <FILE> ::= 'FROM' . 
+          *****FOLLOW: '<DEV:>' '<WORD>' 
+
+      78:**************
+          <FILE> ::= 'TO' . 
+          *****FOLLOW: '<DEV:>' '<WORD>' 
+          <FILE> ::= 'TO' . '!' 
+
+      79:**************
+     <COMMAND> ::= 'PEN' <PEN CMD SPEC> . 
+          *****FOLLOW: '<BREAK>' 
+
+      80:**************
+          <PEN CMD SPEC> ::= <CHANGES> . <SETTING> 
+          <SETTING> ::= . 'ON' 
+          <SETTING> ::= . 'OFF' 
+
+      81:**************
+          <CHANGES> ::= 'CHANGES' . 
+          *****FOLLOW: 'ON' 'OFF' 
+
+      82:**************
+          <COMMAND> ::= 'READ' <FILE SPEC> . 
+          *****FOLLOW: '<BREAK>' 
+
+      83:**************
+          <COMMAND> ::= 'SCALE' <SCALE FACTOR> . 
+          *****FOLLOW: '<BREAK>' 
+
+      84:**************
+          <SCALE FACTOR> ::= <NUMBER> . 
+          *****FOLLOW: '<BREAK>' 
+
+      85:**************
+          <SCALE FACTOR> ::= 'X' . <NUMBER> 
+          <NUMBER> ::= . '<INUM>' 
+          <NUMBER> ::= . '<RNUM>' 
+
+      86:**************
+          <SCALE FACTOR> ::= 'Y' . <NUMBER> 
+          <NUMBER> ::= . '<INUM>' 
+          <NUMBER> ::= . '<RNUM>' 
+
+      87:**************
+          <NUMBER> ::= '<INUM>' . 
+          *****FOLLOW: '<BREAK>' 'TO' ',' ')' 
+
+      88:**************
+          <NUMBER> ::= '<RNUM>' . 
+          *****FOLLOW: '<BREAK>' 'TO' ',' ')' 
+
+      89:**************
+          <COMMAND> ::= 'SETUP' <SET SPEC> . 
+          *****FOLLOW: '<BREAK>' 
+
+      90:**************
+          <SET SPEC> ::= <FILE SPEC> . 
+          *****FOLLOW: '<BREAK>' 
+
+      91:**************
+          <COMMAND> ::= 'SYMBOLS' <SETTING> . 
+          *****FOLLOW: '<BREAK>' 
+
+      92:**************
+          <COMMAND> ::= 'TRANSLATE' <TRANS CMD SPEC> . 
+          *****FOLLOW: '<BREAK>' 
+
+      93:**************
+          <TRANS CMD SPEC> ::= '(' . <X1> ',' <Y1> ')' 
+          <X1> ::= . <NUMBER> 
+          <NUMBER> ::= . '<INUM>' 
+          <NUMBER> ::= . '<RNUM>' 
+
+      94:**************
+          <COMMAND> ::= 'USE' <FILE SPEC> . 
+          *****FOLLOW: '<BREAK>' 
+
+      95:**************
+          <COMMAND> ::= 'WINDOW' <WINDOW CMD SPEC> . 
+          *****FOLLOW: '<BREAK>' 
+
+      96:**************
+          <WINDOW CMD SPEC> ::= '(' . <X1> ',' <Y1> 'TO' <X2> ',' <Y2> ')' 
+          <X1> ::= . <NUMBER> 
+          <NUMBER> ::= . '<INUM>' 
+          <NUMBER> ::= . '<RNUM>' 
+
+      97:**************
+          <DEBUG SPEC> ::= 'SCANNER' <SETTING> . 
+          *****FOLLOW: '<BREAK>' 
+
+      98:**************
+          <DEBUG SPEC> ::= 'SYNTHESIZE' <SETTING> . 
+          *****FOLLOW: '<BREAK>' 
+
+      99:**************
+          <DEBUG SPEC> ::= 'PARSER' <SETTING> . 
+          *****FOLLOW: '<BREAK>' 
+
+     100:**************
+          <DEBUG SPEC> ::= 'PLOT' <SETTING> . 
+          *****FOLLOW: '<BREAK>' 
+
+     101:**************
+          <SEARCH ADDR RANGE> ::= <SA 1> 'TO' . <SA 2> 
+          <SA 2> ::= . '<INUM>' 
+
+     102:**************
+          <COMMAND> ::= 'HARD' <COPY> <SETTING> . 
+          *****FOLLOW: '<BREAK>' 
+
+     103:**************
+          <MAP CMD SPEC> ::= <PEN> <PEN 1> . 'TO' <PEN> <PEN 2> 
+
+     104:**************
+          <PEN 1> ::= '<INUM>' . 
+          *****FOLLOW: 'TO' 
+
+     105:**************
+          <FILE SPEC> ::= <FILE> <DEVICE> . <FILENAME> <FILEEXT> <PPN> 
+          <FILENAME> ::= . '<WORD>' 
+
+     106:**************
+          <DEVICE> ::= '<DEV:>' . ':' 
+
+     107:**************
+          <FILE> ::= 'TO' '!' . 
+          *****FOLLOW: '<DEV:>' '<WORD>' 
+
+     108:**************
+          <PEN CMD SPEC> ::= <CHANGES> <SETTING> . 
+          *****FOLLOW: '<BREAK>' 
+
+     109:**************
+          <SCALE FACTOR> ::= 'X' <NUMBER> . 
+          *****FOLLOW: '<BREAK>' 
+
+     110:**************
+          <SCALE FACTOR> ::= 'Y' <NUMBER> . 
+          *****FOLLOW: '<BREAK>' 
+
+     111:**************
+          <TRANS CMD SPEC> ::= '(' <X1> . ',' <Y1> ')' 
+
+     112:**************
+          <X1> ::= <NUMBER> . 
+          *****FOLLOW: ',' 
+
+     113:**************
+          <WINDOW CMD SPEC> ::= '(' <X1> . ',' <Y1> 'TO' <X2> ',' <Y2> ')' 
+
+     114:**************
+          <SEARCH ADDR RANGE> ::= <SA 1> 'TO' <SA 2> . 
+          *****FOLLOW: '<BREAK>' 
+
+     115:**************
+          <SA 2> ::= '<INUM>' . 
+          *****FOLLOW: '<BREAK>' 
+
+     116:**************
+          <MAP CMD SPEC> ::= <PEN> <PEN 1> 'TO' . <PEN> <PEN 2> 
+          <PEN> ::= . 
+          *****FOLLOW: '<INUM>' 
+          <PEN> ::= . 'PEN' 
+
+     117:**************
+          <FILE SPEC> ::= <FILE> <DEVICE> <FILENAME> . <FILEEXT> <PPN> 
+          <FILEEXT> ::= . 
+          *****FOLLOW: '<BREAK>' '(' '[' 
+          <FILEEXT> ::= . '.' '<WORD>' 
+
+     118:**************
+          <FILENAME> ::= '<WORD>' . 
+          *****FOLLOW: '<BREAK>' '(' '.' '[' 
+
+     119:**************
+          <DEVICE> ::= '<DEV:>' ':' . 
+          *****FOLLOW: '<WORD>' 
+
+     120:**************
+          <TRANS CMD SPEC> ::= '(' <X1> ',' . <Y1> ')' 
+          <Y1> ::= . <NUMBER> 
+          <NUMBER> ::= . '<INUM>' 
+          <NUMBER> ::= . '<RNUM>' 
+
+     121:**************
+          <WINDOW CMD SPEC> ::= '(' <X1> ',' . <Y1> 'TO' <X2> ',' <Y2> ')' 
+          <Y1> ::= . <NUMBER> 
+          <NUMBER> ::= . '<INUM>' 
+          <NUMBER> ::= . '<RNUM>' 
+
+     122:**************
+          <MAP CMD SPEC> ::= <PEN> <PEN 1> 'TO' <PEN> . <PEN 2> 
+          <PEN 2> ::= . '<INUM>' 
+
+     123:**************
+          <FILE SPEC> ::= <FILE> <DEVICE> <FILENAME> <FILEEXT> . <PPN> 
+          <PPN> ::= . 
+          *****FOLLOW: '<BREAK>' 
+          <PPN> ::= . <OPPN> <ONUM> <SPPN> <ONUM> <CPPN> 
+          <OPPN> ::= . '(' 
+          <OPPN> ::= . '[' 
+
+     124:**************
+          <FILEEXT> ::= '.' . '<WORD>' 
+
+     125:**************
+          <TRANS CMD SPEC> ::= '(' <X1> ',' <Y1> . ')' 
+
+     126:**************
+          <Y1> ::= <NUMBER> . 
+          *****FOLLOW: 'TO' ')' 
+
+     127:**************
+          <WINDOW CMD SPEC> ::= '(' <X1> ',' <Y1> . 'TO' <X2> ',' <Y2> ')' 
+
+     128:**************
+          <MAP CMD SPEC> ::= <PEN> <PEN 1> 'TO' <PEN> <PEN 2> . 
+          *****FOLLOW: '<BREAK>' 
+
+     129:**************
+          <PEN 2> ::= '<INUM>' . 
+          *****FOLLOW: '<BREAK>' 
+
+     130:**************
+          <FILE SPEC> ::= <FILE> <DEVICE> <FILENAME> <FILEEXT> <PPN> . 
+          *****FOLLOW: '<BREAK>' 
+
+     131:**************
+          <PPN> ::= <OPPN> . <ONUM> <SPPN> <ONUM> <CPPN> 
+          <ONUM> ::= . '<INUM>' 
+
+     132:**************
+          <OPPN> ::= '(' . 
+          *****FOLLOW: '<INUM>' 
+
+     133:**************
+          <OPPN> ::= '[' . 
+          *****FOLLOW: '<INUM>' 
+
+     134:**************
+          <FILEEXT> ::= '.' '<WORD>' . 
+          *****FOLLOW: '<BREAK>' '(' '[' 
+
+     135:**************
+          <TRANS CMD SPEC> ::= '(' <X1> ',' <Y1> ')' . 
+          *****FOLLOW: '<BREAK>' 
+
+     136:**************
+          <WINDOW CMD SPEC> ::= '(' <X1> ',' <Y1> 'TO' . <X2> ',' <Y2> ')' 
+          <X2> ::= . <NUMBER> 
+          <NUMBER> ::= . '<INUM>' 
+          <NUMBER> ::= . '<RNUM>' 
+
+     137:**************
+          <PPN> ::= <OPPN> <ONUM> . <SPPN> <ONUM> <CPPN> 
+          <SPPN> ::= . ',' 
+          <SPPN> ::= . '-' 
+
+     138:**************
+          <WINDOW CMD SPEC> ::= '(' <X1> ',' <Y1> 'TO' <X2> . ',' <Y2> ')' 
+
+     139:**************
+          <X2> ::= <NUMBER> . 
+          *****FOLLOW: ',' 
+
+     140:**************
+          <PPN> ::= <OPPN> <ONUM> <SPPN> . <ONUM> <CPPN> 
+          <ONUM> ::= . '<INUM>' 
+
+     141:**************
+          <SPPN> ::= ',' . 
+          *****FOLLOW: '<INUM>' 
+
+     142:**************
+          <SPPN> ::= '-' . 
+          *****FOLLOW: '<INUM>' 
+
+     143:**************
+          <WINDOW CMD SPEC> ::= '(' <X1> ',' <Y1> 'TO' <X2> ',' . <Y2> ')' 
+          <Y2> ::= . <NUMBER> 
+          <NUMBER> ::= . '<INUM>' 
+          <NUMBER> ::= . '<RNUM>' 
+
+     144:**************
+          <PPN> ::= <OPPN> <ONUM> <SPPN> <ONUM> . <CPPN> 
+          <CPPN> ::= . 
+          *****FOLLOW: '<BREAK>' 
+          <CPPN> ::= . ')' 
+          <CPPN> ::= . ']' 
+
+     145:**************
+          <WINDOW CMD SPEC> ::= '(' <X1> ',' <Y1> 'TO' <X2> ',' <Y2> . ')' 
+
+     146:**************
+          <Y2> ::= <NUMBER> . 
+          *****FOLLOW: ')' 
+
+     147:**************
+          <PPN> ::= <OPPN> <ONUM> <SPPN> <ONUM> <CPPN> . 
+          *****FOLLOW: '<BREAK>' 
+
+     148:**************
+          <CPPN> ::= ')' . 
+          *****FOLLOW: '<BREAK>' 
+
+     149:**************
+          <CPPN> ::= ']' . 
+          *****FOLLOW: '<BREAK>' 
+
+     150:**************
+          <WINDOW CMD SPEC> ::= '(' <X1> ',' <Y1> 'TO' <X2> ',' <Y2> ')' . 
+          *****FOLLOW: '<BREAK>' 
+
+***** GRAMMAR IS SLR1 *****          ******** CODES FOR SYMBOLS ********
+          CODE   SYMBOL
+          -53   '<RNUM>'
+          -52   ']'
+          -51   '-'
+          -50   '['
+          -49   '.'
+          -48   '<WORD>'
+          -47   ':'
+          -46   '<DEV:>'
+          -45   '!'
+          -44   'FROM'
+          -43   ')'
+          -42   ','
+          -41   '('
+          -40   'Y'
+          -39   'X'
+          -38   'GRIDS'
+          -37   'OFF'
+          -36   'ON'
+          -35   'CHANGES'
+          -34   'TO'
+          -33   'PLOT TIME'
+          -32   'TIME'
+          -31   'COPY'
+          -30   'UNIVERSAL'
+          -29   'OFFLINE'
+          -28   'GENERAL'
+          -27   '<INUM>'
+          -26   'PLOT'
+          -25   'PARSER'
+          -24   'SYNTHESIZE'
+          -23   'SCANNER'
+          -22   'WINDOW'
+          -21   'USE'
+          -20   'TRANSLATE'
+          -19   'SYMBOLS'
+          -18   'STATISTICS'
+          -17   'SETUP'
+          -16   'SCALE'
+          -15   'RESET'
+          -14   'READ'
+          -13   'PEN'
+          -12   'PARAMETERS'
+          -11   'OUTPUT'
+          -10   'MAP'
+           -9   'HELP'
+           -8   'HARD'
+           -7   'EXIT'
+           -6   'ESTIMATE'
+           -5   'ERASES'
+           -4   'DRAW'
+           -3   'DEVICE'
+           -2   'DEBUG'
+           -1   '<BREAK>'
+            0   ''
+            1   <INPUT>
+            2   <COMMAND>
+            3   <DEBUG SPEC>
+            4   <DEVICE NUMBER>
+            5   <DRAW SPEC>
+            6   <SETTING>
+            7   <TIME>
+            8   <COPY>
+            9   <HELP KEYWORD>
+           10   <MAP CMD SPEC>
+           11   <FILE SPEC>
+           12   <PEN CMD SPEC>
+           13   <SCALE FACTOR>
+           14   <SET SPEC>
+           15   <TRANS CMD SPEC>
+           16   <WINDOW CMD SPEC>
+           17   <ONUM>
+           18   <DEVICE KEYWORD>
+           19   <PEN>
+           20   <PEN 1>
+           21   <PEN 2>
+           22   <CHANGES>
+           23   <SEARCH ADDR RANGE>
+           24   <SA 1>
+           25   <SA 2>
+           26   <NUMBER>
+           27   <X1>
+           28   <Y1>
+           29   <X2>
+           30   <Y2>
+           31   <FILE>
+           32   <DEVICE>
+           33   <FILENAME>
+           34   <FILEEXT>
+           35   <PPN>
+           36   <OPPN>
+           37   <SPPN>
+           38   <CPPN>          ********** CODES FOR THE PRODUCTIONS **********
+          CODE          PRODUCTION
+            -1          <S'> ::= . <INPUT> 
+            -2          <INPUT> ::= . <COMMAND> '<BREAK>' 
+            -3          <COMMAND> ::= . 
+            -4          <COMMAND> ::= . 'DEBUG' <DEBUG SPEC> 
+            -5          <COMMAND> ::= . 'DEVICE' <DEVICE NUMBER> 
+            -6          <COMMAND> ::= . 'DRAW' <DRAW SPEC> 
+            -7          <COMMAND> ::= . 'ERASES' <SETTING> 
+            -8          <COMMAND> ::= . 'ESTIMATE' <TIME> 
+            -9          <COMMAND> ::= . 'EXIT' 
+           -10          <COMMAND> ::= . 'HARD' <COPY> <SETTING> 
+           -11          <COMMAND> ::= . 'HELP' <HELP KEYWORD> 
+           -12          <COMMAND> ::= . 'MAP' <MAP CMD SPEC> 
+           -13          <COMMAND> ::= . 'OUTPUT' <FILE SPEC> 
+           -14          <COMMAND> ::= . 'PARAMETERS' 
+           -15          <COMMAND> ::= . 'PEN' <PEN CMD SPEC> 
+           -16          <COMMAND> ::= . 'READ' <FILE SPEC> 
+           -17          <COMMAND> ::= . 'RESET' 
+           -18          <COMMAND> ::= . 'SCALE' <SCALE FACTOR> 
+           -19          <COMMAND> ::= . 'SETUP' <SET SPEC> 
+           -20          <COMMAND> ::= . 'STATISTICS' 
+           -21          <COMMAND> ::= . 'SYMBOLS' <SETTING> 
+           -22          <COMMAND> ::= . 'TRANSLATE' <TRANS CMD SPEC> 
+           -23          <COMMAND> ::= . 'USE' <FILE SPEC> 
+           -24          <COMMAND> ::= . 'WINDOW' <WINDOW CMD SPEC> 
+           -25          <DEBUG SPEC> ::= . <ONUM> 
+           -26          <DEBUG SPEC> ::= . 'SCANNER' <SETTING> 
+           -27          <DEBUG SPEC> ::= . 'SYNTHESIZE' <SETTING> 
+           -28          <DEBUG SPEC> ::= . 'PARSER' <SETTING> 
+           -29          <DEBUG SPEC> ::= . 'PLOT' <SETTING> 
+           -30          <DEVICE NUMBER> ::= . '<INUM>' 
+           -31          <DEVICE NUMBER> ::= . <DEVICE KEYWORD> 
+           -32          <DEVICE KEYWORD> ::= . 'GENERAL' 
+           -33          <DEVICE KEYWORD> ::= . 'HELP' 
+           -34          <DEVICE KEYWORD> ::= . 'OFFLINE' 
+           -35          <DEVICE KEYWORD> ::= . 'UNIVERSAL' 
+           -36          <COPY> ::= . 
+           -37          <COPY> ::= . 'COPY' 
+           -38          <TIME> ::= . 
+           -39          <TIME> ::= . 'TIME' 
+           -40          <TIME> ::= . 'PLOT TIME' 
+           -41          <HELP KEYWORD> ::= . 
+           -42          <HELP KEYWORD> ::= . 'DEVICE' 
+           -43          <HELP KEYWORD> ::= . 'DRAW' 
+           -44          <HELP KEYWORD> ::= . 'ESTIMATE' 
+           -45          <HELP KEYWORD> ::= . 'EXIT' 
+           -46          <HELP KEYWORD> ::= . 'HELP' 
+           -47          <HELP KEYWORD> ::= . 'MAP' 
+           -48          <HELP KEYWORD> ::= . 'OUTPUT' 
+           -49          <HELP KEYWORD> ::= . 'PARAMETERS' 
+           -50          <HELP KEYWORD> ::= . 'PEN' 
+           -51          <HELP KEYWORD> ::= . 'READ' 
+           -52          <HELP KEYWORD> ::= . 'RESET' 
+           -53          <HELP KEYWORD> ::= . 'SCALE' 
+           -54          <HELP KEYWORD> ::= . 'SETUP' 
+           -55          <HELP KEYWORD> ::= . 'STATISTICS' 
+           -56          <HELP KEYWORD> ::= . 'SYMBOLS' 
+           -57          <HELP KEYWORD> ::= . 'TRANSLATE' 
+           -58          <HELP KEYWORD> ::= . 'USE' 
+           -59          <HELP KEYWORD> ::= . 'WINDOW' 
+           -60          <MAP CMD SPEC> ::= . <PEN> <PEN 1> 'TO' <PEN> <PEN 2> 
+           -61          <PEN> ::= . 
+           -62          <PEN> ::= . 'PEN' 
+           -63          <PEN 1> ::= . '<INUM>' 
+           -64          <PEN 2> ::= . '<INUM>' 
+           -65          <PEN CMD SPEC> ::= . <CHANGES> <SETTING> 
+           -66          <CHANGES> ::= . 
+           -67          <CHANGES> ::= . 'CHANGES' 
+           -68          <SETTING> ::= . 'ON' 
+           -69          <SETTING> ::= . 'OFF' 
+           -70          <DRAW SPEC> ::= . 'GRIDS' 
+           -71          <DRAW SPEC> ::= . <SEARCH ADDR RANGE> 
+           -72          <SEARCH ADDR RANGE> ::= . 
+           -73          <SEARCH ADDR RANGE> ::= . <SA 1> 'TO' <SA 2> 
+           -74          <SA 1> ::= . '<INUM>' 
+           -75          <SA 2> ::= . '<INUM>' 
+           -76          <SCALE FACTOR> ::= . <NUMBER> 
+           -77          <SCALE FACTOR> ::= . 'X' <NUMBER> 
+           -78          <SCALE FACTOR> ::= . 'Y' <NUMBER> 
+           -79          <SET SPEC> ::= . 
+           -80          <SET SPEC> ::= . <FILE SPEC> 
+           -81          <TRANS CMD SPEC> ::= . '(' <X1> ',' <Y1> ')' 
+           -82          <WINDOW CMD SPEC> ::= . '(' <X1> ',' <Y1> 'TO' <X2> ',' <Y2> ')' 
+           -83          <X1> ::= . <NUMBER> 
+           -84          <X2> ::= . <NUMBER> 
+           -85          <Y1> ::= . <NUMBER> 
+           -86          <Y2> ::= . <NUMBER> 
+           -87          <FILE SPEC> ::= . <FILE> <DEVICE> <FILENAME> <FILEEXT> <PPN> 
+           -88          <FILE> ::= . 'FROM' 
+           -89          <FILE> ::= . 'TO' 
+           -90          <FILE> ::= . 'TO' '!' 
+           -91          <DEVICE> ::= . 
+           -92          <DEVICE> ::= . '<DEV:>' ':' 
+           -93          <FILENAME> ::= . '<WORD>' 
+           -94          <FILEEXT> ::= . 
+           -95          <FILEEXT> ::= . '.' '<WORD>' 
+           -96          <PPN> ::= . 
+           -97          <PPN> ::= . <OPPN> <ONUM> <SPPN> <ONUM> <CPPN> 
+           -98          <OPPN> ::= . '(' 
+           -99          <OPPN> ::= . '[' 
+          -100          <SPPN> ::= . ',' 
+          -101          <SPPN> ::= . '-' 
+          -102          <CPPN> ::= . 
+          -103          <CPPN> ::= . ')' 
+          -104          <CPPN> ::= . ']' 
+          -105          <ONUM> ::= . '<INUM>' 
+          -106          <NUMBER> ::= . '<INUM>' 
+          -107          <NUMBER> ::= . '<RNUM>' 
+
+          TOTAL NUMBER OF LR(0) ITEMS: 257INITPROCEDURE;
+BEGIN  (* PARSING TABLE *)
+P[  1, -22]:=  19;P[  1, -21]:=  18;P[  1, -20]:=  17;
+P[  1, -19]:=  16;P[  1, -18]:=-520;P[  1, -17]:=  15;
+P[  1, -16]:=  14;P[  1, -15]:=-517;P[  1, -14]:=  13;
+P[  1, -13]:=  12;P[  1, -12]:=-514;P[  1, -11]:=  11;
+P[  1, -10]:=  10;P[  1,  -9]:=   9;P[  1,  -8]:=   8;
+P[  1,  -7]:=-509;P[  1,  -6]:=   7;P[  1,  -5]:=   6;
+P[  1,  -4]:=   5;P[  1,  -3]:=   4;P[  1,  -2]:=   3;
+P[  1,  -1]:=  -3;P[  1,   1]:=  -1;P[  1,   2]:=   2;
+P[  2,  -1]:=-502;P[  3, -27]:=-605;P[  3, -26]:=  23;
+P[  3, -25]:=  22;P[  3, -24]:=  21;P[  3, -23]:=  20;
+P[  3,   3]:=  -4;P[  3,  17]:= -25;P[  4, -30]:=-535;
+P[  4, -29]:=-534;P[  4, -28]:=-532;P[  4, -27]:=-530;
+P[  4,  -9]:=-533;P[  4,   4]:=  -5;P[  4,  18]:= -31;
+P[  5, -38]:=-570;P[  5, -27]:=-574;P[  5,  -1]:= -72;
+P[  5,   5]:=  -6;P[  5,  23]:= -71;P[  5,  24]:=  24;
+P[  6, -37]:=-569;P[  6, -36]:=-568;P[  6,   6]:=  -7;
+P[  7, -33]:=-540;P[  7, -32]:=-539;P[  7,  -1]:= -38;
+P[  7,   7]:=  -8;P[  8, -37]:= -36;P[  8, -36]:= -36;
+P[  8, -31]:=-537;P[  8,   8]:=  25;P[  9, -22]:=-559;
+P[  9, -21]:=-558;P[  9, -20]:=-557;P[  9, -19]:=-556;
+P[  9, -18]:=-555;P[  9, -17]:=-554;P[  9, -16]:=-553;
+P[  9, -15]:=-552;P[  9, -14]:=-551;P[  9, -13]:=-550;
+P[  9, -12]:=-549;P[  9, -11]:=-548;P[  9, -10]:=-547;
+P[  9,  -9]:=-546;P[  9,  -7]:=-545;P[  9,  -6]:=-544;
+P[  9,  -4]:=-543;P[  9,  -3]:=-542;P[  9,  -1]:= -41;
+P[  9,   9]:= -11;P[ 10, -27]:= -61;P[ 10, -13]:=-562;
+P[ 10,  10]:= -12;P[ 10,  19]:=  26;P[ 11, -44]:=-588;
+P[ 11, -34]:=  28;P[ 11,  11]:= -13;P[ 11,  31]:=  27;
+P[ 12, -37]:= -66;P[ 12, -36]:= -66;P[ 12, -35]:=-567;
+P[ 12,  12]:= -15;P[ 12,  22]:=  29;P[ 13, -44]:=-588;
+P[ 13, -34]:=  28;P[ 13,  11]:= -16;P[ 13,  31]:=  27;
+P[ 14, -53]:=-607;P[ 14, -40]:=  31;P[ 14, -39]:=  30;
+P[ 14, -27]:=-606;P[ 14,  13]:= -18;P[ 14,  26]:= -76;
+P[ 15, -44]:=-588;P[ 15, -34]:=  28;P[ 15,  -1]:= -79;
+P[ 15,  11]:= -80;P[ 15,  14]:= -19;P[ 15,  31]:=  27;
+P[ 16, -37]:=-569;P[ 16, -36]:=-568;P[ 16,   6]:= -21;
+P[ 17, -41]:=  32;P[ 17,  15]:= -22;P[ 18, -44]:=-588;
+P[ 18, -34]:=  28;P[ 18,  11]:= -23;P[ 18,  31]:=  27;
+P[ 19, -41]:=  33;P[ 19,  16]:= -24;P[ 20, -37]:=-569;
+P[ 20, -36]:=-568;P[ 20,   6]:= -26;P[ 21, -37]:=-569;
+P[ 21, -36]:=-568;P[ 21,   6]:= -27;P[ 22, -37]:=-569;
+P[ 22, -36]:=-568;P[ 22,   6]:= -28;P[ 23, -37]:=-569;
+P[ 23, -36]:=-568;P[ 23,   6]:= -29;P[ 24, -34]:=  34;
+P[ 25, -37]:=-569;P[ 25, -36]:=-568;P[ 25,   6]:= -10;
+P[ 26, -27]:=-563;P[ 26,  20]:=  35;P[ 27, -48]:= -91;
+P[ 27, -46]:=  37;P[ 27,  32]:=  36;P[ 28, -48]:= -89;
+P[ 28, -46]:= -89;P[ 28, -45]:=-590;P[ 29, -37]:=-569;
+P[ 29, -36]:=-568;P[ 29,   6]:= -65;P[ 30, -53]:=-607;
+P[ 30, -27]:=-606;P[ 30,  26]:= -77;P[ 31, -53]:=-607;
+P[ 31, -27]:=-606;P[ 31,  26]:= -78;P[ 32, -53]:=-607;
+P[ 32, -27]:=-606;P[ 32,  26]:= -83;P[ 32,  27]:=  38;
+P[ 33, -53]:=-607;P[ 33, -27]:=-606;P[ 33,  26]:= -83;
+P[ 33,  27]:=  39;P[ 34, -27]:=-575;P[ 34,  25]:= -73;
+P[ 35, -34]:=  40;P[ 36, -48]:=-593;P[ 36,  33]:=  41;
+P[ 37, -47]:=-592;P[ 38, -42]:=  42;P[ 39, -42]:=  43;
+P[ 40, -27]:= -61;P[ 40, -13]:=-562;P[ 40,  19]:=  44;
+P[ 41, -50]:= -94;P[ 41, -49]:=  46;P[ 41, -41]:= -94;
+P[ 41,  -1]:= -94;P[ 41,  34]:=  45;P[ 42, -53]:=-607;
+P[ 42, -27]:=-606;P[ 42,  26]:= -85;P[ 42,  28]:=  47;
+P[ 43, -53]:=-607;P[ 43, -27]:=-606;P[ 43,  26]:= -85;
+P[ 43,  28]:=  48;P[ 44, -27]:=-564;P[ 44,  21]:= -60;
+P[ 45, -50]:=-599;P[ 45, -41]:=-598;P[ 45,  -1]:= -96;
+P[ 45,  35]:= -87;P[ 45,  36]:=  49;P[ 46, -48]:=-595;
+P[ 47, -43]:=-581;P[ 48, -34]:=  50;P[ 49, -27]:=-605;
+P[ 49,  17]:=  51;P[ 50, -53]:=-607;P[ 50, -27]:=-606;
+P[ 50,  26]:= -84;P[ 50,  29]:=  52;P[ 51, -51]:=-601;
+P[ 51, -42]:=-600;P[ 51,  37]:=  53;P[ 52, -42]:=  54;
+P[ 53, -27]:=-605;P[ 53,  17]:=  55;P[ 54, -53]:=-607;
+P[ 54, -27]:=-606;P[ 54,  26]:= -86;P[ 54,  30]:=  56;
+P[ 55, -52]:=-604;P[ 55, -43]:=-603;P[ 55,  -1]:=-102;
+P[ 55,  38]:= -97;P[ 56, -43]:=-582;
+LHS[  -2]:=  1;RHSLENGTH[  -2]:=  2;
+LHS[  -3]:=  2;RHSLENGTH[  -3]:=  0;
+LHS[  -4]:=  2;RHSLENGTH[  -4]:=  2;
+LHS[  -5]:=  2;RHSLENGTH[  -5]:=  2;
+LHS[  -6]:=  2;RHSLENGTH[  -6]:=  2;
+LHS[  -7]:=  2;RHSLENGTH[  -7]:=  2;
+LHS[  -8]:=  2;RHSLENGTH[  -8]:=  2;
+LHS[  -9]:=  2;RHSLENGTH[  -9]:=  1;
+LHS[ -10]:=  2;RHSLENGTH[ -10]:=  3;
+LHS[ -11]:=  2;RHSLENGTH[ -11]:=  2;
+LHS[ -12]:=  2;RHSLENGTH[ -12]:=  2;
+LHS[ -13]:=  2;RHSLENGTH[ -13]:=  2;
+LHS[ -14]:=  2;RHSLENGTH[ -14]:=  1;
+LHS[ -15]:=  2;RHSLENGTH[ -15]:=  2;
+LHS[ -16]:=  2;RHSLENGTH[ -16]:=  2;
+LHS[ -17]:=  2;RHSLENGTH[ -17]:=  1;
+LHS[ -18]:=  2;RHSLENGTH[ -18]:=  2;
+LHS[ -19]:=  2;RHSLENGTH[ -19]:=  2;
+LHS[ -20]:=  2;RHSLENGTH[ -20]:=  1;
+LHS[ -21]:=  2;RHSLENGTH[ -21]:=  2;
+LHS[ -22]:=  2;RHSLENGTH[ -22]:=  2;
+LHS[ -23]:=  2;RHSLENGTH[ -23]:=  2;
+LHS[ -24]:=  2;RHSLENGTH[ -24]:=  2;
+LHS[ -25]:=  3;RHSLENGTH[ -25]:=  1;
+LHS[ -26]:=  3;RHSLENGTH[ -26]:=  2;
+LHS[ -27]:=  3;RHSLENGTH[ -27]:=  2;
+LHS[ -28]:=  3;RHSLENGTH[ -28]:=  2;
+LHS[ -29]:=  3;RHSLENGTH[ -29]:=  2;
+LHS[ -30]:=  4;RHSLENGTH[ -30]:=  1;
+LHS[ -31]:=  4;RHSLENGTH[ -31]:=  1;
+LHS[ -32]:= 18;RHSLENGTH[ -32]:=  1;
+LHS[ -33]:= 18;RHSLENGTH[ -33]:=  1;
+LHS[ -34]:= 18;RHSLENGTH[ -34]:=  1;
+LHS[ -35]:= 18;RHSLENGTH[ -35]:=  1;
+LHS[ -36]:=  8;RHSLENGTH[ -36]:=  0;
+LHS[ -37]:=  8;RHSLENGTH[ -37]:=  1;
+LHS[ -38]:=  7;RHSLENGTH[ -38]:=  0;
+LHS[ -39]:=  7;RHSLENGTH[ -39]:=  1;
+LHS[ -40]:=  7;RHSLENGTH[ -40]:=  1;
+LHS[ -41]:=  9;RHSLENGTH[ -41]:=  0;
+LHS[ -42]:=  9;RHSLENGTH[ -42]:=  1;
+LHS[ -43]:=  9;RHSLENGTH[ -43]:=  1;
+LHS[ -44]:=  9;RHSLENGTH[ -44]:=  1;
+LHS[ -45]:=  9;RHSLENGTH[ -45]:=  1;
+LHS[ -46]:=  9;RHSLENGTH[ -46]:=  1;
+LHS[ -47]:=  9;RHSLENGTH[ -47]:=  1;
+LHS[ -48]:=  9;RHSLENGTH[ -48]:=  1;
+LHS[ -49]:=  9;RHSLENGTH[ -49]:=  1;
+LHS[ -50]:=  9;RHSLENGTH[ -50]:=  1;
+LHS[ -51]:=  9;RHSLENGTH[ -51]:=  1;
+LHS[ -52]:=  9;RHSLENGTH[ -52]:=  1;
+LHS[ -53]:=  9;RHSLENGTH[ -53]:=  1;
+LHS[ -54]:=  9;RHSLENGTH[ -54]:=  1;
+LHS[ -55]:=  9;RHSLENGTH[ -55]:=  1;
+LHS[ -56]:=  9;RHSLENGTH[ -56]:=  1;
+LHS[ -57]:=  9;RHSLENGTH[ -57]:=  1;
+LHS[ -58]:=  9;RHSLENGTH[ -58]:=  1;
+LHS[ -59]:=  9;RHSLENGTH[ -59]:=  1;
+LHS[ -60]:= 10;RHSLENGTH[ -60]:=  5;
+LHS[ -61]:= 19;RHSLENGTH[ -61]:=  0;
+LHS[ -62]:= 19;RHSLENGTH[ -62]:=  1;
+LHS[ -63]:= 20;RHSLENGTH[ -63]:=  1;
+LHS[ -64]:= 21;RHSLENGTH[ -64]:=  1;
+LHS[ -65]:= 12;RHSLENGTH[ -65]:=  2;
+LHS[ -66]:= 22;RHSLENGTH[ -66]:=  0;
+LHS[ -67]:= 22;RHSLENGTH[ -67]:=  1;
+LHS[ -68]:=  6;RHSLENGTH[ -68]:=  1;
+LHS[ -69]:=  6;RHSLENGTH[ -69]:=  1;
+LHS[ -70]:=  5;RHSLENGTH[ -70]:=  1;
+LHS[ -71]:=  5;RHSLENGTH[ -71]:=  1;
+LHS[ -72]:= 23;RHSLENGTH[ -72]:=  0;
+LHS[ -73]:= 23;RHSLENGTH[ -73]:=  3;
+LHS[ -74]:= 24;RHSLENGTH[ -74]:=  1;
+LHS[ -75]:= 25;RHSLENGTH[ -75]:=  1;
+LHS[ -76]:= 13;RHSLENGTH[ -76]:=  1;
+LHS[ -77]:= 13;RHSLENGTH[ -77]:=  2;
+LHS[ -78]:= 13;RHSLENGTH[ -78]:=  2;
+LHS[ -79]:= 14;RHSLENGTH[ -79]:=  0;
+LHS[ -80]:= 14;RHSLENGTH[ -80]:=  1;
+LHS[ -81]:= 15;RHSLENGTH[ -81]:=  5;
+LHS[ -82]:= 16;RHSLENGTH[ -82]:=  9;
+LHS[ -83]:= 27;RHSLENGTH[ -83]:=  1;
+LHS[ -84]:= 29;RHSLENGTH[ -84]:=  1;
+LHS[ -85]:= 28;RHSLENGTH[ -85]:=  1;
+LHS[ -86]:= 30;RHSLENGTH[ -86]:=  1;
+LHS[ -87]:= 11;RHSLENGTH[ -87]:=  5;
+LHS[ -88]:= 31;RHSLENGTH[ -88]:=  1;
+LHS[ -89]:= 31;RHSLENGTH[ -89]:=  1;
+LHS[ -90]:= 31;RHSLENGTH[ -90]:=  2;
+LHS[ -91]:= 32;RHSLENGTH[ -91]:=  0;
+LHS[ -92]:= 32;RHSLENGTH[ -92]:=  2;
+LHS[ -93]:= 33;RHSLENGTH[ -93]:=  1;
+LHS[ -94]:= 34;RHSLENGTH[ -94]:=  0;
+LHS[ -95]:= 34;RHSLENGTH[ -95]:=  2;
+LHS[ -96]:= 35;RHSLENGTH[ -96]:=  0;
+LHS[ -97]:= 35;RHSLENGTH[ -97]:=  5;
+LHS[ -98]:= 36;RHSLENGTH[ -98]:=  1;
+LHS[ -99]:= 36;RHSLENGTH[ -99]:=  1;
+LHS[-100]:= 37;RHSLENGTH[-100]:=  1;
+LHS[-101]:= 37;RHSLENGTH[-101]:=  1;
+LHS[-102]:= 38;RHSLENGTH[-102]:=  0;
+LHS[-103]:= 38;RHSLENGTH[-103]:=  1;
+LHS[-104]:= 38;RHSLENGTH[-104]:=  1;
+LHS[-105]:= 17;RHSLENGTH[-105]:=  1;
+LHS[-106]:= 26;RHSLENGTH[-106]:=  1;
+LHS[-107]:= 26;RHSLENGTH[-107]:=  1;
+END;  (* PARSING TABLE *)
+    H£

@@ -1,0 +1,41 @@
+
+
+
+                                     DTIME - day/time manipulation routines
+                                                                   11/01/78
+
+
+
+     Entry: EC_DTIME     _____
+
+     Convert a binary day/time record to an internal day/time.
+
+     Usage:
+
+          EXTERNAL PROCEDURE EC_DTIME(VAR ERR_CODE: DTIME_ERR;
+             DTIMEBIN: DTIMEREC; VAR DTIME: DTIME_INT);
+
+     Input arguments:
+
+       DTIMEBIN
+               a record with integer  fields  for  the  year,  month,  day,
+               hours, minutes and seconds.
+
+     Output arguments:
+
+       ERR_CODE
+               element  of  scalar type DTIME_ERR indicating whether or not
+               any error  conditions  were  encountered.  An  error  return
+               indicates  one  of  the  records fields had an illegal value
+               (note however that Pascal's subrange  checking  will  detect
+               most such errors first).
+
+       DTIME   the internal day/time corresponding to the record (undefined
+               if ERR_CODE is returned with the value DT_ERR).
+
+     INCLUDE files required:
+
+       DTIME.TYP
+       DTIME.INC
+
+

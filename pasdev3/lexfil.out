@@ -1,0 +1,283 @@
+INPUT:   <file spec> ;
+INPUT:   
+INPUT:   "alphanums" ::= [ 'alpha' 'digit' ];
+INPUT:   "logicals"  ::= [ 'alpha' 'digit' '$' '_' ];
+INPUT:   "directory_chars" ::= [ 'alpha' 'digit' '.' ',' ];
+INPUT:   "not_quote" ::= [ 'alpha' 'digit' '$' '_' '.' ',' '[' ']' '<' '>' ':' ';' 'others' ];
+INPUT:   
+INPUT:   <log name> ::= "logicals" + ;
+INPUT:   <node> ::= <log name> ( ('"' "not_quote" * '"') ! '') ':' ':' ;
+INPUT:   <device> ::= <log name> ':' ;
+INPUT:   <directory> ::= ( '['  "directory_chars"* ']' ) !
+INPUT:                   ( '<'  "directory_chars"* '>' ) ;
+INPUT:   <fname> ::= "logicals" +;
+INPUT:   <file_type> ::= '.' "alphanums" * ;
+INPUT:   <version> ::= ('.' ! ';') 'digit'+ ;
+INPUT:   <file spec> ::= ( <node>        ! '' )
+INPUT:                   ( <device>      ! '' )
+INPUT:                   ( <directory>   ! '' )
+INPUT:                   ( <fname>       ! '' )
+INPUT:                   ( <file_type>   ! '' )
+INPUT:                   ( <version>     ! '' )****** CODES FOR TERMINAL SYMBOLS ******
+
+          CODE   SYMBOL
+          -15   '"'
+          -14   'others'
+          -13   ';'
+          -12   ':'
+          -11   '>'
+          -10   '<'
+           -9   ']'
+           -8   '['
+           -7   ','
+           -6   '.'
+           -5   '_'
+           -4   '$'
+           -3   'digit'
+           -2   'alpha'
+           -1   '*****END OF DATA****'
+
+
+****** CODES FOR NONTERMINALS TO BE RECOGNIZED ******
+
+          CODE   NONTERMINAL
+            1   '*****END OF DATA****'
+            2   'file spec'****** MINIMIZED DFA NEXT STATE TABLE ******
+
+      -15 -14 -13 -12 -11 -10  -9  -8  -7  -6  -5  -4  -3  -2  -1 
+    ______________________________________________________________
+    !
+  1 !   0   0   6   0   0   4   0   5   0   9   8   8   8   8   2 
+    !
+  2 !   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 
+    !
+  3 !   0   0   0  11   0   0   0   0   0   0   0   0   0   0   0 
+    !
+  4 !   0   0   0   0  14   0   0   0   4   4   0   0   4   4   0 
+    !
+  5 !   0   0   0   0   0   0  14   0   5   5   0   0   5   5   0 
+    !
+  6 !   0   0   0   0   0   0   0   0   0   0   0   0   7   0   0 
+    !
+  7 !   0   0   0   0   0   0   0   0   0   0   0   0   7   0   0 
+    !
+  8 !  16   0   6  13   0   0   0   0   0   9   8   8   8   8   0 
+    !
+  9 !   0   0   6   0   0   0   0   0   0   6   0   0   9   9   0 
+    !
+ 10 !   0   0   6   0   0   4   0   5   0   9  14  14  14  14   0 
+    !
+ 11 !   0   0   6   0   0   4   0   5   0   9  15  15  15  15   0 
+    !
+ 12 !   0   0   0   3   0   0   0   0   0   0   0   0   0   0   0 
+    !
+ 13 !   0   0   6  11   0   4   0   5   0   9  14  14  14  14   0 
+    !
+ 14 !   0   0   6   0   0   0   0   0   0   9  14  14  14  14   0 
+    !
+ 15 !   0   0   6  10   0   0   0   0   0   9  15  15  15  15   0 
+    !
+ 16 !  12  16  16  16  16  16  16  16  16  16  16  16  16  16   0 
+
+****** START STATE:    1****** FINAL/BACKUP STATES IN MINIMIZED DFA ******
+
+          DFA STATE   FINAL/BACKUP STATE(S)
+            0      *<**ERROR**>
+            1      *<file spec> 
+            2      *<*****END OF DATA****> 
+            3      
+            4      
+            5      
+            6      
+            7      *<file spec> 
+            8      *<file spec> 
+            9      *<file spec> 
+           10      *<file spec> 
+           11      *<file spec> 
+           12      
+           13      *<file spec> 
+           14      *<file spec> 
+           15      *<file spec> 
+           16      ****** COMPACTED VERSION OF MINIMIZED DFA NEXT STATE TABLE ******
+
+             DEFAULT  BASE
+
+           1      0      0
+           2      1     15
+           3      2     10
+           4      2     24
+           5      2     30
+           6      2     21
+           7      6      0
+           8      1     33
+           9      2     44
+          10      1     50
+          11     10     56
+          12      2     17
+          13     10     26
+          14     10     32
+          15     11     54
+          16      2     65              NEXT  CHECK              NEXT  CHECK
+
+           1     2      1          51     0     10
+           2     8      1          52    14     10
+           3     8      1          53    14     10
+           4     8      1          54    14     10
+           5     8      1          55    14     10
+           6     9      1          56     0      0
+           7     0      1          57     6      9
+           8     5      1          58    15     11
+           9     0      1          59    15     11
+          10     4      1          60    15     11
+          11     0      1          61    15     11
+          12     0      1          62     0     15
+          13     6      1          63     0      0
+          14     0      1          64     0     15
+          15     0      1          65     0      0
+          16     0      2          66    10     15
+          17     0      2          67    16     16
+          18     0      2          68    16     16
+          19     0      2          69    16     16
+          20     0      2          70    16     16
+          21     0      2          71    16     16
+          22    11      3          72    16     16
+          23     0      2          73    16     16
+          24     7      6          74    16     16
+          25     0      2          75    16     16
+          26     4      4          76    16     16
+          27     4      4          77    16     16
+          28     0      2          78    16     16
+          29     3     12          79    16     16
+          30     4      4          80    12     16
+          31     4      4
+          32     5      5
+          33     5      5
+          34     0      8
+          35    14      4
+          36     5      5
+          37     5      5
+          38    11     13
+          39    14      5
+          40     0     14
+          41     0      8
+          42     0     14
+          43     0      8
+          44     0      0
+          45    13      8
+          46     9      9
+          47     9      9
+          48    16      8
+          49     0      0
+          50     6      9(********************************************)
+(*   SCANNER ALGORITHM CREATED BY LEXGEN    *)
+(********************************************)
+
+PROGRAM ??????;
+
+CONST
+   MAXINDEX    =  ???;  (* MAX INDEX USED TO ACCESS BUFFER *)
+   BUFFERSIZE  =  ???;  (* MAXINDEX + 1 *)
+   MAXTOKEN    =    2;
+   DFASTATE1   =    1;  (* CODE FOR INITIAL STATE OF DFA *)
+   MAXDFASTATE =   16;  (* CODE FOR MAX STATE OF DFA *)
+   MINTERMINAL =  -15;  (* MIN TERMINAL CODE *)
+   EODATA      =   -1;  (* CODE FOR END-OF-DATA *)
+
+
+TYPE
+   STATERANGE  = 1..MAXDFASTATE;
+   EXSTATERANGE= 0..MAXDFASTATE;
+   INDEXRANGE  = 0..MAXINDEX;
+   LEXTOKEN    = RECORD
+                    TOKEN_TYPE: ???;
+                    MORE: ???  (* POINTER TO SYMBOL TABLE, CODE
+                                  TO DIFFERENTIATE DIFFERENT SYMBOLS
+                                  SUCH AS RELATIONAL OPERATORS OF THE
+                                  SAME TOKEN_TYPE, ETC.  *)
+                 END;
+
+VAR
+   DELTA: PACKED ARRAY[STATERANGE,MINTERMINAL..EODATA] OF EXSTATERANGE := (
+      0,0,6,0,0,4,0,5,0,9,8,8,8,8,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+      11,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,0,0,0,4,4,0,0,4,4,0,0,0,0,0,0,
+      0,14,0,5,5,0,0,5,5,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,7,0,0,16,0,6,13,0,0,0,0,0,9,8,8,8,8,0,0,0,6,0,0,0,0,0,0,6,
+      0,0,9,9,0,0,0,6,0,0,4,0,5,0,9,14,14,14,14,0,0,0,6,0,0,4,0,5,0,9,15,
+      15,15,15,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,6,11,0,4,0,5,0,9,14,
+      14,14,14,0,0,0,6,0,0,0,0,0,0,9,14,14,14,14,0,0,0,6,10,0,0,0,0,0,9,
+      15,15,15,15,0,12,16,16,16,16,16,16,16,16,16,16,16,16,16,0);
+
+   (* FINAL[X] = 0 IF STATE X IS NOT A FINAL STATE
+                 1 IF STATE X RECOGNIZES <*****END OF DATA****>
+                 2 IF STATE X RECOGNIZES <file spec>
+                                                                 *)
+   FINAL: PACKED ARRAY[EXSTATERANGE] OF 0..MAXTOKEN := (
+      0,2,1,0,0,0,0,2,2,2,2,2,0,2,2,2,0);
+
+   BEGIN_INDEX, END_INDEX: INDEXRANGE;
+   LEXEME: LEXTOKEN;
+   BUFFER: ARRAY[INDEXRANGE] OF MINTERMINAL..EODATA;
+
+
+PROCEDURE SCAN(VAR BEGIN_INDEX, END_INDEX: INDEXRANGE;
+               VAR LEXEME: LEXTOKEN);
+
+   VAR
+      NEWTOKEN:  BOOLEAN;
+      CURRSTATE, CURRFINAL: EXSTATERANGE;
+      OLDINDEX:  INDEXRANGE;
+
+
+   PROCEDURE GETCHAR(NEWTOKEN: BOOLEAN);
+      BEGIN
+         <  THIS PROCEDURE OBTAINS THE NEXT INPUT CHARACTER (WHICH
+            IS ASSUMED TO BE EODATA IF NO MORE INPUT) AND MODIFIES
+            BEGIN_INDEX AND END_INDEX AS NECESSARY DEPENDING ON
+            THE BUFFERING SCHEME SO THAT
+             (1) IF NEWTOKEN, THEN BEGIN_INDEX POINTS TO THE INPUT
+                 CHARACTER JUST OBTAINED, ELSE BEGIN_INDEX POINTS
+                 TO THE SAME CHARACTER IT POINTED TO BEFORE.
+             (2) END_INDEX IS THE INDEX OF THE NEW CHARACTER JUST
+                 OBTAINED.
+            SCAN ALLOWS FOR EITHER SEQUENTIAL OR CIRCULAR BUFFER  >
+      END; (* GETCHAR *)
+
+
+   BEGIN (* SCAN *)
+      NEWTOKEN  := TRUE;
+      CURRSTATE := DFASTATE1;  (* START IN INITIAL STATE *)
+      CURRFINAL := 0;
+      OLDINDEX  := 0;  (* WIDTH OF LEXEME AS OF LAST FINAL STATE *)
+
+      WHILE CURRSTATE <> 0 DO
+         BEGIN
+            IF FINAL[CURRSTATE] <> 0 THEN
+               BEGIN
+                  CURRFINAL := CURRSTATE;
+                  OLDINDEX := (END_INDEX - BEGIN_INDEX) MOD BUFFERSIZE
+               END;
+            GETCHAR(NEWTOKEN);
+            NEWTOKEN := FALSE;
+            CURRSTATE := DELTA[CURRSTATE, BUFFER[END_INDEX]]
+         END;
+      END_INDEX := (BEGIN_INDEX + OLDINDEX) MOD BUFFERSIZE;
+
+       < COMPUTE LEXEME GIVEN FINAL[CURRFINAL], BEGIN_INDEX, END_INDEX,
+         ETC.                                                          >
+
+   END; (* SCAN *)
+
+
+BEGIN (* MAINLINE *)
+          .
+          .
+          .
+   SCAN(BEGIN_INDEX, END_INDEX, LEXEME);
+              (* AS NEEDED UNTIL END-OF-DATA LEXEME IS OBTAINED *)
+          .
+          .
+          .
+END. (* MAINLINE *)
+
+
+NO ERRORS

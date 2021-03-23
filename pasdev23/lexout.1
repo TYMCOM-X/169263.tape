@@ -1,0 +1,474 @@
+INPUT:   <constant>  <integer>   ;
+INPUT:   "sign" ::= [ '' '+' '-' ];
+INPUT:   "digit" ::= [ '0' '1' '2' '3' '4' '5' '6' '7' '8' '9' ];
+INPUT:   <unsigned integer> ::= "digit" +;
+
+
+                     "digit"
+  8:      O-------------------------------->(O)
+
+
+                    ____________
+                   /            \
+                  !              \
+                  ! ___________   !
+                  V/           \  !
+                  /             \/
+               ->( 0      8    0 )____
+              /   \             /     \
+             /     \___________/       \
+            /                           !
+           /                            V
+  8:      O                            (O)
+
+
+   <unsigned integer> ******* IS ASSIGNED THE NFA ****  8
+INPUT:   <integer> ::= "sign" <unsigned integer>;
+
+
+                     "sign"
+  8:      O-------------------------------->(O)
+
+
+  9: ****** IS COPIED FROM ***** <unsigned integer>
+
+
+                  ___________            ___________
+                 /           \          /           \
+                /             \        /             \
+  8:      O--->( 0      8    0 )----->( 0     9   (O) )
+                \             /        \             /
+                 \___________/          \___________/
+
+
+   <integer> ******* IS ASSIGNED THE NFA ****  8
+INPUT:   <constant> ::= <integer> ( '.' <unsigned integer>
+
+
+  8: ****** IS COPIED FROM ***** <integer>
+
+
+                     '.'
+ 10:      O-------------------------------->(O)
+INPUT:          !                   '.' <unsigned integer> 'e' <integer>
+
+
+ 11: ****** IS COPIED FROM ***** <unsigned integer>
+
+
+                  ___________            ___________
+                 /           \          /           \
+                /             \        /             \
+ 10:      O--->( 0     10    0 )----->( 0    11   (O) )
+                \             /        \             /
+                 \___________/          \___________/
+
+
+                     '.'
+ 12:      O-------------------------------->(O)
+
+
+ 13: ****** IS COPIED FROM ***** <unsigned integer>
+
+
+                  ___________            ___________
+                 /           \          /           \
+                /             \        /             \
+ 12:      O--->( 0     12    0 )----->( 0    13   (O) )
+                \             /        \             /
+                 \___________/          \___________/
+
+
+                     'e'
+ 13:      O-------------------------------->(O)
+
+
+                  ___________            ___________
+                 /           \          /           \
+                /             \        /             \
+ 12:      O--->( 0     12    0 )----->( 0    13   (O) )
+                \             /        \             /
+                 \___________/          \___________/
+INPUT:          !                   'e' <integer> )
+
+
+ 13: ****** IS COPIED FROM ***** <integer>
+
+
+                  ___________            ___________
+                 /           \          /           \
+                /             \        /             \
+ 12:      O--->( 0     12    0 )----->( 0    13   (O) )
+                \             /        \             /
+                 \___________/          \___________/
+
+
+                    ___________
+                   /           \
+                  /             \
+               ->( 0     10    0 )____
+              /   \             /     \
+             /     \___________/       \
+            /                           !
+           /                            V
+ 10:      O                            (O)
+           \                           /\
+            \       ___________        /
+             \     /           \      /
+              \   /             \    /
+               ->( 0     12    0 )__/
+                  \             /
+                   \___________/
+
+
+                     'e'
+ 12:      O-------------------------------->(O)
+
+
+ 13: ****** IS COPIED FROM ***** <integer>
+
+
+                  ___________            ___________
+                 /           \          /           \
+                /             \        /             \
+ 12:      O--->( 0     12    0 )----->( 0    13   (O) )
+                \             /        \             /
+                 \___________/          \___________/
+
+
+                    ___________
+                   /           \
+                  /             \
+               ->( 0     10    0 )____
+              /   \             /     \
+             /     \___________/       \
+            /                           !
+           /                            V
+ 10:      O                            (O)
+           \                           /\
+            \       ___________        /
+             \     /           \      /
+              \   /             \    /
+               ->( 0     12    0 )__/
+                  \             /
+                   \___________/
+
+
+  9: ******* IS THE NEW LABEL FOR **** 10
+
+
+                  ___________            ___________
+                 /           \          /           \
+                /             \        /             \
+  8:      O--->( 0      8    0 )----->( 0     9   (O) )
+                \             /        \             /
+                 \___________/          \___________/
+
+
+   <constant> ******* IS ASSIGNED THE NFA ****  8
+
+
+*** NFA <*****END OF DATA*****>:
+
+0000040273:'*****END OF DATA*****'      0000040301    - NIL -  
+0000040301:''                             - NIL -     - NIL -  
+
+
+*** NFA <constant>:
+
+0000040712:"digit"                      0000040720    - NIL -  
+0000040720:''                           0000040704  0000040712
+0000040676:''                           0000040712    - NIL -  
+0000040662:'.'                          0000040670    - NIL -  
+0000040670:''                           0000040676    - NIL -  
+0000040726:''                           0000040662    - NIL -  
+0000040704:''                           0000041116    - NIL -  
+0000041066:"digit"                      0000041074    - NIL -  
+0000041074:''                           0000041060  0000041066
+0000041052:''                           0000041066    - NIL -  
+0000041036:"sign"                       0000041044    - NIL -  
+0000041044:''                           0000041052    - NIL -  
+0000041030:''                           0000041036    - NIL -  
+0000041006:'e'                          0000041014    - NIL -  
+0000040764:"digit"                      0000040772    - NIL -  
+0000040772:''                           0000040756  0000040764
+0000040750:''                           0000040764    - NIL -  
+0000040734:'.'                          0000040742    - NIL -  
+0000040742:''                           0000040750    - NIL -  
+0000041000:''                           0000040734    - NIL -  
+0000040756:''                           0000041006    - NIL -  
+0000041022:''                           0000041000    - NIL -  
+0000041014:''                           0000041030    - NIL -  
+0000041102:''                           0000041022    - NIL -  
+0000041060:''                           0000041116    - NIL -  
+0000041110:''                           0000040726  0000041102
+0000041116:''                           0000041226    - NIL -  
+0000041176:"digit"                      0000041204    - NIL -  
+0000041204:''                           0000041170  0000041176
+0000041162:''                           0000041176    - NIL -  
+0000041146:"sign"                       0000041154    - NIL -  
+0000041154:''                           0000041162    - NIL -  
+0000041140:''                           0000041146    - NIL -  
+0000041124:'e'                          0000041132    - NIL -  
+0000041132:''                           0000041140    - NIL -  
+0000041212:''                           0000041124    - NIL -  
+0000041170:''                           0000041226    - NIL -  
+0000041220:''                           0000041110  0000041212
+0000040646:"digit"                      0000040654    - NIL -  
+0000040654:''                           0000040640  0000040646
+0000040632:''                           0000040646    - NIL -  
+0000040616:"sign"                       0000040624    - NIL -  
+0000040624:''                           0000040632    - NIL -  
+0000040610:''                           0000040616    - NIL -  
+0000040640:''                           0000041220    - NIL -  
+0000041234:''                           0000040610    - NIL -  
+0000041226:''                             - NIL -     - NIL -  
+
+
+*** NFA <integer>:
+
+0000040566:"digit"                      0000040574    - NIL -  
+0000040574:''                           0000040560  0000040566
+0000040552:''                           0000040566    - NIL -  
+0000040536:"sign"                       0000040544    - NIL -  
+0000040544:''                           0000040552    - NIL -  
+0000040602:''                           0000040536    - NIL -  
+0000040560:''                             - NIL -     - NIL -  ****** CODES FOR TERMINAL SYMBOLS ******
+
+          CODE   SYMBOL
+          -15   'e'
+          -14   '.'
+          -13   '9'
+          -12   '8'
+          -11   '7'
+          -10   '6'
+           -9   '5'
+           -8   '4'
+           -7   '3'
+           -6   '2'
+           -5   '1'
+           -4   '0'
+           -3   '-'
+           -2   '+'
+           -1   '*****END OF DATA*****'
+
+
+****** CODES FOR NONTERMINALS TO BE RECOGNIZED ******
+
+          CODE   NONTERMINAL
+            1   '*****END OF DATA*****'
+            2   'constant'
+            3   'integer'****** MINIMIZED DFA NEXT STATE TABLE ******
+
+      -15 -14 -13 -12 -11 -10  -9  -8  -7  -6  -5  -4  -3  -2  -1 
+    ______________________________________________________________
+    !
+  1 !   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 
+    !
+  2 !   8   6   2   2   2   2   2   2   2   2   2   2   0   0   0 
+    !
+  3 !  10   0   3   3   3   3   3   3   3   3   3   3   0   0   0 
+    !
+  4 !   0   0   2   2   2   2   2   2   2   2   2   2   7   7   1 
+    !
+  5 !   0   0   5   5   5   5   5   5   5   5   5   5   0   0   0 
+    !
+  6 !   0   0   3   3   3   3   3   3   3   3   3   3   0   0   0 
+    !
+  7 !   0   0   2   2   2   2   2   2   2   2   2   2   0   0   0 
+    !
+  8 !   0   0   5   5   5   5   5   5   5   5   5   5   9   9   0 
+    !
+  9 !   0   0   5   5   5   5   5   5   5   5   5   5   0   0   0 
+    !
+ 10 !   0   0   5   5   5   5   5   5   5   5   5   5   9   9   0 
+
+****** START STATE:    4****** FINAL/BACKUP STATES IN MINIMIZED DFA ******
+
+          DFA STATE   FINAL/BACKUP STATE (S)
+            0      *<**ERROR**>
+            1      *<*****END OF DATA*****> 
+            2      *<integer> 
+            3      *<constant> 
+            4      
+            5      *<constant> 
+            6      
+            7      
+            8      
+            9      
+           10      ****** COMPACTED VERSION OF MINIMIZED DFA NEXT STATE TABLE ******
+
+             DEFAULT  BASE
+
+           1      0      0
+           2      1     12
+           3      1     24
+           4      2     39
+           5      1     39
+           6      3     23
+           7      2     41
+           8      5     55
+           9      5      0
+          10      8      0              NEXT  CHECK              NEXT  CHECK
+
+           1     0      1          51     5      5
+           2     0      1          52     5      5
+           3     0      1          53     0      4
+           4     0      1          54     0      4
+           5     0      1          55     0      7
+           6     0      1          56     0      7
+           7     0      1          57     9      8
+           8     0      1          58     9      8
+           9     0      1          59     0      0
+          10     0      1          60     0      0
+          11     0      1          61     0      0
+          12     0      1          62     0      0
+          13     0      1          63     0      0
+          14     0      1          64     0      0
+          15     0      1          65     0      0
+          16     2      2          66     0      0
+          17     2      2          67     0      0
+          18     2      2          68     0      0
+          19     2      2          69     0      0
+          20     2      2          70     0      0
+          21     2      2
+          22     2      2
+          23     2      2
+          24     2      2
+          25     2      2
+          26     6      2
+          27     8      2
+          28     3      3
+          29     3      3
+          30     3      3
+          31     3      3
+          32     3      3
+          33     3      3
+          34     3      3
+          35     3      3
+          36     3      3
+          37     3      3
+          38     0      6
+          39    10      3
+          40     1      4
+          41     7      4
+          42     7      4
+          43     5      5
+          44     5      5
+          45     5      5
+          46     5      5
+          47     5      5
+          48     5      5
+          49     5      5
+          50     5      5(********************************************)
+(*   SCANNER ALGORITHM CREATED BY LEXGEN    *)
+(********************************************)
+
+PROGRAM ??????;
+
+CONST
+   MAXINDEX    =  ???;  (* MAX INDEX USED TO ACCESS BUFFER *)
+   BUFFERSIZE  =  ???;  (* MAXINDEX + 1 *)
+   MAXTOKEN    =    3;
+   DFASTATE1   =    4;  (* CODE FOR INITIAL STATE OF DFA *)
+   MAXDFASTATE =   10;  (* CODE FOR MAX STATE OF DFA *)
+   MINTERMINAL =  -15;  (* MIN TERMINAL CODE *)
+   EODATA      =   -1;  (* CODE FOR END-OF-DATA *)
+
+
+TYPE
+   STATERANGE  = 1..MAXDFASTATE;
+   EXSTATERANGE= 0..MAXDFASTATE;
+   INDEXRANGE  = 0..MAXINDEX;
+   LEXTOKEN    = RECORD
+                    TOKEN_TYPE: ???;
+                    MORE: ???  (* POINTER TO SYMBOL TABLE, CODE
+                                  TO DIFFERENTIATE DIFFERENT SYMBOLS
+                                  SUCH AS RELATIONAL OPERATORS OF THE
+                                  SAME TOKEN_TYPE, ETC.  *)
+                 END;
+
+VAR
+   DELTA: PACKED ARRAY [STATERANGE, MINTERMINAL..EODATA] OF EXSTATERANGE := (
+      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,6,2,2,2,2,2,2,2,2,2,2,0,0,0,10,0,3,
+      3,3,3,3,3,3,3,3,3,0,0,0,0,0,2,2,2,2,2,2,2,2,2,2,7,7,1,0,0,5,5,5,5,
+      5,5,5,5,5,5,0,0,0,0,0,3,3,3,3,3,3,3,3,3,3,0,0,0,0,0,2,2,2,2,2,2,2,
+      2,2,2,0,0,0,0,0,5,5,5,5,5,5,5,5,5,5,9,9,0,0,0,5,5,5,5,5,5,5,5,5,5,
+      0,0,0,0,0,5,5,5,5,5,5,5,5,5,5,9,9,0);
+
+   (* FINAL [X] = 0 IF STATE X IS NOT A FINAL STATE
+                 1 IF STATE X RECOGNIZES <*****END OF DATA*****>
+                 2 IF STATE X RECOGNIZES <constant>
+                 3 IF STATE X RECOGNIZES <integer>
+                                                                 *)
+   FINAL: PACKED ARRAY [EXSTATERANGE] OF 0..MAXTOKEN := (
+      0,1,3,2,0,2,0,0,0,0,0);
+
+   BEGIN_INDEX, END_INDEX: INDEXRANGE;
+   LEXEME: LEXTOKEN;
+   BUFFER: ARRAY [INDEXRANGE] OF MINTERMINAL..EODATA;
+
+
+PROCEDURE SCAN (VAR BEGIN_INDEX, END_INDEX: INDEXRANGE;
+               VAR LEXEME: LEXTOKEN);
+
+   VAR
+      NEWTOKEN:  BOOLEAN;
+      CURRSTATE, CURRFINAL: EXSTATERANGE;
+      OLDINDEX:  INDEXRANGE;
+
+
+   PROCEDURE GETCHAR (NEWTOKEN: BOOLEAN);
+      BEGIN
+         <  THIS PROCEDURE OBTAINS THE NEXT INPUT CHARACTER (WHICH
+            IS ASSUMED TO BE EODATA IF NO MORE INPUT) AND MODIFIES
+            BEGIN_INDEX AND END_INDEX AS NECESSARY DEPENDING ON
+            THE BUFFERING SCHEME SO THAT
+             (1) IF NEWTOKEN, THEN BEGIN_INDEX POINTS TO THE INPUT
+                 CHARACTER JUST OBTAINED, ELSE BEGIN_INDEX POINTS
+                 TO THE SAME CHARACTER IT POINTED TO BEFORE.
+             (2) END_INDEX IS THE INDEX OF THE NEW CHARACTER JUST
+                 OBTAINED.
+            SCAN ALLOWS FOR EITHER SEQUENTIAL OR CIRCULAR BUFFER  >
+      END (* GETCHAR *);
+
+
+   BEGIN (* SCAN *)
+      NEWTOKEN  := TRUE;
+      CURRSTATE := DFASTATE1;  (* START IN INITIAL STATE *)
+      CURRFINAL := 0;
+      OLDINDEX  := 0;  (* WIDTH OF LEXEME AS OF LAST FINAL STATE *)
+
+      WHILE CURRSTATE <> 0 DO
+         BEGIN
+            IF FINAL [CURRSTATE] <> 0 THEN
+               BEGIN
+                  CURRFINAL := CURRSTATE;
+                  OLDINDEX := (END_INDEX - BEGIN_INDEX) MOD BUFFERSIZE
+               END;
+            GETCHAR (NEWTOKEN);
+            NEWTOKEN := FALSE;
+            CURRSTATE := DELTA [CURRSTATE, BUFFER [END_INDEX]]
+         END;
+      END_INDEX := (BEGIN_INDEX + OLDINDEX) MOD BUFFERSIZE;
+
+       < COMPUTE LEXEME GIVEN FINAL [CURRFINAL], BEGIN_INDEX, END_INDEX, 
+         ETC.                                                          >
+
+   END (* SCAN *);
+
+
+BEGIN (* MAINLINE *)
+          .
+          .
+          .
+   SCAN (BEGIN_INDEX, END_INDEX, LEXEME);
+              (* AS NEEDED UNTIL END-OF-DATA LEXEME IS OBTAINED *)
+          .
+          .
+          .
+END. (* MAINLINE *)
+
+
+NO ERRORS
+  

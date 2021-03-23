@@ -1,0 +1,138 @@
+;    +--------------------------------------------------------------+
+;    |                                                              |
+;    |                        D A Y T I M E                         |
+;    |                        - - - - - - -                         |
+;    |                                                              |
+;    +--------------------------------------------------------------+
+;    
+;    MDSI, Company Confidential
+;    
+;    SYSTEM:  DTIME - day/time manipulation routines
+;    
+;    STARTED:  11/01/78
+;    
+;    PURPOSE:  Return current local day/time in internal form.
+;    
+;    USAGE:
+;    
+;       EXTERNAL FUNCTION DAYTIME: DTIME_INT;
+;    
+;    OUTPUT:
+;    
+;       <return value>
+;                   the  current  local  day/time  is   returned   in
+;                   internal form.
+;    
+;    INCLUDE FILES REQUIRED:
+;    
+;       DTIME.TYP
+;       DTIME.INC
+;    
+;    RESPONSIBLE:  S.  M.  ROUSH
+;    
+;    ----------------------------------------------------------------
+
+	TITLE	DAYTIME
+	TWOSEG
+
+        OPDEF   ADJSP   [105000000000]
+	
+	ENTRY	DAYTIM
+
+	EXTERN	EC%DCD
+	EXTERN	EC%DCT
+
+	RELOC	0
+FCNADR: BLOCK	1		; SAVE FCN RET VALUE ADDRESS
+TIMINT: BLOCK	1		; INTERNAL TIME RETURNED HERE
+
+	RELOC	400000
+DAYTIM:
+	HRRZM	2,FCNADR	; SAVE ADDRESS OF FUNC RET VALUE
+	MOVEI	3,(2)
+	DATE	2,		; GET DEC DATE
+	PUSHJ	17,EC%DCD	; CONVERT DEC DATE TO DATE_INT
+	
+	MSTIME	2,		; GET DEC TIME
+	MOVEI	3,TIMINT	; HAVE EC_DCTIME RETURN ITS RESULT IN REG 4
+	PUSHJ	17,EC%DCT	; CONVERT DEC TIME TO DTIME_INT
+	MOVE	2,TIMINT
+	HRRM	2,@FCNADR	; MOVE TO USER LOCN
+
+	POPJ	17,		; RETURN
+
+	prgend
+
+;    +--------------------------------------------------------------+
+;    |                                                              |
+;    |                        G M D T I M E                         |
+;    |                        - - - - - - -                         |
+;    |                                                              |
+;    +--------------------------------------------------------------+
+;    
+;    MDSI, Company Confidential
+;    
+;    SYSTEM:  DTIME - day/time manipulation routines
+;    
+;    STARTED:  11/01/78
+;    
+;    PURPOSE:  Return the current Greenwich Mean day/time in internal
+;       form.
+;    
+;    USAGE:
+;    
+;       EXTERNAL FUNCTION GMDTIME: DTIME_INT;
+;    
+;    OUTPUT:
+;    
+;       <return value>
+;                   the  current  Greenwich Mean day/time in internal
+;                   form.
+;    
+;    INCLUDE FILES REQUIRED:
+;    
+;       DTIME.TYP
+;       DTIME.INC
+;    
+;    RESPONSIBLE:  S.  M.  ROUSH
+;    
+;    ----------------------------------------------------------------
+        ENTRY   GMDTIM
+
+	EXTERN	EC%DCD
+	EXTERN	EC%DCT
+
+	reloc	0
+fcnadr:	block	1		; fcn return value addr saved here
+timdec:	block	1		; DEC time saved here
+timint:	block	1		; internal time saved here
+
+	reloc	400000
+	opdef	datuuo	[calli	-55]
+GMT=20
+
+GMDTIM:
+	hrrzm	2,fcnadr	; save addr of func ret slot
+        DATE    2,              ; GET LOCAL DEC DATE
+        TIMER   3,              ; GET LOCAL DEC TIME
+
+        MOVEI    4,GMT           ; TIME TO GMT
+        MOVEI   5,2
+        DATUUO  5,
+        HALT
+
+	imuli	3,^D1000	; convert GMT in jiffies to GMT in
+	idivi	3,^D60		; millisecs since midnight
+	movem	3,timdec	; save DEC format time
+        MOVEI   3,@fcnadr           ; convert DEC date to DATE_INT FORM
+        PUSHJ   17,EC%DCD
+
+        MOVE    2,timdec             ; CONVERT TIME TO 
+        MOVEI   3,timint             ; DTIME_INT FORM
+        PUSHJ   17,EC%DCT
+        MOVE    2,timint
+        HRRM    2,@fcnadr
+
+        POPJ    17,             ; RETURN TO CALLER
+
+        END     

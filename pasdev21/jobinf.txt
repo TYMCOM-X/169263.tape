@@ -1,0 +1,50 @@
+
+
+
+                                INFPAC - environmental information routines
+                                                                    1/29/78
+
+
+
+     Entry: JOBINF     _____
+
+
+     Usage:
+
+          EXTERNAL PROCEDURE JOBINFO(VAR JOBSTUFF: JOBREC);
+
+     Output arguments:
+
+       JOBSTUFF.HSEGPPN
+               PPN ASSOCIATED WITH JOB'S HIGH SEGMENT.
+
+       JOBSTUFF.HSEGNAM
+               NAME OF JOB'S HIGH SEGMENT.
+
+       JOBSTUFF.LSEGPPN
+               PPN ASSOCIATED WITH JOB'S LOW SEGMENT.
+
+       JOBSTUFF.LSEGNAM
+               NAME ASSOCIATED WITH JOB'S LOW SEGMENT.
+
+       JOBSTUFF.PROGDIR
+               PPN PROGRAM WAS RUN FROM.
+
+       JOBSTUFF.JOBNUM
+               NUMBER ASSIGNED THIS JOB AT LOGIN.
+
+       JOBSTUFF.PROJECTID
+               STRING TYPED BY USER AT LOGIN.
+
+     Notes:
+
+       1.  A NULL STRING WILL BE  RETURNED  IF  ERRORS  ARE  DETECTED  (FOR
+       EXAMPLE,  NO  HIGH  SEGMENT).  2.  IF  THE PROGRAM IS RUN UNDER LINK
+       WITHOUT A /SAVE OR /SSAVE, THE  HIGH  SEGMENT  PPN  IS  RETURNED  AS
+       [0,0].
+
+     INCLUDE files required:
+
+       INFPAC.INC
+
+

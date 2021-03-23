@@ -1,0 +1,16 @@
+dir (pascal10b)REP146.SCR
+dir (pasdev6)REP146.SCR
+dir (pascal10b)REP143.SCR
+dir (pasdev6)REP143.SCR
+dir (pascal10b)REP13.SCR
+dir (pasdev6)REP13.SCR
+dir (pascal10b)REP11.SCR
+dir (pasdev6)REP11.SCR
+dir (pascal10b)QEDLIB.SCR
+dir (pasdev6)QEDLIB.SCR
+dir (pascal10b)P10USR.SCR
+dir (pasdev6)P10USR.SCR
+dir (pascal10b)INDENT.SCR
+dir (pasdev6)INDENT.SCR
+dir (pascal10b)DEBUG.SCR
+dir (pasdev6)DEBUG.SCR

@@ -1,0 +1,2538 @@
+Cross Reference Listing for PASCAL-10					 Page 1
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     ABS         *SYS* 				       CASESTATEM  PASBOD
+						       MAKECODE    PASCG 
+
+     ABS         PASCLL		ERROR       PASLEX     CALL        PASCLL
+				MAC3        PASCGN
+				MAC3R       PASCGN
+
+     ADDRESS     PASCLL		LDADDRESS   PASCG      CALL        PASCLL
+				VARIABLE    PASCLL
+
+     ADJSP       PASCG 		MAC3        PASCGN     ENTERBODY   PASCG 
+				SUPPORT     PASCG      LEAVEBODY   PASCG 
+
+     ALIGN       PASMC 				       COPYCSP     PASMC 
+						       COPYCTP     PASMC 
+						       COPYSTP     PASMC 
+
+     ALTERSTRIN  PASSTR		COMPTYPES   PASCMP     MVSTRING    PASSTR
+				DCLSTRING   PASSTR     STRDESC     PASSTR
+				NEW         *SYS*      STRPARM     PASSTR
+
+     AREAID_OR_  PASCLL		ERROR       PASLEX     CALL        PASCLL
+				MAC         PASCGN
+				MAC3B       PASCGN
+
+     ASSIGNMENT  PASBOD		COMPTYPES   PASCMP     STATEMENT   PASBOD
+				ERROR       PASLEX
+				EXPRESSION  PASEXP
+				FETCHBASIS  PASCG 
+				FULLWORD    PASCG 
+				GETBOUNDS   PASLEX
+				INCREMENTR  PASCGN
+				INSYMBOL    PASLEX
+				LOAD        PASCG 
+				LOADADDRES  PASCG 
+				MAC         PASCGN
+				MAC3        PASCGN
+				MAC3B       PASCGN
+				MAC4        PASCGN
+Cross Reference Listing for PASCAL-10					 Page 2
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     ASSIGNMENT  PASBOD (cont.)	MAC5        PASCGN
+				MAKECODE    PASCG 
+				MAKEREAL    PASEXP
+				MVSTRING    PASSTR
+				SELECTOR    PASSEL
+				STORE       PASCG 
+				STRFORM     PASCMP
+				SUPPORT     PASCG 
+
+     BLOCK       PASBLK		BODY        PASBOD     PASCAL      PASCAL
+				CST_DECLAR  PASCSN     PROCEDURED  PASBLK
+				DECNEST     *UNDEF
+				ERROR       PASLEX
+				ERRORWITHT  PASLEX
+				GETSTORAGE  PASBLK
+				INCNEST     *UNDEF
+				INSYMBOL    PASLEX
+				LABELDECLA  PASBLK
+				MARK        *SYS* 
+				PROCEDURED  PASBLK
+				RELEASE     *SYS* 
+				SKIPIFERR   PASLEX
+				TYPEDECLAR  PASBLK
+				VARIABLEDE  PASBLK
+				ZERONEST    *UNDEF
+
+     BODY        PASBOD		ENTERBODY   PASCG      BLOCK       PASBLK
+				ERROR       PASLEX
+				FWDFILEREF  PASCG 
+				FWDPAGEREF  PASCG 
+				INSERTADDR  PASCG 
+				INSYMBOL    PASLEX
+				LEAVEBODY   PASCG 
+				SET_PTR_TY  PASINI
+				STATEMENT   PASBOD
+				WRITEMC     PASMC 
+
+     BREAK       *SYS* 				       ENDOFLINE   PASLEX
+						       FILEERR     PASCAL
+Cross Reference Listing for PASCAL-10					 Page 3
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     BREAK       *SYS*  (cont.)			       PASCAL      PASCAL
+						       PROCEDURED  PASBLK
+
+     BREAK       PASCLL		GETFILENAM  PASCLL     CALL        PASCLL
+				SUPPORT     PASCG 
+
+     CALL        PASCLL		ABS         PASCLL     CONSTANT    PASCST
+				ADDRESS     PASCLL     FACTOR      PASEXP
+				AREAID_OR_  PASCLL     STATEMENT   PASBOD
+				BREAK       PASCLL
+				CALLNONSTA  PASCLL
+				CHANNEL     PASCLL
+				CHR         PASCLL
+				CLOSE       PASCLL
+				DISPOSE     PASCLL
+				EOFEOLN     PASCLL
+				ERRANDSKIP  PASLEX
+				ERROR       PASLEX
+				EXPRESSION  PASEXP
+				FLOAT       PASCLL
+				FORTRAN_FU  PASCLL
+				FREECHANNE  PASCLL
+				GETCHANNEL  PASCLL
+				GETLINENR   PASCLL
+				GETPUTRESE  PASCLL
+				GET_ROOT    PASCLL
+				INDEXFUN    PASCLL
+				INSYMBOL    PASLEX
+				LENGTHFUN   PASCLL
+				LOAD        PASCG 
+				MAKE_POINT  PASCLL
+				MARK        PASCLL
+				MINIMAXIMU  PASCLL
+				MINMAX      PASCLL
+				NEW         PASCLL
+				ODD         PASCLL
+				ORD         PASCLL
+				PAGE        PASCLL
+				POINTR      PASCLL
+Cross Reference Listing for PASCAL-10					 Page 4
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     CALL        PASCLL (cont.)	PREDSUCC    PASCLL
+				PROTECTION  PASCLL
+				PUT8BITSTO  PASCLL
+				READREADLN  PASCLL
+				RELEASE     PASCLL
+				RETURN      PASCLL
+				ROUND       PASCLL
+				RUNTIME     PASCLL
+				SEARCHVERI  PASCLL
+				SET_ROOT    PASCLL
+				SIZE        PASCLL
+				SQR         PASCLL
+				STOP        PASCLL
+				SUBSTRFUN   PASCLL
+				TIME        PASCLL
+				TRUNC       PASCLL
+				UPLOWCASE   PASCLL
+				UPPERLOWER  PASCLL
+				WRITELN     *SYS* 
+				WRITEWRITE  PASCLL
+
+     CALLNONSTA  PASCLL		CHECKLC     PASCGN     CALL        PASCLL
+				COMPATIBLE  PASCLL
+				COMPTYPES   PASCMP
+				ERROR       PASLEX
+				EXPRESSION  PASEXP
+				FILTER      PASCLL
+				INCREMENTR  PASCGN
+				INSYMBOL    PASLEX
+				LDADDRESS   PASCG 
+				LOAD        PASCG 
+				LOADADDRES  PASCG 
+				MAC3        PASCGN
+				MAC3B       PASCGN
+				MAC3R       PASCGN
+				MAC4        PASCGN
+				MAKEREAL    PASEXP
+				RESTOREREG  PASCLL
+				SAVEREGS    PASCLL
+Cross Reference Listing for PASCAL-10					 Page 5
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     CALLNONSTA  PASCLL (cont.)	SRCHID      PASLEX
+				STRFORM     PASCMP
+				STRPARM     PASSTR
+				SUPPORT     PASCG 
+
+     CASESTATEM  PASBOD		ABS         *SYS*      STATEMENT   PASBOD
+				COMPTYPES   PASCMP
+				CONSTANT    PASCST
+				DECNEST     *UNDEF
+				ERROR       PASLEX
+				EXPRESSION  PASEXP
+				FULLWORD    PASCG 
+				INCNEST     *UNDEF
+				INSERTADDR  PASCG 
+				INSERTBOUN  PASBOD
+				INSYMBOL    PASLEX
+				LOAD        PASCG 
+				MAC         PASCGN
+				MAC3        PASCGN
+				NEW         *SYS* 
+				SETNEST     *UNDEF
+				STATEMENT   PASBOD
+
+     CHANGEBOOL  PASEXP				       EXPRESSION  PASEXP
+
+     CHANGEOPER  PASEXP				       SEARCHCODE  PASEXP
+
+     CHANNEL     PASCLL		GETFILENAM  PASCLL     CALL        PASCLL
+				MAC4        PASCGN
+
+     CHARTOSTR1  PASSTR		MAC3        PASCGN     MVSTRING    PASSTR
+						       STRDESC     PASSTR
+
+     CHECKLC     PASCGN				       CALLNONSTA  PASCLL
+						       FORSTATEME  PASBOD
+						       SAVEEXPR    PASSTR
+						       SAVEREGS    PASCLL
+						       STRCAT      PASSTR
+						       STRPARM     PASSTR
+Cross Reference Listing for PASCAL-10					 Page 6
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     CHECKLC     PASCGN (cont.)			       UPLOWCASE   PASCLL
+						       WITHSTATEM  PASBOD
+						       WRITEWRITE  PASCLL
+
+     CHECKLISTI  PASMC 		PAGE        *SYS*      COPYCSP     PASMC 
+						       COPYCTP     PASMC 
+						       COPYSTP     PASMC 
+						       NEUEZEILE   PASMC 
+						       PUT_RECORD  PASMC 
+						       WRITEFIRST  PASMC 
+						       WRITEHEADE  PASMC 
+						       WRITEIDENT  PASMC 
+						       WRITEMC     PASMC 
+
+     CHKSPECIAL  PASSEL		ERROR       PASLEX     SELECTOR    PASSEL
+
+     CHR         PASCLL		ERROR       PASLEX     CALL        PASCLL
+
+     CLASSIFY    PASSTR		COMPTYPES   PASCMP     MVSTRING    PASSTR
+				DCLSTRING   PASSTR     STRPARM     PASSTR
+				ERROR       PASLEX
+				STRFORM     PASCMP
+
+     CLOSE       *SYS* 				       FINDERROR   PASLEX
+						       MCVARIOUS   PASMC 
+						       NEXTFILE    PASLEX
+						       PASCAL      PASCAL
+
+     CLOSE       PASCLL		GETFILENAM  PASCLL     CALL        PASCLL
+				SUPPORT     PASCG 
+
+     CNVTOR      *UNDEF				       INSYMBOL    PASLEX
+
+     COMPATIBLE  PASCLL		COMPATIBLE  PASCLL     CALLNONSTA  PASCLL
+				COMPTYPES   PASCMP     COMPATIBLE  PASCLL
+				STRFORM     PASCMP
+
+     COMPOUNDST  PASBOD		DECNEST     *UNDEF     LOOPSTATEM  PASBOD
+				ERROR       PASLEX     STATEMENT   PASBOD
+Cross Reference Listing for PASCAL-10					 Page 7
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     COMPOUNDST  PASBOD (cont.)	INCNEST     *UNDEF
+				INSYMBOL    PASLEX
+				NEWLINER    PASCG 
+				SETNEST     *UNDEF
+				STATEMENT   PASBOD
+
+     COMPTYPES   PASCMP		COMPTYPES   PASCMP     ALTERSTRIN  PASSTR
+				GETBOUNDS   PASLEX     ASSIGNMENT  PASBOD
+				NEW         *SYS*      CALLNONSTA  PASCLL
+						       CASESTATEM  PASBOD
+						       CLASSIFY    PASSTR
+						       COMPATIBLE  PASCLL
+						       COMPTYPES   PASCMP
+						       CST_LIST    PASCSN
+						       EXPRESSION  PASEXP
+						       FACTOR      PASEXP
+						       FIELDLIST   PASBLK
+						       FORSTATEME  PASBOD
+						       FREECHANNE  PASCLL
+						       GETCHANNEL  PASCLL
+						       GETFILENAM  PASCLL
+						       GETLINENR   PASCLL
+						       GETPUTRESE  PASCLL
+						       GETSIZE     PASCLL
+						       GET_ROOT    PASCLL
+						       INDEXFUN    PASCLL
+						       MAKE_POINT  PASCLL
+						       MARK        PASCLL
+						       MAXLEN      PASSTR
+						       MCFILEBLOC  PASMC 
+						       MINIMAXIMU  PASCLL
+						       MINMAX      PASCLL
+						       MVSTRING    PASSTR
+						       NEW         PASCLL
+						       POINTR      PASCLL
+						       READREADLN  PASCLL
+						       SEARCHVERI  PASCLL
+						       SELECTOR    PASSEL
+						       SET_ROOT    PASCLL
+Cross Reference Listing for PASCAL-10					 Page 8
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     COMPTYPES   PASCMP (cont.)			       SIMPLEEXPR  PASEXP
+						       STRDESC     PASSTR
+						       STRFORM     PASCMP
+						       STRING      PASCMP
+						       STRPARM     PASSTR
+						       SUBSTRFUN   PASCLL
+						       TERM        PASEXP
+						       UPLOWCASE   PASCLL
+						       WRITEWRITE  PASCLL
+
+     CONSTANT    PASCST		CALL        PASCLL     CASESTATEM  PASBOD
+				CONSTANT    PASCST     CONSTANT    PASCST
+				DCLSTRING   PASSTR     CST_DECLAR  PASCSN
+				ERRANDSKIP  PASLEX     CST_LIST    PASCSN
+				ERROR       PASLEX     FACTOR      PASEXP
+				IFERRSKIP   PASLEX     FIELDLIST   PASBLK
+				INSYMBOL    PASLEX     GETSIZE     PASCLL
+				NEW         *SYS*      MULTI_ARRA  PASCSN
+				SKIPIFERR   PASLEX     NEW         PASCLL
+				SRCHID      PASLEX     SIMPLETYPE  PASBLK
+
+     COPYCSP     PASMC 		ALIGN       PASMC      COPYCTP     PASMC 
+				CHECKLISTI  PASMC 
+				CSP_SIZE    PASMC 
+				PUT_RECORD  PASMC 
+				WRITELN     *SYS* 
+
+     COPYCTP     PASMC 		ALIGN       PASMC      COPYCTP     PASMC 
+				CHECKLISTI  PASMC      COPYSTP     PASMC 
+				COPYCSP     PASMC 
+				COPYCTP     PASMC 
+				COPYSTP     PASMC 
+				CTP_SIZE    PASMC 
+				DREF_CTP    PASMC 
+				DREF_STP    PASMC 
+				PUT_RECORD  PASMC 
+				WRITELN     *SYS* 
+				WRITEPAIR   PASMC 
+
+Cross Reference Listing for PASCAL-10					 Page 9
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     COPYSTP     PASMC 		ALIGN       PASMC      COPYCTP     PASMC 
+				CHECKLISTI  PASMC      COPYSTP     PASMC 
+				COPYCTP     PASMC 
+				COPYSTP     PASMC 
+				DREF_CTP    PASMC 
+				DREF_STP    PASMC 
+				PUT_RECORD  PASMC 
+				STP_SIZE    PASMC 
+				WRITELN     *SYS* 
+
+     CSP_SIZE    PASMC 				       COPYCSP     PASMC 
+
+     CST_DECLAR  PASCSN		CONSTANT    PASCST     BLOCK       PASBLK
+				CST_LIST    PASCSN
+				ENTERID     PASLEX
+				ERRANDSKIP  PASLEX
+				ERROR       PASLEX
+				IFERRSKIP   PASLEX
+				INSYMBOL    PASLEX
+				NEW         *SYS* 
+				SKIPIFERR   PASLEX
+				SRCHID      PASLEX
+				WRITEMC     PASMC 
+
+     CST_LIST    PASCSN		COMPTYPES   PASCMP     CST_DECLAR  PASCSN
+				CONSTANT    PASCST     CST_LIST    PASCSN
+				CST_LIST    PASCSN     MULTI_ARRA  PASCSN
+				ERRANDSKIP  PASLEX     SET_FIELD   PASCSN
+				ERROR       PASLEX     VAR_LIST    PASCSN
+				EXPRESSION  PASEXP
+				GETBOUNDS   PASLEX
+				INSYMBOL    PASLEX
+				MULTI_ARRA  PASCSN
+				NEW         *SYS* 
+				PUT_CST     PASCSN
+				SET_FIELD   PASCSN
+				SRCHID      PASLEX
+				STRFORM     PASCMP
+
+Cross Reference Listing for PASCAL-10					Page 10
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     CTP_SIZE    PASMC 				       COPYCTP     PASMC 
+
+     DATE        *UNDEF				       INIT_0      PASINI
+
+     DAYTIME     *UNDEF				       ENTITLE     PASOPT
+						       LOG_STATS   PASCAL
+
+     DCLLABEL    PASLEX		NEW         *SYS*      FWDFILEREF  PASCG 
+						       FWDPAGEREF  PASCG 
+						       GOTOSTATEM  PASBOD
+						       LABELDECLA  PASBLK
+						       STATEMENT   PASBOD
+
+     DCLSTRING   PASSTR		NEW         *SYS*      ALTERSTRIN  PASSTR
+						       CLASSIFY    PASSTR
+						       CONSTANT    PASCST
+						       MVSTRING    PASSTR
+						       SELECTOR    PASSEL
+						       SIMPLETYPE  PASBLK
+						       STRCAT      PASSTR
+						       STRDESC     PASSTR
+						       SUBSTRFUN   PASCLL
+
+     DC_EXT      *UNDEF				       ENTITLE     PASOPT
+
+  *  DECLAREPAR  PASBLK		NEW         *SYS*      FORMALTYPE  PASBLK
+						       PARAMETERL  PASBLK
+
+  *  DECLAREPAR  PASBLK		NEW         *SYS*      <NONE>            
+
+     DECNEST     *UNDEF				       BLOCK       PASBLK
+						       CASESTATEM  PASBOD
+						       COMPOUNDST  PASBOD
+						       IFSTATEMEN  PASBOD
+						       REPEATSTAT  PASBOD
+
+     DEFSYMBOL   PASMC 		DEFSYMBOL   PASMC      DEFSYMBOL   PASMC 
+				REFERENCE   PASMC      MCSYMBOLS   PASMC 
+				WRITEIDENT  PASMC 
+Cross Reference Listing for PASCAL-10					Page 11
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     DEFSYMBOL   PASMC  (cont.)	WRITEPAIR   PASMC 
+
+     DEPCST      PASCG 		INSERTADDR  PASCG      FACTOR      PASEXP
+				NEW         *SYS*      INSERTBOUN  PASBOD
+						       LDSTRPTR    PASSTR
+						       LOADADDRES  PASCG 
+						       MAKECODE    PASCG 
+						       MOVEWORDS   PASSTR
+
+     DISPOSE     PASCLL		ERROR       PASLEX     CALL        PASCLL
+				EXPRESSION  PASEXP
+				LOAD        PASCG 
+				MAC3        PASCGN
+				SUPPORT     PASCG 
+
+     DODIRECT    PASLEX		ENDOFLINE   PASLEX     INSYMBOL    PASLEX
+				ENTITLE     PASOPT
+				ERROR       PASLEX
+				ERRSKIP     PASOPT
+				GETNEXTLIN  PASLEX
+				IVALUE      PASOPT
+				LITCH       *UNDEF
+				NEXTCH      *UNDEF
+				OPTIONLIST  PASOPT
+				PAGE        *SYS* 
+				READFILEID  PASCAL
+				READIDENTI  PASOPT
+				RESET       *SYS* 
+				SEOF        *UNDEF
+				SKIPBLANKS  PASOPT
+				SREADLN     *UNDEF
+
+     DREF_CTP    PASMC 				       COPYCTP     PASMC 
+						       COPYSTP     PASMC 
+						       MCVARIOUS   PASMC 
+
+     DREF_STP    PASMC 				       COPYCTP     PASMC 
+						       COPYSTP     PASMC 
+
+Cross Reference Listing for PASCAL-10					Page 12
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     DUMPLIBREC  PASMC 		WRITEIDENT  PASMC      MCLIBRARY   PASMC 
+				WRITEPAIR   PASMC 
+
+     DUMP_TREE   *UNDEF				       MCCODE      PASMC 
+
+     EMITSTRING  PASCG 		FULLWORD    PASCG      ENTERBODY   PASCG 
+						       NEWFILER    PASCG 
+						       NEWPAGER    PASCG 
+
+     ENDOFLINE   PASLEX		BREAK       *SYS*      DODIRECT    PASLEX
+				FINDERROR   PASLEX     PASCAL      PASCAL
+				WIDTH       PASOPT
+				WRBUFFER    PASLEX
+				WRITE       *SYS* 
+				WRITELN     *SYS* 
+
+     ENTERBODY   PASCG 		ADJSP       PASCG      BODY        PASBOD
+				EMITSTRING  PASCG 
+				FULLWORD    PASCG 
+				MAC3        PASCGN
+				MAC3R       PASCGN
+				MAC4        PASCGN
+				SUPPORT     PASCG 
+				WRITE       *SYS* 
+				WRITELN     *SYS* 
+
+     ENTERID     PASLEX		ERROR       PASLEX     CST_DECLAR  PASCSN
+						       FIELDLIST   PASBLK
+						       PARAMETERL  PASBLK
+						       PROCEDURED  PASBLK
+						       SIMPLETYPE  PASBLK
+						       TYPEDECLAR  PASBLK
+						       VARIABLEDE  PASBLK
+
+     ENTITLE     PASOPT		DAYTIME     *UNDEF     DODIRECT    PASLEX
+				DC_EXT      *UNDEF     GETNEXTLIN  PASLEX
+				WIDTH       PASOPT     PASCAL      PASCAL
+				WRITE       *SYS* 
+				WRITELN     *SYS* 
+Cross Reference Listing for PASCAL-10					Page 13
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     EOFEOLN     PASCLL		GETFILENAM  PASCLL     CALL        PASCLL
+				MAC3        PASCGN
+				MAC4        PASCGN
+
+     ERRANDSKIP  PASLEX		SKIPIFERR   PASLEX     CALL        PASCLL
+						       CONSTANT    PASCST
+						       CST_DECLAR  PASCSN
+						       CST_LIST    PASCSN
+						       EXITSTATEM  PASBOD
+						       FACTOR      PASEXP
+						       FIELDLIST   PASBLK
+						       FORMALTYPE  PASBLK
+						       FORSTATEME  PASBOD
+						       GETFILENAM  PASCLL
+						       GETPUTRESE  PASCLL
+						       GETSIZE     PASCLL
+						       INDEXFUN    PASCLL
+						       MULTI_ARRA  PASCSN
+						       PARAMETERL  PASBLK
+						       PROCEDURED  PASBLK
+						       SEARCHVERI  PASCLL
+						       SIMPLETYPE  PASBLK
+						       STATEMENT   PASBOD
+						       SUBSTRFUN   PASCLL
+						       UPPERLOWER  PASCLL
+						       VARIABLEDE  PASBLK
+						       VAR_LIST    PASCSN
+
+     ERROR       PASLEX		FINDERROR   PASLEX     ABS         PASCLL
+						       AREAID_OR_  PASCLL
+						       ASSIGNMENT  PASBOD
+						       BLOCK       PASBLK
+						       BODY        PASBOD
+						       CALL        PASCLL
+						       CALLNONSTA  PASCLL
+						       CASESTATEM  PASBOD
+						       CHKSPECIAL  PASSEL
+						       CHR         PASCLL
+						       CLASSIFY    PASSTR
+Cross Reference Listing for PASCAL-10					Page 14
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     ERROR       PASLEX (cont.)			       COMPOUNDST  PASBOD
+						       CONSTANT   ST
+						       CST_DECLAR  PASCSN
+						       CST_LIST    PASCSN
+						       DISPOSE     PASCLL
+						       DODIRECT    PASLEX
+						       ENTERID     PASLEX
+						       ERRORWITHT  PASLEX
+						       ERRSKIP     PASOPT
+						       EXITSTATEM  PASBOD
+						       EXPRESSION  PASEXP
+						       FACTOR      PASEXP
+						       FIELDLIST   PASBLK
+						       FLOAT       PASCLL
+						       FORMALTYPE  PASBLK
+						       FORSTATEME  PASBOD
+						       FREECHANNE  PASCLL
+						       GETCHANNEL  PASCLL
+						       GETFILENAM  PASCLL
+						       GETLINENR   PASCLL
+						       GETSTORAGE  PASBLK
+						       GETSTRINGA  PASCLL
+						       GET_ROOT    PASCLL
+						       GOTOSTATEM  PASBOD
+						       IFSTATEMEN  PASBOD
+						       INCREMENTR  PASCGN
+						       INDEXFUN    PASCLL
+						       INSYMBOL    PASLEX
+						       LABELDECLA  PASBLK
+						       LENGTHFUN   PASCLL
+						       LOADADDRES  PASCG 
+						       MAKE_POINT  PASCLL
+						       MARK        PASCLL
+						       MCVARIOUS   PASMC 
+						       MINIMAXIMU  PASCLL
+						       MINMAX      PASCLL
+						       MULTI_ARRA  PASCSN
+						       NEW         PASCLL
+						       ODD         PASCLL
+Cross Reference Listing for PASCAL-10					Page 15
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     ERROR       PASLEX (cont.)			       OPTIONS     PASLEX
+						       ORD         PASCLL
+						       PARAMETERL  PASBLK
+						       PASCAL      PASCAL
+						       POINTR      PASCLL
+						       PREDSUCC    PASCLL
+						       PROCEDURED  PASBLK
+						       PROTECTION  PASCLL
+						       READREADLN  PASCLL
+						       RELEASE     PASCLL
+						       REPEATSTAT  PASBOD
+						       ROUND       PASCLL
+						       SEARCHVERI  PASCLL
+						       SELECTOR    PASSEL
+						       SET_FIELD   PASCSN
+						       SET_ROOT    PASCLL
+						       SIMPLEEXPR  PASEXP
+						       SIMPLETYPE  PASBLK
+						       SIZE        PASCLL
+						       SKIPIFERR   PASLEX
+						       SQR         PASCLL
+						       SRCHID      PASLEX
+						       STATEMENT   PASBOD
+						       STRDESC     PASSTR
+						       STROP       PASSTR
+						       SUBSTRFUN   PASCLL
+						       TERM        PASEXP
+						       TRUNC       PASCLL
+						       TYP         PASBLK
+						       TYPEDECLAR  PASBLK
+						       UPLOWCASE   PASCLL
+						       UPPERLOWER  PASCLL
+						       VARIABLE    PASCLL
+						       VARIABLEDE  PASBLK
+						       VAR_LIST    PASCSN
+						       WHILESTATE  PASBOD
+						       WITHSTATEM  PASBOD
+						       WRITEWRITE  PASCLL
+
+Cross Reference Listing for PASCAL-10					Page 16
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     ERRORWITHT  PASLEX		ERROR       PASLEX     BLOCK       PASBLK
+				NEW         *SYS*      FULLWORD    PASCG 
+						       MAC         PASCGN
+						       TYPEDECLAR  PASBLK
+						       VARIABLEDE  PASBLK
+
+     ERRSKIP     PASOPT		ERROR       PASLEX     DODIRECT    PASLEX
+				NEXTCH      *UNDEF     OPTIONLIST  PASOPT
+
+     EXITSTATEM  PASBOD		ERRANDSKIP  PASLEX     STATEMENT   PASBOD
+				ERROR       PASLEX
+				EXPRESSION  PASEXP
+				INSERTADDR  PASCG 
+				INSYMBOL    PASLEX
+				MAC3R       PASCGN
+				STATEMENT   PASBOD
+
+     EXPRESSION  PASEXP		CHANGEBOOL  PASEXP     ASSIGNMENT  PASBOD
+				COMPTYPES   PASCMP     CALL        PASCLL
+				ERROR       PASLEX     CALLNONSTA  PASCLL
+				INCREMENTR  PASCGN     CASESTATEM  PASBOD
+				INSYMBOL    PASLEX     CST_LIST    PASCSN
+				LOAD        PASCG      DISPOSE     PASCLL
+				LOADADDRES  PASCG      EXITSTATEM  PASBOD
+				MAC3        PASCGN     FACTOR      PASEXP
+				MAC3R       PASCGN     FORSTATEME  PASBOD
+				MAC4        PASCGN     FORTRAN_FU  PASCLL
+				MAKEREAL    PASEXP     FREECHANNE  PASCLL
+				SEARCHCODE  PASEXP     GETPUTRESE  PASCLL
+				SIMPLEEXPR  PASEXP     GETSTRINGA  PASCLL
+				STRDESC     PASSTR     IFSTATEMEN  PASBOD
+				STRFORM     PASCMP     INDEXFUN    PASCLL
+				STRING      PASCMP     LENGTHFUN   PASCLL
+				STROP       PASSTR     MAKE_POINT  PASCLL
+						       MINMAX      PASCLL
+						       NEW         PASCLL
+						       PROTECTION  PASCLL
+						       PUT8BITSTO  PASCLL
+						       RELEASE     PASCLL
+Cross Reference Listing for PASCAL-10					Page 17
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     EXPRESSION  PASEXP (cont.)			       REPEATSTAT  PASBOD
+						       SEARCHVERI  PASCLL
+						       SELECTOR    PASSEL
+						       SET_ROOT    PASCLL
+						       SUBSTRFUN   PASCLL
+						       WHILESTATE  PASBOD
+						       WRITEWRITE  PASCLL
+
+     EXPSUPPORT  PASEXP		LOAD        PASCG      TERM        PASEXP
+				MAC3        PASCGN
+				SUPPORT     PASCG 
+
+     FACTOR      PASEXP		CALL        PASCLL     FACTOR      PASEXP
+				COMPTYPES   PASCMP     TERM        PASEXP
+				CONSTANT    PASCST
+				DEPCST      PASCG 
+				ERRANDSKIP  PASLEX
+				ERROR       PASLEX
+				EXPRESSION  PASEXP
+				FACTOR      PASEXP
+				FINSCOPE    PASSEL
+				IFERRSKIP   PASLEX
+				INCREMENTR  PASCGN
+				INSYMBOL    PASLEX
+				LOAD        PASCG 
+				MAC3        PASCGN
+				MAC4        PASCGN
+				NEW         *SYS* 
+				SELECTOR    PASSEL
+				SRCHID      PASLEX
+
+     FETCHBASIS  PASCG 		FULLWORD    PASCG      ASSIGNMENT  PASBOD
+				MAC3        PASCGN     FORSTATEME  PASBOD
+				MAC4        PASCGN     GETPARADDR  PASCG 
+				MAC5        PASCGN     LDSTRPTR    PASSTR
+				SUPPORT     PASCG      LOADADDRES  PASCG 
+						       MAKECODE    PASCG 
+						       MAKESTRING  PASSTR
+						       MINMAX      PASCLL
+Cross Reference Listing for PASCAL-10					Page 18
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     FETCHBASIS  PASCG  (cont.)			       MVSTRING    PASSTR
+						       SELECTOR    PASSEL
+						       STORE       PASCG 
+						       SUBSTRFUN   PASCLL
+						       VLOAD       PASCG 
+						       WITHSTATEM  PASBOD
+
+     FIELDLIST   PASBLK		COMPTYPES   PASCMP     FIELDLIST   PASBLK
+				CONSTANT    PASCST     TYP         PASBLK
+				ENTERID     PASLEX
+				ERRANDSKIP  PASLEX
+				ERROR       PASLEX
+				FIELDLIST   PASBLK
+				IFERRSKIP   PASLEX
+				INSYMBOL    PASLEX
+				NEW         *SYS* 
+				RECSECTION  PASBLK
+				SKIPIFERR   PASLEX
+				SRCHID      PASLEX
+				STRING      PASCMP
+				TYP         PASBLK
+
+     FILEB$      *UNDEF				       MCVARIOUS   PASMC 
+
+     FILEB$TEXT  *UNDEF				       LOG_STATS   PASCAL
+
+     FILEERR     PASCAL		BREAK       *SYS*      PASCAL      PASCAL
+				SREADLN     *UNDEF
+				WRITE       *SYS* 
+
+     FILTER      PASCLL				       CALLNONSTA  PASCLL
+
+     FINDERROR   PASLEX		CLOSE       *SYS*      ENDOFLINE   PASLEX
+				OPEN        *SYS*      ERROR       PASLEX
+				PRGM_DIR    *UNDEF
+				READ        *SYS* 
+				READLN      *SYS* 
+				WRITE       *SYS* 
+				WRITELN     *SYS* 
+Cross Reference Listing for PASCAL-10					Page 19
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     FINDLABEL   PASLEX		SEARCHLABE  PASLEX     GOTOSTATEM  PASBOD
+						       STATEMENT   PASBOD
+
+     FINSCOPE    PASSEL				       FACTOR      PASEXP
+						       SELECTOR    PASSEL
+
+     FLOAT       PASCLL		ERROR       PASLEX     CALL        PASCLL
+				INCREMENTR  PASCGN
+				MAC3        PASCGN
+				SUPPORT     PASCG 
+
+     FORMALTYPE  PASBLK		DECLAREPAR  PASBLK#    TYP         PASBLK
+				ERRANDSKIP  PASLEX
+				ERROR       PASLEX
+				IFERRSKIP   PASLEX
+				INSYMBOL    PASLEX
+				NEW         *SYS* 
+				SKIPIFERR   PASLEX
+				SRCHID      PASLEX
+
+     FORSTATEME  PASBOD		CHECKLC     PASCGN     STATEMENT   PASBOD
+				COMPTYPES   PASCMP
+				ERRANDSKIP  PASLEX
+				ERROR       PASLEX
+				EXPRESSION  PASEXP
+				FETCHBASIS  PASCG 
+				INSERTADDR  PASCG 
+				INSYMBOL    PASLEX
+				LOAD        PASCG 
+				MAC         PASCGN
+				MAC3        PASCGN
+				MAC3R       PASCGN
+				MAC4        PASCGN
+				MAKECODE    PASCG 
+				SELECTOR    PASSEL
+				SRCHID      PASLEX
+				STATEMENT   PASBOD
+
+     FORTRAN_FU  PASCLL		EXPRESSION  PASEXP     CALL        PASCLL
+Cross Reference Listing for PASCAL-10					Page 20
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     FORTRAN_FU  PASCLL (cont.)	FULLWORD    PASCG 
+				INSYMBOL    PASLEX
+				LOAD        PASCG 
+				MAKEREAL    PASEXP
+				SUPPORT     PASCG 
+
+     FREECHANNE  PASCLL		COMPTYPES   PASCMP     CALL        PASCLL
+				ERROR       PASLEX
+				EXPRESSION  PASEXP
+				MAC3        PASCGN
+				MAKECODE    PASCG 
+				SUPPORT     PASCG 
+
+     FULLWORD    PASCG 		ERRORWITHT  PASLEX     ASSIGNMENT  PASBOD
+						       CASESTATEM  PASBOD
+						       EMITSTRING  PASCG 
+						       ENTERBODY   PASCG 
+						       FETCHBASIS  PASCG 
+						       FORTRAN_FU  PASCLL
+						       LEAVEBODY   PASCG 
+						       NEWFILER    PASCG 
+						       NEWLINER    PASCG 
+						       NEWPAGER    PASCG 
+						       PASCAL      PASCAL
+
+     FWDFILEREF  PASCG 		DCLLABEL    PASLEX     BODY        PASBOD
+
+     FWDPAGEREF  PASCG 		DCLLABEL    PASLEX     BODY        PASBOD
+						       NEWPAGER    PASCG 
+
+     GETBOUNDS   PASLEX				       ASSIGNMENT  PASBOD
+						       COMPTYPES   PASCMP
+						       CST_LIST    PASCSN
+						       MINIMAXIMU  PASCLL
+						       MULTI_ARRA  PASCSN
+						       NEW         PASCLL
+						       READREADLN  PASCLL
+						       SELECTOR    PASSEL
+						       TYP         PASBLK
+Cross Reference Listing for PASCAL-10					Page 21
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     GETBOUNDS   PASLEX (cont.)			       UPPERLOWER  PASCLL
+						       WRITEWRITE  PASCLL
+
+     GETCHANNEL  PASCLL		COMPTYPES   PASCMP     CALL        PASCLL
+				ERROR       PASLEX
+				STORE       PASCG 
+				SUPPORT     PASCG 
+				VARIABLE    PASCLL
+
+     GETFILENAM  PASCLL		COMPTYPES   PASCMP     BREAK       PASCLL
+				ERRANDSKIP  PASLEX     CHANNEL     PASCLL
+				ERROR       PASLEX     CLOSE       PASCLL
+				INSYMBOL    PASLEX     EOFEOLN     PASCLL
+				LOADADDRES  PASCG      GETLINENR   PASCLL
+				SELECTOR    PASSEL     PAGE        PASCLL
+				SRCHID      PASLEX     READREADLN  PASCLL
+						       WRITEWRITE  PASCLL
+
+     GETINTEGER  PASCLL		INSERTADDR  PASCG      <NONE>            
+				LOADADDRES  PASCG 
+				SELECTOR    PASSEL
+				SRCHID      PASLEX
+
+     GETLINENR   PASCLL		COMPTYPES   PASCMP     CALL        PASCLL
+				ERROR       PASLEX
+				GETFILENAM  PASCLL
+				MAC4        PASCGN
+				STORE       PASCG 
+				VARIABLE    PASCLL
+
+     GETNEXTLIN  PASLEX		ENTITLE     PASOPT     DODIRECT    PASLEX
+				PAGE        *SYS*      PASCAL      PASCAL
+				SGETLINENR  *UNDEF
+				SREADLN     *UNDEF
+
+     GETPARADDR  PASCG 		FETCHBASIS  PASCG      SELECTOR    PASSEL
+				INCREMENTR  PASCGN     SUBSTRFUN   PASCLL
+				MAC5        PASCGN     WITHSTATEM  PASBOD
+
+Cross Reference Listing for PASCAL-10					Page 22
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     GETPUTRESE  PASCLL		COMPTYPES   PASCMP     CALL        PASCLL
+				ERRANDSKIP  PASLEX
+				EXPRESSION  PASEXP
+				GETSTRINGA  PASCLL
+				INSYMBOL    PASLEX
+				LOAD        PASCG 
+				LOADADDRES  PASCG 
+				MAC3        PASCGN
+				SRCHID      PASLEX
+				SUPPORT     PASCG 
+				VARIABLE    PASCLL
+
+     GETSIZE     PASCLL		COMPTYPES   PASCMP     GETSIZE     PASCLL
+				CONSTANT    PASCST     SIZE        PASCLL
+				ERRANDSKIP  PASLEX
+				GETSIZE     PASCLL
+				INSYMBOL    PASLEX
+				STRING      PASCMP
+
+     GETSTORAGE  PASBLK		ERROR       PASLEX     BLOCK       PASBLK
+				INSYMBOL    PASLEX
+
+     GETSTRINGA  PASCLL		ERROR       PASLEX     GETPUTRESE  PASCLL
+				EXPRESSION  PASEXP
+				INSYMBOL    PASLEX
+				MAC3        PASCGN
+				STRDESC     PASSTR
+				STRFORM     PASCMP
+
+     GET_ROOT    PASCLL		COMPTYPES   PASCMP     CALL        PASCLL
+				ERROR       PASLEX
+				MAC3        PASCGN
+				SUPPORT     PASCG 
+
+     GOTOSTATEM  PASBOD		DCLLABEL    PASLEX     STATEMENT   PASBOD
+				ERROR       PASLEX
+				FINDLABEL   PASLEX
+				INSYMBOL    PASLEX
+				MAC3        PASCGN
+Cross Reference Listing for PASCAL-10					Page 23
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     GOTOSTATEM  PASBOD (cont.)	MAC3B       PASCGN
+				MAC3R       PASCGN
+				MAC4        PASCGN
+				SUPPORT     PASCG 
+
+     IFERRSKIP   PASLEX		SKIPIFERR   PASLEX     CONSTANT    PASCST
+						       CST_DECLAR  PASCSN
+						       FACTOR      PASEXP
+						       FIELDLIST   PASBLK
+						       FORMALTYPE  PASBLK
+						       LABELDECLA  PASBLK
+						       PARAMETERL  PASBLK
+						       PROCEDURED  PASBLK
+						       SELECTOR    PASSEL
+						       SIMPLETYPE  PASBLK
+						       TYP         PASBLK
+						       TYPEDECLAR  PASBLK
+						       VARIABLEDE  PASBLK
+
+     IFSTATEMEN  PASBOD		DECNEST     *UNDEF     STATEMENT   PASBOD
+				ERROR       PASLEX
+				EXPRESSION  PASEXP
+				INCNEST     *UNDEF
+				INSERTADDR  PASCG 
+				INSYMBOL    PASLEX
+				MAC3        PASCGN
+				STATEMENT   PASBOD
+
+     INCNEST     *UNDEF				       BLOCK       PASBLK
+						       CASESTATEM  PASBOD
+						       COMPOUNDST  PASBOD
+						       IFSTATEMEN  PASBOD
+						       REPEATSTAT  PASBOD
+
+     INCREMENTR  PASCGN		ERROR       PASLEX     ASSIGNMENT  PASBOD
+						       CALLNONSTA  PASCLL
+						       EXPRESSION  PASEXP
+						       FACTOR      PASEXP
+						       FLOAT       PASCLL
+Cross Reference Listing for PASCAL-10					Page 24
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     INCREMENTR  PASCGN (cont.)			       GETPARADDR  PASCG 
+						       INDEXFUN    PASCLL
+						       LDADDRESS   PASCG 
+						       LOAD        PASCG 
+						       LOADADDRES  PASCG 
+						       MAKECODE    PASCG 
+						       MAKESTRING  PASSTR
+						       MOVEWORDS   PASSTR
+						       MVSTRING    PASSTR
+						       NEW         PASCLL
+						       RUNTIME     PASCLL
+						       SEARCHVERI  PASCLL
+						       SELECTOR    PASSEL
+						       STRPARM     PASSTR
+						       SUBSTRFUN   PASCLL
+						       TERM        PASEXP
+						       TIME        PASCLL
+						       UPLOWCASE   PASCLL
+						       VLOAD       PASCG 
+						       WRITEWRITE  PASCLL
+
+     INDEXFUN    PASCLL		COMPTYPES   PASCMP     CALL        PASCLL
+				ERRANDSKIP  PASLEX
+				ERROR       PASLEX
+				EXPRESSION  PASEXP
+				INCREMENTR  PASCGN
+				INSYMBOL    PASLEX
+				LOAD        PASCG 
+				MAC3        PASCGN
+				RESTOREREG  PASCLL
+				SAVEREGS    PASCLL
+				STRDESC     PASSTR
+				STRFORM     PASCMP
+				SUPPORT     PASCG 
+
+     INIT_0      PASINI		DATE        *UNDEF     PASCAL      PASCAL
+				NEW         *SYS* 
+				PRGM_PPN    *UNDEF
+				SET_PTR_TY  PASINI
+Cross Reference Listing for PASCAL-10					Page 25
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     INSERTADDR  PASCG 				       BODY        PASBOD
+						       CASESTATEM  PASBOD
+						       DEPCST      PASCG 
+						       EXITSTATEM  PASBOD
+						       FORSTATEME  PASBOD
+						       GETINTEGER  PASCLL
+						       IFSTATEMEN  PASBOD
+						       INSERTBOUN  PASBOD
+						       REPEATSTAT  PASBOD
+						       SELECTOR    PASSEL
+						       SIMPLEEXPR  PASEXP
+						       STATEMENT   PASBOD
+						       SUBSTRFUN   PASCLL
+						       TERM        PASEXP
+						       UPLOWCASE   PASCLL
+						       WHILESTATE  PASBOD
+
+     INSERTBOUN  PASBOD		DEPCST      PASCG      CASESTATEM  PASBOD
+				INSERTADDR  PASCG 
+
+     INSYMBOL    PASLEX		CNVTOR      *UNDEF     ASSIGNMENT  PASBOD
+				DODIRECT    PASLEX     BLOCK       PASBLK
+				ERROR       PASLEX     BODY        PASBOD
+				LITCH       *UNDEF     CALL        PASCLL
+				NEW         *SYS*      CALLNONSTA  PASCLL
+				NEXTCH      *UNDEF     CASESTATEM  PASBOD
+				OPTIONS     PASLEX     COMPOUNDST  PASBOD
+						       CONSTANT    PASCST
+						       CST_DECLAR  PASCSN
+						       CST_LIST    PASCSN
+						       EXITSTATEM  PASBOD
+						       EXPRESSION  PASEXP
+						       FACTOR      PASEXP
+						       FIELDLIST   PASBLK
+						       FORMALTYPE  PASBLK
+						       FORSTATEME  PASBOD
+						       FORTRAN_FU  PASCLL
+						       GETFILENAM  PASCLL
+						       GETPUTRESE  PASCLL
+Cross Reference Listing for PASCAL-10					Page 26
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     INSYMBOL    PASLEX (cont.)			       GETSIZE     PASCLL
+						       GETSTORAGE  PASBLK
+						       GETSTRINGA  PASCLL
+						       GOTOSTATEM  PASBOD
+						       IFSTATEMEN  PASBOD
+						       INDEXFUN    PASCLL
+						       LABELDECLA  PASBLK
+						       MAKE_POINT  PASCLL
+						       MINIMAXIMU  PASCLL
+						       MINMAX      PASCLL
+						       MULTI_ARRA  PASCSN
+						       NEW         PASCLL
+						       PARAMETERL  PASBLK
+						       PASCAL      PASCAL
+						       PROCEDURED  PASBLK
+						       READREADLN  PASCLL
+						       REPEATSTAT  PASBOD
+						       SEARCHVERI  PASCLL
+						       SELECTOR    PASSEL
+						       SET_FIELD   PASCSN
+						       SET_ROOT    PASCLL
+						       SIMPLEEXPR  PASEXP
+						       SIMPLETYPE  PASBLK
+						       SIZE        PASCLL
+						       SKIPIFERR   PASLEX
+						       STATEMENT   PASBOD
+						       SUBSTRFUN   PASCLL
+						       TERM        PASEXP
+						       TYP         PASBLK
+						       TYPEDECLAR  PASBLK
+						       UPPERLOWER  PASCLL
+						       VARIABLE    PASCLL
+						       VARIABLEDE  PASBLK
+						       WHILESTATE  PASBOD
+						       WITHSTATEM  PASBOD
+						       WRITEWRITE  PASCLL
+
+     IVALUE      PASOPT		NEXTCH      *UNDEF     DODIRECT    PASLEX
+						       OPTIONLIST  PASOPT
+Cross Reference Listing for PASCAL-10					Page 27
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     IVALUE      PASOPT (cont.)			       OPTIONS     PASLEX
+
+     LABELDECLA  PASBLK		DCLLABEL    PASLEX     BLOCK       PASBLK
+				ERROR       PASLEX
+				IFERRSKIP   PASLEX
+				INSYMBOL    PASLEX
+				SEARCHLABE  PASLEX
+
+     LDADDRESS   PASCG 		INCREMENTR  PASCGN     ADDRESS     PASCLL
+				LOADADDRES  PASCG      CALLNONSTA  PASCLL
+				MAC3        PASCGN     STRPARM     PASSTR
+
+     LDSTRPTR    PASSTR		DEPCST      PASCG      MVSTRING    PASSTR
+				FETCHBASIS  PASCG      STRCAT      PASSTR
+				MAC         PASCGN     STRDESC     PASSTR
+				MAC3        PASCGN
+				MAC4        PASCGN
+				STRKIND     PASSTR
+
+     LEAVEBODY   PASCG 		ADJSP       PASCG      BODY        PASBOD
+				FULLWORD    PASCG 
+				LOADFILEAD  PASCG 
+				MAC3        PASCGN
+				MAC3R       PASCGN
+				NEWLINER    PASCG 
+				SUPPORT     PASCG 
+
+     LEFT_SHIFT  *UNDEF				       PUT_CST     PASCSN
+
+     LENGTHFUN   PASCLL		ERROR       PASLEX     CALL        PASCLL
+				EXPRESSION  PASEXP
+				MAXLEN      PASSTR
+				STRFORM     PASCMP
+				STRKIND     PASSTR
+
+     LEXINIT     PASLEX		RECOVER     PASLEX     PASCAL      PASCAL
+
+     LINK        *UNDEF				       PASCAL      PASCAL
+
+Cross Reference Listing for PASCAL-10					Page 28
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     LITCH       *UNDEF				       DODIRECT    PASLEX
+						       INSYMBOL    PASLEX
+
+     LOAD        PASCG 		INCREMENTR  PASCGN     ASSIGNMENT  PASBOD
+				MAKECODE    PASCG      CALL        PASCLL
+				VLOAD       PASCG      CALLNONSTA  PASCLL
+						       CASESTATEM  PASBOD
+						       DISPOSE     PASCLL
+						       EXPRESSION  PASEXP
+						       EXPSUPPORT  PASEXP
+						       FACTOR      PASEXP
+						       FORSTATEME  PASBOD
+						       FORTRAN_FU  PASCLL
+						       GETPUTRESE  PASCLL
+						       INDEXFUN    PASCLL
+						       MAKEREAL    PASEXP
+						       MAKE_POINT  PASCLL
+						       MINMAX      PASCLL
+						       MOVEWORDS   PASSTR
+						       MVSTRING    PASSTR
+						       NEW         PASCLL
+						       POINTR      PASCLL
+						       PROTECTION  PASCLL
+						       PUT8BITSTO  PASCLL
+						       SEARCHCODE  PASEXP
+						       SEARCHVERI  PASCLL
+						       SELECTOR    PASSEL
+						       SET_ROOT    PASCLL
+						       SIMPLEEXPR  PASEXP
+						       STRPARM     PASSTR
+						       SUBSTRFUN   PASCLL
+						       TERM        PASEXP
+						       UPLOWCASE   PASCLL
+						       WRITEWRITE  PASCLL
+
+     LOADADDRES  PASCG 		DEPCST      PASCG      ASSIGNMENT  PASBOD
+				ERROR       PASLEX     CALLNONSTA  PASCLL
+				FETCHBASIS  PASCG      EXPRESSION  PASEXP
+				INCREMENTR  PASCGN     GETFILENAM  PASCLL
+Cross Reference Listing for PASCAL-10					Page 29
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     LOADADDRES  PASCG  (cont.)	MAC         PASCGN     GETINTEGER  PASCLL
+				MAC3        PASCGN     GETPUTRESE  PASCLL
+				STRFORM     PASCMP     LDADDRESS   PASCG 
+						       READREADLN  PASCLL
+						       SELECTOR    PASSEL
+						       SUBSTRFUN   PASCLL
+						       WRITEWRITE  PASCLL
+
+     LOADFILEAD  PASCG 		MAC3B       PASCGN     LEAVEBODY   PASCG 
+
+     LOG2        PASBLK				       SIMPLETYPE  PASBLK
+
+     LOG_STATS   PASCAL		DAYTIME     *UNDEF     PASCAL      PASCAL
+				FILEB$TEXT  *UNDEF
+				PRGM_PPN    *UNDEF
+				USER_PPN    *UNDEF
+				WRT_LOG     *UNDEF
+
+     LOOKUP_OPT  *UNDEF				       OPTIONLIST  PASOPT
+
+     LOOPSTATEM  PASBOD		COMPOUNDST  PASBOD     STATEMENT   PASBOD
+				MAC3R       PASCGN
+
+     MAC         PASCGN		ERRORWITHT  PASLEX     AREAID_OR_  PASCLL
+						       ASSIGNMENT  PASBOD
+						       CASESTATEM  PASBOD
+						       FORSTATEME  PASBOD
+						       LDSTRPTR    PASSTR
+						       LOADADDRES  PASCG 
+						       MAC3        PASCGN
+						       MAC3R       PASCGN
+						       MAC4        PASCGN
+						       MAC4R       PASCGN
+						       MAC5        PASCGN
+						       MAKECODE    PASCG 
+						       MAKESTRING  PASSTR
+						       MAKE_POINT  PASCLL
+						       MVSTRING    PASSTR
+						       STORE       PASCG 
+Cross Reference Listing for PASCAL-10					Page 30
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     MAC         PASCGN (cont.)			       STRPARM     PASSTR
+						       VLOAD       PASCG 
+						       WITHSTATEM  PASBOD
+
+     MAC3        PASCGN		MAC         PASCGN     ABS         PASCLL
+						       ADJSP       PASCG 
+						       ASSIGNMENT  PASBOD
+						       CALLNONSTA  PASCLL
+						       CASESTATEM  PASBOD
+						       CHARTOSTR1  PASSTR
+						       DISPOSE     PASCLL
+						       ENTERBODY   PASCG 
+						       EOFEOLN     PASCLL
+						       EXPRESSION  PASEXP
+						       EXPSUPPORT  PASEXP
+						       FACTOR      PASEXP
+						       FETCHBASIS  PASCG 
+						       FLOAT       PASCLL
+						       FORSTATEME  PASBOD
+						       FREECHANNE  PASCLL
+						       GETPUTRESE  PASCLL
+						       GETSTRINGA  PASCLL
+						       GET_ROOT    PASCLL
+						       GOTOSTATEM  PASBOD
+						       IFSTATEMEN  PASBOD
+						       INDEXFUN    PASCLL
+						       LDADDRESS   PASCG 
+						       LDSTRPTR    PASSTR
+						       LEAVEBODY   PASCG 
+						       LOADADDRES  PASCG 
+						       MAC3B       PASCGN
+						       MAKECODE    PASCG 
+						       MAKEREAL    PASEXP
+						       MAKE_POINT  PASCLL
+						       MINMAX      PASCLL
+						       MOVEWORDS   PASSTR
+						       MVSTRING    PASSTR
+						       NEW         PASCLL
+						       ODD         PASCLL
+Cross Reference Listing for PASCAL-10					Page 31
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     MAC3        PASCGN (cont.)			       PREDSUCC    PASCLL
+						       PROTECTION  PASCLL
+						       PUT8BITSTO  PASCLL
+						       RELEASE     PASCLL
+						       RESTOREREG  PASCLL
+						       ROUND       PASCLL
+						       RUNTIME     PASCLL
+						       SAVEREGS    PASCLL
+						       SEARCHVERI  PASCLL
+						       SELECTOR    PASSEL
+						       SIMPLEEXPR  PASEXP
+						       SQR         PASCLL
+						       STR1TOCHAR  PASSTR
+						       STRDESC     PASSTR
+						       STROP       PASSTR
+						       STRPARM     PASSTR
+						       SUBLOWBOUN  PASSEL
+						       SUBSTRFUN   PASCLL
+						       TERM        PASEXP
+						       TIME        PASCLL
+						       TRUNC       PASCLL
+						       ULCASE      PASCLL
+						       UPLOWCASE   PASCLL
+						       VLOAD       PASCG 
+						       WITHSTATEM  PASBOD
+						       WRITEWRITE  PASCLL
+
+     MAC3B       PASCGN		MAC3        PASCGN     AREAID_OR_  PASCLL
+				MAC3R       PASCGN     ASSIGNMENT  PASBOD
+						       CALLNONSTA  PASCLL
+						       GOTOSTATEM  PASBOD
+						       LOADFILEAD  PASCG 
+						       MAKECODE    PASCG 
+						       MAKE_POINT  PASCLL
+						       SELECTOR    PASSEL
+						       STORE       PASCG 
+						       SUPPORT     PASCG 
+						       VLOAD       PASCG 
+
+Cross Reference Listing for PASCAL-10					Page 32
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     MAC3R       PASCGN		MAC         PASCGN     ABS         PASCLL
+						       CALLNONSTA  PASCLL
+						       ENTERBODY   PASCG 
+						       EXITSTATEM  PASBOD
+						       EXPRESSION  PASEXP
+						       FORSTATEME  PASBOD
+						       GOTOSTATEM  PASBOD
+						       LEAVEBODY   PASCG 
+						       LOOPSTATEM  PASBOD
+						       MAC3B       PASCGN
+						       MAKE_POINT  PASCLL
+						       NEW         PASCLL
+						       NEWFILER    PASCG 
+						       NEWPAGER    PASCG 
+						       PREDSUCC    PASCLL
+						       SELECTOR    PASSEL
+						       SUBSTRFUN   PASCLL
+						       TERM        PASEXP
+						       UPLOWCASE   PASCLL
+						       WHILESTATE  PASBOD
+
+     MAC4        PASCGN		MAC         PASCGN     ASSIGNMENT  PASBOD
+						       CALLNONSTA  PASCLL
+						       CHANNEL     PASCLL
+						       ENTERBODY   PASCG 
+						       EOFEOLN     PASCLL
+						       EXPRESSION  PASEXP
+						       FACTOR      PASEXP
+						       FETCHBASIS  PASCG 
+						       FORSTATEME  PASBOD
+						       GETLINENR   PASCLL
+						       GOTOSTATEM  PASBOD
+						       LDSTRPTR    PASSTR
+						       MVSTRING    PASSTR
+						       NEW         PASCLL
+						       READREADLN  PASCLL
+						       RESTOREREG  PASCLL
+						       SAVEREGS    PASCLL
+						       SELECTOR    PASSEL
+Cross Reference Listing for PASCAL-10					Page 33
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     MAC4        PASCGN (cont.)			       STRCAT      PASSTR
+						       STRDESC     PASSTR
+						       SUBSTRFUN   PASCLL
+						       UPLOWCASE   PASCLL
+						       WRITEWRITE  PASCLL
+
+     MAC4R       PASCGN		MAC         PASCGN     <NONE>            
+
+     MAC5        PASCGN		MAC         PASCGN     ASSIGNMENT  PASBOD
+						       FETCHBASIS  PASCG 
+						       GETPARADDR  PASCG 
+						       MAKECODE    PASCG 
+						       MINMAX      PASCLL
+						       MOVEWORDS   PASSTR
+						       SELECTOR    PASSEL
+						       STORE       PASCG 
+						       STRPARM     PASSTR
+						       SUBSTRFUN   PASCLL
+
+     MAKECODE    PASCG 		ABS         *SYS*      ASSIGNMENT  PASBOD
+				DEPCST      PASCG      FORSTATEME  PASBOD
+				FETCHBASIS  PASCG      FREECHANNE  PASCLL
+				INCREMENTR  PASCGN     LOAD        PASCG 
+				MAC         PASCGN     MINMAX      PASCLL
+				MAC3        PASCGN     PREDSUCC    PASCLL
+				MAC3B       PASCGN     READREADLN  PASCLL
+				MAC5        PASCGN     RELEASE     PASCLL
+						       SEARCHCODE  PASEXP
+						       STRDESC     PASSTR
+
+     MAKEREAL    PASEXP		LOAD        PASCG      ASSIGNMENT  PASBOD
+				MAC3        PASCGN     CALLNONSTA  PASCLL
+				MAKEREAL    PASEXP     EXPRESSION  PASEXP
+				NEW         *SYS*      FORTRAN_FU  PASCLL
+				SUPPORT     PASCG      MAKEREAL    PASEXP
+						       MINMAX      PASCLL
+						       SIMPLEEXPR  PASEXP
+						       TERM        PASEXP
+
+Cross Reference Listing for PASCAL-10					Page 34
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     MAKESTRING  PASSTR		FETCHBASIS  PASCG      MOVEWORDS   PASSTR
+				INCREMENTR  PASCGN     MVSTRING    PASSTR
+				MAC         PASCGN     STRPARM     PASSTR
+
+     MAKE_POINT  PASCLL		COMPTYPES   PASCMP     CALL        PASCLL
+				ERROR       PASLEX
+				EXPRESSION  PASEXP
+				INSYMBOL    PASLEX
+				LOAD        PASCG 
+				MAC         PASCGN
+				MAC3        PASCGN
+				MAC3B       PASCGN
+				MAC3R       PASCGN
+
+     MARK        *SYS* 				       BLOCK       PASBLK
+						       PASCAL      PASCAL
+
+     MARK        PASCLL		COMPTYPES   PASCMP     CALL        PASCLL
+				ERROR       PASLEX
+				STORE       PASCG 
+				SUPPORT     PASCG 
+				VARIABLE    PASCLL
+
+     MAXLEN      PASSTR		COMPTYPES   PASCMP     LENGTHFUN   PASCLL
+						       MVSTRING    PASSTR
+						       STRCAT      PASSTR
+						       STRDESC     PASSTR
+						       SUBSTRFUN   PASCLL
+
+     MCCODE      PASMC 		DUMP_TREE   *UNDEF     WRITEMC     PASMC 
+				NEUEZEILE   PASMC 
+				SHOWRELOCA  PASMC 
+				WRITE       *SYS* 
+				WRITEBLOCK  PASMC 
+				WRITEBUFFE  PASLEX
+				WRITEFIRST  PASMC 
+				WRITEWORD   PASMC 
+
+     MCCONSTANT  PASMC 		WRITEBLOCK  PASMC      WRITEMC     PASMC 
+Cross Reference Listing for PASCAL-10					Page 35
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     MCCONSTANT  PASMC  (cont.)	WRITEWORD   PASMC 
+
+     MCFILEBLOC  PASMC 		COMPTYPES   PASCMP     WRITEMC     PASMC 
+				WRITEBLOCK  PASMC 
+				WRITEFIRST  PASMC 
+				WRITEWORD   PASMC 
+
+     MCLIBRARY   PASMC 		DUMPLIBREC  PASMC      WRITEMC     PASMC 
+				WRITEBLOCK  PASMC 
+				WRITEHEADE  PASMC 
+
+     MCSYMBOLS   PASMC 		DEFSYMBOL   PASMC      WRITEMC     PASMC 
+				REFERENCE   PASMC 
+				WRITEBLOCK  PASMC 
+				WRITEHEADE  PASMC 
+
+     MCVARIOUS   PASMC 		CLOSE       *SYS*      WRITEMC     PASMC 
+				DREF_CTP    PASMC 
+				ERROR       PASLEX
+				FILEB$      *UNDEF
+				PUTRELCODE  PASMC 
+				WRITEBLOCK  PASMC 
+				WRITEHEADE  PASMC 
+				WRITEIDENT  PASMC 
+				WRITEPAIR   PASMC 
+				WRITEWORD   PASMC 
+
+     MINIMAXIMU  PASCLL		COMPTYPES   PASCMP     CALL        PASCLL
+				ERROR       PASLEX
+				GETBOUNDS   PASLEX
+				INSYMBOL    PASLEX
+				SRCHID      PASLEX
+
+     MINMAX      PASCLL		COMPTYPES   PASCMP     CALL        PASCLL
+				ERROR       PASLEX
+				EXPRESSION  PASEXP
+				FETCHBASIS  PASCG 
+				INSYMBOL    PASLEX
+				LOAD        PASCG 
+Cross Reference Listing for PASCAL-10					Page 36
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     MINMAX      PASCLL (cont.)	MAC3        PASCGN
+				MAC5        PASCGN
+				MAKECODE    PASCG 
+				MAKEREAL    PASEXP
+
+     MOVEWORDS   PASSTR		DEPCST      PASCG      MVSTRING    PASSTR
+				INCREMENTR  PASCGN
+				LOAD        PASCG 
+				MAC3        PASCGN
+				MAC5        PASCGN
+				MAKESTRING  PASSTR
+				STORE       PASCG 
+
+     MULTI_ARRA  PASCSN		CONSTANT    PASCST     CST_LIST    PASCSN
+				CST_LIST    PASCSN     MULTI_ARRA  PASCSN
+				ERRANDSKIP  PASLEX
+				ERROR       PASLEX
+				GETBOUNDS   PASLEX
+				INSYMBOL    PASLEX
+				MULTI_ARRA  PASCSN
+				NEW         *SYS* 
+				PUT_CST     PASCSN
+				STRING      PASCMP
+
+     MVSTRING    PASSTR		ALTERSTRIN  PASSTR     ASSIGNMENT  PASBOD
+				CHARTOSTR1  PASSTR     MVSTRING    PASSTR
+				CLASSIFY    PASSTR     STRPARM     PASSTR
+				COMPTYPES   PASCMP
+				DCLSTRING   PASSTR
+				FETCHBASIS  PASCG 
+				INCREMENTR  PASCGN
+				LDSTRPTR    PASSTR
+				LOAD        PASCG 
+				MAC         PASCGN
+				MAC3        PASCGN
+				MAC4        PASCGN
+				MAKESTRING  PASSTR
+				MAXLEN      PASSTR
+				MOVEWORDS   PASSTR
+Cross Reference Listing for PASCAL-10					Page 37
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     MVSTRING    PASSTR (cont.)	MVSTRING    PASSTR
+				SAVEEXPR    PASSTR
+				STORE       PASCG 
+				STRDESC     PASSTR
+				STROP       PASSTR
+				STRPARM     PASSTR
+
+     NEUEZEILE   PASMC 		CHECKLISTI  PASMC      MCCODE      PASMC 
+				WRITE       *SYS*      WRITEWORD   PASMC 
+				WRITELN     *SYS* 
+
+     NEW         *SYS* 				       ALTERSTRIN  PASSTR
+						       CASESTATEM  PASBOD
+						       COMPTYPES   PASCMP
+						       CONSTANT    PASCST
+						       CST_DECLAR  PASCSN
+						       CST_LIST    PASCSN
+						       DCLLABEL    PASLEX
+						       DCLSTRING   PASSTR
+						       DECLAREPAR  PASBLK
+						       DECLAREPAR  PASBLK
+						       DEPCST      PASCG 
+						       ERRORWITHT  PASLEX
+						       FACTOR      PASEXP
+						       FIELDLIST   PASBLK
+						       FORMALTYPE  PASBLK
+						       INIT_0      PASINI
+						       INSYMBOL    PASLEX
+						       MAKEREAL    PASEXP
+						       MULTI_ARRA  PASCSN
+						       PARAMETERL  PASBLK
+						       PROCEDURED  PASBLK
+						       RECSECTION  PASBLK
+						       SIMPLEEXPR  PASEXP
+						       SIMPLETYPE  PASBLK
+						       TYP         PASBLK
+						       TYPEDECLAR  PASBLK
+						       VARIABLEDE  PASBLK
+
+Cross Reference Listing for PASCAL-10					Page 38
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     NEW         PASCLL		COMPTYPES   PASCMP     CALL        PASCLL
+				CONSTANT    PASCST
+				ERROR       PASLEX
+				EXPRESSION  PASEXP
+				GETBOUNDS   PASLEX
+				INCREMENTR  PASCGN
+				INSYMBOL    PASLEX
+				LOAD        PASCG 
+				MAC3        PASCGN
+				MAC3R       PASCGN
+				MAC4        PASCGN
+				SELECTOR    PASSEL
+				SRCHID      PASLEX
+				STORE       PASCG 
+				STRING      PASCMP
+				SUPPORT     PASCG 
+
+     NEWFILER    PASCG 		EMITSTRING  PASCG      NEWPAGER    PASCG 
+				FULLWORD    PASCG 
+				MAC3R       PASCGN
+
+     NEWLINER    PASCG 		FULLWORD    PASCG      COMPOUNDST  PASBOD
+				NEWPAGER    PASCG      LEAVEBODY   PASCG 
+				SUPPORT     PASCG      REPEATSTAT  PASBOD
+						       STATEMENT   PASBOD
+
+     NEWPAGER    PASCG 		EMITSTRING  PASCG      NEWLINER    PASCG 
+				FULLWORD    PASCG 
+				FWDPAGEREF  PASCG 
+				MAC3R       PASCGN
+				NEWFILER    PASCG 
+
+     NEXTCH      *UNDEF				       DODIRECT    PASLEX
+						       ERRSKIP     PASOPT
+						       INSYMBOL    PASLEX
+						       IVALUE      PASOPT
+						       OPTIONLIST  PASOPT
+						       OPTIONS     PASLEX
+						       PASCAL      PASCAL
+Cross Reference Listing for PASCAL-10					Page 39
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     NEXTCH      *UNDEF (cont.)			       READFILEID  PASCAL
+						       READIDENTI  PASOPT
+						       SKIPBLANKS  PASOPT
+
+     NEXTFILE    PASLEX		CLOSE       *SYS*      PASCAL      PASCAL
+				RESET       *SYS* 
+
+     ODD         PASCLL		ERROR       PASLEX     CALL        PASCLL
+				MAC3        PASCGN
+
+     OPEN        *SYS* 				       FINDERROR   PASLEX
+
+     OPTIONLIST  PASOPT		ERRSKIP     PASOPT     DODIRECT    PASLEX
+				IVALUE      PASOPT     PASCAL      PASCAL
+				LOOKUP_OPT  *UNDEF
+				NEXTCH      *UNDEF
+				READIDENTI  PASOPT
+				SKIPBLANKS  PASOPT
+
+     OPTIONS     PASLEX		ERROR       PASLEX     INSYMBOL    PASLEX
+				IVALUE      PASOPT
+				NEXTCH      *UNDEF
+
+     ORD         PASCLL		ERROR       PASLEX     CALL        PASCLL
+
+     PAGE        *SYS* 				       CHECKLISTI  PASMC 
+						       DODIRECT    PASLEX
+						       GETNEXTLIN  PASLEX
+
+     PAGE        PASCLL		GETFILENAM  PASCLL     CALL        PASCLL
+				SUPPORT     PASCG 
+
+     PARAMETERL  PASBLK		DECLAREPAR  PASBLK#    PROCEDURED  PASBLK
+				ENTERID     PASLEX
+				ERRANDSKIP  PASLEX
+				ERROR       PASLEX
+				IFERRSKIP   PASLEX
+				INSYMBOL    PASLEX
+				NEW         *SYS* 
+Cross Reference Listing for PASCAL-10					Page 40
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     PARAMETERL  PASBLK (cont.)	SKIPIFERR   PASLEX
+				SRCHID      PASLEX
+
+     PASCAL      PASCAL		BLOCK       PASBLK     <NONE>            
+				BREAK       *SYS* 
+				CLOSE       *SYS* 
+				ENDOFLINE   PASLEX
+				ENTITLE     PASOPT
+				ERROR       PASLEX
+				FILEERR     PASCAL
+				FULLWORD    PASCG 
+				GETNEXTLIN  PASLEX
+				INIT_0      PASINI
+				INSYMBOL    PASLEX
+				LEXINIT     PASLEX
+				LINK        *UNDEF
+				LOG_STATS   PASCAL
+				MARK        *SYS* 
+				NEXTCH      *UNDEF
+				NEXTFILE    PASLEX
+				OPTIONLIST  PASOPT
+				READFILEID  PASCAL
+				RELEASE     *SYS* 
+				RESET       *SYS* 
+				REWRITE     *SYS* 
+				RUNTIME     *SYS* 
+				SEOF        *UNDEF
+				SEOLN       *UNDEF
+				SREADLN     *UNDEF
+				TMPCOR      *UNDEF
+				WIDTH       PASOPT
+				WRITE       *SYS* 
+				WRITELN     *SYS* 
+				WRITEMC     PASMC 
+
+     POINTR      PASCLL		COMPTYPES   PASCMP     CALL        PASCLL
+				ERROR       PASLEX
+				LOAD        PASCG 
+
+Cross Reference Listing for PASCAL-10					Page 41
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     PREDSUCC    PASCLL		ERROR       PASLEX     CALL        PASCLL
+				MAC3        PASCGN
+				MAC3R       PASCGN
+				MAKECODE    PASCG 
+				SUPPORT     PASCG 
+
+     PRGM_DIR    *UNDEF				       FINDERROR   PASLEX
+
+     PRGM_PPN    *UNDEF				       INIT_0      PASINI
+						       LOG_STATS   PASCAL
+
+     PROCEDURED  PASBLK		BLOCK       PASBLK     BLOCK       PASBLK
+				BREAK       *SYS* 
+				ENTERID     PASLEX
+				ERRANDSKIP  PASLEX
+				ERROR       PASLEX
+				IFERRSKIP   PASLEX
+				INSYMBOL    PASLEX
+				NEW         *SYS* 
+				PARAMETERL  PASBLK
+				SKIPIFERR   PASLEX
+				SRCHID      PASLEX
+				SRCHSECTIO  PASLEX
+				WRITE       *SYS* 
+
+     PROTECTION  PASCLL		ERROR       PASLEX     CALL        PASCLL
+				EXPRESSION  PASEXP
+				LOAD        PASCG 
+				MAC3        PASCGN
+
+     PUT         *SYS* 				       PUTRELCODE  PASMC 
+						       PUT_RECORD  PASMC 
+
+     PUT8BITSTO  PASCLL		EXPRESSION  PASEXP     CALL        PASCLL
+				LOAD        PASCG 
+				MAC3        PASCGN
+
+     PUTRELCODE  PASMC 		PUT         *SYS*      MCVARIOUS   PASMC 
+						       WRITEBLOCK  PASMC 
+Cross Reference Listing for PASCAL-10					Page 42
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     PUTRELCODE  PASMC  (cont.)			       WRITEWORD   PASMC 
+
+     PUT_CST     PASCSN		LEFT_SHIFT  *UNDEF     CST_LIST    PASCSN
+						       MULTI_ARRA  PASCSN
+
+     PUT_RECORD  PASMC 		CHECKLISTI  PASMC      COPYCSP     PASMC 
+				PUT         *SYS*      COPYCTP     PASMC 
+				WRITELN     *SYS*      COPYSTP     PASMC 
+
+     RADIX50     PASMC 				       WRITEIDENT  PASMC 
+
+     READ        *SYS* 				       FINDERROR   PASLEX
+
+     READFILEID  PASCAL		NEXTCH      *UNDEF     DODIRECT    PASLEX
+						       PASCAL      PASCAL
+
+     READIDENTI  PASOPT		NEXTCH      *UNDEF     DODIRECT    PASLEX
+						       OPTIONLIST  PASOPT
+
+     READLN      *SYS* 				       FINDERROR   PASLEX
+
+     READREADLN  PASCLL		COMPTYPES   PASCMP     CALL        PASCLL
+				ERROR       PASLEX
+				GETBOUNDS   PASLEX
+				GETFILENAM  PASCLL
+				INSYMBOL    PASLEX
+				LOADADDRES  PASCG 
+				MAC4        PASCGN
+				MAKECODE    PASCG 
+				SUPPORT     PASCG 
+				VARIABLE    PASCLL
+
+     RECOVER     PASLEX		RECOVER     PASLEX     LEXINIT     PASLEX
+						       RECOVER     PASLEX
+
+     RECSECTION  PASBLK		NEW         *SYS*      FIELDLIST   PASBLK
+
+     REFERENCE   PASMC 		WRITEIDENT  PASMC      DEFSYMBOL   PASMC 
+				WRITEPAIR   PASMC      MCSYMBOLS   PASMC 
+Cross Reference Listing for PASCAL-10					Page 43
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     RELEASE     *SYS* 				       BLOCK       PASBLK
+						       PASCAL      PASCAL
+
+     RELEASE     PASCLL		ERROR       PASLEX     CALL        PASCLL
+				EXPRESSION  PASEXP
+				MAC3        PASCGN
+				MAKECODE    PASCG 
+				SUPPORT     PASCG 
+
+     REPEATSTAT  PASBOD		DECNEST     *UNDEF     STATEMENT   PASBOD
+				ERROR       PASLEX
+				EXPRESSION  PASEXP
+				INCNEST     *UNDEF
+				INSERTADDR  PASCG 
+				INSYMBOL    PASLEX
+				NEWLINER    PASCG 
+				SETNEST     *UNDEF
+				STATEMENT   PASBOD
+
+     RESET       *SYS* 				       DODIRECT    PASLEX
+						       NEXTFILE    PASLEX
+						       PASCAL      PASCAL
+
+     RESTOREREG  PASCLL		MAC3        PASCGN     CALLNONSTA  PASCLL
+				MAC4        PASCGN     INDEXFUN    PASCLL
+						       SEARCHVERI  PASCLL
+
+     RETURN      PASCLL		STOP        PASCLL     CALL        PASCLL
+				SUPPORT     PASCG 
+
+     REWRITE     *SYS* 				       PASCAL      PASCAL
+
+     ROUND       PASCLL		ERROR       PASLEX     CALL        PASCLL
+				MAC3        PASCGN
+				SUPPORT     PASCG 
+
+     RUNTIME     *SYS* 				       PASCAL      PASCAL
+
+     RUNTIME     PASCLL		INCREMENTR  PASCGN     CALL        PASCLL
+Cross Reference Listing for PASCAL-10					Page 44
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     RUNTIME     PASCLL (cont.)	MAC3        PASCGN
+
+     SAVEEXPR    PASSTR		CHECKLC     PASCGN     MVSTRING    PASSTR
+				STORE       PASCG      STRDESC     PASSTR
+						       SUBSTRFUN   PASCLL
+
+     SAVEREGS    PASCLL		CHECKLC     PASCGN     CALLNONSTA  PASCLL
+				MAC3        PASCGN     INDEXFUN    PASCLL
+				MAC4        PASCGN     SEARCHVERI  PASCLL
+
+     SEARCHCODE  PASEXP		CHANGEOPER  PASEXP     EXPRESSION  PASEXP
+				LOAD        PASCG      SIMPLEEXPR  PASEXP
+				MAKECODE    PASCG      TERM        PASEXP
+
+     SEARCHLABE  PASLEX				       FINDLABEL   PASLEX
+						       LABELDECLA  PASBLK
+
+     SEARCHVERI  PASCLL		COMPTYPES   PASCMP     CALL        PASCLL
+				ERRANDSKIP  PASLEX
+				ERROR       PASLEX
+				EXPRESSION  PASEXP
+				INCREMENTR  PASCGN
+				INSYMBOL    PASLEX
+				LOAD        PASCG 
+				MAC3        PASCGN
+				RESTOREREG  PASCLL
+				SAVEREGS    PASCLL
+				STRDESC     PASSTR
+				STRFORM     PASCMP
+				SUPPORT     PASCG 
+
+     SELECTOR    PASSEL		CHKSPECIAL  PASSEL     ASSIGNMENT  PASBOD
+				COMPTYPES   PASCMP     FACTOR      PASEXP
+				DCLSTRING   PASSTR     FORSTATEME  PASBOD
+				ERROR       PASLEX     GETFILENAM  PASCLL
+				EXPRESSION  PASEXP     GETINTEGER  PASCLL
+				FETCHBASIS  PASCG      NEW         PASCLL
+				FINSCOPE    PASSEL     VARIABLE    PASCLL
+				GETBOUNDS   PASLEX     WITHSTATEM  PASBOD
+Cross Reference Listing for PASCAL-10					Page 45
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     SELECTOR    PASSEL (cont.)	GETPARADDR  PASCG 
+				IFERRSKIP   PASLEX
+				INCREMENTR  PASCGN
+				INSERTADDR  PASCG 
+				INSYMBOL    PASLEX
+				LOAD        PASCG 
+				LOADADDRES  PASCG 
+				MAC3        PASCGN
+				MAC3B       PASCGN
+				MAC3R       PASCGN
+				MAC4        PASCGN
+				MAC5        PASCGN
+				SRCHSECTIO  PASLEX
+				STRFORM     PASCMP
+				STRKIND     PASSTR
+				SUBLOWBOUN  PASSEL
+				SUPPORT     PASCG 
+				VLOAD       PASCG 
+
+     SEOF        *UNDEF				       DODIRECT    PASLEX
+						       PASCAL      PASCAL
+
+     SEOLN       *UNDEF				       PASCAL      PASCAL
+
+     SETNEST     *UNDEF				       CASESTATEM  PASBOD
+						       COMPOUNDST  PASBOD
+						       REPEATSTAT  PASBOD
+						       STATEMENT   PASBOD
+
+     SET_FIELD   PASCSN		CST_LIST    PASCSN     CST_LIST    PASCSN
+				ERROR       PASLEX
+				INSYMBOL    PASLEX
+
+     SET_PTR_TY  PASINI				       BODY        PASBOD
+						       INIT_0      PASINI
+
+     SET_ROOT    PASCLL		COMPTYPES   PASCMP     CALL        PASCLL
+				ERROR       PASLEX
+				EXPRESSION  PASEXP
+Cross Reference Listing for PASCAL-10					Page 46
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     SET_ROOT    PASCLL (cont.)	INSYMBOL    PASLEX
+				LOAD        PASCG 
+				SUPPORT     PASCG 
+
+     SGETLINENR  *UNDEF				       GETNEXTLIN  PASLEX
+
+     SHOWRELOCA  PASMC 		WRITE       *SYS*      MCCODE      PASMC 
+						       WRITEWORD   PASMC 
+
+     SIMPLEEXPR  PASEXP		COMPTYPES   PASCMP     EXPRESSION  PASEXP
+				ERROR       PASLEX
+				INSERTADDR  PASCG 
+				INSYMBOL    PASLEX
+				LOAD        PASCG 
+				MAC3        PASCGN
+				MAKEREAL    PASEXP
+				NEW         *SYS* 
+				SEARCHCODE  PASEXP
+				STRCAT      PASSTR
+				STRFORM     PASCMP
+				TERM        PASEXP
+
+     SIMPLETYPE  PASBLK		CONSTANT    PASCST     TYP         PASBLK
+				DCLSTRING   PASSTR
+				ENTERID     PASLEX
+				ERRANDSKIP  PASLEX
+				ERROR       PASLEX
+				IFERRSKIP   PASLEX
+				INSYMBOL    PASLEX
+				LOG2        PASBLK
+				NEW         *SYS* 
+				SKIPIFERR   PASLEX
+				SRCHID      PASLEX
+				STRING      PASCMP
+
+     SIZE        PASCLL		ERROR       PASLEX     CALL        PASCLL
+				GETSIZE     PASCLL
+				INSYMBOL    PASLEX
+				SRCHID      PASLEX
+Cross Reference Listing for PASCAL-10					Page 47
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     SKIPBLANKS  PASOPT		NEXTCH      *UNDEF     DODIRECT    PASLEX
+						       OPTIONLIST  PASOPT
+
+     SKIPIFERR   PASLEX		ERROR       PASLEX     BLOCK       PASBLK
+				INSYMBOL    PASLEX     CONSTANT    PASCST
+						       CST_DECLAR  PASCSN
+						       ERRANDSKIP  PASLEX
+						       FIELDLIST   PASBLK
+						       FORMALTYPE  PASBLK
+						       IFERRSKIP   PASLEX
+						       PARAMETERL  PASBLK
+						       PROCEDURED  PASBLK
+						       SIMPLETYPE  PASBLK
+						       STATEMENT   PASBOD
+						       TYP         PASBLK
+						       TYPEDECLAR  PASBLK
+						       VARIABLEDE  PASBLK
+
+     SQR         PASCLL		ERROR       PASLEX     CALL        PASCLL
+				MAC3        PASCGN
+
+     SRCHID      PASLEX		ERROR       PASLEX     CALLNONSTA  PASCLL
+						       CONSTANT    PASCST
+						       CST_DECLAR  PASCSN
+						       CST_LIST    PASCSN
+						       FACTOR      PASEXP
+						       FIELDLIST   PASBLK
+						       FORMALTYPE  PASBLK
+						       FORSTATEME  PASBOD
+						       GETFILENAM  PASCLL
+						       GETINTEGER  PASCLL
+						       GETPUTRESE  PASCLL
+						       MINIMAXIMU  PASCLL
+						       NEW         PASCLL
+						       PARAMETERL  PASBLK
+						       PROCEDURED  PASBLK
+						       SIMPLETYPE  PASBLK
+						       SIZE        PASCLL
+						       STATEMENT   PASBOD
+Cross Reference Listing for PASCAL-10					Page 48
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     SRCHID      PASLEX (cont.)			       TYP         PASBLK
+						       UPPERLOWER  PASCLL
+						       VARIABLE    PASCLL
+						       WITHSTATEM  PASBOD
+
+     SRCHSECTIO  PASLEX				       PROCEDURED  PASBLK
+						       SELECTOR    PASSEL
+
+     SREADLN     *UNDEF				       DODIRECT    PASLEX
+						       FILEERR     PASCAL
+						       GETNEXTLIN  PASLEX
+						       PASCAL      PASCAL
+
+     STATEMENT   PASBOD		ASSIGNMENT  PASBOD     BODY        PASBOD
+				CALL        PASCLL     CASESTATEM  PASBOD
+				CASESTATEM  PASBOD     COMPOUNDST  PASBOD
+				COMPOUNDST  PASBOD     EXITSTATEM  PASBOD
+				DCLLABEL    PASLEX     FORSTATEME  PASBOD
+				ERRANDSKIP  PASLEX     IFSTATEMEN  PASBOD
+				ERROR       PASLEX     REPEATSTAT  PASBOD
+				EXITSTATEM  PASBOD     WHILESTATE  PASBOD
+				FINDLABEL   PASLEX     WITHSTATEM  PASBOD
+				FORSTATEME  PASBOD
+				GOTOSTATEM  PASBOD
+				IFSTATEMEN  PASBOD
+				INSERTADDR  PASCG 
+				INSYMBOL    PASLEX
+				LOOPSTATEM  PASBOD
+				NEWLINER    PASCG 
+				REPEATSTAT  PASBOD
+				SETNEST     *UNDEF
+				SKIPIFERR   PASLEX
+				SRCHID      PASLEX
+				WHILESTATE  PASBOD
+				WITHSTATEM  PASBOD
+
+     STOP        PASCLL		SUPPORT     PASCG      CALL        PASCLL
+						       RETURN      PASCLL
+
+Cross Reference Listing for PASCAL-10					Page 49
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     STORE       PASCG 		FETCHBASIS  PASCG      ASSIGNMENT  PASBOD
+				MAC         PASCGN     GETCHANNEL  PASCLL
+				MAC3B       PASCGN     GETLINENR   PASCLL
+				MAC5        PASCGN     MARK        PASCLL
+						       MOVEWORDS   PASSTR
+						       MVSTRING    PASSTR
+						       NEW         PASCLL
+						       SAVEEXPR    PASSTR
+						       WRITEWRITE  PASCLL
+
+     STP_SIZE    PASMC 				       COPYSTP     PASMC 
+
+     STR1TOCHAR  PASSTR		MAC3        PASCGN     STRPARM     PASSTR
+
+     STRCAT      PASSTR		CHECKLC     PASCGN     SIMPLEEXPR  PASEXP
+				DCLSTRING   PASSTR
+				LDSTRPTR    PASSTR
+				MAC4        PASCGN
+				MAXLEN      PASSTR
+				STRDESC     PASSTR
+				STRKIND     PASSTR
+				STROP       PASSTR
+
+     STRDESC     PASSTR		ALTERSTRIN  PASSTR     EXPRESSION  PASEXP
+				CHARTOSTR1  PASSTR     GETSTRINGA  PASCLL
+				COMPTYPES   PASCMP     INDEXFUN    PASCLL
+				DCLSTRING   PASSTR     MVSTRING    PASSTR
+				ERROR       PASLEX     SEARCHVERI  PASCLL
+				LDSTRPTR    PASSTR     STRCAT      PASSTR
+				MAC3        PASCGN     UPLOWCASE   PASCLL
+				MAC4        PASCGN
+				MAKECODE    PASCG 
+				MAXLEN      PASSTR
+				SAVEEXPR    PASSTR
+				STRKIND     PASSTR
+
+     STRFORM     PASCMP		COMPTYPES   PASCMP     ASSIGNMENT  PASBOD
+						       CALLNONSTA  PASCLL
+						       CLASSIFY    PASSTR
+Cross Reference Listing for PASCAL-10					Page 50
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     STRFORM     PASCMP (cont.)			       COMPATIBLE  PASCLL
+						       CST_LIST    PASCSN
+						       EXPRESSION  PASEXP
+						       GETSTRINGA  PASCLL
+						       INDEXFUN    PASCLL
+						       LENGTHFUN   PASCLL
+						       LOADADDRES  PASCG 
+						       SEARCHVERI  PASCLL
+						       SELECTOR    PASSEL
+						       SIMPLEEXPR  PASEXP
+						       STRPARM     PASSTR
+						       SUBSTRFUN   PASCLL
+						       UPLOWCASE   PASCLL
+
+     STRING      PASCMP		COMPTYPES   PASCMP     EXPRESSION  PASEXP
+						       FIELDLIST   PASBLK
+						       GETSIZE     PASCLL
+						       MULTI_ARRA  PASCSN
+						       NEW         PASCLL
+						       SIMPLETYPE  PASBLK
+						       WRITEWRITE  PASCLL
+
+     STRKIND     PASSTR				       LDSTRPTR    PASSTR
+						       LENGTHFUN   PASCLL
+						       SELECTOR    PASSEL
+						       STRCAT      PASSTR
+						       STRDESC     PASSTR
+						       SUBSTRFUN   PASCLL
+						       UPLOWCASE   PASCLL
+
+     STROP       PASSTR		ERROR       PASLEX     EXPRESSION  PASEXP
+				MAC3        PASCGN     MVSTRING    PASSTR
+				SUPPORT     PASCG      STRCAT      PASSTR
+
+     STRPARM     PASSTR		ALTERSTRIN  PASSTR     CALLNONSTA  PASCLL
+				CHECKLC     PASCGN     MVSTRING    PASSTR
+				CLASSIFY    PASSTR     SUBSTRFUN   PASCLL
+				COMPTYPES   PASCMP
+				INCREMENTR  PASCGN
+Cross Reference Listing for PASCAL-10					Page 51
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     STRPARM     PASSTR (cont.)	LDADDRESS   PASCG 
+				LOAD        PASCG 
+				MAC         PASCGN
+				MAC3        PASCGN
+				MAC5        PASCGN
+				MAKESTRING  PASSTR
+				MVSTRING    PASSTR
+				STR1TOCHAR  PASSTR
+				STRFORM     PASCMP
+
+     SUBLOWBOUN  PASSEL		MAC3        PASCGN     SELECTOR    PASSEL
+				SUPPORT     PASCG 
+
+     SUBSTRFUN   PASCLL		COMPTYPES   PASCMP     CALL        PASCLL
+				DCLSTRING   PASSTR
+				ERRANDSKIP  PASLEX
+				ERROR       PASLEX
+				EXPRESSION  PASEXP
+				FETCHBASIS  PASCG 
+				GETPARADDR  PASCG 
+				INCREMENTR  PASCGN
+				INSERTADDR  PASCG 
+				INSYMBOL    PASLEX
+				LOAD        PASCG 
+				LOADADDRES  PASCG 
+				MAC3        PASCGN
+				MAC3R       PASCGN
+				MAC4        PASCGN
+				MAC5        PASCGN
+				MAXLEN      PASSTR
+				SAVEEXPR    PASSTR
+				STRFORM     PASCMP
+				STRKIND     PASSTR
+				STRPARM     PASSTR
+				SUPPORT     PASCG 
+
+     SUPPORT     PASCG 		MAC3B       PASCGN     ADJSP       PASCG 
+						       ASSIGNMENT  PASBOD
+						       BREAK       PASCLL
+Cross Reference Listing for PASCAL-10					Page 52
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     SUPPORT     PASCG  (cont.)			       CALLNONSTA  PASCLL
+						       CLOSE       PASCLL
+						       DISPOSE     PASCLL
+						       ENTERBODY   PASCG 
+						       EXPSUPPORT  PASEXP
+						       FETCHBASIS  PASCG 
+						       FLOAT       PASCLL
+						       FORTRAN_FU  PASCLL
+						       FREECHANNE  PASCLL
+						       GETCHANNEL  PASCLL
+						       GETPUTRESE  PASCLL
+						       GET_ROOT    PASCLL
+						       GOTOSTATEM  PASBOD
+						       INDEXFUN    PASCLL
+						       LEAVEBODY   PASCG 
+						       MAKEREAL    PASEXP
+						       MARK        PASCLL
+						       NEW         PASCLL
+						       NEWLINER    PASCG 
+						       PAGE        PASCLL
+						       PREDSUCC    PASCLL
+						       READREADLN  PASCLL
+						       RELEASE     PASCLL
+						       RETURN      PASCLL
+						       ROUND       PASCLL
+						       SEARCHVERI  PASCLL
+						       SELECTOR    PASSEL
+						       SET_ROOT    PASCLL
+						       STOP        PASCLL
+						       STROP       PASSTR
+						       SUBLOWBOUN  PASSEL
+						       SUBSTRFUN   PASCLL
+						       TRUNC       PASCLL
+						       VLOAD       PASCG 
+						       WRITEWRITE  PASCLL
+
+     TERM        PASEXP		COMPTYPES   PASCMP     SIMPLEEXPR  PASEXP
+				ERROR       PASLEX
+				EXPSUPPORT  PASEXP
+Cross Reference Listing for PASCAL-10					Page 53
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     TERM        PASEXP (cont.)	FACTOR      PASEXP
+				INCREMENTR  PASCGN
+				INSERTADDR  PASCG 
+				INSYMBOL    PASLEX
+				LOAD        PASCG 
+				MAC3        PASCGN
+				MAC3R       PASCGN
+				MAKEREAL    PASEXP
+				SEARCHCODE  PASEXP
+
+     TIME        PASCLL		INCREMENTR  PASCGN     CALL        PASCLL
+				MAC3        PASCGN
+
+     TMPCOR      *UNDEF				       PASCAL      PASCAL
+
+     TRUNC       PASCLL		ERROR       PASLEX     CALL        PASCLL
+				MAC3        PASCGN
+				SUPPORT     PASCG 
+
+     TYP         PASBLK		ERROR       PASLEX     FIELDLIST   PASBLK
+				FIELDLIST   PASBLK     TYP         PASBLK
+				FORMALTYPE  PASBLK     TYPEDECLAR  PASBLK
+				GETBOUNDS   PASLEX     VARIABLEDE  PASBLK
+				IFERRSKIP   PASLEX
+				INSYMBOL    PASLEX
+				NEW         *SYS* 
+				SIMPLETYPE  PASBLK
+				SKIPIFERR   PASLEX
+				SRCHID      PASLEX
+				TYP         PASBLK
+
+     TYPEDECLAR  PASBLK		ENTERID     PASLEX     BLOCK       PASBLK
+				ERROR       PASLEX
+				ERRORWITHT  PASLEX
+				IFERRSKIP   PASLEX
+				INSYMBOL    PASLEX
+				NEW         *SYS* 
+				SKIPIFERR   PASLEX
+				TYP         PASBLK
+Cross Reference Listing for PASCAL-10					Page 54
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     ULCASE      PASCLL		MAC3        PASCGN     UPLOWCASE   PASCLL
+
+     UPLOWCASE   PASCLL		CHECKLC     PASCGN     CALL        PASCLL
+				COMPTYPES   PASCMP
+				ERROR       PASLEX
+				INCREMENTR  PASCGN
+				INSERTADDR  PASCG 
+				LOAD        PASCG 
+				MAC3        PASCGN
+				MAC3R       PASCGN
+				MAC4        PASCGN
+				STRDESC     PASSTR
+				STRFORM     PASCMP
+				STRKIND     PASSTR
+				ULCASE      PASCLL
+
+     UPPERLOWER  PASCLL		ERRANDSKIP  PASLEX     CALL        PASCLL
+				ERROR       PASLEX
+				GETBOUNDS   PASLEX
+				INSYMBOL    PASLEX
+				SRCHID      PASLEX
+
+     USER_PPN    *UNDEF				       LOG_STATS   PASCAL
+
+     VARIABLE    PASCLL		ERROR       PASLEX     ADDRESS     PASCLL
+				INSYMBOL    PASLEX     GETCHANNEL  PASCLL
+				SELECTOR    PASSEL     GETLINENR   PASCLL
+				SRCHID      PASLEX     GETPUTRESE  PASCLL
+						       MARK        PASCLL
+						       READREADLN  PASCLL
+
+     VARIABLEDE  PASBLK		ENTERID     PASLEX     BLOCK       PASBLK
+				ERRANDSKIP  PASLEX
+				ERROR       PASLEX
+				ERRORWITHT  PASLEX
+				IFERRSKIP   PASLEX
+				INSYMBOL    PASLEX
+				NEW         *SYS* 
+				SKIPIFERR   PASLEX
+Cross Reference Listing for PASCAL-10					Page 55
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     VARIABLEDE  PASBLK (cont.)	TYP         PASBLK
+				VAR_LIST    PASCSN
+
+     VAR_LIST    PASCSN		CST_LIST    PASCSN     VARIABLEDE  PASBLK
+				ERRANDSKIP  PASLEX
+				ERROR       PASLEX
+				WRITEMC     PASMC 
+
+     VLOAD       PASCG 		FETCHBASIS  PASCG      LOAD        PASCG 
+				INCREMENTR  PASCGN     SELECTOR    PASSEL
+				MAC         PASCGN
+				MAC3        PASCGN
+				MAC3B       PASCGN
+				SUPPORT     PASCG 
+
+     WHILESTATE  PASBOD		ERROR       PASLEX     STATEMENT   PASBOD
+				EXPRESSION  PASEXP
+				INSERTADDR  PASCG 
+				INSYMBOL    PASLEX
+				MAC3R       PASCGN
+				STATEMENT   PASBOD
+
+     WIDTH       PASOPT				       ENDOFLINE   PASLEX
+						       ENTITLE     PASOPT
+						       PASCAL      PASCAL
+
+     WITHSTATEM  PASBOD		CHECKLC     PASCGN     STATEMENT   PASBOD
+				ERROR       PASLEX
+				FETCHBASIS  PASCG 
+				GETPARADDR  PASCG 
+				INSYMBOL    PASLEX
+				MAC         PASCGN
+				MAC3        PASCGN
+				SELECTOR    PASSEL
+				SRCHID      PASLEX
+				STATEMENT   PASBOD
+
+     WRBUFFER    PASLEX		WRITE       *SYS*      ENDOFLINE   PASLEX
+				WRITELINEN  PASLEX     WRITEBUFFE  PASLEX
+Cross Reference Listing for PASCAL-10					Page 56
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     WRBUFFER    PASLEX (cont.)	WRITELN     *SYS* 
+
+     WRITE       *SYS* 				       ENDOFLINE   PASLEX
+						       ENTERBODY   PASCG 
+						       ENTITLE     PASOPT
+						       FILEERR     PASCAL
+						       FINDERROR   PASLEX
+						       MCCODE      PASMC 
+						       NEUEZEILE   PASMC 
+						       PASCAL      PASCAL
+						       PROCEDURED  PASBLK
+						       SHOWRELOCA  PASMC 
+						       WRBUFFER    PASLEX
+						       WRITEHEADE  PASMC 
+						       WRITEIDENT  PASMC 
+						       WRITELINEN  PASLEX
+						       WRITEWORD   PASMC 
+
+     WRITEBLOCK  PASMC 		PUTRELCODE  PASMC      MCCODE      PASMC 
+						       MCCONSTANT  PASMC 
+						       MCFILEBLOC  PASMC 
+						       MCLIBRARY   PASMC 
+						       MCSYMBOLS   PASMC 
+						       MCVARIOUS   PASMC 
+						       WRITEWORD   PASMC 
+
+     WRITEBUFFE  PASLEX		WRBUFFER    PASLEX     MCCODE      PASMC 
+
+     WRITEFIRST  PASMC 		CHECKLISTI  PASMC      MCCODE      PASMC 
+				WRITELN     *SYS*      MCFILEBLOC  PASMC 
+
+     WRITEHEADE  PASMC 		CHECKLISTI  PASMC      MCLIBRARY   PASMC 
+				WRITE       *SYS*      MCSYMBOLS   PASMC 
+				WRITELN     *SYS*      MCVARIOUS   PASMC 
+
+     WRITEIDENT  PASMC 		CHECKLISTI  PASMC      DEFSYMBOL   PASMC 
+				RADIX50     PASMC      DUMPLIBREC  PASMC 
+				WRITE       *SYS*      MCVARIOUS   PASMC 
+				WRITELN     *SYS*      REFERENCE   PASMC 
+Cross Reference Listing for PASCAL-10					Page 57
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     WRITEIDENT  PASMC  (cont.)	WRITEWORD   PASMC 
+
+     WRITELINEN  PASLEX		WRITE       *SYS*      WRBUFFER    PASLEX
+
+     WRITELN     *SYS* 				       CALL        PASCLL
+						       COPYCSP     PASMC 
+						       COPYCTP     PASMC 
+						       COPYSTP     PASMC 
+						       ENDOFLINE   PASLEX
+						       ENTERBODY   PASCG 
+						       ENTITLE     PASOPT
+						       FINDERROR   PASLEX
+						       NEUEZEILE   PASMC 
+						       PASCAL      PASCAL
+						       PUT_RECORD  PASMC 
+						       WRBUFFER    PASLEX
+						       WRITEFIRST  PASMC 
+						       WRITEHEADE  PASMC 
+						       WRITEIDENT  PASMC 
+						       WRITEMC     PASMC 
+
+     WRITEMC     PASMC 		CHECKLISTI  PASMC      BODY        PASBOD
+				MCCODE      PASMC      CST_DECLAR  PASCSN
+				MCCONSTANT  PASMC      PASCAL      PASCAL
+				MCFILEBLOC  PASMC      VAR_LIST    PASCSN
+				MCLIBRARY   PASMC 
+				MCSYMBOLS   PASMC 
+				MCVARIOUS   PASMC 
+				WRITELN     *SYS* 
+
+     WRITEPAIR   PASMC 		WRITEWORD   PASMC      COPYCTP     PASMC 
+						       DEFSYMBOL   PASMC 
+						       DUMPLIBREC  PASMC 
+						       MCVARIOUS   PASMC 
+						       REFERENCE   PASMC 
+
+     WRITEWORD   PASMC 		NEUEZEILE   PASMC      MCCODE      PASMC 
+				PUTRELCODE  PASMC      MCCONSTANT  PASMC 
+				SHOWRELOCA  PASMC      MCFILEBLOC  PASMC 
+Cross Reference Listing for PASCAL-10					Page 58
+
+     Procedure   in             Calls       in         Called By   in
+     ----------  ------         ----------  ------     ----------  ------
+
+     WRITEWORD   PASMC  (cont.)	WRITE       *SYS*      MCVARIOUS   PASMC 
+				WRITEBLOCK  PASMC      WRITEIDENT  PASMC 
+						       WRITEPAIR   PASMC 
+
+     WRITEWRITE  PASCLL		CHECKLC     PASCGN     CALL        PASCLL
+				COMPTYPES   PASCMP
+				ERROR       PASLEX
+				EXPRESSION  PASEXP
+				GETBOUNDS   PASLEX
+				GETFILENAM  PASCLL
+				INCREMENTR  PASCGN
+				INSYMBOL    PASLEX
+				LOAD        PASCG 
+				LOADADDRES  PASCG 
+				MAC3        PASCGN
+				MAC4        PASCGN
+				STORE       PASCG 
+				STRING      PASCMP
+				SUPPORT     PASCG 
+
+     WRT_LOG     *UNDEF				       LOG_STATS   PASCAL
+
+     ZERONEST    *UNDEF				       BLOCK       PASBLK
+
+   G@r†

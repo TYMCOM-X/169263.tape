@@ -1,0 +1,1262 @@
+
+
+
+          M68000 RDLIB Documentation                                Page 1
+          
+
+
+          ENTRY:  DAYTIME          _____
+
+          This function returns the  current  local  Day/Time  in  internal
+          form.
+
+
+          Usage:
+
+               EXTERNAL FUNCTION DAYTIME: DTIME_INT;
+
+
+
+
+          Input arguments:
+                           none
+
+
+          Output arguments:
+
+            <return  value>   The  current  local  Day/Time  is returned in
+                           internal form.
+
+
+
+          INCLUDE files required:
+
+            DTIME.TYP
+            DTIME.INC
+
+
+
+
+
+
+
+
+
+
+
+
+
+          M68000 RDLIB Documentation                                Page 2
+          
+
+
+          ENTRY:  DC_EXT          _____
+
+          This  function  converts  an  internal  Day/Time  to  a  standard
+          external form.
+
+
+          Usage:
+
+               EXTERNAL FUNCTION DC_EXT (DTIME: DTIME_INT):  DTIME_EXT;
+
+
+
+          Input arguments:
+
+            DTIME           A Day/Time in internal form.
+
+
+          Output arguments:
+
+            <return value>  The Day/Time in standard external form.
+
+
+
+          INCLUDE files required:
+
+            DTIME.TYP
+            DTIME.INC
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          M68000 RDLIB Documentation                                Page 3
+          
+
+
+          ENTRY:  EC_EXT          _____
+
+          This  procedure  converts  an external Date, Time, or Day/Time to
+          internal form.
+
+
+          Usage:
+
+               EXTERNAL PROCEDURE EC_EXT (VAR ERR_CODE:  DTIME_ERR;
+                                          DT_EXT:  NS_EXT;
+                                          VAR DTIME:  DTIME_INT);
+
+
+
+          Input arguments:
+
+            DT_EXT           A  string  representing  a  Date,   Time,   or
+                           Day/Time.  The Date portion of the string may be
+                           in  standard  external  form,  any  non-standard
+                           external  form, or it may be null.  The Time may
+                           be  in   the   standard   external   form,   the
+                           non-standard external form, or it may be null.
+
+
+          Output arguments:
+
+            ERR_CODE         It  is  returned  as DT_NOERR if no errors are
+                           encountered.  It is set to DT_ERR if errors  are
+                           found.   Error  conditions  include:  1.  Syntax
+                           errors in the input string and 2.  Invalid  Date
+                           or Time values.
+
+
+
+
+
+
+
+
+
+
+          M68000 RDLIB Documentation                                Page 4
+          
+
+
+            DTIME            The  internal  Day/Time  corresponding  to the
+                           external format string  passed  in.  If  only  a
+                           Date  is passed in, the Time is set to midnight.
+                           If only a Time is passed in, the Date is set  to
+                           the Base Date (zero).
+
+
+
+          INCLUDE files required:
+
+            DTIME.TYP
+            DTIME.INC
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          M68000 RDLIB Documentation                                Page 5
+          
+
+
+          ENTRY:  EXTR_DATE          _____
+
+          This function extracts the Date portion on an internal Day/Time.
+
+
+          Usage:
+
+               EXTERNAL FUNCTION EXTR_DATE (DTIME:  DTIME_INT):  DATE_INT;
+
+
+
+          Input arguments:
+
+            DTIME           A Day/Time in internal form.
+
+
+          Output arguments:
+
+            <return value>  The Date portion of 'DTIME' in internal form is
+                           returned.
+
+
+
+          INCLUDE files required:
+
+            DTIME.TYP
+            DTIME.INC
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          M68000 RDLIB Documentation                                Page 6
+          
+
+
+          ENTRY:  EXTR_TIME          _____
+
+          This function extracts the Time portion of an internal Day/Time.
+
+
+          Usage:
+
+               EXTERNAL FUNCTION EXTR_TIME (DTIME:  DTIME_INT):  TIME_INT;
+
+
+
+          Input arguments:
+
+            DTIME           A Day/Time in internal form.
+
+
+          Output arguments:
+
+            <return value>  The Time portion of 'DTIME' in internal form is
+                           returned.
+
+
+
+          INCLUDE files required:
+
+            DTIME.TYP
+            DTIME.INC
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          M68000 RDLIB Documentation                                Page 7
+          
+
+
+          ENTRY:  DT_COMBINE          _____
+
+          This  function  combines  an internal Date with an internal Time,
+          yielding an internal Day/Time.
+
+
+          Usage:
+
+               EXTERNAL FUNCTION DT_COMBINE (DATE:  DATE_INT;  
+                                             TIME:  TIME_INT):  DTIME_INT;
+
+
+
+          Input arguments:
+
+            DATE            A Date in internal form.
+
+            TIME            A Time in internal form.
+
+
+          Output arguments:
+
+            <return value>   The  internal  Day/Time,  resulting  from  the
+                           composition   of   the   input   parameters,  is
+                           returned.
+
+
+
+          INCLUDE files required:
+
+            DTIME.TYP
+            DTIME.INC
+
+
+
+
+
+
+
+
+
+          M68000 RDLIB Documentation                                Page 8
+          
+
+
+          ENTRY:  DAYS_DIFF          _____
+
+          This function computes the number of days  between  two  internal
+          Day/Times.
+
+
+          Usage:
+
+               EXTERNAL FUNCTION DAYS_DIFF
+                       (DTIME1, DTIME2:  DTIME_INT):  DAYS;
+
+
+
+          Input arguments:
+
+            DTIME1          A Day/Time in internal form.
+
+            DTIME2          A Day/Time in internal form.
+
+
+          Output arguments:
+
+            <return  value>   The  whole  number  of  Days  between the two
+                           Day/Times  is  returned.  This  value   may   be
+                           negative:  The  second  Day/Time  is  subtracted
+                           from the first.
+
+
+
+          INCLUDE files required:
+
+            DTIME.TYP
+
+
+
+
+
+
+
+
+
+          M68000 RDLIB Documentation                                Page 9
+          
+
+
+            DTIME.INC
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          M68000 RDLIB Documentation                                Page 10
+          
+
+
+          ENTRY:  SECS_DIFF          _____
+
+          This function computes the number of seconds between two internal
+          Day/Times.
+
+
+          Usage:
+
+               EXTERNAL FUNCTION SECS_DIFF
+                       (DTIME1, DTIME2:  DTIME_INT):  SECONDS;
+
+
+
+          Input arguments:
+
+            DTIME1          A Day/Time in internal form.
+
+            DTIME2          A Day/Time in internal form.
+
+
+          Output arguments:
+
+            <return  value>   The rounded number of seconds between the two
+                           internal Day/Times is returned.  This value  may
+                           be  negative:  The  second Day/Tme is subtracted
+                           subtracted from the first Day/Time.
+
+
+
+          INCLUDE files required:
+
+            DTIME.TYP
+
+
+
+
+
+
+
+
+
+          M68000 RDLIB Documentation                                Page 11
+          
+
+
+            DTIME.INC
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          M68000 RDLIB Documentation                                Page 12
+          
+
+
+          ENTRY:  ADD_DAYS          _____
+
+          This functions adds  a  given  number  of  days  to  an  internal
+          Day/Time.
+
+
+          Usage:
+
+               EXTERNAL FUNCTION ADD_DAYS (DTIME:  DTIME_INT;
+                                           NUM_DAYS: DAYS): DTIME_INT;
+
+
+
+          Input arguments:
+
+            DTIME           A Day/Time in internal form.
+
+            NUM_DAYS        A (possibly negative) number of days.
+
+
+          Output arguments:
+
+            <return  value>   An  internal Day/Time is formed by adding the
+                           specified number of days to the given  Day/Time.
+                           If   a   negative  Day/Time  results,  then  the
+                           internal Day/Time returned is zero.
+
+
+
+          INCLUDE files required:
+
+            DTIME.TYP
+
+
+
+
+
+
+
+
+
+          M68000 RDLIB Documentation                                Page 13
+          
+
+
+            DTIME.INC
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          M68000 RDLIB Documentation                                Page 14
+          
+
+
+          ENTRY:  ADD_SECS          _____
+
+          This functions adds a given  number  of  seonds  to  an  internal
+          Day/Time.
+
+
+          Usage:
+
+               EXTERNAL FUNCTION ADD_SECS (DTIME: DTIME_INT;
+                                           NUM_SECS: SECONDS):  DTIME_INT;
+
+
+
+          Input arguments:
+
+            DTIME           A Day/Time in internal form.
+
+            NUM_SECS        A (possibly negative) number of seconds.
+
+
+          Output arguments:
+
+            <return  value>   an  internal Day/Time is formed by adding the
+                           specified  number  of  seconds  to   the   given
+                           Day/Time.  If  a  negative Day/Time results, the
+                           internal Day/Time for day zero is returned.
+
+
+
+          INCLUDE files required:
+
+            DTIME.TYP
+
+
+
+
+
+
+
+
+
+          M68000 RDLIB Documentation                                Page 15
+          
+
+
+            DTIME.INC
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          M68000 RDLIB Documentation                                Page 16
+          
+
+
+          ENTRY:  DAY_OF_WEEK          _____
+
+          Given an internal date, this function returns the day of the week
+          it falls on.
+
+
+          Usage:
+
+               EXTRNAL FUNCTION DAY_OF_WEEK (DATE: DATE_INT): WEEK_DAY;
+
+
+
+          Input arguments:
+
+            DATE            A date in internal form.
+
+
+          Output arguments:
+
+            <return   value>    An   element   of   scalar  type  WEEK_DAY,
+                           representing the day of the week  a  given  date
+                           falls on, is returned.
+
+
+
+          INCLUDE files required:
+
+            DTIME.TYP
+            DTIME.INC
+
+
+
+
+
+
+
+
+
+
+
+
+          M68000 RDLIB Documentation                                Page 17
+          
+
+
+          ENTRY:  NS_D1          _____
+
+          This  function  converts an internal date to the external format:
+          'mm/dd/yy'.
+
+
+          Usage:
+
+               EXTERNAL FUNCTION NS_D1 (DATE: DATE_INT):  NS_DATE1;
+
+
+
+          Input arguments:
+
+            DATE            A date in internal form.
+
+
+          Output arguments:
+
+            <return value>  The  date  is  returned  in  non-standard  date
+                           format #1:  'mm/dd/yy'.
+
+
+
+          INCLUDE files required:
+
+            DTIME.TYP
+            DTIME.INC
+
+
+
+
+
+
+
+
+
+
+
+
+
+          M68000 RDLIB Documentation                                Page 18
+          
+
+
+          ENTRY:  NS_D2          _____
+
+          This  function  converts an internal date to the external format:
+          'mmm dd, yyyy'.
+
+
+          Usage:
+
+               EXTERNAL FUNCTION NS_D2 (DATE: DATE_INT):  NS_DATE2;
+
+
+
+          Input arguments:
+
+            DATE            A date in internal form.
+
+
+          Output arguments:
+
+            <return value>  The  date  is  returned  in  non-standard  date
+                           format #2:  'mmm dd, yyyy'.  The three character
+                           month is returned in  upper  case.  The  day  is
+                           zero    suppressed   if   necessary;   if   zero
+                           suppression is necessary, a  trailing  blank  is
+                           appended to the return value.
+
+
+
+          INCLUDE files required:
+
+            DTIME.TYP
+            DTIME.INC
+
+
+
+
+
+
+
+
+
+          M68000 RDLIB Documentation                                Page 19
+          
+
+
+          ENTRY:  NS_T1          _____
+
+          This  function  converts an internal time to the external format:
+          'hh:mm:ss [A/P]M'.
+
+
+          Usage:
+
+               EXTERNAL FUNCTION NS_T1 (TIME: TIME_INT):  NS_TIME1;
+
+
+
+          Input arguments:
+
+            TIME            A Time in internal form.
+
+
+          Output arguments:
+
+            <return value>  The Time is returned in  non-standard  external
+                           format #1:  'hh:mm:ss [A/P]M'.  The 'AM' or 'PM'
+                           is in upper case.
+
+
+
+          INCLUDE files required:
+
+            DTIME.TYP
+            DTIME.INC
+
+
+
+
+
+
+
+
+
+
+
+
+          M68000 RDLIB Documentation                                Page 20
+          
+
+
+          ENTRY:  DC_DTIME          _____
+
+          This function converts an internal Day/Time to a binary  Day/Time
+          record.
+
+
+          Usage:
+
+               EXTERNAL FUNCTION DC_DTIME (DTIME: DTIME_INT):  DTIMEREC;
+
+
+
+          Input arguments:
+
+            DTIME           A Day/Time in internal form.
+
+
+          Output arguments:
+
+            <return  value>   The  Day/Time  is  returned  as a record with
+                           integer fields for the year, month, day,  hours,
+                           minutes, and seconds.
+
+
+
+          INCLUDE files required:
+
+            DTIME.TYP
+            DTIME.INC
+
+
+
+
+
+
+
+
+
+
+
+
+          M68000 RDLIB Documentation                                Page 21
+          
+
+
+          ENTRY:  EC_DTIME          _____
+
+          This  function  converts  a binary Day/Time record to an internal
+          Day/Time.
+
+
+          Usage:
+
+               EXTERNAL FUNCTION EC_DTIME (VAR ERR_CODE: DTIME_ERR;
+                                           DTIMEBIN: DTIMEREC;
+                                           VAR DTIME: DTIME_INT);
+
+
+
+          Input arguments:
+
+            DTIMEBIN        A record with  integer  fields  for  the  year,
+                           month, day, hours, minutes, and seconds.
+
+
+          Output arguments:
+
+            ERR_CODE         An element of scalar type DTIME_ERR indicating
+                           whether  or   not   an   error   condition   was
+                           encountered.  An  error  return indicates one of
+                           the record fields had an  illegal  value  (Note,
+                           however,  that  Pascal's  subrange checking will
+                           detect most of these errors first.).
+
+
+
+          INCLUDE files required:
+
+
+
+
+
+
+
+
+
+          M68000 RDLIB Documentation                                Page 22
+          
+
+
+            DTIME.TYP
+            DTIME.INC
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          M68000 RDLIB Documentation                                Page 23
+          
+
+
+          ENTRY:  EC_DATE          _____
+
+          This procedure converts a binary date record to an internal date.
+
+
+          Usage:
+
+               EXTERNAL PROCEDURE EC_DATE (VAR ERR_CODE: DTIME_ERR;
+                                           DATE_BIN: DATEREC;
+                                           VAR DATE: DATE_INT);
+
+
+
+          Input arguments:
+
+            DATE_BIN        A binary date  record  with  fields  for  year,
+                           month, and day.
+
+
+          Output arguments:
+
+            ERR_CODE         An element of scalar type DTIME_ERR indicating
+                           whether any error conditions  were  encountered.
+                           An error return indicates an invalid date.
+
+            DATE             The internal date corresponding to the record.
+                           It is undefined if ERR_CODE was  set  to  DT_ERR
+                           upon return.
+
+
+
+          INCLUDE files required:
+
+
+
+
+
+
+
+
+
+          M68000 RDLIB Documentation                                Page 24
+          
+
+
+            DTIMEE.TYP
+            DTIM.INC
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          M68000 RDLIB Documentation                                Page 25
+          
+
+
+          ENTRY:  DC_DATE          _____
+
+          This function oncverts an internal date to a binary date record.
+
+
+          Usage:
+
+               EXTERNAL FUNCTION DC_DATE (DATE: DATE_INT):  DATEREC;
+
+
+
+          Input arguments:
+
+            DATE            A date in internal form.
+
+
+          Output arguments:
+
+            <return  value>   The  date is returned as a binary date record
+                           with integer fields of year, month, and day.
+
+
+
+          INCLUDE files required:
+
+            DTIME.TYP
+            DTIME.INC
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          M68000 RDLIB Documentation                                Page 26
+          
+
+
+          ENTRY:  EC_TIME          _____
+
+          This procedure converts a binary time record to an internal time.
+
+
+          Usage:
+
+               EXTERNAL PROCEDURE EC_TIME (VAR ERR_CODE: DTIME_ERR;
+                                           TIMEBIN: TIMEREC;
+                                           VAR TIME: TIME_INT);
+
+
+
+          Input arguments:
+
+            TIMEBIN         A binary time record with  integer  fields  for
+                           hours, minutes, and seconds.
+
+
+          Output arguments:
+
+            ERR_CODE         An element of scalar type DTIME_ERR indicating
+                           whether  or   not   an   error   cond   was
+                           encountered.  Error  returns indicate a field of
+                           the  input  record  was  out  of  range   (Note,
+                           however, that such errors will usually result in
+                           a Pascal subrange check error first.).
+
+            TIME            The internal time returned corresponds  to  the
+                           binary time record.  It is undefined if ERR_CODE
+                           is returned with the value DT_ERR.
+
+
+
+
+
+
+
+
+
+
+          M68000 RDLIB Documentation                                Page 27
+          
+
+
+          INCLUDE files required:
+
+            DTIME.TYP
+            DTIME.INC
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          M68000 RDLIB Documentation                                Page 28
+          
+
+
+          ENTRY:  DC_TIME          _____
+
+          This function converts an internal time to a binary time record.
+
+
+          Usage:
+
+               EXTERNAL FUNCTION DC_TIME (TIME: TIME_INT):  TIMEREC;
+
+
+
+          Input arguments:
+
+            TIME            An internal time.
+
+
+          Output arguments:
+
+            <return value>  The binary time  record  corresponding  to  the
+                           internal time is returned.)
+
+
+
+          INCLUDE files required:
+
+            DTIME.TYP
+            DTIME.INC
+
+
+
+
+
+
+
+
+
+
+
+
+   mcRLæ

@@ -1,0 +1,33 @@
+
+
+
+                                     DTIME - day/time manipulation routines
+                                                                   11/01/78
+
+
+
+     Entry: DAY_OF_WEEK     _____
+
+     Given an internal date return the day of  the  week  which  that  date
+     falls on.
+
+     Usage:
+
+          EXTERNAL FUNCTION DAY_OF_WEEK(DATE: DATE_INT): WEEK_DAY;
+
+     Input arguments:
+
+       DATE    a date in internal form.
+
+     Output arguments:
+
+       <return value>
+               element  of scalar type WEEK_DAY representing the day of the
+               week which the given date falls on.
+
+     INCLUDE files required:
+
+       DTIME.TYP
+       DTIME.INC
+
+

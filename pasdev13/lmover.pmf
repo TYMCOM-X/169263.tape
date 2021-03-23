@@ -1,0 +1,262 @@
+$number off
+$ski 2
+$tabs 1,9,17,25
+$ver
+TO:  	  A. Kortesoja, T. Dollhoff
+
+FROM:	  P. Pinkstaff, D. Cone, S. Roush
+
+DATE:	  February 26, 1981
+
+SUBJECT:  Link management on the VAX and PVM
+$jus
+$ski 3
+Attached is an overview of the approach to link
+management which will be implemented on the VAX and PVM.
+A list of ANC's requirements for link management is also included.
+$page
+$TITLE left 'VAX Link Management Overview' left 'February 26, 1981'
+#define( #sect, title,
+$SKI 2
+$NEED 4
+^U&title&|U
+$SKI
+)
+
+#sect(Introduction)
+This document provides a summary of the approach to link
+management to be implemented for ANC on the VAX-11 computer
+running under the VMS operating system.
+The same basic approach will also be implemented for the
+Pascal Virtual Machine.
+The solution is in essence a subset of the Pascal overlay
+system currently being used on the DEC10.
+Transfer vectors will be created for symbols known across
+'overlay' boundaries.
+These transfer vectors are at fixed locations and are linked
+with the module defining the vectored symbols.
+$ski
+The following terminology will be used in this document.
+Conceptually the ANC program on the VAX will be divided into
+three major sections.
+The bulk of the program is nonvarying and is known as ^Umain|U.
+The other two sections consist of code and data which vary over
+time.
+Each of these sections is known as a ^Ugeneric module|U.
+ In general multiple copies of the code and data corresponding
+to a generic module will exist.
+Each of these copies is known as a ^Uversion|U of the
+corresponding generic module.
+Relocatable binary files produced by an assembler or compiler and
+used as input to a linker will be referred to as ^Uobject files|U.
+The executable file produced by a linker will be referred to as
+an ^Uimage file|U.
+#sect(System Components)
+Each of the three sections of the ANC program (main and the
+generic modules) will be allocated a fixed portion of the
+virtual address space of the program.
+These ^Uareas|U will be manually allocated and will have fixed base
+addresses.
+Note that in a virtual memory system the virtual addresses
+used by a program need not be contiguous.
+Thus these areas will be of fixed sizes but the size of the
+virtual address space reserved may be extremely large with
+little performance impact.
+$ski
+The transfer vectors will be at fixed locations as well.
+However, these locations will simply be the base addresses
+of the areas containing them.
+Each area will contain a transfer vector with entries
+for all the symbols defined in that area which must
+be referenced from outside the area.
+Two types of transfer vector entries exist.
+For procedure and function calls the transfer vector
+entry will consist of a register save mask and a jump instruction
+to the corresponding entry point.
+For data references, the entry will consist of the address
+of the corresponding symbol.
+Note that the separate updating capability provided by this
+system will rely on users maintaining the offsets of given
+entries within the transfer vectors.
+$ski
+The transfer vectors will be generated from the ^Usymbol definition
+list|U.
+The symbol definition list is similar to the Memory Definition
+Language (MDL) used in the DEC10 Pascal overlay system.
+It consists of a disk file listing those symbols which are known
+across area boundaries.
+For each symbol, the following information will be given:
+the text of the symbol, the name of the defining area and the
+kind of the symbol (routine or data).
+Because offsets within transfer vectors must be preserved
+to permit separate updating, filler entries will also
+be permitted in the symbol definition list.
+$ski
+At execution time, the version of a generic module to be used
+will be determined by calling the ^Uassociation routine|U.
+The association routine will be passed the name of an 
+image file for a specific version of a generic module.
+The association routine will map the code and data 
+contained in the image file into the virtual address
+space of main.
+This will be done via a VMS system call.
+This mapping will have the implicit effect of reinitializing
+the static storage used by the version.
+The virtual addresses into which the version is mapped
+are stored in the image header of the version image
+file and are determined at the time the version is linked.
+#sect(Operational Procedures)
+Version code must be compiled with the compiler's
+OVERLAY option.
+This will cause all externally defined data to be
+accessed indirectly.
+$ski
+The transfer vectors must be generated whenever the
+set of symbols known across areas changes.
+The symbol definition list will be used to generate a
+transfer vector for main and one for each generic module.
+For each transfer vector, an assembly language file will
+be created.
+These files will then be assembled to create object files
+defining the transfer vectors.
+In addition to transfer vector entries for symbols defined
+in the corresponding area, the object file will contain
+definitions of those symbols which may be referenced
+within the current area and defined in a different area.
+These referenced symbols will be equated to fixed offsets
+within the transfer vectors of the defining module.
+$ski
+Main and each generic module version will be linked separately.
+The object file defining the module's transfer vector must
+be included in the link.
+Certain VAX linker options must also be specified at link time.
+For example, the base address of the resulting image must be 
+specified and the transfer vector for the image must be
+forced to the base address of the image.
+$ski
+The individual image files may then be transferred independently
+to a customer system.
+At execution time the association routine must be called once 
+before any calls to the version being associated.
+The association routine is then called again whenever
+the version of a generic module being used changes.
+#sect(Impacts of This Approach on ANC)
+Because this approach is essentially a subset of that used
+on the DEC10, the restrictions this approach places on
+ANC are already being observed.
+No source code modifications are required.
+Certain compiler and linker options must be used when
+compiling and linking.
+The restrictions placed on data references (from generic modules
+to the definitions in main) are identical to those in the
+DEC10 approach.
+The VAX implementation does make the additional assumption
+that there are no direct inter-generic-module references.
+$ski
+This approach permits separate updating of main and generic
+module versions with the following restrictions.
+If a symbol in main is added to the symbol definition list,
+both a new copy of main and the referencing generic module
+version must be sent to any customer requiring the new
+version.
+When changes are made to the symbol definition list,
+the offsets of existing entries must be preserved.
+Deleted symbols should be replaced by a filler entry.
+New symbols must be added in place of filler entries
+of the same kind or at the end of the list.
+These procedures are identical to those used with the
+DEC10 Pascal overlay system.
+$ski
+Changing any of the fixed virtual addresses in the system
+requires rebuilding ^Uall|U modules in the system.
+#sect(Programming Language Deliverables)
+Programming languages will modify the VAX code generator to
+support indirecting for external data references when the
+overlay option is used.
+$ski
+Either a program or a VAX command procedure (an operating system
+command file, similar to MIC on the DEC10) will be supplied to
+generate transfer vectors.
+This processor will run on the VAX.
+It will use the symbol definition list as input and produce
+VAX assembler source files.
+These source files will then be assembled by the user to
+produce the object files to be included as input to the
+linking process.
+One assembly language file will be produced for main,
+one for machine tool links and one for plot links.
+These object files need be generated only when the
+symbol definition list changes.
+$ski
+The options which must be used in the linking process will
+be specified by supplying either linker command files
+or linker option files.
+#sect(Outstanding Issues)
+Details of resolving library references (both to the Pascal
+runtime library and to the VMS common runtime library)
+have not been resolved.
+One of the following two approaches will be used.
+The two libraries referred to above are normally used
+as sharable libraries on the VAX.
+They are not included in a user's image files, but rather
+are at known locations and are mapped to at execution
+time.
+These sharable libraries are position independent and
+include transfer vectors for incoming references.
+This permits updating of sharable libraries without
+even relinking user programs.
+The use of transfer vectors for entry points into sharable
+libraries raises the possibility of eliminating user
+declaration of library routines used by generic module
+versions.
+However, it would also be necessary to force sharable libraries
+to be assigned the same virtual addresses during the linking
+of generic module versions and the link of main.
+There is no reason a user should not be allowed to assign
+virtual addresses for position independent sharable
+libraries.
+However, it currently appears there is no way of specifying
+the base address of a sharable library to the linker.
+This matter will be discussed further with personnel
+from DEC.
+If it is indeed impossible to specify the base address of
+a sharable library, library symbols referenced by generic
+module versions will have to be included in the symbol
+definition list.
+As far as the transfer vector mechansim is concerned,
+library symbols are not different than user symbols 
+referenced in main.
+However, they are both more difficult to determine and
+more likely to change than user declared symbols.
+$ski
+The following comments are relevant if a means of using
+sharable libraries can be found.
+DEC guarantees that sharable library transfer vectors
+will be compatable when switching from an older to a
+newer version of VMS.
+The reverse is not true and could conceivably cause
+problems if a customer had an older version of a sharable
+than that used at MDSI.
+In practice however, it seems very likely that no problems
+would arise unless ANC started using a new system call
+which was not available in earlier operating
+system versions.
+This problem would exist whether a shared copy of the
+library was used or a copy was linked in with ANC.
+$ski
+A small scale test of the basic techniques used in this approach
+will be completed within the next 10 days.
+#sect(Pascal Virtual Machine Compatability)
+This approach appears to be highly compatible with the Pascal
+Virtual Machine (PVM) project.
+Two capabilities are required of the virtual machine software
+by this approach.
+First the PVM linker must provide a means of linking an image
+at a user specified base address.
+Second, at execution time a 'system call' must be available
+and user callable for mapping the image sections of an image file
+into the caller's virtual address space.
+The sharable library issues discussed above are not an issue on the
+virtual machine since runtime functions are simply virtual
+machine instructions.
+  

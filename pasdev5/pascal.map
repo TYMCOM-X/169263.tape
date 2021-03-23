@@ -1,0 +1,781 @@
+		LINK symbol map of	PASCAL		page 1
+	Produced by LINK version 4A(1220) on 25-Jun-80 at  9:09:23
+
+	Low  segment starts at	     0 ends at	 14456 length	 14457 = 7K
+	High segment starts at	400000 ends at	514024 length	114025 = 39K
+	721 words free in Low segment, 1003 words free in high segment
+	481 Global symbols loaded, therefore min. hash size is 535
+	Start address is 403363, located in program PASRUN
+
+		*************
+
+JOBDAT-INITIAL-SYMBOLS
+
+	Zero length module
+
+		*************
+
+PASCAL	from DSK:PASCAL.REL	created by Unknown on  3-Mar-69 at 13:08:00
+	Low  segment starts at	   140 ends at	 13340 length	 13201 (octal),  5761. (decimal)
+	High segment starts at	400010 ends at	403362 length	  3353 (octal),  1771. (decimal)
+
+	PASCAL	      403220	Entry	Relocatable 		START.	      403220	Global	Relocatable 	
+	OPEN%X	      400741	Global	Relocatable 		READFI	      400340	Global	Relocatable 	
+	SET%PT	      400146	Global	Relocatable 		ALC%US	         232	Global	Relocatable 	
+	ALFAPT	      400020	Global	Relocatable 		ALLOCA	         231	Global	Relocatable 	
+	ALPHAB	      400040	Global	Relocatable 		ARBPTR	      400021	Global	Relocatable 	
+	AREA%M	         224	Global	Relocatable 		BLOCKB	      400060	Global	Relocatable 	
+	BOOLPT	      400014	Global	Relocatable 		BREAKC	       10475	Global	Relocatable 	
+	CBPSSA	        7755	Global	Relocatable 		CH	         147	Global	Relocatable 	
+	CHARPT	      400013	Global	Relocatable 		CIX	        7750	Global	Relocatable 	
+	CODE	         453	Global	Relocatable 		CODEEN	         154	Global	Relocatable 	
+	COMPSW	         215	Global	Relocatable 		CONSTB	      400050	Global	Relocatable 	
+	CORSIZ	         220	Global	Relocatable 		CORTMP	         177	Global	Relocatable 	
+	CURPRO	        7753	Global	Relocatable 		DATEPT	      400017	Global	Relocatable 	
+	DAY	       10076	Global	Relocatable 		DBLREA	         211	Global	Relocatable 	
+	DEBUG	         170	Global	Relocatable 		DEBUGC	         163	Global	Relocatable 	
+	DEB%WO	       10062	Global	Relocatable 		DIGITS	      400036	Global	Relocatable 	
+	DISPLA	         314	Global	Relocatable 		DISX	         312	Global	Relocatable 	
+	DMOVE	         212	Global	Relocatable 		DP	         201	Global	Relocatable 	
+	ENTRY	       10074	Global	Relocatable 		ENTRYD	       10100	Global	Relocatable 	
+	EOFN	         150	Global	Relocatable 		EOL	         151	Global	Relocatable 	
+	ERRMSG	       13251	Global	Relocatable 		FACBEG	      400064	Global	Relocatable 	
+	FILEMA	       10222	Global	Relocatable 		FILENA	       10072	Global	Relocatable 	
+	FILENU	       10221	Global	Relocatable 		FILEPT	       10650	Global	Relocatable 	
+	FIRSTK	         306	Global	Relocatable 		FWPTR	         304	Global	Relocatable 	
+	GATTR	         413	Global	Relocatable 		GLISTS	         204	Global	Relocatable 	
+	GLOBTE	         307	Global	Relocatable 		HEAD%S	      400023	Global	Relocatable 	
+	HEXADI	      400042	Global	Relocatable 		HIGHES	       10066	Global	Relocatable 	
+	I	       13273	Global	Relocatable 		IC	         152	Global	Relocatable 	
+	ID	         145	Global	Relocatable 		INCOMP	         214	Global	Relocatable 	
+	INCORE	         222	Global	Relocatable 		ININUS	         171	Global	Relocatable 	
+	INPUTF	      400026	Global	Relocatable 		INTPTR	      400011	Global	Relocatable 	
+	KL10SW	         213	Global	Relocatable 		LANGUA	      400046	Global	Relocatable 	
+	LASTBT	       10647	Global	Relocatable 		LC	         153	Global	Relocatable 	
+	LCMAX	        7754	Global	Relocatable 		LCPAR	         157	Global	Relocatable 	
+	LENSUB	         261	Global	Relocatable 		LETTER	      400044	Global	Relocatable 	
+		LINK symbol map of	PASCAL		page 2
+PASCAL
+	LEVEL	         310	Global	Relocatable 		LEVEL0	         313	Global	Relocatable 	
+	LGTH	         144	Global	Relocatable 		LIBIX	       10101	Global	Relocatable 	
+	LIBORD	       10102	Global	Relocatable 		LIBRAR	       13206	Global	Relocatable 	
+	LINEST	         235	Global	Relocatable 		LINEWI	         234	Global	Relocatable 	
+	LISTCO	         164	Global	Relocatable 		LISTIN	         207	Global	Relocatable 	
+	LISTNA	       10157	Global	Relocatable 		LISTSO	         205	Global	Relocatable 	
+	LOADNO	         162	Global	Relocatable 		LOCALP	         303	Global	Relocatable 	
+	LST	       13247	Global	Relocatable 		MAIN	         174	Global	Relocatable 	
+	MAINST	       10065	Global	Relocatable 		MASK%O	         223	Global	Relocatable 	
+	NILPTR	      400015	Global	Relocatable 		OP	         142	Global	Relocatable 	
+	OPTLEN	         257	Global	Relocatable 		OPTLIN	         260	Global	Relocatable 	
+	OUTFPT	      400027	Global	Relocatable 		OUTINU	         172	Global	Relocatable 	
+	OVERLA	         203	Global	Relocatable 		OVFL%M	         225	Global	Relocatable 	
+	PAGELE	         236	Global	Relocatable 		PAS	       13246	Global	Relocatable 	
+	PASMSG	       10131	Global	Relocatable 		PATCHS	        7747	Global	Relocatable 	
+	PFBLOC	        7751	Global	Relocatable 		PFLIST	       10063	Global	Relocatable 	
+	PFSTAR	        7746	Global	Relocatable 		PROGCH	        7752	Global	Relocatable 	
+	PROGRE	         202	Global	Relocatable 		PRTERR	         176	Global	Relocatable 	
+	REALPT	      400012	Global	Relocatable 		REALTT	       10476	Global	Relocatable 	
+	REGC	        7745	Global	Relocatable 		REGCMA	        7744	Global	Relocatable 	
+	REL	       13250	Global	Relocatable 		RELBLO	         427	Global	Relocatable 	
+	RELFIL	        7756	Global	Relocatable 		RELNAM	       10200	Global	Relocatable 	
+	RELOUT	         206	Global	Relocatable 		RELWOR	       10060	Global	Relocatable 	
+	RFIDER	       13272	Global	Relocatable 		RNTS	       12445	Global	Relocatable 	
+	RTIME	         155	Global	Relocatable 		RUNTMC	         161	Global	Relocatable 	
+	SELSYS	      400062	Global	Relocatable 		SFILEP	       10651	Global	Relocatable 	
+	SHL%AR	         230	Global	Relocatable 		SHORTE	         210	Global	Relocatable 	
+	SHR%AR	         227	Global	Relocatable 		SIMPTY	      400052	Global	Relocatable 	
+	SLASTB	         305	Global	Relocatable 		SMBFIL	       10004	Global	Relocatable 	
+	SPECIA	         175	Global	Relocatable 		SRCNAM	       10223	Global	Relocatable 	
+	STARTA	       10064	Global	Relocatable 		STATBE	      400066	Global	Relocatable 	
+	STATLC	         156	Global	Relocatable 		STMT%I	         302	Global	Relocatable 	
+	STRPTR	      400022	Global	Relocatable 		SUBTIT	         262	Global	Relocatable 	
+	SWFLAG	         200	Global	Relocatable 		SY	         141	Global	Relocatable 	
+	SYMBOL	       10070	Global	Relocatable 		SYMFIL	       10032	Global	Relocatable 	
+	TESTPA	         160	Global	Relocatable 		TEXTPT	      400016	Global	Relocatable 	
+	TITLE	         237	Global	Relocatable 		TITLEL	         233	Global	Relocatable 	
+	TOP	         311	Global	Relocatable 		TOUTFP	      400025	Global	Relocatable 	
+	TRACER	         165	Global	Relocatable 		TTYFPT	      400024	Global	Relocatable 	
+	TTYI	       10103	Global	Relocatable 		TTYINU	         173	Global	Relocatable 	
+	TYPEBE	      400054	Global	Relocatable 		TYPEDE	      400056	Global	Relocatable 	
+	UCSTPT	      400031	Global	Relocatable 		UFCTPT	      400035	Global	Relocatable 	
+	UFLDPT	      400033	Global	Relocatable 		UPRCPT	      400034	Global	Relocatable 	
+	UTYPPT	      400030	Global	Relocatable 		UVARPT	      400032	Global	Relocatable 	
+	VAL	         143	Global	Relocatable 		VIRTUA	         221	Global	Relocatable 	
+	V%NIL	         226	Global	Relocatable 		WITHIX	       10067	Global	Relocatable 	
+	WORDSW	       10061	Global	Relocatable 		XREF	         167	Global	Relocatable 	
+	XREF%O	         166	Global	Relocatable 	
+
+		*************
+
+		LINK symbol map of	PASCAL		page 3
+
+
+PASRUN	from DSK:PASRUN.REL	created by MACRO on  2-Feb-69 at  4:05:00
+	Low  segment starts at	 13341 ends at	 13341 length	     1 (octal),     1. (decimal)
+	High segment starts at	403363 ends at	403366 length	     4 (octal),     4. (decimal)
+
+	AUTO%R	       13341	Entry	Relocatable 	
+
+		*************
+
+VERSIO	from DSK:PASVER.REL	created by MACRO on  3-Mar-69 at 12:17:00
+	High segment starts at	403367 ends at	403370 length	     2 (octal),     2. (decimal)
+
+	DATEOF	      403367	Entry	Relocatable 	
+
+		*************
+
+CHREAD	from DSK:PASLX.REL	created by MACRO on  2-Feb-69 at  2:22:00
+	High segment starts at	403371 ends at	403635 length	   245 (octal),   165. (decimal)
+
+	LITCH	      403402	Entry	Relocatable 		NEXTCH	      403371	Entry	Relocatable 	
+	SEOF	      403520	Entry	Relocatable 		SEOLN	      403474	Entry	Relocatable 	
+	SGETLI	      403612	Entry	Relocatable 		SREAD	      403443	Entry	Relocatable 	
+	SREADL	      403574	Entry	Relocatable 	
+
+		*************
+
+MACNES	from DSK:PASLX.REL	created by MACRO on  2-Feb-69 at  2:22:00
+	High segment starts at	403636 ends at	403655 length	    20 (octal),    16. (decimal)
+
+	DECNES	      403654	Entry	Relocatable 		INCNES	      403652	Entry	Relocatable 	
+	SETNES	      403636	Entry	Relocatable 		ZERONE	      403644	Entry	Relocatable 	
+
+		*************
+
+PASLEX	from DSK:PASLEX.REL	created by Unknown on  3-Mar-69 at 13:08:00
+	Low  segment starts at	 13342 ends at	 13732 length	   371 (octal),   249. (decimal)
+	High segment starts at	403656 ends at	412571 length	  6714 (octal),  3532. (decimal)
+
+	FINDLA	      412513	Global	Relocatable 		SEARCH	      412445	Global	Relocatable 	
+	DCLLAB	      412371	Global	Relocatable 		ERRAND	      412351	Global	Relocatable 	
+	IFERRS	      412333	Global	Relocatable 		SKIPIF	      412215	Global	Relocatable 	
+	GETBOU	      412136	Global	Relocatable 		SRCHID	      411750	Global	Relocatable 	
+	SRCHSE	      411672	Global	Relocatable 		ENTERI	      411552	Global	Relocatable 	
+	INSYMB	      410016	Global	Relocatable 		ERRORW	      406752	Global	Relocatable 	
+	ERROR	      406556	Global	Relocatable 		ENDOFL	      405762	Global	Relocatable 	
+	GETNEX	      405357	Global	Relocatable 		WRITEB	      405326	Global	Relocatable 	
+	WRITEL	      405152	Global	Relocatable 		NEXTFI	      405045	Global	Relocatable 	
+	LEXINI	      404616	Global	Relocatable 		PASLEX	      404616	Entry	Relocatable 	
+	BUFFER	       13461	Global	Relocatable 		CHCNT	       13460	Global	Relocatable 	
+	COMMEN	       13566	Global	Relocatable 		ERRLIN	       13514	Global	Relocatable 	
+	ERRORF	       13367	Global	Relocatable 		ERRORI	       13370	Global	Relocatable 	
+	ERR%CN	       13371	Global	Relocatable 		FILECN	       13456	Global	Relocatable 	
+	FILEDA	       13437	Global	Relocatable 		FILEIC	       13457	Global	Relocatable 	
+	FIRSTN	       13565	Global	Relocatable 		FOLLOW	       13372	Global	Relocatable 	
+		LINK symbol map of	PASCAL		page 4
+PASLEX
+	INCL2F	       13616	Global	Relocatable 		INCLFI	       13570	Global	Relocatable 	
+	INCLNA	       13375	Global	Relocatable 		INCLNE	       13374	Global	Relocatable 	
+	INCL%L	       13645	Global	Relocatable 		IN%SYS	       13646	Global	Relocatable 	
+	LINES%	       13644	Global	Relocatable 		NESTLV	       13563	Global	Relocatable 	
+	ORIGCH	       13567	Global	Relocatable 		PASS%P	       13562	Global	Relocatable 	
+	PNESTL	       13564	Global	Relocatable 		SAVEDP	       13365	Global	Relocatable 	
+	SAVEIC	       13366	Global	Relocatable 		SOURCE	       13373	Global	Relocatable 	
+	SRC%DE	       13647	Global	Relocatable 		SRC%DI	       13650	Global	Relocatable 	
+
+		*************
+
+PASCMP	from DSK:PASCMP.REL	created by Unknown on  2-Feb-69 at  5:09:00
+	Low  segment starts at	 13733 ends at	 13733 length	     1 (octal),     1. (decimal)
+	High segment starts at	412572 ends at	413433 length	   642 (octal),   418. (decimal)
+
+	STRFOR	      413361	Global	Relocatable 		STRING	      413325	Global	Relocatable 	
+	COMPTY	      412651	Global	Relocatable 		PASCMP	      412651	Entry	Relocatable 	
+
+		*************
+
+PASCST	from DSK:PASCST.REL	created by Unknown on  2-Feb-69 at  5:59:00
+	Low  segment starts at	 13734 ends at	 13734 length	     1 (octal),     1. (decimal)
+	High segment starts at	413434 ends at	414134 length	   501 (octal),   321. (decimal)
+
+	CONSTA	      413513	Global	Relocatable 		PASCST	      413513	Entry	Relocatable 	
+
+		*************
+
+PASHAK	from DSK:PASHAK.REL	created by MACRO on  2-Feb-69 at  0:45:00
+	Low  segment starts at	 13735 ends at	 13740 length	     4 (octal),     4. (decimal)
+	High segment starts at	414135 ends at	414216 length	    62 (octal),    50. (decimal)
+
+	DATE%R	      414214	Entry	Relocatable 		DUMP%T	      414156	Entry	Relocatable 	
+	FILEB$	      414141	Entry	Relocatable 		LEFT%S	      414135	Entry	Relocatable 	
+	TIME%R	      414212	Entry	Relocatable 		USER%P	      414210	Entry	Relocatable 	
+
+		*************
+
+PASCSN	from DSK:PASCSN.REL	created by Unknown on  2-Feb-69 at  2:18:00
+	Low  segment starts at	 13741 ends at	 13747 length	     7 (octal),     7. (decimal)
+	High segment starts at	414217 ends at	417551 length	  3333 (octal),  1755. (decimal)
+
+	CST%DE	      417001	Global	Relocatable 		VAR%LI	      416631	Global	Relocatable 	
+	PASCSN	      416631	Entry	Relocatable 	
+
+		*************
+
+PASBLK	from DSK:PASBLK.REL	created by Unknown on  2-Feb-69 at 22:48:00
+	Low  segment starts at	 13750 ends at	 13750 length	     1 (octal),     1. (decimal)
+	High segment starts at	417552 ends at	430171 length	 10420 (octal),  4368. (decimal)
+
+	BLOCK	      427625	Global	Relocatable 		PASBLK	      427625	Entry	Relocatable 	
+
+		*************
+		LINK symbol map of	PASCAL		page 5
+
+
+PASBOD	from DSK:PASBOD.REL	created by Unknown on  2-Feb-69 at 22:00:00
+	Low  segment starts at	 13751 ends at	 13751 length	     1 (octal),     1. (decimal)
+	High segment starts at	430172 ends at	435123 length	  4732 (octal),  2522. (decimal)
+
+	BODY	      434704	Global	Relocatable 		PASBOD	      434704	Entry	Relocatable 	
+
+		*************
+
+PASEXP	from DSK:PASEXP.REL	created by Unknown on  2-Feb-69 at  5:01:00
+	Low  segment starts at	 13752 ends at	 13762 length	    11 (octal),     9. (decimal)
+	High segment starts at	435124 ends at	442157 length	  5034 (octal),  2588. (decimal)
+
+	EXPRES	      440616	Global	Relocatable 		MAKERE	      435203	Global	Relocatable 	
+	PASEXP	      435203	Entry	Relocatable 	
+
+		*************
+
+PASSEL	from DSK:PASSEL.REL	created by Unknown on  2-Feb-69 at  5:01:00
+	Low  segment starts at	 13763 ends at	 13763 length	     1 (octal),     1. (decimal)
+	High segment starts at	442160 ends at	444655 length	  2476 (octal),  1342. (decimal)
+
+	SELECT	      442425	Global	Relocatable 		FINSCO	      442244	Global	Relocatable 	
+	PASSEL	      442244	Entry	Relocatable 	
+
+		*************
+
+PASCLL	from DSK:PASCLL.REL	created by Unknown on  2-Feb-69 at  2:21:00
+	Low  segment starts at	 13764 ends at	 13764 length	     1 (octal),     1. (decimal)
+	High segment starts at	444656 ends at	463101 length	 16224 (octal),  7316. (decimal)
+
+	CALL	      462260	Global	Relocatable 		PASCLL	      462260	Entry	Relocatable 	
+
+		*************
+
+PASMC	from DSK:PASMC.REL	created by Unknown on  2-Feb-69 at  2:24:00
+	Low  segment starts at	 13765 ends at	 13767 length	     3 (octal),     3. (decimal)
+	High segment starts at	463102 ends at	471540 length	  6437 (octal),  3359. (decimal)
+
+	WRITEM	      471450	Global	Relocatable 		ALIGN	      463161	Global	Relocatable 	
+	PASMC	      463161	Entry	Relocatable 	
+
+		*************
+
+MAC	from DSK:PASCGN.REL	created by MACRO on  2-Feb-69 at 23:49:00
+	High segment starts at	471541 ends at	471637 length	    77 (octal),    63. (decimal)
+
+	MAC	      471572	Entry	Relocatable 		MAC3	      471556	Entry	Relocatable 	
+	MAC3B	      471563	Entry	Relocatable 		MAC3R	      471565	Entry	Relocatable 	
+	MAC4	      471551	Entry	Relocatable 		MAC4R	      471544	Entry	Relocatable 	
+	MAC5	      471541	Entry	Relocatable 	
+
+		*************
+
+		LINK symbol map of	PASCAL		page 6
+
+
+INCREG	from DSK:PASCGN.REL	created by MACRO on  2-Feb-69 at 23:49:00
+	High segment starts at	471640 ends at	471646 length	     7 (octal),     7. (decimal)
+
+	INCREM	      471640	Entry	Relocatable 	
+
+		*************
+
+CHECKL	from DSK:PASCGN.REL	created by MACRO on  2-Feb-69 at 23:49:00
+	High segment starts at	471647 ends at	471652 length	     4 (octal),     4. (decimal)
+
+	CHECKL	      471647	Entry	Relocatable 	
+
+		*************
+
+PASCG	from DSK:PASCG.REL	created by Unknown on  2-Feb-69 at  4:37:00
+	Low  segment starts at	 13770 ends at	 13770 length	     1 (octal),     1. (decimal)
+	High segment starts at	471653 ends at	477615 length	  5743 (octal),  3043. (decimal)
+
+	LDADDR	      477524	Global	Relocatable 		LOADAD	      477357	Global	Relocatable 	
+	STORE	      477175	Global	Relocatable 		LOAD	      477105	Global	Relocatable 	
+	VLOAD	      476720	Global	Relocatable 		MAKECO	      475505	Global	Relocatable 	
+	GETPAR	      475446	Global	Relocatable 		FETCHB	      475077	Global	Relocatable 	
+	LEAVEB	      474651	Global	Relocatable 		ENTERB	      473735	Global	Relocatable 	
+	ADJSP	      473674	Global	Relocatable 		NEWLIN	      473624	Global	Relocatable 	
+	NEWPAG	      473457	Global	Relocatable 		NEWFIL	      473301	Global	Relocatable 	
+	EMITST	      473227	Global	Relocatable 		FWDPAG	      473166	Global	Relocatable 	
+	FWDFIL	      473125	Global	Relocatable 		SUPPOR	      472621	Global	Relocatable 	
+	DEPCST	      472074	Global	Relocatable 		INSERT	      472036	Global	Relocatable 	
+	FULLWO	      471732	Global	Relocatable 		PASCG	      471732	Entry	Relocatable 	
+
+		*************
+
+PASSTR	from DSK:PASSTR.REL	created by Unknown on  2-Feb-69 at  5:08:00
+	Low  segment starts at	 13771 ends at	 13771 length	     1 (octal),     1. (decimal)
+	High segment starts at	477616 ends at	503576 length	  3761 (octal),  2033. (decimal)
+
+	STRCAT	      503426	Global	Relocatable 		MVSTRI	      502022	Global	Relocatable 	
+	STRPAR	      501366	Global	Relocatable 		STRDES	      501010	Global	Relocatable 	
+	MAXLEN	      500732	Global	Relocatable 		STROP	      500665	Global	Relocatable 	
+	ALTERS	      500465	Global	Relocatable 		SAVEEX	      500176	Global	Relocatable 	
+	STRKIN	      477744	Global	Relocatable 		DCLSTR	      477675	Global	Relocatable 	
+	PASSTR	      477675	Entry	Relocatable 	
+
+		*************
+
+PASOPT	from DSK:PASOPT.REL	created by Unknown on  3-Mar-69 at 12:46:00
+	Low  segment starts at	 13772 ends at	 13773 length	     2 (octal),     2. (decimal)
+	High segment starts at	5 ends at	505526 length	  1730 (octal),   984. (decimal)
+
+	ENTITL	      505251	Global	Relocatable 		WIDTH	      505226	Global	Relocatable 	
+	OPTION	      504205	Global	Relocatable 		ERRSKI	      504165	Global	Relocatable 	
+	SKIPBL	      504143	Global	Relocatable 		IVALUE	      504111	Global	Relocatable 	
+	READID	      504032	Global	Relocatable 		PASOPT	      504032	Entry	Relocatable 	
+		LINK symbol map of	PASCAL		page 7
+PASOPT
+	IDLENG	       13773	Global	Relocatable 	
+
+		*************
+
+.MAIN	from DSK:PASLOG.REL	created by MACRO on  2-Feb-69 at  2:57:00
+	Low  segment starts at	 13774 ends at	 14221 length	   226 (octal),   150. (decimal)
+	High segment starts at	505527 ends at	505715 length	   167 (octal),   119. (decimal)
+
+	WRT%LO	      505527	Entry	Relocatable 	
+
+		*************
+
+TMPCOR	from DSK:PASCOR.REL	created by MACRO on  2-Feb-69 at  4:52:00
+	Low  segment starts at	 14222 ends at	 14231 length	    10 (octal),     8. (decimal)
+	High segment starts at	505716 ends at	506040 length	   123 (octal),    83. (decimal)
+
+	TEOF	      506036	Entry	Relocatable 		TEOLN	      506033	Entry	Relocatable 	
+	TMPCOR	      505716	Entry	Relocatable 		TREAD	      506015	Entry	Relocatable 	
+	TREADL	      506024	Entry	Relocatable 	
+
+		*************
+
+JOBNUM	from DSK:JOBNUM.REL	created by MACRO on  6-Feb-69 at 15:03:00
+	High segment starts at	506041 ends at	506054 length	    14 (octal),    12. (decimal)
+
+	JOBNUM	      506041	Entry	Relocatable 	
+
+		*************
+
+PRGDIR	from DSK:PRGDIR.REL	created by MACRO on  8-Feb-69 at 18:10:00
+	High segment starts at	506055 ends at	506121 length	    45 (octal),    37. (decimal)
+
+	PRGM%D	      506062	Entry	Relocatable 		PRGM%P	      506055	Entry	Relocatable 	
+
+		*************
+
+DAYTIM	from DSK:RDLIB.REL	created by Unknown on  2-Mar-69 at 13:52:00
+	Low  segment starts at	 14232 ends at	 14233 length	     2 (octal),     2. (decimal)
+	High segment starts at	506122 ends at	506134 length	    13 (octal),    11. (decimal)
+
+	DAYTIM	      506122	Entry	Relocatable 	
+
+		*************
+
+DCEXT	from DSK:RDLIB.REL	created by Unknown on  2-Mar-69 at 13:52:00
+	Low  segment starts at	 14234 ends at	 14234 length	     1 (octal),     1. (decimal)
+	High segment starts at	506135 ends at	506407 length	   253 (octal),   171. (decimal)
+
+	DC%EXT	      506142	Entry	Relocatable 		DCEXT	      506142	Entry	Relocatable 	
+
+		*************
+
+		LINK symbol map of	PASCAL		page 8
+
+
+CHARS2	from DSK:RDLIB.REL	created by Unknown on  2-Mar-69 at 13:52:00
+	Low  segment starts at	 14235 ends at	 14235 length	     1 (octal),     1. (decimal)
+	High segment starts at	506410 ends at	506505 length	    76 (octal),    62. (decimal)
+
+	CHARS2	      506415	Entry	Relocatable 	
+
+		*************
+
+ECDCDA	from DSK:RDLIB.REL	created by Unknown on  2-Mar-69 at 13:52:00
+	Low  segment starts at	 14236 ends at	 14236 length	     1 (octal),     1. (decimal)
+	High segment starts at	506506 ends at	506557 length	    52 (octal),    42. (decimal)
+
+	EC%DCD	      506513	Entry	Relocatable 		ECDCDA	      506513	Entry	Relocatable 	
+
+		*************
+
+ECDCTI	from DSK:RDLIB.REL	created by Unknown on  2-Mar-69 at 13:52:00
+	Low  segment starts at	 14237 ends at	 14237 length	     1 (octal),     1. (decimal)
+	High segment starts at	506560 ends at	506625 length	    46 (octal),    38. (decimal)
+
+	EC%DCT	      506565	Entry	Relocatable 		ECDCTI	      506565	Entry	Relocatable 	
+
+		*************
+
+DCDTIM	from DSK:RDLIB.REL	created by Unknown on  2-Mar-69 at 13:52:00
+	Low  segment starts at	 14240 ends at	 14240 length	     1 (octal),     1. (decimal)
+	High segment starts at	506626 ends at	506676 length	    51 (octal),    41. (decimal)
+
+	DC%DTI	      506633	Entry	Relocatable 		DCDTIM	      506633	Entry	Relocatable 	
+
+		*************
+
+EXTR	from DSK:RDLIB.REL	created by MACRO on  2-Mar-69 at 13:52:00
+	High segment starts at	506677 ends at	506700 length	     2 (octal),     2. (decimal)
+
+	EXTR%D	      506677	Entry	Relocatable 	
+
+		*************
+
+EXTR	from DSK:RDLIB.REL	created by MACRO on  2-Mar-69 at 13:52:00
+	High segment starts at	506701 ends at	506702 length	     2 (octal),     2. (decimal)
+
+	EXTR%T	      506701	Entry	Relocatable 	
+
+		*************
+
+CVBINS	from DSK:RDLIB.REL	created by Unknown on  2-Mar-69 at 13:52:00
+	Low  segment starts at	 14241 ends at	 14241 length	     1 (octal),     1. (decimal)
+	High segment starts at	506703 ends at	507031 length	   127 (octal),    87. (decimal)
+
+	CV%BIN	      506722	Entry	Relocatable 		CVBINS	      506722	Entry	Relocatable 	
+
+		*************
+		LINK symbol map of	PASCAL		page 9
+
+
+DCMONT	from DSK:RDLIB.REL	created by Unknown on  2-Mar-69 at 13:52:00
+	Low  segment starts at	 14242 ends at	 14242 length	     1 (octal),     1. (decimal)
+	High segment starts at	507032 ends at	507114 length	    63 (octal),    51. (decimal)
+
+	DC%MON	      507067	Entry	Relocatable 		DCMONT	      507067	Entry	Relocatable 	
+
+		*************
+
+ECDATE	from DSK:RDLIB.REL	created by Unknown on  2-Mar-69 at 13:52:00
+	Low  segment starts at	 14243 ends at	 14243 length	     1 (octal),     1. (decimal)
+	High segment starts at	507115 ends at	507363 length	   247 (octal),   167. (decimal)
+
+	EC%DAT	      507152	Entry	Relocatable 		ECDATE	      507152	Entry	Relocatable 	
+
+		*************
+
+DCDATE	from DSK:RDLIB.REL	created by Unknown on  2-Mar-69 at 13:52:00
+	Low  segment starts at	 14244 ends at	 14244 length	     1 (octal),     1. (decimal)
+	High segment starts at	507364 ends at	507720 length	   335 (octal),   221. (decimal)
+
+	DC%DAT	      507406	Entry	Relocatable 		DCDATE	      507406	Entry	Relocatable 	
+
+		*************
+
+ECTIME	from DSK:RDLIB.REL	created by Unknown on  2-Mar-69 at 13:52:00
+	Low  segment starts at	 14245 ends at	 14245 length	     1 (octal),     1. (decimal)
+	High segment starts at	507721 ends at	510025 length	   105 (octal),    69. (decimal)
+
+	EC%TIM	      507726	Entry	Relocatable 		ECTIME	      507726	Entry	Relocatable 	
+
+		*************
+
+DCTIME	from DSK:RDLIB.REL	created by Unknown on  2-Mar-69 at 13:52:00
+	Low  segment starts at	 14246 ends at	 14246 length	     1 (octal),     1. (decimal)
+	High segment starts at	510026 ends at	510076 length	    51 (octal),    41. (decimal)
+
+	DC%TIM	      510033	Entry	Relocatable 		DCTIME	      510033	Entry	Relocatable 	
+
+		*************
+
+LOOKUP	from DSK:RDLIB.REL	created by Unknown on  2-Mar-69 at 13:52:00
+	Low  segment starts at	 14247 ends at	 14247 length	     1 (octal),     1. (decimal)
+	High segment starts at	510077 ends at	510277 length	   201 (octal),   129. (decimal)
+
+	LOOKUP	      510104	Entry	Relocatable 		STACK.	       14544	Global	Absolute    	
+
+		*************
+
+FIRST	from DSK:PASLIB.REL	created by MACRO on 19-Feb-69 at 16:52:00
+
+	Zero length module
+
+		*************
+		LINK symbol map of	PASCAL		page 10
+
+
+INI0	from DSK:PASLIB.REL	created by MACRO on 19-Feb-69 at 16:52:00
+	High segment starts at	510300 ends at	510300 length	     1 (octal),     1. (decimal)
+
+	INIT0.	      510300	Entry	Relocatable 	
+
+		*************
+
+LAST	from DSK:PASLIB.REL	created by MACRO on 19-Feb-69 at 16:52:00
+
+	Zero length module
+
+		*************
+
+PASMON	from DSK:PASLIB.REL	created by MACRO on 19-Feb-69 at 16:52:00
+	Low  segment starts at	 14250 ends at	 14252 length	     3 (octal),     3. (decimal)
+	High segment starts at	510301 ends at	510573 length	   273 (octal),   187. (decimal)
+
+	BFPAD.	       14251	Global	Relocatable 		CSTMT.	       14252	Global	Relocatable 	
+	DIE.	      510336	Global	Relocatable 		END.	      510331	Global	Relocatable 	
+	EXIT.	      510331	Global	Relocatable 		INITP.	      510301	Entry	Relocatable 	
+	TRACE	      510446	Global	Relocatable 		VINI0.	      510301	Entry	Relocatable 	
+	VINI1.	      510301	Global	Relocatable 		VINI2.	      510301	Global	Relocatable 	
+	VINI3.	      510301	Global	Relocatable 		VINI4.	      510301	Global	Relocatable 	
+	VINI5.	      510301	Global	Relocatable 		WRTDC.	      510430	Global	Relocatable 	
+	WRTPC.	      510420	Global	Relocatable 	
+
+		*************
+
+QUICKF	from DSK:PASLIB.REL	created by MACRO on 19-Feb-69 at 16:52:00
+	Low  segment starts at	 14253 ends at	 14257 length	     5 (octal),     5. (decimal)
+	High segment starts at	510574 ends at	511230 length	   435 (octal),   285. (decimal)
+
+	ALC0.	      510611	Entry	Relocatable 		DSPOS.	      511077	Entry	Relocatable 	
+	MARK.	      511140	Entry	Relocatable 		NEW.	      510650	Entry	Relocatable 	
+	ON%HEA	      510574	Entry	Relocatable 		RLEAS.	      511147	Entry	Relocatable 	
+
+		*************
+
+PASIOU	from DSK:PASLIB.REL	created by MACRO on 19-Feb-69 at 16:52:00
+	Low  segment starts at	 14260 ends at	 14265 length	     6 (octal),     6. (decimal)
+	High segment starts at	511231 ends at	512246 length	  1016 (octal),   526. (decimal)
+
+	BREAK.	      512127	Entry	Relocatable 		CLOSE.	      511745	Entry	Relocatable 	
+	CONER.	      512137	Entry	Relocatable 		FIXSP.	      512052	Entry	Relocatable 	
+	FLIST.	       14261	Entry	Relocatable 		FLTRCC	      512152	Entry	Relocatable 	
+	FLTRCR	      512145	Entry	Relocatable 		FRECN.	      512000	Entry	Relocatable 	
+	GET.	      511356	Entry	Relocatable 		GETCH.	      511235	Entry	Relocatable 	
+	GETCN.	      511762	Entry	Relocatable 		GETLN.	      511231	Entry	Relocatable 	
+	OPEN.	      511474	Entry	Relocatable 		PASSCC	      512143	Entry	Relocatable 	
+	PASSCR	      512154	Entry	Relocatable 		PUT.	      511405	Entry	Relocatable 	
+	PUTCH.	      511373	Entry	Relocatable 		PUTLN.	      511436	Entry	Relocatable 	
+	PUTPG.	      511443	Entry	Relocatable 		RESET.	      511467	Entry	Relocatable 	
+	REWRT.	      511527	Entry	Relocatable 		TTYOP.	      512132	Entry	Relocatable 	
+		LINK symbol map of	PASCAL		page 11
+PASIOU
+	TWAIT.	      512105	Entry	Relocatable 	
+
+		*************
+
+RNTIM	from DSK:PASLIB.REL	created by MACRO on 19-Feb-69 at 16:52:00
+	High segment starts at	512247 ends at	512252 length	     4 (octal),     4. (decimal)
+
+	RN.TIM	      512247	Entry	Relocatable 	
+
+		*************
+
+WROCT	from DSK:PASLIB.REL	created by MACRO on 19-Feb-69 at 16:52:00
+	High segment starts at	512253 ends at	512273 length	    21 (octal),    17. (decimal)
+
+	WROCT.	      512253	Entry	Relocatable 	
+
+		*************
+
+WRINT	from DSK:PASLIB.REL	created by MACRO on 19-Feb-69 at 16:52:00
+	High segment starts at	512274 ends at	512326 length	    33 (octal),    27. (decimal)
+
+	WRINT.	      512274	Entry	Relocatable 	
+
+		*************
+
+PASNIO	from DSK:PASLIB.REL	created by MACRO on 19-Feb-69 at 16:52:00
+	High segment starts at	512327 ends at	513053 length	   525 (octal),   341. (decimal)
+
+	CNVTOR	      512717	Entry	Relocatable 		CVTOI.	      512703	Entry	Relocatable 	
+	CVTOR.	      512717	Entry	Relocatable 		READI.	      512600	Entry	Relocatable 	
+	READR.	      512723	Entry	Relocatable 		STR2R.	      512707	Entry	Relocatable 	
+	WRTRL.	      512327	Entry	Relocatable 	
+
+		*************
+
+WRITC	from DSK:PASLIB.REL	created by MACRO on 19-Feb-69 at 16:52:00
+	High segment starts at	513054 ends at	513063 length	    10 (octal),     8. (decimal)
+
+	WRITC.	      513054	Entry	Relocatable 	
+
+		*************
+
+WRTSTR	from DSK:PASLIB.REL	created by MACRO on 19-Feb-69 at 16:52:00
+	High segment starts at	513064 ends at	513104 length	    21 (octal),    17. (decimal)
+
+	WRPST.	      513070	Entry	Relocatable 		WRSST.	      513064	Entry	Relocatable 	
+	WRUST.	      513072	Entry	Relocatable 		WRVST.	      513066	Entry	Relocatable 	
+
+		*************
+
+READC	from DSK:PASLIB.REL	created by MACRO on 19-Feb-69 at 16:52:00
+	High segment starts at	513105 ends at	513110 length	     4 (octal),     4. (decimal)
+
+	READC.	      513105	Entry	Relocatable 	
+		LINK symbol map of	PASCAL		page 12
+READC
+
+		*************
+
+WRTSUB	from DSK:PASLIB.REL	created by MACRO on 19-Feb-69 at 16:52:00
+	High segment starts at	513111 ends at	513135 length	    25 (octal),    21. (decimal)
+
+	TOSML.	      513132	Entry	Relocatable 		WRBLK.	      513111	Entry	Relocatable 	
+	WRMIN.	      513130	Entry	Relocatable 		WROPN.	      513116	Entry	Relocatable 	
+	WRSGN.	      513126	Entry	Relocatable 	
+
+		*************
+
+INTRL	from DSK:PASLIB.REL	created by MACRO on 19-Feb-69 at 16:52:00
+	High segment starts at	513136 ends at	513154 length	    17 (octal),    15. (decimal)
+
+	INTRL.	      513136	Entry	Relocatable 	
+
+		*************
+
+ROUND	from DSK:PASLIB.REL	created by MACRO on 19-Feb-69 at 16:52:00
+	High segment starts at	513155 ends at	513172 length	    16 (octal),    14. (decimal)
+
+	ROUND.	      513155	Entry	Relocatable 	
+
+		*************
+
+LINK	from DSK:PASLIB.REL	created by MACRO on 19-Feb-69 at 16:52:00
+	Low  segment starts at	 14266 ends at	 14274 length	     7 (octal),     7. (decimal)
+	High segment starts at	513173 ends at	513206 length	    14 (octal),    12. (decimal)
+
+	LINK	      513173	Entry	Relocatable 	
+
+		*************
+
+FTTYOU	from DSK:PASLIB.REL	created by MACRO on 19-Feb-69 at 16:52:00
+	Low  segment starts at	 14275 ends at	 14322 length	    26 (octal),    22. (decimal)
+
+	TTYOUT	       14275	Entry	Relocatable 	
+
+		*************
+
+FINPUT	from DSK:PASLIB.REL	created by MACRO on 19-Feb-69 at 16:52:00
+	Low  segment starts at	 14323 ends at	 14350 length	    26 (octal),    22. (decimal)
+
+	INPUT	       14323	Entry	Relocatable 	
+
+		*************
+
+FOUTPU	from DSK:PASLIB.REL	created by MACRO on 19-Feb-69 at 16:52:00
+	Low  segment starts at	 14351 ends at	 14376 length	    26 (octal),    22. (decimal)
+
+	OUTPUT	       14351	Entry	Relocatable 	
+
+		*************
+		LINK symbol map of	PASCAL		page 13
+
+
+CBPSS	from DSK:PASLIB.REL	created by MACRO on 19-Feb-69 at 16:52:00
+	High segment starts at	513207 ends at	513213 length	     5 (octal),     5. (decimal)
+
+	CBPSS.	      513207	Entry	Relocatable 	
+
+		*************
+
+PRTSTR	from DSK:PASLIB.REL	created by MACRO on 19-Feb-69 at 16:52:00
+	High segment starts at	513214 ends at	513330 length	   115 (octal),    77. (decimal)
+
+	CMFF.	      513214	Entry	Relocatable 		CMPSS.	      513256	Entry	Relocatable 	
+	CMSF.	      513220	Entry	Relocatable 		CMSSR.	      513240	Entry	Relocatable 	
+	CTSS.	      513315	Entry	Relocatable 	
+
+		*************
+
+PRTIXF	from DSK:PASLIB.REL	created by MACRO on 19-Feb-69 at 16:52:00
+	High segment starts at	513331 ends at	513370 length	    40 (octal),    32. (decimal)
+
+	IX3SS.	      513332	Entry	Relocatable 		IXSS.	      513331	Entry	Relocatable 	
+
+		*************
+
+PRTSRF	from DSK:PASLIB.REL	created by MACRO on 19-Feb-69 at 16:52:00
+	High segment starts at	513371 ends at	513415 length	    25 (octal),    21. (decimal)
+
+	SR3SS.	      513372	Entry	Relocatable 		SRSS.	      513371	Entry	Relocatable 	
+
+		*************
+
+PRTVFF	from DSK:PASLIB.REL	created by MACRO on 19-Feb-69 at 16:52:00
+	High segment starts at	513416 ends at	513442 length	    25 (octal),    21. (decimal)
+
+	VF3SS.	      513417	Entry	Relocatable 		VFSS.	      513416	Entry	Relocatable 	
+
+		*************
+
+PRFID	from DSK:PASLIB.REL	created by Unknown on 19-Feb-69 at 16:52:00
+	Low  segment starts at	 14377 ends at	 14400 length	     2 (octal),     2. (decimal)
+	High segment starts at	513443 ends at	513714 length	   252 (octal),   170. (decimal)
+
+	PRFID.	      513443	Entry	Relocatable 	
+
+		*************
+
+PASERR	from DSK:PASLIB.REL	created by MACRO on 19-Feb-69 at 16:52:00
+	High segment starts at	513715 ends at	513777 length	    63 (octal),    51. (decimal)
+
+	CORER.	      513726	Entry	Relocatable 		FORER.	      513731	Entry	Relocatable 	
+	INXER.	      513720	Entry	Relocatable 		PTRER.	      513715	Entry	Relocatable 	
+	SRERR.	      513723	Entry	Relocatable 	
+
+		*************
+		LINK symbol map of	PASCAL		page 14
+
+
+PASENT	from DSK:PASLIB.REL	created by MACRO on 19-Feb-69 at 16:52:00
+	High segment starts at	514000 ends at	514010 length	    11 (octal),     9. (decimal)
+
+	KI10N.	      514000	Entry	Relocatable 		KI10X.	      514005	Entry	Relocatable 	
+	PNTRY.	      514000	Entry	Relocatable 		PRTRN.	      514005	Entry	Relocatable 	
+
+		*************
+
+UNWND	from DSK:PASLIB.REL	created by MACRO on 19-Feb-69 at 16:52:00
+	High segment starts at	514011 ends at	514021 length	    11 (octal),     9. (decimal)
+
+	UNWND.	      514011	Entry	Relocatable 	
+
+		*************
+
+PFCALL	from DSK:PASLIB.REL	created by MACRO on 19-Feb-69 at 16:52:00
+	High segment starts at	514022 ends at	514024 length	     3 (octal),     3. (decimal)
+
+	PCALL.	      514022	Entry	Relocatable 	
+
+		*************
+
+DATE	from DSK:FORLIB.REL	created by MACRO on  6-Feb-69 at 15:55:00
+	Low  segment starts at	 14401 ends at	 14456 length	    56 (octal),    46. (decimal)
+
+	DATE	       14402	Entry	Relocatable 	
+
+		*************
+
+
+	Index to LINK symbol map of	PASCAL		page 15
+
+	Name	Page	Name	Page	Name	Page	Name	Page
+
+	CBPSS	13	FINPUT	12	PASCMP	 4	PRGDIR	 7
+	CHARS2	 8	FIRST	 9	PASCSN	 4	PRTIXF	13
+	CHECKL	 6	FOUTPU	12	PASCST	 4	PRTSRF	13
+	CHREAD	 3	FTTYOU	12	PASENT	14	PRTSTR	13
+	CVBINS	 8	INCREG	 6	PASERR	13	PRTVFF	13
+	DATE	14	INI0	10	PASEXP	 5	QUICKF	10
+	DAYTIM	 7	INTRL	12	PASHAK	 4	READC	11
+	DCDATE	 9	JOBNUM	 7	PASIOU	10	RNTIM	11
+	DCDTIM	 8	LAST	10	PASLEX	 3	ROUND	12
+	DCEXT	 7	LINK	12	PASMC	 5	TMPCOR	 7
+	DCMONT	 9	LOOKUP	 9	PASMON	10	UNWND	14
+	DCTIME	 9	MAC	 5	PASNIO	11	VERSIO	 3
+	ECDATE	 9	MACNES	 3	PASOPT	 6	WRINT	11
+	ECDCDA	 8	PASBLK	 4	PASRUN	 3	WRITC	11
+	ECDCTI	 8	PASBOD	 5	PASSEL	 5	WROCT	11
+	ECTIME	 9	PASCAL	 1	PASSTR	 6	WRTSTR	11
+	EXTR	 8	PASCG	 6	PFCALL	14	WRTSUB	12
+	EXTR	 8	PASCLL	 5	PRFID	13	.MAIN	 7
+
+	[End of LINK map of	PASCAL]
+ +d

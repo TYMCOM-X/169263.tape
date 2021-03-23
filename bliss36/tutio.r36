@@ -1,0 +1,239 @@
+%IF NOT %BLISS (BLISS36)
+%THEN
+    %ERROR ('? To be used only with BLISS-36');
+%FI
+
+!+
+! This file defines the following terminal I/O functions for TOPS-10
+! and TOPS-20:
+!
+!	TTY_GET_CHAR
+!	TTY_GET_LINE
+!	TTY_PUT_ASCIZ
+!	TTY_PUT_CHAR
+!	TTY_PUT_CRLF
+!	TTY_PUT_INTEGER
+!	TTY_PUT_MSG
+!	TTY_PUT_QUO
+!
+! The usage of these functions is documented in TUTIO.HLP.
+!-
+
+FORWARD ROUTINE
+    TTY_GET_LINE,
+    TTY_PUT_INTEGER	: NOVALUE,
+    TTY_PUT_MSG		: NOVALUE;
+
+%IF %SWITCHES(TOPS20)
+%THEN
+
+!+
+! TOPS-20 Monitor Calls are done via the JSYS function.
+!-
+BUILTIN
+    JSYS;
+
+!+
+! The following useful LITERAL declarations were taken from 'MONSYM.L36'.
+!-
+LITERAL
+    PBIN	=	%O'000000000073',
+    PBOUT	=	%O'000000000074',
+    PSOUT	=	%O'000000000076',
+    RDTTY	=	%O'000000000523',
+    RD_BEL	=	%O'040000000000';
+
+MACRO
+    TTY_GET_CHAR (X) =
+	BEGIN
+	REGISTER
+	    $C=1;
+	JSYS (0, PBIN, $C);
+	.$C
+	END %,
+
+    TTY_PUT_CHAR (X) =
+	BEGIN
+	REGISTER
+	    $C=1;
+	$C = (X);
+	JSYS (0, PBOUT, $C)
+	END %,
+
+    TTY_PUT_ASCIZ (X) =
+	BEGIN
+	REGISTER
+	    $P=1;
+	$P = CH$PTR (X);
+	JSYS (0, PSOUT, $P)
+	END %;
+
+ROUTINE TTY_GET_LINE (ADDR, LEN) =
+    BEGIN
+    REGISTER
+	PTR=1,			! Character pointer into caller's buffer.
+	COUNT=2,		! Number of characters for which there is room.
+	PROMPT=3;		! Character pointer to prompt string.
+
+    PTR = CH$PTR (.ADDR);
+    COUNT = RD_BEL OR .LEN;
+    PROMPT = 0;
+    JSYS (1, RDTTY, PTR, COUNT, PROMPT);
+
+    RETURN .LEN - .COUNT<0,18>	! Return the number of characters in buffer.
+    END;
+%FI
+%IF %SWITCHES(TOPS10)
+%THEN
+
+!+
+! TOPS-10 Monitor Calls are done via the UUO function.
+!-
+BUILTIN
+    UUO;
+
+!+
+! The following useful MACRO declarations were taken from 'UUOSYM.L36'.
+!-
+MACRO
+    INCHRW (e)	=	%O'051', %O'00', e %,
+    INCHWL (e)	=	%O'051', %O'04', e %,
+    OUTCHR (e)	=	%O'051', %O'01', e %,
+    OUTSTR (e)	=	%O'051', %O'03', e %;
+
+MACRO
+    TTY_GET_CHAR (X) =
+	BEGIN
+	LOCAL
+	    $C;
+	UUO (0, INCHRW($C));
+	.$C
+	END %,
+
+    TTY_PUT_CHAR (X) =
+	BEGIN
+	LOCAL
+	    $C;
+	$C = (X);
+	UUO (0, OUTCHR($C))
+	END %,
+
+    TTY_PUT_ASCIZ (X) =
+	UUO (0, OUTSTR((X))) %;
+
+ROUTINE TTY_GET_LINE (ADDR, LEN) =
+    BEGIN
+    LOCAL
+	PTR,			! Character pointer into caller's buffer.
+	CH,			! Character.
+	COUNT;			! Count of characters written into buffer.
+
+    PTR = CH$PTR (.ADDR);
+    COUNT = 0;
+
+    WHILE .COUNT LSS .LEN DO
+	BEGIN
+	UUO (0, INCHWL(CH));
+	CH$WCHAR_A (.CH, PTR);
+	COUNT = .COUNT + 1;
+	IF .CH EQL %O'12' THEN EXITLOOP;
+	END;
+
+    RETURN .COUNT
+    END;
+%FI
+MACRO
+    TTY_PUT_QUO [] =
+	TTY_PUT_ASCIZ (UPLIT (%ASCIZ %STRING (%REMAINING))) %;
+
+BIND
+    PTR_CRLF = UPLIT (%ASCIZ %CHAR(13,10));
+
+MACRO
+    TTY_PUT_CRLF (DUMMY) =
+	TTY_PUT_ASCIZ (PTR_CRLF) %;
+ROUTINE TTY_PUT_MSG (ADDR, LEN) : NOVALUE =
+    BEGIN
+
+    LOCAL
+	PTR;			! Character pointer to caller's buffer.
+
+    PTR = CH$PTR (.ADDR);
+
+    DECR I FROM .LEN - 1 TO 0 DO
+	TTY_PUT_CHAR (CH$RCHAR_A (PTR));
+
+    END;
+ROUTINE TTY_PUT_INTEGER (NUMB, RADX, LEN) : NOVALUE =
+    BEGIN
+    REGISTER
+	DVD = 3,
+	REM = 4;
+
+    LOCAL
+	DIGIT_COUNT,			! Count of ASCII characters.
+	DVR;				! Radix used as divisor.
+
+    OWN
+	DIGIT_VEC : VECTOR[40];		! Vector of ASCII characters.
+
+    BIND
+	CHR_VEC = UPLIT ( %C'0',%C'1',%C'2',%C'3',%C'4',%C'5',%C'6',%C'7',%C'8',
+			%C'9',%C'A',%C'B',%C'C',%C'D',%C'E',%C'F' ) : VECTOR;
+
+    BUILTIN
+	MACHOP;
+
+    LITERAL
+	LSHC	=	%O'246',
+	LSH	=	%O'242',
+	DIV	=	%O'234',
+	IDIV	=	%O'230';
+
+    DVR = .RADX;
+    DIGIT_COUNT = 0;
+    DVD = 0;
+
+    IF .DVR EQL 10
+    THEN
+	REM = ABS (.NUMB)		! Convert to signed if decimal radix. 
+    ELSE
+	(REM = .NUMB; NUMB = 0);	! Convert unsigned otherwise.
+
+    MACHOP (LSHC, DVD, 1);		! Form 72-bit unsigned number
+    MACHOP (LSH, REM, -1);		!    in REM and DVD.
+    MACHOP (DIV, DVD, DVR);		! Do 72-bit by 36-bit divide.
+					! DVD = Quotient, REM = Remainder.
+    WHILE 1 DO
+	BEGIN
+	DIGIT_VEC [.DIGIT_COUNT] = .CHR_VEC [.REM];
+	DIGIT_COUNT = .DIGIT_COUNT + 1;
+
+	IF .DVD EQL 0 THEN EXITLOOP;
+
+	MACHOP (IDIV, DVD, DVR);	! Do 36-bit by 36-bit divide.
+					! DVD = Quotient, REM = Remainder.
+	REM = .REM;			! Let compiler know that REM changed.
+	END;
+
+    IF .NUMB LSS 0
+    THEN
+	BEGIN
+	DIGIT_VEC [.DIGIT_COUNT] = %C'-';
+	DIGIT_COUNT = .DIGIT_COUNT + 1;
+	END;
+
+    IF .LEN EQL 0			! If field length is 0,
+    THEN
+	LEN = .DIGIT_COUNT;		! then left justify with no fill.
+
+    DECR I FROM .LEN - 1 TO 0 DO
+	BEGIN
+	IF .I GEQ .DIGIT_COUNT
+	THEN
+	    TTY_PUT_CHAR (%C' ')
+	ELSE
+	    TTY_PUT_CHAR (.DIGIT_VEC [.I]);
+	END;
+
+    END;

@@ -1,0 +1,237 @@
+$num off
+$pag
+$VER
+TO:\A.\Kortesoja
+$ski
+FROM:\J.\D.\Rosen
+$ski
+DATE:\June 12,\1978
+$ski
+SUBJECT:\QED using the VBUF/VALLOC heap routines
+$ski
+CC(without graphs):\J.\MacKrell,\J.\Broughton
+$jus
+$ski 2
+$title right 'QED Virtual Heap Evaluation/\' right 'June 12, 1978'
+$par 5
+A version of QED using the VBUF/VALLOC virtual heap routines has been
+prepared, and used as a test program. The version may be found as
+QED.EXE[52250,247].
+ As part of the testing, various combinations of
+virtual buffer size and number of virtual buffers were prepared and
+their performance evaluated. This document is a summary of those
+results, and the conclusions obtained. 
+The statistics collected from the various versions were CRU usage,
+low-segment size, and disk I/O activity.
+$ski
+$par 5
+To conduct the tests, two .MIC files were prepared. The first was a sample
+editing session on a large (about 2000 lines) file, conducted in a
+sequential manner through the file. The second .MIC file was a similar
+session with the same file, with the same edits performed, but in a
+haphazard order, skipping around the file. Control-T's were typed
+before and after each invocation of the .MIC files to obtain incremental
+performance statistics.
+$page
+$ski 2
+$cen
+&CRU USAGE&
+$ski 2
+$jus
+$par 5
+None of the versions performed as well as QED without a virtual heap, but
+CRU figures within 10% of QED's were obtained often.
+QED used 944 and 1793 CRUs for best and worst case respectively; the best
+performance using virtual buffers was 1002 and 1816 CRUs for best and
+worst case respectively, both from using 1 384-word buffer. Several other
+combinations gave best and worst performance below 1100 and 1900 CRUs
+(listed below).
+$ski
+$par 5
+The graphs showing CRU usage versus number of buffers for a constant
+buffer size show a fairly dramatic increase in processing time for
+larger numbers of buffers. This can be attributed directly to the management
+of the buffers, and the increase in processing necessary to determine
+if a desired page is in core (walking the MRU chain of buffers)
+as the number of core buffers increases. However, since the page number
+of a virtual pointer is somewhat arbirtary (in the sense that any virtual
+page may be referenced at any time), it is difficult to design a more
+effficient lookup scheme without using more dynamic storage,
+or a large amount of static storage.
+$ski
+$PAR 5
+The graphs showing CRU usage versus size of buffers for a constant 
+number of buffers display a fairly constant amount of processing time
+for each number of buffers. This is to be expected, because even though
+page location processing is equivalent for a given number of buffers, 
+and paging activity decreases for larger buffers, it is balanced by
+the added complexity of record allocation and merging of greater numbers
+of free blocks per virtual page. Comparison of the different graphs
+plainly shows the increase in processing time required for greater
+numbers of buffers.
+$page
+$ski 2
+$cen
+&I/O ACTIVITY&
+$jus
+$ski 2
+$par 5
+In evaulation of the statistics for I/O activity, it must be remembered
+that the figures given are numbers of &blocks& read or written. Thus,
+if two versions with different buffer sizes have the same number of
+disk reads and writes, the one with the larger size performed fewer
+page-outs and -ins.
+Also, the number of reads and writes performed by QED without virtual
+heap should be subtracted from the figures, since this activity was
+performed by all versions of QED tested independent of paging.
+$ski
+$par 5
+The best performance with respect to I/O activity came from combinations
+of buffer size and number of buffers in which the total buffer storage
+available was almost as large or larger than the edit file. Since the
+entire file could reside in core at one time, no paging was necessary.
+This creates a trade-off in the use of the virtual heap between 
+CRU usage (and low-segment size) and amount of I/O activity.
+$ski
+$par 5
+A trend that should be noticed is that the graphs of blocks
+written for both best and worst cases are approximately the same.
+This shows a property of the test program, i.e.\relatively little
+page-out activity was occuring. Since a large amount of virtual
+storage was being used, the inference is that few pages were being
+modified (made 'dirty') and hence were not written. Another test
+case was prepared, performing more modification of the virtual heap.
+Its results are presented below.
+$ski
+$par 5
+The graphs showing the number of reads per run demonstrate, for small
+amounts of core buffer storage, that more reads were required for worst
+case than best case, as was expected. For large amounts of buffer
+storage (greater than 2**12 words), they show &fewer& reads for worst
+case than best case. The explanation:
+after the initial loading of the file, the last lines of the file are
+contained in core buffers. In the best case, that of starting at the
+start of the edit file, the first lines of the file had to be read
+into core buffers, forcing the middle lines to be paged out. When
+these lines were needed, the last lines were paged out, et cetera. For
+the worst case, however, with random access of lines in the file, the
+first lines were not immediately paged in, and more of the last lines
+remained in core buffers. Random access gives greater efficiency to
+a MRU paging scheme, and this efficiency shows up dramatically when
+the amount of in-core storage available for virtual heap memory
+approaches the total amount required. Of course, when the amount
+of storage available is greater than this amount, no paging occurs.
+$page
+$ski 2
+$cen
+&LOW-SEGMENT SIZE&
+$SKI 2
+$jus
+$par 5
+The graph showing low-segment sizes for virtual heap QED versions was
+plotted as a function of log(buffer space).
+Buffer space is basically the number of buffers multiplied by the
+size of the buffers. This is not exactly correct, however, since each
+buffer has a small control record associated with it, and increasing
+the number of buffers requires extra storage for these records over
+and above that required for the buffers. These records are small
+enough, however, that their allocation did not significantly affect
+the low segment size. A 'saturation' effect occured beyond 2**14
+words of buffer storage, as this amount was sufficient to hold the
+entire file in core, and no additional storage (or paging) was necessary.
+$ski
+$par 5
+It should be noticed that low-segment size was never less than
+22 pages. This represents any and all static storage for QED, the
+virtual heap routines, and the dump-mode I/O routines, plus heap
+storage for QED not placed on the virtual heap (everything except the
+actual text of the file) and the page buffers themselves. More
+importantly, a two-word record is created by QED on the PASCAL heap for
+each line in the edit file, placing an upper limit on the possible 
+size of an edit file.  The standard QED can edit a file of about
+9000 lines maximum; with minimum page buffer storage (1 buffer of
+128 words), the virtual heap QED could probably handle about 20000
+lines, depending of course upon the average length of lines in the
+edit file.
+$page
+$ski 2
+$cen
+&SUBSEQUENT TESTS&
+$jus
+$ski 2
+$par 5
+As mentioned under 'I/O ACTIVITY', a second set of .MIC files were prepared,
+attempting to increase paging-out activity. These tests included several
+instances of inserting lines into the file, and a '1,$ FIND' command.
+The .MIC files were first run with regular QED, then with virtual
+QED using combinations of 2 and 4 buffers, and 256 and 512 words per
+buffer.
+The results are tabled below:
+$ver
+$ski 2
+$TAB 17,25,33,41
+(N)=SEQUENTIAL EDIT PASS            (S)=HAPHAZARD (STUPID) PASS
+$ski
+TEST CASE	CRU	READS	WRITES	LOW-SEG
+$SKI 2
+QED(N)	1555	173	91	45
+QED(S)	2273	124	82	44
+$SKI
+2,256(N)	1756	897	295	23
+2,256(S)	2497	1075	296	23
+$SKI
+4,256(N)	1669	774	268	24
+4,256(S)	2326	818	257	24
+$SKI
+2,512(N)	1683	826	321	25
+2,512(S)	2437	1076	322	24
+$SKI
+4,512(N)	1691	844	325	27
+4,512(S)	2443	1038	324	26
+$JUS
+$TAB
+$ski 2
+$par 5
+Even in this set of tests, however, the number of writes for best and
+worst case are almost the same.  It is possible that the increase in
+paging operations hypothesized above (for sequential editing) is
+again responsible.
+Combining these results with the previous statistics, it becomes
+clear that the number of write operations performed by the virtual
+QED programs are virtually independent of editing style.
+$page
+$ski 2
+$cen
+&CONCLUSIONS&
+$JUS
+$ski 2
+$par 5
+The intended use of the VBUF/VALLOC routines is to increase the potential
+heap space for large programs. With this in mind, the user must consider
+the following trade-offs:
+$ski
+$ind left 3
+$ind right 3
+$par -3
+(1)--Increasing the amount of buffer space available to the virtual heap
+routines does not by necessity improve performance. The amount of paging
+&activity& will be reduced, but searching for a specific virtual page, and
+virtual record maintenance, will become less efficient. Also, a CRU is
+an integral of memory and CPU time, which will increase for larger amounts
+of system virtual memory used.
+$ski
+$par -3
+(2)--An increase in paging activity, depending on system load, can
+significantly degrade the performance in real time of a program
+using the virtual heap. Small amounts of buffer space, which force an
+increase in paging, can effectively trade CRU usage for real time.
+$ski
+$par -3
+(3)--The total amount of buffer space should reflect the total amount of
+virtual heap required. It is inefficient to use enough buffer space to
+keep the entire virtual heap in core at one time. Thus the user must
+have an idea of the total heap storage required by his/her program,
+and select a combination of buffer size and number of buffers which
+exploits the advantages of a virtual heap system, i.e.\smaller
+low segment and an extremely large upper limit to the virtual address space.
+   

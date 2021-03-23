@@ -1,0 +1,86 @@
+#document(M68000 Project - KMP,<:January 21, 1982:>,45,,100)
+$POSITIONS +0,+4,+4,+4,+4,+4
+#SECT_DEFAULT(66,0,3,1,2,1)
+#NAME(PALGUT)
+#task(Introduction to the M68000)
+A general overview of what the Development Software group is doing and the
+systems that will be used is needed before I can begin any meaningful work.
+Major points to focus on are:
+#beginitem()
+#item()Learning about the M68000 system,
+#item()Learning M68000 Assembly Language,
+#item()Learning about the TYMSHARE and ADP systems,
+#item()Learning the PASCAL language.
+#enditem
+#schedule(1/18/82,1/22/82,1)
+#actual(1/18/82,1/22/82)
+#progress(1/22/82)
+I have gone over the documentation that was recommended for reading and have
+logged-on each of the systems to become familiar with them.  The languages will
+take time to learn.  I will continue gaining familiarity  as I begin new tasks.
+#task(Introduction to RDLIB)
+A general understanding of what RDLIB is and how it will be used is required
+before coding can begin.  Points to focus on are:
+#beginitem()
+#item()Studying the RDLIB documentation,
+#item()Finding out what tasks I will be performing with respect to RDLIB.
+#enditem()
+#schedule(1/20/82,1/21/82,1)
+#actual(1/20/82,1/21/82)
+#progress(1/21/82)
+I have read the available documentation about RDLIB and have obtained the
+background information I will need in order to begin work on it.
+#task(Scheduling RDLIB Development)
+A schedule for the coding and documenting of RDLIB routines will be formed.
+Important items will include:
+#beginitem()
+#item()Dividing the RDLIB routines to be written between S. Kennedy and myself,
+#item()Determining the format of reference documentation and in-code documentation,
+#item()Begin coding.
+#enditem()
+#schedule (1/22/81,1/29/82,1)
+#actual(1/22/82,1/29/82)
+#progress(1/22/82)
+Most of the routines were divided up between Steve Kennedy and myself.   
+I will be coding the DTIME routines and JOBNUM to start with.  Others
+were left until we get a better idea of how long it will take each of us to code
+the ones we have.  A file was set up on the M68000 system (1002..RDLIBHDR.SA) that
+is a template of general in-code documentation.  It was decided that reference
+documentation would use the same format as the VAX RDLIB documentation.
+#progress(1/29/82)
+Several of the Day/Time routines have been coded, as well as Jobnum.  I
+will complete their documentation as soon as S. Kennedy completes a Macro
+package for documentation formatting.
+#task(Coding, Documenting, Testing RDLIB DTIME Routines)
+Each of the Day/Time routines will be coded, documented, and tested.
+#schedule(2/1/82,2/12/82,1)
+#actual(2/1/82,2/11/82)
+#progress(2/5/82)
+The documentation for the RDLIB Day/Time routines has been written.  All of the
+routines have been coded and assembled except DC_DAYS and EC_DAYS.  I have
+begun testing some of the routines.  I missed approximately a day and a half
+due to snow/illness, but I think I should finish by 2/12.
+#progress(2/11/82)
+Task completed.
+#task(Coding, Documenting, Testing RDLIB Miscellaneous Routines)
+Background on the miscellaneous routines (listed in M68DOC.TXT) must be 
+obtained, then coding, etc, can begin.
+#schedule(2/11/82,2/19/82,1)
+#schedule(2/11/82,2/26/82)
+#actual(2/12/82,3/2/82)
+#progress(2/19/82)
+The miscellaneous routines, especially RENAME and REPROTECT, involved a great
+deal more work than I had originally planned.  Completion will take about
+another week.
+#progress(3/2/82)
+Again, RENAME and REPROTECT posed some unsuspected problems, but now the
+miscellaneous routine are complete.
+#task(RDLIB ANC Dependent Routines)
+It will be necessary to meet with people from ANC to find out which routines
+they will need.  After that, coding can begin.
+#schedule(3/2/82,3/5/82,1)
+#actual(3/2/82)
+#progress(3/3/82)
+We met with ANC to find out what kind of routines they will need (from RDLIB)
+in order to Benchmark their system on the M68000.  Once Benchmarking is complete
+some other routines may be added.

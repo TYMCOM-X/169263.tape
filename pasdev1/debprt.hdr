@@ -1,0 +1,27 @@
+(*   +--------------------------------------------------------------+
+     |                                                              |
+     |                         D E B P R T                          |
+     |                         - - - - - -                          |
+     |                                                              |
+     +--------------------------------------------------------------+
+     
+     MDSI, Company Confidential
+     
+     SYSTEM:  Pascal Debugger
+     
+     STARTED:  6/21/79
+     
+     PURPOSE:  DEBPRT contains the  Pascal  Debugger's  routines  for
+        printing of, and assigning to, user program variables.
+     
+     ENTRY POINTS:
+     
+        PRINT$      print an arbitrary value which is described via a
+                    descriptor record.
+     
+        A$$IGN      assigns an object described by a descriptor to  a
+                    second object described by a descriptor.
+     
+     RESPONSIBLE:  Compiler Group
+     
+     ---------------------------------------------------------------- *)

@@ -1,0 +1,15 @@
+scribe.pas
+doscri.pas
+reader.pas
+writer.pas
+justfy.pas
+getlin.pas
+scan.pas
+scrvar.inc
+stdtyp.inc
+levels.typ
+levels.var[31024,320156]
+stdvar.pas
+cmdutl.typ[31024,320156]
+filutl.inc[31024,320156]
+getcmd.pas

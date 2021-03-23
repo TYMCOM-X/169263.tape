@@ -1,0 +1,281 @@
+	title	VTRANS	** PASCAL virtual address translation routines **
+	search	passym
+	search	virsym
+	$reloc
+	entry	VTRNS.,FTRNS.,VMACC.,VBPTI.,VBVPI.,VGTBF.,VKBFP.
+
+	extern	POMSK.,BP.AREA,VBUF.,VMRU.,VMRUT.,BP.PT
+	extern	TWAIT.,WRTPC.,DIE.
+	extern	N%BUF,VORG.
+	extern	VATBL.,BP.PO,VREAD.,VWRIT.,VGNFP.,VFRFP.
+	$high
+	page
+; VTRNS. -- translate virtual address. The word following the PUSHJ is a
+;   pseudo instruction of the form  FOO AC,LEN  where AC indicates the
+;   register containing the virtual pointer (any is OK except AC0), and
+;   LEN is the desired access length.
+
+INDXBP:	point	4,@0(topp),12
+
+VTRNS.:	LDB	AC0,INDXBP		; pick up AC field of pseudo-op
+	MOVE	AC1,@AC0		; and virtual pointer
+	TLNN	AC1,MASKAREA		; if area zero then no translation
+	JRST	VRET
+	PUSHJ	TOPP,VMACC.		; otherwise make it accessable
+	MOVEM	AC1,@AC0		; install in calling register
+
+VRET:	AOS	0,0(TOPP)		; tick return address
+	POPJ	TOPP,0
+
+
+; FTRNS. -- translate 'with' register.  The psuedo-op looks like
+;    FOO AC,OFFSET   where AC indicates the with register, and OFFSET
+;    is the offset in the record that will be addressed. We return
+;    the address which can be used in AC1, so that OFFSET(AC1) as
+;    effective will reference the desired field.
+
+FTRNS.:	LDB	AC1,INDXBP		; pick up AC field
+	MOVE	AC1,0(AC1)		; pick up virtual with register
+	TLNN	AC1,MASKAREA		; anything to do?
+	JRST	VRET			; no, go home
+	PUSH	TOPP,@0(TOPP)		; pick up offset field
+	ADDI	AC1,@0(TOPP)		; add it to virtual address
+	PUSHJ	TOPP,VMACC.		; get real addr.
+	SUBI	AC1,@0(TOPP)		; subtract offset from real addr.
+	POP	TOPP,0(TOPP)		; uselessly pop stack
+	AOS	0,0(TOPP)		; tick return adr
+	POPJ	TOPP,0			; and split
+	page
+; VMACC. -- make virtual address accessable. Called with virtual address in
+;   AC1, returns real address in AC1, saves all other registers. Minimal
+;   execution in optimal case, i.e. desired page is in core.
+
+VMACC.:	DMOVEM	ATBWD,VMSAVE		; get the two registers saved
+	TDNE	AC1,POMSK.		; do we need to chase the area tables?
+	JRST	VMGETP			; yes, do it, return ATBWD at VMACC1
+	LDB	ATBWD,BP.AREA		; no, pick up area number from VA
+	ADDI	ATBWD,VATBL.		; compute address of area table entry
+
+; at this point, ATBWD has addr of desired area table entry. PTBWD is free.
+
+VMACC1:	SKIPN	PTBWD,0(ATBWD)		; pick up entry from area table
+	JRST	VMERR			; zero -- non-existent area
+	TLNN	PTBWD,IND.BIT		; is page table in core?
+	JRST	VMGPT			; no, get both page table and page,
+	LDB	ATBWD,BP.PO		; get index within page table
+	ADDI	PTBWD,0(ATBWD)		; compute address of page table entry
+	SKIPN	ATBWD,0(PTBWD)		; pick up page table entry
+	JRST	VMERR			; zero -- non-existent page
+	TLZN	ATBWD,IND.BIT		; clear bit -- is page in core?
+	JRST	VMGVP			; no, get page, return VMACC2 with real
+					;   addr in AC1, page buf index in ATBWD
+	AND	AC1,AOMASK		; clear out all but offset and area #
+	ADDI	AC1,0(ATBWD)		; compute real address
+
+; now compute buffer index, only if page was not brought in by helpers.
+
+	ifge	OFIELD-^o12,		; if shift will set bits from left half
+	< TLZ	ATBWD,777777>		;   then clear left half first
+	SUB	ATBWD,VBUF.		; difference from first buffer
+	LSH	ATBWD,-OFIELD		; divide by page size
+
+; at this point, ATBWD contains the index of the buffer containing the
+;   desired page. Promote the page to MRU, restore regs and go home.
+
+VMACC2:	AOS	PTBWD,VMRU.		; tick and load MRU counter
+	ADD	ATBWD,VMRUT.		; compute address within MRU table
+	MOVEM	PTBWD,0(ATBWD)		; install MRU counter
+	DMOVE	ATBWD,VMSAVE		; restore the two registers
+	POPJ	TOPP,0			; and split
+	page
+; This helper chases the chain of area tables, returning the address of
+;   the desired area/page table offset cell in ATBWD.
+
+VMGETP:	LDB	PTBWD,BP.PT		; pick up page table offset
+	MOVEI	ATBWD,VATBL.		; get address of first area table
+
+VMGETL:	SKIPN	ATBWD,0(ATBWD)		; pick up pointer to next table
+	JRST	VMERR			; zero -- non-existent page number
+	SOJG	PTBWD,VMGETL		; else dec. count and go back
+
+	LDB	PTBWD,BP.AREA		; pick out area number
+	ADDI	ATBWD,0(PTBWD)		; get addr of area table entr
+	JRST	VMACC1			;   and go back with it
+
+; This helper brings in a paged-out page table. Since we know that the
+;   page itself is also paged out, bring it in too, passing it the
+;   buffer index of the page table via alternate entry VBPTX.
+
+VMGPT:	PUSHJ	TOPP,VMSAVR		; save the 'with' registers
+	PUSHJ	TOPP,VBPTI.		; bring in page indicated by ATBWD
+	LDB	BFPTR,BP.PO		; pick up offset within page table
+	ADDI	PTBWD,0(BFPTR)		; make PTBWD point to proper entry
+	SKIPN	BFPTR,0(PTBWD)		; pick up the page table word
+	JRST	VMERR			; zero -- non-existent page
+	PUSHJ	TOPP,VBVPX.		; bring in page, pass BFPTR,PTBWD,PTIDX
+	JRST	VMRESR			; go restore regs, back to VMACC2
+
+; This helper brings in a page indicated by PTBWD. PTIDX has not been
+;   set by VBPTI., so take normal entry point that computes the buffer
+;   index of the page table to decrement its reference count. 
+
+VMGVP:	PUSHJ	TOPP,VMSAVR		; save important registers
+	PUSHJ	TOPP,VBVPI.		; bring in page
+
+; at this point (branched into from VMGPT), BFPTR contains the address of
+;   the buffer containing the desired page. Compute real address, put the
+;   index of the buffer in ATBWD, restore 'with' registers, and go back
+;   to VMACC2 to update the MRU and go home.
+
+VMRESR:	AND	AC1,AOMASK		; get offset within page
+	ADDI	AC1,0(BFPTR)		;   and compute final real address
+	MOVEI	ATBWD,0(BFIDX)		; set up ATBWD
+	MOVS	BFPTR,[PTIDX,,VMSAVE+3]	; restore the registers
+	BLT	BFPTR,14
+	MOVE	BFPTR,VMSAVE+2		; restore BFPTR
+	JRST	VMACC2			; and go back with AC1 and ATBWD
+
+; Finally, this guy saves the registers, returning with a POPJ.
+
+VMSAVR:	MOVEM	BFPTR,VMSAVE+2		; save one
+	MOVE	BFPTR,[PTIDX,,VMSAVE+3]	; get magic word
+	BLT	BFPTR,VMSAVE+12		; savem
+	POPJ	TOPP,0			; and beat it
+	page
+; VBPTI. -- bring in page table. Called with ATBWD pointing to the entry
+;   in the area table corresponding to the page table desired. Returns
+;   PTBWD pointing to the page table, and PTIDX with the buffer index
+;   of the buffer containing the table. 
+
+VBPTI.:	MOVEI	FPAGE,0(ATBWD)		; parameter for SWAPIN
+	PUSHJ	TOPP,SWAPIN		;   which does all the work
+	MOVEI	PTBWD,0(BFPTR)		; set up return parameters
+	MOVEI	PTIDX,0(BFIDX)
+	POPJ	TOPP,0
+
+; VBVPI. -- bring in virtual page. Called with PTBWD pointing to the entry
+;   in the page table corresponding to the page desired. Returns BFIDX
+;   and BFPTR with the index and address of the buffer containing the page.
+;   The reference count of the page table is decremented here before the
+;   page is brought in. The second entry point VBVPX. assumes that PTIDX
+;   contains the buffer index of the page table, avoiding recalculation.
+
+VBVPI.:	MOVEI	PTIDX,0(PTBWD)		; calculate buffer index from PTBWD
+	SUB	PTIDX,VBUF.		; offset from first buffer
+	LSH	PTIDX,-OFIELD		; divide by the page size, no remainder
+
+VBVPX.:	ADD	PTIDX,VMRUT.		; get address of reference table entry
+	SOS	0,0(PTIDX)		; dec it
+	HRRZI	FPAGE,0(PTBWD)		; pointer to table for SWAPIN
+					; fall into SWAPIN (next page)
+	page
+; SWAPIN -- swap in file page. Called with FPAGE pointing to an entry in an
+;   area or page table. Is called only if the desired page/page table is not
+;   in core. It selects a page to swap out (calls VGTBF.), and then reads
+;   in the page. It also sets the origin table entry, and zeroes out the 
+;   MRU table entry.
+
+SWAPIN:	PUSHJ	TOPP,VGTBF.		; get a buffer
+	HRRZ	R,0(FPAGE)		; pick up disk page address
+	PUSHJ	TOPP,VREAD.		; and read in the page
+	HRR	R,0(FPAGE)		; pick up file disk address
+	HRRM	BFPTR,0(FPAGE)		; and install core address in table
+	MOVEI	R2,0(BFIDX)		; calculate origin table address
+	ADD	R2,VORG.
+	HRLI	R,0(FPAGE)		; use address of table as backlink
+	MOVEM	R,0(R2)			; new entry for origin table
+	MOVEI	R2,0(BFIDX)		; calculate MRU table address
+	ADD	R2,VMRUT.
+	SETZM	0,0(R2)			; clear it
+	HRLZI	R,IND.BIT		; get word with indirect bit set
+	ORM	R,0(FPAGE)		;   and set it in table word
+	POPJ	TOPP,0
+
+
+; VKBFP. -- kill buffer page. Called with BFPTR pointing to the buffer to
+;   be killed.  The origin and MRU entries are zeroed. Also, the backlink
+;   from the origin table is used to zero the entry in the area or page
+;   table pointing to the page, and the disk address, if any, is freed.
+
+VKBFP.:	MOVEI	BFIDX,0(BFPTR)		; compute index of buffer
+	SUB	BFIDX,VBUF.
+	LSH	BFIDX,-OFIELD
+	MOVE	R2,BFIDX		; compute origin table addr
+	ADD	R2,VORG.
+	MOVS	R,0(R2)			; pick up with backlink in right half
+	SETZM	0(R)			; kill backlink table entry
+	SETZM	0,0(R2)			; zero out origin table entry
+	HLRZS	0,R			; swap halves, clear out left
+	SKIPE	0,R			; if non-zero
+	PUSHJ	TOPP,VFRFP.		;   then kill old file page
+	MOVEI	R2,0(BFIDX)		; compute MRU table address
+	ADD	R2,VMRUT.
+	SETZM	0(R2)			;   and zero entry
+	POPJ	TOPP,0			; split
+	page
+; VGTBF. -- get buffer. Returns with BFPTR and BFIDX as the address and
+;   index of the newly free buffer.  The origin table for the buffer
+;   is not modified, but the backlink is used to mark the previous contents
+;   of the buffer as out of core.
+
+VGTBF.:	MOVE	R,N%BUF			; number of buffers to check
+	MOVEI	BFPTR,0(R)		; calculate MRU table address
+	ADD	BFPTR,VMRUT.
+	HRLOI	R3,377777		; initialize checker at large integer
+
+GLOOP:	SOJL	R,GLOOP2		; for R := n%buf-1 downto 0
+	MOVEI	BFPTR,-1(BFPTR)		; correct MRU table address
+	SKIPN	0(BFPTR)		; if MRU table entry is zero
+	JRST	GTAUTO			;   an automatic winner
+	SKIPL	0(BFPTR)		; negative MRU means active page table
+	CAMG	R3,0(BFPTR)		; orif MRU count too high
+	JRST	GLOOP			;   then forget it
+	MOVE	R3,0(BFPTR)		; else update MRU comparand
+	MOVEI	BFIDX,0(R)		; and index of best found
+	JRST	GLOOP			; and go back for more
+
+GTAUTO:	MOVEI	BFIDX,0(R)		; pony up index of "best found"
+GLOOP2:	MOVEI	BFPTR,0(BFIDX)		; calculate buffer addr for return par
+	LSH	BFPTR,OFIELD
+	ADD	BFPTR,VBUF.
+	MOVEI	R2,0(BFIDX)		; calculate origin table addr
+	ADD	R2,VORG.
+	SKIPN	0,0(R2)			; if origin table
+	POPJ	TOPP,0			;   then go home with virgin buffer
+
+	HRRZ	R,0(R2)			; pick up file page address
+	SKIPN	0,R			; if never was paged out before
+	PUSHJ	TOPP,VGNFP.		;   then get it a file page
+	PUSHJ	TOPP,VWRIT.		; write the page out
+	HLRZ	R2,0(R2)		; pick up backlink from origin table
+	HRRM	R,0(R2)			;   and record disk address in page table
+	HRLZI	R,IND.BIT		; get mask to record page/page table
+	ANDCAM	R,0(R2)			;   as being out of core
+	MOVE	R,N%BUF			; compute highest possible buffer addr
+	LSH	R,OFIELD
+	ADD	R,VBUF.
+	CAIGE	R2,0(R)			; if backlink addr higher than highest
+	CAMGE	R2,VBUF.		;   or lower than lowest
+	POPJ	TOPP,0			; then we paged out a page table
+	SUB	R2,VBUF.		; else get buffer index of backlink
+	LSH	R2,-OFIELD		;   so we can increment the ref. count
+	ADD	R2,VMRUT.		;   of the paged-out page's page table
+	AOS	0,0(R2)			; like so. if that was easy, then I have
+	POPJ	TOPP,0			; some land in florida you might like...
+	page
+
+VMERR:	PUSHJ	TOPP,TWAIT.
+	OUTSTR	[asciz/
+?	Invalid virtual address/]
+	POP	TOPP,AC0
+	PUSHJ	TOPP,WRTPC.
+	JRST	DIE.
+; storage stuff
+	$low
+VMSAVE:	block	12
+	$high
+AOMASK:	exp	<<1_<AFIELD-1>>_<44-AFIELD>>+PAGSIZ-1
+		; mask for all but offset within page and area number
+	lit
+	end
+    

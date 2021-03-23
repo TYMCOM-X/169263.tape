@@ -1,0 +1,692 @@
+MODFIT	Modified first-fit heap allocation	MACRO %53A(1155) 21:03  2-Mar-81 Page 1
+PASNEW	MAC	 5-Nov-69 14:21	
+
+						title	MODFIT	Modified first-fit heap allocation
+						search	PASSYM
+					;    +--------------------------------------------------------------+
+					;    |                                                              |
+					;    |                         M O D F I T                          |
+					;    |                         - - - - - -                          |
+					;    |                                                              |
+					;    +--------------------------------------------------------------+
+					;    
+					;    MDSI, Company Confidential
+					;    
+					;    SYSTEM:  PASCAL Runtime
+					;    
+					;    STARTED:  10/12/78
+					;    
+					;    PURPOSE:  To provide dynamic storage for PASCAL programs via the
+					;       routines NEW, DISPOSE, MARK, and RELEASE.  MODFIT defines the
+					;       entry points NEW.,  DSPOS.,  MARK.,  and  RLEAS.,  using  the
+					;       standard calling conventions for these routines.
+					;    
+					;    USAGE:
+					;    
+					;         MOVEI 2,size(ptr^)
+					;         PUSHJ 17,NEW.
+					;         MOVEM 2,ptr
+					;    
+					;         MOVE  2,ptr
+					;         PUSHJ 17,DSPOS.
+					;    
+					;         PUSHJ 17,MARK.
+					;         MOVEM 2,heapmark
+					;    
+					;         MOVE  2,heapmark
+					;         PUSHJ 17,RLEAS.
+					;    
+					;    EFFECTS:   MODFIT  will  expand  the  low  segment  as needed to
+					;       perform the allocation, printing a 'HEAP overflow' message if
+					;       the  CORE  call to TOPS-10 fails.  Calls to DISPOSE place new
+					;       entries on a free space list, while calls to  RELEASE  return
+					;       low segment storage to the system.
+					;    
+					;    ALGORITHM:  The allocation - collapsing algorithm was taken from
+					;       Knuth's 'Art of Computer Programming' (see  page  6  of  this
+					;       listing).  Adjacent  free  blocks  are coalesced during a NEW
+					;       operation; a contiguous set of  free  blocks  are  completely
+					;       coalesced   before   an   allocation   is   made.  If,  after
+					;       collapsing, there is  still  insufficient  storage,  the  low
+					;       segment  is  expanded  to  provide a new block of appropriate
+					;       size.  If a free block is found, and the block is larger than
+					;       the  requested  size,  it  will be split, with the new record
+					;       being taken from the tail of the block.
+					;    
+					;    NOTES:  The quantum of low-segment extension is the same as  the
+					;       system allocation quantum (see page 7).
+					;    
+MODFIT	Modified first-fit heap allocation	MACRO %53A(1155) 21:03  2-Mar-81 Page 1-1
+PASNEW	MAC	 5-Nov-69 14:21	
+
+					;    EXTERNAL REFERENCES:
+					;    
+					;       .JBREL
+					;       .JBSA
+					;       TWAIT.
+					;       WRTPC.
+					;       DIE.
+					;    
+					;    RESPONSIBLE:  Jerry Rosen -- PASCAL group
+					;    
+					;    ----------------------------------------------------------------
+
+					;
+						$RELOC^
+	400000'				^
+
+			000000			debug=0				;0 for normal, <>0 for debug
+
+					; entry points in this module
+
+						entry	ALC0.		; cause package to be loaded
+			000000			ALC0.=	0
+						entry	NEW.,DSPOS.,MARK.,RLEAS.
+
+					; externs for error reporting
+
+						extern	TWAIT.,DIE.,WRTPC.
+
+					;
+					; heap header DSECT
+
+			000000			LHEAP=0				;LH is addr of previous heap
+			000000			TAIL=0				;RH is word past end of heap
+			000001			FHEAD=1				;RH forward pointer in free list
+			000001			FTAIL=1				;LH backlink in freelist chain
+
+			000002			ROVER=2				;points to free block to search first
+
+			000003			EXTPTR=3			;word for writing out to file
+
+			000004			HDRSIZ=4			;number of words in heap header
+
+					;
+					; block data word DSECT
+
+			000000			SIZE=0				;size of block (including header)
+										; negative if alloc'd, positive if free
+
+					;	the next two are only for blocks on the free list
+
+			000001			BLINK=1				;LH is back link on list
+			000001			FLINK=1				;RH is fore link
+
+					;
+					; allocation parameters
+MODFIT	Modified first-fit heap allocation	MACRO %53A(1155) 21:03  2-Mar-81 Page 1-2
+PASNEW	MAC	 5-Nov-69 14:21	
+
+
+			000002			MINBLK=2			;minimum size block to allocate
+										;  must be >= 2 to mean anything
+			000005			SMALL=5				;don't split leaving remnants of this size
+										; (this size does not include control word)
+
+			025000			HSTART=^o25000			;synthetic heap start address
+										; (use 45000 for image w/Debugger)
+
+					;
+					; register allocations
+
+			000002			ALLOC=2				;size to allocate on NEW
+			000003			HEAP=3				;working pointer to current heap
+			000001			BLK=1				;for walking free blocks
+			000002			HMARK=2				;param for MARK and RELEASE
+			000004			T=4				;temp (2 of them)
+			000005			T2=5
+			000006			NEXT=T+2			;for walking free blocks
+			000007			NEW=T+3				;returns addr of newly alloc'd block
+			000010			T3=T+4
+			377777			NIL=^O377777			;the nil pointer
+
+					;
+					; static storage
+
+	000000'					$low
+	000000'	000000	000000		CHEAP::	exp	0			;ptr to current heap
+	000001'	000000	000000		DUMSTA:	exp	0			; status word for dump mode I/O
+	000002'	000000	000000		CHNUM:	exp	0			; channel number cell
+
+						IFE DEBUG, <
+						  DEFINE COUNT(A) <>>
+						IFN DEBUG, <
+						  DEFINE COUNT(A) <
+						    AOS 0,A>
+						  CNNEW:: exp 0
+						  CNDISP::exp 0
+						  CNCOAL::exp 0
+						  CNEXT:: exp 0
+						  CNSPLI::exp 0
+						  CNEXAM::exp 0 >
+
+	400000'					$high
+
+					; initialize -- get space for heap, and initialize below
+
+	400000'	201 03 0 00 025000 	INIT:	MOVEI	HEAP,HSTART		; get addr of low seg free start
+	400001'	260 17 0 00 400004'		PUSHJ	TOPP,NEWHP		; tack on new one
+	400002'	553 00 0 03 000000 		HRRZS	0,LHEAP(HEAP)		; set back pointer to zero
+	400003'	263 17 0 00 000000 		POPJ	TOPP,0			; and go home
+
+
+					;
+					; initialize a header -- assume HEAP points to the new heap, and that
+MODFIT	Modified first-fit heap allocation	MACRO %53A(1155) 21:03  2-Mar-81 Page 1-3
+PASNEW	MAC	 5-Nov-69 14:21	
+
+					; CHEAP contains the last heap. Just make sure there's space enough for
+					; the heap header.
+
+	400004'	201 04 0 03 000004 	NEWHP:	MOVEI	T,HDRSIZ(HEAP)		; get enough room for header
+	400005'	317 04 0 00 000000*		CAMG	T,.JBREL##		; do we already have enough?
+	400006'	254 00 0 00 400011'		JRST	NEWOK			;   yes, don't do CORE call
+	400007'	047 04 0 00 000011 		CORE	T,0			; else ask TOPS-10 for loseg
+	400010'	254 00 0 00 400355'		JRST	FAIL			; no go
+
+	400011'	200 04 0 00 000000'	NEWOK:	MOVE	T,CHEAP			; pick up old heap pointer
+	400012'	506 04 0 03 000000 		HRLM	T,LHEAP(HEAP)		; install as back heap pointer
+	400013'	201 04 0 03 000004 		MOVEI	T,HDRSIZ(HEAP)		; get addr of first free word
+	400014'	542 04 0 03 000000 		HRRM	T,TAIL(HEAP)		;   which is new end-of-heap ptr
+
+	400015'	201 04 0 03 000000 		MOVEI	T,<FHEAD-1>(HEAP)	; get addr one word before free ptrs
+	400016'	505 04 0 04 000000 		HRLI	T,0(T)			; duplicate in left half
+	400017'	202 04 0 03 000001 		MOVEM	T,FHEAD(HEAP)		;   and put head and tail of free list
+	400020'	552 04 0 03 000002 		HRRZM	T,ROVER(HEAP)		; that's where we'll start next time
+
+	400021'	552 03 0 00 000000'		HRRZM	HEAP,CHEAP		; record ptr, insure LH zeroes
+	400022'	263 17 0 00 000000 		POPJ	TOPP,0
+
+
+					; HPSAVE -- call to write out current heap. It is assumed that something
+					;   is there, and that the end of the heap falls on a 128-word minus one
+					;   boundary (e.g. 12777b, 20777b, etc.). 
+
+						extern	OPENFI,CLOSEF,READPA,WRITEP	; externs for dump I/O
+						entry	HPSAVE,HPLOAD		; our new entries
+
+	400023'	336 00 0 00 000000'	HPSAVE:	SKIPN	0,CHEAP			; make sure there's an active heap
+	400024'	263 17 0 00 000000 		POPJ	TOPP,0			;   else go home now
+
+	400025'	261 17 0 00 000003 		PUSH	TOPP,3			; save addr of skyhook cell
+
+					; load parameters -- assume 2 has addr of file name
+
+	400026'	201 03 0 00 000002'		MOVEI	3,CHNUM			; addr of channel number cell
+	400027'	201 04 0 00 000001'		MOVEI	4,DUMSTA		;   and boolean status cell
+	400030'	400 05 0 00 000000 		SETZ	5,0			; clear inputonly flag
+	400031'	201 06 0 00 000001 		MOVEI	6,1			; and set deletecontents true
+	400032'	260 17 0 00 000000*		PUSHJ	TOPP,OPENFI		; open the file
+	400033'	336 00 0 00 000001'		SKIPN	0,DUMSTA		; did it go?
+	400034'	254 00 0 00 400067'		JRST	HPSERR			; no
+
+	400035'	551 03 0 00 025000 		HRRZI	HEAP,HSTART		; get synthetic heap address start
+	400036'	550 04 0 00 000000'		HRRZ	T,CHEAP			; must use currently active heap
+	400037'	550 04 0 04 000000 		HRRZ	T,TAIL(T)		;   to get real tail of heap
+	400040'	275 04 0 03 000000 		SUBI	T,0(HEAP)		; get length (addr(FREE)-addr(HEAD)-1)
+	400041'	231 04 0 00 000200 		IDIVI	T,^o200			; get size of heap in blocks
+	400042'	200 05 0 17 000000 		MOVE	T2,0(TOPP)		; get skyhook address to store
+	400043'	505 05 0 04 000000 		HRLI	T2,0(T)			; left halfword gets size of heap
+	400044'	202 05 0 03 000003 		MOVEM	T2,EXTPTR(HEAP)		; put down in control area of heap
+	400045'	550 05 0 00 000000'		HRRZ	T2,CHEAP		; get current CHEAP value
+	400046'	506 05 0 03 000000 		HRLM	T2,LHEAP(HEAP)		;   and kludge in as backlink of first
+MODFIT	Modified first-fit heap allocation	MACRO %53A(1155) 21:03  2-Mar-81 Page 1-4
+PASNEW	MAC	 5-Nov-69 14:21	
+
+					;
+					; load parameters for write call
+					;
+	400047'	201 02 0 03 000000 		MOVEI	2,0(HEAP)		; core address from which to write
+	400050'	201 03 0 04 000000 		MOVEI	3,0(T)			; number of blocks to write
+	400051'	400 04 0 00 000000 		SETZ	4,0			; start at block zero in file
+	400052'	200 05 0 00 000002'		MOVE	5,CHNUM			; get channel number
+	400053'	201 06 0 00 000001'		MOVEI	6,DUMSTA		; address of status cell
+	400054'	260 17 0 00 000000*		PUSHJ	TOPP,WRITEP		; away we go
+	400055'	336 00 0 00 000001'		SKIPN	0,DUMSTA		; did we get it?
+	400056'	254 00 0 00 400067'		JRST	HPSERR			; nope.
+
+	400057'	200 02 0 00 000002'		MOVE	2,CHNUM			; set up pars to close fil
+	400060'	400 03 0 00 000000 		SETZ	3,0			; channel, deletefile=false
+	400061'	260 17 0 00 000000*		PUSHJ	TOPP,CLOSEF		; do it
+	400062'	553 00 0 00 025000 		HRRZS	0,HSTART+LHEAP		; zero out phony backlink to avoid trouble
+	400063'	262 17 0 00 000005 		POP	TOPP,T2
+	400064'	201 04 0 00 000001 		MOVEI	T,1			; return TRUE
+	400065'	202 04 0 17 000004 		MOVEM	T,4(TOPP)
+	400066'	263 17 0 00 000000 		POPJ	TOPP,0			; go home
+
+	400067'	262 17 0 00 000005 	HPSERR:	POP	TOPP,T2
+	400070'	402 00 0 17 000004 		SETZM	4(TOPP)			; return FALSE
+	400071'	260 17 0 00 000000 		PUSHJ	TOPP,0
+
+
+					;
+					; HPLOAD -- reset the world from a file. Filename in R2, purge/nopurge parm
+					;   in R3. What could be easier?
+
+	400072'	261 17 0 00 000003 	HPLOAD:	PUSH	TOPP,3			; save purge/nopurge parm
+	400073'	201 03 0 00 000002'		MOVEI	3,CHNUM			; load pars -- 2 has fname, 3 channel cell
+	400074'	201 04 0 00 000001'		MOVEI	4,DUMSTA		; status cell
+	400075'	201 05 0 00 000001 		MOVEI	5,1			; inputonly true
+	400076'	400 06 0 00 000000 		SETZ	6,0			; delete contents false
+	400077'	260 17 0 00 400032*		PUSHJ	TOPP,OPENFI		; do it
+	400100'	336 00 0 00 000001'		SKIPN	DUMSTA			; did we really do it??
+	400101'	254 00 0 00 400150'		JRST	HPLERR			; no, sorry.
+
+	400102'	201 03 0 00 025000 		MOVEI	HEAP,HSTART		; start address
+	400103'	201 05 0 03 000177 		MOVEI	T2,^o177(HEAP)		;   need one page to read in
+	400104'	047 05 0 00 000011 		CORE	T2,0			; so try for it
+	400105'	254 00 0 00 400355'		JRST	FAIL			; no go.
+
+	400106'	201 02 0 03 000000 		MOVEI	2,0(HEAP)		; address for read
+	400107'	201 03 0 00 000001 		MOVEI	3,1			; number of blocks
+	400110'	400 04 0 00 000000 		SETZ	4,0			; start at disk block zero
+	400111'	200 05 0 00 000002'		MOVE	5,CHNUM			; get channel number
+	400112'	201 06 0 00 000001'		MOVEI	6,DUMSTA		; addr of status word
+	400113'	260 17 0 00 000000*		PUSHJ	TOPP,READPA		; get first page of heap
+	400114'	336 00 0 00 000001'		SKIPN	0,DUMSTA		; did we get it?
+	400115'	254 00 0 00 400150'		JRST	HPLERR			; no.
+
+					; now set up for rest of heap
+
+MODFIT	Modified first-fit heap allocation	MACRO %53A(1155) 21:03  2-Mar-81 Page 1-5
+PASNEW	MAC	 5-Nov-69 14:21	
+
+	400116'	201 03 0 00 025000 		MOVEI	HEAP,HSTART		; get start address
+	400117'	544 04 0 03 000003 		HLR	T,EXTPTR(HEAP)		; get size of former heap in blocks
+	400120'	221 04 0 00 000200 		IMULI	T,^o200			; now size in words
+	400121'	271 04 0 03 777777 		ADDI	T,-1(HEAP)		; end of heap one word before
+	400122'	047 04 0 00 000011 		CORE	T,0			; get space needed
+	400123'	254 00 0 00 400355'		JRST	FAIL			; sorry.
+	400124'	201 02 0 00 025200 		MOVEI	2,HSTART+^o200		; start read one block after heap
+	400125'	544 03 0 00 025003 		HLR	3,EXTPTR+HSTART		; pick up length of blocks
+	400126'	275 03 0 00 000001 		SUBI	3,1			; minus one 'cuz we read one already
+	400127'	323 03 0 00 400136'		JUMPLE	3,HPNRED		; zero, no read to do
+	400130'	201 04 0 00 000001 		MOVEI	4,1			; start at block one in file
+	400131'	200 05 0 00 000002'		MOVE	5,CHNUM			; get channel number
+	400132'	201 06 0 00 000001'		MOVEI	6,DUMSTA		; addr of status word
+	400133'	260 17 0 00 400113*		PUSHJ	TOPP,READPA		; get the heap
+	400134'	336 00 0 00 000001'		SKIPN	0,DUMSTA		; did we really?
+	400135'	254 00 0 00 400150'		JRST	HPLERR			; no
+	400136'	200 02 0 00 000002'	HPNRED:	MOVE	2,CHNUM			; gotta close down load file
+	400137'	262 17 0 00 000003 		POP TOPP,3			; get purge/nopurge parm
+	400140'	260 17 0 00 400061*		PUSHJ	TOPP,CLOSEF
+	400141'	201 03 0 00 025000 		MOVEI	HEAP,HSTART		; addr of new heap
+	400142'	554 04 0 03 000000 		HLRZ	T,LHEAP(HEAP)		; get old CHEAP value from save
+	400143'	202 04 0 00 000000'		MOVEM	T,CHEAP			; and restore it
+	400144'	553 00 0 03 000000 		HRRZS	0,LHEAP(HEAP)		; zap nasty phony backlink
+	400145'	550 04 0 03 000003 		HRRZ	T,EXTPTR(HEAP)		; get stored skyhook from file
+	400146'	202 04 0 17 000004 		MOVEM	T,4(TOPP)
+	400147'	263 17 0 00 000000 		POPJ	TOPP,0
+
+	400150'	262 17 0 00 000005 	HPLERR:	POP	TOPP,T2
+	400151'	201 04 0 00 377777 		MOVEI	T,NIL			; get a nil
+	400152'	202 04 0 17 000004 		MOVEM	T,4(TOPP)
+	400153'	263 17 0 00 000000 		POPJ	TOPP,0
+
+					;
+					; NEW -- May have to initialize entire heap structure via INIT. Then
+					;   get a block (either via KNUTH from free chain, or by extending the
+					;   current heap), zero it out, and mark it as allocated.
+
+	400154'	336 03 0 00 000000'	NEW.:	SKIPN	HEAP,CHEAP		; get current hptr, don't skip if zero
+	400155'	260 17 0 00 400000'		PUSHJ	TOPP,INIT		;   and initialize heap structure
+						COUNT	CNNEW			; count new call if debug enabled
+
+	400156'	201 02 0 02 000001 	NEW2:	MOVEI	ALLOC,1(ALLOC)		; add one to size for data word
+	400157'	305 02 0 00 000002 		CAIGE	ALLOC,MINBLK		; if less then minimum then
+	400160'	201 02 0 00 000002 		MOVEI	ALLOC,MINBLK		;   then install min size 
+
+	400161'	260 17 0 00 400224'		PUSHJ	TOPP,KNUTH		; try for block on free list
+	400162'	260 17 0 00 400301'		PUSHJ	TOPP,XTEND		; fail, extend current heap end
+
+	400163'	402 00 0 07 000001 		SETZM	0,1(NEW)		; zero first word of new block
+						IFLE MINBLK-2,<			; assemble test for one-word record
+	400164'	307 02 0 00 000002 		  CAIG	ALLOC,2			; only if minimum block size
+	400165'	254 00 0 00 400173'		  JRST	NUDONE >		; is <= 1 (obviously)
+
+	400166'	505 04 0 07 000001 		HRLI	T,1(NEW)		; source pointer (zeroed word)
+	400167'	541 04 0 07 000002 		HRRI	T,2(NEW)		; destination (one word after)
+MODFIT	Modified first-fit heap allocation	MACRO %53A(1155) 21:03  2-Mar-81 Page 1-6
+PASNEW	MAC	 5-Nov-69 14:21	
+
+	400170'	201 05 0 07 000000 		MOVEI	T2,0(NEW)		; set up end of BLT pointer in T2
+	400171'	271 05 0 02 777777 		ADDI	T2,-1(ALLOC)		;   ALLOC-1 words past control word
+	400172'	251 04 0 05 000000 		BLT	T,0(T2)
+
+	400173'	201 02 0 07 000001 	NUDONE:	MOVEI	ALLOC,1(NEW)		; return addr of block + 1
+	400174'	263 17 0 00 000000 		POPJ	TOPP,0
+
+					;
+					; DISPOSE -- after discovering that the address is reasonable, place the
+					;   newly freed block as the first block on the free list.
+
+	400175'	200 03 0 00 000000'	DSPOS.:	MOVE	HEAP,CHEAP		; pick up current heap pointer
+	400176'	275 02 0 00 000001 		SUBI	ALLOC,1			; dec record addr. to get data word
+	400177'	201 04 0 03 000000 		MOVEI	T,0(HEAP)		; get current heap addr in T
+						COUNT	CNDISP			; count dispose calls
+
+	400200'	307 04 0 02 000000 	DSPS2:	CAIG	T,0(ALLOC)		; if record addr. more than heap top
+	400201'	254 00 0 00 400205'		JRST	DSPS3			;   then we've got the right heap
+	400202'	554 04 0 04 000000 		HLRZ	T,LHEAP(T)		; else pick up this heap's back link
+	400203'	322 04 0 00 400360'		JUMPE	T,DSERR			; error if last heap
+	400204'	254 00 0 00 400200'		JRST	DSPS2			;   else check the 'new' one
+
+	400205'	305 02 0 04 000004 	DSPS3:	CAIGE	ALLOC,HDRSIZ(T)		; if record addr less than end of header
+	400206'	254 00 0 00 400360'		JRST	DSERR			;   then that's an error too
+
+	400207'	550 05 0 04 000000 		HRRZ	T2,TAIL(T)		; pick up addr of end of heap
+	400210'	303 02 0 05 777776 		CAILE	ALLOC,-MINBLK(T2)	; if record more than end of heap minus
+	400211'	254 00 0 00 400360'		JRST	DSERR			;   min rec. size, error
+
+	400212'	331 05 0 02 000000 		SKIPL	T2,SIZE(ALLOC)		; get size field of block
+	400213'	254 00 0 00 400362'		JRST	DSPREV			;   positive, already free: error
+
+					;
+					; at this point, ALLOC is the addr of the new free block, and T is the
+					;   addr of the heap containing the block. Tack it onto the start of
+					;   that heap's free list.
+
+	400214'	200 05 0 04 000001 		MOVE	T2,FHEAD(T)		; get current first free one
+	400215'	504 05 0 00 000004 		HRL	T2,T			;   and addr of heap for back link
+	400216'	202 05 0 02 000001 		MOVEM	T2,FLINK(ALLOC)		; install as ptr word for new block
+	400217'	506 02 0 05 000001 		HRLM	ALLOC,BLINK(T2)		; addr of new as blink for old 1st one
+	400220'	542 02 0 04 000001 		HRRM	ALLOC,FHEAD(T)		; and as flink of heap header
+
+	400221'	217 00 0 02 000000 		MOVMS	0,SIZE(ALLOC)		; set size field positive for free
+	400222'	201 02 0 00 377777 		MOVEI	ALLOC,NIL		; return NIL in parameter (hack)
+	3'	263 17 0 00 000000 		POPJ	TOPP,0
+
+					;
+					;  KNUTH -- allocation-compaction algorithm taken from "Art of Computer
+					;    Programming" Vol. 1, sec. 2.5, problem 19.  It looks for a free block
+					;    large enough for the allocation, coalescing free blocks as it looks.
+					;
+					;  ALLOC contains the word size of the block needed, HEAP points to the
+					;    current heap. NEW will contain the address of the control word of the
+					;    allocated block if successful (skip 1 return), else the routine
+MODFIT	Modified first-fit heap allocation	MACRO %53A(1155) 21:03  2-Mar-81 Page 1-7
+PASNEW	MAC	 5-Nov-69 14:21	
+
+					;    will return without a skip.
+
+
+	400224'	200 01 0 03 000002 	KNUTH:	MOVE	BLK,ROVER(HEAP)		;get addr of first block to check
+	400225'	400 05 0 00 000005 		SETZ	T2,T2			; clear flag for being done
+	400226'	550 07 0 03 000000 		HRRZ	NEW,TAIL(HEAP)		; remember tail of current heap
+
+	400227'	302 01 0 03 000000 	KNCHEK:	CAIE	BLK,<FHEAD-1>(HEAP)	; are we at free list header block?
+	400230'	254 00 0 00 400234'		JRST	KNSIZE			;   no, check this block out.
+	400231'	326 05 0 00 400277'		JUMPN	T2,KNFAIL		; if second time at header, K. fails
+	400232'	201 05 0 00 000001 		MOVEI	T2,1			; else set flag for next time around
+	400233'	254 00 0 00 400275'		JRST	KNNEXT			;   and get next block to check.
+
+	400234'	200 06 0 01 000000 	KNSIZE:	MOVE	NEXT,SIZE(BLK)		; pick up block size to get addr
+	400235'	271 06 0 01 000000 		ADDI	NEXT,0(BLK)		;   of next physical block
+	400236'	306 06 0 07 000000 		CAIN	NEXT,0(NEW)		; don't try to coalesce block at
+	400237'	254 00 0 00 400251'		JRST	KNFIT			;   end of heap -- try to use it
+
+	400240'	337 04 0 06 000000 		SKIPG	T,SIZE(NEXT)		; pick up block's size word
+	400241'	254 00 0 00 400251'		JRST	KNFIT			;   negative, alloc'd, try to use current
+					;
+					; Now BLK points to a free block to which the free block at NEXT may be
+					;   coalesced.  Do it, and try for a second coalesce.
+					;
+						COUNT	CNCOAL			; count as a coalesce
+	400242'	554 10 0 06 000001 		HLRZ	T3,BLINK(NEXT)		; get deleted block's backlink
+	400243'	550 04 0 06 000001 		HRRZ	T,FLINK(NEXT)		;   and forelink
+	400244'	506 10 0 04 000001 		HRLM	T3,BLINK(T)		; put old backlink in next's backlink
+	400245'	542 04 0 10 000001 		HRRM	T,FLINK(T3)		;   and old forelink in prev's fore
+	400246'	550 06 0 06 000000 		HRRZ	NEXT,SIZE(NEXT)		; get additional size
+	400247'	272 06 0 01 000000 		ADDM	NEXT,SIZE(BLK)		;   to add to original size
+	400250'	254 00 0 00 400234'		JRST	KNSIZE			; go try for second coalesce
+					;
+					; Here, BLK points to a candidate for allocation. Check its size; it may
+					;   need to be split.
+					;
+	400251'	200 04 0 01 000000 	KNFIT:	MOVE	T,SIZE(BLK)		; get size of block to try
+						COUNT	CNEXAM			; count examination of blocks for size
+	400252'	305 04 0 02 000000 		CAIGE	T,0(ALLOC)		; will it go?
+	400253'	254 00 0 00 400275'		JRST	KNNEXT			;   too small, get next block
+
+	400254'	550 05 0 01 000001 		HRRZ	T2,FLINK(BLK)		; we got one, get its forelink
+	400255'	202 05 0 03 000002 		MOVEM	T2,ROVER(HEAP)		;   and place as ROVER for next time
+	400256'	275 04 0 02 000000 		SUBI	T,0(ALLOC)		; get size of remaining block
+	400257'	307 04 0 00 000005 		CAIG	T,SMALL			; is it too small to fool with?
+	400260'	254 00 0 00 400265'		JRST	KALLOC			;   yes, just allocate whole thing
+						COUNT	CNSPLI			; count number of splits
+	400261'	202 04 0 01 000000 		MOVEM	T,SIZE(BLK)		; else install new split size
+	400262'	271 01 0 04 000000 		ADDI	BLK,0(T)		;   and get start of new block
+	400263'	212 02 0 01 000000 		MOVNM	ALLOC,SIZE(BLK)		; put down control word for block
+	400264'	254 00 0 00 400272'		JRST	KNDONE			;   and take successful return
+					;
+					; Here, the whole BLK must be allocated. We must unchain it from the
+					;   free list.
+					;
+MODFIT	Modified first-fit heap allocation	MACRO %53A(1155) 21:03  2-Mar-81 Page 1-8
+PASNEW	MAC	 5-Nov-69 14:21	
+
+	400265'	554 04 0 01 000001 	KALLOC:	HLRZ	T,BLINK(BLK)		; get backlink address
+	400266'	550 05 0 01 000001 		HRRZ	T2,FLINK(BLK)		;   and forelink address
+	400267'	542 05 0 04 000001 		HRRM	T2,FLINK(T)		; put as forelink of preceding block
+	400270'	506 04 0 05 000001 		HRLM	T,BLINK(T2)		;   and BL as backlink of next
+	400271'	213 00 0 01 000000 		MOVNS	0,SIZE(BLK)		; negate size to mark as alloc'd
+
+	400272'	201 07 0 01 000000 	KNDONE:	MOVEI	NEW,0(BLK)		; set up return parameter
+	400273'	350 00 0 17 000000 		AOS	0,0(TOPP)		; tick return address for SKIP1 ret.
+	400274'	263 17 0 00 000000 		POPJ	TOPP,0			; go home
+
+	400275'	550 01 0 01 000001 	KNNEXT:	HRRZ	BLK,FLINK(BLK)		; get next block in list
+	400276'	254 00 0 00 400227'		JRST	KNCHEK			;   and check it out
+
+	400277'	202 01 0 03 000002 	KNFAIL:	MOVEM	BLK,ROVER(HEAP)		; change ROVER in case previous ROVER
+										;   was coalesced (thanks, RNF!! )
+	400300'	263 17 0 00 000000 		POPJ	TOPP,0
+
+					;
+					; XTEND -- to get more space for allocation. XTEND first checks .JBREL in
+					;   the job data area to see if the program already has enough core to
+					;   make the allocation. If not, a CORE monitor call is executed. In this
+					;   manner, the system allocation quantum is also the program low-segment
+					;   extension quantum. 
+
+	400301'	200 07 0 03 000000 	XTEND:	MOVE	NEW,TAIL(HEAP);		; old tail will be start of ...
+	400302'	201 04 0 07 000000 		MOVEI	T,0(NEW)		;   new block(s)
+						COUNT	CNEXT			; count heap extensions
+	400303'	271 04 0 02 000000 		ADDI	T,0(ALLOC)		; add needed size to new max addr
+	400304'	047 04 0 00 000011 		CORE	T,0			;   and try for it
+	400305'	254 00 0 00 400355'		JRST	FAIL			; no go
+
+	400306'	550 04 0 00 400005*		HRRZ	T,.JBREL##		; get new loseg limit
+	400307'	271 04 0 00 000001 		ADDI	T,1			; tick by one word
+	400310'	542 04 0 03 000000 		HRRM	T,TAIL(HEAP)		;   to get new heap tail
+
+	400311'	275 04 0 07 000000 		SUBI	T,0(NEW)		; difference of addrs is size of new
+	400312'	201 10 0 04 000000 		MOVEI	T3,0(T)			;   chunk just created
+	400313'	275 04 0 02 000000 		SUBI	T,0(ALLOC)		; get size beyond size needed
+	400314'	307 04 0 00 000005 		CAIG	T,SMALL			; is it worth worrying about?
+	400315'	254 00 0 00 400326'		JRST	XTEND2			;   no
+					;
+					; NEW has old heap tail, which will be the address of the newly created free
+					;   block.  T has the free block size, and T3 has the size of the piece
+					;   which was just obtained from TOPS-10.
+					;
+						COUNT	CNSPLI			; count as a split
+	400316'	202 04 0 07 000000 		MOVEM	T,0(NEW)		;  control word for new free block
+	400317'	275 10 0 04 000000 		SUBI	T3,0(T)			; change size of allocated block
+	400320'	505 05 0 03 000000 		HRLI	T2,<FHEAD-1>(HEAP)	; free links -- backlink to heap header
+	400321'	540 05 0 03 000001 		HRR	T2,FHEAD(HEAP)		;   and forelink to current first
+	400322'	542 07 0 03 000001 		HRRM	NEW,FHEAD(HEAP)		; make heap header point to us
+	400323'	506 07 0 05 000001 		HRLM	NEW,BLINK(T2)		;   and former first point to us
+	400324'	202 05 0 07 000001 		MOVEM	T2,FLINK(NEW)		;   and put down new control word
+	400325'	271 07 0 04 000000 		ADDI	NEW,0(T)		; NEW now has addr of block to allocate
+					;
+MODFIT	Modified first-fit heap allocation	MACRO %53A(1155) 21:03  2-Mar-81 Page 1-9
+PASNEW	MAC	 5-Nov-69 14:21	
+
+					; NEW has address of new block to allocate. T3 has its size.
+					;
+	400326'	212 10 0 07 000000 	XTEND2:	MOVNM	T3,0(NEW)		; put negative size for control word
+	400327'	263 17 0 00 000000 		POPJ	TOPP,0			; go home
+
+					;
+					; MARK. -- saves the current heap, and creates a new one.
+					;
+
+	400330'	336 03 0 00 000000'	MARK.:	SKIPN	HEAP,CHEAP		; if current heap pointer is zero
+	400331'	260 17 0 00 400000'		PUSHJ	TOPP,INIT		;   then create a heap to mark
+	400332'	550 03 0 03 000000 		HRRZ	HEAP,TAIL(HEAP)		; get heap's tail, which will be
+	400333'	260 17 0 00 400004'		PUSHJ	TOPP,NEWHP		;   start of the new heap
+	400334'	200 02 0 00 000000'		MOVE	HMARK,CHEAP		; return current heap as heapmark
+	400335'	263 17 0 00 000000 		POPJ	TOPP,0
+					;
+					;
+					; RLEAS. -- restores the heap previous to the heapmark parameter. First
+					;   we must check to see if there IS a previous!
+					;
+					;
+	400336'	200 04 0 00 000000'	RLEAS.:	MOVE	T,CHEAP			; pick up current heap pointer
+
+	400337'	322 04 0 00 400353'	RLLOOP:	JUMPE	T,RLSERR		; if zero, end of backchain
+	400340'	306 04 0 02 000000 		CAIN	T,0(HMARK)		; is this one the one?
+	400341'	254 00 0 00 400344'		JRST	RLSOK			;   yes, we found it
+	400342'	554 04 0 04 000000 		HLRZ	T,LHEAP(T)		;   no, get previous
+	400343'	254 00 0 00 400337'		JRST	RLLOOP			;     and go back
+
+	400344'	554 03 0 02 000000 	RLSOK:	HLRZ	HEAP,LHEAP(HMARK)	; get heap previous to pointed to.
+	400345'	322 03 0 00 400353'		JUMPE	HEAP,RLSERR		;   first heap -- can't release
+	400346'	202 03 0 00 000000'		MOVEM	HEAP,CHEAP		; make this one new current heap
+
+	400347'	550 04 0 03 000000 		HRRZ	T,TAIL(HEAP)		; to reset loseg, get end of heap
+	400350'	047 04 0 00 000011 		CORE	T,0			;   and set as new max loseg addr
+	400351'	254 00 0 00 400353'		JRST	RLSERR
+	400352'	263 17 0 00 000000 		POPJ	TOPP,0
+
+					;
+					; ERROR ROUTINES
+					;
+
+	400353'				RLSERR:	MOVEI	T,[asciz/
+	400353'	201 04 0 00 400370'	?	Invalid HEAP pointer in RELEASE call/]
+	400354'	254 00 0 00 400363'		JRST	ALCDIE
+
+	400355'				FAIL:	MOVEI	T,[asciz/
+	400355'	201 04 0 00 400401'	?	HEAP overflow. Try again with more core/]
+	400356'	262 17 0 00 000000 		POP	TOPP,0			; we know this one called from internals
+	400357'	254 00 0 00 400363'		JRST	ALCDIE
+
+	400360'				DSERR:	MOVEI	T,[asciz/
+	400360'	201 04 0 00 400412'	?	Bad pointer in DISPOSE/]
+	400361'	254 00 0 00 400363'		JRST	ALCDIE
+
+MODFIT	Modified first-fit heap allocation	MACRO %53A(1155) 21:03  2-Mar-81 Page 1-10
+PASNEW	MAC	 5-Nov-69 14:21	
+
+	400362'				DSPREV:	MOVEI	T,[asciz/
+	400362'	201 04 0 00 400420'	?	Attempt to free freed block/]
+
+	400363'	260 17 0 00 000000*	ALCDIE:	PUSHJ	TOPP,TWAIT.
+	400364'	051 03 0 04 000000 		OUTSTR	0(T)
+	400365'	200 00 0 17 000000 		MOVE	AC0,0(TOPP)
+	400366'	260 17 0 00 000000*		PUSHJ	TOPP,WRTPC.
+	400367'	254 00 0 00 000000*		JRST	DIE.
+
+	400370'					LIT
+	400370'	015 012 077 011 111 
+	400371'	156 166 141 154 151 
+	400372'	144 040 110 105 101 
+	400373'	120 040 160 157 151 
+	400374'	156 164 145 162 040 
+	400375'	151 156 040 122 105 
+	400376'	114 105 101 123 105 
+	400377'	040 143 141 154 154 
+	400400'	000 000 000 000 000 
+	400401'	015 012 077 011 110 
+	400402'	105 101 120 040 157 
+	400403'	166 145 162 146 154 
+	400404'	157 167 056 040 124 
+	400405'	162 171 040 141 147 
+	400406'	141 151 156 040 167 
+	400407'	151 164 150 040 155 
+	400410'	157 162 145 040 143 
+	400411'	157 162 145 000 000 
+	400412'	015 012 077 011 102 
+	400413'	141 144 040 160 157 
+	400414'	151 156 164 145 162 
+	400415'	040 151 156 040 104 
+	400416'	111 123 120 117 123 
+	400417'	105 000 000 000 000 
+	400420'	015 012 077 011 101 
+	400421'	164 164 145 155 160 
+	400422'	164 040 164 157 040 
+	400423'	146 162 145 145 040 
+	400424'	146 162 145 145 144 
+	400425'	040 142 154 157 143 
+	400426'	153 000 000 000 000 
+						end
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400427
+PROGRAM BREAK IS 000003
+CPU TIME USED 02:12.689
+
+10P CORE USED
+MODFIT	Modified first-fit heap allocation	MACRO %53A(1155) 21:03  2-Mar-81 Page S-1
+PASNEW	MAC	 5-Nov-69 14:21		SYMBOL TABLE
+
+ABSLOC		000000	spd	NUDONE		400173'		
+AC0		000000		OPENFI		400077'	ext	
+ALC0.		000000	ent	OUTSTR	051140	000000		
+ALCDIE		400363'		READPA		400133'	ext	
+ALLOC		000002		RLEAS.		400336'	ent	
+BLINK		000001		RLLOOP		400337'		
+BLK		000001		RLSERR		400353'		
+CHEAP		000000'	int	RLSOK		400344'		
+CHNUM		000002'		ROVER		000002		
+CLOSEF		400140'	ext	SIZE		000000		
+CORE	047000	000011		SMALL		000005		
+DEBUG		000000		T		000004		
+DIE.		400367'	ext	T2		000005		
+DSERR		400360'		T3		000010		
+DSPOS.		400175'	ent	TAIL		000000		
+DSPREV		400362'		TOPP		000017	spd	
+DSPS2		400200'		TWAIT.		400363'	ext	
+DSPS3		400205'		WRITEP		400054'	ext	
+DUMSTA		000001'		WRTPC.		400366'	ext	
+EXTPTR		000003		XTEND		400301'		
+FAIL		400355'		XTEND2		400326'		
+FHEAD		000001		.JBREL		400306'	ext	
+FLINK		000001		
+FTAIL		000001		
+HDRSIZ		000004		
+HEAP		000003		
+HILOC		400000'	spd	
+HMARK		000002		
+HPLERR		400150'		
+HPLOAD		400072'	ent	
+HPNRED		400136'		
+HPSAVE		400023'	ent	
+HPSERR		400067'		
+HSTART		025000		
+INIT		400000'		
+KALLOC		400265'		
+KNCHEK		400227'		
+KNDONE		400272'		
+KNFAIL		400277'		
+KNFIT		400251'		
+KNNEXT		400275'		
+KNSIZE		400234'		
+KNUTH		400224'		
+LHEAP		000000		
+LOCFLG	777777	777777	spd	
+LOLOC		000003'	spd	
+MARK.		400330'	ent	
+MINBLK		000002		
+NEW		000007		
+NEW.		400154'	ent	
+NEW2		400156'		
+NEWHP		400004'		
+NEWOK		400011'		
+NEXT		000006		
+NIL		377777		
+   ` 

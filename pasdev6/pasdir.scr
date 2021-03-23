@@ -1,0 +1,212 @@
+$title right 'VAX-PASDIR Implementation Notes' right'December 19, 1980' right'Page \'
+$number off
+$justify
+$control off
+$tabs 9,17,25,32,41,49,57,65,73,81,89
+$skip3
+1.0 &Overview&
+$skip2
+$para +5
+This document describes the data structures and implementation details
+associated with the VAX version of the PASDIR package. The PASDIR package
+consists of five public routines; DIR_OPEN, DIR_CLOSE, DIR_NEXT,
+DIR_MATCH, and DIR_ATTR. The functions of these routines are desribed in the
+R&&D Programming Manual. This document assumes that the reader understands
+what the PASDIR routines do and that the reader has a working knowledge
+of the VAX Record Management Services, RMS.
+This document is laid out so that routines whose functions are related,
+or that are somehow dependant, are discussed as a group.
+Three of the routines are grouped; DIR_OPEN, DIR_CLOSE and DIR_NEXT.
+The other two routines, DIR_MATCH and DIR_ATTR, are discussed
+independently.
+These routines are comprised mostly of calls to the VAX RMS macro
+routines. This document will describe the ordering of the calls to
+the macro routines. For further information on any of the RMS routines
+see the VAX-11 RMS Reference Manual.
+$skip2
+2.0\&DIR_OPEN,\DIR_CLOSE,\and\DIR_NEXT&
+$skip
+$para +5
+The basic functions of these routines are as follows.
+DIR_OPEN opens a specified directory. DIR_NEXT allows the user to 
+determine the filename of each routine in that directory. 
+DIR_CLOSE closes the specified directory and releases any storage
+associated with having the directory open.
+$skip
+$indent +3
+$para -3
+DIR_OPEN\-\This routine calls PAX$UTL.NEW to allocate space for
+a FAB, File Access Block, a NAM, Name Block, and two 255 byte
+buffers to be used within the NAM block. The NAM block will
+be connected to the FAB block and the 255 byte buffers will be connected
+to the NAM block, and all other fields of the FAB and NAM blocks
+will be initialized using the RMS FAB_STORE and NAM_STORE macros.
+These blocks
+contain the information needed by the RMS macros to access
+the specified directory.
+The directory field in the FAB Block will be initialized
+to the directory name that was passed to DIR_OPEN. The filename fields of the
+FAB block will be initialized to "*.*;*",
+indicating that every filename in the directory will match. This
+will allow DIR_NEXT to walk through the directory retrieving the filenames
+one after another.
+The routine calls the $PARSE macro to prepare the FAB and NAM blocks
+for the wild card character processing to be used by the $SEARCH macro.
+The $PARSE macro will return an indication if
+the directory was not found or would not open.
+If everything went well,
+return DIR_OK along with
+a pointer to the FAB block. The pointer is used because it minimizes
+the amount of internal storage needed.
+If the $PARSE macro returned an error indication, return DIR_NO_OPEN
+and call PAX$UTL.DSPOS to release the storage being used by the FAB,
+NAM and associated buffers.
+The two buffers that are attached to the NAM block are used by the RMS routines
+to handle the wild card processing. 
+$skip
+$para-3
+DIR_NEXT\-\This routine calls the $SEARCH macro with the FAB block
+address passed to DIR_NEXT. Extract the "next" filename from the RSA,
+result string address, field of the NAM block
+and return that to the user along with an indication that
+everything went well, DIR_OK. After all of the filenames have been
+returned the call to $SEARCH will return an indication of DIR_NO_MORE.
+When this occurs DIR_NEXT returns a null string for the filename and
+a DIR_EOF status code indicating that the filenames have been exhausted.
+If DIR_NEXT is called after a DIR_EOF indication is returned, the
+next filename returned will be the first filename in the directory, i.e.
+it will be as though DIR_OPEN were called.
+This routine will return DIR_BAD_INT_ID if the $SEARCH macro is called
+with a bad FAB pointer.
+$skip1
+$para -3
+DIR_CLOSE\-\This routine cleans up any open channels and closes the
+directory file with the $CLOSE facility. $CLOSE frees any system
+storage, but does not free the FAB and NAM blocks.
+This routine will explicitly free the FAB and NAM blocks by calling
+PAX$UTL.DSPOS. If the user passes a bad FAB pointer to this routine,
+this routine will act the same as Pascal's DISPOSE.
+$skip3
+$indent-3
+3. &DIR_ATTR&
+$skip2
+$para +5
+This routine accepts a filename as input, and produces attributes about
+that file as its output.
+DIR_ATTR obtains the attributes of a file by calling the $OPEN
+facility of RMS with the name of the file.
+The name of the file is passed to $OPEN through the NAM block.
+DIR_ATTR returns information about file
+protection, size, creation date/time, and date/time of the last revision.
+On the DEC-10, the date of last access is returned, since this is not
+available on the VAX, the last revision day/time will be returned instead.
+The size of the file will be obtained using the XABFHC extended attribute
+block.
+The name of the file will be returned to DIR_ATTR in the NAM block.
+To obtain file protection and creation/accesss time information 
+special extended attribute blocks must be used, i.e. XABs.
+$para+5
+$skip
+File protection information is obtained using the $XABPRO facility.
+File creation date/time and revision date/time are obtained using the $XABDAT
+extended attribute block.
+The internal representation for file protection must be mapped into the
+Pascal representation using the VAX bit offset instructions. The creation
+date/time and revision date/time can be directly taken from the
+XABDAT block.
+on EXTR_DATE).
+$skip
+$para +5
+The FAB, NAM, and XAB blocks will be
+allocated statically because information may only be requested
+about one file at a time. The  blocks will be chained together
+using the RMS macro initilization facilities provided. The call
+to $OPEN will fill in the desired fields of the FAB, NAM, and XAB blocks.
+DIR_ATTR will then remove each piece of desired information and
+place the information into the return record, call $CLOSE to free
+the channel associated with the file, and return DIR_OK indicating
+successful completion. If the specified
+file could not be found, this routine returns the DIR_NO_FILE error.
+$skip
+$para +5
+DIR_ATTR is documented as accepting filename defaults. The DEC-10 version
+accomplishes this by passing the filename parsing off to Pascal.
+This is not desirable because it would force any change being made to
+the VAX Pascal filename parsing routines to be coordinated with
+the PASDIR package. The function that was provided is still available
+using the Pascal FILENAME routine. Filename defaults can be used
+in the call to Pascal FILENAME. The filename string that comes back
+from the call to Pascal's FILENAME routine
+will be in the proper format for the call to DIR_ATTR.
+$skip3
+4. &DIR_MATCH&
+$skip2
+$para +5
+This is a general purpose routine which detects if one
+string contains an occurance of another. This routine contains the capabilities
+to do wild card matching operations. Since this routine contains no
+system dependant features it has been written in Pascal.
+For a description of the routine see the R&&D Programming Manual.
+$skip3
+5.\&Data\Structures&
+$skip2
+$para +5
+Internally these routines contains no data structures other than those
+required by RMS, i.e. a FAB, a NAM, and two XABs.
+DIR_ATTR will contain a statically allocated FAB, NAM and two XABs.
+DIR_OPEN and DIR_CLOSE may be used any number of times, since the
+user may have any number of directories open. To allow for this,
+DIR_OPEN and DIR_CLOSE will use PAX$UTL.NEW and PAX$UTL.DSPOS
+to dynamically create/dispose the FAB, NAM, and associated buffer
+blocks as needed.
+$skip
+The data structures contained in the VAX Pascal-user interface, PASDIR.TYP,
+are:
+$skip1
+$indent+2
+$verbatim
+Type
+
+DIR_INT_ID = ^Integer;		(* FAB pointer used by DIR_OPEN... *)
+
+DIR_EXT_ID = File_name;		(* Directory string *)
+
+DIR_FSIZE = Integer;		(* Size of file, in bytes *)
+
+DIR_ACCESS = DTIME_INT;		(* VAX -> Revision Day/Time *)
+
+DIR_FNAME = File_name;		(* filename for next's return *)
+
+DIR_M_STR = String [ 50 ];	(* The match string for DIR_MATCH *)
+
+DIR_ERRORS = ( DIR_OK,		(* Th normal successful return *)
+	       DIR_NO_OPEN,	(* DIR_OPEN failure *)
+	       DIR_BAD_INT_ID,	(* DIR_NEXT was pased bad INT_ID *)
+	       DIR_EOF,		(* DIR_NEXT at end of directory *)
+	       DIR_NO_FILE );	(* DIR_ATTR can't find file *)
+
+DIR_PROT_SCLS = ( DIR_READ, DIR_WRITE, DIR_EXECUTE, DIR_DELETE );
+
+DIR_ACCT_SCLS = ( DIR_SYSTEM, DIR_OWNER, DIR_GROUP, DIR_WORLD );
+
+DIR_PROT_SET = Set of DIR_PROT_SCLS;
+
+DIR_PROT = Packed Array [ DIR_ACCT_SCLS ] of DIR_PROT_SET;
+
+DIR_ATTRS = Record
+    NAME	: DIR_FNAME;	(* filename in string format *)
+    PROTECT	: DIR_PROT;	(* Protection code as below  *)
+    SIZE	: DIR_FSIZE;	(* File size in bytes        *)
+    CREATION	: DTIME_INT;	(* DAY/TIME in DTIME format  *)
+    ACCESSED	: DIR_ACCESS	(* Revision day/time         *)
+  End;
+
+$justify
+$skip
+$indent-2
+DIR_ATTR requires the DTIME package to convert the creation and
+accessed fields into the proper format. The user must explicitly
+"$Include" the DTIME include file, DTIME.TYP, prior to the
+inclusion of the PASDIR include file, PASDIR.TYP, when
+using DIR_ATTR.
+  

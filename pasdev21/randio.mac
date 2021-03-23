@@ -1,0 +1,313 @@
+        TITLE RANDIO
+	TWOSEG
+	SEARCH	OPDEFS(OPDEFS.UNV[52250,233])
+;    +----------------------------------------------------------------+
+;    I                                                                I
+;    I                         R A N D I O                            I
+;    I                         - - - - - -                            I
+;    I                                                                I
+;    +----------------------------------------------------------------+
+;
+;    MDSI, COMPANY CONFIDENTIAL
+;
+;    STARTED: 22-FEB-77
+;
+;    PURPOSE: THIS PACKAGE OF FORTRAN-CALLABLE SUBROUTINES PROVIDES THE
+;       RANDOM  I/O CAPABILITY REQUIRED BY THE ADBMS DATABASE ROUTINES.
+;       IT USES THE RANDOM I/O USER UUO'S  AND  IS  WRITTEN  SO  AS  TO
+;       COEXIST WITH THE PASCAL RUNTIME SYSTEM.
+;
+;    USAGE:
+;       ENTRY POINTS:
+;         RANDOP -- OPEN A (DATABASE) FILE FOR RANDOM I/O
+;         RANDCL -- CLOSE A FILE
+;         RANDRD -- RANDOMLY READ A PAGE
+;         RANDRW -- RANDOMLY (RE)WRITE A PAGE
+;         RANDWT -- RANDOMLY WRITE A PAGE
+;
+;    RESPONSIBLE: A. KORTESOJA
+;
+;    CHANGES: 
+;	10/03/78  SMR  REVISED FOR USE WITH NEW TENIO PACKAGE.
+;
+;    ------------------------------------------------------------------
+;	ENTRY POINTS
+	ENTRY	RANDCL
+	ENTRY	RANDOP
+	ENTRY	RANDRD
+	ENTRY	RANDRW
+	ENTRY	RANDWT
+
+;	EXTERNAL REFERENCES
+	EXTERN	GETCN.,FRECN.,NEW.,DSPOS.,TENIO.  ;TO PULL TENIO IN
+
+	EXTERN	BUF.0	; SO WE DON'T PULL IN TENIO'S BUFFER ALLOCATOR.
+
+;	REGISTER EQUATES
+	AC0=0
+	AC1=1
+	AC2=2
+	AC3=3
+	AC4=4
+	AC5=5
+	AC6=6
+	AC7=7
+	ACB0=10
+	ACB1=11
+	ACB2=12
+	ARGS=16		;FORTRAN ARGUMENT LIST POINTER
+	STK=17		;STACK POINTER
+
+;	CONFIGURATING CONSTANTS
+	PAGSIZ=^D512	;ADBMS PAGE SIZE
+	BUFSIZ=^D128
+
+;	GLOBAL STORAGE
+	RELOC	0
+BUFPTR:	BLOCK	^D16	;BUFFER PTRS INDEXED BY CHANNEL NUMBER
+FNUM:	BLOCK	1	;CURRENT CHANNEL SHARED BY RANDOP, RANDCL
+FILNAM:	BLOCK	8	; BUFFER TO COPY FILENAME INTO.
+SRCBP:	BLOCK	1	; SOURCE BYTE POINTER FOR FILE NAME MOVE.
+DSTBP:	BLOCK	1	; DEST BYTE POINTER FOR FILE NAME MOVE.
+	RELOC	400000
+
+;    +----------------------------------------------------------------+
+;    I                                                                I
+;    I                         R A N D O P                            I
+;    I                         - - - - - -                            I
+;    I                                                                I
+;    +----------------------------------------------------------------+
+;
+;    MDSI, COMPANY CONFIDENTIAL
+;
+;    STARTED: 22-FEB-77
+;
+;    PURPOSE: OPEN A FILE FOR RANDOM INPUT OR RANDOM INPUT/OUTPUT.
+;
+;    USAGE:
+;       CALL RANDOP(LIONUM,FILEID,USE,FDESG,IRC)
+;
+;    INPUT: 
+;
+;       LIONUM     ADBMS   LOGICAL  I/O  NUMBER  WHICH  IS  EFFECTIVELY
+;                  IGNORED.
+;
+;       FILEID     (PACKED) CHARACTER STRING CONTAINING  EXTERNAL  FILE
+;                  NAME TO OPEN.  STRING MUST BE TERMINATED BY A BLANK.
+;
+;       USE        INDICATES MODE OF  USE:  0=READ  ONLY,  1=READ/WRITE
+;                  ACCESS.
+;
+;    OUTPUT:
+;
+;       FDESG      INTEGER  FILE DESIGNATOR (ACTUALLY,  CHANNEL NUMBER)
+;                  TO BE USED BY OTHER RANDIO ROUTINES TO IDENTIFY FILE
+;                  OF INTEREST.
+;
+;       IRC        ERROR CODE: 0=SUCCESSFUL OPEN,  1=ERROR OF SOME KIND
+;                  (FILE NOT OPEN).
+;
+;    RESPONSIBLE: A. KORTESOJA
+;
+;    CHANGES: 
+;
+;	10/03/78  SMR  REVISED FOR USE WITH NEW TENIO PACKAGE.
+;    ------------------------------------------------------------------
+RANDOP:
+
+DEFINE	LIONUM<@0(ARGS)>	;PARAMETER EQUATES
+DEFINE	FILEID<@1(ARGS)>
+DEFINE	USE<@2(ARGS)>
+DEFINE	FDESG<@3(ARGS)>
+DEFINE	IRC<@4(ARGS)>
+
+INBIT=^O400000000000		;OPENF OPTION BITS
+OUTBITOUTBIT=^O200000000000
+NODBIT=^O100000000000
+MAXNAM=^D40		; MAX LENGTH OF FILE NAME STRING, INCLUDING
+			;   TERMAINATING BLANK.
+SP=^O40			; ASCII BLANK.
+
+	PUSHJ	STK,	GETCN.		;GET A CHANNEL FROM PASCAL I/O
+	MOVEM	AC0,	FNUM		;SAVE IT
+
+	MOVEI	AC2,	BUFSIZ		;GET A BUFFER FROM PASCAL ALLOCATOR
+	PUSHJ	STK,	NEW.
+	MOVE	AC1,	FNUM		;DON'T ASSUME REGISTER PRESERVATION
+	MOVEM	AC2,	BUFPTR(AC1)	;SAVE BUFFER POINTER
+	HRRZ	ACB1,	AC2		;SEND IT TO OPENF IN AC+1
+
+	MOVE	AC0,	USE		;SET UP OPENF AC REG
+	OR	ACB0,	[INBIT!NODBIT]
+	CAIE	AC0,	0		;SKIP IF READ ONLY
+	OR	ACB0,	[OUTBIT]
+;  MOVE FILE NAME TO RANDIO BUFFER SO WE CAN INSERT A CONTROL
+;  CHARACTER AFTER IT AS A TERMINATOR.  MOVES UNTIL A BLANK
+;  IS READ OR 40 CHARACTERS MOVED.
+	MOVE	AC0,	[BYTE (6)^D29,7,0(^D18)0]	; INIT SOURCE B.P.
+	HRRI	AC0,	FILEID
+	MOVEM	AC0,	SRCBP
+	MOVE	AC0,	[BYTE (6)1,7,0(^D18)FILNAM-1]	; INIT DEST B.P.
+	MOVEM	AC0,	DSTBP
+	HRRZI	AC1,	MAXNAM		; AC1 WILL COUNT DOWN BYTES MOVED.
+;
+MLOOP:
+	LDB	AC0,	SRCBP		; GET NEXT BYTE.
+	IBP	   	,SRCBP		; INCR SOURCE B.P.
+	IDPB	AC0,	DSTBP		; MOVE BYTE TO DEST AND INCR B.P.
+	CAIE	AC0,	SP		; IF BLANK, EXIT LOOP.
+	SOJN	AC1,	MLOOP		; IF MOVED MAXNAM BYTES
+					;   THEN EXIT LOOP.
+;
+	SETZ	AC1			; CREATE ASCII 'NUL' BYTE.
+	DPB	AC1,	DSTBP		; MOVE IT TO NAME BFFER.
+	HRRI	ACB0,	FILNAM		;OR IN FILE NAME BASE ADDRESS
+
+	OPENF	ACB0,	FNUM		;TRY TO OPEN FILE
+	JRST	OPERR			;ERROR
+
+	SETZM	,IRC			;RETURN SUCCESS
+	MOVE	AC0,	FNUM		;AND FDESG
+	MOVEM	AC0,	FDESG
+	POPJ	STK,
+
+OPERR:	MOVEI	AC0,	1		;RETURN FAILURE
+	MOVEM	AC0,	IRC
+	MOVE	AC1,	FNUM		;JUMP INTO CLOSE TO RELEASE
+	JRST	CLERR			;BUFFER AND CHANNEL
+
+;    +----------------------------------------------------------------+
+;    I                                                                I
+;    I                         R A N D C L                            I
+;    I                         - - - - - -                            I
+;    I                                                                I
+;    +----------------------------------------------------------------+
+;
+;    MDSI, COMPANY CONFIDENTIAL
+;
+;    STARTED: 22-FEB-77
+;
+;    PURPOSE: CLOSE A FILE.
+;
+;    USAGE:
+;       CALL RANDCL(FDESG)
+;
+;    INPUT: 
+;
+;       FDESG      FILE DESIGNATOR FROM RANDOP.
+;
+;    NOTES: CALL IS A NOP IF FILE IS NOT ACTUALLY OPEN.
+;
+;    RESPONSIBLE: A. KORTESOJA
+;
+;    CHANGES: 
+;	10/03/78  SMR  REVISED FOR USE WITH NEW TENIO PACKAGE.
+;
+;    ------------------------------------------------------------------
+RANDCL:
+
+DEFINE	FDESG<@0(ARGS)>
+
+	MOVE	AC1,	FDESG		;SET FNUM=CHANNEL
+	MOVEM	AC1,	FNUM
+
+CLERR:	MOVE	AC2,	BUFPTR(AC1)	;ENTRY POINT FROM RANDOP
+	JUMPE	AC2,	CLRET		;JUMP IF NOT OPEN
+	SETZM	,BUFPTR(AC1)
+	PUSHJ	STK,	DSPOS.		;FREE THE BUFFER
+
+	MOVEI	ACB0,	0		;CLOSE THE FILE SAVING CONTENTS
+	CLOSEF	ACB0,	FNUM
+	JFCL				; NOP - IGNORE ERROR RETURN.
+
+	MOVE	AC0,	FNUM		;FREE THE CHANNEL
+	PUSHJ	STK,	FRECN.
+
+CLRET:	POPJ	STK,
+
+;    +----------------------------------------------------------------+
+;    I                                                                I
+;    I           R A N D R D / R A N D R W / R A N D W T              I
+;    I           - - - - - - - - - - - - - - - - - - - -              I
+;    I                                                                I
+;    +----------------------------------------------------------------+
+;
+;    MDSI, COMPANY CONFIDENTIAL
+;
+;    STARTED: 22-FEB-77
+;
+;    PURPOSE: ROUTINES TO PERFORM ACTUAL RANDOM I/O.
+;
+;    USAGE:
+;       CALL RANDRD(FDESG,PAGENO,BUFFER)  READ A PAGE
+;       CALL RANDRW(FDESG,PAGENO,BUFFER)  REWRITE A PAGE
+;       CALL RANDWT(RDESG,PAGENO,BUFFER,IRC)  WRITE A PAGE
+;
+;    INPUT: 
+;
+;       FDESG      FILE DESIGNATOR FROM RANDOP.
+;
+;       PAGENO     ONE-BASED PAGE NUMBER TO READ/WRITE ON THE FILE.
+;
+;       BUFFER     CORE PAGE BUFFER FOR DATA.
+;
+;    OUTPUT:
+;
+;       IRC        ERROR CODE: 0=SUCCESSFUL OPERATION,  1=ERROR OF SOME
+;                  KIND.
+;
+;    RESPONSIBLE: A. KORTESOJA
+;
+;    CHANGES: 
+;	10/03/78  SMR  REVISED FOR USE WITH NEW TENIO PACKAGE.
+;
+;    ------------------------------------------------------------------
+DEFINE	FDESG<@0(ARGS)>			;ARGUMENT EQUATES FOR THE FOLLOWING
+DEFINE	PAGENO<@1(ARGS)>
+DEFINE	BUFFER<@2(ARGS)>
+DEFINE	IRC<@3(ARGS)>
+
+RANDRD:
+
+	PUSHJ	STK,	FIXACS
+	RDBLKR	ACB0,	FDESG
+	POPJ	STK,			;IGNORE ERRORS
+	POPJ	STK,
+	POPJ	STK,
+
+RANDRW:
+
+	PUSHJ	STK,	WRTPG
+	POPJ	STK,
+	POPJ	STK,
+
+RANDWT:
+
+	PUSHJ	STK,	WRTPG
+	JRST	WTERR
+	SETZM	,IRC
+	POPJ	STK,
+WTERR:	MOVEI	AC0,	1
+	MOVEM	AC0,	IRC
+	POPJ	STK,
+
+;
+;	LOCAL ROUTINES FOR THE ABOVE I/O ROUTINES
+;
+FIXACS:
+	MOVEI	ACB0,	BUFFER		;FIX UP USER UUO REGISTERS
+	MOVEI	ACB1,	PAGSIZ
+	MOVE	ACB2,	PAGENO
+	SUBI	ACB2,	1
+	IMULI	ACB2,	PAGSIZ
+	POPJ	STK,
+
+WRTPG:
+	PUSHJ	STK,	FIXACS
+	POP	STK,	AC1
+	WRBLKR	ACB0,	FDESG
+	JRST	0(AC1)
+	JRST	1(AC1)
+
+	END
+ 

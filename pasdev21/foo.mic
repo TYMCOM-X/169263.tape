@@ -1,0 +1,29 @@
+.silence
+!DOCMNT Version 1.0
+.r qed
+*l 'a.doc
+*set dellimit 1000
+*1,$f !#WIDTH!or!#width! .,/#/-1 d
+*n
+*1,$f !#ENTRY!or!#entry! .,/#/-1 d
+*n
+*1,$f !#CHANGE!or!#change! .,/#/-1 d
+*n
+*1,$f !#EXTERNAL!or!#external! .,/#/-1 d
+*n
+*1,$f !#RESPONSIBLE!or!#responsible! .,/#/-1 d
+*n
+*1,$s!&!<:&:>!a
+*w 'a.tmp
+*
+*q
+.run rnd:pmf
+*'a.tmp='a.tmp/lib:rlb:docmnt/nopascal
+*
+.run rnd:scribe
+*'a.txt='a.tmp/c
+*
+.del 'a.tmp
+!End of DOCMNT
+.mic revive
+.mic return

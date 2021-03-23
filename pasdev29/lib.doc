@@ -1,0 +1,464 @@
+
+
+
+     Library Management Facility
+     P. Lee
+     August 27, 1979
+
+     Implementation Objective     ______________ _________
+
+     Provide the ability to place files into and extract  files  out  of  a
+     large  library  or  collection  of  contiguous  file "segments".  This
+     includes a directory information facility and provisions  for  further
+     expansion to editing and compiling services.
+
+
+     The Design     ___ ______
+
+     Library Format     _______ ______
+        The  directory resides in a fixed number of blocks at the beginning
+        of the library.  File segments follow,  each  one  beginning  on  a
+        block  (128 word) boundary.  Every segment block contains 127 words
+        of data and a one word checksum.
+        The checksum is transparent to  the  user,  and  the  one  word  of
+        storage  used  by  it  is accounted for by this facility to compute
+        accurate block information about the file segments  in  a  library.
+        In  other  words,  the user need not worry about the fact that only
+        127 words of data are being processed at a  time  -  all  directory
+        information  obtained  through  these  routines will treat files as
+        though they are in 128 word blocks, as they are in the "outside".
+
+
+     Filenames     _________
+
+        The names of library segments follow the same format and  extension
+        conventions  as  files  normally  do  when  not  in a library.  The
+        wildcarding  characters,  '*'  and  '?'  have  the  same   wildcard
+        functions  when  naming  library  segments  as  they do when naming
+        separate files.
+
+
+     Input/Output     ____________
+
+        At the lowest level, I/O transfers occur in one  block  (128)  word
+        units.  I/O  buffers  for  the current directory and segment blocks
+        being processed are a part of the library record, as  well  as  the
+        necessary internal pointers to these buffers.
+        The  high level interfaces allow data to be transferred in units of
+        one word, character, or  line.  All  buffered  transfers  occurring
+        below  these  routines  are transparent to the user.  This provides
+        the user of this facility with a segment oriented I/O  package  for
+        operating  with  large  library  files.  Although  all I/O in these
+        routines is done randomly, the user  is  saved  from  much  of  the
+        confusion of managing file structures by being restricted to random
+        reads and sequential-only writes.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     Library Management Facility
+     Page 2
+
+
+     Command Set     _______ ___
+
+        OPEN  library-name
+           Retrieve  an  existing  library  file,  or  create  a  new  one,
+           establishing  it  as  the current library.  Close any previously
+           opened library file.
+
+        DIR  [ filename [ ,filename ]* ]
+           Print directory information about the specified file segment(s).
+           If none is specified, then information about all of the segments
+           is printed.
+
+        DELETE  filename [ ,filename ]*
+           Change the status of the  specified  file  segments  to  unused.
+           This  effectively disallows further access to the segment(s) and
+           marks them for removal from the library by the PACKing function.
+
+        ADD  filename [ ,filename ]*
+           Copy the "outside" file(s) into  the  library,  creating  a  new
+           directory entry for each one added.
+
+        EXTRACT  filename [ ,filename ]*
+           Copy  the  specified  file  segment(s)  into  separate "outside"
+           file(s).
+
+        PACK
+           Scan through the directory for unused file segments, and squeeze
+           out  the storage used by them.  Update the directory by striking
+           these entries from the directory.
+
+        QUIT
+           Close the current library file and exit.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     Library Management Facility
+     Page 3
+
+
+     Data Structures     ____ __________
+
+     type
+       name_type = record
+         name : packed array[1..6] of char;
+         ext : packed array[1..3] of char
+       end;
+
+       directory_entry = record          (* 8-word directory entry *)
+         file : name_type;
+         address : 0..maxblocks;         (* virtual block address *)
+         length : 0..maxwords;           (* length in words of segment *)
+         write_date : date_int;          (* DTIME internal rep's *)
+         access_date : date_int;
+         in_use : boolean                (* in use segment flag *)
+       end;
+
+       dir_block = array[1..dirs_per_blk] of directory_entry;
+       word_block = record
+         checksum : integer;
+         data : packed array[1..127] of word
+       end;
+       char_block = record
+         checksum : integer;
+         data : packed array[1..635] of char
+       end;
+
+       blocktype = (dir_type, word_type, char_type);
+
+       library_rec = record              (* one-block library record *)
+         case blocktype of               (* undiscriminated union *)
+           dir_type : (entry : dir_block);
+           word_type : (words : word_block);
+           char_type : (chars : char_block)
+       end;
+
+       library = record                  (* internal I/O record *)
+         file : file of library_rec;     (* I/O file *)
+
+         dir_iobuffer,                   (* I/O buffers *)
+         seg_ibuffer,
+         seg_obuffer : library_rec;
+
+         dir_iobuf_addr : 1..num_dir_blks; (* real addresses of *)
+         seg_obuf_addr,                  (* I/O buffers       *)
+         seg_ibuf_addr : 1..max_seg_blks;
+
+         dir_optr : 1..dirs_per_blk;     (* pointers into  *)
+         seg_optr : 1..chars_per_blk;    (* output buffers *)
+
+         last_dir_used : 1..max_num_dirs (* index to last entry *)
+       end;
+
+
+
+
+
+
+
+
+
+
+     Library Management Facility
+     Page 4
+
+
+     Interfaces     __________
+
+     Library Association     _______ ___________
+
+     open_library (var f: library; lib_name: name; var err: errcode);
+        - retrieve an existing library, or create a new one.
+
+     close_library (var f: library);
+        - close the specified library file.
+
+     Directory Access     _________ ______
+
+     rd_dir (var f: library; index: dir_index; var entry: directory_entry;
+             var err: errcode);
+        - read the indexed directory entry, and return it.  Error occurs if
+        index is past the last_dir_used.
+
+     wr_dir (var f: library; index: dir_index; entry: directory_entry;
+             var err:errcode);
+        - write over the indexed directory entry.  If the index is past the
+        last_dir_used, then update the last_dir_used  value.  Error  occurs
+        if index is greater than max_num_dirs.
+
+     find_dir (var f: library; seg_name: name;
+               var index: dir_index): boolean;
+        - search  for  the directory entry matching the given seg_name, and
+        return its index.  TRUE is returned on a successful find, and FALSE
+        is  returned  if  segment  seg_name  is  not found.  Wildcarding is
+        allowed here.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     Library Management Facility
+     Page 5
+
+
+     Reads     _____
+
+     rd_words (var f: library; entry_idx: dir_index; var index: word;
+               num_to_read: word; var words_left: word;
+               var word_array: array[1..*] of words;
+               var err:errcode);
+        - starting from the indexed word in  the  segment  defined  by  the
+        indexed  directory  entry,  fill  the  given array with num_to_read
+        words.  Index is updated to point to the word after  the  last  one
+        read.  Words_left is equal to (num_to_read - number actually read).
+
+     rd_chars (var f: library; entry_idx: dir_index; var index: char_idx;
+               num_to_read: char_idx; var chars_left: char_idx;
+               var char_array: packed array[1..*] of char;
+               var err: errcode);
+        - starting from the indexed character in the segment defined by the
+        indexed directory entry, fill  the  given  array  with  num_to_read
+        characters.  Index  is  updated to point to the character after the
+        last one  read.  Chars_left  is  equal  to  (num_to_read  -  number
+        actually read).
+
+     rd_line (var f: library; entry_idx: dir_index; var index: char_idx;
+              var line: string[*]; var err: errcode);
+        - read  from  the library the next line and place it into the given
+        string.  Advance the index past the end of the line just read.
+
+        Note - The current block of the currently open segment can  not  be
+        read.
+
+     Writes     ______
+
+     wr_word (var f: library; num_to_write: word;
+              word_array: array[1..*] of words; var err: errcode);
+        - write to the end of the currently open segment num_to_write words
+        from the given array.  Error occurs if there is no open segment.
+
+     wr_char (var f: library; num_to_write: char_idx;
+              char_array: packed array[1..*] of char; var err: errcode);
+        - write to the end  of  the  currently  open  segment  num_to_write
+        characters  from the given array.  Error occurs if there is no open
+        segment.
+
+     wr_line (var f: library; line: string[*]; var err: errcode);
+        - write the given line to the end of the  currently  open  segment,
+        adding end of line characters.  Error if no segment is open.
+
+        Note - The   write   routines   will  update  the  directory  entry
+        automatically.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     Library Management Facility
+     Page 6
+
+
+     Segment Association     _______ ___________
+
+     open_segment (var f: library; seg_name: name; var err: errcode);
+        - create a new  directory  entry  for  the  seg_name,  closing  any
+        previously  opened segment, and establish it as the current segment
+        for any  succeeding  writes.  If  the  given  seg_name  matches  an
+        existing  segment name in the directory, mark the existing entry as
+        being not in use, effectively deleting it when opening the new one.
+
+     close_segment;
+        - disassociate the current open segment and the segment name.
+
+        Note - Only one segment may be open for writing at a time.
+
+     Packing     _______
+
+     pack (var f: library; err: errcode);
+        - scan  through  the  directory  for  TRUE  not_in_use  flags   and
+        "squeeze"   out   those  segments  from  the  library.  Update  the
+        directory by removing the not_in_use entries.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     Library Management Facility
+     Page 7
+
+
+                          Library Management Facility                          _______ __________ ________
+
+
+
+                                    command
+                                     parser
+
+
+
+
+                                    command
+                                   dispatcher
+
+
+
+
+
+
+     library       segment           write          read          packing
+      ass'n         ass'n         interfaces     interfaces       function
+
+
+
+
+
+
+                          directory                segment
+                           access                   block
+                                                     I/O
+
+
+
+
+
+
+               wild-                directory
+              carding                block        checksum
+                                      I/O
+
+
+
+
+
+
+
+                                    directory      segment
+                                   I/O buffer    I/O buffers
+
+
+
+
+
+
+
+
+
+
+
+
+
+   

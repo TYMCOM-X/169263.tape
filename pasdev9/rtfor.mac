@@ -1,0 +1,38 @@
+	universal rtfor
+	search	rtsym
+
+	define	$math (precision),<
+	r2==2
+	r3==3
+	r4==4
+	r5==5
+	r6==6
+	r7==7
+	$local	filler,1	;used in call to entry routine
+	$local	target,1	;reg for result of calculation
+	$local	arg1,2		;double precision arguments
+	$local	arg2,2
+	$local	rsave,6		;save area for regs r2 - r7
+	$local	temps,6		;miscellaneous temps
+	ifidn	<precision><R>,<
+	extern	r.ent,r.ret0,r.ret1,r.ret2>
+	ifidn	<precision><D>,<
+	extern	d.ent,d.ret0,d.ret1,d.ret2>
+	ifdif	<precision><>,<
+	extern	pi.,piov2.,f1.0>>
+
+
+	define	$clear,<
+	jfcl	17,.+1>
+
+	define	$matherror (message),<
+	extern	mth.err
+	movei	r0,message
+	jrst	mth.err>
+
+	define	$initmath (entrypoint, initroutine),<
+	entry	entrypoint
+	extern	initroutine
+entrypoint:	pushj	top,initroutine	;fetch parameter, etc.>
+
+	end

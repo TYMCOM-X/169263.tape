@@ -1,0 +1,280 @@
+	title	PVIHLS	PASCAL Dynamic Memory Heap Load and Save
+	search	passym
+	search	virsym
+
+	entry	HEAP.L,HEAP.S,HEAP.C
+	intern	HLOAD.,HSAVE.,VEND.,VENDS.
+
+	extern	VREAD.,VWRIT.,VXTND.,VBUF.,VGNFP.,VFRFP.,VMRUP.
+	extern	VATBL.,HFLSH.,VROOT.,ALCTB.,FFEND.,FFREE.,VGTBF.
+	extern	TWAIT.,WRTPC.,DIE.
+	extern	.JBFF,CORER.,AOK.,VINIT.,VFILE.
+	extern	VFRBF.,VCHN.,VOPEN.,VCLOS.
+
+	RECORD=1
+
+	ife	RECORD,<define COUNT(A) <>>
+
+	$reloc
+	$high
+	
+	ifn	RECORD, <
+	  define COUNT(A) <
+	    AOS	0,A >
+	  $low
+	  C$HSAV::exp	0
+	  C$HLOD::exp	0
+	  $high
+	>
+
+; HSAVE. -- save helper. This one writes out all interesting information
+;   to the current swapping file. It assumes that all core buffers are
+;   available, and will use the first two at VBUF. and VBUF.+PAGSIZ.
+
+HSAVE.:	PUSHJ	TOPP,VMRUP.	; promote BFPTR page to keep it in
+	MOVEI	PTBWD,0(BFPTR)	;   use it to build control block
+	PUSHJ	TOPP,VGTBF.	; get the second buffer for I/O
+	PUSHJ	TOPP,VFRBF.	; free it up, we got the address
+	EXCH	BFPTR,PTBWD	; free the other one, too
+	PUSHJ	TOPP,VFRBF.
+	EXCH	BFPTR,PTBWD
+	MOVEI	R,PAGSIZ	; mark the first word of the control block
+	MOVEM	R,0(PTBWD)	;   with the magic word
+	SETZM	0,0(BFPTR)	; zero it out first
+	HRLI	BFIDX,0(BFPTR)
+	HRRI	BFIDX,1(BFPTR)
+	BLT	BFIDX,PAGSIZ-1(BFPTR)
+
+	MOVEI	ATBWD,VATBL.	; copy first area table into buffer
+	PUSHJ	TOPP,VGNFP.	; get it a file page
+	MOVEM	R,1(PTBWD)	; record in control block
+	
+HSLOOP:	HRLI	BFIDX,0(ATBWD)	; copy area table at 0(atbwd) into buffer
+	HRRI	BFIDX,0(BFPTR)	;   at 0(bfptr)
+	BLT	BFIDX,AMAX-1(BFPTR)
+
+	SETZ	R2,0		; clear extra-page flag
+	SKIPN	ATBWD,0(BFIDX)	; is this the last area table
+	JRST	HSOUT		; yep
+	MOVEI	R2,0(R)		; no, remember this guy's page
+	PUSHJ	TOPP,VGNFP.	; get one for next page
+	MOVEM	R,0(BFIDX)	;   and record as pointer in block
+	EXCH	R,R2		; write out current one
+
+HSOUT:	PUSHJ	TOPP,VWRIT.	; write out current
+	SKIPE	R,R2		; reload R; anything left to do?
+	JRST	HSLOOP		;   yep, go back
+
+	SETZM	0,2(PTBWD)	; distinguishes heap save from area save
+	HRLI	BFIDX,ALCTB.	; put out allocator table
+	HRRI	BFIDX,0(BFPTR)
+	BLT	BFIDX,AMAX-1(BFPTR)
+
+	PUSHJ	TOPP,VGNFP.	; get it a file page
+	MOVEM	R,3(PTBWD)	; remember in control block
+	PUSHJ	TOPP,VWRIT.	;   and write it out
+	HRLI	BFIDX,VROOT.	; same for root table
+	HRRI	BFIDX,0(BFPTR)
+	BLT	BFIDX,AMAX-1(BFPTR)
+	PUSHJ	TOPP,VGNFP.
+	MOVEM	R,4(PTBWD)	; record in control block
+	PUSHJ	TOPP,VWRIT.
+	MOVE	R,FFREE.	; must remember free list as last thing
+	MOVEM	R,5(PTBWD)	;   to go in control block
+	MOVE	R,FFEND.
+	MOVEM	R,6(PTBWD)
+	SETZ	R,0		; write to page zero in file
+	MOVEI	BFPTR,0(PTBWD)
+	JRST	VWRIT.		; write it out and go home
+
+; HLOAD. -- helper to load up heap save file.  Grab two buffers again, one
+;   for active I/O, and one for the control block. The hard part is bringing
+;   in more than one area table.
+
+HLOAD.:	PUSHJ	TOPP,VGTBF.	; get a buffer
+	PUSHJ	TOPP,VMRUP.	; lock it
+	MOVEI	PTBWD,0(BFPTR)	; hang onto address
+	PUSHJ	TOPP,VGTBF.	; get another
+	PUSHJ	TOPP,VFRBF.	; pretend it's free
+	EXCH	PTBWD,BFPTR	; pretend the other one's free too
+	PUSHJ	TOPP,VFRBF.
+	EXCH	PTBWD,BFPTR
+	SETZ	R,0		; from file page zero
+	PUSHJ	TOPP,VREAD.	;   read in control block
+	EXCH	PTBWD,BFPTR	; swap buffer pointers
+	MOVE	R,0(PTBWD)	; pick up page size word
+	JFFO	R,.+2		; check for being power of two
+	JRST	HLFERR		; zero -- not good
+	LSH	R,0(R+1)	; left normalize
+	TLNN	R,377777	; better be equal to 400000,,0
+	TRNE	R,777777	;   or original was not power of two
+	JRST	HLFERR		; which implies some kind of garbage
+	CAIE	R+1,^d35-OFIELD	; finally, was it right power of two?
+	JRST	BADSIZ		; no, sorry
+
+	MOVE	R,5(PTBWD)	; reset FFREE. and FFEND.
+	MOVEM	R,FFREE.
+	MOVE	R,6(PTBWD)
+	MOVEM	R,FFEND.
+	SKIPE	0,2(PTBWD)	; is this file an area save file?
+	JRST	HLFERR		;   yes, that's no good here
+
+	MOVEI	ATBWD,VATBL.	; initialize area table pointer
+	MOVE	R,1(PTBWD)	;   and pointer to area table in file
+
+HLLOOP:	PUSHJ	TOPP,VREAD.	; get the area table in the buffer
+	PUSHJ	TOPP,VFRFP.	;   and free the file page
+	HRLI	BFIDX,0(BFPTR)	; move the area table into place
+	HRRI	BFIDX,0(ATBWD)
+	BLT	BFIDX,AMAX-1(ATBWD)
+	SKIPN	R,0(ATBWD)	; is there pointer to next area table?
+	JRST	HLGTAB		; no, do other tables
+	PUSHJ	TOPP,VXTND.	; else get core addr of next table
+	EXCH	R,0(ATBWD)	; put real addr into former table, get disk addr
+	HRRZ	ATBWD,0(ATBWD)	; get real addr
+	JRST	HLLOOP		; and loop around
+
+HLGTAB:	MOVE	R,3(PTBWD)	; get disk addr of allocator table
+	PUSHJ	TOPP,VREAD.	; get the table
+	PUSHJ	TOPP,VFRFP.	; get rid of the page
+	HRLI	BFIDX,0(BFPTR)	; move table into place
+	HRRI	BFIDX,ALCTB.
+	BLT	BFIDX,ALCTB.+AMAX-1
+	MOVE	R,4(PTBWD)	; same thing for root table
+	PUSHJ	TOPP,VREAD.
+	PUSHJ	TOPP,VFRFP.
+	HRLI	BFIDX,0(BFPTR)
+	HRRI	BFIDX,VROOT.
+	BLT	BFIDX,VROOT.+AMAX-1
+	POPJ	TOPP,0		; we're done
+
+; HEAP.C and HEAP.L -- create/load heap.  Create heap is effectively a
+;   reinitialization with a non-default paging file.  Load heap is also
+;   a reinitialization, without emptying the paging file, followed by a
+;   call to HLOAD., the heap load helper.
+
+HEAP.C:	PUSHJ	TOPP,OBLAST	; kill the old heap, if any
+	MOVEI	AC1,1		; tell VINIT 
+	MOVEM	AC1,AOK.	;   to delete contents of file
+	JRST	VINIT.		; let VINIT. return
+
+
+HEAP.L:	PUSHJ	TOPP,OBLAST	; kill old heap
+	SETZM	0,AOK.		; tell VINIT. not to empty file
+	PUSHJ	TOPP,VINIT.	; do it
+	JRST	HLOAD.		; do the load and split
+
+; OBLAST -- a helper for load and create. Move the parameter file name into
+;   the file name cell in the uncommon module. Then blast the old heap,
+;   by calling VEND. for disposal of the paging file, and COREing out all
+;   extra storage.
+
+OBLAST:	HRLI	REG,0(REG)	; source for parameter
+	HRRI	REG,VFILE.	; destination
+	BLT	REG,VFILE.+6
+
+	PUSH	TOPP,REG1	; save flag for end-preserve
+	PUSHJ	TOPP,VEND.	; dispose of current file
+	POP	TOPP,VENDS.	; establish disposal of new file
+
+	HRRZ	AC1,.JBFF	; get end of stack/debugger
+	ADDI	AC1,PAGSIZ-1	; round up to page bdry.
+	TRZ	AC1,PAGSIZ-1
+	SUBI	AC1,1		; now one word less
+	CORE	AC1,0		; get rid of all above that
+	JSP	AC0,CORER.	; oops.
+
+	POPJ	TOPP,0		; we're done
+
+; HEAP.S -- save heap. Essentially a checkpoint call, we freeze the current
+;   state of the virtual heap. First we flush out all incore buffers, then
+;   copy the contents of the paging file to the new file. Then pony up the
+;   new file to look like the paging file, call HSAVE to write out all the
+;   tables and stuff, close the new file, and reinstate the paging file
+;   like before. The difference is that all areas are now swapped out.
+
+HEAP.S:	PUSH	TOPP,REG	; save addr of file name string
+	PUSHJ	TOPP,HFLSH.	; flush out buffers
+	POP	TOPP,REG	; restore file name string
+	MOVEI	REG1,VCHN.	; var for channel number
+	MOVE	R2,0(REG1)	;   remember chn num of paging file!
+	MOVEM	R2,CHSAVE	;   might get stomped in register
+	MOVEI	REG2,AOK.	; var for error return
+	SETZ	REG3,0		; input and output
+	MOVEI	REG4,1		; delete contents, please
+	PUSHJ	TOPP,VOPEN.	; do it
+	SKIPN	0,AOK.		; did it go?
+	JRST	BADFIL		; no, bomb out
+
+	PUSHJ	TOPP,VGTBF.	; get I/O buffer
+	MOVE	R,FFREE.	; save file alloc'n words
+	MOVEM	R,FRSAV		;   in local storage
+	MOVE	R,FFEND.
+	MOVEM	R,FESAV		; R now has highest file page # to copy
+	MOVE	R2,CHSAVE	; keep handy the chnum of paging file
+
+IOLOOP:	EXCH	R2,VCHN.	; install paging file channel number
+	PUSHJ	TOPP,VREAD.	;   get page (R)
+	EXCH	R2,VCHN.	; install save file channel number
+	PUSHJ	TOPP,VWRIT.	;   write to page (R)
+	SOJGE	R,IOLOOP	; dec page number, go back if anything
+
+	MOVEM	R2,CHSAVE	; save paging file channel
+	PUSHJ	TOPP,HSAVE.	; write out control info using save file
+	MOVE	R2,CHSAVE	; restore paging channel in register
+	EXCH	R2,VCHN.	; switch back channel numbers
+	MOVE	R,FRSAV		; restore file alloc'n for paging file
+	MOVEM	R,FFREE.
+	MOVE	R,FESAV
+	MOVEM	R,FFEND.
+	MOVEI	REG,0(R2)	; channel number of save file
+	SETZ	REG1,0		; don't you dare delete it!
+	JRST	VCLOS.		; close file and return
+
+VEND.:
+	SKIPE	0,VENDS.	; anything extra to do?
+	JRST	VENDSA		; yes, must save
+	MOVE	REG,VCHN.	; else set up to delete swapping file
+	MOVEI	REG1,1
+	JRST	VCLOS.
+
+VENDSA:	PUSHJ	TOPP,HFLSH.	; flush out buffers
+	PUSHJ	TOPP,VGTBF.	; get a buffer for save
+	PUSHJ	TOPP,HSAVE.	;   and save tables
+	MOVE	REG,VCHN.
+	SETZ	REG1,0		; don't delete
+	JRST	VCLOS.
+	POPJ	TOPP,
+
+; error routines, low segment storage
+
+	$low
+FRSAV:	exp	0
+FESAV:	exp	0		; temps for saving file alloc'n info
+CHSAVE:	exp	0		; save paging file channel number
+VENDS.:	exp	0
+	$high
+
+BADFIL:	PUSHJ	TOPP,TWAIT.
+	OUTSTR	[asciz/
+?	Can't open HEAP_SAVE file/]
+	JRST	ERROUT
+
+HLFERR:	PUSHJ	TOPP,WRTMSG	; write first half of message
+	OUTSTR	[asciz/format/]	; write the rest
+	JRST	ERROUT		; common code
+
+BADSIZ:	PUSHJ	TOPP,WRTMSG	; write first half
+	OUTSTR	[asciz/page size/]
+
+ERROUT:	POP	TOPP,AC0	; get return addr
+	PUSHJ	TOPP,WRTPC.
+	JRST	DIE.
+
+WRTMSG:	PUSHJ	TOPP,TWAIT.
+	OUTSTR	[asciz/
+?	Heap load file has incorrect /]
+	POPJ	TOPP,0
+	lit
+	end
+ 

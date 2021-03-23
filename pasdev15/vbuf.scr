@@ -1,0 +1,425 @@
+$pag
+$NUM OFF
+$ver
+Package:\VBUF/VALLOC\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\Author:\J.\D.\Rosen
+Version:\1.0\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\Date:\June\2,\1978
+$ski
+Approved by:
+$ski 6
+$cen
+VBUF/VALLOC
+&ABSTRACT&
+$SKI 2
+$jus
+$par 5
+The current PASCAL run-time support provides a heap data area of
+limited size. As more core space is needed, NEW gets more core
+from the PDP-10 operating system. Programs that allocate large
+amounts of heap storage (most notably QED) can exceed the
+system low-segment size limit and terminate abnormally.
+$ski
+$par 5
+The VBUF and VALLOC routines are an implementation of a 'virtual
+heap' using a disk file as a secondary store. They use a user-defined
+limit of in-core heap storage and simulate a very large virtual
+addressing space. The DUMPIO dump-mode I/O routines are used for
+relatively efficient paging, and the user may directly access
+the entire address space, bypassing the virtual heap
+allocation routines. In this manner, the routines 
+can be used as a limited
+random-block disk I/O package.
+$title right 'VBUF/VALLOC routines/\' right 'June 12, 1978'
+$pag
+$ski 2
+$cen
+&DETAILS OF IMPLEMENTATION&
+$ski
+$jus
+$par 5
+Control information for the address space is kept on the PASCAL
+heap, as are the actual page buffers.  The control record contains,
+among other things, the name of the paging file to be used, the limit
+of core buffers to be allocated, and the number currently allocated.
+Upon initialization (see VBUFINIT below), the space control record is
+allocated.  Core buffers are created as needed until the limit
+is reached. At this point, swapping begins.  No more PASCAL heap storage
+will be allocated by the routines, and when the space is closed, all
+heap storage is returned to PASCAL.
+$ski
+$par 5
+Three features of the routines, borrowed from normal virtual memory
+techniques, increase their potential efficiency.
+First, pages are selected to be swapped out according to
+an LRU (Least Recently Used) algorithm.
+Second, buffer records for pages in core are marked as either
+CLEAN or DIRTY. Pages will be written out 
+to secondary store if and only if
+they have been modified (DIRTY) while in core.
+Third, an associative memory mapping algorithm is used.
+When a virtual pointer is to be accessed, the associated virtual
+page is brought into a core buffer, and the real address of
+the datum returned.
+$ski
+$par 5
+A location in the addressing space is specified by a virtual pointer.
+A virtual pointer is an integer, and is treated as consisting of two
+fields, a page number, and an index within that page. The size of
+virtual pages is set at compile-time of the VBUF and VALLOC packages,
+and must be an integral number of disk blocks (128 words).  For
+example, if the page size is 256 words, then the rightmost 8 bits
+of the virtual address are taken to be the index within the page
+specified by the remaining bits.
+$ski
+$par 5
+At run-time, the user specifies the number of core buffers to be
+maintained by the packages by a parameter to the initialization
+routine. Buffers will be allocated as they are needed, and when the
+number of buffers equals the maximum specified, swapping begins.
+The initialization and closing routines provide a means to save
+the contents of a virtual addressing space between runs, independent
+of the number of buffers used. However, the page size must be the
+same for each use of the space.
+$ski
+$par 5
+The translation of a virtual address into a real address is performed
+by the routine VHOLD. The page specified by the virtual pointer given
+to VHOLD is locked into an available core buffer, and the real address
+corresponding to the page index of the virtual pointer is returned.
+When a page is locked in core, it will not be moved (or paged out) until it
+has been unlocked via routine VFREE.
+A restriction on the routines is that the number of outstanding locks
+cannot exceed the total number of core buffers. In this manner, a free
+buffer is always available for swapping.
+$ski
+$par 5
+The package will provide a temp file for paging on the user's account,
+or will use a user-specified file.
+Since the contents of the addressing space can be preserved in a
+disk file, these routines can serve as a random I/O package. The
+first block (block number zero) is used by the packages to preserve
+control information. The other blocks of the file may be accessed
+by the user by calculating an appropriate virtual pointer, and then
+VHOLDing the page. For example, if the page size is 256 words, and
+the user wishes to access blocks 3 and 4, word zero, the virtual
+address (in octal) would be 400. The rightmost 8 bits are zero,
+indicating an offset of zero within the page, and the remaining
+bits are 0000000001, indicating that the second virtual page is
+to be locked in core. Notice that virtual page numbers are
+zero-based. The disk block number corresponding to a
+virtual page number is given by:
+$ski
+disk_block = (page_number * size_of_page div 128) + 1.
+$ski
+$par 5
+Although the user may access the addressing space directly as
+described above, the package VALLOC provides automatic allocation,
+deallocation, and referencing functions.
+The routines VNEW and VDISPOSE are similar to the PASCAL run-time
+functions NEW and DISPOSE. The user allocates a record of a specified
+size by calling VNEW, and VDISPOSEs of it when he/she is done using it.
+The routines use a rather simplistic first-fit algorithm for allocation
+and an adjacent free block merging algorithm for compaction.
+To access and/or modify the virtual record, the user may either use
+a VHOLD; modify/access; VFREE sequence, or use the routines VFETCH,
+which returns the contents of a record, and VCHANGE, which changes
+the contents of a record. VFETCH and VCHANGE both assume that the
+user has allocated a local variable of the same length as the virtual
+record for transferring of data, whereas using the VHOLD/VFREE sequence
+does not require local storage.
+$ski
+$par 5
+Since VCHANGE and VFETCH are both six characters long, the user may
+define several versions of them, each using a different parameter
+for the user's local record. At link time, all references will be
+bound to the correct versions of VCHANGE and VFETCH. 
+This can minimize address coercion, since both routines expect the
+address of the user's local record.
+Alternatively, the user can define the address parameter as a value
+integer, and pass
+$ski
+ord(address(RECORDVAR))
+$SKI
+to the routine.
+This coercion is explained further under VHOLD and VFETCH below.
+$ski
+$par 5
+The control information for the addressing space includes a disk block
+address designated as 'next free block'. When VNEW cannot allocate
+a large enough record from the pages in core, the page starting at
+'next free block' is used, and then incremented, to supply an unused
+page each time. When a new paging file is being used, this address is
+initialized to page zero. When an addressing space is closed without
+deleting the paging file, this address is written out to block zero,
+word zero of the file. Thus when an addressing space is reopened,
+this word is read into the control information and used as the
+'next free block' address.
+$page
+&Entry&: VBUFINIT
+$ski
+This routine initializes the virtual address space, and must be called
+prior to any use of the other routines. The user may specify a file
+to be used as the paging file, and specifies the number of buffers
+to be maintained in core.
+$ski 3
+$ver
+&Usage&:
+   external procedure VBUFINIT(
+      NUMBUF: INTEGER;
+      FILENM: packed array[1..30] of char;
+      var ERR: boolean);
+$ski 2
+$jus
+Input arguments:
+$ind left +12
+$par -10
+NUMBUF\\\\is the number of buffers to be used.  NUMBUF must be
+greater than zero.
+$ski
+$par -10
+FILENM\\\\if not the null string, is the name of the paging file to
+be used.
+ The contents of the file will be preserved if it already exists.
+ If the null
+string is passed, VBUFINIT will open a file of the format:
+$ski
+xxxVHP.TMP
+$ski
+where xxx is 000,001,002,...\and is the first such file that does
+not exist.
+$ski 2
+$par -12
+Output arguments:
+$ski
+$par -10
+ERR\\\\\\\is true if the address space has been successfully
+initialized. False returns will occur if NUMBUF <= 0, or if an
+I/O error occurred in opening the file, or in reading the end-of-file
+word.
+$ind left -12
+$page
+&Entry&: VBUFCLS
+$ski
+This routine is called to close down a currently active addressing space.
+The user has the option of preserving the contents of the space. Calling
+VBUFCLS when no address space is active will cause a fatal error.
+$ski 3
+$ver
+&Usage&:
+$ski
+   external procedure VBUFCLS(
+      KEEP: boolean);
+$ski
+$jus
+Input arguments:
+$ind left +12
+$par -10
+KEEP\\\\\\if true, the contents of the addressing space are preserved in
+the paging file. If false, the paging file is deleted. If VBUFINIT
+was passed the null string for a file name, forcing the creation of a
+temp file, then KEEP is disregarded, and the temp file is deleted.
+$ski
+$ind left -12
+Output arguments:  none.
+$page
+&Entry&: VHOLD
+$ski
+This routine provides virtual address translation. The user must specify
+whether the page is to be marked CLEAN or DIRTY when it is VFREEd.
+If executing the VHOLD would cause the number of locks to exceed the 
+maximum number of core buffers available, a fatal error is generated.
+Calling VHOLD without initializing the space by VBUFINIT is also a
+fatal error.
+$ski 3
+$ver
+&Usage&:
+   external procedure VHOLD(
+      VP: VIRTUALPOINTER;
+      var RP: SOME_PTR_TYPE;
+      DIRTY: boolean);
+$ski 2
+$jus
+$ind left +12
+$par -12
+Input arguments:
+$par -10
+VP\\\\\\\\is the virtual address to be translated.
+$ski
+$par -10
+DIRTY\\\\\if true, the page containing VP is marked as DIRTY, and will
+be written out to the paging file when it is swapped. If false, the
+page is marked as CLEAN if it is not already dirty.
+$ski
+$ski
+$par -12
+Output arguments:
+$par -10
+RP\\\\\\\\is the translation of the virtual pointer VP into a hard core
+address. RP will remain valid until it has been VFREEd.
+RP can be defined and/or coerced at the convenience of the user,
+but since VHOLD requires a VAR parameter, the user has only two
+options. RP can be declared in the external definition of VHOLD to
+be either a pointer type, or else an integer subrange, to be coerced later with
+$ski
+ptr(RP).
+$ski
+This case differs from the pointer coercion required for VCHANGE and
+VFETCH (see below) in that RP is a VAR parameter, and is set by VHOLD.
+Thus VHOLD needs the address of a &cell& in which to place the hard
+core address.
+$ind left -12
+$page
+&Entry&: VFREE
+$ski
+This routine is the complement to VHOLD. The virtual page pointed to by
+RP is considered unlocked if there are no other locks on it. Depending
+upon the corresponding VHOLD call, the page will be written out when
+it is swapped. A fatal error is generated if RP does not point
+within one of VBUF's buffers, or if the address space has not been
+initialized.
+$ski 3
+$ver
+&Usage&:
+   external procedure VFREE(
+      RP: REALPOINTER);
+$ski 2
+$jus
+Input arguments:
+$ind left +12
+$par -10
+RP\\\\\\\\points within the buffer containing the page locked in core.
+As with VHOLD, the address is required. However, RP is not a VAR
+parameter in this case, so in addition to defining VFREE to take some
+pointer type as RP, the user may also define RP as an integer subrange,
+and pass
+$ski
+ord(POINTER_TO_PAGE)
+$SKI
+as with VFETCH (see below).
+$ind left -12
+$page
+$jus
+&Entry&: VFREEALL
+$ski
+This routine frees all outstanding locks on all virtual pages. It is
+primarily intended for use in an escape handling routine, or after
+an error. All actions of the VBUF and VALLOC routines keep the
+control information in a consistent state by turning off user breaks
+during critical sections of code. A fatal error is generated if
+the address space has not been initialized.
+$ski 3
+$ver
+&Usage&:
+   external procedure VFREEALL;
+$JUS
+$ski 2
+Input arguments: none.
+$ski
+Output arguments: none.
+$page
+&Entry&: VNEW
+$ski
+This routine allocates a record on the virtual heap. A first-fit
+algorithm is used as described above. A fatal error is generated
+if the address space has not been initialized.
+$ski 3
+&Usage&:
+$ver
+   external procedure VNEW(
+      var VP: VIRTUALPOINTER;
+      LEN: INTEGER);
+$ski 2
+$jus
+$ind left +12
+$par -12
+Input arguments:
+$par -10
+LEN\\\\\\\is the length of the record to be created. A fatal error
+is generated if LEN is not within the range 0<LEN<BUFFERSIZE (i.e.\a
+record cannot be allocated across a page boundary).
+$ski 2
+$par -12
+Output arguments:
+$par -10
+VP\\\\\\\\is the virtual pointer to the new record.
+$ind left -12
+$page
+&Entry&: VDISPOSE
+$ski
+This routine works exactly like the PASCAL routine DISPOSE. A run-time
+error is generated if the address space has not been initialized.
+$ski 3
+&Usage&:
+$ver
+   external procedure VDISPOSE(
+      VP: VIRTUALPOINTER);
+$jus
+$ski 2
+Input arguments:
+$ind left +12
+$par -10
+VP\\\\\\\\points to the virtual record to be disposed. Run-time errors
+are generated when an attempt is made to free an unallocated block,
+or to free a freed block, inasmuch as the attempts can be recognized.
+$ind left -12
+$page
+&Entry&: VFETCH
+$ski
+This routine is used to get information from a record on the virtual
+heap. The information in the record at VP is copied into the
+record at DATA. A fatal error is generated if the address space
+has not been initialized.
+$ski 3
+&Usage&:
+$ver
+   external procedure VFETCH(
+      VP: VIRTUALPOINTER;
+      DATA: SOME_TYPE);
+$ski 2
+$jus
+$ind left +12
+$par -12
+Input arguments:
+$par -10
+VP\\\\\\\\is the virtual address of the source record.
+$ski
+$par -12
+Output arguments:
+$par -10
+DATA\\\\\\is the address of the destination record, local to the user.
+DATA must be the address of the record, and there are several ways to
+provide this. First, the user could define his/her own version of
+VFETCH using an appropriate pointer type for the definition of DATA,
+and pass the pointer. Alternatively, the user can use ord(address(RECORD))
+or ord(POINTER) to
+coerce the address into an integer subrange parameter.
+Finally, the user may define DATA to be a VAR parameter of a record
+type, merely passing the name of a record.
+In all of the above cases, the second parameter to VFETCH is the
+&address& of the cell in which to place the data.
+$ind left -12
+$page
+&Entry&: VCHANGE
+$ski
+This routine is used to change information contained in a record on
+the virtual heap. A fatal error is generated if the address space
+has not been initialized.
+$ski 3
+$ver
+&Usage&:
+   external procedure VCHANGE(
+      VP: VIRTUALPOINTER;
+      DATA: SOME_TYPE);
+$jus
+$ski 2
+$ind left +12
+$par -12
+Input arguments:
+$par -10
+VP\\\\\\\\is the virtual pointer to the record to be modified.
+$ski
+$par -10
+DATA\\\\\\is the address of a record containing the data to be
+placed in the virtual record at VP. An address coercion, as
+described under VFETCH, can also be used with VCHANGE
+to provide the address of the source record.
+   

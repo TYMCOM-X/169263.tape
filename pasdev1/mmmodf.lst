@@ -1,0 +1,558 @@
+modfit	MACRO %53A(1155) 19:36 29-Sep-82 Page 1
+MMMODF	MAC	23-May-71 23:35	
+
+						search	RTSYM
+						$module	modfit^
+					;    +--------------------------------------------------------------+
+					;    |                                                              |
+					;    |                         M O D F I T                          |
+					;    |                         - - - - - -                          |
+					;    |                                                              |
+					;    +--------------------------------------------------------------+
+					;    
+					;    MDSI, Company Confidential
+					;    
+					;    SYSTEM:  PASCAL Runtime
+					;    
+					;    STARTED:  10/12/78
+					;    
+					;    PURPOSE:  To provide dynamic storage for PASCAL programs via the
+					;       routines NEW, DISPOSE, MARK, and RELEASE.  MODFIT defines the
+					;       entry points NEW.,  DSPOS.,  MARK.,  and  RLEAS.,  using  the
+					;       standard calling conventions for these routines.
+					;    
+					;    USAGE:
+					;    
+					;         MOVEI 2,size(ptr^)
+					;         PUSHJ 17,NEW.
+					;         MOVEM 2,ptr
+					;    
+					;         MOVE  2,ptr
+					;         PUSHJ 17,DSPOS.
+					;    
+					;         PUSHJ 17,MARK.
+					;         MOVEM 2,heapmark
+					;    
+					;         MOVE  2,heapmark
+					;         PUSHJ 17,RLEAS.
+					;    
+					;    EFFECTS:   MODFIT  will  expand  the  low  segment  as needed to
+					;       perform the allocation, printing a 'HEAP overflow' message if
+					;       the  CORE  call to TOPS-10 fails.  Calls to DISPOSE place new
+					;       entries on a free space list, while calls to  RELEASE  return
+					;       low segment storage to the system.
+modfit	MACRO %53A(1155) 19:36 29-Sep-82 Page 1-1
+MMMODF	MAC	23-May-71 23:35	
+
+					;    
+					;    ALGORITHM:  The allocation - collapsing algorithm was taken from
+					;       Knuth's 'Art of Computer Programming' (see  page  6  of  this
+					;       listing).  Adjacent  free  blocks  are coalesced during a NEW
+					;       operation; a contiguous set of  free  blocks  are  completely
+					;       coalesced   before   an   allocation   is   made.  If,  after
+					;       collapsing, there is  still  insufficient  storage,  the  low
+					;       segment  is  expanded  to  provide a new block of appropriate
+					;       size.  If a free block is found, and the block is larger than
+					;       the  requested  size,  it  will be split, with the new record
+					;       being taken from the tail of the block.
+					;    
+					;    NOTES:  The quantum of low-segment extension is the same as  the
+					;       system allocation quantum (see page 7).
+					;    
+					;    EXTERNAL REFERENCES:
+					;    
+					;       .JBREL
+					;       .JBSA
+					;       TWAIT.
+					;       WRTPC.
+					;       DIE.
+					;    
+					;    RESPONSIBLE:  Jerry Rosen -- PASCAL group
+					;    
+					;    ----------------------------------------------------------------
+
+					;
+
+					;	$check
+
+					; entry points in this module
+
+						entry	ALC1.
+						intern	NEW.,DSPOS.,MARK.,RLEAS.
+						intern	ALC0.
+
+					; externs for error reporting
+
+						extern	TWAIT.,DIE.,WRTPC.
+modfit	MACRO %53A(1155) 19:36 29-Sep-82 Page 1-2
+MMMODF	MAC	23-May-71 23:35	
+
+
+					;
+					; heap header DSECT
+
+			000000			LHEAP=0				;LH is addr of previous heap
+			000000			TAIL=0				;RH is word past end of heap
+			000001			FHEAD=1				;RH forward pointer in free list
+			000001			FTAIL=1				;LH backlink in freelist chain
+
+			000002			ROVER=2				;points to free block to search first
+
+			000003			HDRSIZ=3			;number of words in heap header
+
+					;
+					; block data word DSECT
+
+			000000			SIZE=0				;size of block (including header)
+										; negative if alloc'd, positive if free
+
+					;	the next two are only for blocks on the free list
+
+			000001			BLINK=1				;LH is back link on list
+			000001			FLINK=1				;RH is fore link
+
+					;
+					; allocation parameters
+
+			000002			MINBLK=2			;minimum size block to allocate
+										;  must be >= 2 to mean anything
+			000005			SMALL=5				;don't split leaving remnants of this size
+										; (this size does not include control word)
+
+					;
+					; register allocations
+
+			000002			ALLOC=2				;size to allocate on NEW
+			000003			HEAP=3				;working pointer to current heap
+			000001			BLK=1				;for walking free blocks
+			000002			HMARK=2				;param for MARK and RELEASE
+			000004			T=4				;temp (2 of them)
+modfit	MACRO %53A(1155) 19:36 29-Sep-82 Page 1-3
+MMMODF	MAC	23-May-71 23:35	
+
+			000005			T2=5
+			000006			NEXT=T+2			;for walking free blocks
+			000007			NEW=T+3				;returns addr of newly alloc'd block
+			000010			T3=T+4
+			377777			NIL=^O377777			;the nil pointer
+
+					;
+					; static storage
+
+						$static	cheap,1^
+						$static	blksize,1^
+						$static	destreg,1^
+						$static	regsave,psa-1^
+						$temp	psatemp,1^
+					;
+	400000'	402 00 0 14 000000 	HPINI:	SETZM	CHEAP^.cheap(psa)^
+					;	POPJ	TOP,0
+
+
+					; initialize -- get space for heap, and initialize below
+
+	400001'				ALC1.:
+	400001'				ALC0.:
+	400001'	550 03 0 15 000007 	INIT:	HRRZ	HEAP,$STACK(PDA)	; get addr of low seg free start
+	400002'	402 00 0 14 000000 		SETZM	CHEAP	^.cheap(psa)^		; set back pointer to zero
+
+
+					;
+					; initialize a header -- assume HEAP points to the new heap, and that
+					; CHEAP contains the last heap. Just make sure there's space enough for
+					; the heap header.
+
+	400003'	201 04 0 03 000003 	NEWHP:	MOVEI	T,HDRSIZ(HEAP)		; get enough room for header
+	400004'	317 04 0 00 000000*		CAMG	T,.JBREL##		; do we already have enough?
+	400005'	254 00 0 00 400010'		JRST	NEWOK			;   yes, don't do CORE call
+	400006'	047 04 0 00 000011 		CORE	T,0			; else ask TOPS-10 for loseg
+	400007'	254 00 0 00 400263'		JRST	FAIL			; no go
+
+	400010'	200 04 0 14 000000 	NEWOK:	MOVE	T,CHEAP	^.cheap(psa)^		; pick up old heap pointer
+	400011'	506 04 0 03 000000 		HRLM	T,LHEAP(HEAP)		; install as back heap pointer
+modfit	MACRO %53A(1155) 19:36 29-Sep-82 Page 1-4
+MMMODF	MAC	23-May-71 23:35	
+
+	400012'	201 04 0 03 000003 		MOVEI	T,HDRSIZ(HEAP)		; get addr of first free word
+	400013'	542 04 0 03 000000 		HRRM	T,TAIL(HEAP)		;   which is new end-of-heap ptr
+
+	400014'	201 04 0 03 000000 		MOVEI	T,<FHEAD-1>(HEAP)	; get addr one word before free ptrs
+	400015'	505 04 0 04 000000 		HRLI	T,0(T)			; duplicate in left half
+	400016'	202 04 0 03 000001 		MOVEM	T,FHEAD(HEAP)		;   and put head and tail of free list
+	400017'	552 04 0 03 000002 		HRRZM	T,ROVER(HEAP)		; that's where we'll start next time
+
+	400020'	552 03 0 14 000000 		HRRZM	HEAP,CHEAP	^.cheap(psa)^	; record ptr, insure LH zeroes
+	400021'	263 17 0 00 000000 		POPJ	TOP,0
+					;
+					; NEW -- May have to initialize entire heap structure via INIT. Then
+					;   get a block (either via KNUTH from free chain, or by extending the
+					;   current heap), zero it out, and mark it as allocated.
+
+	400022'				NEW.:
+	400022'	350 01 0 17 000000 		AOS	R1,0(TOP)
+	400023'	201 00 1 01 777777 		MOVEI	R0,@-1(R1)		; EA is size to allocate
+	400024'	135 01 0 00 000000*		LDB	R1,RT.REG##		; reg for result
+	400025'	202 14 0 17 000001 		MOVEM	PSA,PSATEMP^.psatemp(top)^
+						$GETPSA	MODFIT^
+	400026'	200 14 0 15 000017 		move	psa,$MODFIT(pda)^
+	400027'	124 00 0 14 000001 		DMOVEM	R0,BLKSIZE	^.blksize(psa)^	; save size and destination reg
+	400030'	200 01 0 17 000001 		MOVE	R1,PSATEMP^.psatemp(top)^
+	400031'	202 01 0 14 000016 		MOVEM	R1,PSA-1+REGSAVE^.regsave(psa)^
+						$SAVE	REGSAVE,EXP1,PSA-1^
+	400032'	515 00 0 00 000002 		hrlzi	r0,$first
+	400033'	541 00 0 14 000003 		hrri	r0,$offset+REGSAVE^.regsave(psa)^
+	400034'	251 00 0 14 000014 		blt	r0,$len+REGSAVE>^.regsave(psa)^
+	400035'	200 02 0 14 000001 		MOVE	ALLOC,BLKSIZE	^.blksize(psa)^	; put in right place
+	400036'	200 03 0 14 000000 		MOVE	HEAP,CHEAP^.cheap(psa)^
+						$COUNT	CNNEW			^; count new call if debug enabled
+
+	400037'	201 02 0 02 000001 	NEW2:	MOVEI	ALLOC,1(ALLOC)		; add one to size for data word
+	400040'	305 02 0 00 000002 		CAIGE	ALLOC,MINBLK		; if less then minimum then
+	400041'	201 02 0 00 000002 		MOVEI	ALLOC,MINBLK		;   then install min size 
+
+	400042'	260 17 0 00 400127'		PUSHJ	TOP,KNUTH		; try for block on free list
+	400043'	260 17 0 00 400204'		PUSHJ	TOP,XTEND		; fail, extend current heap end
+
+modfit	MACRO %53A(1155) 19:36 29-Sep-82 Page 1-5
+MMMODF	MAC	23-May-71 23:35	
+
+					; The following code is removed along with the stipulation the storage
+					; allocated by NEW be initialized by the runtime to zero. 4/28/82 SEM
+					;
+					; That stipulation restored and the code reenabled since too many programs
+					; (including the Pascal I/O system) relied on the initialization.
+					; 9/29/82 SEM
+					;
+	400044'	402 00 0 07 000001 		SETZM	0,1(NEW)		; zero first word of new block
+						IFLE MINBLK-2,<			; assemble test for one-word record
+	400045'	307 02 0 00 000002 		  CAIG	ALLOC,2			; only if minimum block size
+	400046'	254 00 0 00 400054'		  JRST	NUDONE >		; is <= 1 (obviously)
+
+	400047'	505 04 0 07 000001 		HRLI	T,1(NEW)		; source pointer (zeroed word)
+	400050'	541 04 0 07 000002 		HRRI	T,2(NEW)		; destination (one word after)
+	400051'	201 05 0 07 000000 		MOVEI	T2,0(NEW)		; set up end of BLT pointer in T2
+	400052'	271 05 0 02 777777 		ADDI	T2,-1(ALLOC)		;   ALLOC-1 words past control word
+	400053'	251 04 0 05 000000 		BLT	T,0(T2)
+
+	400054'	201 02 0 07 000001 	NUDONE:	MOVEI	ALLOC,1(NEW)		; return addr of block + 1
+	400055'	200 01 0 14 000002 		MOVE	R1,DESTREG^.destreg(psa)^
+						$RESTORE 1+REGSAVE,EXP2,PSA^
+	400056'	515 00 0 14 000004 		hrlzi	r0,$offset+1+REGSAVE^.regsave(psa)^
+	400057'	541 00 0 00 000003 		hrri	r0,$first
+	400060'	251 00 0 00 000014 		blt	r0,$last
+	400061'	202 02 1 00 000001 		MOVEM	ALLOC,@R1		; where it goes
+	400062'	263 17 0 00 000000 		POPJ	TOP,0
+
+					;
+					; DISPOSE -- after discovering that the address is reasonable, place the
+					;   newly freed block as the first block on the free list.
+
+	400063'				DSPOS.:
+	400063'	350 01 0 17 000000 		AOS	R1,0(TOP)
+	400064'	201 01 1 01 777777 		MOVEI	R1,@-1(R1)		; get record addr to dispose
+	400065'	202 14 0 17 000001 		MOVEM	PSA,PSATEMP^.psatemp(top)^
+						$GETPSA	MODFIT^
+	400066'	200 14 0 15 000017 		move	psa,$MODFIT(pda)^
+	400067'	200 00 0 17 000001 		MOVE	R0,PSATEMP^.psatemp(top)^
+	400070'	202 00 0 14 000016 		MOVEM	R0,PSA-1+REGSAVE^.regsave(psa)^
+						$SAVE	REGSAVE,EXP1,PSA-1^
+modfit	MACRO %53A(1155) 19:36 29-Sep-82 Page 1-6
+MMMODF	MAC	23-May-71 23:35	
+
+	400071'	515 00 0 00 000002 		hrlzi	r0,$first
+	400072'	541 00 0 14 000003 		hrri	r0,$offset+REGSAVE^.regsave(psa)^
+	400073'	251 00 0 14 000014 		blt	r0,$len+REGSAVE>^.regsave(psa)^
+	400074'	200 02 0 00 000001 		MOVE	EXP1,R1
+	400075'	200 03 0 14 000000 		MOVE	HEAP,CHEAP	^.cheap(psa)^	; pick up current heap pointer
+	400076'	275 02 0 00 000001 		SUBI	ALLOC,1			; dec record addr. to get data word
+	400077'	201 04 0 03 000000 		MOVEI	T,0(HEAP)		; get current heap addr in T
+						$COUNT	CNDISP			^; count dispose calls
+
+	400100'	307 04 0 02 000000 	DSPS2:	CAIG	T,0(ALLOC)		; if record addr. more than heap top
+	400101'	254 00 0 00 400105'		JRST	DSPS3			;   then we've got the right heap
+	400102'	554 04 0 04 000000 		HLRZ	T,LHEAP(T)		; else pick up this heap's back link
+	400103'	322 04 0 00 400266'		JUMPE	T,DSERR			; error if last heap
+	400104'	254 00 0 00 400100'		JRST	DSPS2			;   else check the 'new' one
+
+	400105'	305 02 0 04 000003 	DSPS3:	CAIGE	ALLOC,HDRSIZ(T)		; if record addr less than end of header
+	400106'	254 00 0 00 400266'		JRST	DSERR			;   then that's an error too
+
+	400107'	550 05 0 04 000000 		HRRZ	T2,TAIL(T)		; pick up addr of end of heap
+	400110'	303 02 0 05 777776 		CAILE	ALLOC,-MINBLK(T2)	; if record more than end of heap minus
+	400111'	254 00 0 00 400266'		JRST	DSERR			;   min rec. size, error
+
+	400112'	331 05 0 02 000000 		SKIPL	T2,SIZE(ALLOC)		; get size field of block
+	400113'	254 00 0 00 400270'		JRST	DSPREV			;   positive, already free: error
+
+					;
+					; at this point, ALLOC is the addr of the new free block, and T is the
+					;   addr of the heap containing the block. Tack it onto the start of
+					;   that heap's free list.
+
+	400114'	200 05 0 04 000001 		MOVE	T2,FHEAD(T)		; get current first free one
+	400115'	504 05 0 00 000004 		HRL	T2,T			;   and addr of heap for back link
+	400116'	202 05 0 02 000001 		MOVEM	T2,FLINK(ALLOC)		; install as ptr word for new block
+	400117'	506 02 0 05 000001 		HRLM	ALLOC,BLINK(T2)		; addr of new as blink for old 1st one
+	400120'	542 02 0 04 000001 		HRRM	ALLOC,FHEAD(T)		; and as flink of heap header
+
+	400121'	217 00 0 02 000000 		MOVMS	0,SIZE(ALLOC)		; set size field positive for free
+	400122'	201 02 0 00 377777 		MOVEI	ALLOC,NIL		; return NIL in parameter (hack)
+						$RESTORE 1+REGSAVE,EXP2,PSA^
+	400123'	515 00 0 14 000004 		hrlzi	r0,$offset+1+REGSAVE^.regsave(psa)^
+modfit	MACRO %53A(1155) 19:36 29-Sep-82 Page 1-7
+MMMODF	MAC	23-May-71 23:35	
+
+	400124'	541 00 0 00 000003 		hrri	r0,$first
+	400125'	251 00 0 00 000014 		blt	r0,$last
+	400126'	263 17 0 00 000000 		POPJ	TOP,0
+
+					;
+					;  KNUTH -- allocation-compaction algorithm taken from "Art of Computer
+					;    Programming" Vol. 1, sec. 2.5, problem 19.  It looks for a free block
+					;    large enough for the allocation, coalescing free blocks as it looks.
+					;
+					;  ALLOC contains the word size of the block needed, HEAP points to the
+					;    current heap. NEW will contain the address of the control word of the
+					;    allocated block if successful (skip 1 return), else the routine
+					;    will return without a skip.
+
+
+	400127'	200 01 0 03 000002 	KNUTH:	MOVE	BLK,ROVER(HEAP)		;get addr of first block to check
+	400130'	400 05 0 00 000005 		SETZ	T2,T2			; clear flag for being done
+	400131'	550 07 0 03 000000 		HRRZ	NEW,TAIL(HEAP)		; remember tail of current heap
+
+	400132'	302 01 0 03 000000 	KNCHEK:	CAIE	BLK,<FHEAD-1>(HEAP)	; are we at free list header block?
+	400133'	254 00 0 00 400137'		JRST	KNSIZE			;   no, check this block out.
+	400134'	326 05 0 00 400202'		JUMPN	T2,KNFAIL		; if second time at header, K. fails
+	400135'	201 05 0 00 000001 		MOVEI	T2,1			; else set flag for next time around
+	400136'	254 00 0 00 400200'		JRST	KNNEXT			;   and get next block to check.
+
+	400137'	200 06 0 01 000000 	KNSIZE:	MOVE	NEXT,SIZE(BLK)		; pick up block size to get addr
+	400140'	271 06 0 01 000000 		ADDI	NEXT,0(BLK)		;   of next physical block
+	400141'	306 06 0 07 000000 		CAIN	NEXT,0(NEW)		; don't try to coalesce block at
+	400142'	254 00 0 00 400154'		JRST	KNFIT			;   end of heap -- try to use it
+
+	400143'	337 04 0 06 000000 		SKIPG	T,SIZE(NEXT)		; pick up block's size word
+	400144'	254 00 0 00 400154'		JRST	KNFIT			;   negative, alloc'd, try to use current
+					;
+					; Now BLK points to a free block to which the free block at NEXT may be
+					;   coalesced.  Do it, and try for a second coalesce.
+					;
+						$COUNT	CNCOAL			^; count as a coalesce
+	400145'	554 10 0 06 000001 		HLRZ	T3,BLINK(NEXT)		; get deleted block's backlink
+	400146'	550 04 0 06 000001 		HRRZ	T,FLINK(NEXT)		;   and forelink
+	400147'	506 10 0 04 000001 		HRLM	T3,BLINK(T)		; put old backlink in next's backlink
+modfit	MACRO %53A(1155) 19:36 29-Sep-82 Page 1-8
+MMMODF	MAC	23-May-71 23:35	
+
+	400150'	542 04 0 10 000001 		HRRM	T,FLINK(T3)		;   and old forelink in prev's fore
+	400151'	550 06 0 06 000000 		HRRZ	NEXT,SIZE(NEXT)		; get additional size
+	400152'	272 06 0 01 000000 		ADDM	NEXT,SIZE(BLK)		;   to add to original size
+	400153'	254 00 0 00 400137'		JRST	KNSIZE			; go try for second coalesce
+					;
+					; Here, BLK points to a candidate for allocation. Check its size; it may
+					;   need to be split.
+					;
+	400154'	200 04 0 01 000000 	KNFIT:	MOVE	T,SIZE(BLK)		; get size of block to try
+						$COUNT	CNEXAM			^; count examination of blocks for size
+	400155'	305 04 0 02 000000 		CAIGE	T,0(ALLOC)		; will it go?
+	400156'	254 00 0 00 400200'		JRST	KNNEXT			;   too small, get next block
+
+	400157'	550 05 0 01 000001 		HRRZ	T2,FLINK(BLK)		; we got one, get its forelink
+	400160'	202 05 0 03 000002 		MOVEM	T2,ROVER(HEAP)		;   and place as ROVER for next time
+	400161'	275 04 0 02 000000 		SUBI	T,0(ALLOC)		; get size of remaining block
+	400162'	307 04 0 00 000005 		CAIG	T,SMALL			; is it too small to fool with?
+	400163'	254 00 0 00 400170'		JRST	KALLOC			;   yes, just allocate whole thing
+						$COUNT	CNSPLI			^; count number of splits
+	400164'	202 04 0 01 000000 		MOVEM	T,SIZE(BLK)		; else install new split size
+	400165'	271 01 0 04 000000 		ADDI	BLK,0(T)		;   and get start of new block
+	400166'	212 02 0 01 000000 		MOVNM	ALLOC,SIZE(BLK)		; put down control word for block
+	400167'	254 00 0 00 400175'		JRST	KNDONE			;   and take successful return
+					;
+					; Here, the whole BLK must be allocated. We must unchain it from the
+					;   free list.
+					;
+	400170'	554 04 0 01 000001 	KALLOC:	HLRZ	T,BLINK(BLK)		; get backlink address
+	400171'	550 05 0 01 000001 		HRRZ	T2,FLINK(BLK)		;   and forelink address
+	400172'	542 05 0 04 000001 		HRRM	T2,FLINK(T)		; put as forelink of preceding block
+	400173'	506 04 0 05 000001 		HRLM	T,BLINK(T2)		;   and BL as backlink of next
+	400174'	213 00 0 01 000000 		MOVNS	0,SIZE(BLK)		; negate size to mark as alloc'd
+
+	400175'	201 07 0 01 000000 	KNDONE:	MOVEI	NEW,0(BLK)		; set up return parameter
+	400176'	350 00 0 17 000000 		AOS	0,0(TOP)		; tick return address for SKIP1 ret.
+	400177'	263 17 0 00 000000 		POPJ	TOP,0			; go home
+
+	400200'	550 01 0 01 000001 	KNNEXT:	HRRZ	BLK,FLINK(BLK)		; get next block in list
+	400201'	254 00 0 00 400132'		JRST	KNCHEK			;   and check it out
+
+modfit	MACRO %53A(1155) 19:36 29-Sep-82 Page 1-9
+MMMODF	MAC	23-May-71 23:35	
+
+	400202'	202 01 0 03 000002 	KNFAIL:	MOVEM	BLK,ROVER(HEAP)		; change ROVER in case previous ROVER
+										;   was coalesced (thanks, RNF!! )
+	400203'	263 17 0 00 000000 		POPJ	TOP,0
+
+					;
+					; XTEND -- to get more space for allocation. XTEND first checks .JBREL in
+					;   the job data area to see if the program already has enough core to
+					;   make the allocation. If not, E monitor call is executed. In this
+					;   manner, the system allocation quantum is also the program low-segment
+					;   extension quantum. 
+
+	400204'	200 07 0 03 000000 	XTEND:	MOVE	NEW,TAIL(HEAP);		; old tail will be start of ...
+	400205'	201 04 0 07 000000 		MOVEI	T,0(NEW)		;   new block(s)
+						$COUNT	CNEXT			^; count heap extensions
+	400206'	271 04 0 02 000000 		ADDI	T,0(ALLOC)		; add needed size to new max addr
+	400207'	317 04 0 00 400004*		CAMG	T,.JBREL		; avoid CORE calls which have smaller
+	400210'	254 00 0 00 400213'		JRST	XTEND1			;   values than .JBREL
+	400211'	047 04 0 00 000011 		CORE	T,0			;   and try for it
+	400212'	254 00 0 00 400263'		JRST	FAIL			; no go
+
+	400213'	550 04 0 00 400207*	XTEND1:	HRRZ	T,.JBREL##		; get new loseg limit
+	400214'	271 04 0 00 000001 		ADDI	T,1			; tick by one word
+	400215'	542 04 0 03 000000 		HRRM	T,TAIL(HEAP)		;   to get new heap tail
+
+	400216'	275 04 0 07 000000 		SUBI	T,0(NEW)		; difference of addrs is size of new
+	400217'	201 10 0 04 000000 		MOVEI	T3,0(T)			;   chunk just created
+	400220'	275 04 0 02 000000 		SUBI	T,0(ALLOC)		; get size beyond size needed
+	400221'	307 04 0 00 000005 		CAIG	T,SMALL			; is it worth worrying about?
+	400222'	254 00 0 00 400233'		JRST	XTEND2			;   no
+					;
+					; NEW has old heap tail, which will be the address of the newly created free
+					;   block.  T has the free block size, and T3 has the size of the piece
+					;   which was just obtained from TOPS-10.
+					;
+						$COUNT	CNSPLI			^; count as a split
+	400223'	202 04 0 07 000000 		MOVEM	T,0(NEW)		;  control word for new free block
+	400224'	275 10 0 04 000000 		SUBI	T3,0(T)			; change size of allocated block
+	400225'	505 05 0 03 000000 		HRLI	T2,<FHEAD-1>(HEAP)	; free links -- backlink to heap header
+	400226'	540 05 0 03 000001 		HRR	T2,FHEAD(HEAP)		;   and forelink to current first
+	400227'	542 07 0 03 000001 		HRRM	NEW,FHEAD(HEAP)		; make heap header point to us
+modfit	MACRO %53A(1155) 19:36 29-Sep-82 Page 1-10
+MMMODF	MAC	23-May-71 23:35	
+
+	400230'	506 07 0 05 000001 		HRLM	NEW,BLINK(T2)		;   and former first point to us
+	400231'	202 05 0 07 000001 		MOVEM	T2,FLINK(NEW)		;   and put down new control word
+	400232'	271 07 0 04 000000 		ADDI	NEW,0(T)		; NEW now has addr of block to allocate
+					;
+					; NEW has address of new block to allocate. T3 has its size.
+					;
+	400233'	212 10 0 07 000000 	XTEND2:	MOVNM	T3,0(NEW)		; put negative size for control word
+	400234'	263 17 0 00 000000 		POPJ	TOP,0			; go home
+
+					;
+					; MARK. -- saves the current heap, and creates a new one.
+					;
+
+	400235'				MARK.:
+						$GETPSA	MODFIT^
+	400235'	200 14 0 15 000017 		move	psa,$MODFIT(pda)^
+	400236'	200 03 0 14 000000 		MOVE	HEAP,CHEAP^.cheap(psa)^
+	400237'	550 03 0 03 000000 		HRRZ	HEAP,TAIL(HEAP)		; get heap's tail, which will be
+	400240'	260 17 0 00 400003'		PUSHJ	TOP,NEWHP		;   start of the new heap
+	400241'	200 02 0 14 000000 		MOVE	HMARK,CHEAP	^.cheap(psa)^	; return current heap as heapmark
+	400242'	263 17 0 00 000000 		POPJ	TOP,0
+					;
+					;
+					; RLEAS. -- restores the heap previous to the heapmark parameter. First
+					;   we must check to see if there IS a previous!
+					;
+					;
+	400243'				RLEAS.:
+						$GETPSA	MODFIT^
+	400243'	200 14 0 15 000017 		move	psa,$MODFIT(pda)^
+	400244'	200 04 0 14 000000 		MOVE	T,CHEAP	^.cheap(psa)^		; pick up current heap pointer
+
+	400245'	322 04 0 00 400261'	RLLOOP:	JUMPE	T,RLSERR		; if zero, end of backchain
+	400246'	306 04 0 02 000000 		CAIN	T,0(HMARK)		; is this one the one?
+	400247'	254 00 0 00 400252'		JRST	RLSOK			;   yes, we found it
+	400250'	554 04 0 04 000000 		HLRZ	T,LHEAP(T)		;   no, get previous
+	400251'	254 00 0 00 400245'		JRST	RLLOOP			;     and go back
+
+	400252'	554 03 0 02 000000 	RLSOK:	HLRZ	HEAP,LHEAP(HMARK)	;get heap previous to pointed to.
+	400253'	322 03 0 00 400261'		JUMPE	HEAP,RLSERR		;   first heap -- can't release
+modfit	MACRO %53A(1155) 19:36 29-Sep-82 Page 1-11
+MMMODF	MAC	23-May-71 23:35	
+
+	400254'	202 03 0 14 000000 		MOVEM	HEAP,CHEAP	^.cheap(psa)^	; make this one new current heap
+
+	400255'	550 04 0 03 000000 		HRRZ	T,TAIL(HEAP)		; to reset loseg, get end of heap
+	400256'	047 04 0 00 000011 		CORE	T,0			;   and set as new max loseg addr
+	400257'	254 00 0 00 400261'		JRST	RLSERR
+	400260'	263 17 0 00 000000 		POPJ	TOP,0
+
+					;
+					; ERROR ROUTINES
+					;
+
+	400261'				RLSERR:	$RTERROR ($EXSPC,$SPCRH)^
+	400261'	201 01 0 00 014006 		movei	r1,$errcode($EXSPC,$SPCRH,$false)^$EXSPC*2000+$false*1000+$SPCRH^^
+	400262'	254 00 0 00 000000*		jrst	rt.err^
+
+	400263'	262 17 0 00 000000 	FAIL:	POP	TOP,0			; know return buried
+						$RTERROR ($EXSTO,$NONE)^
+	400264'	201 01 0 00 010000 		movei	r1,$errcode($EXSTO,$NONE,$false)^$EXSTO*2000+$false*1000+$NONE^^
+	400265'	254 00 0 00 400262*		jrst	rt.err^
+
+	400266'				DSERR:	$RTERROR ($EXSPC,$SPCBP)^
+	400266'	201 01 0 00 014004 		movei	r1,$errcode($EXSPC,$SPCBP,$false)^$EXSPC*2000+$false*1000+$SPCBP^^
+	400267'	254 00 0 00 400265*		jrst	rt.err^
+
+	400270'				DSPREV:	$RTERROR ($EXSPC,$SPCFF)^
+	400270'	201 01 0 00 014005 		movei	r1,$errcode($EXSPC,$SPCFF,$false)^$EXSPC*2000+$false*1000+$SPCFF^^
+	400271'	254 00 0 00 400267*		jrst	rt.err^
+
+						$END	MODFIT,HPINI^
+						end
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400272
+PROGRAM BREAK IS 000000
+CPU TIME USED 02:53.990
+
+16P CORE USED
+modfit	MACRO %53A(1155) 19:36 29-Sep-82 Page S-1
+MMMODF	MAC	23-May-71 23:35		SYMBOL TABLE
+
+ALC0.		400001'	int	NEW		000007		$LAST		000014	spd	
+ALC1.		400001'	ent	NEW.		400022'	int	$LEN		000011	spd	
+ALLOC		000002		NEW2		400037'		$LOC	777777	777777	spd	
+BLINK		000001		NEWHP		400003'		$LOLOC		000000	spd	
+BLK		000001		NEWOK		400010'		$MAXLO		000000	spd	
+CORE	047000	000011		NEXT		000006		$MAXST		000016	spd	
+DIE.		000000	ext	NIL		377777		$MAXTE		000001	spd	
+DSERR		400266'		NUDONE		400054'		$MODFI		000017	spd	
+DSPOS.		400063'	int	P.MODF		000000	ext	$NEEDP		000001	spd	
+DSPREV		400270'		PDA		000015	spd	$NONE		000000	spd	
+DSPS2		400100'		PSA		000014	spd	$OFFSE		000000	spd	
+DSPS3		400105'		R0		000000	spd	$SPCBP		000004	spd	
+EX.SET		000000	ext	R1		000001	spd	$SPCFF		000005	spd	
+EXP1		000002	spd	RLEAS.		400243'	int	$SPCRH		000006	spd	
+EXP2		000003	spd	RLLOOP		400245'		$STACK		000007	spd	
+FAIL		400263'		RLSERR		400261'		$STATS		000000	spd	
+FHEAD		000001		RLSOK		400252'		$TRUE		000001	spd	
+FLINK		000001		ROVER		000002		.BLKSI		000001	spd	
+FTAIL		000001		RT.ERR		400271'	ext	.CHEAP		000000	spd	
+HDRSIZ		000003		RT.REG		400024'	ext	.DESTR		000002	spd	
+HEAP		000003		S.MODF		000016	sin	.JBREL		400213'	ext	
+HMARK		000002		SIZE		000000		.PSATE		000001	spd	
+HPINI		400000'		SMALL		000005		.REGSA		000003	spd	
+I.MODF		400000'	sin	T		000004		
+INIT		400001'		T2		000005		
+KALLOC		400170'		T3		000010		
+KNCHEK		400132'		TAIL		000000		
+KNDONE		400175'		TOP		000017	spd	
+KNFAIL		400202'		TWAIT.		000000	ext	
+KNFIT		400154'		WRTPC.		000000	ext	
+KNNEXT		400200'		X.MODF		000000	sin	
+KNSIZE		400137'		XTEND		400204'		
+KNUTH		400127'		XTEND1		400213'		
+LHEAP		000000		XTEND2		400233'		
+M4.0		000000	ext	$ABSLO		000000	spd	
+M6.4		000000	ext	$EXSPC		000006	spd	
+M6.5		000000	ext	$EXSTO		000004	spd	
+M6.6		000000	ext	$FALSE		000000	spd	
+MARK.		400235'	int	$FIRST		000003	spd	
+MINBLK		000002		$HILOC		400000	spd	
+ 0 iw

@@ -1,0 +1,1198 @@
+		LINK symbol map of	M68INI		page 1
+	Produced by LINK version 4A(1220)-3 on  4-Oct-82 at 18:45:40
+
+	Low  segment starts at	     0 ends at	  2742 length	  2743 = 3P
+	High segment starts at	400000 ends at	425435 length	 25436 = 22P
+	29 words free in Low segment, 226 words free in high segment
+	521 Global symbols loaded, therefore min. hash size is 579
+	Start address is 402312, located in program PASINI
+
+		*************
+
+JOBDAT-INITIAL-SYMBOLS
+
+	Zero length module
+
+		*************
+
+PASINI	from DSK:PASINI.REL[31024,320155]	created by Unknown on 24-Jan-71 at 21:48:00
+	High segment starts at	400010 ends at	403512 length	  3503 (octal),  1859. (decimal)
+
+	PASINI	      402312	Global	Relocatable 		START.	      402312	Global	Relocatable 	
+	PREDEF	      400351	Entry	Relocatable 		STT%CO	      400306	Entry	Relocatable 	
+	PRTYP2	      400120	Entry	Relocatable 		PRTYP1	      400054	Entry	Relocatable 	
+	PRTYP0	      400017	Entry	Relocatable 	
+
+		*************
+
+M68IMD	from DSK:M68IMD.REL[31024,320155]	created by Unknown on 24-Jan-71 at 21:50:00
+	Low  segment starts at	   140 ends at	   474 length	   335 (octal),   221. (decimal)
+	High segment starts at	403513 ends at	405461 length	  1747 (octal),   999. (decimal)
+
+	MWORD%	      405151	Entry	Relocatable 		MAX%RE	      405152	Entry	Relocatable 	
+	MAX%CH	      405154	Entry	Relocatable 		FNAMSI	      405155	Entry	Relocatable 	
+	FNAMEX	      405156	Entry	Relocatable 		TRNAME	      405161	Entry	Relocatable 	
+	EXNAME	      405164	Entry	Relocatable 		CONDNA	      405166	Entry	Relocatable 	
+	DCL%SC	      404227	Entry	Relocatable 		TM%CON	      404130	Entry	Relocatable 	
+	SYS%PP	      403522	Entry	Relocatable 	
+
+		*************
+
+PASUTL	from DSK:PASUTL.REL[31024,320155]	created by Unknown on 24-Jan-71 at 21:51:00
+	High segment starts at	405462 ends at	411013 length	  3332 (octal),  1754. (decimal)
+
+	CK%UNI	      410242	Entry	Relocatable 		MAKE%L	      410135	Entry	Relocatable 	
+	DCL%RT	      407762	Entry	Relocatable 		DECLAR	      407652	Entry	Relocatable 	
+	POP%SC	      407621	Entry	Relocatable 		CHAIN%	      407574	Entry	Relocatable 	
+	DCL%AR	      407516	Entry	Relocatable 		DCL%FI	      407472	Entry	Relocatable 	
+	DCL%ST	      407444	Entry	Relocatable 		DCL%PO	      407423	Entry	Relocatable 	
+	DCL%SE	      407401	Entry	Relocatable 		DCL%RE	      407352	Entry	Relocatable 	
+	DCL%CH	      407332	Entry	Relocatable 		DCL%IN	      407312	Entry	Relocatable 	
+	DCL%SU	      407263	Entry	Relocatable 		NEW%PR	      407162	Entry	Relocatable 	
+	NEW%TY	      406643	Entry	Relocatable 		NEW%SY	      406406	Entry	Relocatable 	
+	NEW%BL	      406141	Entry	Relocatable 		CST%NI	      406125	Entry	Relocatable 	
+	CST%ST	      406076	Entry	Relocatable 		CST%RE	      406014	Entry	Relocatable 	
+	CST%IN	      405625	Entry	Relocatable 		ENTERN	      405523	Entry	Relocatable 	
+
+		LINK symbol map of	M68INI		page 2
+
+		*************
+
+PASDAT	from DSK:PASDAT.REL[31024,320155]	created by Unknown on 24-Jan-71 at 23:17:00
+	Low  segment starts at	   475 ends at	  1361 length	   665 (octal),   437. (decimal)
+	High segment starts at	411014 ends at	411303 length	   270 (octal),   184. (decimal)
+
+	ALC%TA	        1360	Entry	Relocatable 		TAL%TA	        1357	Entry	Relocatable 	
+	AUTO%S	        1356	Entry	Relocatable 		LAST%C	        1355	Entry	Relocatable 	
+	CMD%LI	        1354	Entry	Relocatable 		CMD%NA	        1353	Entry	Relocatable 	
+	CH%COU	        1352	Entry	Relocatable 		CH%LAS	        1351	Entry	Relocatable 	
+	CH%IND	        1350	Entry	Relocatable 		QBL%AL	        1347	Entry	Relocatable 	
+	INT%PR	        1346	Entry	Relocatable 		BYTE%S	        1345	Entry	Relocatable 	
+	SET%UB	        1344	Entry	Relocatable 		SET%LB	        1343	Entry	Relocatable 	
+	SET%UQ	        1342	Entry	Relocatable 		SET%LQ	        1341	Entry	Relocatable 	
+	SET%SI	        1340	Entry	Relocatable 		SET%UP	        1337	Entry	Relocatable 	
+	SET%LW	        1336	Entry	Relocatable 		STR%LE	        1335	Entry	Relocatable 	
+	ARR%LE	        1334	Entry	Relocatable 		SREALP	        1333	Entry	Relocatable 	
+	ADR%WI	        1332	Entry	Relocatable 		RADIX	        1331	Entry	Relocatable 	
+	HAVE%O	        1330	Entry	Relocatable 		HAVE%C	        1327	Entry	Relocatable 	
+	REL%EX	        1326	Entry	Relocatable 		TTYONA	        1315	Entry	Relocatable 	
+	TTYINA	        1304	Entry	Relocatable 		TMPREF	        1303	Entry	Relocatable 	
+	LOG%RE	        1263	Entry	Relocatable 		LISTFB	        1231	Entry	Relocatable 	
+	DUMPFB	        1177	Entry	Relocatable 		ELF%ST	        1176	Entry	Relocatable 	
+	LF%STA	        1175	Entry	Relocatable 		DF%STA	        1174	Entry	Relocatable 	
+	PAGE%T	        1153	Entry	Relocatable 		GLOBAL	        1132	Entry	Relocatable 	
+	MAIN%T	        1111	Entry	Relocatable 		SRC%SE	        1110	Entry	Relocatable 	
+	END%OF	        1107	Entry	Relocatable 		LN%ENA	        1106	Entry	Relocatable 	
+	SRC%ON	        1105	Entry	Relocatable 		LITERA	        1021	Entry	Relocatable 	
+	LINE	         735	Entry	Relocatable 		FIN%SO	         734	Entry	Relocatable 	
+	NO%FIL	         733	Entry	Relocatable 		FILE%L	         732	Entry	Relocatable 	
+	LIST%E	         731	Entry	Relocatable 		REL%FI	         710	Entry	Relocatable 	
+	LIST%F	         667	Entry	Relocatable 		MAIN%F	         646	Entry	Relocatable 	
+	SIZE%C	         645	Entry	Relocatable 		SIZE%U	         644	Entry	Relocatable 	
+	SIZE%I	         643	Entry	Relocatable 		FILETT	         642	Entry	Relocatable 	
+	FILE%T	         641	Entry	Relocatable 		FILE%O	         640	Entry	Relocatable 	
+	FILE%I	         637	Entry	Relocatable 		STAT%S	         636	Entry	Relocatable 	
+	STAT%M	         635	Entry	Relocatable 		STAT%P	         634	Entry	Relocatable 	
+	STAT%I	         633	Entry	Relocatable 		TYPE%O	         632	Entry	Relocatable 	
+	TYPE%T	         631	Entry	Relocatable 		TYPE%P	         630	Entry	Relocatable 	
+	TYPE%R	         627	Entry	Relocatable 		TYPE%C	         626	Entry	Relocatable 	
+	TYPE%B	         625	Entry	Relocatable 		TYPE%N	         624	Entry	Relocatable 	
+	TYPE%F	         623	Entry	Relocatable 		TYPE%I	         622	Entry	Relocatable 	
+	VLL%BA	         621	Entry	Relocatable 		VL%LIS	         620	Entry	Relocatable 	
+	NVL%BA	         617	Entry	Relocatable 		SYM%NV	         616	Entry	Relocatable 	
+	VL%BAS	         615	Entry	Relocatable 		SYM%VL	         614	Entry	Relocatable 	
+	CTIMES	         613	Entry	Relocatable 		CDATES	         612	Entry	Relocatable 	
+	IO%OPS	         611	Entry	Relocatable 		FILE%C	         610	Entry	Relocatable 	
+	HEAP%C	         607	Entry	Relocatable 		MAX%LE	         606	Entry	Relocatable 	
+	BLK%NU	         605	Entry	Relocatable 		LEX%BL	         604	Entry	Relocatable 	
+	EXT%BL	         603	Entry	Relocatable 		CUR%BL	         602	Entry	Relocatable 	
+	ROOT%B	         601	Entry	Relocatable 		ENV%DT	         600	Entry	Relocatable 	
+	ENV%NA	         577	Entry	Relocatable 		ROOT%N	         576	Entry	Relocatable 	
+	ALLC%R	         575	Entry	Relocatable 		OPTS%L	         574	Entry	Relocatable 	
+	ALL%OP	         573	Entry	Relocatable 		PROG%O	         541	Entry	Relocatable 	
+		LINK symbol map of	M68INI		page 3
+PASDAT
+	DEFAUL	         507	Entry	Relocatable 		QUICK	         506	Entry	Relocatable 	
+	FINISH	         505	Entry	Relocatable 		WARNIN	         504	Entry	Relocatable 	
+	ERR%CO	         503	Entry	Relocatable 		MAX%SE	         502	Entry	Relocatable 	
+	INCLCT	         501	Entry	Relocatable 		LINECT	         500	Entry	Relocatable 	
+	CUR%SO	         477	Entry	Relocatable 		DAT%GE	      411203	Entry	Relocatable 	
+	DAT%SA	      411130	Entry	Relocatable 		HP%GET	      411072	Entry	Relocatable 	
+	HP%PUT	      411023	Entry	Relocatable 	
+
+		*************
+
+PASTAL	from DSK:PASTAL.REL[31024,320155]	created by Unknown on 24-Jan-71 at 23:45:00
+	Low  segment starts at	  1362 ends at	  1640 length	   257 (octal),   175. (decimal)
+	High segment starts at	411304 ends at	413615 length	  2312 (octal),  1226. (decimal)
+
+	ALC%SU	      413560	Entry	Relocatable 		ALLOC%	      413231	Entry	Relocatable 	
+	PASSED	      412114	Entry	Relocatable 		P%B%AD	      412055	Entry	Relocatable 	
+	SIZE%O	      411510	Entry	Relocatable 		ALC%DA	      411470	Entry	Relocatable 	
+	TAL%IN	      411313	Entry	Relocatable 	
+
+		*************
+
+PASVAL	from DSK:PASVAL.REL[31024,320155]	created by Unknown on 24-Jan-71 at 23:46:00
+	High segment starts at	413616 ends at	414065 length	   250 (octal),   168. (decimal)
+
+	MKREAL	      414034	Entry	Relocatable 		CST%SC	      414015	Entry	Relocatable 	
+	MAKERE	      413763	Entry	Relocatable 		MAKEAR	      413731	Entry	Relocatable 	
+	MAKESE	      413662	Entry	Relocatable 		MAKEST	      413625	Entry	Relocatable 	
+
+		*************
+
+PASERR	from DSK:PASERR.REL[31024,320155]	created by Unknown on 24-Jan-71 at 23:48:00
+	Low  segment starts at	  1641 ends at	  1642 length	     2 (octal),     2. (decimal)
+	High segment starts at	414066 ends at	415036 length	   751 (octal),   489. (decimal)
+
+	ABORT	        1642	Entry	Relocatable 		ERR%TA	      414430	Entry	Relocatable 	
+	ELF%CL	      414417	Entry	Relocatable 		ELF%OP	      414352	Entry	Relocatable 	
+	ERR%OP	      414320	Entry	Relocatable 		ERR%TE	      414301	Entry	Relocatable 	
+	ERR%NO	      414264	Entry	Relocatable 		ERR%TO	      414230	Entry	Relocatable 	
+	ERROR	      414210	Entry	Relocatable 		ERR%PR	      414075	Entry	Relocatable 	
+
+		*************
+
+PASMTH	from DSK:PASMTH.REL[31024,320155]	created by Unknown on 24-Jan-71 at 23:48:00
+	High segment starts at	415037 ends at	415170 length	   132 (octal),    90. (decimal)
+
+	INT%BI	      415135	Entry	Relocatable 		GCD	      415101	Entry	Relocatable 	
+	NLM	      415064	Entry	Relocatable 		NGM	      415045	Entry	Relocatable 	
+
+		*************
+
+TEMPNA	from DSK:PASASM.REL[31024,320155]	created by MACRO on 23-Jun-70 at 14:12:00
+	High segment starts at	415171 ends at	415223 length	    33 (octal),    27. (decimal)
+
+	TEMPNA	      415171	Entry	Relocatable 	
+		LINK symbol map of	M68INI		page 4
+TEMPNA
+
+		*************
+
+COROUT	from DSK:COROUT.REL[31024,320156]	created by MACRO on 31-Mar-70 at 12:54:00
+	Low  segment starts at	  1643 ends at	  1650 length	     6 (octal),     6. (decimal)
+	High segment starts at	415224 ends at	415276 length	    53 (octal),    43. (decimal)
+
+	CALL	      415270	Entry	Relocatable 		CREATE	      415232	Entry	Relocatable 	
+	DETACH	      415253	Entry	Relocatable 		RESUME	      415261	Entry	Relocatable 	
+	HSTRT.	       25000	Global	Absolute    	
+
+		*************
+
+MODFIT	from DSK:RDLIB.REL[31024,274427]	created by MACRO on 12-Jun-70 at 19:28:00
+	High segment starts at	415277 ends at	416017 length	   521 (octal),   337. (decimal)
+
+	ALC0.	           0	Global	Absolute    		DSPOS.	      415566	Global	Relocatable 	
+	HPLOAD	      415521	Entry	Relocatable 		HPREAD	      415417	Entry	Relocatable 	
+	HPSAVE	      415412	Entry	Relocatable 		HPWRIT	      415322	Entry	Relocatable 	
+	I.MODF	           0	Global	Absolute    Suppressed	NEW.	      415523	Global	Relocatable 	
+	S.MODF	           7	Global	Absolute    Suppressed	X.MODF	           0	Global	Absolute    Suppressed
+
+		*************
+
+DUMPIO	from DSK:RDLIB.REL[31024,274427]	created by MACRO on 12-Jun-70 at 19:28:00
+	High segment starts at	416020 ends at	416336 length	   317 (octal),   207. (decimal)
+
+	CLOS$F	      416267	Entry	Relocatable 		I.DUMP	           0	Global	Absolute    Suppressed
+	OPN$FI	      416066	Entry	Relocatable 		READ$P	      416225	Entry	Relocatable 	
+	S.DUMP	          20	Global	Absolute    Suppressed	WRIT$P	      416174	Entry	Relocatable 	
+	X.DUMP	           0	Global	Absolute    Suppressed
+
+		*************
+
+PASMON	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	Low  segment starts at	  1651 ends at	  1651 length	     1 (octal),     1. (decimal)
+	High segment starts at	416337 ends at	416702 length	   344 (octal),   228. (decimal)
+
+	DDT.AC	           0	Global	Absolute    		DIE.	      416476	Entry	Relocatable 	
+	END.	      416460	Global	Relocatable 		EXIT.	      416460	Global	Relocatable 	
+	INIT0.	      416337	Entry	Relocatable 		INITP.	      416337	Entry	Relocatable 	
+	REE.AC	      416502	Global	Relocatable 		TRACE	      416603	Global	Relocatable 	
+	WRTDC.	      416542	Global	Relocatable 		WRTPC.	      416532	Entry	Relocatable 	
+
+		*************
+
+STACK	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+		LINK symbol map of	M68INI		page 5
+
+
+MFX	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	416703 ends at	416721 length	    17 (octal),    15. (decimal)
+
+	M.FX	      416703	Entry	Relocatable 	
+
+		*************
+
+MFF	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	416722 ends at	416741 length	    20 (octal),    16. (decimal)
+
+	M.FF	      416722	Entry	Relocatable 	
+
+		*************
+
+MFFP	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	416742 ends at	416761 length	    20 (octal),    16. (decimal)
+
+	MP.FF	      416742	Entry	Relocatable 	
+
+		*************
+
+MRF	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	416762 ends at	416776 length	    15 (octal),    13. (decimal)
+
+	M.RF	      416762	Entry	Relocatable 	
+
+		*************
+
+CSPFF	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	416777 ends at	417006 length	    10 (octal),     8. (decimal)
+
+	CSP.FF	      416777	Entry	Relocatable 	
+
+		*************
+
+MSP	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	417007 ends at	417013 length	     5 (octal),     5. (decimal)
+
+	MS.P	      417007	Entry	Relocatable 	
+
+		*************
+
+MS	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	417014 ends at	417023 length	    10 (octal),     8. (decimal)
+
+	MS.	      417014	Entry	Relocatable 	
+
+		*************
+
+MSFIN	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	417024 ends at	417027 length	     4 (octal),     4. (decimal)
+
+	MS.FIN	      417024	Entry	Relocatable 	
+		LINK symbol map of	M68INI		page 6
+MSFIN
+
+		*************
+
+MSTR	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	417030 ends at	417031 length	     2 (octal),     2. (decimal)
+
+	MSTR.	      417030	Entry	Relocatable 	
+
+		*************
+
+CSP	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	417032 ends at	417065 length	    34 (octal),    28. (decimal)
+
+	CSP.F	      417032	Entry	Relocatable 		CSP.X	      417034	Entry	Relocatable 	
+
+		*************
+
+O.TTY	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	Low  segment starts at	  1652 ends at	  1652 length	     1 (octal),     1. (decimal)
+	High segment starts at	417066 ends at	417077 length	    12 (octal),    10. (decimal)
+
+	I.OTTY	      417066	Global	Relocatable Suppressed	S.OTTY	           0	Global	Absolute    Suppressed
+	TTYOUT	        1652	Entry	Relocatable 		X.OTTY	           0	Global	Absolute    Suppressed
+
+		*************
+
+IORWR	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	417100 ends at	417240 length	   141 (octal),    97. (decimal)
+
+	REWRT.	      417100	Entry	Relocatable 	
+
+		*************
+
+IOBIN	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	417241 ends at	417427 length	   167 (octal),   119. (decimal)
+
+	CLSTB.	      417424	Entry	Relocatable 		DB$OPE	      417271	Entry	Relocatable 	
+	OPNBN.	      417307	Entry	Relocatable 		OPNTP.	      417241	Entry	Relocatable 	
+
+		*************
+
+IOCLS	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	417430 ends at	417555 length	   126 (octal),    86. (decimal)
+
+	CLOSA.	      417453	Entry	Relocatable 		CLOSD.	      417432	Entry	Relocatable 	
+	CLOSE.	      417430	Entry	Relocatable 		I.IOCL	           0	Global	Absolute    Suppressed
+	S.IOCL	           0	Global	Absolute    Suppressed	X.IOCL	      417453	Global	Relocatable Suppressed
+
+		*************
+
+IOTXH	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	417556 ends at	417631 length	    54 (octal),    44. (decimal)
+
+	DODEC.	      417556	Entry	Relocatable 		DOTXT.	      417576	Entry	Relocatable 	
+		LINK symbol map of	M68INI		page 7
+IOTXH
+
+		*************
+
+IOICM	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	417632 ends at	420056 length	   225 (octal),   149. (decimal)
+
+	FARGX.	      417772	Entry	Relocatable 		FFRBF.	      417714	Entry	Relocatable 	
+	FGTBF.	      417701	Entry	Relocatable 		FLCHN.	      417745	Entry	Relocatable 	
+	FLUCH.	      417752	Entry	Relocatable 		FMTCH.	      417763	Entry	Relocatable 	
+	GTIFN.	      417655	Entry	Relocatable 		I.IOIC	      417724	Global	Relocatable Suppressed
+	IOFAK.	      420046	Entry	Relocatable 		P.FID.	      417632	Entry	Relocatable 	
+	S.IOIC	          23	Global	Absolute    Suppressed	X.IOIC	           0	Global	Absolute    Suppressed
+
+		*************
+
+DBFBFK	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	420057 ends at	420074 length	    16 (octal),    14. (decimal)
+
+	DB.FBL	      420057	Entry	Relocatable 	
+
+		*************
+
+IOCNNL	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	420075 ends at	420146 length	    52 (octal),    42. (decimal)
+
+	FRCHN.	      420145	Entry	Relocatable 		FRECN.	      420130	Entry	Relocatable 	
+	GETCN.	      420075	Entry	Relocatable 		GTCHN.	      420142	Entry	Relocatable 	
+	I.IOCN	      420137	Global	Relocatable Suppressed	S.IOCN	           1	Global	Absolute    Suppressed
+	X.IOCN	           0	Global	Absolute    Suppressed
+
+		*************
+
+IOWRB	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+ segment starts at	420147 ends at	420211 length	    43 (octal),    35. (decimal)
+
+	WRBIN.	      420147	Entry	Relocatable 	
+
+		*************
+
+IOGET	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	420212 ends at	420254 length	    43 (octal),    35. (decimal)
+
+	GET.	      420212	Entry	Relocatable 	
+
+		*************
+
+IOFSZ	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	420255 ends at	420273 length	    17 (octal),    15. (decimal)
+
+	FILSZ.	      420255	Entry	Relocatable 	
+
+		*************
+
+		LINK symbol map of	M68INI		page 8
+
+
+IOMS1	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	420274 ends at	420305 length	    12 (octal),    10. (decimal)
+
+	CKEOF.	      420274	Entry	Relocatable 	
+
+		*************
+
+IOMS2	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	420306 ends at	420316 length	    11 (octal),     9. (decimal)
+
+	FILLC.	      420306	Entry	Relocatable 	
+
+		*************
+
+IOMS3	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	420317 ends at	420336 length	    20 (octal),    16. (decimal)
+
+	NTXDI.	      420335	Entry	Relocatable 		NTXER.	      420317	Entry	Relocatable 	
+
+		*************
+
+IORLR	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	420337 ends at	420644 length	   306 (octal),   198. (decimal)
+
+	REAL.R	      420337	Entry	Relocatable 		SRL.R	      420360	Entry	Relocatable 	
+
+		*************
+
+IORLC	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	420645 ends at	420763 length	   117 (octal),    79. (decimal)
+
+	ENDRN.	      420755	Entry	Relocatable 		REA.C1	      420645	Entry	Relocatable 	
+	REA.C2	      420703	Entry	Relocatable 		REA.C3	      420731	Entry	Relocatable 	
+	TENE.	      420744	Entry	Relocatable 		TENF.	      420746	Entry	Relocatable 	
+	TENP.	      420741	Entry	Relocatable 	
+
+		*************
+
+IOSTR	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	420764 ends at	421154 length	   171 (octal),   121. (decimal)
+
+	BOOL.X	      420774	Entry	Relocatable 		CSTR.R	      421120	Entry	Relocatable 	
+	CSTR.W	      421051	Entry	Relocatable 		FSTR.R	      421070	Entry	Relocatable 	
+	FSTR.W	      421043	Entry	Relocatable 		STRV.R	      421100	Entry	Relocatable 	
+	STRV.W	      421061	Entry	Relocatable 		XSTR.R	      421064	Entry	Relocatable 	
+	XSTR.W	      420764	Entry	Relocatable 	
+
+		*************
+
+IOCHAR	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	421155 ends at	422323 length	  1147 (octal),   615. (decimal)
+
+	BREAK.	      421666	Entry	Relocatable 		GETCH.	      421155	Entry	Relocatable 	
+		LINK symbol map of	M68INI		page 9
+IOCHAR
+	GETCR.	      421164	Entry	Relocatable 		I.IOCH	      421534	Global	Relocatable Suppressed
+	PUTCH.	      421462	Entry	Relocatable 		PUTCR.	      421471	Entry	Relocatable 	
+	PUTPG.	      421635	Entry	Relocatable 		RD.FDN	      422013	Entry	Relocatable 	
+	RD.FDR	      422010	Entry	Relocatable 		RD.FSN	      422274	Entry	Relocatable 	
+	RD.LNN	      421734	Entry	Relocatable 		RD.LNR	      421731	Entry	Relocatable 	
+	RD.SSN	      422250	Entry	Relocatable 		RD.SSR	      422245	Entry	Relocatable 	
+	S.IOCH	          10	Global	Absolute    Suppressed	WR.DNN	      422225	Entry	Relocatable 	
+	WR.DNR	      422222	Entry	Relocatable 		WR.FDN	      422050	Entry	Relocatable 	
+	WR.FDR	      422045	Entry	Relocatable 		WR.FSN	      422214	Entry	Relocatable 	
+	WR.LNN	      421763	Entry	Relocatable 		WR.LNR	      421760	Entry	Relocatable 	
+	WR.SSN	      422162	Entry	Relocatable 		WR.SSR	      422157	Entry	Relocatable 	
+	WR.SVN	      422107	Entry	Relocatable 		WR.SVR	      422104	Entry	Relocatable 	
+	X.IOCH	           0	Global	Absolute    Suppressed
+
+		*************
+
+TWAIT	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	422324 ends at	422343 length	    20 (octal),    16. (decimal)
+
+	TWAIT.	      422324	Entry	Relocatable 	
+
+		*************
+
+.MAIN	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+.MAIN	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+.MAIN	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+.MAIN	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+.MAIN	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+		LINK symbol map of	M68INI		page 10
+
+
+IOCHER	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	422344 ends at	422346 length	     3 (octal),     3. (decimal)
+
+	IOSYM.	      422344	Entry	Relocatable 	
+
+		*************
+
+IOSTT	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	422347 ends at	422377 length	    31 (octal),    25. (decimal)
+
+	EXTST.	      422355	Entry	Relocatable 		IOSTA.	      422357	Entry	Relocatable 	
+	IOSTL.	      422347	Entry	Relocatable 	
+
+		*************
+
+TENIO	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	422400 ends at	423701 length	  1302 (octal),   706. (decimal)
+
+	COSEF.	      422634	Global	Relocatable 		FOSVC.	      423626	Global	Relocatable 	
+	FUSHF.	      423637	Global	Relocatable 		IOUUO.	      422400	Entry	Relocatable 	
+	NAMEF.	      423604	Global	Relocatable 		NOTEF.	      423564	Global	Relocatable 	
+	OPENF.	      422400	Global	Relocatable 		PINTF.	      423616	Global	Relocatable 	
+	RBLKR.	      423130	Global	Relocatable 		RDBLK.	      423076	Global	Relocatable 	
+	RDWRD.	      423136	Global	Relocatable 		RET14.	      422703	Entry	Relocatable 	
+	RET16.	      423362	Entry	Relocatable 		RWRDR.	      423151	Global	Relocatable 	
+	TENIO.	      422400	Entry	Relocatable 		TUNCF.	      422770	Global	Relocatable 	
+	WBLK.	      423417	Global	Relocatable 		WBLKR.	      423440	Global	Relocatable 	
+	WRWRD.	      423446	Global	Relocatable 		WWRDR.	      423457	Global	Relocatable 	
+
+		*************
+
+DISPAT	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	423702 ends at	423773 length	    72 (octal),    58. (decimal)
+
+	APOIN.	      423733	Global	Relocatable 		I.TENI	      423702	Global	Relocatable Suppressed
+	LEAVE.	      423726	Global	Relocatable 		LUD.AC	      423710	Global	Relocatable 	
+	LUOAD.	          40	Global	Absolute    		PASUO.	          41	Entry	Absolute    	
+	S.TENI	         161	Global	Absolute    Suppressed	SKIP1.	      423724	Global	Relocatable 	
+	SKIP2.	      423722	Global	Relocatable 		TNAB.	      423715	Global	Relocatable 	
+	X.TENI	           0	Global	Absolute    Suppressed	ZILCH.	      423734	Global	Relocatable 	
+
+		*************
+
+DECOD.	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	423774 ends at	424213 length	   220 (octal),   144. (decimal)
+
+	DECOD.	      423774	Entry	Relocatable 		STRTD.	      424001	Entry	Relocatable 	
+
+		*************
+
+		LINK symbol map of	M68INI		page 11
+
+
+BUFGET	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+PPGRB.	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424214 ends at	424222 length	     7 (octal),     7. (decimal)
+
+	I.PPGR	      424221	Global	Relocatable Suppressed	PPGRB.	      424214	Global	Relocatable 	
+	PPGRG.	      424221	Entry	Relocatable 		S.PPGR	           1	Global	Absolute    Suppressed
+	X.PPGR	           0	Global	Absolute    Suppressed
+
+		*************
+
+TERFAK	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+FAK33	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+FAK34	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+FAK35	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+FAK36	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+FAK37	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+		LINK symbol map of	M68INI		page 12
+
+
+SGLEXP	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424223 ends at	424246 length	    24 (octal),    20. (decimal)
+
+	II.EXP	      424223	Entry	Relocatable 		RI.EXP	      424225	Entry	Relocatable 	
+	RR.EXP	      424227	Entry	Relocatable 	
+
+		*************
+
+SFOR	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424247 ends at	424300 length	    32 (octal),    26. (decimal)
+
+	I.SGLF	      424273	Global	Relocatable Suppressed	S.SGLF	           5	Global	Absolute    Suppressed
+	SFOR.	      424247	Entry	Relocatable 		SFOR.1	      424257	Entry	Relocatable 	
+	SFOR.2	      424262	Global	Relocatable 		X.SGLF	           0	Global	Absolute    Suppressed
+
+		*************
+
+FSAVE	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424301 ends at	424305 length	     5 (octal),     5. (decimal)
+
+	FSAVE.	      424301	Entry	Relocatable 	
+
+		*************
+
+SUBER	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424306 ends at	424307 length	     2 (octal),     2. (decimal)
+
+	INXER.	      424306	Entry	Relocatable 		SUBER.	      424306	Entry	Relocatable 	
+
+		*************
+
+VALER	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424310 ends at	424311 length	     2 (octal),     2. (decimal)
+
+	SRERR.	      424310	Entry	Relocatable 		VALER.	      424310	Entry	Relocatable 	
+
+		*************
+
+PTRER	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424312 ends at	424313 length	     2 (octal),     2. (decimal)
+
+	PTRER.	      424312	Entry	Relocatable 	
+
+		*************
+
+ASSER	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424314 ends at	424315 length	     2 (octal),     2. (decimal)
+
+	ASSER.	      424314	Entry	Relocatable 	
+
+		*************
+
+		LINK symbol map of	M68INI		page 13
+
+
+PRFID	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424316 ends at	424530 length	   213 (octal),   139. (decimal)
+
+	PRFID.	      424316	Entry	Relocatable 	
+
+		*************
+
+SZOVL	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+EXIO	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424531 ends at	424532 length	     2 (octal),     2. (decimal)
+
+	EX.IO	      425405	Global	Relocatable Suppressed	IOERR.	      424531	Entry	Relocatable 	
+
+		*************
+
+EXUSR	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424533 ends at	424534 length	     2 (octal),     2. (decimal)
+
+	EX.USR	      425406	Global	Relocatable Suppressed	USERR.	      424533	Entry	Relocatable 	
+
+		*************
+
+ESCAP	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424535 ends at	424535 length	     1 (octal),     1. (decimal)
+
+	ESCAP.	      424535	Entry	Relocatable 	
+
+		*************
+
+M21	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424536 ends at	424545 length	    10 (octal),     8. (decimal)
+
+	M2.1	      424536	Entry	Relocatable 	
+
+		*************
+
+M22	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424546 ends at	424552 length	     5 (octal),     5. (decimal)
+
+	M2.2	      424546	Entry	Relocatable 	
+
+		*************
+
+M23	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424553 ends at	424557 length	     5 (octal),     5. (decimal)
+
+	M2.3	      424553	Entry	Relocatable 	
+
+		LINK symbol map of	M68INI		page 14
+
+		*************
+
+M24	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424560 ends at	424564 length	     5 (octal),     5. (decimal)
+
+	M2.4	      424560	Entry	Relocatable 	
+
+		*************
+
+M25	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424565 ends at	424571 length	     5 (octal),     5. (decimal)
+
+	M2.5	      424565	Entry	Relocatable 	
+
+		*************
+
+M26	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424572 ends at	424576 length	     5 (octal),     5. (decimal)
+
+	M2.6	      424572	Entry	Relocatable 	
+
+		*************
+
+M27	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424577 ends at	424605 length	     7 (octal),     7. (decimal)
+
+	M2.7	      424577	Entry	Relocatable 	
+
+		*************
+
+M210	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424606 ends at	424612 length	     5 (octal),     5. (decimal)
+
+	M2.10	      424606	Entry	Relocatable 	
+
+		*************
+
+M211	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424613 ends at	424620 length	     6 (octal),     6. (decimal)
+
+	M2.11	      424613	Entry	Relocatable 	
+
+		*************
+
+M31	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424621 ends at	424624 length	     4 (octal),     4. (decimal)
+
+	M3.1	      424621	Entry	Relocatable 	
+
+		*************
+
+		LINK symbol map of	M68INI		page 15
+
+
+M35	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424625 ends at	424632 length	     6 (octal),     6. (decimal)
+
+	M3.5	      424625	Entry	Relocatable 	
+
+		*************
+
+M37	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424633 ends at	424637 length	     5 (octal),     5. (decimal)
+
+	M3.7	      424633	Entry	Relocatable 	
+
+		*************
+
+M310	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424640 ends at	424643 length	     4 (octal),     4. (decimal)
+
+	M3.10	      424640	Entry	Relocatable 	
+
+		*************
+
+EXINIT	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424644 ends at	424664 length	    21 (octal),    17. (decimal)
+
+	EX.RST	      424644	Entry	Relocatable 		EX.SET	      424650	Entry	Relocatable 	
+	I.EXIN	      424657	Global	Relocatable Suppressed	S.EXIN	         217	Global	Absolute    Suppressed
+	X.EXIN	           0	Global	Absolute    Suppressed
+
+		*************
+
+EXCPT	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	424665 ends at	425373 length	   507 (octal),   327. (decimal)
+
+	EX.TBL	      425316	Entry	Relocatable 		EXC.AC	      425111	Global	Relocatable 	
+	EXCPT.	      424674	Entry	Relocatable 		RTEXC.	      424665	Entry	Relocatable 	
+
+		*************
+
+ATNACN	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+PNRET	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	425374 ends at	425403 length	    10 (octal),     8. (decimal)
+
+	PNTRY.	      425374	Entry	Relocatable 		PRTRN.	      425401	Entry	Relocatable 	
+
+		*************
+
+		LINK symbol map of	M68INI		page 16
+
+
+N11	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+N12	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+N13	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+N14	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+N15	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+N16	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+N32	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+N33	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+N34	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+		LINK symbol map of	M68INI		page 17
+
+
+N36	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+N311	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+N40	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+N50	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+N61	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+N62	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+N63	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+N64	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+N65	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+		LINK symbol map of	M68INI		page 18
+
+
+N66	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+N70	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+NUSER	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+RTREG	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	425404 ends at	425404 length	     1 (octal),     1. (decimal)
+
+	RT.REG	      425404	Entry	Relocatable 	
+
+		*************
+
+RXIO	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	425405 ends at	425405 length	     1 (octal),     1. (decimal)
+
+	RX.IO	      425405	Entry	Relocatable Suppressed
+
+		*************
+
+RXUSR	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	425406 ends at	425406 length	     1 (octal),     1. (decimal)
+
+	RX.USR	      425406	Entry	Relocatable Suppressed
+
+		*************
+
+PSARQ1	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+PEXINI	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	425407 ends at	425410 length	     2 (octal),     2. (decimal)
+
+	P.EXIN	      425407	Entry	Relocatable 	
+
+		*************
+
+		LINK symbol map of	M68INI		page 19
+
+
+PSGLFO	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	425411 ends at	425412 length	     2 (octal),     2. (decimal)
+
+	P.SGLF	      425411	Entry	Relocatable 	
+
+		*************
+
+PIOCHA	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	425413 ends at	425414 length	     2 (octal),     2. (decimal)
+
+	P.IOCH	      425413	Entry	Relocatable 	
+
+		*************
+
+PIOCNN	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	425415 ends at	425416 length	     2 (octal),     2. (decimal)
+
+	P.IOCN	      425415	Entry	Relocatable 	
+
+		*************
+
+PMODFI	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	425417 ends at	425420 length	     2 (octal),     2. (decimal)
+
+	P.MODF	      425417	Entry	Relocatable 	
+
+		*************
+
+PPPGRB	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	425421 ends at	425422 length	     2 (octal),     2. (decimal)
+
+	P.PPGR	      425421	Entry	Relocatable 	
+
+		*************
+
+PTENIO	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	425423 ends at	425424 length	     2 (octal),     2. (decimal)
+
+	P.TENI	      425423	Entry	Relocatable 	
+
+		*************
+
+PIOCLS	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	425425 ends at	425426 length	     2 (octal),     2. (decimal)
+
+	P.IOCL	      425425	Entry	Relocatable 	
+
+		*************
+
+PIOICM	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	425427 ends at	425430 length	     2 (octal),     2. (decimal)
+
+	P.IOIC	      425427	Entry	Relocatable 	
+		LINK symbol map of	M68INI		page 20
+PIOICM
+
+		*************
+
+PDUMPI	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	425431 ends at	425432 length	     2 (octal),     2. (decimal)
+
+	P.DUMP	      425431	Entry	Relocatable 	
+
+		*************
+
+POTTY	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	425433 ends at	425434 length	     2 (octal),     2. (decimal)
+
+	P.OTTY	      425433	Entry	Relocatable 	
+
+		*************
+
+PSARQ2	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+.MAIN	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+.MAIN	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+.MAIN	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+.MAIN	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+.MAIN	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+
+	Zero length module
+
+		*************
+
+		LINK symbol map of	M68INI		page 21
+
+
+SFVFY	from DSK:PASLIB.REL[31024,274427]	created by MACRO on 28-May-71 at 22:34:00
+	High segment starts at	425435 ends at	425435 length	     1 (octal),     1. (decimal)
+
+	SF$VFY	      425435	Entry	Relocatable 	
+
+		*************
+
+EXP1	from DSK:FORLIB.REL[31024,320155]	created by MACRO on  6-Feb-69 at 15:55:00
+	Low  segment starts at	  1653 ends at	  1730 length	    56 (octal),    46. (decimal)
+
+	EXP1.	        1654	Entry	Relocatable 	
+
+		*************
+
+EXP3	from DSK:FORLIB.REL[31024,320155]	created by MACRO on  6-Feb-69 at 15:55:00
+	Low  segment starts at	  1731 ends at	  2015 length	    65 (octal),    53. (decimal)
+
+	EXP3.	        1732	Entry	Relocatable 		EXP3..	        1734	Entry	Relocatable 	
+
+		*************
+
+EXP2	from DSK:FORLIB.REL[31024,320155]	created by MACRO on  6-Feb-69 at 15:55:00
+	Low  segment starts at	  2016 ends at	  2134 length	   117 (octal),    79. (decimal)
+
+	EXP2.	        2017	Entry	Relocatable 		EXP2..	        2021	Entry	Relocatable 	
+
+		*************
+
+EXP.	from DSK:FORLIB.REL[31024,320155]	created by MACRO on  6-Feb-69 at 15:55:00
+	Low  segment starts at	  2135 ends at	  2226 length	    72 (octal),    58. (decimal)
+
+	EXP.	        2136	Entry	Relocatable 	
+
+		*************
+
+ALOG.	from DSK:FORLIB.REL[31024,320155]	created by MACRO on  6-Feb-69 at 15:55:00
+	Low  segment starts at	  2227 ends at	  2333 length	   105 (octal),    69. (decimal)
+
+	ALG10.	        2230	Entry	Relocatable 		ALOG.	        2244	Entry	Relocatable 	
+
+		*************
+
+FORDUM	from DSK:FORLIB.REL[31024,320155]	created by MACRO on  6-Feb-69 at 15:55:00
+	Low  segment starts at	  2334 ends at	  2742 length	   407 (octal),   263. (decimal)
+
+	FORER%	        2354	Entry	Relocatable 		FORER.	        2354	Entry	Relocatable 	
+
+		*************
+
+
+	Index to LINK symbol map of	M68INI		page 22
+
+	Name	Page	Name	Page	Name	Page	Name	Page
+
+	ALOG.	21	IOMS1	 8	N13	16	PNRET	15
+	ASSER	12	IOMS2	 8	N14	16	POTTY	20
+	ATNACN	15	IOMS3	 8	N15	16	PPGRB.	11
+	BUFGET	11	IORLC	 8	N16	16	PPPGRB	19
+	COROUT	 4	IORLR	 8	N311	17	PRFID	13
+	CSP	 6	IORWR	 6	N32	16	PSARQ1	18
+	CSPFF	 5	IOSTR	 8	N33	16	PSARQ2	20
+	DBFBFK	 7	IOSTT	10	N34	16	PSGLFO	19
+	DECOD.	10	IOTXH	 6	N36	17	PTENIO	19
+	DISPAT	10	IOWRB	 7	N40	17	PTRER	12
+	DUMPIO	 4	M21	13	N50	17	RTREG	18
+	ESCAP	13	M210	14	N61	17	RXIO	18
+	EXCPT	15	M211	14	N62	17	RXUSR	18
+	EXINIT	15	M22	13	N63	17	SFOR	12
+	EXIO	13	M23	13	N64	17	SFVFY	21
+	EXP.	21	M24	14	N65	17	SGLEXP	12
+	EXP1	21	M25	14	N66	18	STACK	 4
+	EXP2	21	M26	14	N70	18	SUBER	12
+	EXP3	21	M27	14	NUSER	18	SZOVL	13
+	EXUSR	13	M31	14	O.TTY	 6	TEMPNA	 3
+	FAK33	11	M310	15	PASDAT	 2	TENIO	10
+	FAK34	11	M35	15	PASERR	 3	TERFAK	11
+	FAK35	11	M37	15	PASINI	 1	TWAIT	 9
+	FAK36	11	M68IMD	 1	PASMON	 4	VALER	12
+	FAK37	11	MFF	 5	PASMTH	 3	.MAIN	 9
+	FORDUM	21	MFFP	 5	PASTAL	 3	.MAIN	 9
+	FSAVE	12	MFX	 5	PASUTL	 1	.MAIN	 9
+	IOBIN	 6	MODFIT	 4	PASVAL	 3	.MAIN	 9
+	IOCHAR	 8	MRF	 5	PDUMPI	20	.MAIN	 9
+	IOCHER	10	MS	 5	PEXINI	18	.MAIN	20
+	IOCLS	 6	MSFIN	 5	PIOCHA	19	.MAIN	20
+	IOCNNL	 7	MSP	 5	PIOCLS	19	.MAIN	20
+	IOFSZ	 7	MSTR	 6	PIOCNN	19	.MAIN	20
+	IOGET	 7	N11	16	PIOICM	19	.MAIN	20
+	IOICM	 7	N12	16	PMODFI	19
+
+	[End of LINK map of	M68INI]
+|@ZX

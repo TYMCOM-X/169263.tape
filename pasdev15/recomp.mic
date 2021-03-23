@@ -1,0 +1,14 @@
+r pascal
+odms/trace
+use/trace
+putup/trace
+update/trace
+tricky/trace
+modmak/trace
+delmod/trace
+build/trace
+wrtsym/trace
+token2/trace
+pack/trace
+print/trace
+

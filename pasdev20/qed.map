@@ -1,0 +1,424 @@
+		LINK symbol map of	QED		page 1
+	Produced by LINK version 4(771030)-4 on 27-Apr-80 at 18:59:16
+
+	Low  segment starts at	     0 ends at	   575 length	   576 = 1P
+	High segment starts at	400000 ends at	431127 length	 31130 = 26P
+	130 words free in Low segment, 424 words free in high segment
+	225 Global symbols loaded, therefore min. hash size is 251
+	Start address is 400056, located in program QED
+
+		*************
+
+JOBDAT-INITIAL-SYMBOLS
+
+	Zero length module
+
+		*************
+
+QED	from DSK:QED.REL[52250,245]	created on 14-Aug-79 at 20:10:00
+	Low  segment starts at	   140 ends at	   200 length	    41 (octal),    33. (decimal)
+	High segment starts at	400010 ends at	400076 length	    67 (octal),    55. (decimal)
+
+	QED	      400056	Entry	Relocatable 	
+
+		*************
+
+QEDCL	from DSK:QEDLIB.REL[52250,245]	created on 18-Apr-80 at 20:52:00
+	Low  segment starts at	   201 ends at	   354 length	   154 (octal),   108. (decimal)
+	High segment starts at	400077 ends at	406630 length	  6532 (octal),  3418. (decimal)
+
+	QEDCL	      406425	Entry	Relocatable 		QEXECU	      404131	Entry	Relocatable 	
+	QINITE	      400255	Entry	Relocatable 		QINIT	      400217	Entry	Relocatable 	
+	QSETTA	      400204	Entry	Relocatable 		QSETMA	      400167	Entry	Relocatable 	
+
+		*************
+
+QLD	from DSK:QEDLIB.REL[52250,245]	created on 18-Apr-80 at 20:52:00
+	Low  segment starts at	   355 ends at	   355 length	     1 (octal),     1. (decimal)
+	High segment starts at	406631 ends at	410520 length	  1670 (octal),   952. (decimal)
+
+	QLDEVA	      410056	Entry	Relocatable 		QLDPAR	      407526	Entry	Relocatable 	
+	QLDDIS	      406636	Entry	Relocatable 		QLD	      406636	Entry	Relocatable 	
+
+		*************
+
+QJOIN	from DSK:QEDLIB.REL[52250,245]	created on 18-Apr-80 at 20:52:00
+	Low  segment starts at	   356 ends at	   356 length	     1 (octal),     1. (decimal)
+	High segment starts at	410521 ends at	410703 length	   163 (octal),   115. (decimal)
+
+	QJOINL	      410526	Entry	Relocatable 		QJOIN	      410526	Entry	Relocatable 	
+
+		*************
+
+QSPLIT	from DSK:QEDLIB.REL[52250,245]	created on 18-Apr-80 at 20:52:00
+	Low  segment starts at	   357 ends at	   357 length	     1 (octal),     1. (decimal)
+	High segment starts at	410704 ends at	411275 length	   372 (octal),   250. (decimal)
+
+		LINK symbol map of	QED		page 2
+QSPLIT
+	QSPLIT	      410711	Entry	Relocatable 	
+
+		*************
+
+QEDTYP	from DSK:QEDLIB.REL[52250,245]	created on 18-Apr-80 at 20:52:00
+	Low  segment starts at	   360 ends at	   360 length	     1 (octal),     1. (decimal)
+	High segment starts at	411276 ends at	412000 length	   503 (octal),   323. (decimal)
+
+	DEFRAN	      411445	Entry	Relocatable 		QCMDS	      411277	Entry	Relocatable 	
+	SETPAR	      411752	Entry	Relocatable 		SOPS	      411717	Entry	Relocatable 	
+	SPLITO	      411733	Entry	Relocatable 	
+
+		*************
+
+QSUBST	from DSK:QEDLIB.REL[52250,245]	created on 18-Apr-80 at 20:52:00
+	Low  segment starts at	   361 ends at	   361 length	     1 (octal),     1. (decimal)
+	High segment starts at	412001 ends at	412524 length	   524 (octal),   340. (decimal)
+
+	QSUBST	      412006	Entry	Relocatable 	
+
+		*************
+
+QEDERR	from DSK:QEDLIB.REL[52250,245]	created on 18-Apr-80 at 20:52:00
+	Low  segment starts at	   362 ends at	   410 length	    27 (octal),    23. (decimal)
+	High segment starts at	412525 ends at	413106 length	   362 (octal),   242. (decimal)
+
+	QEDERR	      412613	Entry	Relocatable 	
+
+		*************
+
+QMARK	from DSK:QEDLIB.REL[52250,245]	created on 18-Apr-80 at 20:52:00
+	Low  segment starts at	   411 ends at	   411 length	     1 (octal),     1. (decimal)
+	High segment starts at	413107 ends at	413314 length	   206 (octal),   134. (decimal)
+
+	QMARKM	      413114	Entry	Relocatable 		QMARK	      413114	Entry	Relocatable 	
+
+		*************
+
+QPRINT	from DSK:QEDLIB.REL[52250,245]	created on 18-Apr-80 at 20:52:00
+	Low  segment starts at	   412 ends at	   412 length	     1 (octal),     1. (decimal)
+	High segment starts at	413315 ends at	413563 length	   247 (octal),   167. (decimal)
+
+	QLISTL	      413442	Entry	Relocatable 		PRLINE	      413322	Entry	Relocatable 	
+	QPRINT	      413322	Entry	Relocatable 	
+
+		*************
+
+QEDLN	from DSK:QEDLIB.REL[52250,245]	created on 18-Apr-80 at 20:52:00
+	Low  segment starts at	   413 ends at	   441 length	    27 (octal),    23. (decimal)
+	High segment starts at	413564 ends at	416617 length	  3034 (octal),  1564. (decimal)
+
+	QFILEW	      416402	Entry	Relocatable 		QTTYAP	      416260	Entry	Relocatable 	
+	QFILEA	      416027	Entry	Relocatable 		QUNBOU	      415775	Entry	Relocatable 	
+	QSETBO	      415660	Entry	Relocatable 		QSETOF	      415637	Entry	Relocatable 	
+		LINK symbol map of	QED		page 3
+QEDLN
+	QCOPYL	      415473	Entry	Relocatable 		QMOVEL	      415343	Entry	Relocatable 	
+	QFIRST	      415327	Entry	Relocatable 		QDOLLA	      415307	Entry	Relocatable 	
+	QBUFLE	      415270	Entry	Relocatable 		QDELLI	      415205	Entry	Relocatable 	
+	QADDLI	      415130	Entry	Relocatable 		QMODLI	      414773	Entry	Relocatable 	
+	QGETLI	      414722	Entry	Relocatable 		QINITB	      414645	Entry	Relocatable 	
+	QDELBU	      414575	Entry	Relocatable 		QEDLN	      414575	Entry	Relocatable 	
+
+		*************
+
+QREAD	from DSK:QEDLIB.REL[52250,245]	created on 18-Apr-80 at 20:52:00
+	Low  segment starts at	   442 ends at	   442 length	     1 (octal),     1. (decimal)
+	High segment starts at	416620 ends at	416761 length	   142 (octal),    98. (decimal)
+
+	QREAD	      416720	Entry	Relocatable 	
+
+		*************
+
+QSPRED	from DSK:QEDLIB.REL[52250,245]	created on 18-Apr-80 at 20:52:00
+	Low  segment starts at	   443 ends at	   444 length	     2 (octal),     2. (decimal)
+	High segment starts at	416762 ends at	417760 length	   777 (octal),   511. (decimal)
+
+	SPREDM	      417641	Entry	Relocatable 		SPREDP	      417615	Entry	Relocatable 	
+	SPREDD	      417000	Entry	Relocatable 		QSPRED	      417000	Entry	Relocatable 	
+
+		*************
+
+QSPAT	from DSK:QEDLIB.REL[52250,245]	created on 18-Apr-80 at 20:52:00
+	Low  segment starts at	   445 ends at	   457 length	    13 (octal),    11. (decimal)
+	High segment starts at	417761 ends at	423573 length	  3613 (octal),  1931. (decimal)
+
+	SPATMA	      422306	Entry	Relocatable 		SPATPA	      420345	Entry	Relocatable 	
+	QTOKEN	      420170	Entry	Relocatable 		SPATGE	      420150	Entry	Relocatable 	
+	SPATSE	      420121	Entry	Relocatable 		SPATDI	      417770	Entry	Relocatable 	
+	QSPAT	      417770	Entry	Relocatable 	
+
+		*************
+
+ONESCA	from DSK:QEDLIB.REL[52250,245]	created by MACRO on 18-Apr-80 at 20:52:00
+	Low  segment starts at	   460 ends at	   500 length	    21 (octal),    17. (decimal)
+	High segment starts at	423574 ends at	423674 length	   101 (octal),    65. (decimal)
+
+	ESCOFF	      423661	Entry	Relocatable 		ESCPOP	      423657	Entry	Relocatable 	
+	FIRESC	      423634	Entry	Relocatable 		MASK	      423640	Entry	Relocatable 	
+	ONESCA	      423574	Entry	Relocatable 		PUSHES	      423603	Entry	Relocatable 	
+	UNMASK	      423652	Entry	Relocatable 	
+
+		*************
+
+JOBINF	from RND:RDLIB.REL[52250,10]	created by MACRO on 12-Feb-79 at  1:25:00
+	High segment starts at	423675 ends at	424022 length	   126 (octal),    86. (decimal)
+
+	JOBINF	      423675	Entry	Relocatable 	
+
+		*************
+		LINK symbol map of	QED		page 4
+
+
+LOOKUP	from RND:RDLIB.REL[52250,10]	created on 12-Feb-79 at  1:25:00
+	Low  segment starts at	   501 ends at	   501 length	     1 (octal),     1. (decimal)
+	High segment starts at	424023 ends at	424223 length	   201 (octal),   129. (decimal)
+
+	LOOKUP	      424030	Entry	Relocatable 	
+
+		*************
+
+FILUTL	from RND:RDLIB.REL[52250,10]	created on 12-Feb-79 at  1:25:00
+	Low  segment starts at	   502 ends at	   502 length	     1 (octal),     1. (decimal)
+	High segment starts at	424224 ends at	425176 length	   753 (octal),   491. (decimal)
+
+	OPEN%F	      424716	Entry	Relocatable 		PR%FIL	      424513	Entry	Relocatable 	
+	FILUTL	      424513	Entry	Relocatable 	
+
+		*************
+
+QUERY	from RND:RDLIB.REL[52250,10]	created on 12-Feb-79 at  1:25:00
+	Low  segment starts at	   503 ends at	   503 length	     1 (octal),     1. (decimal)
+	High segment starts at	425177 ends at	425452 length	   254 (octal),   172. (decimal)
+
+	QUERY	      425236	Entry	Relocatable 	
+
+		*************
+
+IORESE	from RND:RDLIB.REL[52250,10]	created by MACRO on 12-Feb-79 at  1:25:00
+	High segment starts at	425453 ends at	425461 length	     7 (octal),     7. (decimal)
+
+	IORESE	      425453	Entry	Relocatable 		IRESET	      425454	Entry	Relocatable 	
+
+		*************
+
+PATHNA	from RND:RDLIB.REL[52250,10]	created by MACRO on 12-Feb-79 at  1:25:00
+	High segment starts at	425462 ends at	425574 length	   113 (octal),    75. (decimal)
+
+	PATHNA	      425462	Entry	Relocatable 	
+
+		*************
+
+FIRST	from DSK:PASLIB.REL[52250,264]	created by MACRO on 16-Apr-80 at 16:05:00
+
+	Zero length module
+
+		*************
+
+INI0	from DSK:PASLIB.REL[52250,264]	created by MACRO on 16-Apr-80 at 16:05:00
+	High segment starts at	425575 ends at	425575 length	     1 (octal),     1. (decimal)
+
+	INIT0.	      425575	Entry	Relocatable 	
+
+		*************
+
+		LINK symbol map of	QED		page 5
+
+
+LAST	from DSK:PASLIB.REL[52250,264]	created by MACRO on 16-Apr-80 at 16:05:00
+
+	Zero length module
+
+		*************
+
+PASMON	from DSK:PASLIB.REL[52250,264]	created by MACRO on 16-Apr-80 at 16:05:00
+	Low  segment starts at	   504 ends at	   506 length	     3 (octal),     3. (decimal)
+	High segment starts at	425576 ends at	426065 length	   270 (octal),   184. (decimal)
+
+	BFPAD.	         505	Global	Relocatable 		CSTMT.	         506	Global	Relocatable 	
+	DIE.	      425630	Global	Relocatable 		END.	      425623	Global	Relocatable 	
+	EXIT.	      425623	Global	Relocatable 		INITP.	      425576	Entry	Relocatable 	
+	TRACE	      425740	Global	Relocatable 		VINI0.	      425576	Entry	Relocatable 	
+	VINI1.	      425576	Global	Relocatable 		VINI2.	      425576	Global	Relocatable 	
+	VINI3.	      425576	Global	Relocatable 		VINI4.	      425576	Global	Relocatable 	
+	VINI5.	      425576	Global	Relocatable 		WRTDC.	      425722	Global	Relocatable 	
+	WRTPC.	      425712	Global	Relocatable 	
+
+		*************
+
+QUICKF	from DSK:PASLIB.REL[52250,264]	created by MACRO on 16-Apr-80 at 16:05:00
+	Low  segment starts at	   507 ends at	   513 length	     5 (octal),     5. (decimal)
+	High segment starts at	426066 ends at	426522 length	   435 (octal),   285. (decimal)
+
+	ALC0.	      426103	Entry	Relocatable 		DSPOS.	      426371	Entry	Relocatable 	
+	MARK.	      426432	Entry	Relocatable 		NEW.	      426142	Entry	Relocatable 	
+	ON%HEA	      426066	Entry	Relocatable 		RLEAS.	      426441	Entry	Relocatable 	
+
+		*************
+
+PASIOU	from DSK:PASLIB.REL[52250,264]	created by MACRO on 16-Apr-80 at 16:05:00
+	Low  segment starts at	   514 ends at	   521 length	     6 (octal),     6. (decimal)
+	High segment starts at	426523 ends at	427524 length	  1002 (octal),   514. (decimal)
+
+	BREAK.	      427405	Entry	Relocatable 		CLOSE.	      427224	Entry	Relocatable 	
+	CONER.	      427415	Entry	Relocatable 		FIXSP.	      427331	Entry	Relocatable 	
+	FLIST.	         515	Entry	Relocatable 		FLTRCC	      427430	Entry	Relocatable 	
+	FLTRCR	      427423	Entry	Relocatable 		FRECN.	      427257	Entry	Relocatable 	
+	GET.	      426650	Entry	Relocatable 		GETCH.	      426527	Entry	Relocatable 	
+	GETCN.	      427241	Entry	Relocatable 		GETLN.	      426523	Entry	Relocatable 	
+	OPEN.	      426766	Entry	Relocatable 		PASSCC	      427421	Entry	Relocatable 	
+	PASSCR	      427432	Entry	Relocatable 		PUT.	      426677	Entry	Relocatable 	
+	PUTCH.	      426665	Entry	Relocatable 		PUTLN.	      426730	Entry	Relocatable 	
+	PUTPG.	      426735	Entry	Relocatable 		RESET.	      426761	Entry	Relocatable 	
+	REWRT.	      427006	Entry	Relocatable 		TTYOP.	      427410	Entry	Relocatable 	
+	TWAIT.	      427363	Entry	Relocatable 	
+
+		*************
+
+		LINK symbol map of	QED		page 6
+
+
+WRINT	from DSK:PASLIB.REL[52250,264]	created by MACRO on 16-Apr-80 at 16:05:00
+	High segment starts at	427525 ends at	427557 length	    33 (octal),    27. (decimal)
+
+	WRINT.	      427525	Entry	Relocatable 	
+
+		*************
+
+PASNIO	from DSK:PASLIB.REL[52250,264]	created by MACRO on 16-Apr-80 at 16:05:00
+	High segment starts at	427560 ends at	430304 length	   525 (octal),   341. (decimal)
+
+	CNVTOR	      430150	Entry	Relocatable 		CVTOI.	      430134	Entry	Relocatable 	
+	CVTOR.	      430150	Entry	Relocatable 		READI.	      430031	Entry	Relocatable 	
+	READR.	      430154	Entry	Relocatable 		STR2R.	      430140	Entry	Relocatable 	
+	WRTRL.	      427560	Entry	Relocatable 	
+
+		*************
+
+WRITC	from DSK:PASLIB.REL[52250,264]	created by MACRO on 16-Apr-80 at 16:05:00
+	High segment starts at	430305 ends at	430314 length	    10 (octal),     8. (decimal)
+
+	WRITC.	      430305	Entry	Relocatable 	
+
+		*************
+
+WRTSTR	from DSK:PASLIB.REL[52250,264]	created by MACRO on 16-Apr-80 at 16:05:00
+	High segment starts at	430315 ends at	430335 length	    21 (octal),    17. (decimal)
+
+	WRPST.	      430321	Entry	Relocatable 		WRSST.	      430315	Entry	Relocatable 	
+	WRUST.	      430323	Entry	Relocatable 		WRVST.	      430317	Entry	Relocatable 	
+
+		*************
+
+WRTSUB	from DSK:PASLIB.REL[52250,264]	created by MACRO on 16-Apr-80 at 16:05:00
+	High segment starts at	430336 ends at	430362 length	    25 (octal),    21. (decimal)
+
+	TOSML.	      430357	Entry	Relocatable 		WRBLK.	      430336	Entry	Relocatable 	
+	WRMIN.	      430355	Entry	Relocatable 		WROPN.	      430343	Entry	Relocatable 	
+	WRSGN.	      430353	Entry	Relocatable 	
+
+		*************
+
+ROUND	from DSK:PASLIB.REL[52250,264]	created by MACRO on 16-Apr-80 at 16:05:00
+	High segment starts at	430363 ends at	430400 length	    16 (octal),    14. (decimal)
+
+	ROUND.	      430363	Entry	Relocatable 	
+
+		*************
+
+FTTY	from DSK:PASLIB.REL[52250,264]	created by MACRO on 16-Apr-80 at 16:05:00
+	Low  segment starts at	   522 ends at	   547 length	    26 (octal),    22. (decimal)
+
+	TTY	         522	Entry	Relocatable 	
+
+		LINK symbol map of	QED		page 7
+
+		*************
+
+FTTYOU	from DSK:PASLIB.REL[52250,264]	created by MACRO on 16-Apr-80 at 16:05:00
+	Low  segment starts at	   550 ends at	   575 length	    26 (octal),    22. (decimal)
+
+	TTYOUT	         550	Entry	Relocatable 	
+
+		*************
+
+CBPSS	from DSK:PASLIB.REL[52250,264]	created by MACRO on 16-Apr-80 at 16:05:00
+	High segment starts at	430401 ends at	430405 length	     5 (octal),     5. (decimal)
+
+	CBPSS.	      430401	Entry	Relocatable 	
+
+		*************
+
+PRTSTR	from DSK:PASLIB.REL[52250,264]	created by MACRO on 16-Apr-80 at 16:05:00
+	High segment starts at	430406 ends at	430522 length	   115 (octal),    77. (decimal)
+
+	CMFF.	      430406	Entry	Relocatable 		CMPSS.	      430450	Entry	Relocatable 	
+	CMSF.	      430412	Entry	Relocatable 		CMSSR.	      430432	Entry	Relocatable 	
+	CTSS.	      430507	Entry	Relocatable 	
+
+		*************
+
+PRTIXF	from DSK:PASLIB.REL[52250,264]	created by MACRO on 16-Apr-80 at 16:05:00
+	High segment starts at	430523 ends at	430562 length	    40 (octal),    32. (decimal)
+
+	IX3SS.	      430524	Entry	Relocatable 		IXSS.	      430523	Entry	Relocatable 	
+
+		*************
+
+PRTVFF	from DSK:PASLIB.REL[52250,264]	created by MACRO on 16-Apr-80 at 16:05:00
+	High segment starts at	430563 ends at	430607 length	    25 (octal),    21. (decimal)
+
+	VF3SS.	      430564	Entry	Relocatable 		VFSS.	      430563	Entry	Relocatable 	
+
+		*************
+
+PRFID	from DSK:PASLIB.REL[52250,264]	created by MACRO on 16-Apr-80 at 16:05:00
+	High segment starts at	430610 ends at	431022 length	   213 (octal),   139. (decimal)
+
+	PRFID.	      430610	Entry	Relocatable 	
+
+		*************
+
+PASERR	from DSK:PASLIB.REL[52250,264]	created by MACRO on 16-Apr-80 at 16:05:00
+	High segment starts at	431023 ends at	431105 length	    63 (octal),    51. (decimal)
+
+	CORER.	      431034	Entry	Relocatable 		FORER.	      431037	Entry	Relocatable 	
+	INXER.	      431026	Entry	Relocatable 		PTRER.	      431023	Entry	Relocatable 	
+	SRERR.	      431031	Entry	Relocatable 	
+
+		*************
+		LINK symbol map of	QED		page 8
+
+
+PASENT	from DSK:PASLIB.REL[52250,264]	created by MACRO on 16-Apr-80 at 16:05:00
+	High segment starts at	431106 ends at	431116 length	    11 (octal),     9. (decimal)
+
+	KI10N.	      431106	Entry	Relocatable 		KI10X.	      431113	Entry	Relocatable 	
+	PNTRY.	      431106	Entry	Relocatable 		PRTRN.	      431113	Entry	Relocatable 	
+
+		*************
+
+UNWND	from DSK:PASLIB.REL[52250,264]	created by MACRO on 16-Apr-80 at 16:05:00
+	High segment starts at	431117 ends at	431127 length	    11 (octal),     9. (decimal)
+
+	UNWND.	      431117	Entry	Relocatable 	
+
+		*************
+
+
+	Index to LINK symbol map of	QED		page 9
+
+	Name	Page	Name	Page	Name	Page	Name	Page
+
+	CBPSS	 7	PASENT	 8	QEDCL	 1	QSPRED	 3
+	FILUTL	 4	PASERR	 7	QEDERR	 2	QSUBST	 2
+	FIRST	 4	PASIOU	 5	QEDLN	 2	QUERY	 4
+	FTTY	 6	PASMON	 5	QEDTYP	 2	QUICKF	 5
+	FTTYOU	 7	PASNIO	 6	QJOIN	 1	ROUND	 6
+	INI0	 4	PATHNA	 4	QLD	 1	UNWND	 8
+	IORESE	 4	PRFID	 7	QMARK	 2	WRINT	 6
+	JOBINF	 3	PRTIXF	 7	QPRINT	 2	WRITC	 6
+	LAST	 5	PRTSTR	 7	QREAD	 3	WRTSTR	 6
+	LOOKUP	 4	PRTVFF	 7	QSPAT	 3	WRTSUB	 6
+	ONESCA	 3	QED	 1	QSPLIT	 1
+
+	[End of LINK map of	QED]

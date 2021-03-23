@@ -1,0 +1,2359 @@
+       File DSK:EXE015.PAS[31024,274425]   Compiled 10-Aug-82 11:00   Pascal, Version 2A(440)-1
+
+       File DSK:EXE015.PAS[31024,274425]   Compiled 10-Aug-82 11:00   Pascal, Version 2A(440)-1
+
+       File DSK:EXE015.PAS[31024,274425]   Compiled 10-Aug-82 11:00   Pascal, Version 2A(440)-1
+
+       File DSK:EXE015.PAS[31024,274425]   Compiled 10-Aug-82 11:00   Pascal, Version 2A(440)-1
+
+
+
+
+
+			    $$$$$   $   $   $$$$$     $$      $     $$$$$
+			    $       $   $   $        $  $    $$     $    
+			    $        $ $    $        $  $     $     $$$$ 
+			    $$$       $     $$$      $  $     $         $
+			    $        $ $    $        $  $     $         $
+			    $       $   $   $        $  $     $     $   $
+			    $$$$$   $   $   $$$$$     $$     $$$     $$$ 
+
+
+				    DSK:EXE015.PAS[31024,274425]
+
+
+Options in effect: 
+
+	CHECK, NOSPECIAL, NOMAP, NOSYMBOLS, NOCALLS, ASSEMBLY, NOXREF, TRACE, QBLOCKS, NOOPTIMIZE, 
+	CODE, NODEBUG, FINISH, NOGLOBAL, NOMAINSEG, NOOVERLAY, AUTOQUICK, SOURCE, NOSTANDARD, 
+	LENGTH (45), WIDTH (102), NOEXTLENGTH, STORAGE (2048), ALLOC (0), ENABLE(M68)
+
+
+
+
+       File DSK:EXE015.PAS[31024,274425]   Compiled 10-Aug-82 11:00   Pascal, Version 2A(440)-1
+
+       File DSK:EXE015.PAS[31024,274425]   Compiled 10-Aug-82 11:00   Pascal, Version 2A(440)-1
+
+       File DSK:EXE015.PAS[31024,274425]   Compiled 10-Aug-82 11:00   Pascal, Version 2A(440)-1
+
+       File DSK:EXE015.PAS[31024,274425]   Compiled 10-Aug-82 11:00   Pascal, Version 2A(440)-1
+       File DSK:EXE015.PAS[31024,274425]   Compiled 10-Aug-82 11:00   Pascal, Version 2A(440)-1
+
+       File DSK:EXE015.PAS[31024,274425]   Compiled 10-Aug-82 11:00   Pascal, Version 2A(440)-1
+
+       File DSK:EXE015.PAS[31024,274425]   Compiled 10-Aug-82 11:00   Pascal, Version 2A(440)-1
+
+       File DSK:EXE015.PAS[31024,274425]   Compiled 10-Aug-82 11:00   Pascal, Version 2A(440)-1
+
+
+
+
+
+			    $$$$$   $   $   $$$$$     $$      $     $$$$$
+			    $       $   $   $        $  $    $$     $    
+			    $        $ $    $        $  $     $     $$$$ 
+			    $$$       $     $$$      $  $     $         $
+			    $        $ $    $        $  $     $         $
+			    $       $   $   $        $  $     $     $   $
+			    $$$$$   $   $   $$$$$     $$     $$$     $$$ 
+
+
+				    DSK:EXE015.PAS[31024,274425]
+
+
+Options in effect: 
+
+	CHECK, NOSPECIAL, NOMAP, NOSYMBOLS, NOCALLS, ASSEMBLY, NOXREF, TRACE, QBLOCKS, NOOPTIMIZE, 
+	CODE, NODEBUG, FINISH, NOGLOBAL, NOMAINSEG, NOOVERLAY, AUTOQUICK, SOURCE, NOSTANDARD, 
+	LENGTH (45), WIDTH (102), NOEXTLENGTH, STORAGE (2048), ALLOC (0), ENABLE(M68)
+
+
+
+
+       File DSK:EXE015.PAS[31024,274425]   Compiled 10-Aug-82 11:00   Pascal, Version 2A(440)-1
+
+       File DSK:EXE015.PAS[31024,274425]   Compiled 10-Aug-82 11:00   Pascal, Version 2A(440)-1
+
+       File DSK:EXE015.PAS[31024,274425]   Compiled 10-Aug-82 11:00   Pascal, Version 2A(440)-1
+
+       File DSK:EXE015.PAS[31024,274425]   Compiled 10-Aug-82 11:00   Pascal, Version 2A(440)-1
+MODULE  EXE015       DSK:EXE015.PAS[31024,274425]                                      10-Aug-82 11:00
+SECTION 0                                                                                       PAGE 1
+
+    1	program exe015 options check;
+    2	const
+    3	   max_integer = maximum(integer);MODULE  EXE015       DSK:EXE015.PAS[31024,274425]                                      10-Aug-82 11:00
+SECTION 1            initialize                                                                 PAGE 2
+
+    2	public procedure initialize;
+    3	begin
+    4	   rewrite(tty);
+    5	   writeln(tty,'Begin EXE015');
+    6	   break(tty);
+    7	end;MODULE  EXE015       DSK:EXE015.PAS[31024,274425]                                      10-Aug-82 11:00
+SECTION 2            error                                                                      PAGE 3
+
+    2	public procedure error (error_number : integer);
+    3	begin
+    4	   writeln(tty,'Error ',error_number);
+    5	   break(tty);
+    6	end;MODULE  EXE015       DSK:EXE015.PAS[31024,274425]                                      10-Aug-82 11:00
+SECTION 3            test_mask_unmask_pending_masked                                            PAGE 4
+
+    2	public procedure test_mask_unmask_pending_masked;
+    3	begin
+    4	   if masked(attention) then
+    5	      error(100);
+    6	   if pending(attention) then
+    7	      error(101);
+    8	   mask(attention);
+    9	   if not masked(attention) then
+   10	      error(102);
+   11	   if pending(attention) then
+   12	      error(103);
+   13	   unmask(attention);
+   14	   if masked(attention) then
+   15	      error(104);
+   16	   if pending(attention) then
+   17	      error(105);
+   18	end;MODULE  EXE015       DSK:EXE015.PAS[31024,274425]                                      10-Aug-82 11:00
+SECTION 4            test_with                                                                  PAGE 5
+
+    2	(* verify restoration of "with" register *)
+    3	public procedure test_with;
+    4	type
+    5	   local_record = record
+    6	      field_1 : integer;
+    7	      field_2 : integer;
+    8	   end;
+    9	var
+   10	   local_structure : ^local_record;
+   11	
+   12	   procedure inner;
+   13	   type 
+   14	      inner_record = record
+   15	         inner_1 : integer;
+   16	         inner_2 : integer;
+   17	      end;
+   18	   var
+   19	      inner_structure : ^inner_record;
+   20	   begin
+   21	      new(inner_structure);
+   22	      with inner_structure^ do
+   23	      begin
+   24	         inner_1:=max_integer;
+   25	         inner_2:=max_integer;
+   26	         inner_1:=inner_1*inner_2;
+   27	         error(110);
+   28	         exception
+   29	            math_error    : begin
+   30	                               if mathstatus<>math_int_ovf then
+   31	                                  error(111);
+   32	                               if inner_2<>max_integer then
+   33	                                  error(112);
+   34	                            end;
+   35	            allconditions : error(113);
+   36	      end;
+   37	   end;
+   38	
+   39	begin
+   40	   new(local_structure);
+   41	   with local_structure^ do
+   42	   begin
+   43	      field_1:=max_integer;MODULE  EXE015       DSK:EXE015.PAS[31024,274425]                                      10-Aug-82 11:00
+SECTION 4            test_with                                                                  PAGE 6
+
+   44	      field_2:=0;
+   45	      inner;
+   46	      field_1:=field_1 div field_2;
+   47	      error(114);
+   48	      exception
+   49	         math_error    : begin
+   50	                            if mathstatus<>math_zero_divide then
+   51	                               error(115);
+   52	                            if field_2<>0 then
+   53	                               error(116);
+   54	                         end;
+   55	         allconditions : error(117);
+   56	   end;
+   57	end;MODULE  EXE015       DSK:EXE015.PAS[31024,274425]                                      10-Aug-82 11:00
+SECTION 5            test_others                                                                PAGE 7
+
+    2	(* verify invocation of "others" handler *)
+    3	public procedure test_others;
+    4	var
+    5	   integer_1 : integer;
+    6	   integer_2 : integer;
+    7	begin
+    8	   integer_1:=max_integer;
+    9	   integer_2:=0;
+   10	   integer_1:=integer_1 div integer_2;
+   11	   error(120);
+   12	   exception
+   13	      program_error : error(121);
+   14	      others        : ;
+   15	end;MODULE  EXE015       DSK:EXE015.PAS[31024,274425]                                      10-Aug-82 11:00
+SECTION 6            test_resignal_labelled                                                     PAGE 8
+
+    2	(* try resignal from a labelled handler *)
+    3	public procedure test_resignal_labelled;
+    4	
+    5	   procedure inner;
+    6	   var
+    7	      integer_1 : integer;
+    8	      integer_2 : integer;
+    9	   begin
+   10	      integer_1:=max_integer;
+   11	      integer_2:=0;
+   12	      integer_1:=integer_1 div integer_2;
+   13	      error(130);
+   14	      exception
+   15	         math_error    : begin
+   16	                            if mathstatus<>math_zero_divide then
+   17	                               error(131);
+   18	                            signal();
+   19	                         end;
+   20	         allconditions : error(132);
+   21	   end;
+   22	
+   23	begin
+   24	   inner;
+   25	   error(133);
+   26	   exception
+   27	      math_error    : if mathstatus<>math_zero_divide then
+   28	                         error(134);
+   29	      allconditions : error(135);
+   30	end;MODULE  EXE015       DSK:EXE015.PAS[31024,274425]                                      10-Aug-82 11:00
+SECTION 7            test_resignal_others                                                       PAGE 9
+
+    2	(* try resignal from an others handler *)
+    3	public procedure test_resignal_others;
+    4	
+    5	   procedure inner;
+    6	   var
+    7	      integer_1 : integer;
+    8	      integer_2 : integer;
+    9	   begin
+   10	      integer_1:=max_integer;
+   11	      integer_2:=0;
+   12	      integer_1:=integer_1 div integer_2;
+   13	      error(140);
+   14	      exception
+   15	         program_error : error(141);
+   16	         others        : signal();
+   17	   end;
+   18	
+   19	begin
+   20	   inner;
+   21	   error(142);
+   22	   exception
+   23	      program_error : error(143);
+   24	      others        : ;
+   25	end;MODULE  EXE015       DSK:EXE015.PAS[31024,274425]                                      10-Aug-82 11:00
+SECTION 8            test_exception_with_inner_handler                                         PAGE 10
+
+    2	(* try an exception within a handler, which should be handled by the local handler *)
+    3	public procedure test_exception_with_inner_handler;
+    4	exception
+    5	   explicit_signal;
+    6	var
+    7	   integer_1 : integer;
+    8	   integer_2 : integer;
+    9	begin
+   10	   integer_1:=max_integer;
+   11	   integer_2:=0;
+   12	   integer_1:=integer_1 div integer_2;
+   13	   error(150);
+   14	   exception
+   15	      math_error    : begin
+   16	                         if mathstatus<>math_zero_divide then
+   17	                            error(151);
+   18	                         signal(explicit_signal);
+   19	                         error(152);
+   20	                         exception
+   21	                            explicit_signal : ;
+   22	                            allconditions   : error(153);
+   23	                         end;
+   24	      allconditions : error(154);
+   25	end;MODULE  EXE015       DSK:EXE015.PAS[31024,274425]                                      10-Aug-82 11:00
+SECTION 9            test_exception_with_outer_handler                                         PAGE 11
+
+    2	(* try an exception within a handler, which should be handled by the outer handler *)
+    3	public procedure test_exception_with_outer_handler;
+    4	exception
+    5	   explicit_signal;
+    6	var
+    7	   integer_1 : integer;
+    8	   integer_2 : integer;
+    9	begin
+   10	   integer_1:=max_integer;
+   11	   integer_2:=0;
+   12	   begin
+   13	      integer_1:=integer_1 div integer_2;
+   14	      error(160);
+   15	      exception
+   16	         math_error    : begin
+   17	                            if mathstatus<>math_zero_divide then
+   18	                               error(161);
+   19	                            signal(explicit_signal);
+   20	                            error(162);
+   21	                         end;
+   22	         allconditions : error(163);
+   23	   end;
+   24	   error(164);
+   25	   exception
+   26	      explicit_signal : ;
+   27	      allconditions   : error(165);
+   28	end;MODULE  EXE015       DSK:EXE015.PAS[31024,274425]                                      10-Aug-82 11:00
+SECTION 10           test_local_goto                                                           PAGE 12
+
+    2	(* try a simple goto out of a handler *)
+    3	public procedure test_local_goto;
+    4	label
+    5	   1;
+    6	var
+    7	   integer_1 : integer;
+    8	   integer_2 : integer;
+    9	begin
+   10	   integer_1:=max_integer;
+   11	   integer_2:=0;
+   12	   integer_1:=integer_1 div integer_2;
+   13	   error(170);
+   14	1: return;
+   15	   error(171);
+   16	   exception
+   17	      math_error      : begin
+   18	                           if mathstatus<>math_zero_divide then
+   19	                              error(172);
+   20	                           goto 1;
+   21	                           error(173);
+   22	                        end;
+   23	      allconditions   : error(174);
+   24	end;MODULE  EXE015       DSK:EXE015.PAS[31024,274425]                                      10-Aug-82 11:00
+SECTION 11           test_non_local_goto                                                       PAGE 13
+
+    2	(* try a non-local goto out of a handler *)
+    3	public procedure test_non_local_goto;
+    4	label
+    5	   2;
+    6	
+    7	   procedure inner;
+    8	   var
+    9	      integer_1 : integer;
+   10	      integer_2 : integer;
+   11	   begin
+   12	      integer_1:=max_integer;
+   13	      integer_2:=0;
+   14	      integer_1:=integer_1 div integer_2;
+   15	      error(180);
+   16	      exception
+   17	         math_error    : begin
+   18	                            if mathstatus<>math_zero_divide then
+   19	                               error(181);
+   20	                            goto 2;
+   21	                            error(182);
+   22	                         end;
+   23	         allconditions : error(183);
+   24	   end;
+   25	
+   26	begin
+   27	   inner;
+   28	   error(184);
+   29	2: return;
+   30	end;MODULE  EXE015       DSK:EXE015.PAS[31024,274425]                                      10-Aug-82 11:00
+SECTION 12           test_handler_to_exception_goto                                            PAGE 14
+
+    2	(* verify restoration of proper handler when "goto-ing" out of multiple levels of handlers *)
+    3	public procedure test_handler_to_exception_goto;
+    4	exception
+    5	   explicit_signal;
+    6	label
+    7	   3,4;
+    8	var
+    9	   integer_1 : integer;
+   10	   integer_2 : integer;
+   11	begin
+   12	   goto 4;
+   13	3: signal(explicit_signal);
+   14	   error(190);
+   15	   begin
+   16	4:    integer_1:=max_integer;
+   17	      integer_2:=0;
+   18	      begin
+   19	         integer_1:=integer_1 div integer_2;
+   20	         error(191);
+   21	         exception
+   22	            math_error      : begin
+   23	                                 if mathstatus<>math_zero_divide then
+   24	                                    error(192);
+   25	                                 goto 3;
+   26	                              end;
+   27	            explicit_signal : error(193);
+   28	            allconditions   : error(194);
+   29	      end;
+   30	      error(195);
+   31	      exception
+   32	         math_error      : error(196);
+   33	         explicit_signal : error(197);
+   34	         allconditions   : error(198);
+   35	   end;
+   36	   error(199);
+   37	   exception
+   38	      math_error      : error(200);
+   39	      explicit_signal : ;
+   40	      allconditions   : error(201);
+   41	end;MODULE  EXE015       DSK:EXE015.PAS[31024,274425]                                      10-Aug-82 11:00
+SECTION 13           test_handler_to_signal_goto                                               PAGE 15
+
+    2	(* verify restoration of proper handler again, this time with user declared condition *)
+    3	public procedure test_handler_to_signal_goto;
+    4	exception
+    5	   explicit_signal;
+    6	label
+    7	   5,6;
+    8	begin
+    9	   goto 6;
+   10	5: signal(explicit_signal);
+   11	   error(210);
+   12	   begin
+   13	6:    ;
+   14	      begin
+   15	        signal(explicit_signal);
+   16	         error(211);
+   17	         exception
+   18	            explicit_signal : goto 5;
+   19	            allconditions   : error(213);
+   20	      end;
+   21	      error(214);
+   22	      exception
+   23	         explicit_signal : error(215);
+   24	         allconditions   : error(216);
+   25	   end;
+   26	   error(217);
+   27	   exception
+   28	      explicit_signal : ;
+   29	      allconditions   : error(218);
+   30	end;MODULE  EXE015       DSK:EXE015.PAS[31024,274425]                                      10-Aug-82 11:00
+SECTION 14           test_return_handler_to_procedure                                          PAGE 16
+
+    2	(* try a simple explicit "return" from a handler *)
+    3	public procedure test_return_handler_to_procedure; 
+    4	
+    5	   procedure inner;
+    6	   var
+    7	      integer_1 : integer;
+    8	      integer_2 : integer;
+    9	   begin
+   10	      integer_1:=max_integer;
+   11	      integer_2:=0;
+   12	      integer_1:=integer_1 div integer_2;
+   13	      error(220);
+   14	      exception
+   15	         math_error    : begin
+   16	                            if mathstatus<>math_zero_divide then
+   17	                               error(221);
+   18	                            return;
+   19	                            error(222);
+   20	                         end;
+   21	         allconditions : error(223);
+   22	   end;
+   23	
+   24	begin
+   25	   inner;
+   26	   exception
+   27	      allconditions : error(224);
+   28	end;MODULE  EXE015       DSK:EXE015.PAS[31024,274425]                                      10-Aug-82 11:00
+SECTION 15           test_return_handler_to_handler                                            PAGE 17
+
+    2	(* try a "return" from one active handler to another *)
+    3	public procedure test_return_handler_to_handler; 
+    4	var
+    5	   integer_1 : integer;
+    6	   integer_2 : integer;
+    7	
+    8	   procedure inner;
+    9	   exception
+   10	      explicit_signal;
+   11	   begin
+   12	      signal(explicit_signal);
+   13	      error(230);
+   14	      exception
+   15	         explicit_signal : begin
+   16	                              return;
+   17	                              error(231);
+   18	                      end;
+   19	         allconditions   : error(232);
+   20	   end;
+   21	
+   22	begin
+   23	   integer_1:=max_integer;
+   24	   integer_2:=0;
+   25	   integer_1:=integer_1 div integer_2;
+   26	   error(233);
+   27	   exception
+   28	      math_error    : begin
+   29	                         if mathstatus<>math_zero_divide then
+   30	                            error(234);
+   31	                         inner;
+   32	                      end;
+   33	      allconditions : error(235);
+   34	end;MODULE  EXE015       DSK:EXE015.PAS[31024,274425]                                      10-Aug-82 11:00
+SECTION 16           test_signal_with_inner_handler                                            PAGE 18
+
+    2	(* try explicitly signalling a user condition from within an active handler,
+    3	   with the second signal handled by a nested inner handler *)
+    4	public procedure test_signal_with_inner_handler;
+    5	exception
+    6	   explicit_signal;
+    7	begin
+    8	   signal(explicit_signal);
+    9	   error(240);
+   10	   exception
+   11	      explicit_signal : begin
+   12	                           signal(explicit_signal);
+   13	                           error(241);
+   14	                           exception
+   15	                              explicit_signal : ;
+   16	                              allconditions   : error(242);
+   17	                        end;
+   18	      allconditions   : error(243);
+   19	end;MODULE  EXE015       DSK:EXE015.PAS[31024,274425]                                      10-Aug-82 11:00
+SECTION 17           test_signal_with_outer_handler                                            PAGE 19
+
+    2	(* try explicitly signalling a user condition from within an active handler,
+    3	   this time with the second signal handled by an outer handler *)
+    4	public procedure test_signal_with_outer_handler;
+    5	exception
+    6	   explicit_signal;
+    7	begin
+    8	   ;
+    9	   begin
+   10	      signal(explicit_signal);
+   11	      error(250);
+   12	      exception
+   13	         explicit_signal : begin
+   14	                              signal(explicit_signal);
+   15	                              error(251);
+   16	                           end;
+   17	         allconditions   : error(252);
+   18	   end;
+   19	   error(253);
+   20	   exception
+   21	      explicit_signal : ;
+   22	      allconditions   : error(254);
+   23	end;MODULE  EXE015       DSK:EXE015.PAS[31024,274425]                                      10-Aug-82 11:00
+SECTION 18           perform_tests                                                             PAGE 20
+
+    2	public procedure perform_tests;
+    3	begin
+    4	   test_mask_unmask_pending_masked;
+    5	   test_with;
+    6	   test_others;
+    7	   test_resignal_labelled;
+    8	   test_resignal_others;
+    9	   test_exception_with_inner_handler;
+   10	   test_exception_with_outer_handler;
+   11	   test_local_goto;
+   12	   test_non_local_goto;
+   13	   test_handler_to_exception_goto;
+   14	   test_handler_to_signal_goto;
+   15	   test_return_handler_to_procedure;
+   16	   test_return_handler_to_handler;
+   17	   test_signal_with_inner_handler;
+   18	   test_signal_with_outer_handler;
+   19	
+   20	   (* Handler to catch any undetected exceptions *)
+   21	
+   22	   exception
+   23	      allconditions : begin
+   24	                         writeln(tty,'Undetected exception occurred');
+   25	                         exception_message;
+   26	                      end;
+   27	end;MODULE  EXE015       DSK:EXE015.PAS[31024,274425]                                      10-Aug-82 11:00
+SECTION 19           wrapup                                                                    PAGE 21
+
+    2	public procedure wrapup;
+    3	begin
+    4	   writeln(tty,'End EXE015');
+    5	end;MODULE  EXE015       DSK:EXE015.PAS[31024,274425]                                      10-Aug-82 11:00
+SECTION 20           main                                                                      PAGE 22
+
+    2	begin
+    3	   initialize;
+    4	   perform_tests;
+    5	   wrapup;
+    6	end.
+    7	  
+
+File   level   on page     name
+
+  0	 0	    1	DSK:EXE015.PAS[31024,274425]
+
+
+
+Section   in file   on page     title
+
+     2	      0	         3    error
+     1	      0	         2    initialize
+    20	      0	        22    main
+    18	      0	        20    perform_tests
+     8	      0	        10    test_exception_with_inner_handler
+     9	      0	        11    test_exception_with_outer_handler
+    12	      0	        14    test_handler_to_exception_goto
+    13	      0	        15    test_handler_to_signal_goto
+    10	      0	        12    test_local_goto
+     3	      0	         4    test_mask_unmask_pending_masked
+    11	      0	        13    test_non_local_goto
+     5	      0	         7    test_others
+     6	      0	         8    test_resignal_labelled
+     7	      0	         9    test_resignal_others
+    15	      0	        17    test_return_handler_to_handler 
+    14	      0	        16    test_return_handler_to_procedure 
+    16	      0	        18    test_signal_with_inner_handler
+    17	      0	        19    test_signal_with_outer_handler
+     4	      0	         5    test_with
+    19	      0	        21    wrapup
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            		      EXE015     IDNT	   0,0
+		      *
+		      *		 MC68000 Checkout Code Generator,  Aug 10, 1982  11:01:18 am
+		      *
+	 00000002		 SECTION   2
+	 00000000     STATIC.	 EQU	   *
+	 0000000A		 SECTION   10
+	 00000000     CODE.	 EQU	   *
+00000000 C21DD5EA     C.1	 DC.L	   $C21DD5EA			       Date-time
+00000004 0000			 DC.W	   0				         $0
+00000006 455845303135		 DC.B	   'EXE015'
+	 00000002		 SECTION   2
+		      *
+		      *		 Condition cells
+		      *
+00000000 7FFF			 DC.W	   32767			         $7FFF
+00000002 7FFF			 DC.W	   32767			         $7FFF
+00000004 7FFF			 DC.W	   32767			         $7FFF
+00000006 7FFF			 DC.W	   32767			         $7FFF
+00000008 7FFF			 DC.W	   32767			         $7FFF
+0000000A 7FFF			 DC.W	   32767			         $7FFF
+0000000C 7FFF			 DC.W	   32767			         $7FFF
+		      *
+		      *		 Unitialized static area
+		      *
+	 0000000A		 SECTION   10
+		      *
+		      *		 Constant area for subroutine INITIALIZE
+		      *
+0000000C 23434E	      K.1	 DC.B	   '#CN'
+0000000F 00000001		 DS.B	   1
+00000010 426567696E20 K.2	 DC.B	   'Begin EXE015'
+		      *
+		      *		 Begin subroutine INITIALIZE
+		      *
+				 XDEF	   INITIALI
+0000001C	      INITIALI
+0000001C 7010	      B.3	 MOVEQ	   #16,D0			         $10
+0000001E 2F00			 MOVE.L	   D0,-(A7)
+00000020 6112			 BSR.S	   X.3.1(PC)
+00000022 00000000		 DC.L	   C.1
+00000026 0000			 DC.W	   0				         $0
+00000028 000A			 DC.W	   10				       String length word
+0000002A 494E49544941		 DC.B	   'INITIALIZE'
+00000034 203CFFFFFFFC X.3.1	 MOVE.L	   #T.3-4,D0			         00000003A 4EB900000000		 JSR	   M.ENTRY
+		      *							       LINE 1/3
+		      *							       LINE 1/4
+00000040 487AFFCA     L.3.1	 PEA	   K.1(PC)			         CODE.+$C
+00000044 7003			 MOVEQ	   #3,D0			         $3
+00000046 3F00			 MOVE.W	   D0,-(A7)
+00000048 7032			 MOVEQ	   #50,D0			         $32
+0000004A 3F00			 MOVE.W	   D0,-(A7)
+0000004C 4EB900000000		 JSR	   T.REWRIT
+00000052 2B5F0000		 MOVE.L	   (A7)+,TTYOUTPUT-32768(A5)	         TTYOUTPUT
+		      *							       LINE 1/5
+00000056 202D0000		 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+0000005A 4A80			 TST.L	   D0
+0000005C 6606			 BNE.S	   X.3.2(PC)
+0000005E 4EB900000000		 JSR	   E.FILE
+00000064 720C	      X.3.2	 MOVEQ	   #12,D1			         $C
+00000066 3F01			 MOVE.W	   D1,-(A7)
+00000068 7204			 MOVEQ	   #4,D1			         $4
+0000006A 3F01			 MOVE.W	   D1,-(A7)
+0000006C 487AFFA2		 PEA	   K.2(PC)			         CODE.+$10
+00000070 2F00			 MOVE.L	   D0,-(A7)
+00000072 4EB900000000		 JSR	   T.WRITE
+00000078 2F00			 MOVE.L	   D0,-(A7)
+0000007A 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 1/6
+00000080 202D0000		 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00000084 4A80			 TST.L	   D0
+00000086 6606			 BNE.S	   X.3.3(PC)
+00000088 4EB900000000		 JSR	   E.FILE
+0000008E 2F00	      X.3.3	 MOVE.L	   D0,-(A7)
+00000090 4EB900000000		 JSR	   T.BREAK
+		      *							       LINE 1/7
+00000096 4EB900000000		 JSR	   M.RETURN
+		      *
+		      *		 Constant area for subroutine ERROR
+		      *
+0000009C 4572726F7220 K.3	 DC.B	   'Error '
+		      *
+		      *		 Begin subroutine ERROR
+		      *
+				 XDEF	   ERROR   
+000000A2	      ERROR   
+000000A2 7014	      B.4	 MOVEQ	   #20,D0			         $14
+000000A4 2F00			 MOVE.L	   D0,-(A7)
+000000A6 610E			 BSR.S	   X.4.1(PC)000000A8 00000000		 DC.L	   C.1
+000000AC 0000			 DC.W	   0				         $0
+000000AE 0005			 DC.W	   5				       String length word
+000000B0 4552524F52		 DC.B	   'ERROR'
+000000B5 00000001		 DS.B	   1				       Fill byte
+000000B6 203CFFFFFFFC X.4.1	 MOVE.L	   #T.4-4,D0			         0
+000000BC 4EB900000000		 JSR	   M.ENTRY
+		      *							       LINE 2/3
+		      *							       LINE 2/4
+000000C2 202D0000     L.4.1	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+000000C6 4A80			 TST.L	   D0
+000000C8 6606			 BNE.S	   X.4.2(PC)
+000000CA 4EB900000000		 JSR	   E.FILE
+000000D0 7206	      X.4.2	 MOVEQ	   #6,D1			         $6
+000000D2 3F01			 MOVE.W	   D1,-(A7)
+000000D4 7204			 MOVEQ	   #4,D1			         $4
+000000D6 3F01			 MOVE.W	   D1,-(A7)
+000000D8 487AFFC2		 PEA	   K.3(PC)			         CODE.+$9C
+000000DC 2F00			 MOVE.L	   D0,-(A7)
+000000DE 4EB900000000		 JSR	   T.WRITE
+000000E4 4267			 CLR.W	   -(A7)
+000000E6 486E0014		 PEA	   20(A6)			         ERROR_NUMBER
+000000EA 2F00			 MOVE.L	   D0,-(A7)
+000000EC 4EB900000000		 JSR	   T.WRITE
+000000F2 2F00			 MOVE.L	   D0,-(A7)
+000000F4 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 2/5
+000000FA 202D0000		 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+000000FE 4A80			 TST.L	   D0
+00000100 6606			 BNE.S	   X.4.3(PC)
+00000102 4EB900000000		 JSR	   E.FILE
+00000108 2F00	      X.4.3	 MOVE.L	   D0,-(A7)
+0000010A 4EB900000000		 JSR	   T.BREAK
+		      *							       LINE 2/6
+00000110 4EB900000000		 JSR	   M.RETURN
+		      *
+		      *		 Begin subroutine TEST_MASK_UNMASK_PENDING_MASKED
+		      *
+				 XDEF	   TEST_MAS
+00000116	      TEST_MAS
+00000116 7010	      B.5	 MOVEQ	   #16,D0			         $10
+00000118 2F00			 MOVE.L	   D0,-(A7)
+0000011A 6128			 BSR.S	   X.5.1(PC)
+0000011C 00000000		 DC.L	   C.1
+00000120 0000			 DC.W	   0				         $000000122 001F			 DC.W	   31				       String length word
+00000124 544553545F4D		 DC.B	   'TEST_MASK_UNMASK_PENDING_MASKED'
+00000143 00000001		 DS.B	   1				       Fill byte
+00000144 203CFFFFFFFC X.5.1	 MOVE.L	   #T.5-4,D0			         0
+0000014A 4EB900000000		 JSR	   M.ENTRY
+		      *							       LINE 3/3
+		      *							       LINE 3/4
+00000150 486D0000     L.5.1	 PEA	   E.CATTN-32768(A5)		         ATTENTION
+00000154 4EB900000000		 JSR	   E.MSKD
+0000015A 4A1F			 TST.B	   (A7)+
+0000015C 6708			 BEQ.S	   L.5.3(PC)
+		      *							       LINE 3/5
+0000015E 7064	      L.5.2	 MOVEQ	   #100,D0			         $64
+00000160 2F00			 MOVE.L	   D0,-(A7)
+00000162 6100FF3E		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+		      *							       LINE 3/6
+00000166 486D0000     L.5.3	 PEA	   E.CATTN-32768(A5)		         ATTENTION
+0000016A 4EB900000000		 JSR	   E.PEND
+00000170 4A1F			 TST.B	   (A7)+
+00000172 6708			 BEQ.S	   L.5.5(PC)
+		      *							       LINE 3/7
+00000174 7065	      L.5.4	 MOVEQ	   #101,D0			         $65
+00000176 2F00			 MOVE.L	   D0,-(A7)
+00000178 6100FF28		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+		      *							       LINE 3/8
+0000017C 486D0000     L.5.5	 PEA	   E.CATTN-32768(A5)		         ATTENTION
+00000180 4EB900000000		 JSR	   E.MASK
+		      *							       LINE 3/9
+00000186 486D0000		 PEA	   E.CATTN-32768(A5)		         ATTENTION
+0000018A 4EB900000000		 JSR	   E.MSKD
+00000190 4A1F			 TST.B	   (A7)+
+00000192 6608			 BNE.S	   L.5.7(PC)
+		      *							       LINE 3/10
+00000194 7066	      L.5.6	 MOVEQ	   #102,D0			         $66
+00000196 2F00			 MOVE.L	   D0,-(A7)
+00000198 6100FF08		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+		      *							       LINE 3/11
+0000019C 486D0000     L.5.7	 PEA	   E.CATTN-32768(A5)		         ATTENTION
+000001A0 4EB900000000		 JSR	   E.PEND
+000001A6 4A1F			 TST.B	   (A7)+
+000001A8 6708			 BEQ.S	   L.5.9(PC)
+		      *							       LINE 3/12
+000001AA 7067	      L.5.8	 MOVEQ	   #103,D0			         $67
+000001AC 2F00			 MOVE.L	   D0,-(A7)
+000001AE 6100FEF2		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2		      *							       LINE 3/13
+000001B2 486D0000     L.5.9	 PEA	   E.CATTN-32768(A5)		         ATTENTION
+000001B6 4EB900000000		 JSR	   E.UNMASK
+		      *							       LINE 3/14
+000001BC 486D0000		 PEA	   E.CATTN-32768(A5)		         ATTENTION
+000001C0 4EB900000000		 JSR	   E.MSKD
+000001C6 4A1F			 TST.B	   (A7)+
+000001C8 6708			 BEQ.S	   L.5.11(PC)
+		      *							       LINE 3/15
+000001CA 7068	      L.5.10	 MOVEQ	   #104,D0			         $68
+000001CC 2F00			 MOVE.L	   D0,-(A7)
+000001CE 6100FED2		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+		      *							       LINE 3/16
+000001D2 486D0000     L.5.11	 PEA	   E.CATTN-32768(A5)		         ATTENTION
+000001D6 4EB900000000		 JSR	   E.PEND
+000001DC 4A1F			 TST.B	   (A7)+
+000001DE 6708			 BEQ.S	   L.5.13(PC)
+		      *							       LINE 3/17
+000001E0 7069	      L.5.12	 MOVEQ	   #105,D0			         $69
+000001E2 2F00			 MOVE.L	   D0,-(A7)
+000001E4 6100FEBC		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+		      *							       LINE 3/18
+000001E8 4EB900000000 L.5.13	 JSR	   M.RETURN
+		      *
+		      *		 Begin subroutine INNER
+		      *
+000001EE 7014	      B.7	 MOVEQ	   #20,D0			         $14
+000001F0 2F00			 MOVE.L	   D0,-(A7)
+000001F2 610E			 BSR.S	   X.7.1(PC)
+000001F4 00000000		 DC.L	   C.1
+000001F8 0000			 DC.W	   0				         $0
+000001FA 0005			 DC.W	   5				       String length word
+000001FC 494E4E4552		 DC.B	   'INNER'
+00000201 00000001		 DS.B	   1				       Fill byte
+00000202 203CFFFFFFE6 X.7.1	 MOVE.L	   #T.7-4,D0			         -22
+00000208 4EB900000000		 JSR	   M.ENTRY
+0000020E 2D4FFFEE		 MOVE.L	   A7,ST.7(A6)			         -18
+		      *							       LINE 4/20
+		      *							       LINE 4/21
+00000212 7008	      L.7.1	 MOVEQ	   #8,D0			         $8
+00000214 2F00			 MOVE.L	   D0,-(A7)
+00000216 4EB900000000		 JSR	   H.NEW
+0000021C 2D5FFFFC		 MOVE.L	   (A7)+,-4(A6)			         INNER_STRUCTURE
+		      *							       LINE 4/22
+00000220 202EFFFC		 MOVE.L	   -4(A6),D0			         INNER_STRUCTURE00000224 4A80			 TST.L	   D0
+00000226 6606			 BNE.S	   X.7.2(PC)
+00000228 4EB900000000		 JSR	   E.PTR
+0000022E 2040	      X.7.2	 MOVEA.L   D0,A0
+00000230 2D48FFEA		 MOVE.L	   A0,W.7(A6)			         -22
+		      *							       LINE 4/23
+00000234 487A004A     L.7.2	 PEA	   H.7.3(PC)
+00000238 4EB900000000		 JSR	   E.HSET
+		      *							       LINE 4/24
+0000023E 206EFFEA		 MOVEA.L   W.7(A6),A0			         -22
+00000242 20BC7FFFFFFF		 MOVE.L	   #2147483647,(A0)		         $7FFFFFFF
+		      *							       LINE 4/25
+00000248 206EFFEA		 MOVEA.L   W.7(A6),A0			         -22
+0000024C 217C7FFFFFFF		 MOVE.L	   #2147483647,4(A0)		         $7FFFFFFF  $4
+	 0004
+		      *							       LINE 4/26
+00000254 206EFFEA		 MOVEA.L   W.7(A6),A0			         -22
+00000258 226EFFEA		 MOVEA.L   W.7(A6),A1			         -22
+0000025C 246EFFEA		 MOVEA.L   W.7(A6),A2			         -22
+00000260 2F11			 MOVE.L	   (A1),-(A7)
+00000262 2F2A0004		 MOVE.L	   4(A2),-(A7)			         $4
+00000266 4EB900000000		 JSR	   G.I4MULT
+0000026C 209F			 MOVE.L	   (A7)+,(A0)
+		      *							       LINE 4/27
+0000026E 706E			 MOVEQ	   #110,D0			         $6E
+00000270 2F00			 MOVE.L	   D0,-(A7)
+00000272 6100FE2E		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+00000276 604E			 BRA.S	   L.7.11(PC)
+		      *							       LINE 4/28
+00000278 2E6EFFEE     L.7.3	 MOVEA.L   ST.7(A6),A7			         -18
+0000027C 4EFB8002		 JMP	   H.7.3(PC,A0.W)
+00000280 00000000     H.7.3	 DC.L	   L.7.3
+00000284 00000000		 DC.L	   0				         $0
+00000288 FFF2			 DC.W	   -14				         $FFFFFFF2
+0000028A 0000			 DC.W	   E.CMATH			         MATH_ERROR
+0000028C 0000			 DC.W	   L.7.4+12-*
+0000028E FFFE			 DC.W	   -2				         $FFFFFFFE
+00000290 0000			 DC.W	   L.7.10+16-*
+00000292	      L.7.4
+		      *							       LINE 4/29
+		      *							       LINE 4/30
+00000292 4EB900000000 L.7.5	 JSR	   E.MATHST
+00000298 7003			 MOVEQ	   #3,D0			         $3
+0000029A B05F			 CMP.W	   (A7)+,D0
+0000029C 6708			 BEQ.S	   L.7.7(PC)		      *							       LINE 4/31
+0000029E 706F	      L.7.6	 MOVEQ	   #111,D0			         $6F
+000002A0 2F00			 MOVE.L	   D0,-(A7)
+000002A2 6100FDFE		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+		      *							       LINE 4/32
+000002A6 206EFFEA     L.7.7	 MOVEA.L   W.7(A6),A0			         -22
+000002AA 0CA87FFFFFFF		 CMPI.L	   #2147483647,4(A0)		         $7FFFFFFF  $4
+	 0004
+000002B2 6708			 BEQ.S	   L.7.9(PC)
+		      *							       LINE 4/33
+000002B4 7070	      L.7.8	 MOVEQ	   #112,D0			         $70
+000002B6 2F00			 MOVE.L	   D0,-(A7)
+000002B8 6100FDE8		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+		      *							       LINE 4/34
+000002BC 6008	      L.7.9	 BRA.S	   L.7.11(PC)
+		      *							       LINE 4/35
+000002BE 7071	      L.7.10	 MOVEQ	   #113,D0			         $71
+000002C0 2F00			 MOVE.L	   D0,-(A7)
+000002C2 6100FDDE		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+000002C6 42A7	      L.7.11	 CLR.L	   -(A7)
+000002C8 4EB900000000		 JSR	   E.HREST
+		      *							       LINE 4/36
+000002CE 206EFFEA		 MOVEA.L   W.7(A6),A0			         -22
+		      *							       LINE 4/37
+000002D2 4EB900000000		 JSR	   M.RETURN
+		      *
+		      *		 Begin subroutine TEST_WITH
+		      *
+				 XDEF	   TEST_WIT
+000002D8	      TEST_WIT
+000002D8 7010	      B.6	 MOVEQ	   #16,D0			         $10
+000002DA 2F00			 MOVE.L	   D0,-(A7)
+000002DC 6112			 BSR.S	   X.6.1(PC)
+000002DE 00000000		 DC.L	   C.1
+000002E2 0000			 DC.W	   0				         $0
+000002E4 0009			 DC.W	   9				       String length word
+000002E6 544553545F57		 DC.B	   'TEST_WITH'
+000002EF 00000001		 DS.B	   1				       Fill byte
+000002F0 203CFFFFFFE6 X.6.1	 MOVE.L	   #T.6-4,D0			         -22
+000002F6 4EB900000000		 JSR	   M.ENTRY
+000002FC 2D4FFFEE		 MOVE.L	   A7,ST.6(A6)			         -18
+		      *							       LINE 4/39
+		      *							       LINE 4/40
+00000300 7008	      L.6.1	 MOVEQ	   #8,D0			         $8
+00000302 2F00			 MOVE.L	   D0,-(A7)00000304 4EB900000000		 JSR	   H.NEW
+0000030A 2D5FFFFC		 MOVE.L	   (A7)+,-4(A6)			         LOCAL_STRUCTURE
+		      *							       LINE 4/41
+0000030E 202EFFFC		 MOVE.L	   -4(A6),D0			         LOCAL_STRUCTURE
+00000312 4A80			 TST.L	   D0
+00000314 6606			 BNE.S	   X.6.2(PC)
+00000316 4EB900000000		 JSR	   E.PTR
+0000031C 2040	      X.6.2	 MOVEA.L   D0,A0
+0000031E 2D48FFEA		 MOVE.L	   A0,W.6(A6)			         -22
+		      *							       LINE 4/42
+00000322 487A004E     L.6.2	 PEA	   H.6.3(PC)
+00000326 4EB900000000		 JSR	   E.HSET
+		      *							       LINE 4/43
+0000032C 206EFFEA		 MOVEA.L   W.6(A6),A0			         -22
+00000330 20BC7FFFFFFF		 MOVE.L	   #2147483647,(A0)		         $7FFFFFFF
+		      *							       LINE 4/44
+00000336 206EFFEA		 MOVEA.L   W.6(A6),A0			         -22
+0000033A 7000			 MOVEQ	   #0,D0			         $0
+0000033C 21400004		 MOVE.L	   D0,4(A0)			         $4
+		      *							       LINE 4/45
+00000340 2F0E			 MOVE.L	   A6,-(A7)
+00000342 6100FEAA		 BSR.L	   B.7(PC)			         INNER = CODE.+$1EE
+		      *							       LINE 4/46
+00000346 206EFFEA		 MOVEA.L   W.6(A6),A0			         -22
+0000034A 226EFFEA		 MOVEA.L   W.6(A6),A1			         -22
+0000034E 246EFFEA		 MOVEA.L   W.6(A6),A2			         -22
+00000352 2F11			 MOVE.L	   (A1),-(A7)
+00000354 2F2A0004		 MOVE.L	   4(A2),-(A7)			         $4
+00000358 4EB900000000		 JSR	   G.I4DIV
+0000035E 209F			 MOVE.L	   (A7)+,(A0)
+		      *							       LINE 4/47
+00000360 7072			 MOVEQ	   #114,D0			         $72
+00000362 2F00			 MOVE.L	   D0,-(A7)
+00000364 6100FD3C		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+00000368 604A			 BRA.S	   L.6.11(PC)
+		      *							       LINE 4/48
+0000036A 2E6EFFEE     L.6.3	 MOVEA.L   ST.6(A6),A7			         -18
+0000036E 4EFB8002		 JMP	   H.6.3(PC,A0.W)
+00000372 00000000     H.6.3	 DC.L	   L.6.3
+00000376 00000000		 DC.L	   0				         $0
+0000037A FFF2			 DC.W	   -14				         $FFFFFFF2
+0000037C 0000			 DC.W	   E.CMATH			         MATH_ERROR
+0000037E 0000			 DC.W	   L.6.4+12-*
+00000380 FFFE			 DC.W	   -2				         $FFFFFFFE
+00000382 0000			 DC.W	   L.6.10+16-*00000384	      L.6.4
+		      *							       LINE 4/49
+		      *							       LINE 4/50
+00000384 4EB900000000 L.6.5	 JSR	   E.MATHST
+0000038A 7004			 MOVEQ	   #4,D0			         $4
+0000038C B05F			 CMP.W	   (A7)+,D0
+0000038E 6708			 BEQ.S	   L.6.7(PC)
+		      *							       LINE 4/51
+00000390 7073	      L.6.6	 MOVEQ	   #115,D0			         $73
+00000392 2F00			 MOVE.L	   D0,-(A7)
+00000394 6100FD0C		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+		      *							       LINE 4/52
+00000398 206EFFEA     L.6.7	 MOVEA.L   W.6(A6),A0			         -22
+0000039C 4AA80004		 TST.L	   4(A0)			         $4
+000003A0 6708			 BEQ.S	   L.6.9(PC)
+		      *							       LINE 4/53
+000003A2 7074	      L.6.8	 MOVEQ	   #116,D0			         $74
+000003A4 2F00			 MOVE.L	   D0,-(A7)
+000003A6 6100FCFA		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+		      *							       LINE 4/54
+000003AA 6008	      L.6.9	 BRA.S	   L.6.11(PC)
+		      *							       LINE 4/55
+000003AC 7075	      L.6.10	 MOVEQ	   #117,D0			         $75
+000003AE 2F00			 MOVE.L	   D0,-(A7)
+000003B0 6100FCF0		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+000003B4 42A7	      L.6.11	 CLR.L	   -(A7)
+000003B6 4EB900000000		 JSR	   E.HREST
+		      *							       LINE 4/56
+000003BC 206EFFEA		 MOVEA.L   W.6(A6),A0			         -22
+		      *							       LINE 4/57
+000003C0 4EB900000000		 JSR	   M.RETURN
+		      *
+		      *		 Begin subroutine TEST_OTHERS
+		      *
+				 XDEF	   TEST_OTH
+000003C6	      TEST_OTH
+000003C6 7010	      B.8	 MOVEQ	   #16,D0			         $10
+000003C8 2F00			 MOVE.L	   D0,-(A7)
+000003CA 6114			 BSR.S	   X.8.1(PC)
+000003CC 00000000		 DC.L	   C.1
+000003D0 0000			 DC.W	   0				         $0
+000003D2 000B			 DC.W	   11				       String length word
+000003D4 544553545F4F		 DC.B	   'TEST_OTHERS'
+000003DF 00000001		 DS.B	   1				       Fill byte
+000003E0 203CFFFFFFE6 X.8.1	 MOVE.L	   #T.8-4,D0			         -22000003E6 4EB900000000		 JSR	   M.ENTRY
+000003EC 2D4FFFEA		 MOVE.L	   A7,ST.8(A6)			         -22
+		      *							       LINE 5/7
+000003F0 487A003A     L.8.1	 PEA	   H.8.2(PC)
+000003F4 4EB900000000		 JSR	   E.HSET
+		      *							       LINE 5/8
+000003FA 2D7C7FFFFFFF		 MOVE.L	   #2147483647,-4(A6)		         $7FFFFFFF  INTEGER_1
+	 FFFC
+		      *							       LINE 5/9
+00000402 7000			 MOVEQ	   #0,D0			         $0
+00000404 2D40FFF8		 MOVE.L	   D0,-8(A6)			         INTEGER_2
+		      *							       LINE 5/10
+00000408 2F2EFFFC		 MOVE.L	   -4(A6),-(A7)			         INTEGER_1
+0000040C 2F2EFFF8		 MOVE.L	   -8(A6),-(A7)			         INTEGER_2
+00000410 4EB900000000		 JSR	   G.I4DIV
+00000416 2D5FFFFC		 MOVE.L	   (A7)+,-4(A6)			         INTEGER_1
+		      *							       LINE 5/11
+0000041A 7078			 MOVEQ	   #120,D0			         $78
+0000041C 2F00			 MOVE.L	   D0,-(A7)
+0000041E 6100FC82		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+00000422 6024			 BRA.S	   L.8.5(PC)
+		      *							       LINE 5/12
+00000424 2E6EFFEA     L.8.2	 MOVEA.L   ST.8(A6),A7			         -22
+00000428 4EFB8002		 JMP	   H.8.2(PC,A0.W)
+0000042C 00000000     H.8.2	 DC.L	   L.8.2
+00000430 00000000		 DC.L	   0				         $0
+00000434 FFEE			 DC.W	   -18				         $FFFFFFEE
+00000436 0000			 DC.W	   E.CPROG			         PROGRAM_ERROR
+00000438 0000			 DC.W	   L.8.3+12-*
+0000043A FFFF			 DC.W	   -1				         $FFFFFFFF
+0000043C 0000			 DC.W	   L.8.4+16-*
+		      *							       LINE 5/13
+0000043E 7079	      L.8.3	 MOVEQ	   #121,D0			         $79
+00000440 2F00			 MOVE.L	   D0,-(A7)
+00000442 6100FC5E		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+00000446 4E71			 NOP	   
+		      *							       LINE 5/14
+00000448	      L.8.4
+00000448 42A7	      L.8.5	 CLR.L	   -(A7)
+0000044A 4EB900000000		 JSR	   E.HREST
+		      *							       LINE 5/15
+00000450 4EB900000000		 JSR	   M.RETURN
+		      *
+		      *		 Begin subroutine INNER
+		      *00000456 7014	      B.10	 MOVEQ	   #20,D0			         $14
+00000458 2F00			 MOVE.L	   D0,-(A7)
+0000045A 610E			 BSR.S	   X.10.1(PC)
+0000045C 00000000		 DC.L	   C.1
+00000460 0000			 DC.W	   0				         $0
+00000462 0005			 DC.W	   5				       String length word
+00000464 494E4E4552		 DC.B	   'INNER'
+00000469 00000001		 DS.B	   1				       Fill byte
+0000046A 203CFFFFFFE6 X.10.1	 MOVE.L	   #T.10-4,D0			         -22
+00000470 4EB900000000		 JSR	   M.ENTRY
+00000476 2D4FFFEA		 MOVE.L	   A7,ST.10(A6)			         -22
+		      *							       LINE 6/9
+0000047A 487A003A     L.10.1	 PEA	   H.10.2(PC)
+0000047E 4EB900000000		 JSR	   E.HSET
+		      *							       LINE 6/10
+00000484 2D7C7FFFFFFF		 MOVE.L	   #2147483647,-4(A6)		         $7FFFFFFF  INTEGER_1
+	 FFFC
+		      *							       LINE 6/11
+0000048C 7000			 MOVEQ	   #0,D0			         $0
+0000048E 2D40FFF8		 MOVE.L	   D0,-8(A6)			         INTEGER_2
+		      *							       LINE 6/12
+00000492 2F2EFFFC		 MOVE.L	   -4(A6),-(A7)			         INTEGER_1
+00000496 2F2EFFF8		 MOVE.L	   -8(A6),-(A7)			         INTEGER_2
+0000049A 4EB900000000		 JSR	   G.I4DIV
+000004A0 2D5FFFFC		 MOVE.L	   (A7)+,-4(A6)			         INTEGER_1
+		      *							       LINE 6/13
+000004A4 48780082		 PEA	   130				         $82
+000004A8 6100FBF8		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+000004AC 603E			 BRA.S	   L.10.8(PC)
+		      *							       LINE 6/14
+000004AE 2E6EFFEA     L.10.2	 MOVEA.L   ST.10(A6),A7			         -22
+000004B2 4EFB8002		 JMP	   H.10.2(PC,A0.W)
+000004B6 00000000     H.10.2	 DC.L	   L.10.2
+000004BA 00000000		 DC.L	   0				         $0
+000004BE FFEE			 DC.W	   -18				         $FFFFFFEE
+000004C0 0000			 DC.W	   E.CMATH			         MATH_ERROR
+000004C2 0000			 DC.W	   L.10.3+12-*
+000004C4 FFFE			 DC.W	   -2				         $FFFFFFFE
+000004C6 0000			 DC.W	   L.10.7+16-*
+000004C8	      L.10.3
+		      *							       LINE 6/15
+		      *							       LINE 6/16
+000004C8 4EB900000000 L.10.4	 JSR	   E.MATHST
+000004CE 7004			 MOVEQ	   #4,D0			         $4
+000004D0 B05F			 CMP.W	   (A7)+,D0000004D2 6708			 BEQ.S	   L.10.6(PC)
+		      *							       LINE 6/17
+000004D4 48780083     L.10.5	 PEA	   131				         $83
+000004D8 6100FBC8		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+		      *							       LINE 6/18
+000004DC 4EB900000000 L.10.6	 JSR	   E.RESIG
+		      *							       LINE 6/19
+000004E2 6008			 BRA.S	   L.10.8(PC)
+		      *							       LINE 6/20
+000004E4 48780084     L.10.7	 PEA	   132				         $84
+000004E8 6100FBB8		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+000004EC 42A7	      L.10.8	 CLR.L	   -(A7)
+000004EE 4EB900000000		 JSR	   E.HREST
+		      *							       LINE 6/21
+000004F4 4EB900000000		 JSR	   M.RETURN
+		      *
+		      *		 Begin subroutine TEST_RESIGNAL_LABELLED
+		      *
+				 XDEF	   TEST_RES
+000004FA	      TEST_RES
+000004FA 7010	      B.9	 MOVEQ	   #16,D0			         $10
+000004FC 2F00			 MOVE.L	   D0,-(A7)
+000004FE 611E			 BSR.S	   X.9.1(PC)
+00000500 00000000		 DC.L	   C.1
+00000504 0000			 DC.W	   0				         $0
+00000506 0016			 DC.W	   22				       String length word
+00000508 544553545F52		 DC.B	   'TEST_RESIGNAL_LABELLED'
+0000051E 203CFFFFFFEE X.9.1	 MOVE.L	   #T.9-4,D0			         -14
+00000524 4EB900000000		 JSR	   M.ENTRY
+0000052A 2D4FFFF2		 MOVE.L	   A7,ST.9(A6)			         -14
+		      *							       LINE 6/23
+0000052E 487A0020     L.9.1	 PEA	   H.9.2(PC)
+00000532 4EB900000000		 JSR	   E.HSET
+		      *							       LINE 6/24
+00000538 2F0E			 MOVE.L	   A6,-(A7)
+0000053A 6100FF1A		 BSR.L	   B.10(PC)			         INNER = CODE.+$456
+		      *							       LINE 6/25
+0000053E 48780085		 PEA	   133				         $85
+00000542 6100FB5E		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+00000546 6038			 BRA.S	   L.9.7(PC)
+		      *							       LINE 6/26
+00000548 2E6EFFF2     L.9.2	 MOVEA.L   ST.9(A6),A7			         -14
+0000054C 4EFB8002		 JMP	   H.9.2(PC,A0.W)
+00000550 00000000     H.9.2	 DC.L	   L.9.2
+00000554 00000000		 DC.L	   0				         $000000558 FFF6			 DC.W	   -10				         $FFFFFFF6
+0000055A 0000			 DC.W	   E.CMATH			         MATH_ERROR
+0000055C 0000			 DC.W	   L.9.3+12-*
+0000055E FFFE			 DC.W	   -2				         $FFFFFFFE
+00000560 0000			 DC.W	   L.9.6+16-*
+		      *							       LINE 6/27
+00000562 4EB900000000 L.9.3	 JSR	   E.MATHST
+00000568 7004			 MOVEQ	   #4,D0			         $4
+0000056A B05F			 CMP.W	   (A7)+,D0
+0000056C 6708			 BEQ.S	   L.9.5(PC)
+		      *							       LINE 6/28
+0000056E 48780086     L.9.4	 PEA	   134				         $86
+00000572 6100FB2E		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+00000576 6008	      L.9.5	 BRA.S	   L.9.7(PC)
+		      *							       LINE 6/29
+00000578 48780087     L.9.6	 PEA	   135				         $87
+0000057C 6100FB24		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+00000580 42A7	      L.9.7	 CLR.L	   -(A7)
+00000582 4EB900000000		 JSR	   E.HREST
+		      *							       LINE 6/30
+00000588 4EB900000000		 JSR	   M.RETURN
+		      *
+		      *		 Begin subroutine INNER
+		      *
+0000058E 7014	      B.12	 MOVEQ	   #20,D0			         $14
+00000590 2F00			 MOVE.L	   D0,-(A7)
+00000592 610E			 BSR.S	   X.12.1(PC)
+00000594 00000000		 DC.L	   C.1
+00000598 0000			 DC.W	   0				         $0
+0000059A 0005			 DC.W	   5				       String length word
+0000059C 494E4E4552		 DC.B	   'INNER'
+000005A1 00000001		 DS.B	   1				       Fill byte
+000005A2 203CFFFFFFE6 X.12.1	 MOVE.L	   #T.12-4,D0			         -22
+000005A8 4EB900000000		 JSR	   M.ENTRY
+000005AE 2D4FFFEA		 MOVE.L	   A7,ST.12(A6)			         -22
+		      *							       LINE 7/9
+000005B2 487A003A     L.12.1	 PEA	   H.12.2(PC)
+000005B6 4EB900000000		 JSR	   E.HSET
+		      *							       LINE 7/10
+000005BC 2D7C7FFFFFFF		 MOVE.L	   #2147483647,-4(A6)		         $7FFFFFFF  INTEGER_1
+	 FFFC
+		      *							       LINE 7/11
+000005C4 7000			 MOVEQ	   #0,D0			         $0
+000005C6 2D40FFF8		 MOVE.L	   D0,-8(A6)			         INTEGER_2
+		      *							       LINE 7/12000005CA 2F2EFFFC		 MOVE.L	   -4(A6),-(A7)			         INTEGER_1
+000005CE 2F2EFFF8		 MOVE.L	   -8(A6),-(A7)			         INTEGER_2
+000005D2 4EB900000000		 JSR	   G.I4DIV
+000005D8 2D5FFFFC		 MOVE.L	   (A7)+,-4(A6)			         INTEGER_1
+		      *							       LINE 7/13
+000005DC 4878008C		 PEA	   140				         $8C
+000005E0 6100FAC0		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+000005E4 602A			 BRA.S	   L.12.5(PC)
+		      *							       LINE 7/14
+000005E6 2E6EFFEA     L.12.2	 MOVEA.L   ST.12(A6),A7			         -22
+000005EA 4EFB8002		 JMP	   H.12.2(PC,A0.W)
+000005EE 00000000     H.12.2	 DC.L	   L.12.2
+000005F2 00000000		 DC.L	   0				         $0
+000005F6 FFEE			 DC.W	   -18				         $FFFFFFEE
+000005F8 0000			 DC.W	   E.CPROG			         PROGRAM_ERROR
+000005FA 0000			 DC.W	   L.12.3+12-*
+000005FC FFFF			 DC.W	   -1				         $FFFFFFFF
+000005FE 0000			 DC.W	   L.12.4+16-*
+		      *							       LINE 7/15
+00000600 4878008D     L.12.3	 PEA	   141				         $8D
+00000604 6100FA9C		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+00000608 6006			 BRA.S	   L.12.5(PC)
+		      *							       LINE 7/16
+0000060A 4EB900000000 L.12.4	 JSR	   E.RESIG
+00000610 42A7	      L.12.5	 CLR.L	   -(A7)
+00000612 4EB900000000		 JSR	   E.HREST
+		      *							       LINE 7/17
+00000618 4EB900000000		 JSR	   M.RETURN
+		      *
+		      *		 Begin subroutine TEST_RESIGNAL_OTHERS
+		      *
+				 XDEF	   TEST_RES
+0000061E	      TEST_RES
+0000061E 7010	      B.11	 MOVEQ	   #16,D0			         $10
+00000620 2F00			 MOVE.L	   D0,-(A7)
+00000622 611C			 BSR.S	   X.11.1(PC)
+00000624 00000000		 DC.L	   C.1
+00000628 0000			 DC.W	   0				         $0
+0000062A 0014			 DC.W	   20				       String length word
+0000062C 544553545F52		 DC.B	   'TEST_RESIGNAL_OTHERS'
+00000640 203CFFFFFFEE X.11.1	 MOVE.L	   #T.11-4,D0			         -14
+00000646 4EB900000000		 JSR	   M.ENTRY
+0000064C 2D4FFFF2		 MOVE.L	   A7,ST.11(A6)			         -14
+		      *							       LINE 7/19
+00000650 487A0020     L.11.1	 PEA	   H.11.2(PC)00000654 4EB900000000		 JSR	   E.HSET
+		      *							       LINE 7/20
+0000065A 2F0E			 MOVE.L	   A6,-(A7)
+0000065C 6100FF30		 BSR.L	   B.12(PC)			         INNER = CODE.+$58E
+		      *							       LINE 7/21
+00000660 4878008E		 PEA	   142				         $8E
+00000664 6100FA3C		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+00000668 6024			 BRA.S	   L.11.5(PC)
+		      *							       LINE 7/22
+0000066A 2E6EFFF2     L.11.2	 MOVEA.L   ST.11(A6),A7			         -14
+0000066E 4EFB8002		 JMP	   H.11.2(PC,A0.W)
+00000672 00000000     H.11.2	 DC.L	   L.11.2
+00000676 00000000		 DC.L	   0				         $0
+0000067A FFF6			 DC.W	   -10				         $FFFFFFF6
+0000067C 0000			 DC.W	   E.CPROG			         PROGRAM_ERROR
+0000067E 0000			 DC.W	   L.11.3+12-*
+00000680 FFFF			 DC.W	   -1				         $FFFFFFFF
+00000682 0000			 DC.W	   L.11.4+16-*
+		      *							       LINE 7/23
+00000684 4878008F     L.11.3	 PEA	   143				         $8F
+00000688 6100FA18		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+0000068C 4E71			 NOP	   
+		      *							       LINE 7/24
+0000068E	      L.11.4
+0000068E 42A7	      L.11.5	 CLR.L	   -(A7)
+00000690 4EB900000000		 JSR	   E.HREST
+		      *							       LINE 7/25
+00000696 4EB900000000		 JSR	   M.RETURN
+		      *
+		      *		 Begin subroutine TEST_EXCEPTION_WITH_INNER_HANDLER
+		      *
+				 XDEF	   TEST_EXC
+0000069C	      TEST_EXC
+0000069C 7010	      B.13	 MOVEQ	   #16,D0			         $10
+0000069E 2F00			 MOVE.L	   D0,-(A7)
+000006A0 612A			 BSR.S	   X.13.1(PC)
+000006A2 00000000		 DC.L	   C.1
+000006A6 0000			 DC.W	   0				         $0
+000006A8 0021			 DC.W	   33				       String length word
+000006AA 544553545F45		 DC.B	   'TEST_EXCEPTION_WITH_INNER_HANDLER'
+000006CB 00000001		 DS.B	   1				       Fill byte
+000006CC 203CFFFFFFDC X.13.1	 MOVE.L	   #T.13-4,D0			         -32
+000006D2 4EB900000000		 JSR	   M.ENTRY
+000006D8 2D4FFFE0		 MOVE.L	   A7,ST.13(A6)			         -32
+		      *							       LINE 8/9000006DC 487A003C     L.13.1	 PEA	   H.13.2(PC)
+000006E0 4EB900000000		 JSR	   E.HSET
+		      *							       LINE 8/10
+000006E6 2D7C7FFFFFFF		 MOVE.L	   #2147483647,-4(A6)		         $7FFFFFFF  INTEGER_1
+	 FFFC
+		      *							       LINE 8/11
+000006EE 7000			 MOVEQ	   #0,D0			         $0
+000006F0 2D40FFF8		 MOVE.L	   D0,-8(A6)			         INTEGER_2
+		      *							       LINE 8/12
+000006F4 2F2EFFFC		 MOVE.L	   -4(A6),-(A7)			         INTEGER_1
+000006F8 2F2EFFF8		 MOVE.L	   -8(A6),-(A7)			         INTEGER_2
+000006FC 4EB900000000		 JSR	   G.I4DIV
+00000702 2D5FFFFC		 MOVE.L	   (A7)+,-4(A6)			         INTEGER_1
+		      *							       LINE 8/13
+00000706 48780096		 PEA	   150				         $96
+0000070A 6100F996		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+0000070E 60000086		 BRA.L	   L.13.12(PC)
+		      *							       LINE 8/14
+00000712 2E6EFFE0     L.13.2	 MOVEA.L   ST.13(A6),A7			         -32
+00000716 4EFB8002		 JMP	   H.13.2(PC,A0.W)
+0000071A 00000000     H.13.2	 DC.L	   L.13.2
+0000071E 00000000		 DC.L	   0				         $0
+00000722 FFE4			 DC.W	   -28				         $FFFFFFE4
+00000724 0000			 DC.W	   E.CMATH			         MATH_ERROR
+00000726 0000			 DC.W	   L.13.3+12-*
+00000728 FFFE			 DC.W	   -2				         $FFFFFFFE
+0000072A 0000			 DC.W	   L.13.11+16-*
+0000072C	      L.13.3
+		      *							       LINE 8/15
+0000072C 487A0038     L.13.4	 PEA	   H.13.7(PC)
+00000730 4EB900000000		 JSR	   E.HSET
+		      *							       LINE 8/16
+00000736 4EB900000000		 JSR	   E.MATHST
+0000073C 7004			 MOVEQ	   #4,D0			         $4
+0000073E B05F			 CMP.W	   (A7)+,D0
+00000740 6708			 BEQ.S	   L.13.6(PC)
+		      *							       LINE 8/17
+00000742 48780097     L.13.5	 PEA	   151				         $97
+00000746 6100F95A		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+		      *							       LINE 8/18
+0000074A 486D800C     L.13.6	 PEA	   STATIC.+12-32768(A5)		         EXPLICIT_SIGNAL
+0000074E 4EB900000000		 JSR	   E.SIGNAL
+		      *							       LINE 8/19
+00000754 48780098		 PEA	   152				         $98
+00000758 6100F948		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A20000075C 6024			 BRA.S	   L.13.10(PC)
+		      *							       LINE 8/20
+0000075E 2E6EFFE0     L.13.7	 MOVEA.L   ST.13(A6),A7			         -32
+00000762 4EFB8002		 JMP	   H.13.7(PC,A0.W)
+00000766 00000000     H.13.7	 DC.L	   L.13.7
+0000076A 00000000		 DC.L	   H.13.2
+0000076E FFEE			 DC.W	   -18				         $FFFFFFEE
+00000770 0000			 DC.W	   STATIC.+12			         EXPLICIT_SIGNAL
+00000772 0000			 DC.W	   L.13.8+12-*
+00000774 FFFE			 DC.W	   -2				         $FFFFFFFE
+00000776 0000			 DC.W	   L.13.9+16-*
+		      *							       LINE 8/21
+00000778 6008	      L.13.8	 BRA.S	   L.13.10(PC)
+		      *							       LINE 8/22
+0000077A 48780099     L.13.9	 PEA	   153				         $99
+0000077E 6100F922		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+00000782 487AFF96     L.13.10	 PEA	   H.13.2(PC)
+00000786 4EB900000000		 JSR	   E.HREST
+		      *							       LINE 8/23
+0000078C 6008			 BRA.S	   L.13.12(PC)
+		      *							       LINE 8/24
+0000078E 4878009A     L.13.11	 PEA	   154				         $9A
+00000792 6100F90E		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+00000796 42A7	      L.13.12	 CLR.L	   -(A7)
+00000798 4EB900000000		 JSR	   E.HREST
+		      *							       LINE 8/25
+0000079E 4EB900000000		 JSR	   M.RETURN
+		      *
+		      *		 Begin subroutine TEST_EXCEPTION_WITH_OUTER_HANDLER
+		      *
+				 XDEF	   TEST_EXC
+000007A4	      TEST_EXC
+000007A4 7010	      B.14	 MOVEQ	   #16,D0			         $10
+000007A6 2F00			 MOVE.L	   D0,-(A7)
+000007A8 612A			 BSR.S	   X.14.1(PC)
+000007AA 00000000		 DC.L	   C.1
+000007AE 0000			 DC.W	   0				         $0
+000007B0 0021			 DC.W	   33				       String length word
+000007B2 544553545F45		 DC.B	   'TEST_EXCEPTION_WITH_OUTER_HANDLER'
+000007D3 00000001		 DS.B	   1				       Fill byte
+000007D4 203CFFFFFFDC X.14.1	 MOVE.L	   #T.14-4,D0			         -32
+000007DA 4EB900000000		 JSR	   M.ENTRY
+000007E0 2D4FFFE0		 MOVE.L	   A7,ST.14(A6)			         -32
+		      *							       LINE 9/9
+000007E4 487A00A2     L.14.1	 PEA	   H.14.10(PC)000007E8 4EB900000000		 JSR	   E.HSET
+		      *							       LINE 9/10
+000007EE 2D7C7FFFFFFF		 MOVE.L	   #2147483647,-4(A6)		         $7FFFFFFF  INTEGER_1
+	 FFFC
+		      *							       LINE 9/11
+000007F6 7000			 MOVEQ	   #0,D0			         $0
+000007F8 2D40FFF8		 MOVE.L	   D0,-8(A6)			         INTEGER_2
+		      *							       LINE 9/12
+000007FC 487A002C     L.14.2	 PEA	   H.14.3(PC)
+00000800 4EB900000000		 JSR	   E.HSET
+		      *							       LINE 9/13
+00000806 2F2EFFFC		 MOVE.L	   -4(A6),-(A7)			         INTEGER_1
+0000080A 2F2EFFF8		 MOVE.L	   -8(A6),-(A7)			         INTEGER_2
+0000080E 4EB900000000		 JSR	   G.I4DIV
+00000814 2D5FFFFC		 MOVE.L	   (A7)+,-4(A6)			         INTEGER_1
+		      *							       LINE 9/14
+00000818 487800A0		 PEA	   160				         $A0
+0000081C 6100F884		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+00000820 604A			 BRA.S	   L.14.9(PC)
+		      *							       LINE 9/15
+00000822 2E6EFFE0     L.14.3	 MOVEA.L   ST.14(A6),A7			         -32
+00000826 4EFB8002		 JMP	   H.14.3(PC,A0.W)
+0000082A 00000000     H.14.3	 DC.L	   L.14.3
+0000082E 00000000		 DC.L	   H.14.10
+00000832 FFEE			 DC.W	   -18				         $FFFFFFEE
+00000834 0000			 DC.W	   E.CMATH			         MATH_ERROR
+00000836 0000			 DC.W	   L.14.4+12-*
+00000838 FFFE			 DC.W	   -2				         $FFFFFFFE
+0000083A 0000			 DC.W	   L.14.8+16-*
+0000083C	      L.14.4
+		      *							       LINE 9/16
+		      *							       LINE 9/17
+0000083C 4EB900000000 L.14.5	 JSR	   E.MATHST
+00000842 7004			 MOVEQ	   #4,D0			         $4
+00000844 B05F			 CMP.W	   (A7)+,D0
+00000846 6708			 BEQ.S	   L.14.7(PC)
+		      *							       LINE 9/18
+00000848 487800A1     L.14.6	 PEA	   161				         $A1
+0000084C 6100F854		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+		      *							       LINE 9/19
+00000850 486D800A     L.14.7	 PEA	   STATIC.+10-32768(A5)		         EXPLICIT_SIGNAL
+00000854 4EB900000000		 JSR	   E.SIGNAL
+		      *							       LINE 9/20
+0000085A 487800A2		 PEA	   162				         $A2
+0000085E 6100F842		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2		      *							       LINE 9/21
+00000862 6008			 BRA.S	   L.14.9(PC)
+		      *							       LINE 9/22
+00000864 487800A3     L.14.8	 PEA	   163				         $A3
+00000868 6100F838		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+0000086C 487A001A     L.14.9	 PEA	   H.14.10(PC)
+00000870 4EB900000000		 JSR	   E.HREST
+		      *							       LINE 9/23
+		      *							       LINE 9/24
+00000876 487800A4		 PEA	   164				         $A4
+0000087A 6100F826		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+0000087E 6024			 BRA.S	   L.14.13(PC)
+		      *							       LINE 9/25
+00000880 2E6EFFE0     L.14.10	 MOVEA.L   ST.14(A6),A7			         -32
+00000884 4EFB8002		 JMP	   H.14.10(PC,A0.W)
+00000888 00000000     H.14.10	 DC.L	   L.14.10
+0000088C 00000000		 DC.L	   0				         $0
+00000890 FFE4			 DC.W	   -28				         $FFFFFFE4
+00000892 0000			 DC.W	   STATIC.+10			         EXPLICIT_SIGNAL
+00000894 0000			 DC.W	   L.14.11+12-*
+00000896 FFFE			 DC.W	   -2				         $FFFFFFFE
+00000898 0000			 DC.W	   L.14.12+16-*
+		      *							       LINE 9/26
+0000089A 6008	      L.14.11	 BRA.S	   L.14.13(PC)
+		      *							       LINE 9/27
+0000089C 487800A5     L.14.12	 PEA	   165				         $A5
+000008A0 6100F800		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+000008A4 42A7	      L.14.13	 CLR.L	   -(A7)
+000008A6 4EB900000000		 JSR	   E.HREST
+		      *							       LINE 9/28
+000008AC 4EB900000000		 JSR	   M.RETURN
+		      *
+		      *		 Begin subroutine TEST_LOCAL_GOTO
+		      *
+				 XDEF	   TEST_LOC
+000008B2	      TEST_LOC
+000008B2 7010	      B.15	 MOVEQ	   #16,D0			         $10
+000008B4 2F00			 MOVE.L	   D0,-(A7)
+000008B6 6118			 BSR.S	   X.15.1(PC)
+000008B8 00000000		 DC.L	   C.1
+000008BC 0000			 DC.W	   0				         $0
+000008BE 000F			 DC.W	   15				       String length word
+000008C0 544553545F4C		 DC.B	   'TEST_LOCAL_GOTO'
+000008CF 00000001		 DS.B	   1				       Fill byte
+000008D0 203CFFFFFFE6 X.15.1	 MOVE.L	   #T.15-4,D0			         -22000008D6 4EB900000000		 JSR	   M.ENTRY
+000008DC 2D4FFFEA		 MOVE.L	   A7,ST.15(A6)			         -22
+		      *							       LINE 10/9
+000008E0 487A003E     L.15.1	 PEA	   H.15.3(PC)
+000008E4 4EB900000000		 JSR	   E.HSET
+		      *							       LINE 10/10
+000008EA 2D7C7FFFFFFF		 MOVE.L	   #2147483647,-4(A6)		         $7FFFFFFF  INTEGER_1
+	 FFFC
+		      *							       LINE 10/11
+000008F2 7000			 MOVEQ	   #0,D0			         $0
+000008F4 2D40FFF8		 MOVE.L	   D0,-8(A6)			         INTEGER_2
+		      *							       LINE 10/12
+000008F8 2F2EFFFC		 MOVE.L	   -4(A6),-(A7)			         INTEGER_1
+000008FC 2F2EFFF8		 MOVE.L	   -8(A6),-(A7)			         INTEGER_2
+00000900 4EB900000000		 JSR	   G.I4DIV
+00000906 2D5FFFFC		 MOVE.L	   (A7)+,-4(A6)			         INTEGER_1
+		      *							       LINE 10/13
+0000090A 487800AA		 PEA	   170				         $AA
+0000090E 6100F792		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+		      *							       LINE 10/14
+00000912 4EB900000000 L.15.2	 JSR	   M.RETURN
+		      *							       LINE 10/16
+00000918 2E6EFFEA     L.15.3	 MOVEA.L   ST.15(A6),A7			         -22
+0000091C 4EFB8002		 JMP	   H.15.3(PC,A0.W)
+00000920 00000000     H.15.3	 DC.L	   L.15.3
+00000924 00000000		 DC.L	   0				         $0
+00000928 FFEE			 DC.W	   -18				         $FFFFFFEE
+0000092A 0000			 DC.W	   E.CMATH			         MATH_ERROR
+0000092C 0000			 DC.W	   L.15.4+12-*
+0000092E FFFE			 DC.W	   -2				         $FFFFFFFE
+00000930 0000			 DC.W	   L.15.8+16-*
+00000932	      L.15.4
+		      *							       LINE 10/17
+		      *							       LINE 10/18
+00000932 4EB900000000 L.15.5	 JSR	   E.MATHST
+00000938 7004			 MOVEQ	   #4,D0			         $4
+0000093A B05F			 CMP.W	   (A7)+,D0
+0000093C 6708			 BEQ.S	   L.15.7(PC)
+		      *							       LINE 10/19
+0000093E 487800AC     L.15.6	 PEA	   172				         $AC
+00000942 6100F75E		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+		      *							       LINE 10/20
+00000946 60CA	      L.15.7	 BRA.S	   L.15.2(PC)
+		      *							       LINE 10/23
+00000948 487800AE     L.15.8	 PEA	   174				         $AE0000094C 6100F754		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+00000950 42A7	      L.15.9	 CLR.L	   -(A7)
+00000952 4EB900000000		 JSR	   E.HREST
+		      *							       LINE 10/24
+00000958 4EB900000000		 JSR	   M.RETURN
+		      *
+		      *		 Begin subroutine INNER
+		      *
+0000095E 7014	      B.17	 MOVEQ	   #20,D0			         $14
+00000960 2F00			 MOVE.L	   D0,-(A7)
+00000962 610E			 BSR.S	   X.17.1(PC)
+00000964 00000000		 DC.L	   C.1
+00000968 0000			 DC.W	   0				         $0
+0000096A 0005			 DC.W	   5				       String length word
+0000096C 494E4E4552		 DC.B	   'INNER'
+00000971 00000001		 DS.B	   1				       Fill byte
+00000972 203CFFFFFFE6 X.17.1	 MOVE.L	   #T.17-4,D0			         -22
+00000978 4EB900000000		 JSR	   M.ENTRY
+0000097E 2D4FFFEA		 MOVE.L	   A7,ST.17(A6)			         -22
+		      *							       LINE 11/11
+00000982 487A003A     L.17.1	 PEA	   H.17.2(PC)
+00000986 4EB900000000		 JSR	   E.HSET
+		      *							       LINE 11/12
+0000098C 2D7C7FFFFFFF		 MOVE.L	   #2147483647,-4(A6)		         $7FFFFFFF  INTEGER_1
+	 FFFC
+		      *							       LINE 11/13
+00000994 7000			 MOVEQ	   #0,D0			         $0
+00000996 2D40FFF8		 MOVE.L	   D0,-8(A6)			         INTEGER_2
+		      *							       LINE 11/14
+0000099A 2F2EFFFC		 MOVE.L	   -4(A6),-(A7)			         INTEGER_1
+0000099E 2F2EFFF8		 MOVE.L	   -8(A6),-(A7)			         INTEGER_2
+000009A2 4EB900000000		 JSR	   G.I4DIV
+000009A8 2D5FFFFC		 MOVE.L	   (A7)+,-4(A6)			         INTEGER_1
+		      *							       LINE 11/15
+000009AC 487800B4		 PEA	   180				         $B4
+000009B0 6100F6F0		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+000009B4 6042			 BRA.S	   L.17.8(PC)
+		      *							       LINE 11/16
+000009B6 2E6EFFEA     L.17.2	 MOVEA.L   ST.17(A6),A7			         -22
+000009BA 4EFB8002		 JMP	   H.17.2(PC,A0.W)
+000009BE 00000000     H.17.2	 DC.L	   L.17.2
+000009C2 00000000		 DC.L	   0				         $0
+000009C6 FFEE			 DC.W	   -18				         $FFFFFFEE
+000009C8 0000			 DC.W	   E.CMATH			         MATH_ERROR
+000009CA 0000			 DC.W	   L.17.3+12-*000009CC FFFE			 DC.W	   -2				         $FFFFFFFE
+000009CE 0000			 DC.W	   L.17.7+16-*
+000009D0	      L.17.3
+		      *							       LINE 11/17
+		      *							       LINE 11/18
+000009D0 4EB900000000 L.17.4	 JSR	   E.MATHST
+000009D6 7004			 MOVEQ	   #4,D0			         $4
+000009D8 B05F			 CMP.W	   (A7)+,D0
+000009DA 6708			 BEQ.S	   L.17.6(PC)
+		      *							       LINE 11/19
+000009DC 487800B5     L.17.5	 PEA	   181				         $B5
+000009E0 6100F6C0		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+		      *							       LINE 11/20
+000009E4 206E0014     L.17.6	 MOVEA.L   20(A6),A0			         $14
+000009E8 2C48			 MOVEA.L   A0,A6
+000009EA 4EF900000000		 JMP	   S.24
+		      *							       LINE 11/23
+000009F0 487800B7     L.17.7	 PEA	   183				         $B7
+000009F4 6100F6AC		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+000009F8 42A7	      L.17.8	 CLR.L	   -(A7)
+000009FA 4EB900000000		 JSR	   E.HREST
+		      *							       LINE 11/24
+00000A00 4EB900000000		 JSR	   M.RETURN
+		      *
+		      *		 Begin subroutine TEST_NON_LOCAL_GOTO
+		      *
+				 XDEF	   TEST_NON
+00000A06	      TEST_NON
+00000A06 7010	      B.16	 MOVEQ	   #16,D0			         $10
+00000A08 2F00			 MOVE.L	   D0,-(A7)
+00000A0A 611C			 BSR.S	   X.16.1(PC)
+00000A0C 00000000		 DC.L	   C.1
+00000A10 0000			 DC.W	   0				         $0
+00000A12 0013			 DC.W	   19				       String length word
+00000A14 544553545F4E		 DC.B	   'TEST_NON_LOCAL_GOTO'
+00000A27 00000001		 DS.B	   1				       Fill byte
+00000A28 203CFFFFFFF8 X.16.1	 MOVE.L	   #T.16-4,D0			         -4
+00000A2E 4EB900000000		 JSR	   M.ENTRY
+00000A34 2D4FFFFC		 MOVE.L	   A7,ST.16(A6)			         -4
+		      *							       LINE 11/26
+		      *							       LINE 11/27
+00000A38 2F0E	      L.16.1	 MOVE.L	   A6,-(A7)
+00000A3A 6100FF22		 BSR.L	   B.17(PC)			         INNER = CODE.+$95E
+		      *							       LINE 11/28
+00000A3E 487800B8		 PEA	   184				         $B800000A42 6100F65E		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+00000A46	      L.16.2
+00000A46 2E6EFFFC     S.24	 MOVEA.L   ST.16(A6),A7			         -4
+		      *							       LINE 11/29
+00000A4A 4EB900000000		 JSR	   M.RETURN
+		      *
+		      *		 Begin subroutine TEST_HANDLER_TO_EXCEPTION_GOTO
+		      *
+				 XDEF	   TEST_HAN
+00000A50	      TEST_HAN
+00000A50 7010	      B.18	 MOVEQ	   #16,D0			         $10
+00000A52 2F00			 MOVE.L	   D0,-(A7)
+00000A54 6126			 BSR.S	   X.18.1(PC)
+00000A56 00000000		 DC.L	   C.1
+00000A5A 0000			 DC.W	   0				         $0
+00000A5C 001E			 DC.W	   30				       String length word
+00000A5E 544553545F48		 DC.B	   'TEST_HANDLER_TO_EXCEPTION_GOTO'
+00000A7C 203CFFFFFFD2 X.18.1	 MOVE.L	   #T.18-4,D0			         -42
+00000A82 4EB900000000		 JSR	   M.ENTRY
+00000A88 2D4FFFD6		 MOVE.L	   A7,ST.18(A6)			         -42
+		      *							       LINE 12/11
+00000A8C 487A0120     L.18.1	 PEA	   H.18.19(PC)
+00000A90 4EB900000000		 JSR	   E.HSET
+		      *							       LINE 12/12
+00000A96 6026			 BRA.S	   L.18.4(PC)
+00000A98 487A0114     L.18.2	 PEA	   H.18.19(PC)
+00000A9C 4EB900000000		 JSR	   E.HREST
+		      *							       LINE 12/13
+00000AA2 486D8008		 PEA	   STATIC.+8-32768(A5)		         EXPLICIT_SIGNAL
+00000AA6 4EB900000000		 JSR	   E.SIGNAL
+		      *							       LINE 12/14
+00000AAC 487800BE		 PEA	   190				         $BE
+00000AB0 6100F5F0		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+		      *							       LINE 12/15
+00000AB4 487A00AA     L.18.3	 PEA	   H.18.14(PC)
+00000AB8 4EB900000000		 JSR	   E.HSET
+00000ABE 487A00A0     L.18.4	 PEA	   H.18.14(PC)
+00000AC2 4EB900000000		 JSR	   E.HREST
+		      *							       LINE 12/16
+00000AC8 2D7C7FFFFFFF		 MOVE.L	   #2147483647,-4(A6)		         $7FFFFFFF  INTEGER_1
+	 FFFC
+		      *							       LINE 12/17
+00000AD0 7000			 MOVEQ	   #0,D0			         $0
+00000AD2 2D40FFF8		 MOVE.L	   D0,-8(A6)			         INTEGER_2
+		      *							       LINE 12/1800000AD6 487A002C     L.18.5	 PEA	   H.18.6(PC)
+00000ADA 4EB900000000		 JSR	   E.HSET
+		      *							       LINE 12/19
+00000AE0 2F2EFFFC		 MOVE.L	   -4(A6),-(A7)			         INTEGER_1
+00000AE4 2F2EFFF8		 MOVE.L	   -8(A6),-(A7)			         INTEGER_2
+00000AE8 4EB900000000		 JSR	   G.I4DIV
+00000AEE 2D5FFFFC		 MOVE.L	   (A7)+,-4(A6)			         INTEGER_1
+		      *							       LINE 12/20
+00000AF2 487800BF		 PEA	   191				         $BF
+00000AF6 6100F5AA		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+00000AFA 6048			 BRA.S	   L.18.13(PC)
+		      *							       LINE 12/21
+00000AFC 2E6EFFD6     L.18.6	 MOVEA.L   ST.18(A6),A7			         -42
+00000B00 4EFB8002		 JMP	   H.18.6(PC,A0.W)
+00000B04 00000000     H.18.6	 DC.L	   L.18.6
+00000B08 00000000		 DC.L	   H.18.14
+00000B0C FFEE			 DC.W	   -18				         $FFFFFFEE
+00000B0E 0000			 DC.W	   STATIC.+8			         EXPLICIT_SIGNAL
+00000B10 0000			 DC.W	   L.18.11+12-*
+00000B12 0000			 DC.W	   E.CMATH			         MATH_ERROR
+00000B14 0000			 DC.W	   L.18.7+16-*
+00000B16 FFFE			 DC.W	   -2				         $FFFFFFFE
+00000B18 0000			 DC.W	   L.18.12+20-*
+00000B1A	      L.18.7
+		      *							       LINE 12/22
+		      *							       LINE 12/23
+00000B1A 4EB900000000 L.18.8	 JSR	   E.MATHST
+00000B20 7004			 MOVEQ	   #4,D0			         $4
+00000B22 B05F			 CMP.W	   (A7)+,D0
+00000B24 6708			 BEQ.S	   L.18.10(PC)
+		      *							       LINE 12/24
+00000B26 487800C0     L.18.9	 PEA	   192				         $C0
+00000B2A 6100F576		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+		      *							       LINE 12/25
+00000B2E 6000FF68     L.18.10	 BRA.L	   L.18.2(PC)
+		      *							       LINE 12/27
+00000B32 487800C1     L.18.11	 PEA	   193				         $C1
+00000B36 6100F56A		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+00000B3A 6008			 BRA.S	   L.18.13(PC)
+		      *							       LINE 12/28
+00000B3C 487800C2     L.18.12	 PEA	   194				         $C2
+00000B40 6100F560		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+00000B44 487A001A     L.18.13	 PEA	   H.18.14(PC)
+00000B48 4EB900000000		 JSR	   E.HREST
+		      *							       LINE 12/29		      *							       LINE 12/30
+00000B4E 487800C3		 PEA	   195				         $C3
+00000B52 6100F54E		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+00000B56 603A			 BRA.S	   L.18.18(PC)
+		      *							       LINE 12/31
+00000B58 2E6EFFD6     L.18.14	 MOVEA.L   ST.18(A6),A7			         -42
+00000B5C 4EFB8002		 JMP	   H.18.14(PC,A0.W)
+00000B60 00000000     H.18.14	 DC.L	   L.18.14
+00000B64 00000000		 DC.L	   H.18.19
+00000B68 FFE4			 DC.W	   -28				         $FFFFFFE4
+00000B6A 0000			 DC.W	   STATIC.+8			         EXPLICIT_SIGNAL
+00000B6C 0000			 DC.W	   L.18.16+12-*
+00000B6E 0000			 DC.W	   E.CMATH			         MATH_ERROR
+00000B70 0000			 DC.W	   L.18.15+16-*
+00000B72 FFFE			 DC.W	   -2				         $FFFFFFFE
+00000B74 0000			 DC.W	   L.18.17+20-*
+		      *							       LINE 12/32
+00000B76 487800C4     L.18.15	 PEA	   196				         $C4
+00000B7A 6100F526		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+00000B7E 6012			 BRA.S	   L.18.18(PC)
+		      *							       LINE 12/33
+00000B80 487800C5     L.18.16	 PEA	   197				         $C5
+00000B84 6100F51C		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+00000B88 6008			 BRA.S	   L.18.18(PC)
+		      *							       LINE 12/34
+00000B8A 487800C6     L.18.17	 PEA	   198				         $C6
+00000B8E 6100F512		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+00000B92 487A001A     L.18.18	 PEA	   H.18.19(PC)
+00000B96 4EB900000000		 JSR	   E.HREST
+		      *							       LINE 12/35
+		      *							       LINE 12/36
+00000B9C 487800C7		 PEA	   199				         $C7
+00000BA0 6100F500		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+00000BA4 6032			 BRA.S	   L.18.23(PC)
+		      *							       LINE 12/37
+00000BA6 2E6EFFD6     L.18.19	 MOVEA.L   ST.18(A6),A7			         -42
+00000BAA 4EFB8002		 JMP	   H.18.19(PC,A0.W)
+00000BAE 00000000     H.18.19	 DC.L	   L.18.19
+00000BB2 00000000		 DC.L	   0				         $0
+00000BB6 FFDA			 DC.W	   -38				         $FFFFFFDA
+00000BB8 0000			 DC.W	   STATIC.+8			         EXPLICIT_SIGNAL
+00000BBA 0000			 DC.W	   L.18.21+12-*
+00000BBC 0000			 DC.W	   E.CMATH			         MATH_ERROR
+00000BBE 0000			 DC.W	   L.18.20+16-*
+00000BC0 FFFE			 DC.W	   -2				         $FFFFFFFE00000BC2 0000			 DC.W	   L.18.22+20-*
+		      *							       LINE 12/38
+00000BC4 487800C8     L.18.20	 PEA	   200				         $C8
+00000BC8 6100F4D8		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+00000BCC 600A			 BRA.S	   L.18.23(PC)
+		      *							       LINE 12/39
+00000BCE 6008	      L.18.21	 BRA.S	   L.18.23(PC)
+		      *							       LINE 12/40
+00000BD0 487800C9     L.18.22	 PEA	   201				         $C9
+00000BD4 6100F4CC		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+00000BD8 42A7	      L.18.23	 CLR.L	   -(A7)
+00000BDA 4EB900000000		 JSR	   E.HREST
+		      *							       LINE 12/41
+00000BE0 4EB900000000		 JSR	   M.RETURN
+		      *
+		      *		 Begin subroutine TEST_HANDLER_TO_SIGNAL_GOTO
+		      *
+				 XDEF	   TEST_HAN
+00000BE6	      TEST_HAN
+00000BE6 7010	      B.19	 MOVEQ	   #16,D0			         $10
+00000BE8 2F00			 MOVE.L	   D0,-(A7)
+00000BEA 6124			 BSR.S	   X.19.1(PC)
+00000BEC 00000000		 DC.L	   C.1
+00000BF0 0000			 DC.W	   0				         $0
+00000BF2 001B			 DC.W	   27				       String length word
+00000BF4 544553545F48		 DC.B	   'TEST_HANDLER_TO_SIGNAL_GOTO'
+00000C0F 00000001		 DS.B	   1				       Fill byte
+00000C10 203CFFFFFFDA X.19.1	 MOVE.L	   #T.19-4,D0			         -34
+00000C16 4EB900000000		 JSR	   M.ENTRY
+00000C1C 2D4FFFDE		 MOVE.L	   A7,ST.19(A6)			         -34
+		      *							       LINE 13/8
+00000C20 487A00D8     L.19.1	 PEA	   H.19.14(PC)
+00000C24 4EB900000000		 JSR	   E.HSET
+		      *							       LINE 13/9
+00000C2A 6026			 BRA.S	   L.19.4(PC)
+00000C2C 487A00CC     L.19.2	 PEA	   H.19.14(PC)
+00000C30 4EB900000000		 JSR	   E.HREST
+		      *							       LINE 13/10
+00000C36 486D8006		 PEA	   STATIC.+6-32768(A5)		         EXPLICIT_SIGNAL
+00000C3A 4EB900000000		 JSR	   E.SIGNAL
+		      *							       LINE 13/11
+00000C40 487800D2		 PEA	   210				         $D2
+00000C44 6100F45C		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+		      *							       LINE 13/12
+00000C48 487A0070     L.19.3	 PEA	   H.19.10(PC)00000C4C 4EB900000000		 JSR	   E.HSET
+00000C52 487A0066     L.19.4	 PEA	   H.19.10(PC)
+00000C56 4EB900000000		 JSR	   E.HREST
+		      *							       LINE 13/14
+00000C5C 487A0024     L.19.5	 PEA	   H.19.6(PC)
+00000C60 4EB900000000		 JSR	   E.HSET
+		      *							       LINE 13/15
+00000C66 486D8006		 PEA	   STATIC.+6-32768(A5)		         EXPLICIT_SIGNAL
+00000C6A 4EB900000000		 JSR	   E.SIGNAL
+		      *							       LINE 13/16
+00000C70 487800D3		 PEA	   211				         $D3
+00000C74 6100F42C		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+00000C78 6024			 BRA.S	   L.19.9(PC)
+		      *							       LINE 13/17
+00000C7A 2E6EFFDE     L.19.6	 MOVEA.L   ST.19(A6),A7			         -34
+00000C7E 4EFB8002		 JMP	   H.19.6(PC,A0.W)
+00000C82 00000000     H.19.6	 DC.L	   L.19.6
+00000C86 00000000		 DC.L	   H.19.10
+00000C8A FFF6			 DC.W	   -10				         $FFFFFFF6
+00000C8C 0000			 DC.W	   STATIC.+6			         EXPLICIT_SIGNAL
+00000C8E 0000			 DC.W	   L.19.7+12-*
+00000C90 FFFE			 DC.W	   -2				         $FFFFFFFE
+00000C92 0000			 DC.W	   L.19.8+16-*
+		      *							       LINE 13/18
+00000C94 6096	      L.19.7	 BRA.S	   L.19.2(PC)
+		      *							       LINE 13/19
+00000C96 487800D5     L.19.8	 PEA	   213				         $D5
+00000C9A 6100F406		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+00000C9E 487A001A     L.19.9	 PEA	   H.19.10(PC)
+00000CA2 4EB900000000		 JSR	   E.HREST
+		      *							       LINE 13/20
+		      *							       LINE 13/21
+00000CA8 487800D6		 PEA	   214				         $D6
+00000CAC 6100F3F4		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+00000CB0 602C			 BRA.S	   L.19.13(PC)
+		      *							       LINE 13/22
+00000CB2 2E6EFFDE     L.19.10	 MOVEA.L   ST.19(A6),A7			         -34
+00000CB6 4EFB8002		 JMP	   H.19.10(PC,A0.W)
+00000CBA 00000000     H.19.10	 DC.L	   L.19.10
+00000CBE 00000000		 DC.L	   H.19.14
+00000CC2 FFEC			 DC.W	   -20				         $FFFFFFEC
+00000CC4 0000			 DC.W	   STATIC.+6			         EXPLICIT_SIGNAL
+00000CC6 0000			 DC.W	   L.19.11+12-*
+00000CC8 FFFE			 DC.W	   -2				         $FFFFFFFE
+00000CCA 0000			 DC.W	   L.19.12+16-*		      *							       LINE 13/23
+00000CCC 487800D7     L.19.11	 PEA	   215				         $D7
+00000CD0 6100F3D0		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+00000CD4 6008			 BRA.S	   L.19.13(PC)
+		      *							       LINE 13/24
+00000CD6 487800D8     L.19.12	 PEA	   216				         $D8
+00000CDA 6100F3C6		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+00000CDE 487A001A     L.19.13	 PEA	   H.19.14(PC)
+00000CE2 4EB900000000		 JSR	   E.HREST
+		      *							       LINE 13/25
+		      *							       LINE 13/26
+00000CE8 487800D9		 PEA	   217				         $D9
+00000CEC 6100F3B4		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+00000CF0 6024			 BRA.S	   L.19.17(PC)
+		      *							       LINE 13/27
+00000CF2 2E6EFFDE     L.19.14	 MOVEA.L   ST.19(A6),A7			         -34
+00000CF6 4EFB8002		 JMP	   H.19.14(PC,A0.W)
+00000CFA 00000000     H.19.14	 DC.L	   L.19.14
+00000CFE 00000000		 DC.L	   0				         $0
+00000D02 FFE2			 DC.W	   -30				         $FFFFFFE2
+00000D04 0000			 DC.W	   STATIC.+6			         EXPLICIT_SIGNAL
+00000D06 0000			 DC.W	   L.19.15+12-*
+00000D08 FFFE			 DC.W	   -2				         $FFFFFFFE
+00000D0A 0000			 DC.W	   L.19.16+16-*
+		      *							       LINE 13/28
+00000D0C 6008	      L.19.15	 BRA.S	   L.19.17(PC)
+		      *							       LINE 13/29
+00000D0E 487800DA     L.19.16	 PEA	   218				         $DA
+00000D12 6100F38E		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+00000D16 42A7	      L.19.17	 CLR.L	   -(A7)
+00000D18 4EB900000000		 JSR	   E.HREST
+		      *							       LINE 13/30
+00000D1E 4EB900000000		 JSR	   M.RETURN
+		      *
+		      *		 Begin subroutine INNER
+		      *
+00000D24 7014	      B.21	 MOVEQ	   #20,D0			         $14
+00000D26 2F00			 MOVE.L	   D0,-(A7)
+00000D28 610E			 BSR.S	   X.21.1(PC)
+00000D2A 00000000		 DC.L	   C.1
+00000D2E 0000			 DC.W	   0				         $0
+00000D30 0005			 DC.W	   5				       String length word
+00000D32 494E4E4552		 DC.B	   'INNER'
+00000D37 00000001		 DS.B	   1				       Fill byte
+00000D38 203CFFFFFFE6 X.21.1	 MOVE.L	   #T.21-4,D0			         -2200000D3E 4EB900000000		 JSR	   M.ENTRY
+00000D44 2D4FFFEA		 MOVE.L	   A7,ST.21(A6)			         -22
+		      *							       LINE 14/9
+00000D48 487A003A     L.21.1	 PEA	   H.21.2(PC)
+00000D4C 4EB900000000		 JSR	   E.HSET
+		      *							       LINE 14/10
+00000D52 2D7C7FFFFFFF		 MOVE.L	   #2147483647,-4(A6)		         $7FFFFFFF  INTEGER_1
+	 FFFC
+		      *							       LINE 14/11
+00000D5A 7000			 MOVEQ	   #0,D0			         $0
+00000D5C 2D40FFF8		 MOVE.L	   D0,-8(A6)			         INTEGER_2
+		      *							       LINE 14/12
+00000D60 2F2EFFFC		 MOVE.L	   -4(A6),-(A7)			         INTEGER_1
+00000D64 2F2EFFF8		 MOVE.L	   -8(A6),-(A7)			         INTEGER_2
+00000D68 4EB900000000		 JSR	   G.I4DIV
+00000D6E 2D5FFFFC		 MOVE.L	   (A7)+,-4(A6)			         INTEGER_1
+		      *							       LINE 14/13
+00000D72 487800DC		 PEA	   220				         $DC
+00000D76 6100F32A		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+00000D7A 603C			 BRA.S	   L.21.8(PC)
+		      *							       LINE 14/14
+00000D7C 2E6EFFEA     L.21.2	 MOVEA.L   ST.21(A6),A7			         -22
+00000D80 4EFB8002		 JMP	   H.21.2(PC,A0.W)
+00000D84 00000000     H.21.2	 DC.L	   L.21.2
+00000D88 00000000		 DC.L	   0				         $0
+00000D8C FFEE			 DC.W	   -18				         $FFFFFFEE
+00000D8E 0000			 DC.W	   E.CMATH			         MATH_ERROR
+00000D90 0000			 DC.W	   L.21.3+12-*
+00000D92 FFFE			 DC.W	   -2				         $FFFFFFFE
+00000D94 0000			 DC.W	   L.21.7+16-*
+00000D96	      L.21.3
+		      *							       LINE 14/15
+		      *							       LINE 14/16
+00000D96 4EB900000000 L.21.4	 JSR	   E.MATHST
+00000D9C 7004			 MOVEQ	   #4,D0			         $4
+00000D9E B05F			 CMP.W	   (A7)+,D0
+00000DA0 6708			 BEQ.S	   L.21.6(PC)
+		      *							       LINE 14/17
+00000DA2 487800DD     L.21.5	 PEA	   221				         $DD
+00000DA6 6100F2FA		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+		      *							       LINE 14/18
+00000DAA 4EB900000000 L.21.6	 JSR	   M.RETURN
+		      *							       LINE 14/21
+00000DB0 487800DF     L.21.7	 PEA	   223				         $DF
+00000DB4 6100F2EC		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A200000DB8 42A7	      L.21.8	 CLR.L	   -(A7)
+00000DBA 4EB900000000		 JSR	   E.HREST
+		      *							       LINE 14/22
+00000DC0 4EB900000000		 JSR	   M.RETURN
+		      *
+		      *		 Begin subroutine TEST_RETURN_HANDLER_TO_PROCEDURE
+		      *
+				 XDEF	   TEST_RET
+00000DC6	      TEST_RET
+00000DC6 7010	      B.20	 MOVEQ	   #16,D0			         $10
+00000DC8 2F00			 MOVE.L	   D0,-(A7)
+00000DCA 6128			 BSR.S	   X.20.1(PC)
+00000DCC 00000000		 DC.L	   C.1
+00000DD0 0000			 DC.W	   0				         $0
+00000DD2 0020			 DC.W	   32				       String length word
+00000DD4 544553545F52		 DC.B	   'TEST_RETURN_HANDLER_TO_PROCEDURE'
+00000DF4 203CFFFFFFEE X.20.1	 MOVE.L	   #T.20-4,D0			         -14
+00000DFA 4EB900000000		 JSR	   M.ENTRY
+00000E00 2D4FFFF2		 MOVE.L	   A7,ST.20(A6)			         -14
+		      *							       LINE 14/24
+00000E04 487A0018     L.20.1	 PEA	   H.20.2(PC)
+00000E08 4EB900000000		 JSR	   E.HSET
+		      *							       LINE 14/25
+00000E0E 2F0E			 MOVE.L	   A6,-(A7)
+00000E10 6100FF12		 BSR.L	   B.21(PC)			         INNER = CODE.+$D24
+00000E14 601E			 BRA.S	   L.20.4(PC)
+		      *							       LINE 14/26
+00000E16 2E6EFFF2     L.20.2	 MOVEA.L   ST.20(A6),A7			         -14
+00000E1A 4EFB8002		 JMP	   H.20.2(PC,A0.W)
+00000E1E 00000000     H.20.2	 DC.L	   L.20.2
+00000E22 00000000		 DC.L	   0				         $0
+00000E26 FFF6			 DC.W	   -10				         $FFFFFFF6
+00000E28 FFFE			 DC.W	   -2				         $FFFFFFFE
+00000E2A 0000			 DC.W	   L.20.3+12-*
+		      *							       LINE 14/27
+00000E2C 487800E0     L.20.3	 PEA	   224				         $E0
+00000E30 6100F270		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+00000E34 42A7	      L.20.4	 CLR.L	   -(A7)
+00000E36 4EB900000000		 JSR	   E.HREST
+		      *							       LINE 14/28
+00000E3C 4EB900000000		 JSR	   M.RETURN
+		      *
+		      *		 Begin subroutine INNER
+		      *
+00000E42 7014	      B.23	 MOVEQ	   #20,D0			         $1400000E44 2F00			 MOVE.L	   D0,-(A7)
+00000E46 610E			 BSR.S	   X.23.1(PC)
+00000E48 00000000		 DC.L	   C.1
+00000E4C 0000			 DC.W	   0				         $0
+00000E4E 0005			 DC.W	   5				       String length word
+00000E50 494E4E4552		 DC.B	   'INNER'
+00000E55 00000001		 DS.B	   1				       Fill byte
+00000E56 203CFFFFFFEE X.23.1	 MOVE.L	   #T.23-4,D0			         -14
+00000E5C 4EB900000000		 JSR	   M.ENTRY
+00000E62 2D4FFFF2		 MOVE.L	   A7,ST.23(A6)			         -14
+		      *							       LINE 15/11
+00000E66 487A0024     L.23.1	 PEA	   H.23.2(PC)
+00000E6A 4EB900000000		 JSR	   E.HSET
+		      *							       LINE 15/12
+00000E70 486D8004		 PEA	   STATIC.+4-32768(A5)		         EXPLICIT_SIGNAL
+00000E74 4EB900000000		 JSR	   E.SIGNAL
+		      *							       LINE 15/13
+00000E7A 487800E6		 PEA	   230				         $E6
+00000E7E 6100F222		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+00000E82 6028			 BRA.S	   L.23.6(PC)
+		      *							       LINE 15/14
+00000E84 2E6EFFF2     L.23.2	 MOVEA.L   ST.23(A6),A7			         -14
+00000E88 4EFB8002		 JMP	   H.23.2(PC,A0.W)
+00000E8C 00000000     H.23.2	 DC.L	   L.23.2
+00000E90 00000000		 DC.L	   0				         $0
+00000E94 FFF6			 DC.W	   -10				         $FFFFFFF6
+00000E96 0000			 DC.W	   STATIC.+4			         EXPLICIT_SIGNAL
+00000E98 0000			 DC.W	   L.23.3+12-*
+00000E9A FFFE			 DC.W	   -2				         $FFFFFFFE
+00000E9C 0000			 DC.W	   L.23.5+16-*
+00000E9E	      L.23.3
+		      *							       LINE 15/15
+		      *							       LINE 15/16
+00000E9E 4EB900000000 L.23.4	 JSR	   M.RETURN
+		      *							       LINE 15/19
+00000EA4 487800E8     L.23.5	 PEA	   232				         $E8
+00000EA8 6100F1F8		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+00000EAC 42A7	      L.23.6	 CLR.L	   -(A7)
+00000EAE 4EB900000000		 JSR	   E.HREST
+		      *							       LINE 15/20
+00000EB4 4EB900000000		 JSR	   M.RETURN
+		      *
+		      *		 Begin subroutine TEST_RETURN_HANDLER_TO_HANDLER
+		      *
+				 XDEF	   TEST_RET00000EBA	      TEST_RET
+00000EBA 7010	      B.22	 MOVEQ	   #16,D0			         $10
+00000EBC 2F00			 MOVE.L	   D0,-(A7)
+00000EBE 6126			 BSR.S	   X.22.1(PC)
+00000EC0 00000000		 DC.L	   C.1
+00000EC4 0000			 DC.W	   0				         $0
+00000EC6 001E			 DC.W	   30				       String length word
+00000EC8 544553545F52		 DC.B	   'TEST_RETURN_HANDLER_TO_HANDLER'
+00000EE6 203CFFFFFFE6 X.22.1	 MOVE.L	   #T.22-4,D0			         -22
+00000EEC 4EB900000000		 JSR	   M.ENTRY
+00000EF2 2D4FFFEA		 MOVE.L	   A7,ST.22(A6)			         -22
+		      *							       LINE 15/22
+00000EF6 487A003A     L.22.1	 PEA	   H.22.2(PC)
+00000EFA 4EB900000000		 JSR	   E.HSET
+		      *							       LINE 15/23
+00000F00 2D7C7FFFFFFF		 MOVE.L	   #2147483647,-4(A6)		         $7FFFFFFF  INTEGER_1
+	 FFFC
+		      *							       LINE 15/24
+00000F08 7000			 MOVEQ	   #0,D0			         $0
+00000F0A 2D40FFF8		 MOVE.L	   D0,-8(A6)			         INTEGER_2
+		      *							       LINE 15/25
+00000F0E 2F2EFFFC		 MOVE.L	   -4(A6),-(A7)			         INTEGER_1
+00000F12 2F2EFFF8		 MOVE.L	   -8(A6),-(A7)			         INTEGER_2
+00000F16 4EB900000000		 JSR	   G.I4DIV
+00000F1C 2D5FFFFC		 MOVE.L	   (A7)+,-4(A6)			         INTEGER_1
+		      *							       LINE 15/26
+00000F20 487800E9		 PEA	   233				         $E9
+00000F24 6100F17C		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+00000F28 603E			 BRA.S	   L.22.8(PC)
+		      *							       LINE 15/27
+00000F2A 2E6EFFEA     L.22.2	 MOVEA.L   ST.22(A6),A7			         -22
+00000F2E 4EFB8002		 JMP	   H.22.2(PC,A0.W)
+00000F32 00000000     H.22.2	 DC.L	   L.22.2
+00000F36 00000000		 DC.L	   0				         $0
+00000F3A FFEE			 DC.W	   -18				         $FFFFFFEE
+00000F3C 0000			 DC.W	   E.CMATH			         MATH_ERROR
+00000F3E 0000			 DC.W	   L.22.3+12-*
+00000F40 FFFE			 DC.W	   -2				         $FFFFFFFE
+00000F42 0000			 DC.W	   L.22.7+16-*
+00000F44	      L.22.3
+		      *							       LINE 15/28
+		      *							       LINE 15/29
+00000F44 4EB900000000 L.22.4	 JSR	   E.MATHST
+00000F4A 7004			 MOVEQ	   #4,D0			         $4
+00000F4C B05F			 CMP.W	   (A7)+,D000000F4E 6708			 BEQ.S	   L.22.6(PC)
+		      *							       LINE 15/30
+00000F50 487800EA     L.22.5	 PEA	   234				         $EA
+00000F54 6100F14C		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+		      *							       LINE 15/31
+00000F58 2F0E	      L.22.6	 MOVE.L	   A6,-(A7)
+00000F5A 6100FEE6		 BSR.L	   B.23(PC)			         INNER = CODE.+$E42
+		      *							       LINE 15/32
+00000F5E 6008			 BRA.S	   L.22.8(PC)
+		      *							       LINE 15/33
+00000F60 487800EB     L.22.7	 PEA	   235				         $EB
+00000F64 6100F13C		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+00000F68 42A7	      L.22.8	 CLR.L	   -(A7)
+00000F6A 4EB900000000		 JSR	   E.HREST
+		      *							       LINE 15/34
+00000F70 4EB900000000		 JSR	   M.RETURN
+		      *
+		      *		 Begin subroutine TEST_SIGNAL_WITH_INNER_HANDLER
+		      *
+				 XDEF	   TEST_SIG
+00000F76	      TEST_SIG
+00000F76 7010	      B.24	 MOVEQ	   #16,D0			         $10
+00000F78 2F00			 MOVE.L	   D0,-(A7)
+00000F7A 6126			 BSR.S	   X.24.1(PC)
+00000F7C 00000000		 DC.L	   C.1
+00000F80 0000			 DC.W	   0				         $0
+00000F82 001E			 DC.W	   30				       String length word
+00000F84 544553545F53		 DC.B	   'TEST_SIGNAL_WITH_INNER_HANDLER'
+00000FA2 203CFFFFFFE4 X.24.1	 MOVE.L	   #T.24-4,D0			         -24
+00000FA8 4EB900000000		 JSR	   M.ENTRY
+00000FAE 2D4FFFE8		 MOVE.L	   A7,ST.24(A6)			         -24
+		      *							       LINE 16/7
+00000FB2 487A0024     L.24.1	 PEA	   H.24.2(PC)
+00000FB6 4EB900000000		 JSR	   E.HSET
+		      *							       LINE 16/8
+00000FBC 486D8002		 PEA	   STATIC.+2-32768(A5)		         EXPLICIT_SIGNAL
+00000FC0 4EB900000000		 JSR	   E.SIGNAL
+		      *							       LINE 16/9
+00000FC6 487800F0		 PEA	   240				         $F0
+00000FCA 6100F0D6		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+00000FCE 6070			 BRA.S	   L.24.10(PC)
+		      *							       LINE 16/10
+00000FD0 2E6EFFE8     L.24.2	 MOVEA.L   ST.24(A6),A7			         -24
+00000FD4 4EFB8002		 JMP	   H.24.2(PC,A0.W)
+00000FD8 00000000     H.24.2	 DC.L	   L.24.200000FDC 00000000		 DC.L	   0				         $0
+00000FE0 FFEC			 DC.W	   -20				         $FFFFFFEC
+00000FE2 0000			 DC.W	   STATIC.+2			         EXPLICIT_SIGNAL
+00000FE4 0000			 DC.W	   L.24.3+12-*
+00000FE6 FFFE			 DC.W	   -2				         $FFFFFFFE
+00000FE8 0000			 DC.W	   L.24.9+16-*
+00000FEA	      L.24.3
+		      *							       LINE 16/11
+00000FEA 487A0024     L.24.4	 PEA	   H.24.5(PC)
+00000FEE 4EB900000000		 JSR	   E.HSET
+		      *							       LINE 16/12
+00000FF4 486D8002		 PEA	   STATIC.+2-32768(A5)		         EXPLICIT_SIGNAL
+00000FF8 4EB900000000		 JSR	   E.SIGNAL
+		      *							       LINE 16/13
+00000FFE 487800F1		 PEA	   241				         $F1
+00001002 6100F09E		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+00001006 6024			 BRA.S	   L.24.8(PC)
+		      *							       LINE 16/14
+00001008 2E6EFFE8     L.24.5	 MOVEA.L   ST.24(A6),A7			         -24
+0000100C 4EFB8002		 JMP	   H.24.5(PC,A0.W)
+00001010 00000000     H.24.5	 DC.L	   L.24.5
+00001014 00000000		 DC.L	   H.24.2
+00001018 FFF6			 DC.W	   -10				         $FFFFFFF6
+0000101A 0000			 DC.W	   STATIC.+2			         EXPLICIT_SIGNAL
+0000101C 0000			 DC.W	   L.24.6+12-*
+0000101E FFFE			 DC.W	   -2				         $FFFFFFFE
+00001020 0000			 DC.W	   L.24.7+16-*
+		      *							       LINE 16/15
+00001022 6008	      L.24.6	 BRA.S	   L.24.8(PC)
+		      *							       LINE 16/16
+00001024 487800F2     L.24.7	 PEA	   242				         $F2
+00001028 6100F078		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+0000102C 487AFFAA     L.24.8	 PEA	   H.24.2(PC)
+00001030 4EB900000000		 JSR	   E.HREST
+		      *							       LINE 16/17
+00001036 6008			 BRA.S	   L.24.10(PC)
+		      *							       LINE 16/18
+00001038 487800F3     L.24.9	 PEA	   243				         $F3
+0000103C 6100F064		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+00001040 42A7	      L.24.10	 CLR.L	   -(A7)
+00001042 4EB900000000		 JSR	   E.HREST
+		      *							       LINE 16/19
+00001048 4EB900000000		 JSR	   M.RETURN
+		      *
+		      *		 Begin subroutine TEST_SIGNAL_WITH_OUTER_HANDLER		      *
+				 XDEF	   TEST_SIG
+0000104E	      TEST_SIG
+0000104E 7010	      B.25	 MOVEQ	   #16,D0			         $10
+00001050 2F00			 MOVE.L	   D0,-(A7)
+00001052 6126			 BSR.S	   X.25.1(PC)
+00001054 00000000		 DC.L	   C.1
+00001058 0000			 DC.W	   0				         $0
+0000105A 001E			 DC.W	   30				       String length word
+0000105C 544553545F53		 DC.B	   'TEST_SIGNAL_WITH_OUTER_HANDLER'
+0000107A 203CFFFFFFE4 X.25.1	 MOVE.L	   #T.25-4,D0			         -24
+00001080 4EB900000000		 JSR	   M.ENTRY
+00001086 2D4FFFE8		 MOVE.L	   A7,ST.25(A6)			         -24
+		      *							       LINE 17/7
+0000108A 487A0078     L.25.1	 PEA	   H.25.8(PC)
+0000108E 4EB900000000		 JSR	   E.HSET
+		      *							       LINE 17/9
+00001094 487A0024     L.25.2	 PEA	   H.25.3(PC)
+00001098 4EB900000000		 JSR	   E.HSET
+		      *							       LINE 17/10
+0000109E 486D8000		 PEA	   STATIC.+0-32768(A5)		         EXPLICIT_SIGNAL
+000010A2 4EB900000000		 JSR	   E.SIGNAL
+		      *							       LINE 17/11
+000010A8 487800FA		 PEA	   250				         $FA
+000010AC 6100EFF4		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+000010B0 6036			 BRA.S	   L.25.7(PC)
+		      *							       LINE 17/12
+000010B2 2E6EFFE8     L.25.3	 MOVEA.L   ST.25(A6),A7			         -24
+000010B6 4EFB8002		 JMP	   H.25.3(PC,A0.W)
+000010BA 00000000     H.25.3	 DC.L	   L.25.3
+000010BE 00000000		 DC.L	   H.25.8
+000010C2 FFF6			 DC.W	   -10				         $FFFFFFF6
+000010C4 0000			 DC.W	   STATIC.+0			         EXPLICIT_SIGNAL
+000010C6 0000			 DC.W	   L.25.4+12-*
+000010C8 FFFE			 DC.W	   -2				         $FFFFFFFE
+000010CA 0000			 DC.W	   L.25.6+16-*
+000010CC	      L.25.4
+		      *							       LINE 17/13
+		      *							       LINE 17/14
+000010CC 486D8000     L.25.5	 PEA	   STATIC.+0-32768(A5)		         EXPLICIT_SIGNAL
+000010D0 4EB900000000		 JSR	   E.SIGNAL
+		      *							       LINE 17/15
+000010D6 487800FB		 PEA	   251				         $FB
+000010DA 6100EFC6		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+		      *							       LINE 17/16000010DE 6008			 BRA.S	   L.25.7(PC)
+		      *							       LINE 17/17
+000010E0 487800FC     L.25.6	 PEA	   252				         $FC
+000010E4 6100EFBC		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+000010E8 487A001A     L.25.7	 PEA	   H.25.8(PC)
+000010EC 4EB900000000		 JSR	   E.HREST
+		      *							       LINE 17/18
+		      *							       LINE 17/19
+000010F2 487800FD		 PEA	   253				         $FD
+000010F6 6100EFAA		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+000010FA 6024			 BRA.S	   L.25.11(PC)
+		      *							       LINE 17/20
+000010FC 2E6EFFE8     L.25.8	 MOVEA.L   ST.25(A6),A7			         -24
+00001100 4EFB8002		 JMP	   H.25.8(PC,A0.W)
+00001104 00000000     H.25.8	 DC.L	   L.25.8
+00001108 00000000		 DC.L	   0				         $0
+0000110C FFEC			 DC.W	   -20				         $FFFFFFEC
+0000110E 0000			 DC.W	   STATIC.+0			         EXPLICIT_SIGNAL
+00001110 0000			 DC.W	   L.25.9+12-*
+00001112 FFFE			 DC.W	   -2				         $FFFFFFFE
+00001114 0000			 DC.W	   L.25.10+16-*
+		      *							       LINE 17/21
+00001116 6008	      L.25.9	 BRA.S	   L.25.11(PC)
+		      *							       LINE 17/22
+00001118 487800FE     L.25.10	 PEA	   254				         $FE
+0000111C 6100EF84		 BSR.L	   B.4(PC)			         ERROR = CODE.+$A2
+00001120 42A7	      L.25.11	 CLR.L	   -(A7)
+00001122 4EB900000000		 JSR	   E.HREST
+		      *							       LINE 17/23
+00001128 4EB900000000		 JSR	   M.RETURN
+		      *
+		      *		 Constant area for subroutine PERFORM_TESTS
+		      *
+0000112E 556E64657465 K.4	 DC.B	   'Undetected exception occurred'
+0000114B 00000001		 DS.B	   1
+		      *
+		      *		 Begin subroutine PERFORM_TESTS
+		      *
+				 XDEF	   PERFORM_
+0000114C	      PERFORM_
+0000114C 7010	      B.26	 MOVEQ	   #16,D0			         $10
+0000114E 2F00			 MOVE.L	   D0,-(A7)
+00001150 6116			 BSR.S	   X.26.1(PC)
+00001152 00000000		 DC.L	   C.1
+00001156 0000			 DC.W	   0				         $000001158 000D			 DC.W	   13				       String length word
+0000115A 504552464F52		 DC.B	   'PERFORM_TESTS'
+00001167 00000001		 DS.B	   1				       Fill byte
+00001168 203CFFFFFFEE X.26.1	 MOVE.L	   #T.26-4,D0			         -14
+0000116E 4EB900000000		 JSR	   M.ENTRY
+00001174 2D4FFFF2		 MOVE.L	   A7,ST.26(A6)			         -14
+		      *							       LINE 18/3
+00001178 487A004E     L.26.1	 PEA	   H.26.2(PC)
+0000117C 4EB900000000		 JSR	   E.HSET
+		      *							       LINE 18/4
+00001182 6100EF92		 BSR.L	   B.5(PC)			         TEST_MASK_UNMASK_PEN 
+		      *							       LINE 18/5
+00001186 6100F150		 BSR.L	   B.6(PC)			         TEST_WITH = CODE.+$2D
+		      *							       LINE 18/6
+0000118A 6100F23A		 BSR.L	   B.8(PC)			         TEST_OTHERS = CODE.+$
+		      *							       LINE 18/7
+0000118E 6100F36A		 BSR.L	   B.9(PC)			         TEST_RESIGNAL_LABELL 
+		      *							       LINE 18/8
+00001192 6100F48A		 BSR.L	   B.11(PC)			         TEST_RESIGNAL_OTHERS 
+		      *							       LINE 18/9
+00001196 6100F504		 BSR.L	   B.13(PC)			         TEST_EXCEPTION_WITH_ 
+		      *							       LINE 18/10
+0000119A 6100F608		 BSR.L	   B.14(PC)			         TEST_EXCEPTION_WITH_ 
+		      *							       LINE 18/11
+0000119E 6100F712		 BSR.L	   B.15(PC)			         TEST_LOCAL_GOTO = COD
+		      *							       LINE 18/12
+000011A2 6100F862		 BSR.L	   B.16(PC)			         TEST_NON_LOCAL_GOTO =
+		      *							       LINE 18/13
+000011A6 6100F8A8		 BSR.L	   B.18(PC)			         TEST_HANDLER_TO_EXCE 
+		      *							       LINE 18/14
+000011AA 6100FA3A		 BSR.L	   B.19(PC)			         TEST_HANDLER_TO_SIGN 
+		      *							       LINE 18/15
+000011AE 6100FC16		 BSR.L	   B.20(PC)			         TEST_RETURN_HANDLER_ 
+		      *							       LINE 18/16
+000011B2 6100FD06		 BSR.L	   B.22(PC)			         TEST_RETURN_HANDLER_ 
+		      *							       LINE 18/17
+000011B6 6100FDBE		 BSR.L	   B.24(PC)			         TEST_SIGNAL_WITH_INN 
+		      *							       LINE 18/18
+000011BA 6100FE92		 BSR.L	   B.25(PC)			         TEST_SIGNAL_WITH_OUT 
+000011BE 6046			 BRA.S	   L.26.5(PC)
+		      *							       LINE 18/22
+000011C0 2E6EFFF2     L.26.2	 MOVEA.L   ST.26(A6),A7			         -14
+000011C4 4EFB8002		 JMP	   H.26.2(PC,A0.W)
+000011C8 00000000     H.26.2	 DC.L	   L.26.2
+000011CC 00000000		 DC.L	   0				         $0000011D0 FFF6			 DC.W	   -10				         $FFFFFFF6
+000011D2 FFFE			 DC.W	   -2				         $FFFFFFFE
+000011D4 0000			 DC.W	   L.26.3+12-*
+000011D6	      L.26.3
+		      *							       LINE 18/23
+		      *							       LINE 18/24
+000011D6 202D0000     L.26.4	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+000011DA 4A80			 TST.L	   D0
+000011DC 6606			 BNE.S	   X.26.2(PC)
+000011DE 4EB900000000		 JSR	   E.FILE
+000011E4 721D	      X.26.2	 MOVEQ	   #29,D1			         $1D
+000011E6 3F01			 MOVE.W	   D1,-(A7)
+000011E8 7204			 MOVEQ	   #4,D1			         $4
+000011EA 3F01			 MOVE.W	   D1,-(A7)
+000011EC 487AFF40		 PEA	   K.4(PC)			         CODE.+$112E
+000011F0 2F00			 MOVE.L	   D0,-(A7)
+000011F2 4EB900000000		 JSR	   T.WRITE
+000011F8 2F00			 MOVE.L	   D0,-(A7)
+000011FA 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 18/25
+00001200 4EB900000000		 JSR	   E.MSG
+		      *							       LINE 18/26
+00001206 42A7	      L.26.5	 CLR.L	   -(A7)
+00001208 4EB900000000		 JSR	   E.HREST
+		      *							       LINE 18/27
+0000120E 4EB900000000		 JSR	   M.RETURN
+		      *
+		      *		 Constant area for subroutine WRAPUP
+		      *
+00001214 456E64204558 K.5	 DC.B	   'End EXE015'
+		      *
+		      *		 Begin subroutine WRAPUP
+		      *
+				 XDEF	   WRAPUP  
+0000121E	      WRAPUP  
+0000121E 7010	      B.27	 MOVEQ	   #16,D0			         $10
+00001220 2F00			 MOVE.L	   D0,-(A7)
+00001222 610E			 BSR.S	   X.27.1(PC)
+00001224 00000000		 DC.L	   C.1
+00001228 0000			 DC.W	   0				         $0
+0000122A 0006			 DC.W	   6				       String length word
+0000122C 575241505550		 DC.B	   'WRAPUP'
+00001232 203CFFFFFFFC X.27.1	 MOVE.L	   #T.27-4,D0			         0
+00001238 4EB900000000		 JSR	   M.ENTRY
+		      *							       LINE 19/3		      *							       LINE 19/4
+0000123E 202D0000     L.27.1	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00001242 4A80			 TST.L	   D0
+00001244 6606			 BNE.S	   X.27.2(PC)
+00001246 4EB900000000		 JSR	   E.FILE
+0000124C 720A	      X.27.2	 MOVEQ	   #10,D1			         $A
+0000124E 3F01			 MOVE.W	   D1,-(A7)
+00001250 7204			 MOVEQ	   #4,D1			         $4
+00001252 3F01			 MOVE.W	   D1,-(A7)
+00001254 487AFFBE		 PEA	   K.5(PC)			         CODE.+$1214
+00001258 2F00			 MOVE.L	   D0,-(A7)
+0000125A 4EB900000000		 JSR	   T.WRITE
+00001260 2F00			 MOVE.L	   D0,-(A7)
+00001262 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 19/5
+00001268 4EB900000000		 JSR	   M.RETURN
+		      *
+		      *		 Begin program EXE015
+		      *
+				 XDEF	   M.START 
+0000126E	      M.START 
+0000126E 7010	      B.1	 MOVEQ	   #16,D0			         $10
+00001270 2F00			 MOVE.L	   D0,-(A7)
+00001272 610E			 BSR.S	   X.1.1(PC)
+00001274 00000000		 DC.L	   C.1
+00001278 0000			 DC.W	   0				         $0
+0000127A 0006			 DC.W	   6				       String length word
+0000127C 455845303135		 DC.B	   'EXE015'
+00001282 203CFFFFFFFC X.1.1	 MOVE.L	   #T.1-4,D0			         0
+00001288 4EB900000000		 JSR	   M.ENTRY
+		      *							       LINE 20/2
+		      *							       LINE 20/3
+0000128E 6100ED8C     L.1.1	 BSR.L	   B.3(PC)			         INITIALIZE = CODE.+$1
+		      *							       LINE 20/4
+00001292 6100FEB8		 BSR.L	   B.26(PC)			         PERFORM_TESTS = CODE.
+		      *							       LINE 20/5
+00001296 6186			 BSR.S	   B.27(PC)			         WRAPUP = CODE.+$121E
+		      *							       LINE 20/6
+00001298 4EB900000000		 JSR	   M.STOP
+				 XREF	   M.ENTRY
+				 XREF	   T.REWRIT
+				 XREF	   TTYOUTPU
+				 XREF	   E.FILE
+				 XREF	   T.WRITE
+				 XREF	   T.WRTLN				 XREF	   T.BREAK
+				 XREF	   M.RETURN
+				 XREF	   E.CATTN
+				 XREF	   E.MSKD
+				 XREF	   E.PEND
+				 XREF	   E.MASK
+				 XREF	   E.UNMASK
+				 XREF	   H.NEW
+				 XREF	   E.PTR
+				 XREF	   E.HSET
+				 XREF	   G.I4MULT
+				 XREF	   E.CMATH
+				 XREF	   E.MATHST
+				 XREF	   E.HREST
+				 XREF	   G.I4DIV
+				 XREF	   E.CPROG
+				 XREF	   E.RESIG
+				 XREF	   E.SIGNAL
+				 XREF	   E.MSG
+				 XREF	   M.STOP
+		      *
+		      *		 Code area:      00001260 bytes (4704 decimal)
+		      *		 Constant area:  0000003E bytes (62 decimal)
+		      *		 Static area:    0000000E bytes (14 decimal)
+		      *
+	 00000000		 END
+  @..

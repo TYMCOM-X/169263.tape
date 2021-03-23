@@ -1,0 +1,140 @@
+areas
+  area1 size 4000b
+
+modules
+  reader in area1
+  writer in area1
+  getlin in area1
+  scan in area1
+  justfy in area1
+
+symbols
+  output var
+  input var
+  ttyout var
+  do_scr var
+  error var
+
+  getlin var in getlin
+
+  initju var in justfy
+  justli var in justfy
+
+  ondeca var in reader
+  offund var in reader
+  offcon var in reader
+  offdec var in reader
+  oncont var in reader
+  readli var in reader
+  initre var in reader
+  onunde var in reader
+  getlnr var in reader
+
+  wrtlin var in writer
+
+  initsc var in scan
+  scan var in scan
+
+(* runtim var *)
+(* ireset var *)
+(* passcc var *)
+(* return var *)
+(* pathna var *)
+  clevel var
+  curlev var
+  pr_fil var
+  open_f var
+  query var
+  bfpad. var
+  end. var
+  init0. var
+  trace var
+  wrtpc. var
+  die. var
+  exit. var
+  initp. var
+  wrtdc. var
+  pntry. var
+  prtrn. var
+  alc0. var
+  new. var
+  dspos. var
+  mark. var
+  rleas. var
+  m.xf var
+  m.fc var
+  m.fx var
+  m.ff var
+  mp.ff var
+  m.rc var
+  mp.rc var
+  mpu.rc var
+  mu.rc var
+  m.rf var
+  mp.rf var
+  xf. var
+  xx. var
+(* rf. var *)
+(* rx. var *)
+  xf.p var
+  xx.p var
+  csp.fc var
+  csp.fx var
+  csp.ff var
+  vf.xo var
+  sm.ss var
+  csp.f var
+  csp.x var
+  smv.lo var
+  smv.ll var
+  in.vl var
+  rest.6 var
+  save.6 var
+  fail.7 var
+  save.7 var
+  rest.7 var
+  open. var
+  rewrt. var
+  closa. var
+  close. var
+  closd. var
+  frecn. var
+  getcn. var
+  break. var
+  getcr. var
+  putch. var
+  putpg. var
+  rd.fdr var
+  rd.lnn var
+  wr.dnr var
+  wr.fdr var
+  wr.lnn var
+  wr.ssn var
+  wr.svn var
+  getch. var
+  putcr. var
+  rd.fdn var
+  rd.fsn var
+  rd.lnr var
+  rd.ssr var
+  wr.dnn var
+  wr.fdn var
+  wr.fsn var
+  wr.lnr var
+  wr.ssr var
+  wr.svr var
+  iosym. var
+  ioerr. var
+  twait. var
+  stmt. var
+  debug. var 
+
+storage
+size 5000b
+  getlin size 1000b
+  reader size 1000b
+  writer size 1000b
+  scan size 1000b
+  justfy size 1000b
+
+end

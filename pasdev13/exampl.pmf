@@ -1,0 +1,12 @@
+#define(#fix,fn,
+l fn
+<:1,$s:ru odms[52250,220]:.^Ur odms[52250,220]|U:p
+w
+:>)
+do qed
+#fix(examp1.txt)
+#fix(examp2.txt)
+#fix(examp3.txt)
+#fix(examp4.txt)
+#fix(examp5.txt)
+q

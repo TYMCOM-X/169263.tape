@@ -1,0 +1,21 @@
+<FILE SPEC>;
+
+*
+* Define a dummy set of all the terminals just to control the order in which
+* LEXGEN sees, and thus encodes, the terminals. 
+*
+"dummy" ::= ['ALPHA' 'OCTAL_DIGIT' 'DECIMAL_DIGIT' '#' '?' '*' '[' ',' ']' '<' '>' '.' ':'];
+"ALPHANUMS" ::= ['ALPHA' 'OCTAL_DIGIT' 'DECIMAL_DIGIT'];
+"NAME CHARS" ::= ['ALPHA' 'OCTAL_DIGIT' 'DECIMAL_DIGIT' '#' '?' '*'];
+
+<DIRECTORY> ::= ('[' 'OCTAL_DIGIT'* ',' 'OCTAL_DIGIT'* ']') !
+	('[' ']');
+<PROT> ::= '<' 'OCTAL_DIGIT' 'OCTAL_DIGIT' 'OCTAL_DIGIT' '>';
+<DIR OR PROT> ::= ( <DIRECTORY> ) ! ( <PROT> ) ! 
+	( <DIRECTORY> <PROT> ) ! ( <PROT> <DIRECTORY> );
+<EXTENSION> ::= '.' "NAME CHARS" *;
+<NAME> ::= "NAME CHARS"+;
+<DEVICE> ::= "ALPHANUMS"+ ':';
+<DEC FILE> ::= ( <DEVICE> ! '' )  ( <NAME> )  ( <EXTENSION> ! '' )  (<DIR OR PROT> ! '' ) ;
+
+<FILE SPEC> ::= <DEC FILE>

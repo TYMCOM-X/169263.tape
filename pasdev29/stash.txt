@@ -1,0 +1,1057 @@
+
+
+
+
+
+
+
+
+
+
+
+
+                                 File Stash Facility                                 ____ _____ ________
+
+                                     Version 1.0
+
+
+               STASH  is  a  program  that  facilitates  the  addition  and
+          extraction  of  files  from a library.  This "packing" of several
+          files into a single file saves a significant amount of disk space
+          (typically  around 25%) as well as making the transportation of a
+          number of separate, but related files (i.e., .TYP, .INC, or  .HDR
+          files) easier.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     File Stash Facility, Version 1.0
+                                                          November 21, 1979
+
+
+     1.0  The Library          ___ _______
+
+               STASH combines separate files into segments of a single file
+          called a library.  In addition to these segments, a library has a                   _______
+          fixed  number  of  blocks  at  the beginning containing directory
+          information about each segment.  A library, then, consists  of  a
+          header  of  directory  information, and then successive segments,
+          each segment corresponding to a single file.
+               A "packing" effect occurs when  files  are  stored  in  this
+          fashion  because  the  amount  of free space following the end of
+          each segment is always less than one block (128  words).  On  the
+          other  hand,  separate files may contain more than five blocks of
+          free space after the end-of-file.
+
+
+                LIBRARY                              "External"                _______
+                                                       Files                                                       _____
+                  ---                                   ---
+                   |                                     |
+               directory                               file1
+              information                                |
+                   |                                     -
+                   |                                     |
+                  ---                                free space
+                   |                                     |
+                segment1                                ---
+                   |
+                  ---                                   ---
+               free space                                |
+                  ---                                    |
+                   |                                   file2
+                   |                                     |
+                segment2                                ---
+                   |                                 free space
+                  ---                                    |
+               free space                               ---
+                  ---
+                segment3                                ---
+                   |                                   file3
+                  ---                                    |
+               free space                               ---
+                  ---                                    |
+                                                     free space
+                                                         |
+                                                         |
+                                                        ---
+
+
+
+
+
+
+
+
+
+                                                                     Page 2
+
+
+
+
+
+
+     File Stash Facility, Version 1.0
+                                                          November 21, 1979
+
+
+     2.0  Input/Output          ____________
+
+               All file data transfers are done in  one  block  (128  word)
+          increments.  Library  segment blocks consist of 127 words of data
+          plus a one word checksum.  The efficiency of transferring  blocks
+          of data allows STASH to add and extract files very efficiently.
+
+
+     3.0  The Command Set          ___ _______ ___
+
+               Listed  below  are  the  STASH commands and a description of
+          their syntax and functions.  The  minimal  abbreviations  of  the
+          commands are underlined.
+
+     3.1  OPEN  <library name>          _
+
+               Either  creates  a  new  library  or  prepares  a previously
+          existing one for processing.  <library name>  is  simply  a  file
+          name.  If  no file extension is specified, .LIB is assumed.  If a
+          library is currently open, it is closed prior to opening the  new
+          one.
+
+     3.2  ADD  <filename> [,<filename>]*          _
+
+               Adds the specified file(s) to the library as segments of the
+          same name.  A <filename> is of the  form,  <name>  [.<extension>]
+          [ '['<ppn>']' ].   If   a   segment   of   the   same  file  name
+          (disregarding <ppn>) already exists  in  the  library,  then  the
+          existing entry is deleted.
+
+     3.3  EXTRACT  <segment name> [,<segment name>]*          _
+
+               Copies  the  specified  library segment(s) into files of the
+          same name.  Wildcarding with '*' or '?' may be used to specifying
+          several segments at a time.
+
+     3.4  DELETE  <segment name> [,<segment name>]*          _
+
+               Deletes  the  specified segments from the library directory.
+          This does not actually remove the segment*, it simply marks it as                                 ______
+          being not in use.  Wildcarding ('*', '?') may be used in the name
+          specifications.
+
+     3.5  DIR  [ <segment name>[,<segment name>]* ]          ___
+
+               Lists directory information about the size,  creation  date,
+          and  access date for each of the specified segments.  Wildcarding
+          may be used.  If no segment name is specified,  then  information
+          about all of the segments in the library is listed.
+
+
+
+
+
+
+     *See PACK, section 3.6.
+                                                                     Page 3
+
+
+
+
+
+     File Stash Facility, Version 1.0
+                                                          November 21, 1979
+
+
+     3.6  PACK          ____
+
+               "Squeezes"  out the space left by previously deleted library
+          segments.
+
+     3.7  HELP  [ <command> ]          ____
+
+               Lists helpful information about the specified  command.  The
+          command  may  be  any of the ones enumerated in sections 3.1-3.8.
+          If no command is specified, then information  about  all  of  the
+          commands is listed.
+
+     3.8  QUIT          _
+
+               Closes the library and exits.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                     Page 4
+
+
+
+
+
+
+     File Stash Facility, Version 1.0
+                                                          November 21, 1979
+
+
+     4.0  STASH Interfaces          _____ __________
+
+               In  addition  to  the  STASH  program, there are available a
+          number of modules with routines that facilitate the management of
+          a   library.   The   file   LIB.TYP  contains  all  of  the  type
+          declarations needed  for  the  interfaces  to  STASH.  The  type,
+          LIBRARY,  is  the main library record.  It contains the I/O file,
+          buffers, and other utility variables that allow the interfaces to
+          operate properly on the library.
+               Other types of interest are:
+
+
+
+          NAME_TYPE = RECORD
+            NAME : PACKED ARRAY[1..6] OF CHAR;
+            EXT  : PACKED ARRAY[1..3] OF CHAR;
+          END;
+
+          WORD = -377777777777B..377777777777B;
+
+          DIRECTORY_ENTRY = RECORD
+            SEG_NAME : NAME_TYPE;             (* the segment name *)
+            LENGTH : 0..MAXIMUM(WORD);        (* char length of seg *)
+            WRITE_DATE,                       (* creation date *)
+            ACCESS_DATE : DTIME_INT;          (* last access date *)
+            IN_USE : BOOLEAN                  (* false if deleted *)
+          END;
+
+
+
+               Note  that these interfaces must be used with the new Pascal                                                                 ___
+          compiler, and with the compiler's SPECIAL(INTEGERS) option.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                     Page 5
+
+
+
+
+
+
+     File Stash Facility, Version 1.0
+                                                          November 21, 1979
+
+
+     4.1  Module LIBASN          ______ ______
+
+               Module LIBASN handles the association  and  dissociation  of
+          the library record to a file.
+
+     4.1.1  OPEN_LIBRARY            ____________
+
+          PUBLIC PROCEDURE OPEN_LIBRARY ( VAR F: LIBRARY;
+                                          LIB_NAME: NAME_TYPE;
+                                          VAR NEW: BOOLEAN;
+                                          VAR ERR: ERRCODE );
+
+               This  procedure  opens  a  library  file and initializes all
+          internal buffers and pointers.
+
+          Input          _____
+
+            F       is the library record to be associated  to  the  opened
+                    library.  All  STASH  interfaces operate on the library
+                    through this record.
+
+            LIB_NAME
+                    is the name of the library file to be opened.
+
+          Output          ______
+
+            NEW     is TRUE when a new library file has  been  created.  If
+                    the  given  library  was  previously in existence, then
+                    this returns as FALSE.
+
+            ERR     is a STASH error code.  An error occurs if the  library
+                    can not be opened (LIB_OPENFAIL), otherwise LIB_OK.
+
+     4.1.2  CLOSE_LIBRARY            _____________
+
+          PUBLIC PROCEDURE CLOSE_LIBRARY ( VAR F: LIBRARY );
+
+               This procedure closes the library file.
+
+          Input          _____
+
+            F       is the library record to be closed.
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                     Page 6
+
+
+
+
+
+
+     File Stash Facility, Version 1.0
+                                                          November 21, 1979
+
+
+     4.2  Module DIRIO          ______ _____
+
+               This  module  has  the  routines  that  handle  I/O with the
+          library directory entries.
+
+     4.2.1  RD_DIR            ______
+
+          PUBLIC PROCEDURE RD_DIR ( VAR F: LIBRARY;
+                                    DIR_INDEX: DIR_IDX;
+                                    VAR ENTRY: DIRECTORY_ENTRY;
+                                    VAR ERR: ERRCODE );
+
+               This procedure reads  the  specified  directory  entry.  The
+          entry is specified by an index into the directory.
+
+          Input          _____
+
+            DIR_INDEX
+                    is  the  index of the directory entry to be read.  This
+                    must be an  integer  in  the  range  of  1..(number  of
+                    entries).
+
+          Output          ______
+
+            ENTRY   is the directory entry record at position DIR_INDEX.
+
+            ERR     is a STASH error code.  An error occurs if DIR_INDEX is
+                    past the last directory entry (BAD_DIRIDX), or  if  the
+                    library, F, is not open (LIB_IOFATAL).
+
+     4.2.2  WR_DIR            ______
+
+
+          PUBLIC PROCEDURE WR_DIR ( VAR F : LIBRARY;
+                                    DIR_INDEX : DIR_IDX;
+                                    ENTRY : DIRECTORY_ENTRY;
+                                    VAR ERR : ERRCODE );
+
+               This  procedure  writes  the  given  directory  entry at the
+          specified index location.
+
+          Input          _____
+
+            DIR_INDEX
+                    is the index of the write position.  This  must  be  an
+                    integer in the range of 1..maximum(dir_idx).
+
+            ENTRY   is the directory entry record to write to the library.
+
+
+
+
+
+
+
+                                                                     Page 7
+
+
+
+
+
+
+     File Stash Facility, Version 1.0
+                                                          November 21, 1979
+
+
+          Output          ______
+
+            ERR     is a STASH error code.  An error occurs if DIR_INDEX is
+                    greater than maximum(dir_idx) (BAD_DIRIDX), or  if  the
+                    library is not open (LIB_NOTOPEN).
+
+     4.2.3  FIND_DIR            ________
+
+          PUBLIC PROCEDURE FIND_DIR ( VAR F : LIBRARY;
+                                      SEG_NAME : NAME_TYPE;
+                                      VAR DIR_INDEX : DIR_IDX;
+                                             ): BOOLEAN;
+
+               This  procedure  searches  for  a directory entry whose name
+          matches the given name.  Wildcarding may be used.
+
+          Input          _____
+
+            SEG_NAME
+                    is the name of the segment whose directory entry is  to
+                    be  searched  for.  '*' and '?' may be used in the name
+                    for wildcarding.
+
+            DIR_INDEX
+                    specifies the starting position in  the  directory  for
+                    the search.  The search begins at DIR_INDEX+1.
+
+          Output          ______
+
+            DIR_INDEX
+                    is  the  index  of  the  directory  entry  matching the
+                    SEG_NAME.  If  the  search  had  failed,  this  remains
+                    unchanged.
+
+            ERR     is  a STASH error code.  An error occurs if the library
+                    is not open (LIB_IOFATAL).
+
+            FIND_DIR
+                    is TRUE if the search was successful, otherwise FALSE.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                     Page 8
+
+
+
+
+
+
+     File Stash Facility, Version 1.0
+                                                          November 21, 1979
+
+
+     4.3  Module SEGASN          ______ ______
+
+               This module handles the initiation and termination of output
+          to the bodies of library segments.
+
+     4.3.1  OPN_SEGMENT            ___________
+
+          PUBLIC PROCEDURE OPN_SEGMENT ( VAR F : LIBRARY;
+                                         SEG_NAME : NAME_TYPE;
+                                         VAR ERR : ERRCODE );
+
+               This  procedure  creates a new directory entry for the given
+          segment name, and prepares the library for the addition of a  new
+          segment.  Only  one  segment  may  be  open for output at a time.                          ___
+          Therefore, if a segment was already open at the time of the call,
+          it  is  closed prior to opening the new one.  Subsequent calls to
+          module SEGOUT routines will add to this new segment.
+
+          Input          _____
+
+            SEG_NAME
+                    is the name of the segment for which the new  directory
+                    entry is to be created and written.
+
+          Output          ______
+
+            ERR     is  a STASH error code.  An error occurs if the library
+                    is not open (LIB_IOFATAL).
+
+     4.3.2  CLS_SEGMENT            ___________
+
+          PUBLIC PROCEDURE CLS_SEGMENT ( VAR F : LIBRARY );
+
+               This procedure closes the segment to any further outputs  to
+          the currently open segment.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                     Page 9
+
+
+
+
+
+
+     File Stash Facility, Version 1.0
+                                                          November 21, 1979
+
+
+     4.4  Module SEGIN          ______ _____
+
+               This module handles the reading of library segments into the
+          calling program's variables.  Library segments  can  be  read  as
+          words  (36-bit  integers),  characters, or lines, and the user is
+          advised against mixing these input modes.  Any number of segments
+          may  be  read, since segments do not need to be opened for input.
+          To specify the segment to read from, one obtains the  DIR_IDX  of
+          the  segment to read, usually from procedure FIND_DIR, and passes
+          it to the appropriate segin procedure.
+
+     4.4.1  RD_WORD            _______
+
+          PUBLIC PROCEDURE RD_WORD ( VAR F : LIBRARY;
+                                     DIR_INDEX : DIR_IDX;
+                                     VAR INDEX : WORD;
+                                     NUM_TO_READ : WORD;
+                                     VAR WORDS_LEFT : WORD;
+                                     VAR WORD_ARRAY : ARRAY[1..*] OF WORD;
+                                     VAR ERR : ERRCODE );
+
+               This procedure fills an array with words  from  a  specified
+          segment and location.
+
+          Input          _____
+
+            DIR_INDEX
+                    is  the  index of the directory entry of the segment to
+                    read.
+
+            INDEX   is the index of the start  of  the  read.  The  segment
+                    read  begins from the INDEXed word in the segment.  The
+                    index of the first word in a segment is 1.
+
+            NUM_TO_READ
+                    is the number of words to read from  the  segment  into
+                    the array.
+
+          Output          ______
+
+            WORDS_LEFT
+                    is  defined  as NUM_TO_READ - (number of words actually
+                    read).  The number of words actually read may  be  less
+                    than   NUM_TO_READ   if  the  end  of  the  segment                     encountered, or if an error occurs.  Normally, however,
+                    this is 0.
+
+            WORD_ARRAY
+                    is the array to be filled with the read words.
+
+            ERR     is a STASH error code.  An error occurs if the INDEX is
+                    greater than the segment's length (INTR_FATAL),  or  if
+                    the library is not open (LIB_IOFATAL).
+
+
+                                                                    Page 10
+
+
+
+
+
+
+     File Stash Facility, Version 1.0
+                                                          November 21, 1979
+
+
+     4.4.2  RD_CHAR            _______
+
+          PUBLIC PROCEDURE RD_CHAR ( VAR F : LIBRARY;
+                                     DIR_INDEX : DIR_IDX;
+                                     VAR INDEX : CHAR_IDX;
+                                     NUM_TO_READ : CHAR_IDX;
+                                     VAR CHARS_LEFT : CHAR_IDX;
+                                     VAR CHAR_ARRAY : ARRAY[1..*] OF CHAR;
+                                     VAR ERR : ERRCODE );
+
+               This  procedure  fills  an  array  with  characters  from  a
+          specified segment and location.
+
+          Input          _____
+
+            DIR_INDEX
+                    is the index of the directory entry of the  segment  to
+                    read.
+
+            INDEX   is  the  index  of  the start of the read.  The segment
+                    read begins from the INDEXed character in the  segment.
+                    The index of the first character in the segment is 1.
+
+            NUM_TO_READ
+                    is  the  number  of characters to read from the segment
+                    into the array.
+
+          Output          ______
+
+            CHARS_LEFT
+                    is defined  as  NUM_TO_READ  -  (number  of  characters
+                    actually read).  The number of characters actually read
+                    may be less than NUM_TO_READ if the end of the  segment
+                    is  encountered,  or  if  an  error  occurs.  Normally,
+                    however, this is 0.
+
+            CHAR_ARRAY
+                    is the array to be filled with the read characters.
+
+            ERR     is a STASH error code.  An error occurs if the INDEX is
+                    greater  than  the segment's length (INTR_FATAL), or if
+                    the library is not open (LIB_IOFATAL).
+
+     4.4.3  RD_LINE            _______
+
+          PUBLIC PROCEDURE RD_LINE ( VAR F : LIBRARY;
+                                     DIR_INDEX : DIR_IDX;
+                                     VAR INDEX : CHAR_IDX;
+                                     VAR LINE : STRING[*];
+                                     VAR ERR : ERRCODE );
+
+               This  procedure  reads  the  next  line  from  the  segment,
+          starting from the given index.
+
+
+                                                                    Page 11
+
+
+
+
+
+
+     File Stash Facility, Version 1.0
+                                                          November 21, 1979
+
+
+          Input          _____
+
+            DIR_INDEX
+                    is  the  index of the directory entry of the segment to
+                    read.
+
+            INDEX   is the index of the start  of  the  read.  The  segment
+                    read  begins from the INDEXed character in the segment.
+                    The index of the first character in a segment is 1.
+
+          Output          ______
+
+            LINE    is the line segment data is to be read into.
+
+            ERR     is a STASH error code.  An error occurs if the INDEX is
+                    greater  than  the segment's length (INTR_FATAL), or if
+                    the library is not open (LIB_IOFATAL).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                    Page 12
+
+
+
+
+
+
+     File Stash Facility, Version 1.0
+                                                          November 21, 1979
+
+
+     4.5  Module SEGOUT          ______ ______
+
+               This module handles the writing of data to library segments.
+          Segments  can  be written as words (36-bit integers), characters,
+          or lines, and the user is advised  against  mixing  these  output
+          modes.  Before  any writing to a segment can be accomplished, the
+          segment must be opened with  a  call  to  OPN_SEGMENT  in  module
+          SEGASN.  OPN_SEGMENT  prepares the segment for processing by this
+          module.
+
+     4.5.1  WR_WORD            _______
+
+          PUBLIC PROCEDURE WR_WORD ( VAR F : LIBRARY;
+                                     VAR NUM_TO_WRITE : WORD;
+                                     WORD_ARRAY : ARRAY[1..*] OF WORD;
+                                     VAR ERR : ERRCODE );
+
+               This procedure writes the given array of words to the end of
+          the currently open segment.
+
+          Input          _____
+
+            NUM_TO_WRITE
+                    is  the number of words from WORD_ARRAY to write to the
+                    currently open segment.
+
+            WORD_ARRAY
+                    is the array of word to be written to the open segment.
+
+          Output          ______
+
+            NUM_TO_WRITE
+                    is the number of words actually written  the  the  open
+                    segment.  This  normally does not change from its input
+                    value, unless NUM_TO_WRITE's  input  value  is  greater
+                    than the length of WORD_ARRAY, or an error occurs.
+
+            ERR     is a STASH error code.  An error occurs if a segment is
+                    not currently open (SEG_NOTOPEN), or if the library  is
+                    nor currently open (LIB_IOFATAL).
+
+     4.5.2  WR_CHAR            _______
+
+          PUBLIC PROCEDURE WR_CHAR ( VAR F : LIBRARY;
+                                     VAR NUM_TO_WRITE : CHAR_IDX;
+                                     CHAR_ARRAY : ARRAY[1..*] OF CHAR;
+                                     VAR ERR : ERRCODE );
+
+               This  procedure  writes the given array of characters to the
+          end of the currently open segment.
+
+
+
+
+
+                                                                    Page 13
+
+
+
+
+
+
+     File Stash Facility, Version 1.0
+                                                          November 21, 1979
+
+
+          Input          _____
+
+            NUM_TO_WRITE
+                    is the number of characters from CHAR_ARRAY to write to
+                    the currently open segment.
+
+            CHAR_ARRAY
+                    is  the  array  of characters to be written to the open
+                    segment.
+
+          Output          ______
+
+            NUM_TO_WRITE
+                    is the number of characters actually  written  the  the
+                    open  segment.  This  normally does not change from its
+                    input  value,  unless  NUM_TO_WRITE's  input  value  is
+                    greater  than  the  length  of  CHAR_ARRAY, or an error
+                    occurs.
+
+            ERR     is a STASH error code.  An error occurs if a segment is
+                    not  currently open (SEG_NOTOPEN), or if the library is
+                    nor currently open (LIB_IOFATAL).
+
+     4.5.3  WR_LINE            _______
+
+          PUBLIC PROCEDURE WR_LINE ( VAR F : LIBRARY;
+                                     LINE : STRING[*];
+                                     VAR ERR : ERRCODE );
+
+               This procedure writes the given string to  the  end  of  the
+          currently open segment, adding end of line characters.
+
+          Input          _____
+
+            LINE    is the string to be written to th open segment.
+
+          Output          ______
+
+            ERR     is a STASH error code.  An error occurs if a segment is
+                    not currently open (SEG_NOTOPEN), of if the library  is
+                    not open (LIB_IOFATAL).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                    Page 14
+
+
+
+
+
+
+     File Stash Facility, Version 1.0
+                                                          November 21, 1979
+
+
+     4.6  Module LIBPAK          ______ ______
+
+               This  module  handles the packing of the library file.  This
+          involves "squeezing" out previously deleted segments.
+
+     4.6.1  PACK            ____
+
+          PUBLIC PROCEDURE PACK ( VAR F : LIBRARY;
+                                  F_NAME : NAME_TYPE;
+                                  VAR ERR : ERRCODE );
+
+               This procedure packs the specified library file.
+
+          Input          _____
+
+            F_NAME  is the name of the file in which the  library  resides.
+                    It must match the file that F is associated to.
+
+          Output          ______
+
+            ERR     is  a STASH error code.  An error occurs if the library
+                    is not open (LIB_IOFATAL).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                    Page 15
+
+
+
+
+
+
+     File Stash Facility, Version 1.0
+                                                          November 21, 1979
+
+
+     5.0  Library Integrity          _______ _________
+
+               All I/O operations on the library file are done  in  such  a
+          way  that  at any point in time the directory accurately reflects
+          the actual contents of the library segments.  If for  any  reason
+          STASH  should  be  interrupted (attention, system failure, etc.),
+          the information contained in the  directory  would  still  be  an
+          accurate  reflection  of  the  library.  If  such an interruption
+          should occur during a write operation to a segment, then at  most
+          one  block (the current I/O buffer) would be lost.  The directory
+          would still be good in this situation.
+               Library packing is done by writing the packed version of the
+          library  to  a  backup  file,  and  then  when  the  operation is
+          complete, renaming files.
+               The library segments are checksummed, and tampering  with  a                                    ___
+          library  file with any routines other than the STASH routines can
+          irreversibly damage the library's contents.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                    Page 16
+
+
+
+
+    @@Ó

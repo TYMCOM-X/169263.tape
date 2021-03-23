@@ -1,0 +1,37 @@
+(*   +--------------------------------------------------------------+
+     |                                                              |
+     |                         D C _ E X T                          |
+     |                         - - - - - -                          |
+     |                                                              |
+     +--------------------------------------------------------------+
+     
+     MDSI, Company Confidential
+     
+     SYSTEM:  DTIME - day/time manipulation routines
+     
+     STARTED:  11/01/78
+     
+     PURPOSE:  Convert an  internal  day/time  to  standard  external
+        form.
+     
+     USAGE:
+     
+        EXTERNAL FUNCTION DC_EXT(DTIME: DTIME_INT): DTIME_EXT;
+     
+     INPUT:
+     
+        DTIME       a day/time in internal form.
+     
+     OUTPUT:
+     
+        <return value>
+                    a day/time in standard external form.
+     
+     INCLUDE FILES REQUIRED:
+     
+        DTIME.TYP
+        DTIME.INC
+     
+     RESPONSIBLE:  S.  M.  Roush
+     
+     ---------------------------------------------------------------- *)

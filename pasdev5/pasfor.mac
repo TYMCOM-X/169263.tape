@@ -1,0 +1,722 @@
+	search	passym
+	entry	rand1.
+	entry	rand0.
+	extern	for.bp,f.ret1
+	$reloc
+
+rand1.:	move	ac1,@0(topp)
+	move	ac0,@ac1
+	jrst	rand.
+rand0.:
+	move	ac0,pseed.	;use last seed
+rand.:
+	tlz	ac0,760000
+	cain	ac0,0
+	move	ac0,x0
+	mul	ac0,k
+	ashc	ac0,4
+	lsh	ac1,-4
+	add	ac0,ac1
+	tlze	ac0,760000
+	addi	ac0,1
+	movem	ac0,pseed.
+	hlrz	ac1,ac0
+	fsc	ac1,216
+	hrli	ac0,0
+	fsc	ac0,174
+	fad	ac0,ac1
+	jrst	f.ret1		;go return
+
+k:	byte	(18)4544,503720
+x0:	xwd	1,-1
+	$low
+pseed.:	xwd	1,-1
+	prgend
+	search	passym
+	entry	ii.exp
+	extern	rblt.,rend.,fpar.,f.list,f.ret.
+	$reloc
+
+; calculate i**j, both integers
+
+ii.exp:
+	move	ac1,rblt.
+	blt	ac1,rend.	;save regs
+	move	ac1,@0(topp)
+	move	ac0,@ac1	;get i
+	aos	0(topp)
+	move	ac1,@0(topp)
+	move	ac1,@ac1	;get j
+	jumpe	ac1,one		; i**0 = 1
+	jumpl	ac1,zero	; i**j = 0 if j < 0
+	move	reg,ac0		;copy i
+loop:	soje	ac1,f.ret.
+	imul	ac0,reg
+	jrst	loop
+zero:	movei	ac0,0
+	jrst	f.ret.
+one:	movei	ac0,1
+	jrst	f.ret.
+	prgend
+	search	passym
+	entry	ri.exp
+	extern	rblt.,rend.,fpar.,f1.0.,f.list,f.ret.
+	$reloc
+
+; calculate x**i where x is real and i an integer
+
+ri.exp:
+	move	ac1,rblt.
+	blt	ac1,rend.	;save regs
+	move	ac1,@0(topp)
+	move	ac0,@ac1	;get x
+	aos	0(topp)
+	move	ac1,@0(topp)
+	move	ac1,@ac1	;get i
+	jumpe	ac1,one		;x**0 = 1.0
+	jumpg	ac1,ok		;if i<0 return (1.0/x)**(-i)
+	move	reg,ac0
+	move	ac0,f1.0.
+	fdvr	ac0,reg
+	movm	ac1,ac1
+ok:	move	reg,ac0
+loop:	soje	ac1,f.ret.
+	fmpr	ac0,reg
+	jrst	loop
+one:	move	ac0,f1.0.
+	jrst	f.ret.
+	prgend
+	search	passym
+	entry	di.exp
+	extern	rblt.,rend.,fpar.,f.list,f1.0.,d.ret.
+	$reloc
+
+; calculate x**i where x is double precision real and i an integer
+
+di.exp:
+	move	ac1,rblt.
+	blt	ac1,rend.	;save regs
+	move	ac1,@0(topp)
+	dmove	ac0,@ac1	;get x
+	dmovem	ac0,fpar.	;save x
+	aos	0(topp)
+	move	ac1,@0(topp)
+	move	reg,@ac1	;get i
+	jumpe	reg,one		;x**0 = 1.0
+	jumpg	reg,iter
+	dmove	ac0,f1.0.	;if i<0 return (1.0/x)**(-i)
+	dfdv	ac0,fpar.
+	dmovem	ac0,fpar.
+	movm	reg,reg
+iter:	dmove	ac0,fpar.
+loop:	soje	reg,d.ret.
+	dfmp	ac0,fpar.
+	jrst	loop
+one:	dmove	ac0,f1.0.
+	jrst	d.ret.
+	prgend
+	search	passym
+	entry	rr.exp
+	extern	rblt.,rend.,fpar.,f.list,f.ret.
+	extern	log,exp
+	$reloc
+
+; calculate x**y = exp(y*log(x)), y and x real
+
+rr.exp:
+	move	ac1,rblt.
+	blt	ac1,rend.	;save regs
+	move	ac1,@0(topp)
+	move	ac0,@ac1	;get x
+	aos	0(topp)
+	move	ac1,@0(topp)
+	move	ac1,@ac1	;get y
+	dmovem	ac0,fpar.
+	movei	basis,f.list
+	pushj	topp,log	;log(x)
+	fmpr	ac0,fpar.+1	;y*log(x)
+	movem	ac0,fpar.
+	pushj	topp,exp
+	jrst	f.ret.		;done
+	prgend
+	search	passym
+	entry	dd.exp
+	extern	rblt.,rend.,fpar.,f.list,d.ret.,fpar2.
+	extern	dlog,dexp
+
+	$reloc
+
+; calculate x**y = exp(y*ln(x))
+; x and y double precision real
+
+dd.exp:
+	move	ac1,rblt.
+	blt	ac1,rend.	;save regs
+	move	ac1,@0(topp)
+	dmove	ac0,@ac1	;get x
+	dmovem	ac0,fpar.
+	aos	0(topp)
+	move	ac1,@0(topp)
+	dmove	ac0,@ac1
+	dmovem	ac0,fpar2.	;save y
+	movei	basis,f.list
+	pushj	topp,dlog
+	dfmp	ac0,fpar2.
+	dmovem	ac0,fpar.
+	pushj	topp,dexp
+	jrst	d.ret.
+	prgend
+        search  passym
+        entry   r.sqrt
+        $reloc
+	lall
+
+r.sqrt:
+        .fortran(sqrt)
+        prgend
+        search  passym
+        entry   d.sqrt
+        $reloc
+	lall
+
+d.sqrt:
+        .dfortran(dsqrt)
+        prgend
+        search  passym
+        entry   r.ln
+        $reloc
+	lall
+
+r.ln:
+        .fortran(alog)
+        prgend
+        search  passym
+        entry   d.ln
+        $reloc
+	lall
+
+d.ln:
+        .dfortran(dlog)
+        prgend
+        search  passym
+        entry   r.log
+        $reloc
+	lall
+
+r.log:
+        .fortran(alog10)
+        prgend
+        search  passym
+        entry   d.log
+        $reloc
+	lall
+
+d.log:
+        .dfortran(dlog10)
+        prgend
+        search  passym
+        entry   r.exp
+        $reloc
+	lall
+
+r.exp:
+        .fortran(exp)
+        prgend
+        search  passym
+        entry   d.exp
+        $reloc
+	lall
+
+d.exp:
+        .dfortran(dexp)
+        prgend
+        search  passym
+        entry   r.sin
+        $reloc
+	lall
+
+r.sin:
+        .fortran(sin)
+        prgend
+        search  passym
+        entry   d.sin
+        $reloc
+	lall
+
+d.sin:
+        .dfortran(dsin)
+        prgend
+        search  passym
+        entry   r.asin
+        $reloc
+	lall
+
+r.asin:
+        .fortran(asin)
+        prgend
+        search  passym
+        entry   d.asin
+        $reloc
+	extern	rblt.,rend.,fpar.,f.list,d.ret.,dsqrt.,datan.
+	extern	f1.0.,piov2.,fpar2.
+	extern	forer.
+
+;
+; calculate arcsin (x) as arctan (x/sqrt(1-x**2))
+;
+
+d.asin:
+	move	ac1,rblt.
+	blt	ac1,rend.
+	move	ac1,@0(topp)
+	dmove	reg,@ac1	;get parameter
+	dmovem	reg,fpar2.	;temp
+	jumpge	reg,.+2
+	dmovn	reg,reg		;absolute value
+	camge	reg,f1.0.	;assure <= 1.0
+	jrst	ok
+	camg	reg,f1.0.
+	camle	reg1,f1.0.+1
+	jrst	error
+ok:	dfmp	reg,reg		;squared
+	dmovn	reg,reg		;-x**2
+	jfcl	17,.+1
+	dfad	reg,f1.0.	;1.0-x**2
+	jumpe	reg,zero
+	dmovem	reg,fpar.
+	movei	basis,f.list
+	pushj	topp,dsqrt.
+	dmove	reg,fpar2.
+	dfdv	reg,ac0		;x/sqrt(1-x**2)
+	dmovem	reg,fpar.
+	jfcl	17,.+1
+	pushj	topp,datan.
+	jrst	d.ret.
+
+zero:	dmove	ac0,piov2.	;pi div 2
+	skipge	fpar2.
+	dmovn	ac0,ac0
+	jrst	d.ret.		;go return
+
+error:	move	ac0,0(topp)	;get return address
+	jrst	forer.		;report error
+        prgend
+        search  passym
+        entry   r.sinh
+        $reloc
+	lall
+
+r.sinh:
+        .fortran(sinh)
+        prgend
+        search  passym
+        entry   d.sinh
+	entry	d.cosh
+        $reloc
+
+	extern	rblt.,rend.,d.ret.,dexp.,fpar.,f.list
+	extern	f1.0.
+
+d.sinh:
+	setom	flag		;remember it was sinh
+	jrst	.+2
+d.cosh:
+	setzm	flag		;remember as cosh
+	move	ac1,rblt.
+	blt	ac1,rend.	;save regs
+	move	ac1,@0(topp)
+	dmove	ac0,@ac1	;get parameter
+	dmovem	ac0,fpar.
+	movei	basis,f.list	;addr of parameterlist
+	pushj	topp,dexp.
+	dmove	reg,f1.0.	;get floating 1.0
+	dfdv	reg,ac0		;exp (-x)
+	skipe	flag		;if it was sinh
+	dmovn	reg,reg		;then negate
+	dfad	ac0,reg
+	fsc	ac0,-1		;divide by 2.0
+	jrst	d.ret.	;go return
+
+	$low
+flag:	exp	0
+        prgend
+        search  passym
+        entry   r.sind
+        $reloc
+	lall
+
+r.sind:
+        .fortran(sind)
+        prgend
+        search  passym
+        entry   d.sind
+	entry	d.cosd
+        $reloc
+	extern	d.ret1,rblt.,rend.,dsin.,dcos.
+
+d.sind:
+	movei	ac0,dsin.
+	jrst	.+2
+d.cosd:
+	movei	ac0,dcos.
+	move	ac1,rblt.
+	blt	ac1,rend.	;save regs
+	move	ac1,@0(topp)
+	dmove	reg,@ac1	;get parameter
+	dfdv	reg,scale	;convert to radians (180/pi)
+	jrst	d.ret1		;complete call
+
+; double precision 180.0/pi
+scale:	byte	(18)206712,273406,230740,767561
+        prgend
+        search  passym
+        entry   r.cos
+        $reloc
+	lall
+
+r.cos:
+        .fortran(cos)
+        prgend
+        search  passym
+        entry   d.cos
+        $reloc
+	lall
+
+d.cos:
+        .dfortran(dcos)
+        prgend
+        search  passym
+        entry   r.acos
+        $reloc
+	lall
+
+r.acos:
+        .fortran(acos)
+        prgend
+        search  passym
+        entry   d.acos
+	$reloc
+	extern	rblt.,rend.,fpar.,f.list,d.ret.,pi.,f1.0.
+	extern	fpar2.,piov2.
+	extern	dsqrt.,datan.
+	extern	forer.
+
+;
+; calculate arccos (x) as arctan (sqrt(1-x**2)/x)
+;
+
+d.acos:
+	move	ac1,rblt.
+	blt	ac1,rend.	;save regs
+	move	ac1,@0(topp)
+	dmove	reg,@ac1	;get parameter
+	dmovem	reg,fpar2.
+	jumpge	reg,.+2
+	dmovn	reg,reg		;absolute value
+	camge	reg,f1.0.	;check if <= 1.0
+	jrst	ok
+	camg	reg,f1.0.
+	camle	reg1,f1.0.+1
+	jrst	error
+
+ok:	jumpe	reg,zero	;acos(0) = pi / 2
+	dfmp	reg,reg
+	dmovn	reg,reg
+	jfcl	17,.+1
+	dfad	reg,f1.0.	;1-x**2
+	dmovem	reg,fpar.
+	movei	basis,f.list
+	pushj	topp,dsqrt.
+	dfdv	ac0,fpar2.
+	dmovem	ac0,fpar.
+	jfcl	17,.+1
+	pushj	topp,datan.
+	skipge	fpar2.
+	dfad	ac0,pi.
+	jrst	d.ret.
+
+zero:	dmove	ac0,piov2.
+	jrst	d.ret.
+
+error:	move	ac0,0(topp)	;get return address
+	jrst	forer.		;and report error
+        prgend
+        search  passym
+        entry   r.cosh
+        $reloc
+	lall
+
+r.cosh:
+        .fortran(cosh)
+        prgend
+        search  passym
+        entry   r.cosd
+        $reloc
+	lall
+
+r.cosd:
+        .fortran(cosd)
+        prgend
+        search  passym
+        entry   r.tan
+        $reloc
+
+	extern	rblt.,rend.,fpar.,fpar2.,f.list,cos.,sin.,f.ret.
+
+r.tan:
+	move	ac1,rblt.
+	blt	ac1,rend.	;save regs
+	move	ac1,@0(topp)
+	move	ac1,@ac1	;get parameter
+	movem	ac1,fpar.
+	movei	basis,f.list	;addr of parameterlist
+	pushj	topp,cos.
+	movem	ac0,fpar2.	;save cos
+	pushj	topp,sin.
+	fdvr	ac0,fpar2.	;calculate tan = sin/cos
+	jrst	f.ret.	;go return
+        prgend
+        search  passym
+        entry   d.tan
+        $reloc
+	extern	rblt.,rend.,fpar.,fpar2.,f.list,dsin.,dcos.,d.ret.
+
+d.tan:
+	move	ac1,rblt.
+	blt	ac1,rend.	;save regs
+	move	ac1,@0(topp)
+	dmove	ac0,@ac1	;get parameter
+	dmovem	ac0,fpar.
+	movei	basis,f.list	;addr of parameterlist
+	pushj	topp,dcos.
+	dmovem	ac0,fpar2.	;save
+	pushj	topp,dsin.
+	dfdv	ac0,fpar2.	;tan = sin/cos
+	jrst	d.ret.	;go return
+        prgend
+        search  passym
+        entry   r.tanh
+        $reloc
+	lall
+
+r.tanh:
+        .fortran(tanh)
+        prgend
+        search  passym
+        entry   d.tanh
+        $reloc
+
+	extern	rblt.,rend.,d.ret.,fpar.,f.list,dexp.
+	extern	f1.0.
+
+d.tanh:
+	move	ac1,rblt.
+	blt	ac1,rend.	;save regs
+	move	ac1,@0(topp)
+	dmove	ac0,@ac1	;get parameter
+	dmovem	ac0,fpar.
+	movei	basis,f.list	;addr of paramterlist
+	pushj	topp,dexp.	;exp(x)
+	dmove	reg,ac0		;copy result
+	dmove	reg2,f1.0.	;floating 1.0
+	dfdv	reg2,reg	;invert
+	dfsb	ac0,reg2	;exp(x)-exp(-x)
+	dfad	reg,reg2	;exp(x)+exp(-x)
+	dfdv	ac0,reg		;tanh
+	jrst	d.ret.	;go return
+
+        prgend
+        search  passym
+        entry   r.ctn
+        $reloc
+
+	extern	rblt.,rend.,fpar.,fpar2.,f.list,cos.,sin.,f.ret.
+
+r.ctn:
+	move	ac1,rblt.
+	blt	ac1,rend.	;save regs
+	move	ac1,@0(topp)
+	move	ac1,@ac1	;get parameter
+	movem	ac1,fpar.
+	movei	basis,f.list	;addr of parameterlist
+	pushj	topp,sin.
+	movem	ac0,fpar2.	;save sin
+	pushj	topp,cos.
+	fdvr	ac0,fpar2.	;calculate ctn = cos/sin
+	jrst	f.ret.	;go return
+        prgend
+        search  passym
+        entry   d.ctn
+        $reloc
+	extern	rblt.,rend.,fpar.,fpar2.,f.list,dsin.,dcos.,d.ret.
+
+d.ctn:
+	move	ac1,rblt.
+	blt	ac1,rend.	;save regs
+	move	ac1,@0(topp)
+	dmove	ac0,@ac1	;get parameter
+	dmovem	ac0,fpar.
+	movei	basis,f.list	;addr of parameterlist
+	pushj	topp,dsin.
+	dmovem	ac0,fpar2.	;save sin
+	pushj	topp,dcos.
+	dfdv	ac0,fpar2.	;ctn = cos/sin
+	jrst	d.ret.	;go return
+        prgend
+        search  passym
+        entry   r.atn
+        $reloc
+	lall
+
+r.atn:
+        .fortran(atan)
+        prgend
+        search  passym
+        entry   d.atn
+        $reloc
+	lall
+
+d.atn:
+        .dfortran(datan)
+        prgend
+        search  passym
+        entry   r.atn2
+        $reloc
+	extern	rblt.,rend.,f.ret.,atan2,fpar.
+
+r.atn2:
+	move	ac1,rblt.
+	blt	ac1,rend.
+	move	ac1,@0(topp)	;get first parameter
+	move	ac0,@ac1
+	aos	0(topp)
+	move	ac1,@0(topp)
+	move	ac1,@ac1	;get second parameter
+	dmovem	ac0,fpar.
+	movei	basis,flist
+	jfcl	17,.+1
+	pushj	topp,atan2
+	jrst	f.ret.	;go return
+
+	xwd	-2,0
+flist:	exp	fpar.
+	exp	fpar.+1
+
+        prgend
+        search  passym
+        entry   d.atn2
+        $reloc
+	extern	rblt.,rend.,datn2.,d.ret.
+	extern	fpar.,fpar2.
+
+
+d.atn2:
+	move	ac1,rblt.
+	blt	ac1,rend.	;save regs
+	move	ac1,@0(topp)
+	dmove	ac0,@ac1	;get first parameter
+	dmovem	ac0,fpar.
+	aos	0(topp)
+	move	ac1,@0(topp)
+	dmove	ac0,@ac1	;get second parameter
+	dmovem	ac0,fpar2.
+	movei	basis,flist	;addr of parameterlist
+	jfcl	17,.+1
+	pushj	topp,datn2.
+	jrst	d.ret.	;go return
+
+	xwd	-2,0
+flist:	exp	fpar.
+	exp	fpar2.
+
+        prgend
+	search	passym
+	entry	fort1.,f.ret.,for.bp,f.ret1
+	extern	rblt.,rend.
+	extern	f.list,fpar.,fpar2.
+	$reloc
+
+; common code to call a single precision fortran
+; library function. On entry:
+;	(ac0) = address of routine to be called
+;	@0(topp) = ZRO R,@ADDR(INDEXR)
+;	  where R is the result register and
+;	  @ADDR(INDEXR) is the address of the operand
+;
+
+fort1.:	move	ac1,rblt.
+	blt	ac1,rend.	;save registers
+	move	ac1,@0(topp)	;get addr of parameter
+	move	ac1,@ac1	;parameter value
+	movem	ac1,fpar.	;in parameterlist
+	movei	basis,f.list	;addr of parameterlist
+	jfcl	17,.+1		;prevent bogus overflows
+	pushj	topp,@ac0	;actual fortran call
+f.ret.:			;common return point
+	movs	ac1,rblt.
+	blt	ac1,basis	;restore regs
+f.ret1:
+	aos	ac1,0(topp)	;bump return address
+	ldb	ac1,for.bp	;get result reg R
+	movem	ac0,0(ac1)
+	popj	topp,		;all done
+for.bp:	point	4,-1(ac1),12
+
+	prgend
+	search	passym
+	$reloc
+	entry	fort2.,d.ret.,d.ret1,dbl.bp,f1.0.
+	entry	pi.,piov2.
+	extern	f.list,fpar.,fpar2.
+	extern	rblt.,fregs.,rend.
+
+; common code to call a double precision fortran routine.
+; On entry:
+;	(ac0) = address of routine to call
+;	@0(topp) = ZRO R,@ADDR(INDEXR)
+;	 where R,R+1 are the result registers and
+;	 @ADDR(INDEXR) is the address of the operand
+;
+
+fort2.:	
+	move	ac1,rblt.
+	blt	ac1,rend.	;save registers
+	move	ac1,@0(topp)	;get addr of parameter
+	dmove	reg,@ac1	;get parameter value
+d.ret1:
+	dmovem	reg,fpar.	;save value
+	movei	basis,f.list	;addr of parameterlist
+	jfcl	17,.+1
+	pushj	topp,@ac0	;actual call
+d.ret.:			;common return point
+	aos	reg,0(topp)	;bump return address
+	ldb	reg,dbl.bp	;get result reg
+	dmovem	ac0,fregs.-reg(reg);store in saved regs
+	movs	ac1,rblt.
+	blt	ac1,basis	;restore saved regs
+	popj	topp,		;and done
+
+dbl.bp:	point	4,-1(reg),12
+f1.0.:	dec	1.0
+	exp	0	;dbl precision 1.0
+pi.:	byte	(18)202622,077325,021026,430215
+piov2.:	byte	(18)201622,077325,021026,430215
+
+	prgend
+	search	passym
+	entry	fregs.,rblt.,rend.
+	entry	f.list,fpar.,fpar2.
+	$reloc
+	$low
+fpar.:	block	2
+fpar2.:	block	2
+fregs.:	block	basis-reg
+rend.:	block	1
+
+
+	$high
+	xwd	-1,0
+f.list:	exp	fpar.
+rblt.:	xwd	reg,fregs.
+	end
+ 

@@ -1,0 +1,32 @@
+
+
+
+                                     DTIME - day/time manipulation routines
+                                                                   11/01/78
+
+
+
+     Entry: DC_DATE     _____
+
+     Convert an internal date to a binary date record.
+
+     Usage:
+
+          EXTERNAL FUNCTION DC_DATE(DATE: DATE_INT): DATEREC;
+
+     Input arguments:
+
+       DATE    a date in internal form.
+
+     Output arguments:
+
+       <return value>
+               the date as a binary date  record  (a  record  with  integer
+               fields for the year, month and day).
+
+     INCLUDE files required:
+
+       DTIME.TYP
+       DTIME.INC
+
+

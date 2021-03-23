@@ -1,0 +1,37 @@
+(*   +--------------------------------------------------------------+
+     |                                                              |
+     |                        D C _ S E C S                         |
+     |                        - - - - - - -                         |
+     |                                                              |
+     +--------------------------------------------------------------+
+     
+     MDSI, Company Confidential
+     
+     SYSTEM:  DTIME package
+     
+     STARTED:  2/15/80
+     
+     PURPOSE:  An internal DTIME routine which converts  an  internal
+        time to number of seconds since midnight.
+     
+     USAGE:
+     
+           EXTERNAL FUNCTION DC_SECS ( TIME: TIME_INT ): SECONDS;
+     
+     INPUT:
+     
+        TIME        an internal time.
+     
+     OUTPUT:
+     
+        <return value>
+                    the   corresponding   number   of  seconds  since
+                    midnight.
+     
+     INCLUDE FILES REQUIRED:
+     
+        IDTIME.TYP
+     
+     RESPONSIBLE:  Programming Languages
+     
+     ---------------------------------------------------------------- *)

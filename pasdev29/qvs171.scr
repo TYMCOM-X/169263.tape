@@ -1,0 +1,109 @@
+$number off
+$verbatim
+PROGRAM: QED                                      DATE: 2/19/80
+VERSION: 1.71(OPS)                                AUTHOR: P. Lee
+APPROVED BY:
+
+
+
+$justify
+&RELEASE SCHEDULE&
+$skip 1
+$par3
+QED Version 1.71(OPS) is now in NRD:. It will be moved to RND: on March 3,
+1980.
+$ski
+&CHANGES&
+$skip 1
+$indent 3
+$paragraph -4
+1.\\A new command, underbar (_), has been added to QED.
+The underbar command outputs the displacement (in lines)
+of a specified line from the nearest preceding line
+in the bounded buffer
+containing a label. This command is primarily intended to be used
+by 940 assembly language programmers.
+$ski
+The syntax of the underbar command is:
+$ski
+[ld]\_
+$ski
+where ld is any valid QED line address specification.
+If the line address is omitted, the current line is assumed.
+After a successful underbar command, the current line
+becomes the line whose location was output.
+$ski
+A line contains a label if its first character is alphanumeric
+(A..Z, a..z, 0..9) or a dollar sign ($). A label consists
+of the initial character and all subsequent characters upto
+but not including: (1) a blank, (2) a tab character, or
+(3) the end of the line.
+$ski
+The location output by the underbar command for a line
+consists of the label (enclosed in colons) of the nearest preceding
+line in the (possibly bounded) buffer containing a label,
+ a plus sign, and then the displacement
+of the line from the labelled line, e.g., :LABEL:+2.
+The displacement is one based, e.g., if the labelled line
+immediately precedes the line whose location is
+to be output, the displacement is one. If a line specified by underbar
+contains a label, only its label is output.
+$ski
+The underbar command may be used under control of a FIND command.
+If a separate line address is not specified for an underbar command
+under FIND, then a location for each line selected by the
+FIND command will be output. Otherwise, if a separate line
+address is specified, e.g., FIND/BAH/ /FOO/_, then a
+location for the &first& occurrence of 'FOO' 
+&following each& occurrence of 'BAH' in the buffer will be output.
+If, under FIND, a user wishes to &print& all selected lines in 
+addition to their locations, a PRINT command should be included,
+e.g., FIND/whatever/P;_ .
+$page
+If there is not a labelled line preceding the line specified
+by the underbar command, the error:
+$ski
+No preceding label found.
+$ski
+occurs. Note that this error will abort the FIND command.
+$ski
+Additional lines resulting from the conversion of linefeeds
+in 940 files to ampersands at the ends of lines in OPS Pascal
+QED will be considered to be separate lines when computing
+displacements in OPS Pascal QED. This means that displacements printed
+by OPS Pascal QED may be different than those printed
+by 940 QED when a 940 file contains linefeeds. Further,
+OPS Pascal QED may recognize labels in continuation
+lines where 940 QED would not.
+$ski2
+$par-3
+&BUG FIXES&
+$ski
+$par-4
+1.\\Heap overflow resulting from editing operations other than
+buffer appends were causing the buffer to be inconsistent.
+$par
+QED will now give the following message:
+$ski
+?Error\--\the heap has overflowed.
+$par
+The\buffer\may\no\longer\be\consistent.
+$par
+Save\any\unused\changes\in\a\new\file.
+$ski
+&whenever& the heap overflows. The operation which caused the overflow
+will be left unfinished. Further, the default write file name
+will be deleted to prevent accidental overwriting of the original
+file.
+$ski
+$par-4
+2.\\QED was leaving the writing of a file unfinished when an attention
+interrupt was issued during the file writing process.
+$par
+This made it easy for a user to then quit the editing session and
+lose the part of the file not written. QED has now been changed
+to give the following message:
+$ski
+Warning\--\output\file\write\incomplete
+$ski
+if an attention interrupt breaks the file writing procedure.

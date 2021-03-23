@@ -1,0 +1,7 @@
+.if ($a="") .goto stupid
+.pro<'a>talk10.*,t10???.*
+! protection 'a installed, 14 files?
+.mic return
+stupid::
+! please give a protection code
+.mic return

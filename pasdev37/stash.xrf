@@ -1,0 +1,348 @@
+Cross Reference Listing for STASH					 Page 1
+
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     BLK_MSG     LIB   		LIB         LIB      WRITE       *SYS* 
+
+     BREAK       *SYS* 		LIB         LIB   
+				PACK        LIBPAK
+
+     CHECKSUM    *UNDEF		RD_SEGBLK   BLKIO 
+				WR_SEGBLK   BLKIO 
+
+  *  CHKERR      BLKIO 		RDDIRBLK    BLKIO 
+				RD_SEGBLK   BLKIO 
+				WRDIRBLK    BLKIO 
+				WR_SEGBLK   BLKIO 
+
+  *  CHKERR      LIB   		LIB         LIB      PRINT_NAME  LIB   
+						     WRITE       *SYS* 
+						     WRITELN     *SYS* 
+
+     CHR         *SYS* 		PACK        LIBPAK
+				RD_CHAR     SEGIN 
+				RD_LINE     SEGIN 
+				WR_LINE     SEGOUT
+
+     CLOSE       *SYS* 		CLOSE_LIBR  LIBASN
+				LIB         LIB   
+
+     CLOSE_LIBR  LIBASN		LIB         LIB      CLOSE       *SYS* 
+				PACK        LIBPAK
+
+     CLS_SEGMEN  SEGASN		LIB         LIB      WR_SEGBLK   BLKIO 
+				OPN_SEGMEN  SEGASN
+
+     DAYTIME     *UNDEF		OPN_SEGMEN  SEGASN
+				PACK        LIBPAK
+				RD_CHAR     SEGIN 
+				RD_LINE     SEGIN 
+				RD_WORD     SEGIN 
+
+     DC_EXT      *UNDEF		LIB         LIB   Cross Reference Listing for STASH					 Page 2
+
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     EOF         *SYS* 		LIB         LIB   
+				OPEN_LIBRA  LIBASN
+
+     EQUAL       DIRIO 		FIND_DIR    DIRIO    MATCH       DIRIO 
+
+     EXTENT      *SYS* 		LIB         LIB   
+
+     FILENAME    *UNDEF		LIB         LIB   
+				PACK        LIBPAK
+
+     FIND_DIR    DIRIO 		LIB         LIB      EQUAL       DIRIO 
+				SET_ENTRY_  SEGASN   RD_DIR      DIRIO 
+
+     GET         *SYS* 		LIB         LIB   
+
+     GET_NAME    LIB   		LIB         LIB      INDEX       *SYS* 
+						     LENGTH      *SYS* 
+						     PR_FILE_ID  *UNDEF
+						     SUBSTR      *SYS* 
+						     UPPERCASE   *SYS* 
+
+     INDEX       *SYS* 		GET_NAME    LIB   
+				LIB         LIB   
+				MATCH       DIRIO 
+
+     IOSTATUS    *SYS* 		LIB         LIB   
+				OPEN_LIBRA  LIBASN
+				RDDIRBLK    BLKIO 
+				RD_SEGBLK   BLKIO 
+				WRDIRBLK    BLKIO 
+				WR_SEGBLK   BLKIO 
+
+     LENGTH      *SYS* 		GET_NAME    LIB   
+				LIB         LIB   
+				WR_LINE     SEGOUT
+
+     LIB         LIB   		<NONE>               BLK_MSG     LIB   
+						     BREAK       *SYS* 
+						     CHKERR      LIB   #Cross Reference Listing for STASH					 Page 3
+
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     LIB         LIB    (cont.)			     CLOSE       *SYS* 
+						     CLOSE_LIBR  LIBASN
+						     CLS_SEGMEN  SEGASN
+						     DC_EXT      *UNDEF
+						     EOF         *SYS* 
+						     EXTENT      *SYS* 
+						     FILENAME    *UNDEF
+						     FIND_DIR    DIRIO 
+						     GET         *SYS* 
+						     GET_NAME    LIB   
+						     INDEX       *SYS* 
+						     IOSTATUS    *SYS* 
+						     LENGTH      *SYS* 
+						     LOOKUPLIBC  *UNDEF
+						     MAXIMUM     *SYS* 
+						     OPEN        *SYS* 
+						     OPEN_LIBRA  LIBASN
+						     OPN_SEGMEN  SEGASN
+						     PACK        LIBPAK
+						     PRINT_NAME  LIB   
+						     PUT         *SYS* 
+						     QUERY       *UNDEF
+						     RD_DIR      DIRIO 
+						     RD_WORD     SEGIN 
+						     READ        *SYS* 
+						     READLN      *SYS* 
+						     RESET       *SYS* 
+						     REWRITE     *SYS* 
+						     SUBSTR      *SYS* 
+						     UPPERCASE   *SYS* 
+						     WRITE       *SYS* 
+						     WRITELN     *SYS* 
+						     WR_DIR      DIRIO 
+						     WR_SEGBLK   BLKIO 
+						     WR_WORD     SEGOUT
+
+     LOOKUPLIBC  *UNDEF		LIB         LIB   
+
+     MATCH       DIRIO 		EQUAL       DIRIO    INDEX       *SYS* Cross Reference Listing for STASH					 Page 4
+
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     MATCH       DIRIO  (cont.)			     UPPERBOUND  *SYS* 
+						     VERIFY      *SYS* 
+
+     MAXIMUM     *SYS* 		LIB         LIB   
+
+     OPEN        *SYS* 		LIB         LIB   
+
+     OPEN_LIBRA  LIBASN		LIB         LIB      EOF         *SYS* 
+				PACK        LIBPAK   IOSTATUS    *SYS* 
+						     RD_DIR      DIRIO 
+						     UPDATE      *SYS* 
+
+     OPN_SEGMEN  SEGASN		LIB         LIB      CLS_SEGMEN  SEGASN
+						     DAYTIME     *UNDEF
+						     SET_ENTRY_  SEGASN
+						     WR_DIR      DIRIO 
+
+     PACK        LIBPAK		LIB         LIB      BREAK       *SYS* 
+						     CHR         *SYS* 
+						     CLOSE_LIBR  LIBASN
+						     DAYTIME     *UNDEF
+						     FILENAME    *UNDEF
+						     OPEN_LIBRA  LIBASN
+						     RD_DIR      DIRIO 
+						     RD_SEGBLK   BLKIO 
+						     RENAME      *UNDEF
+						     WRITELN     *SYS* 
+						     WR_DIR      DIRIO 
+						     WR_SEGBLK   BLKIO 
+
+     PRINT_NAME  LIB   		CHKERR      LIB      WRITE       *SYS* 
+				LIB         LIB   
+
+     PR_FILE_ID  *UNDEF		GET_NAME    LIB   
+
+     PUT         *SYS* 		LIB         LIB   
+
+     QUERY       *UNDEF		LIB         LIB   Cross Reference Listing for STASH					 Page 5
+
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     RDDIRBLK    BLKIO 		RD_DIR      DIRIO    CHKERR      BLKIO #
+				WR_DIR      DIRIO    IOSTATUS    *SYS* 
+						     READRN      *SYS* 
+
+     RD_CHAR     SEGIN 		<NONE>               CHR         *SYS* 
+						     DAYTIME     *UNDEF
+						     RD_DIR      DIRIO 
+						     RD_SEGBLK   BLKIO 
+						     WR_DIR      DIRIO 
+
+     RD_DIR      DIRIO 		FIND_DIR    DIRIO    RDDIRBLK    BLKIO 
+				LIB         LIB   
+				OPEN_LIBRA  LIBASN
+				PACK        LIBPAK
+				RD_CHAR     SEGIN 
+				RD_LINE     SEGIN 
+				RD_WORD     SEGIN 
+				SET_ENTRY_  SEGASN
+				WR_CHAR     SEGOUT
+				WR_LINE     SEGOUT
+				WR_WORD     SEGOUT
+
+     RD_LINE     SEGIN 		<NONE>               CHR         *SYS* 
+						     DAYTIME     *UNDEF
+						     RD_DIR      DIRIO 
+						     RD_SEGBLK   BLKIO 
+						     WR_DIR      DIRIO 
+
+     RD_SEGBLK   BLKIO 		PACK        LIBPAK   CHECKSUM    *UNDEF
+				RD_CHAR     SEGIN    CHKERR      BLKIO #
+				RD_LINE     SEGIN    IOSTATUS    *SYS* 
+				RD_WORD     SEGIN    READRN      *SYS* 
+
+     RD_WORD     SEGIN 		LIB         LIB      DAYTIME     *UNDEF
+						     RD_DIR      DIRIO 
+						     RD_SEGBLK   BLKIO 
+						     WR_DIR      DIRIO 
+
+     READ        *SYS* 		LIB         LIB   Cross Reference Listing for STASH					 Page 6
+
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     READLN      *SYS* 		LIB         LIB   
+
+     READRN      *SYS* 		RDDIRBLK    BLKIO 
+				RD_SEGBLK   BLKIO 
+
+     RENAME      *UNDEF		PACK        LIBPAK
+
+     RESET       *SYS* 		LIB         LIB   
+
+     REWRITE     *SYS* 		LIB         LIB   
+
+     SET_ENTRY_  SEGASN		OPN_SEGMEN  SEGASN   FIND_DIR    DIRIO 
+						     RD_DIR      DIRIO 
+
+     SUBSTR      *SYS* 		GET_NAME    LIB   
+				LIB         LIB   
+
+     UPDATE      *SYS* 		OPEN_LIBRA  LIBASN
+
+     UPPERBOUND  *SYS* 		MATCH       DIRIO 
+				WR_CHAR     SEGOUT
+				WR_WORD     SEGOUT
+
+     UPPERCASE   *SYS* 		GET_NAME    LIB   
+				LIB         LIB   
+
+     VERIFY      *SYS* 		MATCH       DIRIO 
+
+     WRDIRBLK    BLKIO 		WR_DIR      DIRIO    CHKERR      BLKIO #
+						     IOSTATUS    *SYS* 
+						     WRITERN     *SYS* 
+
+     WRITE       *SYS* 		BLK_MSG     LIB   
+				CHKERR      LIB   
+				LIB         LIB   
+				PRINT_NAME  LIB   
+
+     WRITELN     *SYS* 		CHKERR      LIB   
+				LIB         LIB   Cross Reference Listing for STASH					 Page 7
+
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     WRITELN     *SYS*  (cont.)	PACK        LIBPAK
+
+     WRITERN     *SYS* 		WRDIRBLK    BLKIO 
+				WR_SEGBLK   BLKIO 
+
+     WR_CHAR     SEGOUT		<NONE>               RD_DIR      DIRIO 
+						     UPPERBOUND  *SYS* 
+						     WR_DIR      DIRIO 
+						     WR_SEGBLK   BLKIO 
+
+     WR_DIR      DIRIO 		LIB         LIB      RDDIRBLK    BLKIO 
+				OPN_SEGMEN  SEGASN   WRDIRBLK    BLKIO 
+				PACK        LIBPAK
+				RD_CHAR     SEGIN 
+				RD_LINE     SEGIN 
+				RD_WORD     SEGIN 
+				WR_CHAR     SEGOUT
+				WR_LINE     SEGOUT
+				WR_WORD     SEGOUT
+
+     WR_LINE     SEGOUT		<NONE>               CHR         *SYS* 
+						     LENGTH      *SYS* 
+						     RD_DIR      DIRIO 
+						     WR_DIR      DIRIO 
+						     WR_SEGBLK   BLKIO 
+
+     WR_SEGBLK   BLKIO 		CLS_SEGMEN  SEGASN   CHECKSUM    *UNDEF
+				LIB         LIB      CHKERR      BLKIO #
+				PACK        LIBPAK   IOSTATUS    *SYS* 
+				WR_CHAR     SEGOUT   WRITERN     *SYS* 
+				WR_LINE     SEGOUT
+				WR_WORD     SEGOUT
+
+     WR_WORD     SEGOUT		LIB         LIB      RD_DIR      DIRIO 
+						     UPPERBOUND  *SYS* 
+						     WR_DIR      DIRIO 
+						     WR_SEGBLK   BLKIO 
+Module Cross Reference Listing for STASH				 Page 1
+
+     Module         #Procs  Called  #Procs      #Procs  Call    #Procs
+     ------         ------  ------  ------      ------  ------  ------
+
+     BLKIO 	         1  BLKIO   4		     4  BLKIO   1
+		         2  DIRIO   2
+		         1  LIB     1
+		         2  LIBPAK  1
+		         1  SEGASN  1
+		         1  SEGIN   3
+		         1  SEGOUT  3
+
+     DIRIO 	         3  DIRIO   2		     2  BLKIO   2
+		         3  LIB     1		     2  DIRIO   3
+		         1  LIBASN  1
+		         2  LIBPAK  1
+		         3  SEGASN  2
+		         2  SEGIN   3
+		         2  SEGOUT  3
+
+     LIB   	         4  LIB     2		     1  BLKIO   1
+						     1  DIRIO   3
+						     2  LIB     4
+						     1  LIBASN  2
+						     1  LIBPAK  1
+						     1  SEGASN  2
+						     1  SEGIN   1
+						     1  SEGOUT  1
+
+     LIBASN	         2  LIB     1		     1  DIRIO   1
+		         2  LIBPAK  1
+
+     LIBPAK	         1  LIB     1		     1  BLKIO   2
+						     1  DIRIO   2
+						     1  LIBASN  2
+
+     SEGASN	         2  LIB     1		     1  BLKIO   1
+		         2  SEGASN  1		     2  DIRIO   3
+						     1  SEGASN  2
+
+     SEGIN 	         1  LIB     1		     3  BLKIO   1
+						     3  DIRIO   2Module Cross Reference Listing for STASH				 Page 2
+
+     Module         #Procs  Called  #Procs      #Procs  Call    #Procs
+     ------         ------  ------  ------      ------  ------  ------
+
+     SEGOUT	         1  LIB     1		     3  BLKIO   1
+						     3  DIRIO   2
+

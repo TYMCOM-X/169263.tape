@@ -1,0 +1,191 @@
+#DOCUMENT(M68000 Project - SMR,,45,,100)
+$POSITIONS +0,+4,+4,+4,+4,+4
+#SECT_DEFAULT(66,0,3,1,2,1)
+#NAME(ROUSH)
+#task(Memo on code sharing)
+Write a memo to the application group managers describing the
+approach we are taking to code sharing and detailing its
+advantages and disadvantages.
+#end_disc
+#schedule(12/4/81,12/7/81,1)
+#actual(12/4/81,12/7/81)
+#task(EXORmacs installation)
+Assist in and learn from installation of our EXORmacs development
+system.
+#end_disc
+#schedule(12/7/81,12/8/81,1)
+#actual(12/7/81,12/11/81)
+#task(Complete runtime specification)
+Update the runtime specification document to reflect the changes
+necessary for code sharing in an unmapped system.
+Distribute the runtime specification and hold a design review for the runtime.
+#end_disc
+#schedule(12/3/81,12/16/81)
+#actual(12/3/81,12/16/81)
+#progress(12/11/81)
+Runtime spec complete.
+Review scheduled for 12/16/81.
+#end_disc
+#beginlevel
+#task(Partial spec update)
+Update all sections of the specification except the
+section on procedure calling conventions.
+#end_disc
+#schedule(12/3/81,12/8/81)
+#actual(12/3/81,12/11/81)
+#task(Update procedure calling conventions)
+Decide if a dedicated argument pointer register is acceptable
+now that a dedicated static area register is necessary.
+If a dedicated argument pointer register is unacceptable,
+then design a document an alternative procedure calling mechanism.
+#end_disc
+#schedule(12/7/81,12/11/81)
+#actual(12/7/81,12/11/81)
+#task(Hold design review,N)
+#schedule(12/16/81,12/16/81)
+#actual(12/16/81,12/16/81)
+#endlevel
+#task(File transfer)
+Work with Neil Krone in getting his file transfer program working
+and documented.
+#end_disc
+#schedule(12/14/81,12/18/81,1)
+#schedule(12/18/81,1/13/81)
+#actual(1/5/82,1/19/82)
+#progress(12/17/81)
+We've decided not to try using Neil Krone's simple transfer program
+because Motorola's official transfer program with error checking 
+and retransmission capability is available.
+This will undoubtably take longer to get up because of its increased
+complexity but may eliminate the need for writing our own later.
+The start of this task has been delayed for two reasons.
+First, Neil Krone must obtain some missing components of the
+transfer program.
+Second I wanted to establish the initial library, with
+initialization routine, before starting on the transfer task.
+The initialization routine will make creation of test harnesses
+much easier for others working on the runtime.
+#end_disc
+#progress(1/11/82)
+Motorola's file transfer program works in "transparent" mode after
+some patches to the VERSAdos operating system were applied.
+The next step is to get the downloading of printable ASCII
+files to the EXORmacs working.
+#end_disc
+#progress(1/12/82)
+Transfer of printable ASCII files is working.
+#end_disc
+#progress(1/13/82)
+Modified both ends of the transfer program to enable transfer
+of VERSAdos object files to the EXORmacs.
+Object file transfers are now working.
+The remaining steps are to get file transfers working from 
+TYMSHARE and to document how to use the transfer programs.
+#end_disc
+#task(Exception handling macros)
+Write, enter and document macros for the runtime which generate
+exception handling data structures.
+#end_disc
+#schedule(12/10/81,12/15/81)
+#actual(12/10/81,12/14/81)
+#task(Runtime Initialization Routine)
+Write and test the runtime initialization routine.
+This includes setting up the initial searchable object library
+and testing most of the ideas involved in the proposed
+scheme for sharing code on an unmapped system.
+#end_disc
+#schedule(12/14/81,12/23/81)
+#actual(12/14/81,12/17/81)
+#progress(12/17/81)
+I calling this routine done, but somewhere down the line it will
+undoubtably have to be rewritten.
+This has become apparent as we've learned more about the OEM version
+of VERSados.
+However, before the final form of the initialization routine
+can be determined we'll have to find out even more about OEM VERSados.
+The present routine will enable work to proceed.
+#beginlevel
+#task(Versados experimentation)
+Some of the ideas critical to the code sharing approach chosen
+will be tried out on the EXORmacs system.
+#end_disc
+#schedule(12/14/81,12/16/81)
+#actual(12/14/81,12/15/81)
+#task(Design initialization routine)
+The approach used in support of code sharing will be decided upon.
+The initialization routine and the
+methodology to used in testing it will
+be designed.
+#end_disc
+#schedule(12/15/81,12/17/81)
+#actual(12/15/81,12/15/81)
+#task(Code initialization routine)
+The initialization routine will be
+coded, keyed in and assembled.
+#end_disc
+#schedule(12/17/81,12/21/81)
+#actual(12/15/81,12/17/81)
+#task(Set up initial library)
+An initial version of the runtime object library will be set up.
+A command file for constructing it will be set up also.
+#schedule(12/21/81,12/21/81)
+#actual(12/17/81,12/17/81)
+#task(Test initialization routine)
+The initialization routine and library ordering will be tested.
+#end_disc
+#schedule(12/22/81,12/23/81)
+#actual(12/17/81,12/17/81)
+#endlevel
+#task(Binary I/O Design)
+Produce a design for the implementation of the runtime routines
+for support of binary I/O.
+#end_disc
+#schedule(1/25/82,2/5/82,1)
+#actual(1/25/82,2/3/82)
+#task(Overlay System Functional Specification)
+Produce a function specification for an overlay system to run
+under VERSAdos.
+#end_disc
+#schedule(2/1/82,3/26/82,1)
+#progress(2/9/82)
+This task has been cancelled due to uncertainty about the
+target system.
+#end_disc
+#task(Dynamic temp allocation routine)
+Write, test and document a runtime routine to allocate dynamic temps.
+#end_disc
+#schedule(2/9/82,2/10/82,1)
+#actual(2/9/82,2/10/82)
+#task(Non-local goto runtime routine)
+Write, test and document a runtime routine to do non-local gotos
+into the main routine.
+#end_disc
+#schedule(2/10/82,2/11/82,1)
+#actual(2/10/82)
+#task(Improve stack frame macros used by runtime)
+Modify the M$FRAME and M$UNFRAME macros used at the entry and exit
+points of most runtime routines.
+The modifications will result in smaller and faster code
+being generated by the macros in many cases.
+#end_disc
+#schedule(2/11/82,2/12/82,1)
+#actual(2/11/82,2/12/82)
+#task(Vax RDLIB Diversion)
+Write six new Vax RDLIB routines for I/O to an arbitrary terminal.
+Test, release and update documentation for same.
+Also modify existing SLEEP routine to take its time parameter
+in milliseconds rather than seconds.
+#end_disc
+#schedule(2/16/82,2/18/82,1)
+#actual(2/16/82,2/18/82)
+#task(Date runtime routine)
+Write, assembly, debug and test the runtime routine implementing
+the Pascal intrinsic function DATE.
+#end_disc
+#schedule(2/19/82,2/22/82,1)
+#actual(2/19/82,2/22/82)
+#task(Set Runtime Routines)
+Write, assemble, debug and test the set runtime routines.
+#end_disc
+#schedule(2/22/82,3/12/82,1)
+#actual(2/22/82)

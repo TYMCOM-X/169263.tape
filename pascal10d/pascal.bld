@@ -1,0 +1,86 @@
+dsk:pascal[31024,320161]
+dsk:link[1,315372]
+dsk:pmf[31024,320226]
+[31024,320157] [31024,320155]
+0 newpas
+1 vaxdrv
+3 paslst
+5 vaxccg
+6 nxtpas
+7 vaxini/e
+pasini/7
+vaximd/7
+pasutl/71
+vaxprm/715
+vaxtal/715
+pasval/71
+newpas/06d
+pascmd/106
+pass1/1
+paslex/1
+passmo/1
+pascmp/1
+pasanl/1
+pasblk/1
+pasbod/1
+pastsm/1
+pasesm/1
+pasref/1
+passfc/1
+pa1dmp/1
+pa1xrf/1
+pasglb/1
+pascgr/1
+vaxalc/1
+pasesu/1
+pasemu/1
+pasfld/1d
+pasmth/715
+pascv/13506
+pasrdr/13
+pasopd/1306
+passw/13506
+pasifu/15
+vaxjmp/5
+passet/3
+pass3/3
+passdm/3
+pass4/5
+vaxdeb/5
+vaxrel/5
+vaxio/5
+vaxmac/5
+pasmap/5
+vaxcsp/5
+vaxcgu/5
+vaxgen/5
+vaxexp/5
+vaxstr/5
+vaxset/5
+vaxcmp/5
+vaxcll/5
+pa6dmp/5
+vaxutl/5
+vaxerr/5
+vaxdie/5e
+scratc/5e
+paslog/135
+pasdat/7123506
+pasver/01234567e
+paserr/713
+tmpcor/06e
+versio/13506
+fio/1235
+fioutl/1235e
+delren/13506
+pasnew[31024,274430]/7123506e
+corout/7135e
+dumpio/7123506e
+autoru/123506e
+run[31024,320155]/123506e
+pasasm/713506es
+rdlib[31024,274426]/713506es
+iolib[31024,320214]/713506es
+paslib[31024,274426]/7123506es
+forlib/7123506es
+paslib[31024,274427]/71es

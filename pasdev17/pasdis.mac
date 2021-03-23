@@ -1,0 +1,127 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;									;
+;	This is a dispatcher for a local UUO interface for TENIO and	;
+;	TERIO to be used in conjunction with the PASCAL run time	;
+;	system.  Since programs which run along with PASCAL programs	;
+;	are not allowed to own their own scratch storage, the inter-	;
+;	face assumes that the PASCAL run time conventions are followed.	;
+;	In particular, on entry R17 is assumed to point to a stack	;
+;	with at least 17 (octal) locations of memory on it, of which	;
+;	at least one must be available for stacking (since a PUSHJ 17,	;
+;	is used to dispatch to this thing).  Furthermore, R15 is pre-	;
+;	sumed to point to a list of addresses of pseudo static storage	;
+;	(although the dispatcher itself doesn't use this info, it does	;
+;	pass the register on to the called routine).  Since neither	;
+;	TENIO nor TERIO needs to increment RETRN. directly, RETRN. is	;
+;	not supplied by this version of the interface.  Also, R17 is	;
+;	saved in a special slot and thus may not be used by any called	;
+;	routine.  All other items are as documented in the assembly	;
+;	code version of the dispatcher; see its comments for details.	;
+;									;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+	SEARCH	OPDEFS,RTSYM
+	$MODUL	DISPAT - PASCAL Compatible Local UUO Dispatch Interface
+	SUBTTL	(A Rather Bizarre Version)
+	ENTRY	PASUO.		; Hook so Jerry can find me
+	INTERN	LUOAD.,APOIN.,LEAVE.,ZILCH.,SKIP1.,SKIP2.,TNAB.
+	intern	lud.ac		; local uuo dispacther, vectored for
+	extern	lud.tv		;    swapping segs
+PSA==		2		; Special register here for TENIO
+	$STATIC	TENBLK,161	; TENIO scratch + R17 save area
+;
+;	Special macros for simple initialization.  THESE MUST CORRESPOND
+;	PROPERLY WITH TENIO.
+;
+	DEFINE	BLOCKS<27(14)>	; Start of file block area
+	DEFINE	SWCHBF<3(1)>	; Buffer and switches offset in block
+BLKSIZ==	6		; Size of one file block
+
+;
+;	Set up LUUO hardware locations to dispatch to us.
+;
+	$ABS	40		; Used by hardware
+LUOAD.:	BLOCK	1		; Will get op code, AC, effective address
+PASUO.:	PUSHJ	17,LUD.TV	; Can be reentrant with guaranteed stack
+;
+;	Now use standard construction techniques.
+;
+;	First, the initialization stuff.
+;
+	$HIGH			; Code goes here
+TENIGO:	MOVEI	1,BLOCKS	; Find file block group
+	MOVEI	2,16		; There are this many
+INILUP:	CLEARM	SWCHBF		; Indicate this file not open
+	ADDI	1,BLKSIZ
+	SOJP	2,INILUP	; and loop to next one
+	POPJ	17,0
+;
+;	The actuall LUUO dispatch.
+;
+LUD.AC:	MOVEM	16,17(17)	; Save R16
+	MOVEI	16,1(17)	; Save the rest of the gang
+	BLT	16,16(17)
+	LDB	16,[POINT 5,LUOAD.,8]; Fetch UUO op code
+	JMP	@VECT(16)	; and take off with it
+;
+;	Find the registers, grab the TENIO scratch area and save R17.
+;	Note that PSA must be changed to correspond to TENIO (R2).
+;
+TNAB.:	MOVEI	3,1(17)		; Point to register block
+	$GETPS	TENIO		; Find scratch area
+	MOVEM	17,0(PSA)	; Save R17 and
+	MOVEI	PSA,1(PSA)	; step over it
+	JMP	0(16)		; Return via R16
+;
+;	Return from UUO land.
+;
+SKIP2.:	MOVE	17,-1(2)	; Restore R17 from sneaky spot
+	AOSKP	0(17)		; Increment and hop to next increment
+;
+SKIP1.:	MOVE	17,-1(2)	; Restore R17
+	AOSKP	0(17)		; Increment return
+;
+LEAVE.:	MOVE	17,-1(2)	; Restore R17
+	MOVSI	16,1(17)	; Find the other registers
+	BLT	16,16		; and restore them
+	POPJ	17,0		; Just leave
+;
+	LIT			; Let the pool flow out
+APOIN.:	POINT	4,LUOAD.,12	; Pointer to AC field of LUUO
+;
+;	Dispatch vector.  The routines are all somewhere else.
+;
+	EXTERN	RDBLK.,RBLKR.,WBLK.,WBLKR.,OPENF.,COSEF.,RDWRD.; External
+	EXTERN	RWRDR.,WRWRD.,WWRDR.,TUNCF.,NOTEF.,PINTF.,FUSHF.; aliases
+	EXTERN	NAMEF.,FOSVC.
+	EXTERN	UUO21,UUO22,UUO23,UUO24,UUO25,UUO26,UUO27,UUO30,UUO31
+	EXTERN	UUO32,UUO33.,UUO34.,UUO35.,UUO36.,UUO37.; Other strangers
+VECT:	BLOCK	0		; Dispatch vector
+ZILCH.:	HALT	.		; 0 is not LUUO
+	EXP	RDBLK.		; 1 Read a chunk
+	EXP	RBLKR.		; 2 Read a random chunk
+	EXP	WBLK.		; 3 Write a chunk (Kortecrapulously)
+	EXP	WBLKR.		; 4 Write a random chunk
+	EXP	OPENF.		; 5 Open a file
+	EXP	COSEF.		; 6 Close a file
+	EXP	RDWRD.		; 7 Read one word
+	EXP	RWRDR.		; 10 Read one word random
+	EXP	WRWRD.		; 11 Write one word
+	EXP	WWRDR.		; 12 Write one word random
+	EXP	FUSHF.		; 13 Update file
+	EXP	TUNCF.		; 14 Truncate a file
+	EXP	NAMEF.		; 15 Return file name
+	EXP	FOSVC.		; 16 Dispatch on E for subfunction
+	EXP	NOTEF.		; 17 Note file status
+	EXP	PINTF.		; 20 Set file pointers
+	EXP	UUO21,UUO22,UUO23,UUO24	; 21-24 UUOs of various unknown
+	EXP	UUO25,UUO26,UUO27,UUO30	; 25-30 shapes and Kortesojan
+	EXP	UUO31,UUO32	; 31-32 TERIO flavors
+	EXP	UUO33.		; 33 UUOs unused by TENIO
+	EXP	UUO34.		; 34 or TERIO, to be used
+	EXP	UUO35.		; 35 by customers and other
+	EXP	UUO36.		; 36 riff raff at will
+	EXP	UUO37.		; 37
+;
+	$END	TENI,TENIGO	; Tell all to Steve
+	END

@@ -1,0 +1,308 @@
+#document(M68000 RDLIB Documentation,,45)
+#entry(DAYTIME)
+This function returns the current local Day/Time in internal form.
+#use
+EXTERNAL FUNCTION DAYTIME: DTIME_INT;
+
+#enduse
+#input
+none
+#output
+#ret()
+
+The current local Day/Time is returned in internal form.
+#inc(DTIME.TYP,DTIME.INC)
+#entry(DC_EXT)
+This function converts an internal Day/Time to a standard external form.
+#use
+EXTERNAL FUNCTION DC_EXT (DTIME: DTIME_INT):  DTIME_EXT;
+#enduse
+#input
+#arg(DTIME)
+A Day/Time in internal form.
+#output
+#ret()
+The Day/Time in standard external form.
+#inc(DTIME.TYP,DTIME.INC)
+#entry(EC_EXT)
+This procedure converts an external Date, Time, or Day/Time to internal form.
+#use
+EXTERNAL PROCEDURE EC_EXT (VAR ERR_CODE:  DTIME_ERR;
+                           DT_EXT:  NS_EXT;
+                           VAR DTIME:  DTIME_INT);
+#enduse
+#input
+#arg(DT_EXT)
+A string representing a Date, Time, or Day/Time.  The Date portion 
+of the string may be in standard external form, any non-standard
+external form, or it may be null.
+The Time may be in the standard external form, the non-standard external form,
+or it may be null.
+#output
+#arg(ERR_CODE)
+It is returned as DT_NOERR if no errors are encountered.  It
+is set to DT_ERR if errors are found.  Error conditions include:  1. Syntax
+errors in the input string and  2. Invalid Date or Time values.
+#arg(DTIME)
+The internal Day/Time corresponding to the external format string
+passed in.  If only a Date is passed in, the Time is set to midnight.  If
+only a Time is passed in, the Date is set to the Base Date (zero).
+#inc(DTIME.TYP,DTIME.INC)
+#entry(EXTR_DATE)
+This function extracts the Date portion on an internal Day/Time.
+#use
+EXTERNAL FUNCTION EXTR_DATE (DTIME:  DTIME_INT):  DATE_INT;
+#enduse
+#Input
+#arg(DTIME)
+A Day/Time in internal form.
+#output
+#ret()
+The Date portion of 'DTIME' in internal form is returned.
+#inc(DTIME.TYP,DTIME.INC)
+#entry(EXTR_TIME)
+This function extracts the Time portion of an internal Day/Time.
+#use
+EXTERNAL FUNCTION EXTR_TIME (DTIME:  DTIME_INT):  TIME_INT;
+#enduse
+#input
+#arg(DTIME)
+A Day/Time in internal form.
+#output
+#ret()
+The Time portion of 'DTIME' in internal form is returned.
+#inc(DTIME.TYP,DTIME.INC)
+#entry(DT_COMBINE)
+This function combines an internal Date with an internal Time, yielding an
+internal Day/Time.
+#use
+EXTERNAL FUNCTION DT_COMBINE (DATE:  DATE_INT;  
+                              TIME:  TIME_INT):  DTIME_INT;
+#enduse
+#input
+#arg(DATE)
+A Date in internal form.
+#arg(TIME)
+A Time in internal form.
+#output
+#ret()
+The internal Day/Time, resulting from the composition of the input
+parameters, is returned.
+#inc(DTIME.TYP,DTIME.INC)
+#entry(DAYS_DIFF)
+This function computes the number of days between two internal Day/Times.
+#use
+EXTERNAL FUNCTION DAYS_DIFF
+        (DTIME1, DTIME2:  DTIME_INT):  DAYS;
+#enduse
+#input
+#arg(DTIME1)
+A Day/Time in internal form.
+#arg(DTIME2)
+A Day/Time in internal form.
+#output
+#ret()
+The whole number of Days between the two Day/Times is returned.  This
+value may be negative:  The second Day/Time is subtracted from the first.
+#inc(DTIME.TYP,DTIME.INC)
+#entry(SECS_DIFF)
+This function computes the number of seconds between two internal Day/Times.
+#use
+EXTERNAL FUNCTION SECS_DIFF
+        (DTIME1, DTIME2:  DTIME_INT):  SECONDS;
+#enduse
+#input
+#arg(DTIME1)
+A Day/Time in internal form.
+#arg(DTIME2)
+A Day/Time in internal form.
+#output
+#ret()
+The rounded number of seconds between the two internal Day/Times is
+returned.  This value may be negative:  The second Day/Tme is subtracted
+subtracted from the first Day/Time.
+#inc(DTIME.TYP,DTIME.INC)
+#entry(ADD_DAYS)
+This functions adds a given number of days to an internal Day/Time.
+#use
+EXTERNAL FUNCTION ADD_DAYS (DTIME:  DTIME_INT;
+                            NUM_DAYS: DAYS): DTIME_INT;
+#enduse
+#input
+#arg(DTIME)
+ A Day/Time in internal form.
+#arg(NUM_DAYS)
+ A (possibly negative) number of days.
+#output
+#ret()
+An internal Day/Time is formed by adding the specified number of days to
+the given Day/Time.  If a negative Day/Time results, then the internal Day/Time
+returned is zero.
+#inc(DTIME.TYP,DTIME.INC)
+#entry(ADD_SECS)
+This functions adds a given number of seonds to an internal Day/Time.
+#use
+EXTERNAL FUNCTION ADD_SECS (DTIME: DTIME_INT;
+                            NUM_SECS: SECONDS):  DTIME_INT;
+#enduse
+#input
+#arg(DTIME)
+ A Day/Time in internal form.
+#arg(NUM_SECS)
+ A (possibly negative) number of seconds.
+#output
+#ret()
+an internal Day/Time is formed by adding the specified number of seconds
+to the given Day/Time.  If a negative Day/Time results, the internal Day/Time
+for day zero is returned.
+#inc(DTIME.TYP,DTIME.INC)
+#entry(DAY_OF_WEEK)
+Given an internal date, this function returns the day of the week it falls on.
+#use
+EXTRNAL FUNCTION DAY_OF_WEEK (DATE: DATE_INT): WEEK_DAY;
+#enduse
+#input
+#arg(DATE)
+ A date in internal form.
+#output
+#ret()
+An element of scalar type WEEK_DAY, representing the day of the week a
+given date falls on, is returned.
+#inc(DTIME.TYP,DTIME.INC)
+#entry(NS_D1)
+This function converts an internal date to the external format:  'mm/dd/yy'.
+#use
+EXTERNAL FUNCTION NS_D1 (DATE: DATE_INT):  NS_DATE1;
+#enduse
+#input
+#arg(DATE)
+A date in internal form.
+#output
+#ret()
+The date is returned in non-standard date format #1:  'mm/dd/yy'.
+#inc(DTIME.TYP,DTIME.INC)
+#entry(NS_D2)
+This function converts an internal date to the external format:  
+'mmm  dd,  yyyy'.
+#use
+EXTERNAL FUNCTION NS_D2 (DATE: DATE_INT):  NS_DATE2;
+#enduse
+#input
+#arg(DATE)
+A date in internal form.
+#output
+#ret()
+The date is returned in non-standard date format #2:  'mmm  dd,  yyyy'.
+The three character month is returned in upper case.  The day is zero 
+suppressed if necessary; if zero suppression is necessary, a trailing blank
+is appended to the return value.
+#inc(DTIME.TYP,DTIME.INC)
+#entry(NS_T1)
+This function converts an internal time to the external format:  'hh:mm:ss [A/P]M'.
+#use
+EXTERNAL FUNCTION NS_T1 (TIME: TIME_INT):  NS_TIME1;
+#enduse
+#input
+#arg(TIME)
+A Time in internal form.
+#output
+#ret()
+The Time is returned in non-standard external format #1:  'hh:mm:ss [A/P]M'.
+The 'AM' or 'PM' is in upper case.
+#inc(DTIME.TYP,DTIME.INC)
+#entry(DC_DTIME)
+This function converts an internal Day/Time to a binary Day/Time record.
+#use
+EXTERNAL FUNCTION DC_DTIME (DTIME: DTIME_INT):  DTIMEREC;
+#enduse
+#input
+#arg(DTIME)
+A Day/Time in internal form.
+#output
+#ret()
+The Day/Time is returned as a record with integer fields for the year,
+month, day, hours, minutes, and seconds.
+#inc(DTIME.TYP,DTIME.INC)
+#entry(EC_DTIME)
+This function converts a binary Day/Time record to an internal Day/Time.
+#use
+EXTERNAL FUNCTION EC_DTIME (VAR ERR_CODE: DTIME_ERR;
+                            DTIMEBIN: DTIMEREC;
+                            VAR DTIME: DTIME_INT);
+#enduse
+#input
+#arg(DTIMEBIN)
+A record with integer fields for the year, month, day, hours,
+minutes, and seconds.
+#output
+#arg(ERR_CODE)
+An element of scalar type DTIME_ERR indicating whether or not
+an error condition was encountered.  An error return indicates one of the
+record fields had an illegal value (Note, however, that Pascal's subrange
+checking will detect most of these errors first.).
+#inc(DTIME.TYP,DTIME.INC)
+#entry(EC_DATE)
+This procedure converts a binary date record to an internal date.
+#use
+EXTERNAL PROCEDURE EC_DATE (VAR ERR_CODE: DTIME_ERR;
+                            DATE_BIN: DATEREC;
+                            VAR DATE: DATE_INT);
+#enduse
+#input
+#arg(DATE_BIN)
+A binary date record with fields for year, month, and day.
+#output
+#arg(ERR_CODE)
+An element of scalar type DTIME_ERR indicating whether any error
+conditions were encountered.  An error return indicates an invalid date.
+#arg(DATE)
+The internal date corresponding to the record.  It is undefined if
+ERR_CODE was set to DT_ERR upon return.
+#inc(DTIMEE.TYP,DTIM.INC)
+#entry(DC_DATE)
+This function oncverts an internal date to a binary date record.
+#use
+EXTERNAL FUNCTION DC_DATE (DATE: DATE_INT):  DATEREC;
+#enduse
+#input
+#arg(DATE)
+A date in internal form.
+#output
+#ret()
+The date is returned as a binary date record with integer fields of year,
+month, and day.
+#inc(DTIME.TYP,DTIME.INC)
+#entry(EC_TIME)
+This procedure converts a binary time record to an internal time.
+#use
+EXTERNAL PROCEDURE EC_TIME (VAR ERR_CODE: DTIME_ERR;
+                            TIMEBIN: TIMEREC;
+                            VAR TIME: TIME_INT);
+#enduse
+#input
+#arg(TIMEBIN)
+A binary time record with integer fields for hours, minutes, and
+seconds.
+#output
+#arg(ERR_CODE)
+An element of scalar type DTIME_ERR indicating whether or not
+an error condition was encountered.  Error returns indicate a field of the input
+record was out of range (Note, however, that such errors will usually result in
+a Pascal subrange check error first.).
+#arg(TIME)
+The internal time returned corresponds to the binary time record.
+It is undefined if ERR_CODE is returned with the value DT_ERR.
+#inc(DTIME.TYP,DTIME.INC)
+#entry(DC_TIME)
+This function converts an internal time to a binary time record.
+#use
+EXTERNAL FUNCTION DC_TIME (TIME: TIME_INT):  TIMEREC;
+#enduse
+#input
+#arg(TIME)
+An internal time.
+#output
+#ret()
+The binary time record corresponding to the internal time is returned.)
+#inc(DTIME.TYP,DTIME.INC)
+  

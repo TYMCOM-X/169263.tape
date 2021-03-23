@@ -1,0 +1,6 @@
+PROGRAM Widgit_Orders;
+  (* Program                : Widgit_Orders
+CONST Widgit_Cost  = 2.5;       (*Widgits cost $2.50 each*)
+      Amount_Due := Widgit_Cost * Quantity;
+    WRITELN(TTY,'Customer orders for Acme Widgit Co'); BREAK(TTY);
+  WRITELN(TTY,'Widgit Program               May 1982');

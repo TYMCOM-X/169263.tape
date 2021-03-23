@@ -1,0 +1,452 @@
+
+
+
+          M68000 Project - SMR                                                               Page 1
+          
+
+
+          1  ROUSH             _____
+
+
+
+              1.1 Memo on code sharing
+
+
+                  Description:  Write a memo  to  the  application  group  managers  describing  the
+                               approach  we  are taking to code sharing and detailing its advantages
+                               and disadvantages.
+
+
+                                 Start       Completion                               __________    __________
+
+                  Scheduled:     12/4/81     12/7/81
+
+                  Actual:        12/4/81     12/7/81
+
+
+
+
+              1.2 EXORmacs installation
+
+
+                  Description:  Assist in and learn from installation of  our  EXORmacs  development
+                               system.
+
+
+                                 Start       Completion                               __________    __________
+
+                  Scheduled:     12/7/81     12/8/81
+
+
+
+
+
+
+
+
+
+
+          M68000 Project - SMR                                                               Page 2
+          
+
+
+                  Actual:        12/7/81     12/11/81
+
+
+
+
+              1.3 Complete runtime specification
+
+
+                  Description:   Update  the  runtime  specification document to reflect the changes
+                               necessary for code sharing in  an  unmapped  system.  Distribute  the
+                               runtime specification and hold a design review for the runtime.
+
+                  Rescheduled:   12/3/81     12/16/81
+
+                  Actual:        12/3/81     12/16/81
+
+
+                  Progress -- 12/11/81
+
+                      Runtime spec complete.  Review scheduled for 12/16/81.
+
+
+
+                  1.3.1 Partial spec update
+
+
+                      Description:   Update  all sections of the specification except the section on
+                                   procedure calling conventions.
+
+                      Rescheduled:   12/3/81     12/8/81
+
+
+
+
+
+
+
+
+
+
+
+          M68000 Project - SMR                                                               Page 3
+          
+
+
+                      Actual:        12/3/81     12/11/81
+
+
+
+                  1.3.2 Update procedure calling conventions
+
+
+                      Description:  Decide if a dedicated argument pointer  register  is  acceptable
+                                   now  that  a  dedicated  static area register is necessary.  If a
+                                   dedicated argument pointer register is unacceptable, then  design
+                                   a document an alternative procedure calling mechanism.
+
+                      Rescheduled:   12/7/81     12/11/81
+
+                      Actual:        12/7/81     12/11/81
+
+
+
+                  1.3.3 Hold design review
+
+                      Rescheduled:   12/16/81    12/16/81
+
+                      Actual:        12/16/81    12/16/81
+
+
+
+
+              1.4 File transfer
+
+
+                  Description:   Work  with  Neil Krone in getting his file transfer program working
+                               and documented.
+
+
+
+
+
+
+
+
+
+          M68000 Project - SMR                                                               Page 4
+          
+
+
+                                 Start       Completion                               __________    __________
+
+                  Scheduled:     12/14/81    12/18/81
+                  Rescheduled:   12/18/81    1/13/81
+
+                  Actual:        1/5/82      1/19/82
+
+
+                  Progress -- 12/17/81
+
+                      We've decided not to try using Neil Krone's simple  transfer  program  because
+                      Motorola's  official  transfer  program with error checking and retransmission
+                      capability is available.  This will undoubtably take longer to get up  because
+                      of  its  increased  complexity  but may eliminate the need for writing our own
+                      later.  The start of this task has been delayed for two reasons.  First,  Neil
+                      Krone  must  obtain some missing components of the transfer program.  Second I
+                      wanted to establish the initial library, with initialization  routine,  before
+                      starting  on the transfer task.  The initialization routine will make creation
+                      of test harnesses much easier for others working on the runtime.
+
+
+                  Progress -- 1/11/82
+
+                      Motorola's file transfer  program  works  in  "transparent"  mode  after  some
+                      patches  to  the  VERSAdos operating system were applied.  The next step is to
+                      get the downloading of printable ASCII files to the EXORmacs working.
+
+
+                  Progress -- 1/12/82
+
+                      Transfer of printable ASCII files is working.
+
+
+
+
+
+
+
+
+
+
+          M68000 Project - SMR                                                               Page 5
+          
+
+
+                  Progress -- 1/13/82
+
+                      Modified both ends of the transfer program  to  enable  transfer  of  VERSAdos
+                      object  files  to  the  EXORmacs.  Object file transfers are now working.  The
+                      remaining steps are to  get  file  transfers  working  from  TYMSHARE  and  to
+                      document how to use the transfer programs.
+
+
+
+
+              1.5 Exception handling macros
+
+
+                  Description:   Write,  enter  and  document  macros for the runtime which generate
+                               exception handling data structures.
+
+                  Rescheduled:   12/10/81    12/15/81
+
+                  Actual:        12/10/81    12/14/81
+
+
+
+
+              1.6 Runtime Initialization Routine
+
+
+                  Description:  Write and test the runtime  initialization  routine.  This  includes
+                               setting  up the initial searchable object library and testing most of
+                               the ideas involved in the proposed scheme  for  sharing  code  on  an
+                               unmapped system.
+
+                  Rescheduled:   12/14/81    12/23/81
+
+
+
+
+
+
+
+
+
+          M68000 Project - SMR                                                               Page 6
+          
+
+
+                  Actual:        12/14/81    12/17/81
+
+
+                  Progress -- 12/17/81
+
+                      I  calling  this routine done, but somewhere down the line it will undoubtably
+                      have to be rewritten.  This has become apparent as we've  learned  more  about
+                      the   OEM  version  of  VERSados.  However,  before  the  final  form  of  the
+                      initialization routine can be determined we'll have  to  find  out  even  more
+                      about OEM VERSados.  The present routine will enable work to proceed.
+
+
+
+                  1.6.1 Versados experimentation
+
+
+                      Description:   Some  of the ideas critical to the code sharing approach chosen
+                                   will be tried out on the EXORmacs system.
+
+                      Rescheduled:   12/14/81    12/16/81
+
+                      Actual:        12/14/81    12/15/81
+
+
+
+                  1.6.2 Design initialization routine
+
+
+                      Description:  The approach used in support of code  sharing  will  be  decided
+                                   upon.  The  initialization routine and the methodology to used in
+                                   testing it will be designed.
+
+
+
+
+
+
+
+
+
+
+          M68000 Project - SMR                                                               Page 7
+          
+
+
+                      Rescheduled:   12/15/81    12/17/81
+
+                      Actual:        12/15/81    12/15/81
+
+
+
+                  1.6.3 Code initialization routine
+
+
+                      Description:   The  initialization  routine  will  be  coded,  keyed  in   and
+                                   assembled.
+
+                      Rescheduled:   12/17/81    12/21/81
+
+                      Actual:        12/15/81    12/17/81
+
+
+
+                  1.6.4 Set up initial library
+
+
+                      Description:  An initial version of the runtime object library will be set up.
+                                   A command file for constructing it will be set up also.
+                      Rescheduled:   12/21/81    12/21/81
+
+                      Actual:        12/17/81    12/17/81
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          M68000 Project - SMR                                                               Page 8
+          
+
+
+                  1.6.5 Test initialization routine
+
+
+                      Description:  The initialization routine and library ordering will be tested.
+
+                      Rescheduled:   12/22/81    12/23/81
+
+                      Actual:        12/17/81    12/17/81
+
+
+
+
+              1.7 Binary I/O Design
+
+
+                  Description:  Produce a design for the implementation of the runtime routines  for
+                               support of binary I/O.
+
+
+                                 Start       Completion                               __________    __________
+
+                  Scheduled:     1/25/82     2/5/82
+
+                  Actual:        1/25/82     2/3/82
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          M68000 Project - SMR                                                               Page 9
+          
+
+
+              1.8 Overlay System Functional Specification
+
+
+                  Description:   Produce a function specification for an overlay system to run under
+                               VERSAdos.
+
+
+                                 Start       Completion                               __________    __________
+
+                  Scheduled:     2/1/82      3/26/82
+
+                  Progress -- 2/9/82
+
+                      This task has been cancelled due to uncertainty about the target system.
+
+
+
+
+              1.9 Dynamic temp allocation routine
+
+
+                  Description:  Write, test and document  a  runtime  routine  to  allocate  dynamic
+                               temps.
+
+
+                                 Start       Completion                               __________    __________
+
+                  Scheduled:     2/9/82      2/10/82
+
+                  Actual:        2/9/82      2/10/82
+
+
+
+
+
+
+
+
+
+
+
+          M68000 Project - SMR                                                               Page 10
+          
+
+
+              1.10 Non-local goto runtime routine
+
+
+                  Description:   Write,  test  and  document a runtime routine to do non-local gotos
+                               into the main routine.
+
+
+                                 Start       Completion                               __________    __________
+
+                  Scheduled:     2/10/82     2/11/82
+
+                  Actual:        2/10/82     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  

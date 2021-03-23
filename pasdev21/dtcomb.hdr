@@ -1,0 +1,41 @@
+;    +--------------------------------------------------------------+
+;    |                                                              |
+;    |                     D T _ C O M B I N E                      |
+;    |                     - - - - - - - - - -                      |
+;    |                                                              |
+;    +--------------------------------------------------------------+
+;    
+;    MDSI, Company Confidential
+;    
+;    SYSTEM:  DTIME - day/time manipulation routines
+;    
+;    STARTED:  11/01/78
+;    
+;    PURPOSE:   Combine  an  internal  date  with  an  internal  time
+;       yielding an internal day/time.
+;    
+;    USAGE:
+;    
+;       EXTERNAL FUNCTION DT_COMBINE(DATE: DATE_INT;
+;          TIME: TIME_INT): DTIME_INT;
+;    
+;    INPUT:
+;    
+;       DATE        a date in internal form.
+;    
+;       TIME        a time in internal form.
+;    
+;    OUTPUT:
+;    
+;       <return value>
+;                   the   internal   day/time   resulting   from  the
+;                   composition of the two input parameters.
+;    
+;    INCLUDE FILES REQUIRED:
+;    
+;       DTIME.TYP
+;       DTIME.INC
+;    
+;    RESPONSIBLE:  S.  M.  ROUSH
+;    
+;    ----------------------------------------------------------------

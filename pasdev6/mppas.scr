@@ -1,0 +1,232 @@
+$number off
+$ski 3
+$ver
+To:  D. Jeris
+
+From:  S. M. Roush
+
+Date:  September 18, 1980
+
+Subject:  MP/Pascal internals
+
+CC:  R. Billington, D. Gorgen, H. Hansen, A. Kortesoja, A. Kushnir,
+     C. Lanctot, W. Murphy, M. Senneff
+$jus
+$number bottom 1
+$page
+$ski 3
+1.\&Introduction&
+$ski
+This document summarizes the results of a conversation with David
+Cline of Data General concerning MP/Pascal.
+The topics covered are: implementaion details relevant to assembly
+language programmers, efficiency (primarily space) of various
+MP/Pascal constructs and semantic incompatabilities with MDSI
+Pascal.
+$ski 2
+2.\&Storage allocation&
+$ski
+All non-structured data types are stored in a single word, except
+reals which require two words.
+Eight words are always allocated for sets.
+Strings are preceded by a two word descriptor; both strings and arrays
+of char (packed or unpacked) are allocated one character per byte.
+The format of the string descriptor is described in Appendix A of
+Data General's MP/Pascal Programmer's Reference Manual.
+Any byte left over in the last word of a string or array of char is
+unused since all data items are allocated on word boundaries.
+The fields of a record are allocated in the order in which they
+appear in the record's type definition.
+The packed attribute in type definitions is completely ignored.
+$ski 2
+3.\&Threaded code organization&
+$ski
+MP/Pascal generates what is known as threaded code.
+In Data General's implementation the compiler does not generate
+any Nova instructions.
+Instead the compiler generates a data structure known as a
+thread list.
+The thread list consists of a list of addresses of runtime routines
+and of parameters to those routines.
+All executable code is contained in the runtime routines.
+At the end of each runtime routine (or &thread& routine),
+a jump is done to the next routine pointed at from the thread list.
+The runtime routines reside in the file PASCAL.LB and are
+linked with the user program at bind time.
+$ski
+As an example consider the 'code', i.e., thread list entries,
+generated for an integer addition.
+First the address of a routine to push an integer onto the
+stack would be generated.
+This would be followed by zero to two parameter words describing
+the location of the variable or perhaps an immediate value.
+Next the address of a routine to push the second operand of the
+addition onto the stack would be generated, followed by zero to
+two parameters. 
+Finally the address of a routine to add the top two stack elements
+would be generated.
+$ski
+The thread routines define a virtual machine - the thread machine
+architecture.
+The MP/Pascal thread machine is stack oriented. 
+The typical thread list sequence for a binary operation consists of
+the following thread list entries:
+the address of a routine to push
+the value or the address of the first operand onto the stack,
+the parameter words describing the location of the operand,
+the address of a routine to push the value or address of the second
+operand onto the stack, the parameters of this second routine,
+and the address of the routine which performs the operation.
+Since at most one copy of each of the thread routines from PASCAL.LB
+is linked with a program, the size of the thread list will
+determine the size of a large program.
+Because of the stack architecture, the most common thread list
+entries will be the addresses and parameters of the routines for
+pushing and popping values or addresses from the stack.
+Thus whether it is necessary to generate zero, one or two argument
+words for the push and pop thread routines is critical to program
+size.
+$ski
+The number of arguments required to address variables in the
+different Pascal storage classes is summarized below.
+Routine parameters and local variables of routines are special
+cased.
+There are routines specific to the first three argument words
+in a parameter list and to the first four words in the
+local stack frame.
+(The number of argument words required for each data type is
+given in Appendix A of the MP/Pascal Reference Manual.)
+Thus the first two or three (in most cases) parameters can be
+addressed with zero argument words; 
+the same is true for the first four words of local storage.
+Argument words beyond the third, and words of local storage
+beyond the fourth, require one argument word to be generated
+in the thread list to contain the offset within the
+parameter list or local stack frame.
+Static and global variables always require one argument word with the
+address of the variable.
+Non-local variables (variables defined as locals in a procedure
+containing the current procedure) require two argument words.
+$ski
+In summary, non-local references are expensive; there use should be
+avoided.
+The special casing of the first four words of local stack frame
+storage encourages the use of many small procedures (the overhead
+of a procedure declaration is discussed later).
+$ski 2
+4.\&The MP/Pascal runtime environment&
+$ski
+MP/Pascal makes very limited use of the hardware stack of the
+NOVA.
+The space allocated for the hardware stack is fixed at 200 words.
+The Pascal stack is software maintained using AC2 as the top of
+stack pointer.
+The software stack starts at the top of memory and grows down
+toward the heap.
+The heap begins immediately after the statically allocated portions
+of the program (the thread list, thread routines, static storage
+and the hardware stack) and grows up towards the stack.
+$ski
+A user assembly language routine could use the software stack
+for local data if it first verified that the heap would
+not be over run.
+The current top of the heap is maintained in a word on page zero.
+The size of the hardware stack can be increased at link time
+by defining a special object module; 
+we can learn the details of this procedure if necessary.
+$ski
+PASCAL.LB may make a contribution to page zero of at most 30
+words.
+Since user contributions to page zero begin at address 40,
+at least (255 - 40 - 30) = 185 words are available on page zero
+for the user program.
+MP/Pascal does not use the auto-increment or auto-decrement
+locations on page zero.
+$ski
+The procedure calling conventions are fully explained in Appendix
+A of the MP/Pascal Reference Manual.
+$ski
+The thread list for a procedure begins with a thread routine address
+followed by four arguments.
+Since the return opcode takes no arguments, a procedure with a
+null body should generate six words in the thread list.
+$ski 2
+5.\&The code generated for Pascal constructs&
+$ski 
+The overhead in thread list size of each of the user-controllable
+runtime checks is summarized below:
+$ver
+1.\line number updating - 20% increase in thread list size,
+2.\subrange checks - 3 words per check,
+3.\subscript checks - 3 words per check,
+4.\record variant reference checks - 2 words per check,
+5.\NIL pointer checks - 1 word per check (NIL is represented
+   internally by the value zero).
+$jus
+$ski
+Integer overflow checks are implemented by calling different thread
+routines when checking is enabled.
+Thus no extra space is required in the thread list.
+Note, that since different routines are used a program should either
+always use the overflow check option or never use it, assuming space
+efficiency is the primary goal.
+Zeroing pointers and structures containing pointers involves two
+or three words of overhead per procedure in space.
+The time overhead for this check could be substantial;
+on procedure entry the local stack frame is zeroed from the
+location of the first pointer to the location of the last pointer.
+$ski
+Constant sets appearing in the code (e.g., ['A'..'Z']) are
+generated at runtime;
+thus it would pay to assign such a constant to a variable if
+the use of the set was within a loop.
+$ski
+As mentioned before the thread machine architecture is basically that
+of a stack machine.
+An array or record assignment is done by pushing the addresses of 
+the arrays or records onto the stack and then calling a routine to do the
+actual copy.
+Similarly, string operations are done by pushing the addresses of
+string descriptors onto  the stack.
+Single word data items and reals have their values rather than 
+their addresses pushed onto the stack.
+These operations are all relatively efficient in terms of
+thread list size.
+Set operations are sometimes handled by pushing addresses and
+sometimes handled by pushing values.
+Pushing a value is rather costly in time since a set is always
+allocated as eight words;
+however the space cost in the thread list is not
+excessive.
+$ski 2
+6.\&Semantic incompatabilities&
+$ski
+There are at least three semantic incompatabilities between
+MDSI Pascal and MP/Pascal.
+A file RESET operation in MP/Pascal does not do an implicit
+GET of the first file buffer element, unlike MDSI Pascal
+or 'standard' Pascal.
+A string assignment will cause a fatal runtime error in MP/Pascal
+if the right hand side length is greater than the maximum
+length of the left hand side.
+In MDSI Pascal the right hand side string value would be truncated.
+When comparing unequal length strings in MP/Pascal the longer
+string is considered greater than the shorter string if they 
+are the same up to the length of the shorter string.
+MDSI implicitly pads the shorter string value with blanks.
+$ski 2
+7.\&Features in new MP/Pascal releases&
+$ski
+Version 2.2 of MP/Pascal (which is currently available)
+implements the intrinsic procedure DISPOSE.
+Note however that in all versions a NEW of a record
+with variants will allocate space sufficient for the largest
+variant.
+Version 2.2 also contains standard procedures permitting
+multi-tasking within a Pascal program.
+Version 2.3 (available soon) contains several minor enhancements
+designed to make debugging of MP/Pascal programs easier when
+using the MP/OS Debugger.
+These 'enhancements' include upgraded documentation of the 
+MP/Pascal runtime environment.
+   

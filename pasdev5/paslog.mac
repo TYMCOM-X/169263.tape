@@ -1,0 +1,6 @@
+	search	passym
+	entry	wrt%log
+	$reloc
+wrt%log:
+	popj	topp,
+	end

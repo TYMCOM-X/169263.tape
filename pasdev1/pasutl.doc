@@ -1,0 +1,101 @@
+#system (PASCAL Compiler)
+#module (PASUTL,6/5/78)
+This module contains the symbols table utility routines.
+These routines are used by nearly every other module in the compiler.
+The symbol table structure is specified in PASIST.INC, and particularly
+in PASIST.TYP, which it includes.
+#entry (entername)&
+is called with a string containing a name, and returns a pointer to the name
+tree node (NAM node) for that symbol.
+There is only one NAM node for each symbol name, regardless of how many
+distinct symbols have that name.
+#entry (cst_int)&
+takes a string containing an unsigned decimal or octal integer number,
+and returns a value node (VAL node) containing the integer constant
+represented by the string.
+#entry (cst_real)&
+is called with a string containing an unsigned real constant and with  a
+is called with a string containing an unsigned real number and a precision
+specification, and returns a value node (VAL node) containing the real
+number represented by the string, as a real constant of the specified
+precision.
+#entry (cst_string)&
+takes a string, and returns a value node (VAL node) containing that string
+as a string constant.
+#entry (cst_nil)&
+returns a value node (VAL node) of pointer type, which by definition
+represents the pointer constant NIL.
+#entry (new_blk)&
+returns a new scope block (BLK node) of a specified kind (program, module,
+datamodule, subroutine, or handler) and with a specified parent.
+#entry (new_sym)&
+returns a new symbol node (SYM node) of a specified kind.
+The node is not linked into any of the symbol table data structures yet.
+#entry (new_type)&
+returns a new type node (TYP node) of a specified kind.
+The node is not linked into any of the symbol table data structures yet.
+#entry (dcl_subrange)&
+takes a scalar type node and a pair of integers, and returns a new type
+node of subrange kind, with the specified base type and minimum and maximum
+values.
+#entry (dcl_int)&
+returns a new type node, representing a subrange of type INTEGER with
+specified minimum and maximum values.
+#entry (dcl_char)&
+returns a new type node, representing a subrange of type CHAR with
+specified minimum and maximum values.
+#entry (dcl_real)&
+returns a new type node representing a real subrange with specified
+minimum value, maximum value, and precision.
+#entry (dcl_set)&
+returns a new type node, representing a set type with a specified element type.
+#entry (dcl_pointer)&
+returns a new type node, representing a pointer type to a specified target type.
+#entry (dcl_string)&
+returns a new type node, representing a string type with a specified length and
+kind (varying or nonvarying).
+#entry (dcl_file)&
+returns a new type node, representing a file type with a specified binary
+attribute and component type.
+#entry (dcl_aggregate)&
+#entry (dcl_array)&
+returns a new type node, representing an array type which is the same as some
+flexible array type, but with a specified upper bound.
+#entry (chain_sym)&
+adds a symbol to a symbol chain, such as the chains which are hung off the
+scope block.
+#entry (pop_scope)&
+removes a symbol and all the symbols on its sym^.next chain from the current
+scope, by splicing them off of the scope chains from their name nodes.
+Pop_scope is used at block exit, and at the conclusion of "with" statements.
+#entry (declare)&
+causes a symbol to be declared in the current block,
+with a specified symbol kind and type node.
+Declare also checks for duplicate symbol declarations in a block.
+#entry (dcl_rt_sym)&
+creates the dummy symbol node which represents the return value temporary
+in a function or condition handler definition.
+The symbol is built and added to the symbol table as though it had been
+declared.
+#entry (make_label)&
+takes a parse node for a label identifier (which is of course an integer).
+It creates a name table node for the label (by entering the appropriate
+digit string in the name table) and returns a label symbol with that
+name.
+#entry (ck_uniqueness)&
+scans the symbol nodes for public and external symbols, verifying
+that their names are unique within the length specified by PROG_OPTIONS.
+EXTERNAL_UNIQUE_LENGTH.
+#responsible (Compiler Group)
+#change (7/27/78,RNF)&
+added makearray and makerecord routines; modified all value node creation
+routines to add value nodes to value chain; modified new_block and new_sym to
+initialize new fields (see CIN-#2).
+#change (11/14/78,RNF)&
+The makearray, makerecord, makestring, makeset, and cst_scalar routines were
+split out of PASUTL into the new module PASVAL, since these routines are
+used in the second pass (by the constant expression folding code), while
+the rest of PASUTL is only used in the first pass.
+#change (6/16/82,DJW)&
+Added CK_UNIQUENESS to support the EXTLENGTH option.
+#end

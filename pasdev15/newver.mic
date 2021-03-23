@@ -1,0 +1,27 @@
+.if ($a="") .silence
+/odmspc 055,s
+r pascal
+odms/notr
+use/notr
+putup/notr
+update/notr
+tricky/notr
+modmak/notr
+delmod/notr
+build/notr
+wrtsym/notr
+token2/notr
+pack/notr
+print/notr
+change/notr
+
+!compilation completed
+r link
+@odms
+odms/ssave
+/g
+!linking completed
+.pro<055>odms.shr,odms.low
+/odmspc 657,s
+.if ($a="") .revive
+.mic return

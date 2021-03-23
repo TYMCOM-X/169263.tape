@@ -1,0 +1,2412 @@
+		ORIGINAL INTERMEDIATE FORM FOR BLOCK 3 AT LEVEL 2:  SUBROUTINE ERROR
+		-------- ------------ ---- --- ----- - -- ----- --  ---------- -----
+
+     1      BLOCK   3 AT LEVEL 2:  SUBROUTINE ERROR
+
+     2      STMT    1: BEGIN ON LINE 21
+
+     3    1 LABEL   
+
+     4      STMT    1: <IO STATEMENT> ON LINE 22
+     5      =       IDENT   TTYOUTPUT		       6 TEXT: FILE 32
+     6      FILECHK TTYOUTPUT$5
+     7      STARTIO TTYOUTPUT$5
+     8      =       CONST   'Error '		       1 STRING 6
+     9      WRITE   RIGHT 'Error ' TO TTYOUTPUT$5
+    10      =       IDENT   ERROR_NUMBER	       1 @054422: INTEGER 10
+    11      WRITE   DECIMAL ERROR_NUMBER TO TTYOUTPUT$5
+    12      WRITELN TTYOUTPUT$5
+    13      END IO  TTYOUTPUT$5
+
+    14      STMT    1: <FUNCTION QUALIFIER> ON LINE 23
+    15      =       IDENT   TTYOUTPUT		       4 TEXT: FILE 32
+    16      FILECHK TTYOUTPUT$15
+    17      STARTIO TTYOUTPUT$15
+    18      BREAK   TTYOUTPUT$15
+    19      END IO  TTYOUTPUT$15
+
+    20      STMT    1: END ON LINE 24
+    21      RETURN  
+    22      END     	    ORIGINAL INTERMEDIATE FORM FOR BLOCK 4 AT LEVEL 2:  SUBROUTINE FUNC_RET_CHAR
+	    -------- ------------ ---- --- ----- - -- ----- --  ---------- -------------
+
+     1      BLOCK   4 AT LEVEL 2:  SUBROUTINE FUNC_RET_CHAR
+
+     2      STMT    1: BEGIN ON LINE 27
+
+     3    1 LABEL   
+
+     4      STMT    1: <SIMPLE STATEMENT> ON LINE 28
+     5      =       IDENT   FUNC_RET_CHAR	       1 CHAR 7
+     6      =       IDENT   CH			       1 CHAR 7
+     7      ASSIGN  FUNC_RET_CHAR := CH
+
+     8      STMT    1: END ON LINE 29
+     9      RETURN  
+    10      END     	     ORIGINAL INTERMEDIATE FORM FOR BLOCK 5 AT LEVEL 2:  SUBROUTINE MANY_PARAMS
+	     -------- ------------ ---- --- ----- - -- ----- --  ---------- -----------
+
+     1      BLOCK   5 AT LEVEL 2:  SUBROUTINE MANY_PARAMS
+
+     2      STMT    1: BEGIN ON LINE 33
+
+     3    1 LABEL   
+
+     4      STMT    1: <IF HEAD> ON LINE 34
+     5      =       IDENT   A			       1 @054763: STRING 10V
+     6      =       CONST   'string10..'	       1 STRING 10
+     7      =       SNE     A, 'string10..'	       1 BOOLEAN 1
+     8      JUMP    TO 2 @ 13 IF NOT $7
+
+     9      STMT    2: <FUNCTION QUALIFIER> ON LINE 34
+    10      =       CONST   !ERROR		       1 @055616: PROCEDURE
+    11      =       CONST   300			       1 INTEGER 9
+    12      CALL    !ERROR ( 300 )
+
+    13    2 LABEL   
+
+    14      STMT    1: <IF HEAD> ON LINE 35
+    15      =       IDENT   B			       1 CHAR 7
+    16      =       CONST   99			       1 CHAR 7
+    17      =       INE     B, 99		       1 BOOLEAN 1
+    18      JUMP    TO 3 @ 23 IF NOT $17
+
+    19      STMT    2: <FUNCTION QUALIFIER> ON LINE 35
+    20      =       CONST   !ERROR		       1 @055616: PROCEDURE
+    21      =       CONST   301			       1 INTEGER 9
+    22      CALL    !ERROR ( 301 )
+
+    23    3 LABEL   
+
+    24      STMT    1: <IF HEAD> ON LINE 36
+    25      =       IDENT   C			       1 @055276: STRING 400V
+    26      =       CONST   'A.VERY.BIG.STRING.ACTUALLY.DECLARED.400'
+						       1 STRING 39
+    27      =       SNE     C, 'A.VERY.BIG.STRING.ACTUALLY.DECLARED.400'
+						       1 BOOLEAN 1
+    28      JUMP    TO 4 @ 33 IF NOT $27
+
+    29      STMT    2: <FUNCTION QUALIFIER> ON LINE 36ORIGINAL INTERMEDIATE FORM FOR BLOCK 5 AT LEVEL 2:  SUBROUTINE MANY_PARAMS		      PAGE 2
+
+    30      =       CONST   !ERROR		       1 @055616: PROCEDURE
+    31      =       CONST   302			       1 INTEGER 9
+    32      CALL    !ERROR ( 302 )
+
+    33    4 LABEL   
+
+    34      STMT    1: <IF HEAD> ON LINE 37
+    35      =       IDENT   D			       1 INTEGER 32S
+    36      =       CONST   123			       1 INTEGER 7
+    37      =       INE     D, 123		       1 BOOLEAN 1
+    38      JUMP    TO 5 @ 43 IF NOT $37
+
+    39      STMT    2: <FUNCTION QUALIFIER> ON LINE 37
+    40      =       CONST   !ERROR		       1 @055616: PROCEDURE
+    41      =       CONST   303			       1 INTEGER 9
+    42      CALL    !ERROR ( 303 )
+
+    43    5 LABEL   
+
+    44      STMT    1: <IF HEAD> ON LINE 38
+    45      =       IDENT   E			       1 @052164: STRING 10V
+    46      =       CONST   'STRING.10.'	       1 STRING 10
+    47      =       SNE     E, 'STRING.10.'	       1 BOOLEAN 1
+    48      JUMP    TO 6 @ 53 IF NOT $47
+
+    49      STMT    2: <FUNCTION QUALIFIER> ON LINE 38
+    50      =       CONST   !ERROR		       1 @055616: PROCEDURE
+    51      =       CONST   304			       1 INTEGER 9
+    52      CALL    !ERROR ( 304 )
+
+    53    6 LABEL   
+
+    54      STMT    1: <IF HEAD> ON LINE 39
+    55      =       IDENT   F			       1 BOOLEAN 1
+    56      JUMP    TO 7 @ 61 IF NOT F
+
+    57      STMT    2: <FUNCTION QUALIFIER> ON LINE 39
+    58      =       CONST   !ERROR		       1 @055616: PROCEDURE
+    59      =       CONST   305			       1 INTEGER 9
+    60      CALL    !ERROR ( 305 )
+
+    61    7 LABEL   ORIGINAL INTERMEDIATE FORM FOR BLOCK 5 AT LEVEL 2:  SUBROUTINE MANY_PARAMS		      PAGE 3
+
+    62      STMT    1: END ON LINE 40
+    63      RETURN  
+    64      END     	   ORIGINAL INTERMEDIATE FORM FOR BLOCK 6 AT LEVEL 2:  SUBROUTINE SUBSTR_AS_PARAM
+	   -------- ------------ ---- --- ----- - -- ----- --  ---------- ---------------
+
+     1      BLOCK   6 AT LEVEL 2:  SUBROUTINE SUBSTR_AS_PARAM
+
+     2      STMT    1: BEGIN ON LINE 43
+
+     3    1 LABEL   
+
+     4      STMT    1: <IF HEAD> ON LINE 44
+     5      =       IDENT   A			       1 @055477: STRING 10
+     6      =       CONST   'string10..'	       1 STRING 10
+     7      =       SNE     A, 'string10..'	       1 BOOLEAN 1
+     8      JUMP    TO 2 @ 13 IF NOT $7
+
+     9      STMT    2: <FUNCTION QUALIFIER> ON LINE 44
+    10      =       CONST   !ERROR		       1 @055616: PROCEDURE
+    11      =       CONST   350			       1 INTEGER 9
+    12      CALL    !ERROR ( 350 )
+
+    13    2 LABEL   
+
+    14      STMT    1: END ON LINE 45
+    15      RETURN  
+    16      END     	     ORIGINAL INTERMEDIATE FORM FOR BLOCK 7 AT LEVEL 2:  SUBROUTINE CASE_PASSED
+	     -------- ------------ ---- --- ----- - -- ----- --  ---------- -----------
+
+     1      BLOCK   7 AT LEVEL 2:  SUBROUTINE CASE_PASSED
+
+     2      STMT    1: BEGIN ON LINE 48
+
+     3    1 LABEL   
+
+     4      STMT    1: <SIMPLE STATEMENT> ON LINE 49
+     5      =       IDENT   CASE_PASSED		       1 BOOLEAN 1
+     6      =       IDENT   A			       2 @054311: STRING 400V
+     7      =       CONST   1			       2 INTEGER 1
+     8      =       CONST   26			       2 INTEGER 5
+     9      =       LENGTH  A$6			       1 INTEGER 32S
+    10      STRRNGE 1$7, 26$8, $9
+    11      =       SUBSTR  A$6 [1$7 : 26$8]	       1 STRING 26
+    12      =       CONST   'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+						       1 STRING 26
+    13      =       SEQ     $11, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+						       1 BOOLEAN 1
+    14      ASSIGN  CASE_PASSED := $13
+
+    15      STMT    1: <IF HEAD> ON LINE 51
+    16      =       IDENT   CASE_PASSED		       1 BOOLEAN 1
+    17      =       IDENT   A			       1 @054311: STRING 400V
+    18      =       LENGTH  A			       1 INTEGER 32S
+    19      =       CONST   128			       1 INTEGER 8
+    20      =       IGT     $18, 128		       1 BOOLEAN 1
+    21      =       ANDIF   CASE_PASSED, $20	       1 BOOLEAN 1
+    22      JUMP    TO 2 @ 34 IF NOT $21
+
+    23      STMT    1: <SIMPLE STATEMENT> ON LINE 52
+    24      =       IDENT   CASE_PASSED		       1 BOOLEAN 1
+    25      =       IDENT   A			       2 @054311: STRING 400V
+    26      =       CONST   128			       2 INTEGER 8
+    27      =       CONST   10			       2 INTEGER 4
+    28      =       LENGTH  A$25		       1 INTEGER 32S
+    29      STRRNGE 128$26, 10$27, $28
+    30      =       SUBSTR  A$25 [128$26 : 10$27]      1 STRING 10
+    31      =       CONST   'ABCDEFGHIJ'	       1 STRING 10
+    32      =       SEQ     $30, 'ABCDEFGHIJ'	       1 BOOLEAN 1
+    33      ASSIGN  CASE_PASSED := $32ORIGINAL INTERMEDIATE FORM FOR BLOCK 7 AT LEVEL 2:  SUBROUTINE CASE_PASSED		      PAGE 2
+
+    34    2 LABEL   
+
+    35      STMT    1: <IF HEAD> ON LINE 53
+    36      =       IDENT   CASE_PASSED		       1 BOOLEAN 1
+    37      =       IDENT   A			       1 @054311: STRING 400V
+    38      =       LENGTH  A			       1 INTEGER 32S
+    39      =       CONST   300			       1 INTEGER 9
+    40      =       IGT     $38, 300		       1 BOOLEAN 1
+    41      =       ANDIF   CASE_PASSED, $40	       1 BOOLEAN 1
+    42      JUMP    TO 3 @ 54 IF NOT $41
+
+    43      STMT    1: <SIMPLE STATEMENT> ON LINE 54
+    44      =       IDENT   CASE_PASSED		       1 BOOLEAN 1
+    45      =       IDENT   A			       2 @054311: STRING 400V
+    46      =       CONST   300			       2 INTEGER 9
+    47      =       CONST   10			       2 INTEGER 4
+    48      =       LENGTH  A$45		       1 INTEGER 32S
+    49      STRRNGE 300$46, 10$47, $48
+    50      =       SUBSTR  A$45 [300$46 : 10$47]      1 STRING 10
+    51      =       CONST   '1234567890'	       1 STRING 10
+    52      =       SEQ     $50, '1234567890'	       1 BOOLEAN 1
+    53      ASSIGN  CASE_PASSED := $52
+
+    54    3 LABEL   
+
+    55      STMT    1: END ON LINE 55
+    56      RETURN  
+    57      END     		  ORIGINAL INTERMEDIATE FORM FOR BLOCK 9 AT LEVEL 3:  SUBROUTINE F
+		  -------- ------------ ---- --- ----- - -- ----- --  ---------- -
+
+     1      BLOCK   9 AT LEVEL 3:  SUBROUTINE F
+
+     2      STMT    1: BEGIN ON LINE 61
+
+     3    1 LABEL   
+
+     4      STMT    1: <SIMPLE STATEMENT> ON LINE 62
+     5      =       IDENT   F			       1 @055065: STRING 132V
+     6      =       CONST   'ty'		       1 STRING 2
+     7      =       STRCVT  'ty'		       1 @055065: STRING 132V
+     8      ASSIGN  F := $7
+
+     9      STMT    1: <IF HEAD> ON LINE 63
+    10      =       IDENT   S1			       1 @063521: STRING *V
+    11      =       IDENT   S3			       1 @063521: STRING *V
+    12      =       SEQ     S1, S3		       1 BOOLEAN 1
+    13      JUMP    TO 3 @ 23 IF NOT $12
+
+    14      STMT    2: BEGIN ON LINE 63
+
+    15    2 LABEL   
+
+    16      STMT    1: <FUNCTION QUALIFIER> ON LINE 64
+    17      =       CONST   !ERROR		       1 @055616: PROCEDURE
+    18      =       CONST   400			       1 INTEGER 9
+    19      CALL    !ERROR ( 400 )
+
+    20      STMT    1: <GOTO STATEMENT> ON LINE 65
+    21      GOTO    1
+
+    22      STMT    1: END ON LINE 68
+
+    23    3 LABEL   
+
+    24      STMT    1: END ON LINE 69
+    25      RETURN  
+    26      END     		ORIGINAL INTERMEDIATE FORM FOR BLOCK 8 AT LEVEL 2:  SUBROUTINE GORY
+		-------- ------------ ---- --- ----- - -- ----- --  ---------- ----
+
+     1      BLOCK   8 AT LEVEL 2:  SUBROUTINE GORY
+
+     2      STMT    1: BEGIN ON LINE 71
+
+     3    1 LABEL   
+
+     4      STMT    1: <IF HEAD> ON LINE 72
+     5      =       IDENT   S1			       1 @063521: STRING *V
+     6      =       IDENT   S2			       1 @063521: STRING *V
+     7      =       CAT     S1, S2		       1 STRING *
+     8      =       IDENT   S3			       1 @063521: STRING *V
+     9      =       IDENT   S4			       1 @063521: STRING *V
+    10      =       CAT     S3, S4		       2 STRING *
+    11      =       CONST   1			       2 INTEGER 1
+    12      =       IDENT   J			       2 INTEGER 32S
+    13      =       LENGTH  $10			       1 INTEGER 32S
+    14      STRRNGE 1$11, J$12, $13
+    15      =       SUBSTR  $10 [1$11 : J$12]	       1 STRING *
+    16      =       CONST   !F			       1 @052011: FUNCTION
+    17      =       FCALL   !F			       1 @055065: STRING 132V
+    18      =       CAT     $15, $17		       1 STRING *
+    19      =       SNE     $7, $18		       1 BOOLEAN 1
+    20      JUMP    TO 2 @ 25 IF NOT $19
+
+    21      STMT    1: <FUNCTION QUALIFIER> ON LINE 73
+    22      =       CONST   !ERROR		       1 @055616: PROCEDURE
+    23      =       CONST   401			       1 INTEGER 9
+    24      CALL    !ERROR ( 401 )
+
+    25    2 LABEL   
+
+    26    3 LABEL   1
+
+    27      STMT    1: <IF HEAD> ON LINE 75
+    28      =       IDENT   S1			       1 @063521: STRING *V
+    29      =       IDENT   S3			       1 @063521: STRING *V
+    30      =       CAT     S1, S3		       1 STRING *
+    31      =       IDENT   S2			       1 @063521: STRING *V
+    32      =       IDENT   S4			       1 @063521: STRING *V
+    33      =       CAT     S2, S4		       2 STRING *
+    34      =       CONST   1			       2 INTEGER 1ORIGINAL INTERMEDIATE FORM FOR BLOCK 8 AT LEVEL 2:  SUBROUTINE GORY			      PAGE 2
+
+    35      =       IDENT   J			       2 INTEGER 32S
+    36      =       LENGTH  $33			       1 INTEGER 32S
+    37      STRRNGE 1$34, J$35, $36
+    38      =       SUBSTR  $33 [1$34 : J$35]	       1 STRING *
+    39      =       CONST   !F			       1 @052011: FUNCTION
+    40      =       FCALL   !F			       1 @055065: STRING 132V
+    41      =       CAT     $38, $40		       1 STRING *
+    42      =       SEQ     $30, $41		       1 BOOLEAN 1
+    43      JUMP    TO 4 @ 48 IF NOT $42
+
+    44      STMT    1: <FUNCTION QUALIFIER> ON LINE 76
+    45      =       CONST   !ERROR		       1 @055616: PROCEDURE
+    46      =       CONST   402			       1 INTEGER 9
+    47      CALL    !ERROR ( 402 )
+
+    48    4 LABEL   
+
+    49      STMT    1: END ON LINE 77
+    50      RETURN  
+    51      END     		 ORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001
+		 -------- ------------ ---- --- ----- - -- ----- --  ------- ------
+
+     1      BLOCK   1 AT LEVEL 1:  PROGRAM EXE001
+
+     2      STMT    1: BEGIN ON LINE 81
+
+     3    1 LABEL   
+
+     4      STMT    1: <FUNCTION QUALIFIER> ON LINE 82
+     5      =       IDENT   TTYOUTPUT		       1 TEXT: FILE 32
+     6      =       CONST   '#CN'		       1 STRING 3
+     7      =       GEN SET 			       1 SET 0,0
+     8      =       REWRITE '#CN', ~, $7	       1 TEXT: FILE 32
+     9      ASSIGN  TTYOUTPUT := $8
+
+    10      STMT    1: <IO STATEMENT> ON LINE 83
+    11      =       IDENT   TTYOUTPUT		       5 TEXT: FILE 32
+    12      FILECHK TTYOUTPUT$11
+    13      STARTIO TTYOUTPUT$11
+    14      =       CONST   'Begin EXE001'	       1 STRING 12
+    15      WRITE   RIGHT 'Begin EXE001' TO TTYOUTPUT$11
+    16      WRITELN TTYOUTPUT$11
+    17      END IO  TTYOUTPUT$11
+
+    18      STMT    1: <FUNCTION QUALIFIER> ON LINE 84
+    19      =       IDENT   TTYOUTPUT		       4 TEXT: FILE 32
+    20      FILECHK TTYOUTPUT$19
+    21      STARTIO TTYOUTPUT$19
+    22      BREAK   TTYOUTPUT$19
+    23      END IO  TTYOUTPUT$19
+
+    24      STMT    1: <SIMPLE STATEMENT> ON LINE 85
+    25      =       IDENT   I			       1 INTEGER 32S
+    26      =       CONST   3			       1 INTEGER 2
+    27      ASSIGN  I := 3
+
+    28      STMT    1: <SIMPLE STATEMENT> ON LINE 86
+    29      =       IDENT   J			       1 INTEGER 32S
+    30      =       CONST   6			       1 INTEGER 3
+    31      ASSIGN  J := 6
+
+    32      STMT    1: <FUNCTION QUALIFIER> ON LINE 88
+    33      =       IDENT   VFLX		       1 @054732: POINTER 32ORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			      PAGE 2
+
+    34      =       CONST   12			       2 INTEGER 4
+    35      =       CONST   4			       1 @045207: INTEGER 3
+    36      =       IADD    12$34, 4		       1 @045207: INTEGER 31
+    37      =       NEW     $36			       2 @054732: POINTER 32
+    38      ASSIGN  VFLX := $37
+    39      =       DEREF   $37			       1 @054754: STRING *V
+    40      =       UPBOUND $39			       1 INTEGER 32S
+    41      ASSIGN  $40 := 12$34
+
+    42      STMT    1: <FUNCTION QUALIFIER> ON LINE 89
+    43      =       IDENT   FFLX		       1 @054700: POINTER 32
+    44      =       CONST   7			       2 INTEGER 3
+    45      =       CONST   2			       1 @045207: INTEGER 2
+    46      =       IADD    7$44, 2		       1 @045207: INTEGER 31
+    47      =       NEW     $46			       2 @054700: POINTER 32
+    48      ASSIGN  FFLX := $47
+    49      =       DEREF   $47			       1 @054653: STRING *
+    50      =       UPBOUND $49			       1 INTEGER 32S
+    51      ASSIGN  $50 := 7$44
+
+    52      STMT    1: <SIMPLE STATEMENT> ON LINE 91
+    53      =       IDENT   VFLX		       2 @054732: POINTER 32
+    54      PTRCHK  VFLX$53
+    55      =       DEREF   VFLX$53		       1 @054754: STRING *V
+    56      =       CONST   'very flexible'	       1 STRING 13
+    57      =       STRCVT  'very flexible'	       1 @054754: STRING *V
+    58      ASSIGN  $55 := $57
+
+    59      STMT    1: <IF HEAD> ON LINE 92
+    60      =       IDENT   VFLX		       2 @054732: POINTER 32
+    61      PTRCHK  VFLX$60
+    62      =       DEREF   VFLX$60		       1 @054754: STRING *V
+    63      =       CONST   'very flexibl'	       1 STRING 12
+    64      =       SNE     $62, 'very flexibl'	       1 BOOLEAN 1
+    65      JUMP    TO 2 @ 70 IF NOT $64
+
+    66      STMT    2: <FUNCTION QUALIFIER> ON LINE 92
+    67      =       CONST   !ERROR		       1 @055616: PROCEDURE
+    68      =       CONST   1			       1 INTEGER 1
+    69      CALL    !ERROR ( 1 )
+
+    70    2 LABEL   ORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			      PAGE 3
+
+    71      STMT    1: <SIMPLE STATEMENT> ON LINE 93
+    72      =       IDENT   I			       1 INTEGER 32S
+    73      =       IDENT   S2			       1 @055130: STRING 12V
+    74      =       LENGTH  S2			       1 INTEGER 32S
+    75      ASSIGN  I := $74
+
+    76      STMT    1: <IF HEAD> ON LINE 94
+    77      =       IDENT   I			       1 INTEGER 32S
+    78      =       CONST   9			       1 INTEGER 4
+    79      =       INE     I, 9		       1 BOOLEAN 1
+    80      JUMP    TO 3 @ 85 IF NOT $79
+
+    81      STMT    2: <FUNCTION QUALIFIER> ON LINE 94
+    82      =       CONST   !ERROR		       1 @055616: PROCEDURE
+    83      =       CONST   2			       1 INTEGER 2
+    84      CALL    !ERROR ( 2 )
+
+    85    3 LABEL   
+
+    86      STMT    1: <SIMPLE STATEMENT> ON LINE 95
+    87      =       IDENT   J			       1 INTEGER 32S
+    88      =       CONST   4			       1 INTEGER 3
+    89      ASSIGN  J := 4
+
+    90      STMT    1: <IF HEAD> ON LINE 96
+    91         IDENT   J			       1 INTEGER 32S
+    92      =       CONST   4			       1 INTEGER 3
+    93      =       INE     J, 4		       1 BOOLEAN 1
+    94      JUMP    TO 4 @ 99 IF NOT $93
+
+    95      STMT    2: <FUNCTION QUALIFIER> ON LINE 96
+    96      =       CONST   !ERROR		       1 @055616: PROCEDURE
+    97      =       CONST   3			       1 INTEGER 2
+    98      CALL    !ERROR ( 3 )
+
+    99    4 LABEL   
+
+   100      STMT    1: <SIMPLE STATEMENT> ON LINE 97
+   101      =       IDENT   K			       1 INTEGER 32S
+   102      =       IDENT   VFLX		       2 @054732: POINTER 32
+   103      PTRCHK  VFLX$102
+   104      =       DEREF   VFLX$102		       1 @054754: STRING *VORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			      PAGE 4
+
+   105      =       LENGTH  $104		       1 INTEGER 32S
+   106      ASSIGN  K := $105
+
+   107      STMT    1: <IF HEAD> ON LINE 98
+   108      =       IDENT   K			       1 INTEGER 32S
+   109      =       CONST   12			       1 INTEGER 4
+   110      =       INE     K, 12		       1 BOOLEAN 1
+   111      JUMP    TO 5 @ 116 IF NOT $110
+
+   112      STMT    2: <FUNCTION QUALIFIER> ON LINE 98
+   113      =       CONST   !ERROR		       1 @055616: PROCEDURE
+   114      =       CONST   4			       1 INTEGER 3
+   115      CALL    !ERROR ( 4 )
+
+   116    5 LABEL   
+
+   117      STMT    1: <SIMPLE STATEMENT> ON LINE 99
+   118      =       IDENT   I			       1 INTEGER 32S
+   119      =       IDENT   FFLX		       2 @054700: POINTER 32
+   120      PTRCHK  FFLX$119
+   121      =       DEREF   FFLX$119		       1 @054653: STRING *
+   122      =       LENGTH  $121		       1 INTEGER 32S
+   123      ASSIGN  I := $122
+
+   124      STMT    1: <IF HEAD> ON LINE 100
+   125      =       IDENT   I			       1 INTEGER 32S
+   126      =       CONST   7			       1 INTEGER 3
+   127      =       INE     I, 7		       1 BOOLEAN 1
+   128      JUMP    TO 6 @ 133 IF NOT $127
+
+   129      STMT    2: <FUNCTION QUALIFIER> ON LINE 100
+   130      =       CONST   !ERROR		       1 @055616: PROCEDURE
+   131      =       CONST   5			       1 INTEGER 3
+   132      CALL    !ERROR ( 5 )
+
+   133    6 LABEL   
+
+   134      STMT    1: <SIMPLE STATEMENT> ON LINE 102
+   135      =       IDENT   FFLX		       2 @054700: POINTER 32
+   136      PTRCHK  FFLX$135
+   137      =       DEREF   FFLX$135		       1 @054653: STRING *
+   138      =       CONST   'ooof'		       1 STRING 4ORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			      PAGE 5
+
+   139      =       STRCVT  'ooof'		       1 @054653: STRING *
+   140      ASSIGN  $137 := $139
+
+   141      STMT    1: <IF HEAD> ON LINE 103
+   142      =       IDENT   FFLX		       2 @054700: POINTER 32
+   143      PTRCHK  FFLX$142
+   144      =       DEREF   FFLX$142		       1 @054653: STRING *
+   145      =       CONST   'ooof   '		       1 STRING 7
+   146      =       SNE     $144, 'ooof   '	       1 BOOLEAN 1
+   147      JUMP    TO 7 @ 152 IF NOT $146
+
+   148      STMT    2: <FUNCTION QUALIFIER> ON LINE 103
+   149      =       CONST   !ERROR		       1 @055616: PROCEDURE
+   150      =       CONST   6			       1 INTEGER 3
+   151      CALL    !ERROR ( 6 )
+
+   152    7 LABEL   
+
+   153      STMT    1: <SIMPLE STATEMENT> ON LINE 104
+   154      =       IDENT   T			       1 @054747: STRING 16
+   155      =       IDENT   S1			       1 @055123: STRING 4
+   156      =       UPCASE  S1			       1 @055123: STRING 4
+   157      =       IDENT   S2			       2 @055130: STRING 12V
+   158      =       CONST   3			       2 INTEGER 2
+   159      =       CONST   6			       2 INTEGER 3
+   160      =       LENGTH  S2$157		       1 INTEGER 32S
+   161      STRRNGE 3$158, 6$159, $160
+   162      =       SUBSTR  S2$157 [3$158 : 6$159]     1 STRING 6
+   163      =       CAT     $156, $162		       1 STRING 10
+   164      =       STRCVT  $163		       1 @054747: STRING 16
+   165      ASSIGN  T := $164 (OVL)
+
+   166      STMT    1: <IF HEAD> ON LINE 105
+   167      =       IDENT   T			       1 @054747: STRING 16
+   168      =       CONST   'S123ring 1      '	       1 STRING 16
+   169      =       SNE     T, 'S123ring 1      '      1 BOOLEAN 1
+   170      JUMP    TO 8 @ 175 IF NOT $169
+
+   171      STMT    2: <FUNCTION QUALIFIER> ON LINE 105
+   172      =       CONST   !ERROR		       1 @055616: PROCEDURE
+   173      =       CONST   7			       1 INTEGER 3
+   174      CALL    !ERROR ( 7 )ORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			      PAGE 6
+
+   175    8 LABEL   
+
+   176      STMT    1: <SIMPLE STATEMENT> ON LINE 106
+   177      =       IDENT   S1			       1 @055123: STRING 4
+   178      =       IDENT   FFLX		       2 @054700: POINTER 32
+   179      PTRCHK  FFLX$178
+   180      =       DEREF   FFLX$178		       1 @054653: STRING *
+   181      =       STRCVT  $180		       1 @055123: STRING 4
+   182      ASSIGN  S1 := $181
+
+   183      STMT    1: <IF HEAD> ON LINE 107
+   184      =       IDENT   S1			       1 @055123: STRING 4
+   185      =       CONST   'ooof'		       1 STRING 4
+   186      =       SNE     S1, 'ooof'		       1 BOOLEAN 1
+   187      JUMP    TO 9 @ 192 IF NOT $186
+
+   188      STMT    2: <FUNCTION QUALIFIER> ON LINE 107
+   189      =       CONST   !ERROR		       1 @055616: PROCEDURE
+   190      =       CONST   8			       1 INTEGER 4
+   191      CALL    !ERROR ( 8 )
+
+   192    9 LABEL   
+
+   193      STMT    1: <SIMPLE STATEMENT> ON LINE 108
+   194      =       IDENT   T			       1 @054747: STRING 16
+   195      =       IDENT   VFLX		       2 @054732: POINTER 32
+   196      PTRCHK  VFLX$195
+   197      =       DEREF   VFLX$195		       1 @054754: STRING *V
+   198      =       CONST   32			       1 CHAR 6
+   199      =       LWCASE  32			       1 CHAR 6
+   200      =       IDENT   S1			       1 @055123: STRING 4
+   201      =       CAT     $197, $199, S1	       1 STRING *
+   202      =       STRCVT  $201		       1 @054747: STRING 16
+   203      ASSIGN  T := $202 (OVL)
+
+   204      STMT    1: <IF HEAD> ON LINE 109
+   205      =       IDENT   T			       1 @054747: STRING 16
+   206      =       CONST   'very flexibl ooo'	       1 STRING 16
+   207      =       SNE     T, 'very flexibl ooo'      1 BOOLEAN 1
+   208      JUMP    TO 10 @ 213 IF NOT $207
+
+   209      STMT    2: <FUNCTION QUALIFIER> ON LINE 109ORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			      PAGE 7
+
+   210      =       CONST   !ERROR		       1 @055616: PROCEDURE
+   211      =       CONST   9			       1 INTEGER 4
+   212      CALL    !ERROR ( 9 )
+
+   213   10 LABEL   
+
+   214      STMT    1: <SIMPLE STATEMENT> ON LINE 110
+   215      =       IDENT   FFLX		       2 @054700: POINTER 32
+   216      PTRCHK  FFLX$215
+   217      =       DEREF   FFLX$215		       1 @054653: STRING *
+   218      =       IDENT   VFLX		       2 @054732: POINTER 32
+   219      PTRCHK  VFLX$218
+   220      =       DEREF   VFLX$218		       2 @054754: STRING *V
+   221      =       CONST   1			       2 INTEGER 1
+   222      =       IDENT   I			       1 INTEGER 32S
+   223      =       CONST   2			       1 INTEGER 2
+   224      =       ISUB    I, 2		       2 INTEGER 32S
+   225      =       LENGTH  $220		       1 INTEGER 32S
+   226      STRRNGE 1$221, $224, $225
+   227      =       SUBSTR  $220 [1$221 : $224]	       1 STRING *
+   228      =       IDENT   S1			       1 @055123: STRING 4
+   229      =       CAT     $227, S1		       1 STRING *
+   230      ASSIGN  $217 := $229 (OVL)
+
+   231      STMT    1: <IF HEAD> ON LINE 111
+   232      =       IDENT   FFLX		       2 @054700: POINTER 32
+   233      PTRCHK  FFLX$232
+   234      =       DEREF   FFLX$232		       1 @054653: STRING *
+   235      =       CONST   'very oo'		       1 STRING 7
+   236      =       SNE     $234, 'very oo'	       1 BOOLEAN 1
+   237      JUMP    TO 11 @ 242 IF NOT $236
+
+   238      STMT    2: <FUNCTION QUALIFIER> ON LINE 111
+   239      =       CONST   !ERROR		       1 @055616: PROCEDURE
+   240      =       CONST   10			       1 INTEGER 4
+   241      CALL    !ERROR ( 10 )
+
+   242   11 LABEL   
+
+   243      STMT    1: <SIMPLE STATEMENT> ON LINE 112
+   244      =       IDENT   VFLX		       2 @054732: POINTER 32
+   245      PTRCHK  VFLX$244ORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			      PAGE 8
+
+   246      =       DEREF   VFLX$244		       2 @054754: STRING *V
+   247      =       CONST   6			       2 INTEGER 3
+   248      =       IDENT   VFLX		       2 @054732: POINTER 32
+   249      PTRCHK  VFLX$248
+   250      =       DEREF   VFLX$248		       1 @054754: STRING *V
+   251      =       LENGTH  $250		       1 INTEGER 32S
+   252      =       CONST   6			       1 INTEGER 3
+   253      =       ISUB    $251, 6		       2 INTEGER 32S
+   254      =       LENGTH  $246		       1 INTEGER 32S
+   255      STRRNGE 6$247, $253, $254
+   256      =       SUBSTR  $246 [6$247 : $253]	       1 STRING *
+   257      =       IDENT   S1			       1 @055123: STRING 4
+   258      =       UPCASE  S1			       1 @055123: STRING 4
+   259      =       STRCVT  $258		       1 @067610: STRING *
+   260      ASSIGN  $256 := $259 (OVL)
+
+   261      STMT    1: <IF HEAD> ON LINE 113
+   262      =       IDENT   VFLX		       2 @054732: POINTER 32
+   263      PTRCHK  VFLX$262
+   264      =       DEREF   VFLX$262		       1 @054754: STRING *V
+   265      =       CONST   'very OOOF  l'	       1 STRING 12
+   266      =       SNE     $264, 'very OOOF  l'       1 BOOLEAN 1
+   267      JUMP    TO 12 @ 272 IF NOT $266
+
+   268      STMT    2: <FUNCTION QUALIFIER> ON LINE 113
+   269      =       CONST   !ERROR		       1 @055616: PROCEDURE
+   270      =       CONST   11			       1 INTEGER 4
+   271      CALL    !ERROR ( 11 )
+
+   272   12 LABEL   
+
+   273      STMT    1: <SIMPLE STATEMENT> ON LINE 115
+   274      =       IDENT   CH1			       1 CHAR 7
+   275      =       IDENT   S2			       2 @055130: STRING 12V
+   276      =       IDENT   J			       2 INTEGER 32S
+   277      =       CONST   1			       1 INTEGER 1
+   278      =       LENGTH  S2$275		       1 INTEGER 32S
+   279      =       CONST   1			       1 INTEGER 1
+   280      SUBRNGE J$276, 1, $278
+   281      =       SUBSTR  S2$275 [J$276 : 1]	       1 CHAR 7
+   282      ASSIGN  CH1 := $281ORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			      PAGE 9
+
+   283      STMT    1: <IF HEAD> ON LINE 116
+   284      =       IDENT   CH1			       1 CHAR 7
+   285      =       CONST   105			       1 CHAR 7
+   286      =       INE     CH1, 105		       1 BOOLEAN 1
+   287      JUMP    TO 13 @ 292 IF NOT $286
+
+   288      STMT    2: <FUNCTION QUALIFIER> ON LINE 116
+   289      =       CONST   !ERROR		       1 @055616: PROCEDURE
+   290      =       CONST   12			       1 INTEGER 4
+   291      CALL    !ERROR ( 12 )
+
+   292   13 LABEL   
+
+   293      STMT    1: <SIMPLE STATEMENT> ON LINE 117
+   294      =       IDENT   CH2			       1 CHAR 7
+   295      =       IDENT   VFLX		       2 @054732: POINTER 32
+   296      PTRCHK  VFLX$295
+   297      =       DEREF   VFLX$295		       2 @054754: STRING *V
+   298      =       IDENT   I			       2 INTEGER 32S
+   299      =       CONST   1			       1 INTEGER 1
+   300      =       LENGTH  $297		       1 INTEGER 32S
+   301      =       CONST   1			       1 INTEGER 1
+   302      SUBRNGE I$298, 1, $300
+   303      =       SUBSTR  $297 [I$298 : 1]	       1 CHAR 7
+   304      ASSIGN  CH2 := $303
+
+   305      STMT    1: <IF HEAD> ON LINE 118
+   306      =       IDENT   CH2			       1 CHAR 7
+   307      =       CONST   79			       1 CHAR 7
+   308      =       INE     CH2, 79		       1 BOOLEAN 1
+   309      JUMP    TO 14 @ 314 IF NOT $308
+
+   310      STMT    2: <FUNCTION QUALIFIER> ON LINE 118
+   311      =       CONST   !ERROR		       1 @055616: PROCEDURE
+   312      =       CONST   13			       1 INTEGER 4
+   313      CALL    !ERROR ( 13 )
+
+   314   14 LABEL   
+
+   315      STMT    1: <SIMPLE STATEMENT> ON LINE 119
+   316      =       IDENT   CH3			       1 CHAR 7
+   317      =       CONST   97			       1 CHAR 7ORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			     PAGE 10
+
+   318      =       UPCASE  97			       2 CHAR 7
+   319      =       CONST   0			       1 INTEGER 1
+   320      =       CONST   127			       1 INTEGER 7
+   321      VALRNGE $318, 0, 127
+   322      ASSIGN  CH3 := $318
+
+   323      STMT    1: <IF HEAD> ON LINE 120
+   324      =       IDENT   CH3			       1 CHAR 7
+   325      =       CONST   65			       1 CHAR 7
+   326      =       INE     CH3, 65		       1 BOOLEAN 1
+   327      JUMP    TO 15 @ 332 IF NOT $326
+
+   328      STMT    2: <FUNCTION QUALIFIER> ON LINE 120
+   329      =       CONST   !ERROR		       1 @055616: PROCEDURE
+   330      =       CONST   14			       1 INTEGER 4
+   331      CALL    !ERROR ( 14 )
+
+   332   15 LABEL   
+
+   333      STMT    1: <SIMPLE STATEMENT> ON LINE 122
+   334      =       IDENT   T			       1 @054747: STRING 16
+   335      =       IDENT   FFLX		       2 @054700: POINTER 32
+   336      PTRCHK  FFLX$335
+   337      =       DEREF   FFLX$335		       1 @054653: STRING *
+   338      =       CONST   95			       1 CHAR 7
+   339      =       IDENT   VFLX		       2 @054732: POINTER 32
+   340      PTRCHK  VFLX$339
+   341      =       DEREF   VFLX$339		       1 @054754: STRING *V
+   342      =       IDENT   S2			       1 @055130: STRING 12V
+   343      =       CAT     $337, 95, $341, S2	       1 STRING *
+   344      =       STRCVT  $343		       1 @054747: STRING 16
+   345      ASSIGN  T := $344 (OVL)
+
+   346      STMT    1: <IF HEAD> ON LINE 123
+   347      =       IDENT   T			       1 @054747: STRING 16
+   348      =       CONST   'very oo_very OOO'	       1 STRING 16
+   349      =       SNE     T, 'very oo_very OOO'      1 BOOLEAN 1
+   350      JUMP    TO 16 @ 355 IF NOT $349
+
+   351      STMT    2: <FUNCTION QUALIFIER> ON LINE 123
+   352      =       CONST   !ERROR		       1 @055616: PROCEDURE
+   353      =       CONST   15			       1 INTEGER 4ORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			     PAGE 11
+
+   354      CALL    !ERROR ( 15 )
+
+   355   16 LABEL   
+
+   356      STMT    1: <SIMPLE STATEMENT> ON LINE 124
+   357      =       IDENT   FFLX		       2 @054700: POINTER 32
+   358      PTRCHK  FFLX$357
+   359      =       DEREF   FFLX$357		       1 @054653: STRING *
+   360      =       IDENT   VFLX		       2 @054732: POINTER 32
+   361      PTRCHK  VFLX$360
+   362      =       DEREF   VFLX$360		       1 @054754: STRING *V
+   363      =       STRCVT  $362		       1 @054653: STRING *
+   364      ASSIGN  $359 := $363
+
+   365      STMT    1: <IF HEAD> ON LINE 125
+   366      =       IDENT   FFLX		       2 @054700: POINTER 32
+   367      PTRCHK  FFLX$366
+   368      =       DEREF   FFLX$366		       1 @054653: STRING *
+   369      =       CONST   'very OO'		       1 STRING 7
+   370      =       SNE     $368, 'very OO'	       1 BOOLEAN 1
+   371      JUMP    TO 17 @ 376 IF NOT $370
+
+   372      STMT    2: <FUNCTION QUALIFIER> ON LINE 125
+   373      =       CONST   !ERROR		       1 @055616: PROCEDURE
+   374      =       CONST   16			       1 INTEGER 5
+   375      CALL    !ERROR ( 16 )
+
+   376   17 LABEL   
+
+   377      STMT    1: <SIMPLE STATEMENT> ON LINE 126
+   378      =       IDENT   FFLX		       2 @054700: POINTER 32
+   379      PTRCHK  FFLX$378
+   380      =       DEREF   FFLX$378		       1 @054653: STRING *
+   381      =       IDENT   T			       1 @054747: STRING 16
+   382      =       IDENT   VFLX		       2 @054732: POINTER 32
+   383      PTRCHK  VFLX$382
+   384      =       DEREF   VFLX$382		       2 @054754: STRING *V
+   385      =       IDENT   I			       2 INTEGER 32S
+   386      =       IDENT   J			       1 INTEGER 32S
+   387      =       IDENT   K			       1 INTEGER 32S
+   388      =       IADD    J, K		       1 INTEGER 32S
+   389      =       CONST   12			       1 INTEGER 4ORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			     PAGE 12
+
+   390      =       ISUB    $388, 12		       2 INTEGER 32S
+   391      =       LENGTH  $384		       1 INTEGER 32S
+   392      STRRNGE I$385, $390, $391
+   393      =       SUBSTR  $384 [I$385 : $390]	       1 STRING *
+   394      =       LWCASE  $393		       1 STRING *
+   395      =       CAT     T, $394		       1 STRING *
+   396      ASSIGN  $380 := $395 (OVL)
+
+   397      STMT    1: <IF HEAD> ON LINE 127
+   398      =       IDENT   FFLX		       2 @054700: POINTER 32
+   399      PTRCHK  FFLX$398
+   400      =       DEREF   FFLX$398		       1 @054653: STRING *
+   401      =       CONST   'very oo'		       1 STRING 7
+   402      =       SNE     $400, 'very oo'	       1 BOOLEAN 1
+   403      JUMP    TO 18 @ 408 IF NOT $402
+
+   404      STMT    2: <FUNCTION QUALIFIER> ON LINE 127
+   405      =       CONST   !ERROR		       1 @055616: PROCEDURE
+   406      =       CONST   17			       1 INTEGER 5
+   407      CALL    !ERROR ( 17 )
+
+   408   18 LABEL   
+
+   409      STMT    1: <SIMPLE STATEMENT> ON LINE 129
+   410      =       IDENT   VS1			       1 @054445: STRING 15V
+   411      =       CONST   'ooof'		       1 STRING 4
+   412      =       STRCVT  'ooof'		       1 @054445: STRING 15V
+   413      ASSIGN  VS1 := $412
+
+   414      STMT    1: <IF HEAD> ON LINE 130
+   415      =       IDENT   VS1			       1 @054445: STRING 15V
+   416      =       CONST   'ooof'		       1 STRING 4
+   417      =       SNE     VS1, 'ooof'		       1 BOOLEAN 1
+   418      JUMP    TO 19 @ 423 IF NOT $417
+
+   419      STMT    2: <FUNCTION QUALIFIER> ON LINE 130
+   420      =       CONST   !ERROR		       1 @055616: PROCEDURE
+   421      =       CONST   18			       1 INTEGER 5
+   422      CALL    !ERROR ( 18 )
+
+   423   19 LABEL   ORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			     PAGE 13
+
+   424      STMT    1: <SIMPLE STATEMENT> ON LINE 131
+   425      =       IDENT   S2			       1 @055130: STRING 12V
+   426      =       IDENT   VS1			       1 @054445: STRING 15V
+   427      =       STRCVT  VS1			       1 @055130: STRING 12V
+   428      ASSIGN  S2 := $427
+
+   429      STMT    1: <IF HEAD> ON LINE 132
+   430      =       IDENT   S2			       1 @055130: STRING 12V
+   431      =       CONST   'ooof'		       1 STRING 4
+   432      =       SNE     S2, 'ooof'		       1 BOOLEAN 1
+   433      JUMP    TO 20 @ 438 IF NOT $432
+
+   434      STMT    2: <FUNCTION QUALIFIER> ON LINE 132
+   435      =       CONST   !ERROR		       1 @055616: PROCEDURE
+   436      =       CONST   19			       1 INTEGER 5
+   437      CALL    !ERROR ( 19 )
+
+   438   20 LABEL   
+
+   439      STMT    1: <SIMPLE STATEMENT> ON LINE 133
+   440      =       IDENT   FFLX		       2 @054700: POINTER 32
+   441      PTRCHK  FFLX$440
+   442      =       DEREF   FFLX$440		       1 @054653: STRING *
+   443      =       IDENT   S2			       1 @055130: STRING 12V
+   444      =       IDENT   VS1			       1 @054445: STRING 15V
+   445      =       CAT     S2, VS1		       1 STRING *27
+   446      ASSIGN  $442 := $445 (OVL)
+
+   447      STMT    1: <IF HEAD> ON LINE 134
+   448      =       IDENT   FFLX		       2 @054700: POINTER 32
+   449      PTRCHK  FFLX$448
+   450      =       DEREF   FFLX$448		       1 @054653: STRING *
+   451      =       CONST   'ooofooo'		       1 STRING 7
+   452      =       SNE     $450, 'ooofooo'	       1 BOOLEAN 1
+   453      JUMP    TO 21 @ 458 IF NOT $452
+
+   454      STMT    2: <FUNCTION QUALIFIER> ON LINE 134
+   455      =       CONST   !ERROR		       1 @055616: PROCEDURE
+   456      =       CONST   20			       1 INTEGER 5
+   457      CALL    !ERROR ( 20 )
+
+   458   21 LABEL   ORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			     PAGE 14
+
+   459      STMT    1: <SIMPLE STATEMENT> ON LINE 135
+   460      =       IDENT   CH1			       1 CHAR 7
+   461      =       IDENT   T			       1 @054747: STRING 16
+   462      =       CONST   9			       1 INTEGER 4
+   463      =       CONST   4			       1 INTEGER 3
+   464      =       SUBSTR  T [9 : 4]		       1 STRING 4
+   465      =       CONST   2			       1 INTEGER 2
+   466      =       CONST   1			       1 INTEGER 1
+   467      =       SUBSTR  $464 [2 : 1]	       1 CHAR 7
+   468      ASSIGN  CH1 := $467
+
+   469      STMT    1: <IF HEAD> ON LINE 136
+   470      =       IDENT   CH1			       1 CHAR 7
+   471      =       CONST   101			       1 CHAR 7
+   472      =       INE     CH1, 101		       1 BOOLEAN 1
+   473      JUMP    TO 22 @ 478 IF NOT $472
+
+   474      STMT    2: <FUNCTION QUALIFIER> ON LINE 136
+   475      =       CONST   !ERROR		       1 @055616: PROCEDURE
+   476      =       CONST   21			       1 INTEGER 5
+   477      CALL    !ERROR ( 21 )
+
+   478   22 LABEL   
+
+   479      STMT    1: <SIMPLE STATEMENT> ON LINE 137
+   480      =       IDENT   T			       1 @054747: STRING 16
+   481      =       CONST   ''			       1 STRING 0
+   482      =       STRCVT  ''			       1 @054747: STRING 16
+   483      ASSIGN  T := $482
+
+   484      STMT    1: <IF HEAD> ON LINE 138
+   485      =       IDENT   T			       1 @054747: STRING 16
+   486      =       CONST   '                '	       1 STRING 16
+   487      =       SNE     T, '                '      1 BOOLEAN 1
+   488      JUMP    TO 23 @ 493 IF NOT $487
+
+   489      STMT    2: <FUNCTION QUALIFIER> ON LINE 138
+   490      =       CONST   !ERROR		       1 @055616: PROCEDURE
+   491      =       CONST   22			       1 INTEGER 5
+   492      CALL    !ERROR ( 22 )
+
+   493   23 LABEL   ORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			     PAGE 15
+
+   494      STMT    1: <SIMPLE STATEMENT> ON LINE 139
+   495      =       IDENT   VS1			       1 @054445: STRING 15V
+   496      =       CONST   ''			       1 STRING 0
+   497      =       STRCVT  ''			       1 @054445: STRING 15V
+   498      ASSIGN  VS1 := $497
+
+   499      STMT    1: <IF HEAD> ON LINE 140
+   500      =       IDENT   VS1			       1 @054445: STRING 15V
+   501      =       CONST   ''			       1 STRING 0
+   502      =       SNE     VS1, ''		       1 BOOLEAN 1
+   503      JUMP    TO 24 @ 508 IF NOT $502
+
+   504      STMT    2: <FUNCTION QUALIFIER> ON LINE 140
+   505      =       CONST   !ERROR		       1 @055616: PROCEDURE
+   506      =       CONST   23			       1 INTEGER 5
+   507      CALL    !ERROR ( 23 )
+
+   508   24 LABEL   
+
+   509      STMT    1: <SIMPLE STATEMENT> ON LINE 141
+   510      =       IDENT   T			       1 @054747: STRING 16
+   511      =       CONST   97			       1 CHAR 7
+   512      =       STRCVT  97			       1 @054747: STRING 16
+   513      ASSIGN  T := $512
+
+   514      STMT    1: <IF HEAD> ON LINE 142
+   515      =       IDENT   T			       1 @054747: STRING 16
+   516      =       CONST   97			       1 CHAR 7
+   517      =       SNE     T, 97		       1 BOOLEAN 1
+   518      JUMP    TO 25 @ 523 IF NOT $517
+
+   519      STMT    2: <FUNCTION QUALIFIER> ON LINE 142
+   520      =       CONST   !ERROR		       1 @055616: PROCEDURE
+   521      =       CONST   24			       1 INTEGER 5
+   522      CALL    !ERROR ( 24 )
+
+   523   25 LABEL   
+
+   524      STMT    1: <SIMPLE STATEMENT> ON LINE 143
+   525      =       IDENT   VS1			       1 @054445: STRING 15V
+   526      =       CONST   97			       1 CHAR 7
+   527      =       STRCVT  97			       1 @054445: STRING 15VORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			     PAGE 16
+
+   528      ASSIGN  VS1 := $527
+
+   529      STMT    1: <IF HEAD> ON LINE 144
+   530      =       IDENT   VS1			       1 @054445: STRING 15V
+   531      =       CONST   97			       1 CHAR 7
+   532      =       SNE     VS1, 97		       1 BOOLEAN 1
+   533      JUMP    TO 26 @ 538 IF NOT $532
+
+   534      STMT    2: <FUNCTION QUALIFIER> ON LINE 144
+   535      =       CONST   !ERROR		       1 @055616: PROCEDURE
+   536      =       CONST   25			       1 INTEGER 5
+   537      CALL    !ERROR ( 25 )
+
+   538   26 LABEL   
+
+   539      STMT    1: <SIMPLE STATEMENT> ON LINE 145
+   540      =       IDENT   VFLX		       2 @054732: POINTER 32
+   541      PTRCHK  VFLX$540
+   542      =       DEREF   VFLX$540		       1 @054754: STRING *V
+   543      =       CONST   '12345678'		       1 STRING 8
+   544      =       STRCVT  '12345678'		       1 @054754: STRING *V
+   545      ASSIGN  $542 := $544
+
+   546      STMT    1: <IF HEAD> ON LINE 146
+   547      =       IDENT   VFLX		       2 @054732: POINTER 32
+   548      PTRCHK  VFLX$547
+   549      =       DEREF   VFLX$547		       1 @054754: STRING *V
+   550      =       CONST   '12345678'		       1 STRING 8
+   551      =       SNE     $549, '12345678'	       1 BOOLEAN 1
+   552      JUMP    TO 27 @ 557 IF NOT $551
+
+   553      STMT    2: <FUNCTION QUALIFIER> ON LINE 146
+   554      =       CONST   !ERROR		       1 @055616: PROCEDURE
+   555      =       CONST   26			       1 INTEGER 5
+   556      CALL    !ERROR ( 26 )
+
+   557   27 LABEL   
+
+   558      STMT    1: <SIMPLE STATEMENT> ON LINE 147
+   559      =       IDENT   VS1			       1 @054445: STRING 15V
+   560      =       IDENT   VFLX		       2 @054732: POINTER 32
+   561      PTRCHK  VFLX$560ORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			     PAGE 17
+
+   562      =       DEREF   VFLX$560		       2 @054754: STRING *V
+   563      =       CONST   3			       2 INTEGER 2
+   564      =       CONST   1			       2 INTEGER 1
+   565      =       LENGTH  $562		       1 INTEGER 32S
+   566      STRRNGE 3$563, 1$564, $565
+   567      =       SUBSTR  $562 [3$563 : 1$564]       1 STRING 1
+   568      =       STRCVT  $567		       1 @054445: STRING 15V
+   569      ASSIGN  VS1 := $568
+
+   570      STMT    1: <IF HEAD> ON LINE 148
+   571      =       IDENT   VS1			       1 @054445: STRING 15V
+   572      =       CONST   51			       1 CHAR 6
+   573      =       SNE     VS1, 51		       1 BOOLEAN 1
+   574      JUMP    TO 28 @ 579 IF NOT $573
+
+   575      STMT    2: <FUNCTION QUALIFIER> ON LINE 148
+   576      =       CONST   !ERROR		       1 @055616: PROCEDURE
+   577      =       CONST   27			       1 INTEGER 5
+   578      CALL    !ERROR ( 27 )
+
+   579   28 LABEL   
+
+   580      STMT    1: <SIMPLE STATEMENT> ON LINE 149
+   581      =       IDENT   CH1			       1 CHAR 7
+   582      =       IDENT   T			       1 @054747: STRING 16
+   583      =       UPCASE  T			       1 @054747: STRING 16
+   584      =       CONST   1			       1 INTEGER 1
+   585      =       CONST   1			       1 INTEGER 1
+   586      =       SUBSTR  $583 [1 : 1]	       1 CHAR 7
+   587      ASSIGN  CH1 := $586
+
+   588      STMT    1: <IF HEAD> ON LINE 150
+   589      =       IDENT   CH1			       1 CHAR 7
+   590      =       CONST   65			       1 CHAR 7
+   591      =       INE     CH1, 65		       1 BOOLEAN 1
+   592      JUMP    TO 29 @ 597 IF NOT $591
+
+   593      STMT    2: <FUNCTION QUALIFIER> ON LINE 150
+   594      =       CONST   !ERROR		       1 @055616: PROCEDURE
+   595      =       CONST   28			       1 INTEGER 5
+   596      CALL    !ERROR ( 28 )ORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			     PAGE 18
+
+   597   29 LABEL   
+
+   598      STMT    1: <SIMPLE STATEMENT> ON LINE 151
+   599      =       IDENT   VS1			       1 @054445: STRING 15V
+   600      =       IDENT   VFLX		       2 @054732: POINTER 32
+   601      PTRCHK  VFLX$600
+   602      =       DEREF   VFLX$600		       3 @054754: STRING *V
+   603      =       CONST   4			       3 INTEGER 3
+   604      =       LENGTH  $602		       1 INTEGER 32S
+   605      =       CONST   1			       1 INTEGER 1
+   606      =       IADD    $604, 1		       1 INTEGER 32S
+   607      =       ISUB    $606, 4$603		       2 INTEGER 32S
+   608      =       LENGTH  $602		       1 INTEGER 32S
+   609      STRRNGE 4$603, $607, $608
+   610      =       SUBSTR  $602 [4$603 : $607]	       1 STRING *
+   611      =       STRCVT  $610		       1 @054445: STRING 15V
+   612      ASSIGN  VS1 := $611
+
+   613      STMT    1: <IF HEAD> ON LINE 152
+   614      =       IDENT   VS1			       1 @054445: STRING 15V
+   615      =       CONST   '45678'		       1 STRING 5
+   616      =       SNE     VS1, '45678'	       1 BOOLEAN 1
+   617      JUMP    TO 30 @ 622 IF NOT $616
+
+   618      STMT    2: <FUNCTION QUALIFIER> ON LINE 152
+   619      =       CONST   !ERROR		       1 @055616: PROCEDURE
+   620      =       CONST   29			       1 INTEGER 5
+   621      CALL    !ERROR ( 29 )
+
+   622   30 LABEL   
+
+   623      STMT    1: <SIMPLE STATEMENT> ON LINE 153
+   624      =       IDENT   VS1			       1 @054445: STRING 15V
+   625      =       CONST   'string_longer_than upb_lhs'
+						       1 STRING 26
+   626      =       STRCVT  'string_longer_than upb_lhs'
+						       1 @054445: STRING 15V
+   627      ASSIGN  VS1 := $626
+
+   628      STMT    1: <IF HEAD> ON LINE 154
+   629      =       IDENT   VS1			       1 @054445: STRING 15V
+   630      =       CONST   'string_longer_t'	       1 STRING 15ORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			     PAGE 19
+
+   631      =       SNE     VS1, 'string_longer_t'     1 BOOLEAN 1
+   632      JUMP    TO 31 @ 637 IF NOT $631
+
+   633      STMT    2: <FUNCTION QUALIFIER> ON LINE 154
+   634      =       CONST   !ERROR		       1 @055616: PROCEDURE
+   635      =       CONST   30			       1 INTEGER 5
+   636      CALL    !ERROR ( 30 )
+
+   637   31 LABEL   
+
+   638      STMT    1: <SIMPLE STATEMENT> ON LINE 155
+   639      =       IDENT   T			       1 @054747: STRING 16
+   640      =       CONST   'ABC'		       1 STRING 3
+   641      =       CONST   38			       1 CHAR 6
+   642      =       IDENT   S2			       1 @055130: STRING 12V
+   643      =       UPCASE  S2			       1 @055130: STRING 12V
+   644      =       CAT     'ABC', 38, $643	       1 STRING *16
+   645      =       LWCASE  $644		       1 STRING *16
+   646      =       STRCVT  $645		       1 @054747: STRING 16
+   647      ASSIGN  T := $646 (OVL)
+
+   648      STMT    1: <IF HEAD> ON LINE 156
+   649      =       IDENT   T			       1 @054747: STRING 16
+   650      =       CONST   'abc&ooof'		       1 STRING 8
+   651      =       SNE     T, 'abc&ooof'	       1 BOOLEAN 1
+   652      JUMP    TO 32 @ 657 IF NOT $651
+
+   653      STMT    2: <FUNCTION QUALIFIER> ON LINE 156
+   654      =       CONST   !ERROR		       1 @055616: PROCEDURE
+   655      =       CONST   31			       1 INTEGER 5
+   656      CALL    !ERROR ( 31 )
+
+   657   32 LABEL   
+
+   658      STMT    1: <SIMPLE STATEMENT> ON LINE 157
+   659      =       IDENT   VS1			       1 @054445: STRING 15V
+   660      =       IDENT   T			       1 @054747: STRING 16
+   661      =       LWCASE  T			       2 @054747: STRING 16
+   662      =       IDENT   J			       3 INTEGER 32S
+   663      =       LENGTH  $661		       1 INTEGER 32S
+   664      =       CONST   1			       1 INTEGER 1
+   665      =       IADD    $663, 1		       1 INTEGER 32SORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			     PAGE 20
+
+   666      =       ISUB    $665, J$662		       2 INTEGER 32S
+   667      =       CONST   16			       1 INTEGER 5
+   668      STRRNGE J$662, $666, 16
+   669      =       SUBSTR  $661 [J$662 : $666]	       1 STRING *16
+   670      =       UPCASE  $669		       1 STRING *16
+   671      =       STRCVT  $670		       1 @054445: STRING 15V
+   672      ASSIGN  VS1 := $671
+
+   673      STMT    1: <IF HEAD> ON LINE 158
+   674      =       IDENT   VS1			       1 @054445: STRING 15V
+   675      =       CONST   '&OOOF'		       1 STRING 5
+   676      =       SNE     VS1, '&OOOF'	       1 BOOLEAN 1
+   677      JUMP    TO 33 @ 682 IF NOT $676
+
+   678      STMT    2: <FUNCTION QUALIFIER> ON LINE 158
+   679      =       CONST   !ERROR		       1 @055616: PROCEDURE
+   680      =       CONST   32			       1 INTEGER 6
+   681      CALL    !ERROR ( 32 )
+
+   682   33 LABEL   
+
+   683      STMT    1: <SIMPLE STATEMENT> ON LINE 159
+   684      =       IDENT   VS1			       1 @054445: STRING 15V
+   685      =       IDENT   T			       1 @054747: STRING 16
+   686      =       CONST   1			       1 INTEGER 1
+   687      =       CONST   3			       1 INTEGER 2
+   688      =       SUBSTR  T [1 : 3]		       1 STRING 3
+   689      =       CONST   46			       1 CHAR 6
+   690      =       IDENT   VFLX		       2 @054732: POINTER 32
+   691      PTRCHK  VFLX$690
+   692      =       DEREF   VFLX$690		       2 @054754: STRING *V
+   693      =       CONST   1			       2 INTEGER 1
+   694      =       CONST   3			       2 INTEGER 2
+   695      =       LENGTH  $692		       1 INTEGER 32S
+   696      STRRNGE 1$693, 3$694, $695
+   697      =       SUBSTR  $692 [1$693 : 3$694]       1 STRING 3
+   698      =       CAT     $688, 46, $697	       1 STRING 7
+   699      =       STRCVT  $698		       1 @054445: STRING 15V
+   700      ASSIGN  VS1 := $699 (OVL)
+
+   701      STMT    1: <IF HEAD> ON LINE 160
+   702      =       IDENT   VS1			       1 @054445: STRING 15VORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			     PAGE 21
+
+   703      =       CONST   'abc.123'		       1 STRING 7
+   704      =       SNE     VS1, 'abc.123'	       1 BOOLEAN 1
+   705      JUMP    TO 34 @ 710 IF NOT $704
+
+   706      STMT    2: <FUNCTION QUALIFIER> ON LINE 160
+   707      =       CONST   !ERROR		       1 @055616: PROCEDURE
+   708      =       CONST   33			       1 INTEGER 6
+   709      CALL    !ERROR ( 33 )
+
+   710   34 LABEL   
+
+   711      STMT    1: <SIMPLE STATEMENT> ON LINE 161
+   712      =       IDENT   S1			       1 @055123: STRING 4
+   713      =       CONST   'more than 4 chars'	       1 STRING 17
+   714      =       STRCVT  'more than 4 chars'	       1 @055123: STRING 4
+   715      ASSIGN  S1 := $714
+
+   716      STMT    1: <IF HEAD> ON LINE 162
+   717      =       IDENT   S1			       1 @055123: STRING 4
+   718      =       CONST   'more'		       1 STRING 4
+   719      =       SNE     S1, 'more'		       1 BOOLEAN 1
+   720      JUMP    TO 35 @ 725 IF NOT $719
+
+   721      STMT    2: <FUNCTION QUALIFIER> ON LINE 162
+   722      =       CONST   !ERROR		       1 @055616: PROCEDURE
+   723      =       CONST   34			       1 INTEGER 6
+   724      CALL    !ERROR ( 34 )
+
+   725   35 LABEL   
+
+   726      STMT    1: <SIMPLE STATEMENT> ON LINE 163
+   727      =       IDENT   CH1			       1 CHAR 7
+   728      =       IDENT   VS1			       1 @054445: STRING 15V
+   729      =       UPCASE  VS1			       2 @054445: STRING 15V
+   730      =       CONST   3			       2 INTEGER 2
+   731      =       CONST   1			       1 INTEGER 1
+   732      =       LENGTH  $729		       1 INTEGER 32S
+   733      =       CONST   1			       1 INTEGER 1
+   734      SUBRNGE 3$730, 1, $732
+   735      =       SUBSTR  $729 [3$730 : 1]	       1 CHAR 7
+   736      ASSIGN  CH1 := $735ORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			     PAGE 22
+
+   737      STMT    1: <IF HEAD> ON LINE 164
+   738      =       IDENT   CH1			       1 CHAR 7
+   739      =       CONST   67			       1 CHAR 7
+   740      =       INE     CH1, 67		       1 BOOLEAN 1
+   741      JUMP    TO 36 @ 746 IF NOT $740
+
+   742      STMT    2: <FUNCTION QUALIFIER> ON LINE 164
+   743      =       CONST   !ERROR		       1 @055616: PROCEDURE
+   744      =       CONST   35			       1 INTEGER 6
+   745      CALL    !ERROR ( 35 )
+
+   746   36 LABEL   
+
+   747      STMT    1: <SIMPLE STATEMENT> ON LINE 165
+   748      =       IDENT   S1			       1 @055123: STRING 4
+   749      =       IDENT   T			       1 @054747: STRING 16
+   750      =       IDENT   J			       2 INTEGER 32S
+   751      =       CONST   3			       2 INTEGER 2
+   752      =       CONST   16			       1 INTEGER 5
+   753      STRRNGE J$750, 3$751, 16
+   754      =       SUBSTR  T [J$750 : 3$751]	       1 STRING 3
+   755      =       STRCVT  $754		       1 @055123: STRING 4
+   756      ASSIGN  S1 := $755
+
+   757      STMT    1: <IF HEAD> ON LINE 166
+   758      =       IDENT   S1			       1 @055123: STRING 4
+   759      =       CONST   '&oo '		       1 STRING 4
+   760      =       SNE     S1, '&oo '		       1 BOOLEAN 1
+   761      JUMP    TO 37 @ 766 IF NOT $760
+
+   762      STMT    2: <FUNCTION QUALIFIER> ON LINE 166
+   763      =       CONST   !ERROR		       1 @055616: PROCEDURE
+   764      =       CONST   36			       1 INTEGER 6
+   765      CALL    !ERROR ( 36 )
+
+   766   37 LABEL   
+
+   767      STMT    1: <SIMPLE STATEMENT> ON LINE 167
+   768      =       IDENT   S2			       1 @055130: STRING 12V
+   769      =       CONST   '123456789012'	       1 STRING 12
+   770      =       STRCVT  '123456789012'	       1 @055130: STRING 12V
+   771      ASSIGN  S2 := $770ORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			     PAGE 23
+
+   772      STMT    1: <IF HEAD> ON LINE 168
+   773      =       IDENT   S2			       1 @055130: STRING 12V
+   774      =       CONST   '123456789012'	       1 STRING 12
+   775      =       SNE     S2, '123456789012'	       1 BOOLEAN 1
+   776      JUMP    TO 38 @ 781 IF NOT $775
+
+   777      STMT    2: <FUNCTION QUALIFIER> ON LINE 168
+   778      =       CONST   !ERROR		       1 @055616: PROCEDURE
+   779      =       CONST   37			       1 INTEGER 6
+   780      CALL    !ERROR ( 37 )
+
+   781   38 LABEL   
+
+   782      STMT    1: <SIMPLE STATEMENT> ON LINE 169
+   783      =       IDENT   T			       1 @054747: STRING 16
+   784      =       CONST   4			       1 INTEGER 3
+   785      =       CONST   13			       1 INTEGER 4
+   786      =       SUBSTR  T [4 : 13]		       1 STRING 13
+   787      =       CONST   'cba'		       1 STRING 3
+   788      =       STRCVT  'cba'		       1 @076651: STRING 13
+   789      ASSIGN  $786 := $788
+
+   790      STMT    1: <IF HEAD> ON LINE 170
+   791      =       IDENT   T			       1 @054747: STRING 16
+   792      =       CONST   'abccba'		       1 STRING 6
+   793      =       SNE     T, 'abccba'		       1 BOOLEAN 1
+   794      JUMP    TO 39 @ 799 IF NOT $793
+
+   795      STMT    2: <FUNCTION QUALIFIER> ON LINE 170
+   796      =       CONST   !ERROR		       1 @055616: PROCEDURE
+   797      =       CONST   38			       1 INTEGER 6
+   798      CALL    !ERROR ( 38 )
+
+   799   39 LABEL   
+
+   800      STMT    1: <SIMPLE STATEMENT> ON LINE 171
+   801      =       IDENT   S2			       2 @055130: STRING 12V
+   802      =       IDENT   I			       2 INTEGER 32S
+   803      =       CONST   5			       2 INTEGER 3
+   804      =       LENGTH  S2$801		       1 INTEGER 32S
+   805      STRRNGE I$802, 5$803, $804
+   806      =       SUBSTR  S2$801 [I$802 : 5$803]     1 STRING 5ORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			     PAGE 24
+
+   807      =       CONST   'abcdefg'		       1 STRING 7
+   808      =       STRCVT  'abcdefg'		       1 @076352: STRING 5
+   809      ASSIGN  $806 := $808
+
+   810      STMT    1: <IF HEAD> ON LINE 172
+   811      =       IDENT   S2			       1 @055130: STRING 12V
+   812      =       CONST   '123456abcde2'	       1 STRING 12
+   813      =       SNE     S2, '123456abcde2'	       1 BOOLEAN 1
+   814      JUMP    TO 40 @ 819 IF NOT $813
+
+   815      STMT    2: <FUNCTION QUALIFIER> ON LINE 172
+   816      =       CONST   !ERROR		       1 @055616: PROCEDURE
+   817      =       CONST   39			       1 INTEGER 6
+   818      CALL    !ERROR ( 39 )
+
+   819   40 LABEL   
+
+   820      STMT    1: <SIMPLE STATEMENT> ON LINE 173
+   821      =       IDENT   FFLX		       2 @054700: POINTER 32
+   822      PTRCHK  FFLX$821
+   823      =       DEREF   FFLX$821		       3 @054653: STRING *
+   824      =       CONST   3			       3 INTEGER 2
+   825      =       LENGTH  $823		       1 INTEGER 32S
+   826      =       CONST   1			       1 INTEGER 1
+   827      =       IADD    $825, 1		       1 INTEGER 32S
+   828      =       ISUB    $827, 3$824		       2 INTEGER 32S
+   829      =       LENGTH  $823		       1 INTEGER 32S
+   830      STRRNGE 3$824, $828, $829
+   831      =       SUBSTR  $823 [3$824 : $828]	       1 STRING *
+   832      =       CONST   'foof'		       1 STRING 4
+   833      =       STRCVT  'foof'		       1 @076001: STRING *
+   834      ASSIGN  $831 := $833
+
+   835      STMT    1: <IF HEAD> ON LINE 174
+   836      =       IDENT   FFLX		       2 @054700: POINTER 32
+   837      PTRCHK  FFLX$836
+   838      =       DEREF   FFLX$836		       1 @054653: STRING *
+   839      =       CONST   'oofoof '		       1 STRING 7
+   840      =       SNE     $838, 'oofoof '	       1 BOOLEAN 1
+   841      JUMP    TO 41 @ 846 IF NOT $840
+
+   842      STMT    2: <FUNCTION QUALIFIER> ON LINE 174ORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			     PAGE 25
+
+   843      =       CONST   !ERROR		       1 @055616: PROCEDURE
+   844      =       CONST   40			       1 INTEGER 6
+   845      CALL    !ERROR ( 40 )
+
+   846   41 LABEL   
+
+   847      STMT    1: <SIMPLE STATEMENT> ON LINE 175
+   848      =       IDENT   FFLX		       2 @054700: POINTER 32
+   849      PTRCHK  FFLX$848
+   850      =       DEREF   FFLX$848		       2 @054653: STRING *
+   851      =       IDENT   J			       2 INTEGER 32S
+   852      =       CONST   3			       2 INTEGER 2
+   853      =       LENGTH  $850		       1 INTEGER 32S
+   854      STRRNGE J$851, 3$852, $853
+   855      =       SUBSTR  $850 [J$851 : 3$852]       1 STRING 3
+   856      =       CONST   ''			       1 STRING 0
+   857      =       STRCVT  ''			       1 @101444: STRING 3
+   858      ASSIGN  $855 := $857
+
+   859      STMT    1: <IF HEAD> ON LINE 176
+   860      =       IDENT   FFLX		       2 @054700: POINTER 32
+   861      PTRCHK  FFLX$860
+   862      =       DEREF   FFLX$860		       1 @054653: STRING *
+   863      =       CONST   'oof  '		       1 STRING 5
+   864      =       SNE     $862, 'oof  '	       1 BOOLEAN 1
+   865      JUMP    TO 42 @ 870 IF NOT $864
+
+   866      STMT    2: <FUNCTION QUALIFIER> ON LINE 176
+   867      =       CONST   !ERROR		       1 @055616: PROCEDURE
+   868      =       CONST   41			       1 INTEGER 6
+   869      CALL    !ERROR ( 41 )
+
+   870   42 LABEL   
+
+   871      STMT    1: <SIMPLE STATEMENT> ON LINE 177
+   872      =       IDENT   VFLX		       2 @054732: POINTER 32
+   873      PTRCHK  VFLX$872
+   874      =       DEREF   VFLX$872		       2 @054754: STRING *V
+   875      =       CONST   5			       2 INTEGER 3
+   876      =       CONST   4			       2 INTEGER 3
+   877      =       LENGTH  $874		       1 INTEGER 32S
+   878      STRRNGE 5$875, 4$876, $877ORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			     PAGE 26
+
+   879      =       SUBSTR  $874 [5$875 : 4$876]       1 STRING 4
+   880      =       CONST   '43210'		       1 STRING 5
+   881      =       STRCVT  '43210'		       1 @101111: STRING 4
+   882      ASSIGN  $879 := $881
+
+   883      STMT    1: <IF HEAD> ON LINE 178
+   884      =       IDENT   VFLX		       2 @054732: POINTER 32
+   885      PTRCHK  VFLX$884
+   886      =       DEREF   VFLX$884		       1 @054754: STRING *V
+   887      =       CONST   '12344321'		       1 STRING 8
+   888      =       SNE     $886, '12344321'	       1 BOOLEAN 1
+   889      JUMP    TO 43 @ 894 IF NOT $888
+
+   890      STMT    2: <FUNCTION QUALIFIER> ON LINE 178
+   891      =       CONST   !ERROR		       1 @055616: PROCEDURE
+   892      =       CONST   42			       1 INTEGER 6
+   893      CALL    !ERROR ( 42 )
+
+   894   43 LABEL   
+
+   895      STMT    1: <SIMPLE STATEMENT> ON LINE 179
+   896      =       IDENT   VFLX		       2 @054732: POINTER 32
+   897      PTRCHK  VFLX$896
+   898      =       DEREF   VFLX$896		       3 @054754: STRING *V
+   899      =       IDENT   I			       3 INTEGER 32S
+   900      =       LENGTH  $898		       1 INTEGER 32S
+   901      =       CONST   1			       1 INTEGER 1
+   902      =       IADD    $900, 1		       1 INTEGER 32S
+   903      =       ISUB    $902, I$899		       2 INTEGER 32S
+   904      =       LENGTH  $898		       1 INTEGER 32S
+   905      STRRNGE I$899, $903, $904
+   906      =       SUBSTR  $898 [I$899 : $903]	       1 STRING *
+   907      =       CONST   'abcdefgh'		       1 STRING 8
+   908      =       STRCVT  'abcdefgh'		       1 @100532: STRING *
+   909      ASSIGN  $906 := $908
+
+   910      STMT    1: <IF HEAD> ON LINE 180
+   911      =       IDENT   VFLX		       2 @054732: POINTER 32
+   912      PTRCHK  VFLX$911
+   913      =       DEREF   VFLX$911		       1 @054754: STRING *V
+   914      =       CONST   '123443ab'		       1 STRING 8
+   915      =       SNE     $913, '123443ab'	       1 BOOLEAN 1ORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			     PAGE 27
+
+   916      JUMP    TO 44 @ 921 IF NOT $915
+
+   917      STMT    2: <FUNCTION QUALIFIER> ON LINE 180
+   918      =       CONST   !ERROR		       1 @055616: PROCEDURE
+   919      =       CONST   43			       1 INTEGER 6
+   920      CALL    !ERROR ( 43 )
+
+   921   44 LABEL   
+
+   922      STMT    1: <SIMPLE STATEMENT> ON LINE 181
+   923      =       IDENT   T			       1 @054747: STRING 16
+   924      =       IDENT   VFLX		       2 @054732: POINTER 32
+   925      PTRCHK  VFLX$924
+   926      =       DEREF   VFLX$924		       1 @054754: STRING *V
+   927      =       CONST   32			       1 CHAR 6
+   928      =       CAT     $926, 32		       3 STRING *
+   929      =       CONST   5			       3 INTEGER 3
+   930      =       LENGTH  $928		       1 INTEGER 32S
+   931      =       CONST   1			       1 INTEGER 1
+   932      =       IADD    $930, 1		       1 INTEGER 32S
+   933      =       ISUB    $932, 5$929		       2 INTEGER 32S
+   934      =       LENGTH  $928		       1 INTEGER 32S
+   935      STRRNGE 5$929, $933, $934
+   936      =       SUBSTR  $928 [5$929 : $933]	       1 STRING *
+   937      =       STRCVT  $936		       1 @054747: STRING 16
+   938      ASSIGN  T := $937
+
+   939      STMT    1: <IF HEAD> ON LINE 182
+   940      =       IDENT   T			       1 @054747: STRING 16
+   941      =       CONST   '43ab'		       1 STRING 4
+   942      =       SNE     T, '43ab'		       1 BOOLEAN 1
+   943      JUMP    TO 45 @ 948 IF NOT $942
+
+   944      STMT    2: <FUNCTION QUALIFIER> ON LINE 182
+   945      =       CONST   !ERROR		       1 @055616: PROCEDURE
+   946      =       CONST   44			       1 INTEGER 6
+   947      CALL    !ERROR ( 44 )
+
+   948   45 LABEL   
+
+   949      STMT    1: <SIMPLE STATEMENT> ON LINE 183
+   950      =       IDENT   VS1			       3 @054445: STRING 15VORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			     PAGE 28
+
+   951      =       CONST   4			       3 INTEGER 3
+   952      =       LENGTH  VS1$950		       1 INTEGER 32S
+   953      =       CONST   1			       1 INTEGER 1
+   954      =       IADD    $952, 1		       1 INTEGER 32S
+   955      =       ISUB    $954, 4$951		       2 INTEGER 32S
+   956      =       LENGTH  VS1$950		       1 INTEGER 32S
+   957      STRRNGE 4$951, $955, $956
+   958      =       SUBSTR  VS1$950 [4$951 : $955]     1 STRING *15
+   959      =       IDENT   VS1			       1 @054445: STRING 15V
+   960      =       STRCVT  VS1			       1 @103622: STRING *15
+   961      ASSIGN  $958 := $960 (OVL)
+
+   962      STMT    1: <IF HEAD> ON LINE 184
+   963      =       IDENT   VS1			       1 @054445: STRING 15V
+   964      =       CONST   'abcabc.'		       1 STRING 7
+   965      =       SNE     VS1, 'abcabc.'	       1 BOOLEAN 1
+   966      JUMP    TO 46 @ 971 IF NOT $965
+
+   967      STMT    2: <FUNCTION QUALIFIER> ON LINE 184
+   968      =       CONST   !ERROR		       1 @055616: PROCEDURE
+   969      =       CONST   45			       1 INTEGER 6
+   970      CALL    !ERROR ( 45 )
+
+   971   46 LABEL   
+
+   972      STMT    1: <SIMPLE STATEMENT> ON LINE 185
+   973      =       IDENT   VS1			       1 @054445: STRING 15V
+   974      =       IDENT   VS1			       3 @054445: STRING 15V
+   975      =       IDENT   J			       3 INTEGER 32S
+   976      =       LENGTH  VS1$974		       1 INTEGER 32S
+   977      =       CONST   1			       1 INTEGER 1
+   978      =       IADD    $976, 1		       1 INTEGER 32S
+   979      =       ISUB    $978, J$975		       2 INTEGER 32S
+   980      =       LENGTH  VS1$974		       1 INTEGER 32S
+   981      STRRNGE J$975, $979, $980
+   982      =       SUBSTR  VS1$974 [J$975 : $979]     1 STRING *15
+   983      =       STRCVT  $982		       1 @054445: STRING 15V
+   984      ASSIGN  VS1 := $983
+
+   985      STMT    1: <IF HEAD> ON LINE 186
+   986      =       IDENT   VS1			       1 @054445: STRING 15V
+   987      =       CONST   'abc.'		       1 STRING 4ORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			     PAGE 29
+
+   988      =       SNE     VS1, 'abc.'		       1 BOOLEAN 1
+   989      JUMP    TO 47 @ 994 IF NOT $988
+
+   990      STMT    2: <FUNCTION QUALIFIER> ON LINE 186
+   991      =       CONST   !ERROR		       1 @055616: PROCEDURE
+   992      =       CONST   46			       1 INTEGER 6
+   993      CALL    !ERROR ( 46 )
+
+   994   47 LABEL   
+
+   995      STMT    1: <SIMPLE STATEMENT> ON LINE 187
+   996      =       IDENT   VS1			       3 @054445: STRING 15V
+   997      =       CONST   3			       3 INTEGER 2
+   998      =       LENGTH  VS1$996		       1 INTEGER 32S
+   999      =       CONST   1			       1 INTEGER 1
+  1000      =       IADD    $998, 1		       1 INTEGER 32S
+  1001      =       ISUB    $1000, 3$997	       2 INTEGER 32S
+  1002      =       LENGTH  VS1$996		       1 INTEGER 32S
+  1003      STRRNGE 3$997, $1001, $1002
+  1004      =       SUBSTR  VS1$996 [3$997 : $1001]    1 STRING *15
+  1005      =       IDENT   VS1			       3 @054445: STRING 15V
+  1006      =       IDENT   J			       3 INTEGER 32S
+  1007      =       LENGTH  VS1$1005		       1 INTEGER 32S
+  1008      =       CONST   1			       1 INTEGER 1
+  1009      =       IADD    $1007, 1		       1 INTEGER 32S
+  1010      =       ISUB    $1009, J$1006	       2 INTEGER 32S
+  1011      =       LENGTH  VS1$1005		       1 INTEGER 32S
+  1012      STRRNGE J$1006, $1010, $1011
+  1013      =       SUBSTR  VS1$1005 [J$1006 : $1010]
+						       1 STRING *15
+  1014      ASSIGN  $1004 := $1013 (OVL)
+
+  1015      STMT    1: <IF HEAD> ON LINE 188
+  1016      =       IDENT   VS1			       1 @054445: STRING 15V
+  1017      =       CONST   'ab.'		       1 STRING 3
+  1018      =       SNE     VS1, 'ab.'		       1 BOOLEAN 1
+  1019      JUMP    TO 48 @ 1024 IF NOT $1018
+
+  1020      STMT    2: <FUNCTION QUALIFIER> ON LINE 188
+  1021      =       CONST   !ERROR		       1 @055616: PROCEDURE
+  1022      =       CONST   47			       1 INTEGER 6
+  1023      CALL    !ERROR ( 47 )ORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			     PAGE 30
+
+  1024   48 LABEL   
+
+  1025      STMT    1: <SIMPLE STATEMENT> ON LINE 189
+  1026      =       IDENT   VS1			       1 @054445: STRING 15V
+  1027      =       IDENT   K			       1 INTEGER 32S
+  1028      =       CONST   65			       1 CHAR 7
+  1029      =       SCLCVT  65			       1 MACHINE_WORD: INTEGER 32S
+  1030      =       IADD    K, $1029		       1 INTEGER 32S
+  1031      =       IDENT   K			       1 INTEGER 32S
+  1032      =       ISUB    $1030, K		       2 INTEGER 32S
+  1033      =       CONST   0			       1 INTEGER 1
+  1034      =       CONST   127			       1 INTEGER 7
+  1035      VALRNGE $1032, 0, 127
+  1036      =       SCLCVT  $1032		       1 CHAR 7
+  1037      =       STRCVT  $1036		       1 @054445: STRING 15V
+  1038      ASSIGN  VS1 := $1037 (OVL)
+
+  1039      STMT    1: <IF HEAD> ON LINE 190
+  1040      =       IDENT   VS1			       1 @054445: STRING 15V
+  1041      =       CONST   65			       1 CHAR 7
+  1042      =       SNE     VS1, 65		       1 BOOLEAN 1
+  1043      JUMP    TO 49 @ 1048 IF NOT $1042
+
+  1044      STMT    2: <FUNCTION QUALIFIER> ON LINE 190
+  1045      =       CONST   !ERROR		       1 @055616: PROCEDURE
+  1046      =       CONST   48			       1 INTEGER 6
+  1047      CALL    !ERROR ( 48 )
+
+  1048   49 LABEL   
+
+  1049      STMT    1: <SIMPLE STATEMENT> ON LINE 191
+  1050      =       IDENT   VS1			       1 @054445: STRING 15V
+  1051      =       IDENT   VS1			       1 @054445: STRING 15V
+  1052      =       CONST   !FUNC_RET_CHAR	       1 @052362: FUNCTION
+  1053      =       IDENT   T			       1 @054747: STRING 16
+  1054      =       CONST   1			       1 INTEGER 1
+  1055      =       CONST   1			       1 INTEGER 1
+  1056      =       SUBSTR  T [1 : 1]		       1 CHAR 7
+  1057      =       FCALL   !FUNC_RET_CHAR ( $1056 )   1 CHAR 7
+  1058      =       CAT     VS1, $1057		       1 STRING *16
+  1059      =       STRCVT  $1058		       1 @054445: STRING 15V
+  1060      ASSIGN  VS1 := $1059 (OVL)ORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			     PAGE 31
+
+  1061      STMT    1: <IF HEAD> ON LINE 192
+  1062      =       IDENT   VS1			       1 @054445: STRING 15V
+  1063      =       CONST   'A4'		       1 STRING 2
+  1064      =       SNE     VS1, 'A4'		       1 BOOLEAN 1
+  1065      JUMP    TO 50 @ 1070 IF NOT $1064
+
+  1066      STMT    2: <FUNCTION QUALIFIER> ON LINE 192
+  1067      =       CONST   !ERROR		       1 @055616: PROCEDURE
+  1068      =       CONST   49			       1 INTEGER 6
+  1069      CALL    !ERROR ( 49 )
+
+  1070   50 LABEL   
+
+  1071      STMT    1: <FUNCTION QUALIFIER> ON LINE 194
+  1072      =       IDENT   VFLX		       1 @054732: POINTER 32
+  1073      =       CONST   26			       2 INTEGER 5
+  1074      =       CONST   4			       1 @045207: INTEGER 3
+  1075      =       IADD    26$1073, 4		       1 @045207: INTEGER 31
+  1076      =       NEW     $1075		       2 @054732: POINTER 32
+  1077      ASSIGN  VFLX := $1076
+  1078      =       DEREF   $1076		       1 @054754: STRING *V
+  1079      =       UPBOUND $1078		       1 INTEGER 32S
+  1080      ASSIGN  $1079 := 26$1073
+
+  1081      STMT    1: <FUNCTION QUALIFIER> ON LINE 195
+  1082      =       IDENT   FFLX		       1 @054700: POINTER 32
+  1083      =       CONST   26			       2 INTEGER 5
+  1084      =       CONST   2			       1 @045207: INTEGER 2
+  1085      =       IADD    26$1083, 2		       1 @045207: INTEGER 31
+  1086      =       NEW     $1085		       2 @054700: POINTER 32
+  1087      ASSIGN  FFLX := $1086
+  1088      =       DEREF   $1086		       1 @054653: STRING *
+  1089      =       UPBOUND $1088		       1 INTEGER 32S
+  1090      ASSIGN  $1089 := 26$1083
+
+  1091      STMT    1: <SIMPLE STATEMENT> ON LINE 196
+  1092      =       IDENT   VFLX		       2 @054732: POINTER 32
+  1093      PTRCHK  VFLX$1092
+  1094      =       DEREF   VFLX$1092		       1 @054754: STRING *V
+  1095      =       CONST   'abcdefghijklmnopqrstuvwxyz'
+						       1 STRING 26
+  1096      =       STRCVT  'abcdefghijklmnopqrstuvwxyz'ORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			     PAGE 32
+
+						       1 @054754: STRING *V
+  1097      ASSIGN  $1094 := $1096
+
+  1098      STMT    1: <SIMPLE STATEMENT> ON LINE 197
+  1099      =       IDENT   FFLX		       2 @054700: POINTER 32
+  1100      PTRCHK  FFLX$1099
+  1101      =       DEREF   FFLX$1099		       1 @054653: STRING *
+  1102      =       IDENT   VFLX		       2 @054732: POINTER 32
+  1103      PTRCHK  VFLX$1102
+  1104      =       DEREF   VFLX$1102		       1 @054754: STRING *V
+  1105      =       STRCVT  $1104		       1 @054653: STRING *
+  1106      ASSIGN  $1101 := $1105
+
+  1107      STMT    1: <IF HEAD> ON LINE 198
+  1108      =       IDENT   FFLX		       2 @054700: POINTER 32
+  1109      PTRCHK  FFLX$1108
+  1110      =       DEREF   FFLX$1108		       1 @054653: STRING *
+  1111      =       CONST   'abcdefghijklmnopqrstuvwxyz'
+						       1 STRING 26
+  1112      =       SNE     $1110, 'abcdefghijklmnopqrstuvwxyz'
+						       1 BOOLEAN 1
+  1113      =       IDENT   VFLX		       2 @054732: POINTER 32
+  1114      PTRCHK  VFLX$1113
+  1115      =       DEREF   VFLX$1113		       1 @054754: STRING *V
+  1116      =       CONST   'abcdefghijklmnopqrstuvwxyz'
+						       1 STRING 26
+  1117      =       SNE     $1115, 'abcdefghijklmnopqrstuvwxyz'
+						       1 BOOLEAN 1
+  1118      =       OR      $1112, $1117	       1 BOOLEAN 1
+  1119      =       IDENT   VFLX		       2 @054732: POINTER 32
+  1120      PTRCHK  VFLX$1119
+  1121      =       DEREF   VFLX$1119		       1 @054754: STRING *V
+  1122      =       IDENT   FFLX		       2 @054700: POINTER 32
+  1123      PTRCHK  FFLX$1122
+  1124      =       DEREF   FFLX$1122		       1 @054653: STRING *
+  1125      =       SNE     $1121, $1124	       1 BOOLEAN 1
+  1126      =       OR      $1118, $1125	       1 BOOLEAN 1
+  1127      JUMP    TO 51 @ 1132 IF NOT $1126
+
+  1128      STMT    1: <FUNCTION QUALIFIER> ON LINE 201
+  1129      =       CONST   !ERROR		       1 @055616: PROCEDURE
+  1130      =       CONST   50			       1 INTEGER 6ORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			     PAGE 33
+
+  1131      CALL    !ERROR ( 50 )
+
+  1132   51 LABEL   
+
+  1133      STMT    1: <IF HEAD> ON LINE 202
+  1134      =       CONST   !CASE_PASSED	       1 @054245: FUNCTION
+  1135      =       IDENT   FFLX		       2 @054700: POINTER 32
+  1136      PTRCHK  FFLX$1135
+  1137      =       DEREF   FFLX$1135		       1 @054653: STRING *
+  1138      =       UPCASE  $1137		       1 @054653: STRING *
+  1139      =       STRCVT  $1138		       1 @054311: STRING 400V
+  1140      =       FCALL   !CASE_PASSED ( $1139 )     1 BOOLEAN 1
+  1141      =       NOT     $1140		       1 BOOLEAN 1
+  1142      JUMP    TO 52 @ 1147 IF NOT $1141
+
+  1143      STMT    1: <FUNCTION QUALIFIER> ON LINE 203
+  1144      =       CONST   !ERROR		       1 @055616: PROCEDURE
+  1145      =       CONST   51			       1 INTEGER 6
+  1146      CALL    !ERROR ( 51 )
+
+  1147   52 LABEL   
+
+  1148      STMT    1: <IF HEAD> ON LINE 204
+  1149      =       CONST   !CASE_PASSED	       1 @054245: FUNCTION
+  1150      =       IDENT   VFLX		       2 @054732: POINTER 32
+  1151      PTRCHK  VFLX$1150
+  1152      =       DEREF   VFLX$1150		       1 @054754: STRING *V
+  1153      =       UPCASE  $1152		       1 @054754: STRING *V
+  1154      =       STRCVT  $1153		       1 @054311: STRING 400V
+  1155      =       FCALL   !CASE_PASSED ( $1154 )     1 BOOLEAN 1
+  1156      =       NOT     $1155		       1 BOOLEAN 1
+  1157      JUMP    TO 53 @ 1162 IF NOT $1156
+
+  1158      STMT    1: <FUNCTION QUALIFIER> ON LINE 205
+  1159      =       CONST   !ERROR		       1 @055616: PROCEDURE
+  1160      =       CONST   52			       1 INTEGER 6
+  1161      CALL    !ERROR ( 52 )
+
+  1162   53 LABEL   
+
+  1163      STMT    1: <IF HEAD> ON LINE 206
+  1164      =       CONST   !CASE_PASSED	       1 @054245: FUNCTIONORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			     PAGE 34
+
+  1165      =       IDENT   FFLX		       2 @054700: POINTER 32
+  1166      PTRCHK  FFLX$1165
+  1167      =       DEREF   FFLX$1165		       2 @054653: STRING *
+  1168      =       CONST   1			       2 INTEGER 1
+  1169      =       CONST   10			       2 INTEGER 4
+  1170      =       LENGTH  $1167		       1 INTEGER 32S
+  1171      STRRNGE 1$1168, 10$1169, $1170
+  1172      =       SUBSTR  $1167 [1$1168 : 10$1169]   1 STRING 10
+  1173      =       IDENT   VFLX		       2 @054732: POINTER 32
+  1174      PTRCHK  VFLX$1173
+  1175      =       DEREF   VFLX$1173		       3 @054754: STRING *V
+  1176      =       CONST   11			       3 INTEGER 4
+  1177      =       LENGTH  $1175		       1 INTEGER 32S
+  1178      =       CONST   1			       1 INTEGER 1
+  1179      =       IADD    $1177, 1		       1 INTEGER 32S
+  1180      =       ISUB    $1179, 11$1176	       2 INTEGER 32S
+  1181      =       LENGTH  $1175		       1 INTEGER 32S
+  1182      STRRNGE 11$1176, $1180, $1181
+  1183      =       SUBSTR  $1175 [11$1176 : $1180]    1 STRING *
+  1184      =       CAT     $1172, $1183	       1 STRING *
+  1185      =       UPCASE  $1184		       1 STRING *
+  1186      =       STRCVT  $1185		       1 @054311: STRING 400V
+  1187      =       FCALL   !CASE_PASSED ( $1186 )     1 BOOLEAN 1
+  1188      =       NOT     $1187		       1 BOOLEAN 1
+  1189      JUMP    TO 54 @ 1194 IF NOT $1188
+
+  1190      STMT    1: <FUNCTION QUALIFIER> ON LINE 207
+  1191      =       CONST   !ERROR		       1 @055616: PROCEDURE
+  1192      =       CONST   53			       1 INTEGER 6
+  1193      CALL    !ERROR ( 53 )
+
+  1194   54 LABEL   
+
+  1195      STMT    1: <IF HEAD> ON LINE 208
+  1196      =       CONST   !CASE_PASSED	       1 @054245: FUNCTION
+  1197      =       IDENT   FFLX		       2 @054700: POINTER 32
+  1198      PTRCHK  FFLX$1197
+  1199      =       DEREF   FFLX$1197		       2 @054653: STRING *
+  1200      =       CONST   1			       2 INTEGER 1
+  1201      =       CONST   10			       2 INTEGER 4
+  1202      =       LENGTH  $1199		       1 INTEGER 32S
+  1203      STRRNGE 1$1200, 10$1201, $1202ORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			     PAGE 35
+
+  1204      =       SUBSTR  $1199 [1$1200 : 10$1201]   1 STRING 10
+  1205      =       UPCASE  $1204		       1 STRING 10
+  1206      =       IDENT   VFLX		       2 @054732: POINTER 32
+  1207      PTRCHK  VFLX$1206
+  1208      =       DEREF   VFLX$1206		       3 @054754: STRING *V
+  1209      =       CONST   11			       3 INTEGER 4
+  1210      =       LENGTH  $1208		       1 INTEGER 32S
+  1211      =       CONST   1			       1 INTEGER 1
+  1212      =       IADD    $1210, 1		       1 INTEGER 32S
+  1213      =       ISUB    $1212, 11$1209	       2 INTEGER 32S
+  1214      =       LENGTH  $1208		       1 INTEGER 32S
+  1215      STRRNGE 11$1209, $1213, $1214
+  1216      =       SUBSTR  $1208 [11$1209 : $1213]    1 STRING *
+  1217      =       UPCASE  $1216		       1 STRING *
+  1218      =       CAT     $1205, $1217	       1 STRING *
+  1219      =       STRCVT  $1218		       1 @054311: STRING 400V
+  1220      =       FCALL   !CASE_PASSED ( $1219 )     1 BOOLEAN 1
+  1221      =       NOT     $1220		       1 BOOLEAN 1
+  1222      JUMP    TO 55 @ 1227 IF NOT $1221
+
+  1223      STMT    1: <FUNCTION QUALIFIER> ON LINE 209
+  1224      =       CONST   !ERROR		       1 @055616: PROCEDURE
+  1225      =       CONST   54			       1 INTEGER 6
+  1226      CALL    !ERROR ( 54 )
+
+  1227   55 LABEL   
+
+  1228      STMT    1: <FUNCTION QUALIFIER> ON LINE 210
+  1229      =       IDENT   FFLX		       1 @054700: POINTER 32
+  1230      =       CONST   154			       2 INTEGER 8
+  1231      =       CONST   2			       1 @045207: INTEGER 2
+  1232      =       IADD    154$1230, 2		       1 @045207: INTEGER 31
+  1233      =       NEW     $1232		       2 @054700: POINTER 32
+  1234      ASSIGN  FFLX := $1233
+  1235      =       DEREF   $1233		       1 @054653: STRING *
+  1236      =       UPBOUND $1235		       1 INTEGER 32S
+  1237      ASSIGN  $1236 := 154$1230
+
+  1238      STMT    1: <FUNCTION QUALIFIER> ON LINE 211
+  1239      =       IDENT   VFLX		       1 @054732: POINTER 32
+  1240      =       CONST   154			       2 INTEGER 8
+  1241      =       CONST   4			       1 @045207: INTEGER 3ORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			     PAGE 36
+
+  1242      =       IADD    154$1240, 4		       1 @045207: INTEGER 31
+  1243      =       NEW     $1242		       2 @054732: POINTER 32
+  1244      ASSIGN  VFLX := $1243
+  1245      =       DEREF   $1243		       1 @054754: STRING *V
+  1246      =       UPBOUND $1245		       1 INTEGER 32S
+  1247      ASSIGN  $1246 := 154$1240
+
+  1248      STMT    1: <SIMPLE STATEMENT> ON LINE 212
+  1249      =       IDENT   FFLX		       2 @054700: POINTER 32
+  1250      PTRCHK  FFLX$1249
+  1251      =       DEREF   FFLX$1249		       2 @054653: STRING *
+  1252      =       CONST   1			       2 INTEGER 1
+  1253      =       CONST   26			       2 INTEGER 5
+  1254      =       LENGTH  $1251		       1 INTEGER 32S
+  1255      STRRNGE 1$1252, 26$1253, $1254
+  1256      =       SUBSTR  $1251 [1$1252 : 26$1253]   1 STRING 26
+  1257      =       CONST   'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+						       1 STRING 26
+  1258      ASSIGN  $1256 := 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+  1259      STMT    1: <SIMPLE STATEMENT> ON LINE 213
+  1260      =       IDENT   FFLX		       2 @054700: POINTER 32
+  1261      PTRCHK  FFLX$1260
+  1262      =       DEREF   FFLX$1260		       2 @054653: STRING *
+  1263      =       CONST   128			       2 INTEGER 8
+  1264      =       CONST   26			       2 INTEGER 5
+  1265      =       LENGTH  $1262		       1 INTEGER 32S
+  1266      STRRNGE 128$1263, 26$1264, $1265
+  1267      =       SUBSTR  $1262 [128$1263 : 26$1264]
+						       1 STRING 26
+  1268      =       IDENT   FFLX		       2 @054700: POINTER 32
+  1269      PTRCHK  FFLX$1268
+  1270      =       DEREF   FFLX$1268		       2 @054653: STRING *
+  1271      =       CONST   1			       2 INTEGER 1
+  1272      =       CONST   26			       2 INTEGER 5
+  1273      =       LENGTH  $1270		       1 INTEGER 32S
+  1274      STRRNGE 1$1271, 26$1272, $1273
+  1275      =       SUBSTR  $1270 [1$1271 : 26$1272]   1 STRING 26
+  1276      ASSIGN  $1267 := $1275 (OVL)
+
+  1277      STMT    1: <IF HEAD> ON LINE 214
+  1278      =       IDENT   FFLX		       2 @054700: POINTER 32ORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			     PAGE 37
+
+  1279      PTRCHK  FFLX$1278
+  1280      =       DEREF   FFLX$1278		       2 @054653: STRING *
+  1281      =       CONST   1			       2 INTEGER 1
+  1282      =       CONST   26			       2 INTEGER 5
+  1283      =       LENGTH  $1280		       1 INTEGER 32S
+  1284      STRRNGE 1$1281, 26$1282, $1283
+  1285      =       SUBSTR  $1280 [1$1281 : 26$1282]   1 STRING 26
+  1286      =       CONST   'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+						       1 STRING 26
+  1287      =       SNE     $1285, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+						       1 BOOLEAN 1
+  1288      =       IDENT   FFLX		       2 @054700: POINTER 32
+  1289      PTRCHK  FFLX$1288
+  1290      =       DEREF   FFLX$1288		       2 @054653: STRING *
+  1291      =       CONST   128			       2 INTEGER 8
+  1292      =       CONST   26			       2 INTEGER 5
+  1293      =       LENGTH  $1290		       1 INTEGER 32S
+  1294      STRRNGE 128$1291, 26$1292, $1293
+  1295      =       SUBSTR  $1290 [128$1291 : 26$1292]
+						       1 STRING 26
+  1296      =       IDENT   FFLX		       2 @054700: POINTER 32
+  1297      PTRCHK  FFLX$1296
+  1298      =       DEREF   FFLX$1296		       2 @054653: STRING *
+  1299      =       CONST   1			       2 INTEGER 1
+  1300      =       CONST   26			       2 INTEGER 5
+  1301      =       LENGTH  $1298		       1 INTEGER 32S
+  1302      STRRNGE 1$1299, 26$1300, $1301
+  1303      =       SUBSTR  $1298 [1$1299 : 26$1300]   1 STRING 26
+  1304      =       SNE     $1295, $1303	       1 BOOLEAN 1
+  1305      =       OR      $1287, $1304	       1 BOOLEAN 1
+  1306      JUMP    TO 56 @ 1311 IF NOT $1305
+
+  1307      STMT    1: <FUNCTION QUALIFIER> ON LINE 216
+  1308      =       CONST   !ERROR		       1 @055616: PROCEDURE
+  1309      =       CONST   55			       1 INTEGER 6
+  1310      CALL    !ERROR ( 55 )
+
+  1311   56 LABEL   
+
+  1312      STMT    1: <SIMPLE STATEMENT> ON LINE 217
+  1313      =       IDENT   VFLX		       2 @054732: POINTER 32
+  1314      PTRCHK  VFLX$1313ORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			     PAGE 38
+
+  1315      =       DEREF   VFLX$1313		       1 @054754: STRING *V
+  1316      =       IDENT   FFLX		       2 @054700: POINTER 32
+  1317      PTRCHK  FFLX$1316
+  1318      =       DEREF   FFLX$1316		       1 @054653: STRING *
+  1319      =       STRCVT  $1318		       1 @054754: STRING *V
+  1320      ASSIGN  $1315 := $1319
+
+  1321      STMT    1: <IF HEAD> ON LINE 218
+  1322      =       IDENT   VFLX		       2 @054732: POINTER 32
+  1323      PTRCHK  VFLX$1322
+  1324      =       DEREF   VFLX$1322		       2 @054754: STRING *V
+  1325      =       CONST   1			       2 INTEGER 1
+  1326      =       CONST   26			       2 INTEGER 5
+  1327      =       LENGTH  $1324		       1 INTEGER 32S
+  1328      STRRNGE 1$1325, 26$1326, $1327
+  1329      =       SUBSTR  $1324 [1$1325 : 26$1326]   1 STRING 26
+  1330      =       CONST   'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+						       1 STRING 26
+  1331      =       SNE     $1329, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+						       1 BOOLEAN 1
+  1332      =       IDENT   VFLX		       2 @054732: POINTER 32
+  1333      PTRCHK  VFLX$1332
+  1334      =       DEREF   VFLX$1332		       2 @054754: STRING *V
+  1335      =       CONST   128			       2 INTEGER 8
+  1336      =       CONST   26			       2 INTEGER 5
+  1337      =       LENGTH  $1334		       1 INTEGER 32S
+  1338      STRRNGE 128$1335, 26$1336, $1337
+  1339      =       SUBSTR  $1334 [128$1335 : 26$1336]
+						       1 STRING 26
+  1340      =       IDENT   VFLX		       2 @054732: POINTER 32
+  1341      PTRCHK  VFLX$1340
+  1342      =       DEREF   VFLX$1340		       2 @054754: STRING *V
+  1343      =       CONST   1			       2 INTEGER 1
+  1344      =       CONST   26			       2 INTEGER 5
+  1345      =       LENGTH  $1342		       1 INTEGER 32S
+  1346      STRRNGE 1$1343, 26$1344, $1345
+  1347      =       SUBSTR  $1342 [1$1343 : 26$1344]   1 STRING 26
+  1348      =       SNE     $1339, $1347	       1 BOOLEAN 1
+  1349      =       OR      $1331, $1348	       1 BOOLEAN 1
+  1350      JUMP    TO 57 @ 1355 IF NOT $1349
+
+  1351      STMT    1: <FUNCTION QUALIFIER> ON LINE 220ORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			     PAGE 39
+
+  1352      =       CONST   !ERROR		       1 @055616: PROCEDURE
+  1353      =       CONST   56			       1 INTEGER 6
+  1354      CALL    !ERROR ( 56 )
+
+  1355   57 LABEL   
+
+  1356      STMT    1: <IF HEAD> ON LINE 221
+  1357      =       CONST   !CASE_PASSED	       1 @054245: FUNCTION
+  1358      =       IDENT   FFLX		       2 @054700: POINTER 32
+  1359      PTRCHK  FFLX$1358
+  1360      =       DEREF   FFLX$1358		       1 @054653: STRING *
+  1361      =       STRCVT  $1360		       1 @054311: STRING 400V
+  1362      =       FCALL   !CASE_PASSED ( $1361 )     1 BOOLEAN 1
+  1363      =       NOT     $1362		       1 BOOLEAN 1
+  1364      JUMP    TO 58 @ 1369 IF NOT $1363
+
+  1365      STMT    1: <FUNCTION QUALIFIER> ON LINE 222
+  1366      =       CONST   !ERROR		       1 @055616: PROCEDURE
+  1367      =       CONST   57			       1 INTEGER 6
+  1368      CALL    !ERROR ( 57 )
+
+  1369   58 LABEL   
+
+  1370      STMT    1: <IF HEAD> ON LINE 223
+  1371      =       CONST   !CASE_PASSED	       1 @054245: FUNCTION
+  1372      =       IDENT   VFLX		       2 @054732: POINTER 32
+  1373      PTRCHK  VFLX$1372
+  1374      =       DEREF   VFLX$1372		       1 @054754: STRING *V
+  1375      =       STRCVT  $1374		       1 @054311: STRING 400V
+  1376      =       FCALL   !CASE_PASSED ( $1375 )     1 BOOLEAN 1
+  1377      =       NOT     $1376		       1 BOOLEAN 1
+  1378      JUMP    TO 59 @ 1383 IF NOT $1377
+
+  1379      STMT    1: <FUNCTION QUALIFIER> ON LINE 224
+  1380      =       CONST   !ERROR		       1 @055616: PROCEDURE
+  1381      =       CONST   58			       1 INTEGER 6
+  1382      CALL    !ERROR ( 58 )
+
+  1383   59 LABEL   
+
+  1384      STMT    1: <IF HEAD> ON LINE 225
+  1385      =       CONST   !CASE_PASSED	       1 @054245: FUNCTIONORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			     PAGE 40
+
+  1386      =       IDENT   FFLX		       2 @054700: POINTER 32
+  1387      PTRCHK  FFLX$1386
+  1388      =       DEREF   FFLX$1386		       1 @054653: STRING *
+  1389      =       UPCASE  $1388		       1 @054653: STRING *
+  1390      =       STRCVT  $1389		       1 @054311: STRING 400V
+  1391      =       FCALL   !CASE_PASSED ( $1390 )     1 BOOLEAN 1
+  1392      =       NOT     $1391		       1 BOOLEAN 1
+  1393      JUMP    TO 60 @ 1398 IF NOT $1392
+
+  1394      STMT    1: <FUNCTION QUALIFIER> ON LINE 226
+  1395      =       CONST   !ERROR		       1 @055616: PROCEDURE
+  1396      =       CONST   59			       1 INTEGER 6
+  1397      CALL    !ERROR ( 59 )
+
+  1398   60 LABEL   
+
+  1399      STMT    1: <IF HEAD> ON LINE 227
+  1400      =       CONST   !CASE_PASSED	       1 @054245: FUNCTION
+  1401      =       IDENT   VFLX		       2 @054732: POINTER 32
+  1402      PTRCHK  VFLX$1401
+  1403      =       DEREF   VFLX$1401		       1 @054754: STRING *V
+  1404      =       LWCASE  $1403		       1 @054754: STRING *V
+  1405      =       UPCASE  $1404		       1 @054754: STRING *V
+  1406      =       STRCVT  $1405		       1 @054311: STRING 400V
+  1407      =       FCALL   !CASE_PASSED ( $1406 )     1 BOOLEAN 1
+  1408      =       NOT     $1407		       1 BOOLEAN 1
+  1409      JUMP    TO 61 @ 1414 IF NOT $1408
+
+  1410      STMT    1: <FUNCTION QUALIFIER> ON LINE 228
+  1411      =       CONST   !ERROR		       1 @055616: PROCEDURE
+  1412      =       CONST   60			       1 INTEGER 6
+  1413      CALL    !ERROR ( 60 )
+
+  1414   61 LABEL   
+
+  1415      STMT    1: <FUNCTION QUALIFIER> ON LINE 230
+  1416      =       IDENT   VFLX		       1 @054732: POINTER 32
+  1417      =       CONST   400			       2 INTEGER 9
+  1418      =       CONST   4			       1 @045207: INTEGER 3
+  1419      =       IADD    400$1417, 4		       1 @045207: INTEGER 31
+  1420      =       NEW     $1419		       2 @054732: POINTER 32
+  1421      ASSIGN  VFLX := $1420ORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			     PAGE 41
+
+  1422      =       DEREF   $1420		       1 @054754: STRING *V
+  1423      =       UPBOUND $1422		       1 INTEGER 32S
+  1424      ASSIGN  $1423 := 400$1417
+
+  1425      STMT    1: <SIMPLE STATEMENT> ON LINE 231
+  1426      =       IDENT   VFLX		       2 @054732: POINTER 32
+  1427      PTRCHK  VFLX$1426
+  1428      =       DEREF   VFLX$1426		       1 @054754: STRING *V
+  1429      =       CONST   ''			       1 STRING 0
+  1430      =       STRCVT  ''			       1 @054754: STRING *V
+  1431      ASSIGN  $1428 := $1430
+
+  1432      STMT    1: <FOR HEAD> ON LINE 232
+  1433      =       CONST   1			       2 INTEGER 1
+  1434      =       CONST   400			       2 INTEGER 9
+  1435      =       IGT     1$1433, 400$1434	       1 BOOLEAN 1
+  1436      JUMP    TO 63 @ 1458 IF $1435
+  1437      =       IDENT   I			       1 INTEGER 32S
+  1438      ASSIGN  I := 1$1433
+
+  1439   62 LABEL   
+
+  1440      STMT    1: <SIMPLE STATEMENT> ON LINE 233
+  1441      =       IDENT   VFLX		       2 @054732: POINTER 32
+  1442      PTRCHK  VFLX$1441
+  1443      =       DEREF   VFLX$1441		       1 @054754: STRING *V
+  1444      =       IDENT   VFLX		       2 @054732: POINTER 32
+  1445      PTRCHK  VFLX$1444
+  1446      =       DEREF   VFLX$1444		       1 @054754: STRING *V
+  1447      =       CONST   97			       1 CHAR 7
+  1448      =       CAT     $1446, 97		       1 STRING *
+  1449      =       STRCVT  $1448		       1 @054754: STRING *V
+  1450      ASSIGN  $1443 := $1449 (OVL)
+  1451      =       IDENT   I			       1 INTEGER 32S
+  1452      =       CONST   1			       1 INTEGER 1
+  1453      =       IADD    I, 1		       2 INTEGER 32S
+  1454      =       IDENT   I			       1 INTEGER 32S
+  1455      ASSIGN  I := $1453 (LREC)
+  1456      =       ILE     $1453, 400$1434	       1 BOOLEAN 1
+  1457      JUMP    TO 62 @ 1439 IF $1456
+
+  1458   63 LABEL   ORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			     PAGE 42
+
+  1459      STMT    1: <SIMPLE STATEMENT> ON LINE 234
+  1460      =       IDENT   VFLX		       2 @054732: POINTER 32
+  1461      PTRCHK  VFLX$1460
+  1462      =       DEREF   VFLX$1460		       2 @054754: STRING *V
+  1463      =       CONST   365			       2 INTEGER 9
+  1464      =       CONST   5			       2 INTEGER 3
+  1465      =       LENGTH  $1462		       1 INTEGER 32S
+  1466      STRRNGE 365$1463, 5$1464, $1465
+  1467      =       SUBSTR  $1462 [365$1463 : 5$1464]
+						       1 STRING 5
+  1468      =       CONST   '12345'		       1 STRING 5
+  1469      ASSIGN  $1467 := '12345'
+
+  1470      STMT    1: <SIMPLE STATEMENT> ON LINE 235
+  1471      =       IDENT   VFLX		       2 @054732: POINTER 32
+  1472      PTRCHK  VFLX$1471
+  1473      =       DEREF   VFLX$1471		       2 @054754: STRING *V
+  1474      =       CONST   300			       2 INTEGER 9
+  1475      =       CONST   10			       2 INTEGER 4
+  1476      =       LENGTH  $1473		       1 INTEGER 32S
+  1477      STRRNGE 300$1474, 10$1475, $1476
+  1478      =       SUBSTR  $1473 [300$1474 : 10$1475]
+						       1 STRING 10
+  1479      =       CONST   '1234567890'	       1 STRING 10
+  1480      ASSIGN  $1478 := '1234567890'
+
+  1481      STMT    1: <IF HEAD> ON LINE 236
+  1482      =       IDENT   VFLX		       2 @054732: POINTER 32
+  1483      PTRCHK  VFLX$1482
+  1484      =       DEREF   VFLX$1482		       2 @054754: STRING *V
+  1485      =       CONST   360			       2 INTEGER 9
+  1486      =       CONST   10			       2 INTEGER 4
+  1487      =       LENGTH  $1484		       1 INTEGER 32S
+  1488      STRRNGE 360$1485, 10$1486, $1487
+  1489      =       SUBSTR  $1484 [360$1485 : 10$1486]
+						       1 STRING 10
+  1490      =       UPCASE  $1489		       1 STRING 10
+  1491      =       CONST   'AAAAA12345'	       1 STRING 10
+  1492      =       SNE     $1490, 'AAAAA12345'	       1 BOOLEAN 1
+  1493      JUMP    TO 64 @ 1498 IF NOT $1492
+
+  1494      STMT    1: <FUNCTION QUALIFIER> ON LINE 237ORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			     PAGE 43
+
+  1495      =       CONST   !ERROR		       1 @055616: PROCEDURE
+  1496      =       CONST   61			       1 INTEGER 6
+  1497      CALL    !ERROR ( 61 )
+
+  1498   64 LABEL   
+
+  1499      STMT    1: <IF HEAD> ON LINE 239
+  1500      =       CONST   !CASE_PASSED	       1 @054245: FUNCTION
+  1501      =       CONST   'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+						       1 STRING 26
+  1502      =       STRCVT  'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+						       1 @054311: STRING 400V
+  1503      =       FCALL   !CASE_PASSED ( $1502 )     1 BOOLEAN 1
+  1504      =       NOT     $1503		       1 BOOLEAN 1
+  1505      JUMP    TO 65 @ 1510 IF NOT $1504
+
+  1506      STMT    1: <FUNCTION QUALIFIER> ON LINE 240
+  1507      =       CONST   !ERROR		       1 @055616: PROCEDURE
+  1508      =       CONST   62			       1 INTEGER 6
+  1509      CALL    !ERROR ( 62 )
+
+  1510   65 LABEL   
+
+  1511      STMT    1: <SIMPLE STATEMENT> ON LINE 242
+  1512      =       IDENT   AFLX		       1 @054554: STRING 400
+  1513      =       CONST   1			       1 INTEGER 1
+  1514      =       CONST   26			       1 INTEGER 5
+  1515      =       SUBSTR  AFLX [1 : 26]	       1 STRING 26
+  1516      =       CONST   'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+						       1 STRING 26
+  1517      ASSIGN  $1515 := 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+  1518      STMT    1: <SIMPLE STATEMENT> ON LINE 243
+  1519      =       IDENT   AFLX		       1 @054554: STRING 400
+  1520      =       CONST   128			       1 INTEGER 8
+  1521      =       CONST   26			       1 INTEGER 5
+  1522      =       SUBSTR  AFLX [128 : 26]	       1 STRING 26
+  1523      =       IDENT   AFLX		       1 @054554: STRING 400
+  1524      =       CONST   1			       1 INTEGER 1
+  1525      =       CONST   26			       1 INTEGER 5
+  1526      =       SUBSTR  AFLX [1 : 26]	       1 STRING 26
+  1527      ASSIGN  $1522 := $1526 (OVL)ORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			     PAGE 44
+
+  1528      STMT    1: <SIMPLE STATEMENT> ON LINE 244
+  1529      =       IDENT   AFLX		       1 @054554: STRING 400
+  1530      =       CONST   300			       1 INTEGER 9
+  1531      =       CONST   10			       1 INTEGER 4
+  1532      =       SUBSTR  AFLX [300 : 10]	       1 STRING 10
+  1533      =       CONST   '1234567890'	       1 STRING 10
+  1534      ASSIGN  $1532 := '1234567890'
+
+  1535      STMT    1: <IF HEAD> ON LINE 245
+  1536      =       CONST   !CASE_PASSED	       1 @054245: FUNCTION
+  1537      =       IDENT   AFLX		       1 @054554: STRING 400
+  1538      =       STRCVT  AFLX		       1 @054311: STRING 400V
+  1539      =       FCALL   !CASE_PASSED ( $1538 )     1 BOOLEAN 1
+  1540      =       NOT     $1539		       1 BOOLEAN 1
+  1541      JUMP    TO 66 @ 1546 IF NOT $1540
+
+  1542      STMT    1: <FUNCTION QUALIFIER> ON LINE 246
+  1543      =       CONST   !ERROR		       1 @055616: PROCEDURE
+  1544      =       CONST   63			       1 INTEGER 6
+  1545      CALL    !ERROR ( 63 )
+
+  1546   66 LABEL   
+
+  1547      STMT    1: <SIMPLE STATEMENT> ON LINE 248
+  1548      =       IDENT   BIGSTR		       1 @054561: STRING 400V
+  1549      =       IDENT   AFLX		       1 @054554: STRING 400
+  1550      =       CONST   1			       1 INTEGER 1
+  1551      =       CONST   26			       1 INTEGER 5
+  1552      =       SUBSTR  AFLX [1 : 26]	       1 STRING 26
+  1553      =       STRCVT  $1552		       1 @054561: STRING 400V
+  1554      ASSIGN  BIGSTR := $1553
+
+  1555      STMT    1: <SIMPLE STATEMENT> ON LINE 249
+  1556      =       IDENT   BIGSTR		       1 @054561: STRING 400V
+  1557      =       IDENT   BIGSTR		       1 @054561: STRING 400V
+  1558      =       IDENT   BIGSTR		       1 @054561: STRING 400V
+  1559      =       IDENT   BIGSTR		       1 @054561: STRING 400V
+  1560      =       IDENT   BIGSTR		       1 @054561: STRING 400V
+  1561      =       IDENT   BIGSTR		       1 @054561: STRING 400V
+  1562      =       IDENT   BIGSTR		       1 @054561: STRING 400V
+  1563      =       CAT     BIGSTR, BIGSTR, BIGSTR, BIGSTR, BIGSTR, BIGSTR
+						       1 STRING *2400ORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			     PAGE 45
+
+  1564      =       STRCVT  $1563		       1 @054561: STRING 400V
+  1565      ASSIGN  BIGSTR := $1564 (OVL)
+
+  1566      STMT    1: <SIMPLE STATEMENT> ON LINE 250
+  1567      =       IDENT   BIGSTR		       1 @054561: STRING 400V
+  1568      =       IDENT   BIGSTR		       2 @054561: STRING 400V
+  1569      =       CONST   1			       2 INTEGER 1
+  1570      =       CONST   127			       2 INTEGER 7
+  1571      =       LENGTH  BIGSTR$1568		       1 INTEGER 32S
+  1572      STRRNGE 1$1569, 127$1570, $1571
+  1573      =       SUBSTR  BIGSTR$1568 [1$1569 : 127$1570]
+						       1 STRING 127
+  1574      =       STRCVT  $1573		       1 @054561: STRING 400V
+  1575      ASSIGN  BIGSTR := $1574
+
+  1576      STMT    1: <SIMPLE STATEMENT> ON LINE 251
+  1577      =       IDENT   BIGSTR		       1 @054561: STRING 400V
+  1578      =       IDENT   BIGSTR		       1 @054561: STRING 400V
+  1579      =       IDENT   BIGSTR		       2 @054561: STRING 400V
+  1580      =       CONST   1			       2 INTEGER 1
+  1581      =       CONST   26			       2 INTEGER 5
+  1582      =       LENGTH  BIGSTR$1579		       1 INTEGER 32S
+  1583      STRRNGE 1$1580, 26$1581, $1582
+  1584      =       SUBSTR  BIGSTR$1579 [1$1580 : 26$1581]
+						       1 STRING 26
+  1585      =       IDENT   BIGSTR		       1 @054561: STRING 400V
+  1586      =       IDENT   BIGSTR		       1 @054561: STRING 400V
+  1587      =       CAT     BIGSTR, $1584, BIGSTR, BIGSTR
+						       1 STRING *1226
+  1588      =       STRCVT  $1587		       1 @054561: STRING 400V
+  1589      ASSIGN  BIGSTR := $1588 (OVL)
+
+  1590      STMT    1: <SIMPLE STATEMENT> ON LINE 252
+  1591      =       IDENT   BIGSTR		       1 @054561: STRING 400V
+  1592      =       IDENT   BIGSTR		       2 @054561: STRING 400V
+  1593      =       CONST   1			       2 INTEGER 1
+  1594      =       CONST   299			       2 INTEGER 9
+  1595      =       LENGTH  BIGSTR$1592		       1 INTEGER 32S
+  1596      STRRNGE 1$1593, 299$1594, $1595
+  1597      =       SUBSTR  BIGSTR$1592 [1$1593 : 299$1594]
+						       1 STRING 299
+  1598      =       CONST   '1234567890'	       1 STRING 10ORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			     PAGE 46
+
+  1599      =       CAT     $1597, '1234567890'	       1 STRING 309
+  1600      =       STRCVT  $1599		       1 @054561: STRING 400V
+  1601      ASSIGN  BIGSTR := $1600 (OVL)
+
+  1602      STMT    1: <IF HEAD> ON LINE 253
+  1603      =       CONST   !CASE_PASSED	       1 @054245: FUNCTION
+  1604      =       IDENT   BIGSTR		       1 @054561: STRING 400V
+  1605      =       FCALL   !CASE_PASSED ( BIGSTR )    1 BOOLEAN 1
+  1606      =       NOT     $1605		       1 BOOLEAN 1
+  1607      JUMP    TO 67 @ 1612 IF NOT $1606
+
+  1608      STMT    1: <FUNCTION QUALIFIER> ON LINE 254
+  1609      =       CONST   !ERROR		       1 @055616: PROCEDURE
+  1610      =       CONST   64			       1 INTEGER 7
+  1611      CALL    !ERROR ( 64 )
+
+  1612   67 LABEL   
+
+  1613      STMT    1: <SIMPLE STATEMENT> ON LINE 256
+  1614      =       IDENT   VS1			       1 @054445: STRING 15V
+  1615      =       CONST   'string10..'	       1 STRING 10
+  1616      =       STRCVT  'string10..'	       1 @054445: STRING 15V
+  1617      ASSIGN  VS1 := $1616
+
+  1618      STMT    1: <SIMPLE STATEMENT> ON LINE 257
+  1619      =       IDENT   CH1			       1 CHAR 7
+  1620      =       CONST   99			       1 CHAR 7
+  1621      ASSIGN  CH1 := 99
+
+  1622      STMT    1: <SIMPLE STATEMENT> ON LINE 258
+  1623      =       IDENT   BIGSTR		       1 @054561: STRING 400V
+  1624      =       CONST   'A.VERY.BIG.STRING.ACTUALLY.DECLARED.400'
+						       1 STRING 39
+  1625      =       STRCVT  'A.VERY.BIG.STRING.ACTUALLY.DECLARED.400'
+						       1 @054561: STRING 400V
+  1626      ASSIGN  BIGSTR := $1625
+
+  1627      STMT    1: <SIMPLE STATEMENT> ON LINE 259
+  1628      =       IDENT   I			       1 INTEGER 32S
+  1629      =       CONST   123			       1 INTEGER 7
+  1630      ASSIGN  I := 123ORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			     PAGE 47
+
+  1631      STMT    1: <SIMPLE STATEMENT> ON LINE 260
+  1632      =       IDENT   VS2			       1 @054415: STRING 10V
+  1633      =       CONST   'STRING.10.'	       1 STRING 10
+  1634      =       STRCVT  'STRING.10.'	       1 @054415: STRING 10V
+  1635      ASSIGN  VS2 := $1634
+
+  1636      STMT    1: <SIMPLE STATEMENT> ON LINE 261
+  1637      =       IDENT   BOOL		       1 BOOLEAN 1
+  1638      =       CONST   0			       1 BOOLEAN 1
+  1639      ASSIGN  BOOL := 0
+
+  1640      STMT    1: <FUNCTION QUALIFIER> ON LINE 262
+  1641      =       CONST   !MANY_PARAMS	       1 @055540: PROCEDURE
+  1642      =       IDENT   VS1			       1 @054445: STRING 15V
+  1643      =       STRCVT  VS1			       1 @054763: STRING 10V
+  1644      =       IDENT   CH1			       1 CHAR 7
+  1645      =       IDENT   BIGSTR		       1 @054561: STRING 400V
+  1646      =       IDENT   I			       1 INTEGER 32S
+  1647      =       IDENT   VS2			       1 @054415: STRING 10V
+  1648      =       IDENT   BOOL		       1 BOOLEAN 1
+  1649      CALL    !MANY_PARAMS ( $1643, CH1, BIGSTR, I, VS2, BOOL )
+
+  1650      STMT    1: <SIMPLE STATEMENT> ON LINE 263
+  1651      =       IDENT   VS1			       1 @054445: STRING 15V
+  1652      =       CONST   'AAAstring10..AA'	       1 STRING 15
+  1653      =       STRCVT  'AAAstring10..AA'	       1 @054445: STRING 15V
+  1654      ASSIGN  VS1 := $1653
+
+  1655      STMT    1: <FUNCTION QUALIFIER> ON LINE 264
+  1656      =       CONST   !SUBSTR_AS_PARAM	       1 @055217: PROCEDURE
+  1657      =       IDENT   VS1			       2 @054445: STRING 15V
+  1658      =       CONST   4			       2 INTEGER 3
+  1659      =       CONST   10			       2 INTEGER 4
+  1660      =       LENGTH  VS1$1657		       1 INTEGER 32S
+  1661      STRRNGE 4$1658, 10$1659, $1660
+  1662      =       SUBSTR  VS1$1657 [4$1658 : 10$1659]
+						       1 STRING 10
+  1663      CALL    !SUBSTR_AS_PARAM ( $1662 )
+
+  1664      STMT    1: <FUNCTION QUALIFIER> ON LINE 266
+  1665      =       CONST   !GORY		       1 @054230: PROCEDURE
+  1666      =       CONST   'NAS'		       1 STRING 3ORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			     PAGE 48
+
+  1667      =       STRCVT  'NAS'		       1 @063521: STRING *V
+  1668      =       CONST   'TYnasty'		       1 STRING 7
+  1669      =       STRCVT  'TYnasty'		       1 @063521: STRING *V
+  1670      =       CONST   'NASTY'		       1 STRING 5
+  1671      =       STRCVT  'NASTY'		       1 @063521: STRING *V
+  1672      =       CONST   'naszz'		       1 STRING 5
+  1673      =       STRCVT  'naszz'		       1 @063521: STRING *V
+  1674      =       CONST   'xxx'		       1 STRING 3
+  1675      =       STRCVT  'xxx'		       1 @063521: STRING *V
+  1676      =       CONST   8			       1 INTEGER 4
+  1677      CALL    !GORY ( $1667, $1669, $1671, $1673, $1675, 8 )
+
+  1678      STMT    1: <SIMPLE STATEMENT> ON LINE 268
+  1679      =       IDENT   I			       1 INTEGER 32S
+  1680      =       CONST   21			       1 INTEGER 5
+  1681      ASSIGN  I := 21
+
+  1682      STMT    1: <SIMPLE STATEMENT> ON LINE 269
+  1683      =       IDENT   J			       1 INTEGER 32S
+  1684      =       CONST   19			       1 INTEGER 5
+  1685      ASSIGN  J := 19
+
+  1686      STMT    1: <SIMPLE STATEMENT> ON LINE 270
+  1687      =       IDENT   T			       1 @054747: STRING 16
+  1688      =       IDENT   I			       1 INTEGER 32S
+  1689      =       IDENT   J			       1 INTEGER 32S
+  1690      =       IADD    I, J		       2 INTEGER 32S
+  1691      =       CONST   0			       1 INTEGER 1
+  1692      =       CONST   127			       1 INTEGER 7
+  1693      VALRNGE $1690, 0, 127
+  1694      =       SCLCVT  $1690		       1 CHAR 7
+  1695      =       STRCVT  $1694		       1 @054747: STRING 16
+  1696      ASSIGN  T := $1695 (OVL)
+
+  1697      STMT    1: <IF HEAD> ON LINE 271
+  1698      =       IDENT   T			       1 @054747: STRING 16
+  1699      =       CONST   40			       1 CHAR 6
+  1700      =       SNE     T, 40		       1 BOOLEAN 1
+  1701      JUMP    TO 68 @ 1706 IF NOT $1700
+
+  1702      STMT    2: <FUNCTION QUALIFIER> ON LINE 271
+  1703      =       CONST   !ERROR		       1 @055616: PROCEDUREORIGINAL INTERMEDIATE FORM FOR BLOCK 1 AT LEVEL 1:  PROGRAM EXE001			     PAGE 49
+
+  1704      =       CONST   65			       1 INTEGER 7
+  1705      CALL    !ERROR ( 65 )
+
+  1706   68 LABEL   
+
+  1707      STMT    1: <IO STATEMENT> ON LINE 272
+  1708      =       IDENT   TTYOUTPUT		       5 TEXT: FILE 32
+  1709      FILECHK TTYOUTPUT$1708
+  1710      STARTIO TTYOUTPUT$1708
+  1711      =       CONST   'End EXE001'	       1 STRING 10
+  1712      WRITE   RIGHT 'End EXE001' TO TTYOUTPUT$1708
+  1713      WRITELN TTYOUTPUT$1708
+  1714      END IO  TTYOUTPUT$1708
+
+  1715      STMT    1: END ON LINE 273
+  1716      STOP    
+  1717      END     
+  KdY$é

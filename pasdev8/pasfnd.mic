@@ -1,0 +1,16 @@
+.r qed
+*a
+*.run find
+**/out:pascal.f'b
+**/ident/number/print
+**/alpha:pan
+**/find:<<'a>>
+**@pasfil
+**@pastyp
+**/exit
+*.print pascal.f'b/head
+*.
+*w pasf'b.ctl
+*y
+*q
+.submit pasf'b

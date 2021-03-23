@@ -1,0 +1,43 @@
+#system (PASCAL Runtime)
+#module (MODFIT,10/12/78)
+To provide dynamic storage for PASCAL programs via the routines NEW,
+DISPOSE, MARK, and RELEASE. MODFIT defines the entry points NEW., 
+DSPOS., MARK., and RLEAS., using the standard calling conventions for
+these routines.
+#usage
+  MOVEI 2,size(ptr^)
+  PUSHJ 17,NEW.
+  MOVEM 2,ptr
+
+  MOVE  2,ptr
+  PUSHJ 17,DSPOS.
+
+  PUSHJ 17,MARK.
+  MOVEM 2,heapmark
+
+  MOVE  2,heapmark
+  PUSHJ 17,RLEAS.
+#effects
+MODFIT will expand the low segment as needed to perform the allocation,
+printing a 'HEAP overflow' message if the CORE call to TOPS-10 fails.
+Calls to DISPOSE place new entries on a free space list, while calls
+to RELEASE return low segment storage to the system.
+#algorithm
+The allocation - collapsing algorithm was taken from Knuth's 'Art of
+Computer Programming' (see page 6 of this listing). Adjacent free
+blocks are coalesced during a NEW operation; a contiguous set of free
+blocks are completely coalesced before an allocation is made. If,
+after collapsing, there is still insufficient storage, the low segment
+is expanded to provide a new block of appropriate size. If a free block
+is found, and the block is larger than the requested size, it will be
+split, with the new record being taken from the tail of the block.
+#notes
+The quantum of low-segment extension is the same as the system allocation
+quantum (see page 7).
+#external (.JBREL)
+#external (.JBSA)
+#external (TWAIT.)
+#external (WRTPC.)
+#external (DIE.)
+#responsible (Jerry Rosen -- PASCAL group)
+#end

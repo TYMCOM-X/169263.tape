@@ -1,0 +1,171 @@
+$verbatim
+PROGRAM: QED                                      DATE: 7/31/79
+VERSION: 1.7                                      AUTHOR: P. Lee
+APPROVED BY:
+
+
+
+$justify
+&RELEASE SCHEDULE&
+$skip 1
+$indent 3
+QED Version 1.7 is now in NRD.
+$skip 2
+$indent -3
+&CHANGES&
+$skip 1
+$indent 3
+$paragraph -4
+1. QED will now generate an error message instead of aborting when the storage
+capacity is exceeded. The last line appended or loaded will be lost.
+If the input causing the overflow was from a file (i.e. a LOAD) then the
+default file name for the WRITE command will not change, forcing the user to
+explicitly name a file during a WRITE. This is done to protect the user
+from accidently losing the part of the file not loaded by QED.
+$skip 1
+$paragraph -4
+2. As in QED Version 1.6, control character editing is not implemented. Attempts
+to use the EDIT or MODIFY commands will result in a diagnostic message, and
+the use of a control-G to invoke previous line editing will cause a question
+mark to appear in the line being input. Any of the generated question marks
+will be ignored by QED.
+$skip 1
+$paragraph -4
+3. The SUBSTITUTE command now has a new optional parameter &n& instructing
+QED to substitute for the &n&th occurrance of the pattern string in the line.
+The syntax of SUBSTITUTE is now:
+$verbatim
+
+[ld[,ld]] &S&UBSTITUTE [&n&] Xold-stringXnew-stringX [options]
+
+$justify
+The default value for &n& is 1, and values of &n& other than 1 are illegal for
+:, @, and # pattern delimiters (the X's above). If the ALL option is specified
+QED will substitute for every occurrance after and including the &n&th
+occurrance of old-string. Each successive search in an &n&th occurrance
+substitute begins &after& the last character of the previous match to avoid
+possible infinite loop situations with the ALL option.
+$skip 1
+$paragraph -4
+4. Two new commands, BEFORE and AFTER, both with the same syntax and options
+as SUBSTITUTE are now implemented. &BE&FORE inserts the new-string before
+the &n&th occurrance of old-string. Similarly, &AF&TER inserts the new-string
+after the &n&th occurrance of old-string. Each successive search in an &n&th
+occurrance BEFORE command begins after the last character of the &matched&
+string, and on an &n&th occurrance AFTER command begins after the last
+character of the &inserted& string.
+$skip 1
+$paragraph -4
+5. A new extension to line addressing will now allow backward searching for a
+line matching a predicate. The up-arrow in "^<predicate>" indicates that the
+buffer is to be searched backwards for the predicate. This is allowed &only&
+for line designators and BOUND command predicates. Note that the MOVE and
+COPY commands take line designators as parameters and that backward
+searches &are& allowed in these cases as part of the command parameter.
+Note also that the up-arrow is not preserved in the default pattern. It
+must be explicitly given to cause a backward search of the default pattern.
+The rules for multiple search predicates such as
+/FOO/^/BAR//FUM/ are as follows:
+$indent left +5
+$skip 1
+$paragraph -4
+1. The first predicate (/FOO/) may wrap around the top
+or the bottom of the buffer and continue searching
+until it reaches the current line.
+$skip 1
+$paragraph -4
+2. Successive predicates have a narrower range to
+search. A search terminates whenever it
+$indent left +3
+$skip
+1) matches a line.
+$skip
+2) reaches the top or bottom of
+the buffer.
+$skip
+3) reaches the current line (dot).
+$skip
+4) reaches the line preceding or following
+line at which the last
+search in the opposite direction began.
+$skip
+$indent left -3
+$paragraph -4
+3. All searches begin with the &next& line
+in the direction of the next search.
+$indent left -5
+The end result is a "narrowing" effect where
+ each successive search predicate
+has a smaller portion of the buffer to search.
+ Predicates such as /FOO/and^/BAR/
+and /FOO/or^/BAR/ are not allowed as the
+ up-arrow must &precede& a predicate.
+$verbatim
+
+/FOO/^/BAR//FUM/
+
+top of                                                 bottom of
+buffer  dot        'BAR'        'FUM'        'FOO'      buffer
+   |     .           |            |            |          |
+          ------------------------------------>|
+                     |<------------------------|
+                     |----------->|
+
+$justify
+$paragraph -4
+6. Two new SET command options are now implemented and have the forms:
+$skip 1
+^uSET TAB|uS [ON | OFF]
+$skip 1
+^uSET WILD|uCARD [ON | OFF]
+$skip 1
+The TABS option controls the printing of the tab character (control-I). The
+default is ON and this causes tabs to be printed as spaces. SET TABS OFF
+causes a tab to be printed as &&I. Note that tabs will always
+be printed as spaces by the LIST command.
+$skip 1
+The WILDCARD option defaults to ON and when off allows the matching of "?"
+as a normal, not wildcard, character. This option also controls the treatment
+of "*" described below.
+$skip 1
+$paragraph -4
+7. The wildcard character "*" will match &zero& or more characters when used
+in a pattern match. QED, when searching for a pattern containing a "*"
+wildcard will match according to the "shortest match" algorithm. For example,
+in the line:
+$verbatim
+
+FOOxxBARFOOBAR
+
+$justify
+the pattern /FOO*BAR/ will match "FOOBAR" and not "FOOxxBAR". The pattern
+/FOO???*BAR/ will match the entire line.
+$skip 1
+More examples:
+$indent left +3
+:*FOO*BAR: matches "FOOxxBAR".
+$skip
+:*FOOBAR: matches the entire line.
+$skip
+:*BAR: matches "FOOxxBAR".
+$skip
+@FOO*BAR*@ matches "FOOBAR".
+$skip
+$indent left -3
+$skip 2
+$paragraph -4
+8. BOUND now has a new command option, NEXT.
+$verbatim
+
+[ld,ld] &B&OUND [[^] &N&EXT | [^] <predicate>]
+
+$justify
+When the NEXT option is used, QED will bound to the next page in the buffer.
+BOUND ^NEXT will bound to the current page.
+There are three differences between
+BOUND NEXT and BOUND ::. First, the search for BOUND  ^NEXT begins with the
+current line, whereas the search for BOUND  ^:: begins with the &previous&
+line. Secondly, BOUND NEXT will not disturb the default pattern, and thirdly,
+BOUND NEXT will not wrap around the top or the bottom of the buffer as
+BOUND :: will. BOUND NEXT is useful for "paging through" a file during an
+edit session.

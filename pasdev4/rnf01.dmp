@@ -1,0 +1,19 @@
+INTERMEDIATE FORM AFTER MAKE_BASIC_BLOCKS FOR BLOCK 1 AT LEVEL 1:  PROGRAM RNF01
+------------ ---- ----- ----------------- --- ----- - -- ----- --  ------- -----
+
+     1      BLOCK   1 AT LEVEL 1:  PROGRAM RNF01
+
+     2    1 LABEL   
+
+     3      STMT    1: BEGIN ON LINE 2
+
+     4      STMT    2: <FUNCTION QUALIFIER> ON LINE 2
+     5      =       IDENT   TTYOUTPUT		       1 TEXT: FILE 32
+     6      =       CONST   88			       1 CHAR 7
+     7      =       GEN SET 			       1 SET 0,0
+     8      =       REWRITE 88, ~, $7		       1 TEXT: FILE 32
+     9      ASSIGN  TTYOUTPUT := $8
+
+    10      STMT    3: END ON LINE 2
+    11      STOP    
+    12      END     

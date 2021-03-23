@@ -1,0 +1,483 @@
+Pass 0 modules                             From [31024,320157]   30-Jan-81 19:27
+    
+    NEWPAS.PAS [31024,320155]      Fri 10-Oct-80 12:32   <0,6>
+    PASCMD.PAS [31024,320155]      Wed 28-May-80 17:25   <0,1,6>
+       PASCMD.INC [31024,320155]   Sat 24-May-80 18:21   <0,1,6,7>
+       PASCMD.TYP [31024,320155]   Sat 24-May-80 14:11   <0,1,2,3,5,6,7>
+    
+   (PASCV.PAS  [31024,320155]      Wed 28-May-80 11:30  see common)
+   (PASOPD.PAS [31024,320155]      Thu 09-Oct-80 12:10  see common)
+       PASOPD.INC [31024,320155]   Wed 28-May-80 13:21  see common
+       PASOPD.TYP [31024,320155]   Thu 09-Oct-80 12:10  see common
+   (PASSW.PAS  [31024,320155]      Sat 24-May-80 14:08  see common)
+       PASSW.INC  [31024,320155]   Sat 24-May-80 14:07  see common
+   (PASDAT.PAS [31024,320155]      Tue 18-Nov-80 13:55  see common)
+       PASDAT.INC [31024,320155]   Sat 24-May-80 22:17  see common
+   (VERSIO.PAS [31024,320155]      Sat 24-May-80 15:47  see common)
+       VERSIO.INC [31024,320155]   Sat 24-May-80 15:37  see common
+   (DELREN.PAS [31024,320155]      Sat 24-May-80 19:23  see common)
+       DELREN.INC [31024,320155]   Sat 24-May-80 19:23  see common
+
+Pass 0 included files not corresponding to a module in Pass 0
+    
+    TMPCOR.INC [31024,320155]      Sat 24-May-80 21:59   <0,6>
+    
+   (PASCAL.INC [31024,320155]      Thu 15-Jan-81 13:13  see common)
+   (PTMCON.INC [31024,320155]      Thu 15-Jan-81 13:13  see common)
+   (PASFIL.INC [31024,320155]      Thu 15-Jan-81 13:13  see common)
+   (PASLOG.INC [31024,320155]      Thu 15-Jan-81 13:13  see pass 1)
+   (PASIST.INC [31024,320155]      Thu 15-Jan-81 13:13  see common)
+   (PASPT.TYP  [31024,320155]      Sat 24-May-80 22:26  see common)
+   (PASADR.TYP                     Tue 20-Jan-81 15:20  see common)
+   (CMDUTL.TYP [31024,320220]      Sat 24-May-80 12:51  see common)
+   (FILUTL.INC [31024,320220]      Thu 29-May-80 12:03  see common)
+   (FIO.TYP    [31024,320155]      Sat 24-May-80 16:05  see common)
+   (FIO.INC    [31024,320155]      Sat 24-May-80 16:23  see common)
+   (PASLOG.TYP [31024,320155]      Sat 24-May-80 19:13  see pass 1)
+   (DTIME.TYP  [31024,320220]      Thu 05-Jun-80 13:55  see common)
+   (PASSPF.TYP [31024,320155]      Tue 18-Nov-80 14:04  see common)
+   (PASIST.TYP [31024,320155]      Thu 22-Jan-81 21:48  see common)
+   (PASBNF.SYM [31024,320155]      Thu 15-Jan-81 13:15  see common)
+   (LOOKUP.TYP [31024,320220]      Sat 24-May-80 12:59  see common)
+   (PRGDIR.INC [31024,320220]      Sat 24-May-80 15:15  see common)
+   (DTIME.INC  [31024,320220]      Thu 05-Jun-80 13:56  see common)
+   (TMPNAM.INC [31024,320155]      Sat 24-May-80 21:55  see common)
+   (RUN.INC    [31024,320155]      Sat 24-May-80 23:24  see common)
+   (PASIF.TYP  [31024,320155]      Fri 05-Dec-80 14:51  see common)
+   (PASIFU.TYP [31024,320155]      Sat 24-May-80 19:45  see pass 1)
+Pass 1 modules                             From [31024,320157]   30-Jan-81 19:27
+    
+    PASUTL.PAS [31024,320155]      Wed 28-Jan-81 17:56   <1,7>
+       PASUTL.INC [31024,320155]   Thu 02-Oct-80 15:48   <1,7>
+    VAXPRM.PAS                     Wed 17-Dec-80 18:11   <1,5,7>
+       PTMPRM.INC [31024,320155]   Sat 24-May-80 14:28   <1,5,7>
+    VAXTAL.PAS                     Fri 23-Jan-81 20:11   <1,5,7>
+       PTMTAL.INC [31024,320155]   Sat 24-May-80 15:13   <1,5,7>
+    PASVAL.PAS [31024,320155]      Sat 24-May-80 13:27   <1,7>
+       PASVAL.INC [31024,320155]   Sat 24-May-80 13:34   <1,7>
+    PASS1.PAS  [31024,320155]      Mon 02-Jun-80 20:12
+    PASLEX.PAS [31024,320155]      Fri 03-Oct-80 18:59
+       PASLEX.INC [31024,320155]   Sat 24-May-80 14:52
+    PASSMO.PAS [31024,320155]      Fri 10-Oct-80 12:30
+       PASSMO.INC [31024,320155]   Sat 24-May-80 17:22
+    PASCMP.PAS [31024,320155]      Mon 13-Oct-80 12:34
+       PASCMP.INC [31024,320155]   Sat 24-May-80 13:55
+    PASANL.PAS [31024,320155]      Thu 16-Oct-80 15:36
+       PASANL.INC [31024,320155]   Sat 24-May-80 21:51
+    PASBLK.PAS [31024,320155]      Mon 13-Oct-80 20:17
+       PASBLK.INC [31024,320155]   Sat 24-May-80 18:24
+    PASBOD.PAS [31024,320155]      Wed 14-Jan-81 21:55
+       PASBOD.INC [31024,320155]   Sat 24-May-80 21:46
+    PASTSM.PAS [31024,320155]      Fri 30-Jan-81 14:09
+       PASTSM.INC [31024,320155]   Sat 24-May-80 14:47
+    PASESM.PAS [31024,320155]      Tue 23-Dec-80 20:59
+       PASESM.INC [31024,320155]   Mon 13-Oct-80 15:20
+    PASREF.PAS [31024,320155]      Tue 20-Jan-81 14:29
+       PASREF.INC [31024,320155]   Sat 24-May-80 13:41
+    PASSFC.PAS [31024,320155]      Thu 04-Dec-80 21:46
+       PASSFC.INC [31024,320155]   Sat 24-May-80 14:40
+    PA1DMP.PAS                     Fri 30-Jan-81 13:20
+       PA1DMP.INC [31024,320155]   Sat 24-May-80 21:20
+    PA1XRF.PAS [31024,320155]      Wed 28-May-80 11:30
+       PA1XRF.INC [31024,320155]   Sat 24-May-80 20:32
+    PASGLB.PAS [31024,320155]      Wed 28-May-80 11:30
+       PASGLB.INC [31024,320155]   Sat 24-May-80 16:24
+    PASCGR.PAS [31024,320155]      Tue 04-Nov-80 19:31
+       PASCGR.INC [31024,320155]   Sat 24-May-80 15:19
+    VAXALC.PAS                     Fri 08-Aug-80 19:15
+       PTMALC.INC [31024,320155]   Sat 24-May-80 23:23
+    PASESU.PAS                     Tue 20-Jan-81 16:43
+       PASESU.INC [31024,320155]   Sat 24-May-80 14:09
+    PASEMU.PAS [31024,320155]      Fri 03-Oct-80 19:01
+       PASEMU.INC [31024,320155]   Sat 24-May-80 14:54
+    PASFLD.PAS [31024,320155]      Wed 01-Oct-80 12:14
+       PA1FLD.INC [31024,320155]   Sat 24-May-80 21:28
+    PASMTH.PAS                     Thu 14-Aug-80 15:18   <1,5,7>
+       PASMTH.INC                  Thu 14-Aug-80 15:14   <1,5,7>
+    PASRDR.PAS [31024,320155]      Thu 03-Jul-80 15:35   <1,3>
+       PASRDR.INC [31024,320155]   Sat 24-May-80 16:49   <1,3>
+    PASIFU.PAS [31024,320155]      Fri 31-Oct-80 15:49   <1,5>
+       PASIFU.INC [31024,320155]   Sat 24-May-80 14:21   <1,5>
+       PASIFU.TYP [31024,320155]   Sat 24-May-80 19:45   <0,1,2,3,5,6,7>
+    PASLOG.PAS [31024,320155]      Wed 28-May-80 11:45   <1,3,5>
+       PASLOG.INC [31024,320155]   Thu 15-Jan-81 13:13   <0,1,3,5,6,7>
+       PASLOG.TYP [31024,320155]   Sat 24-May-80 19:13   <0,1,2,3,5,6,7>
+    PASERR.PAS [31024,320155]      Wed 28-May-80 11:46   <1,3,7>
+       PASERR.TYP [31024,320155]   Thu 15-Jan-81 13:13   <1,3,7>
+       PASERR.INC [31024,320155]   Sat 24-May-80 16:31   <1,3,7>
+       PASERR.TAB [31024,320155]   Thu 15-Jan-81 13:13   <1,3,7>
+    
+   (PASCMD.PAS [31024,320155]      Wed 28-May-80 17:25  see pass 0)
+       PASCMD.INC [31024,320155]   Sat 24-May-80 18:21  see pass 0
+       PASCMD.TYP [31024,320155]   Sat 24-May-80 14:11  see pass 0
+   (PASCV.PAS  [31024,320155]      Wed 28-May-80 11:30  see common)
+       PASCV.INC  [31024,320155]   Sat 24-May-80 21:21  see common
+   (PASOPD.PAS [31024,320155]      Thu 09-Oct-80 12:10  see common)
+       PASOPD.INC [31024,320155]   Wed 28-May-80 13:21  see common
+       PASOPD.TYP [31024,320155]   Thu 09-Oct-80 12:10  see common
+   (PASSW.PAS  [31024,320155]      Sat 24-May-80 14:08  see common)
+       PASSW.INC  [31024,320155]   Sat 24-May-80 14:07  see common
+   (PASDAT.PAS [31024,320155]      Tue 18-Nov-80 13:55  see common)
+       PASDAT.INC [31024,320155]   Sat 24-May-80 22:17  see common
+   (VERSIO.PAS [31024,320155]      Sat 24-May-80 15:47  see common)
+   (FIO.PAS    [31024,320155]      Thu 29-May-80 13:53  see common)
+       FIO.TYP    [31024,320155]   Sat 24-May-80 16:05  see common
+       FIO.INC    [31024,320155]   Sat 24-May-80 16:23  see common
+   (DELREN.PAS [31024,320155]      Sat 24-May-80 19:23  see common)
+
+Pass 1 included files not corresponding to a module in Pass 1
+    
+    PASSPF.NAM [31024,320155]      Tue 18-Nov-80 14:05   <1,7>
+    PASTAL.PRM [31024,320207]      Thu 22-Jan-81 20:26   <1,5,7>
+    INFPAC.INC [31024,320220]      Sat 24-May-80 22:45   <1,3,5>
+    PASXRF.TYP [31024,320155]      Sat 24-May-80 16:54   <1,3>
+    PASRW.INC  [31024,320155]      Mon 13-Oct-80 12:32
+    PASBNF.SEM [31024,320155]      Thu 15-Jan-81 13:15
+    PASBNF.TAB [31024,320155]      Thu 15-Jan-81 13:15
+    PASSET.TYP [31024,320155]      Sat 24-May-80 15:34   <1,3,5>
+    PASBNF.NAM [31024,320155]      Tue 14-Oct-80 13:36   <1,5>
+    
+   (PASCAL.INC [31024,320155]      Thu 15-Jan-81 13:13  see common)
+   (PTMCON.INC [31024,320155]      Thu 15-Jan-81 13:13  see common)
+   (PASFIL.INC [31024,320155]      Thu 15-Jan-81 13:13  see common)
+   (PASIST.INC [31024,320155]      Thu 15-Jan-81 13:13  see common)
+   (PASPT.TYP  [31024,320155]      Sat 24-May-80 22:26  see common)
+   (PASADR.TYP                     Tue 20-Jan-81 15:20  see common)
+   (CMDUTL.TYP [31024,320220]      Sat 24-May-80 12:51  see common)
+   (FILUTL.INC [31024,320220]      Thu 29-May-80 12:03  see common)
+   (DTIME.TYP  [31024,320220]      Thu 05-Jun-80 13:55  see common)
+   (PASSPF.TYP [31024,320155]      Tue 18-Nov-80 14:04  see common)
+   (PASIST.TYP [31024,320155]      Thu 22-Jan-81 21:48  see common)
+   (PASBNF.SYM [31024,320155]      Thu 15-Jan-81 13:15  see common)
+   (LOOKUP.TYP [31024,320220]      Sat 24-May-80 12:59  see common)
+   (PRGDIR.INC [31024,320220]      Sat 24-May-80 15:15  see common)
+   (DTIME.INC  [31024,320220]      Thu 05-Jun-80 13:56  see common)
+   (TMPNAM.INC [31024,320155]      Sat 24-May-80 21:55  see common)
+   (RUN.INC    [31024,320155]      Sat 24-May-80 23:24  see common)
+   (PASIF.TYP  [31024,320155]      Fri 05-Dec-80 14:51  see common)
+   (COROUT.INC [31024,320155]      Sat 24-May-80 22:12  see common)
+Pass 2 modules                             From [31024,320157]   30-Jan-81 19:27
+    
+    
+   (PASDAT.PAS [31024,320155]      Tue 18-Nov-80 13:55  see common)
+   (FIO.PAS    [31024,320155]      Thu 29-May-80 13:53  see common)
+       FIO.TYP    [31024,320155]   Sat 24-May-80 16:05  see common
+       FIO.INC    [31024,320155]   Sat 24-May-80 16:23  see common
+
+Pass 2 included files not corresponding to a module in Pass 2
+    
+    
+   (PASPT.TYP  [31024,320155]      Sat 24-May-80 22:26  see common)
+   (PASADR.TYP                     Tue 20-Jan-81 15:20  see common)
+   (CMDUTL.TYP [31024,320220]      Sat 24-May-80 12:51  see common)
+   (FILUTL.INC [31024,320220]      Thu 29-May-80 12:03  see common)
+   (PASLOG.TYP [31024,320155]      Sat 24-May-80 19:13  see pass 1)
+   (PASCMD.TYP [31024,320155]      Sat 24-May-80 14:11  see pass 0)
+   (DTIME.TYP  [31024,320220]      Thu 05-Jun-80 13:55  see common)
+   (PASSPF.TYP [31024,320155]      Tue 18-Nov-80 14:04  see common)
+   (PASIST.TYP [31024,320155]      Thu 22-Jan-81 21:48  see common)
+   (PASBNF.SYM [31024,320155]      Thu 15-Jan-81 13:15  see common)
+   (PASIF.TYP  [31024,320155]      Fri 05-Dec-80 14:51  see common)
+   (PASIFU.TYP [31024,320155]      Sat 24-May-80 19:45  see pass 1)
+Pass 3 modules                             From [31024,320157]   30-Jan-81 19:27
+    
+    PASSET.PAS [31024,320155]      Sat 24-May-80 15:07
+       PASSET.TYP [31024,320155]   Sat 24-May-80 15:34   <1,3,5>
+       PASSET.INC [31024,320155]   Sat 24-May-80 15:07   <3,5>
+    PASS3.PAS  [31024,320155]      Mon 30-Jun-80 17:26
+       PASS3.INC  [31024,320155]   Sat 24-May-80 22:18
+    PASSDM.PAS [31024,320155]      Tue 14-Oct-80 13:47
+    
+   (PASCV.PAS  [31024,320155]      Wed 28-May-80 11:30  see common)
+       PASCV.INC  [31024,320155]   Sat 24-May-80 21:21  see common
+   (PASRDR.PAS [31024,320155]      Thu 03-Jul-80 15:35  see pass 1)
+       PASRDR.INC [31024,320155]   Sat 24-May-80 16:49  see pass 1
+   (PASOPD.PAS [31024,320155]      Thu 09-Oct-80 12:10  see common)
+       PASOPD.INC [31024,320155]   Wed 28-May-80 13:21  see common
+       PASOPD.TYP [31024,320155]   Thu 09-Oct-80 12:10  see common
+   (PASSW.PAS  [31024,320155]      Sat 24-May-80 14:08  see common)
+       PASSW.INC  [31024,320155]   Sat 24-May-80 14:07  see common
+   (PASLOG.PAS [31024,320155]      Wed 28-May-80 11:45  see pass 1)
+       PASLOG.INC [31024,320155]   Thu 15-Jan-81 13:13  see pass 1
+       PASLOG.TYP [31024,320155]   Sat 24-May-80 19:13  see pass 1
+   (PASDAT.PAS [31024,320155]      Tue 18-Nov-80 13:55  see common)
+       PASDAT.INC [31024,320155]   Sat 24-May-80 22:17  see common
+   (PASERR.PAS [31024,320155]      Wed 28-May-80 11:46  see pass 1)
+       PASERR.TYP [31024,320155]   Thu 15-Jan-81 13:13  see pass 1
+       PASERR.INC [31024,320155]   Sat 24-May-80 16:31  see pass 1
+       PASERR.TAB [31024,320155]   Thu 15-Jan-81 13:13  see pass 1
+   (VERSIO.PAS [31024,320155]      Sat 24-May-80 15:47  see common)
+       VERSIO.INC [31024,320155]   Sat 24-May-80 15:37  see common
+   (FIO.PAS    [31024,320155]      Thu 29-May-80 13:53  see common)
+       FIO.TYP    [31024,320155]   Sat 24-May-80 16:05  see common
+       FIO.INC    [31024,320155]   Sat 24-May-80 16:23  see common
+   (DELREN.PAS [31024,320155]      Sat 24-May-80 19:23  see common)
+       DELREN.INC [31024,320155]   Sat 24-May-80 19:23  see common
+
+Pass 3 included files not corresponding to a module in Pass 3
+    
+    
+   (PASCAL.INC [31024,320155]      Thu 15-Jan-81 13:13  see common)
+   (PTMCON.INC [31024,320155]      Thu 15-Jan-81 13:13  see common)
+   (PASFIL.INC [31024,320155]      Thu 15-Jan-81 13:13  see common)
+   (PASIST.INC [31024,320155]      Thu 15-Jan-81 13:13  see common)
+   (PASPT.TYP  [31024,320155]      Sat 24-May-80 22:26  see common)
+   (PASADR.TYP                     Tue 20-Jan-81 15:20  see common)
+   (CMDUTL.TYP [31024,320220]      Sat 24-May-80 12:51  see common)
+   (FILUTL.INC [31024,320220]      Thu 29-May-80 12:03  see common)
+   (PASCMD.TYP [31024,320155]      Sat 24-May-80 14:11  see pass 0)
+   (DTIME.TYP  [31024,320220]      Thu 05-Jun-80 13:55  see common)
+   (PASSPF.TYP [31024,320155]      Tue 18-Nov-80 14:04  see common)
+   (PASIST.TYP [31024,320155]      Thu 22-Jan-81 21:48  see common)
+   (PASBNF.SYM [31024,320155]      Thu 15-Jan-81 13:15  see common)
+   (LOOKUP.TYP [31024,320220]      Sat 24-May-80 12:59  see common)
+   (PRGDIR.INC [31024,320220]      Sat 24-May-80 15:15  see common)
+   (DTIME.INC  [31024,320220]      Thu 05-Jun-80 13:56  see common)
+   (TMPNAM.INC [31024,320155]      Sat 24-May-80 21:55  see common)
+   (RUN.INC    [31024,320155]      Sat 24-May-80 23:24  see common)
+   (PASIF.TYP  [31024,320155]      Fri 05-Dec-80 14:51  see common)
+   (COROUT.INC [31024,320155]      Sat 24-May-80 22:12  see common)
+   (INFPAC.INC [31024,320220]      Sat 24-May-80 22:45  see pass 1)
+   (PASXRF.TYP [31024,320155]      Sat 24-May-80 16:54  see pass 1)
+   (PASIFU.TYP [31024,320155]      Sat 24-May-80 19:45  see pass 1)
+Pass 5 modules                             From [31024,320157]   30-Jan-81 19:27
+    
+    VAXJMP.PAS                     Fri 16-Jan-81 15:29
+    PASS4.PAS  [31024,320155]      Mon 02-Jun-80 20:21
+    VAXDEB.PAS                     Sat 24-May-80 14:20
+       VAXDEB.INC                  Sat 24-May-80 19:28
+    VAXREL.PAS                     Tue 20-Jan-81 18:30
+       VAXREL.INC                  Sat 24-May-80 18:06
+    VAXIO.PAS                      Mon 26-Jan-81 19:36
+       VAXIO.INC                   Sat 24-May-80 13:00
+    VAXMAC.PAS                     Fri 23-Jan-81 19:52
+       VAXMAC.INC                  Sat 24-May-80 15:30
+    PASMAP.PAS [31024,320155]      Fri 26-Sep-80 13:22
+       PASMAP.INC [31024,320155]   Sat 24-May-80 20:36
+    VAXCSP.PAS                     Fri 09-Jan-81 19:29
+       VAXCSP.INC                  Sat 24-May-80 21:03
+    VAXCGU.PAS                     Fri 23-Jan-81 19:38
+       VAXCGU.INC                  Fri 15-Aug-80 13:16
+    VAXGEN.PAS                     Mon 26-Jan-81 18:45
+       PTMGEN.INC [31024,320155]   Sat 24-May-80 23:22
+       VAXGEN.INC                  Wed 22-Oct-80 14:04
+    VAXEXP.PAS                     Tue 20-Jan-81 18:37
+       VAXEXP.INC                  Thu 18-Dec-80 22:22
+    VAXSTR.PAS                     Fri 23-Jan-81 20:15
+       VAXSTR.INC                  Fri 23-Jan-81 20:08
+    VAXSET.PAS                     Thu 29-Jan-81 19:28
+       VAXSET.INC                  Wed 14-Jan-81 00:15
+    VAXCMP.PAS                     Tue 27-Jan-81 15:51
+       VAXCMP.INC                  Sat 24-May-80 18:36
+    VAXCLL.PAS                     Fri 23-Jan-81 20:38
+       VAXCLL.INC                  Fri 23-Jan-81 20:12
+    VAXDMP.PAS                     Thu 22-Jan-81 21:54
+    VAXUTL.PAS                     Thu 29-Jan-81 19:26
+       VAXUTL.INC                  Mon 05-Jan-81 16:38
+    VAXERR.PAS                     Fri 24-Oct-80 13:40
+    
+   (VAXPRM.PAS                     Wed 17-Dec-80 18:11  see pass 1)
+       PTMPRM.INC [31024,320155]   Sat 24-May-80 14:28  see pass 1
+   (VAXTAL.PAS                     Fri 23-Jan-81 20:11  see pass 1)
+       PTMTAL.INC [31024,320155]   Sat 24-May-80 15:13  see pass 1
+   (PASMTH.PAS                     Thu 14-Aug-80 15:18  see pass 1)
+       PASMTH.INC                  Thu 14-Aug-80 15:14  see pass 1
+   (PASCV.PAS  [31024,320155]      Wed 28-May-80 11:30  see common)
+       PASCV.INC  [31024,320155]   Sat 24-May-80 21:21  see common
+   (PASSW.PAS  [31024,320155]      Sat 24-May-80 14:08  see common)
+       PASSW.INC  [31024,320155]   Sat 24-May-80 14:07  see common
+   (PASIFU.PAS [31024,320155]      Fri 31-Oct-80 15:49  see pass 1)
+       PASIFU.INC [31024,320155]   Sat 24-May-80 14:21  see pass 1
+       PASIFU.TYP [31024,320155]   Sat 24-May-80 19:45  see pass 1
+   (PASLOG.PAS [31024,320155]      Wed 28-May-80 11:45  see pass 1)
+       PASLOG.INC [31024,320155]   Thu 15-Jan-81 13:13  see pass 1
+       PASLOG.TYP [31024,320155]   Sat 24-May-80 19:13  see pass 1
+   (PASDAT.PAS [31024,320155]      Tue 18-Nov-80 13:55  see common)
+       PASDAT.INC [31024,320155]   Sat 24-May-80 22:17  see common
+   (VERSIO.PAS [31024,320155]      Sat 24-May-80 15:47  see common)
+       VERSIO.INC [31024,320155]   Sat 24-May-80 15:37  see common
+   (FIO.PAS    [31024,320155]      Thu 29-May-80 13:53  see common)
+       FIO.TYP    [31024,320155]   Sat 24-May-80 16:05  see common
+       FIO.INC    [31024,320155]   Sat 24-May-80 16:23  see common
+   (DELREN.PAS [31024,320155]      Sat 24-May-80 19:23  see common)
+       DELREN.INC [3320155]   Sat 24-May-80 19:23  see common
+
+Pass 5 included files not corresponding to a module in Pass 5
+    
+    PASOPT.INC [31024,320155]      Sat 24-May-80 21:46
+    PA2DMP.INC [31024,320155]      Sat 24-May-80 15:59
+    PASOPT.TYP [31024,320155]      Sat 24-May-80 21:10
+    VAXCG.TYP                      Tue 20-Jan-81 18:53
+    VAXOPC.INC                     Sat 24-May-80 19:32
+    PASJMP.INC                     Sat 24-May-80 15:29
+    PA5DMP.INC [31024,320155]      Sat 24-May-80 16:50
+    
+   (PASCAL.INC [31024,320155]      Thu 15-Jan-81 13:13  see common)
+   (PTMCON.INC [31024,320155]      Thu 15-Jan-81 13:13  see common)
+   (PASFIL.INC [31024,320155]      Thu 15-Jan-81 13:13  see common)
+   (PASIST.INC [31024,320155]      Thu 15-Jan-81 13:13  see common)
+   (PASPT.TYP  [31024,320155]      Sat 24-May-80 22:26  see common)
+   (PASADR.TYP                     Tue 20-Jan-81 15:20  see common)
+   (CMDUTL.TYP [31024,320220]      Sat 24-May-80 12:51  see common)
+   (FILUTL.INC [31024,320220]      Thu 29-May-80 12:03  see common)
+   (PASCMD.TYP [31024,320155]      Sat 24-May-80 14:11  see pass 0)
+   (DTIME.TYP  [31024,320220]      Thu 05-Jun-80 13:55  see common)
+   (PASSPF.TYP [31024,320155]      Tue 18-Nov-80 14:04  see common)
+   (PASIST.TYP [31024,320155]      Thu 22-Jan-81 21:48  see common)
+   (PASBNF.SYM [31024,320155]      Thu 15-Jan-81 13:15  see common)
+   (PASTAL.PRM [31024,320207]      Thu 22-Jan-81 20:26  see pass 1)
+   (PRGDIR.INC [31024,320220]      Sat 24-May-80 15:15  see common)
+   (DTIME.INC  [31024,320220]      Thu 05-Jun-80 13:56  see common)
+   (TMPNAM.INC [31024,320155]      Sat 24-May-80 21:55  see common)
+   (RUN.INC    [31024,320155]      Sat 24-May-80 23:24  see common)
+   (PASIF.TYP  [31024,320155]      Fri 05-Dec-80 14:51  see common)
+   (COROUT.INC [31024,320155]      Sat 24-May-80 22:12  see common)
+   (INFPAC.INC [31024,320220]      Sat 24-May-80 22:45  see pass 1)
+   (PASSET.TYP [31024,320155]      Sat 24-May-80 15:34  see pass 3)
+   (PASBNF.NAM [31024,320155]      Tue 14-Oct-80 13:36  see pass 1)
+   (PASSET.INC [31024,320155]      Sat 24-May-80 15:07  see pass 3)
+Pass 6 modules                             From [31024,320157]   30-Jan-81 19:27
+    
+    
+   (NEWPAS.PAS [31024,320155]      Fri 10-Oct-80 12:32  see pass 0)
+   (PASCMD.PAS [31024,320155]      Wed 28-May-80 17:25  see pass 0)
+       PASCMD.INC [31024,320155]   Sat 24-May-80 18:21  see pass 0
+       PASCMD.TYP [31024,320155]   Sat 24-May-80 14:11  see pass 0
+   (PASCV.PAS  [31024,320155]      Wed 28-May-80 11:30  see common)
+   (PASOPD.PAS [31024,320155]      Thu 09-Oct-80 12:10  see common)
+       PASOPD.INC [31024,320155]   Wed 28-May-80 13:21  see common
+       PASOPD.TYP [31024,320155]   Thu 09-Oct-80 12:10  see common
+   (PASSW.PAS  [31024,320155]      Sat 24-May-80 14:08  see common)
+       PASSW.INC  [31024,320155]   Sat 24-May-80 14:07  see common
+   (PASDAT.PAS [31024,320155]      Tue 18-Nov-80 13:55  see common)
+       PASDAT.INC [31024,320155]   Sat 24-May-80 22:17  see common
+   (VERSIO.PAS [31024,320155]      Sat 24-May-80 15:47  see common)
+       VERSIO.INC [31024,320155]   Sat 24-May-80 15:37  see common
+   (DELREN.PAS [31024,320155]      Sat 24-May-80 19:23  see common)
+       DELREN.INC [31024,320155]   Sat 24-May-80 19:23  see common
+
+Pass 6 included files not corresponding to a module in Pass 6
+    
+    
+   (PASCAL.INC [31024,320155]      Thu 15-Jan-81 13:13  see common)
+   (PTMCON.INC [31024,320155]      Thu 15-Jan-81 13:13  see common)
+   (PASFIL.INC [31024,320155]      Thu 15-Jan-81 13:13  see common)
+   (PASLOG.INC [31024,320155]      Thu 15-Jan-81 13:13  see pass 1)
+   (PASIST.INC [31024,320155]      Thu 15-Jan-81 13:13  see common)
+   (PASPT.TYP  [31024,320155]      Sat 24-May-80 22:26  see common)
+   (PASADR.TYP                     Tue 20-Jan-81 15:20  see common)
+   (CMDUTL.TYP [31024,320220]      Sat 24-May-80 12:51  see common)
+   (FILUTL.INC [31024,320220]      Thu 29-May-80 12:03  see common)
+   (FIO.TYP    [31024,320155]      Sat 24-May-80 16:05  see common)
+   (FIO.INC    [31024,320155]      Sat 24-May-80 16:23  see common)
+   (PASLOG.TYP [31024,320155]      Sat 24-May-80 19:13  see pass 1)
+   (DTIME.TYP  [31024,320220]      Thu 05-Jun-80 13:55  see common)
+   (PASSPF.TYP [31024,320155]      Tue 18-Nov-80 14:04  see common)
+   (PASIST.TYP [31024,320155]      Thu 22-Jan-81 21:48  see common)
+   (PASBNF.SYM [31024,320155]      Thu 15-Jan-81 13:15  see common)
+   (LOOKUP.TYP [31024,320220]      Sat 24-May-80 12:59  see common)
+   (PRGDIR.INC [31024,320220]      Sat 24-May-80 15:15  see common)
+   (DTIME.INC  [31024,320220]      Thu 05-Jun-80 13:56  see common)
+   (TMPNAM.INC [31024,320155]      Sat 24-May-80 21:55  see common)
+   (RUN.INC    [31024,320155]      Sat 24-May-80 23:24  see common)
+   (TMPCOR.INC [31024,320155]      Sat 24-May-80 21:59  see pass 0)
+   (PASIF.TYP  [31024,320155]      Fri 05-Dec-80 14:51  see common)
+   (PASIFU.TYP [31024,320155]      Sat 24-May-80 19:45  see pass 1)
+Pass 7 modules                             From [31024,320157]   30-Jan-81 19:27
+    
+    PASINI.PAS [31024,320155]      Tue 23-Dec-80 16:45
+       PASINI.INC [31024,320155]   Tue 18-Nov-80 13:53
+    VAXIMD.PAS                     Mon 19-Jan-81 20:17
+       PTMIMD.TYP [31024,320155]   Thu 16-Oct-80 15:19
+       PTMIMD.INC [31024,320155]   Tue 18-Nov-80 15:51
+    
+   (PASUTL.PAS [31024,320155]      Wed 28-Jan-81 17:56  see pass 1)
+       PASUTL.INC [31024,320155]   Thu 02-Oct-80 15:48  see pass 1
+   (VAXPRM.PAS                     Wed 17-Dec-80 18:11  see pass 1)
+       PTMPRM.INC [31024,320155]   Sat 24-May-80 14:28  see pass 1
+   (VAXTAL.PAS                     Fri 23-Jan-81 20:11  see pass 1)
+       PTMTAL.INC [31024,320155]   Sat 24-May-80 15:13  see pass 1
+   (PASVAL.PAS [31024,320155]      Sat 24-May-80 13:27  see pass 1)
+       PASVAL.INC [31024,320155]   Sat 24-May-80 13:34  see pass 1
+   (PASMTH.PAS                     Thu 14-Aug-80 15:18  see pass 1)
+       PASMTH.INC                  Thu 14-Aug-80 15:14  see pass 1
+   (PASDAT.PAS [31024,320155]      Tue 18-Nov-80 13:55  see common)
+       PASDAT.INC [31024,320155]   Sat 24-May-80 22:17  see common
+   (PASERR.PAS [31024,320155]      Wed 28-May-80 11:46  see pass 1)
+       PASERR.TYP [31024,320155]   Thu 15-Jan-81 13:13  see pass 1
+       PASERR.INC [31024,320155]   Sat 24-May-80 16:31  see pass 1
+       PASERR.TAB [31024,320155]   Thu 15-Jan-81 13:13  see pass 1
+
+Pass 7 included files not corresponding to a module in Pass 7
+    
+    
+   (PASCAL.INC [31024,320155]      Thu 15-Jan-81 13:13  see common)
+   (PTMCON.INC [31024,320155]      Thu 15-Jan-81 13:13  see common)
+   (PASFIL.INC [31024,320155]      Thu 15-Jan-81 13:13  see common)
+   (PASLOG.INC [31024,320155]      Thu 15-Jan-81 13:13  see pass 1)
+   (PASCMD.INC [31024,320155]      Sat 24-May-80 18:21  see pass 0)
+   (PASIST.INC [31024,320155]      Thu 15-Jan-81 13:13  see common)
+   (PASPT.TYP  [31024,320155]      Sat 24-May-80 22:26  see common)
+   (PASSPF.NAM [31024,320155]      Tue 18-Nov-80 14:05  see pass 1)
+   (PASOPD.INC [31024,320155]      Wed 28-May-80 13:21  see common)
+   (PASADR.TYP                     Tue 20-Jan-81 15:20  see common)
+   (CMDUTL.TYP [31024,320220]      Sat 24-May-80 12:51  see common)
+   (FILUTL.INC [31024,320220]      Thu 29-May-80 12:03  see common)
+   (FIO.TYP    [31024,320155]      Sat 24-May-80 16:05  see common)
+   (FIO.INC    [31024,320155]      Sat 24-May-80 16:23  see common)
+   (PASLOG.TYP [31024,320155]      Sat 24-May-80 19:13  see pass 1)
+   (PASCMD.TYP [31024,320155]      Sat 24-May-80 14:11  see pass 0)
+   (DTIME.TYP  [31024,320220]      Thu 05-Jun-80 13:55  see common)
+   (PASSPF.TYP [31024,320155]      Tue 18-Nov-80 14:04  see common)
+   (PASIST.TYP [31024,320155]      Thu 22-Jan-81 21:48  see common)
+   (PASBNF.SYM [31024,320155]      Thu 15-Jan-81 13:15  see common)
+   (LOOKUP.TYP [31024,320220]      Sat 24-May-80 12:59  see common)
+   (PASOPD.TYP [31024,320155]      Thu 09-Oct-80 12:10  see common)
+   (PASTAL.PRM [31024,320207]      Thu 22-Jan-81 20:26  see pass 1)
+   (TMPNAM.INC [31024,320155]      Sat 24-May-80 21:55  see common)
+   (PASIF.TYP  [31024,320155]      Fri 05-Dec-80 14:51  see common)
+   (COROUT.INC [31024,320155]      Sat 24-May-80 22:12  see common)
+   (PASIFU.TYP [31024,320155]      Sat 24-May-80 19:45  see pass 1)
+Modules common to many passes              From [31024,320157]   30-Jan-81 19:27
+    
+    PASCV.PAS  [31024,320155]      Wed 28-May-80 11:30   <0,1,3,5,6>
+       PASCV.INC  [31024,320155]   Sat 24-May-80 21:21   <1,3,5>
+    PASOPD.PAS [31024,320155]      Thu 09-Oct-80 12:10   <0,1,3,6>
+       PASOPD.INC [31024,320155]   Wed 28-May-80 13:21   <0,1,3,6,7>
+       PASOPD.TYP [31024,320155]   Thu 09-Oct-80 12:10   <0,1,3,6,7>
+    PASSW.PAS  [31024,320155]      Sat 24-May-80 14:08   <0,1,3,5,6>
+       PASSW.INC  [31024,320155]   Sat 24-May-80 14:07   <0,1,3,5,6>
+    PASDAT.PAS [31024,320155]      Tue 18-Nov-80 13:55   <0,1,2,3,5,6,7>
+       PASDAT.INC [31024,320155]   Sat 24-May-80 22:17   <0,1,3,5,6,7>
+    VERSIO.PAS [31024,320155]      Sat 24-May-80 15:47   <0,1,3,5,6>
+       VERSIO.INC [31024,320155]   Sat 24-May-80 15:37   <0,3,5,6>
+    FIO.PAS    [31024,320155]      Thu 29-May-80 13:53   <1,2,3,5>
+       FIO.TYP    [31024,320155]   Sat 24-May-80 16:05   <0,1,2,3,5,6,7>
+       FIO.INC    [31024,320155]   Sat 24-May-80 16:23   <0,1,2,3,5,6,7>
+    DELREN.PAS [31024,320155]      Sat 24-May-80 19:23   <0,1,3,5,6>
+       DELREN.INC [31024,320155]   Sat 24-May-80 19:23   <0,3,5,6>
+    
+
+Common included files not corresponding to any module
+    
+    PASCAL.INC [31024,320155]      Thu 15-Jan-81 13:13   <0,1,3,5,6,7>
+    PTMCON.INC [31024,320155]      Thu 15-Jan-81 13:13   <0,1,3,5,6,7>
+    PASFIL.INC [31024,320155]      Thu 15-Jan-81 13:13   <0,1,3,5,6,7>
+    PASIST.INC [31024,320155]      Thu 15-Jan-81 13:13   <0,1,3,5,6,7>
+    PASPT.TYP  [31024,320155]      Sat 24-May-80 22:26   <0,1,2,3,5,6,7>
+    PASADR.TYP                     Tue 20-Jan-81 15:20   <0,1,2,3,5,6,7>
+    CMDUTL.TYP [31024,320220]      Sat 24-May-80 12:51   <0,1,2,3,5,6,7>
+    FILUTL.INC [31024,320220]      Thu 29-May-80 12:03   <0,1,2,3,5,6,7>
+    DTIME.TYP  [31024,320220]      Thu 05-Jun-80 13:55   <0,1,2,3,5,6,7>
+    PASSPF.TYP [31024,320155]      Tue 18-Nov-80 14:04   <0,1,2,3,5,6,7>
+    PASIST.TYP [31024,320155]      Thu 22-Jan-81 21:48   <0,1,2,3,5,6,7>
+    PASBNF.SYM [31024,320155]      Thu 15-Jan-81 13:15   <0,1,2,3,5,6,7>
+    LOOKUP.TYP [31024,320220]      Sat 24-May-80 12:59   <0,1,3,6,7>
+    PRGDIR.INC [31024,320220]      Sat 24-May-80 15:15   <0,1,3,5,6>
+    DTIME.INC  [31024,320220]      Thu 05-Jun-80 13:56   <0,1,3,5,6>
+    TMPNAM.INC [31024,320155]      Sat 24-May-80 21:55   <0,1,3,5,6,7>
+    RUN.INC    [31024,320155]      Sat 24-May-80 23:24   <0,1,3,5,6>
+    PASIF.TYP  [31024,320155]      Fri 05-Dec-80 14:51   <0,1,2,3,5,6,7>
+    COROUT.INC [31024,320155]      Sat 24-May-80 22:12   <1,3,5,7>
+    
+    @ xﬂ

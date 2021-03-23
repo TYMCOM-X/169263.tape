@@ -1,0 +1,8419 @@
+MODULE SIX36( IDENT='2-15', ADDRESSING_MODE(NOINDIRECT),
+    %TITLE %STRING('Bliss-36 Language Debugger TOPS-',	! 
+		    %IF %SWITCHES(TOPS10) %THEN '10 I/O' %ELSE '20 I/O' %FI)
+%IF %VARIANT EQL 10
+%THEN
+	    LINKAGE(BLISS10), ENVIRONMENT(BLISS10_OTS)
+%ELSE
+	    LINKAGE(BLISS36C), ENVIRONMENT(BLISS36C_OTS)
+%FI,
+		NODEBUG, ENTRY(SIX36,SIX12,SIXXEQ))=
+BEGIN
+!
+! Copyright (C) 1981, 1982, 1983
+! Digital Equipment Corporation,  Maynard, Massachusetts  01754
+!
+! This software is furnished under a license for use only on  a
+! single computer system and may be copied only with the inclu-
+! sion of the above copyright notice.  This  software,  or  any
+! other  copies  thereof, may not be provided or otherwise made
+! available to any other person except for use on  such  system
+! and  to  one who agrees to these license terms.  Title to and
+! ownership of the software shall at all times remain in DEC.
+!
+! The information in this software is subject to change without
+! notice and should not be construed as a commitment by Digital
+! Equipment Corporation.
+!
+! DEC assumes no responsibility for the use or  reliability  of
+! its software on equipment which is not supplied by DEC.
+!
+!
+!
+! MODULE DESCRIPTION
+!
+!	This module implements SIX36, the BLISS-36 debugger.  Considerable
+!	credit is due to
+!
+!		CMU	- Weinstock, Wulf, Lane and Johnsson; for the
+!				Debugging Control Module, 1974
+!
+!		DEC	- Ghanta, Lupton, et al; Enhancements in B10 support
+!			- Brender, R.; Initial work for supporting B36 and the
+!				TOPS-10/-20 support.
+!
+!		CMU	- Newcomer, J.; Considerable enhancements, particularly
+!				SIGNAL|UNWIND support, qualified symbols and
+!				all sorts of other goodies.
+!
+!
+! REVISION HISTORY
+!
+!	30-Mar-81	AL	Translated from B10 with CVT10.  Major surgery
+!				removing junk, attempting to rationally format
+!				and comment. [Its own mother wouldn't recognize
+!				it now!]
+!
+!	9-Apr-81	AL	Beginning to approach working code.  Most B10
+!				and B36C stuff has been removed
+!
+!	9-Jul-81	AL	Fix problem with GETNAMEOP involving ^-6.  The
+!				^ operator in B36 is signed, not so with B10!
+!
+!	13-Jul-81	AL	Added /VARIANT control for Bliss-10 Linkages
+!
+!       24-Jul-81       AL      Fix problems with TOPS-10 ideas about byte
+!                               pointers vs. address.
+!
+!	14-Aug-81	AL	Work on fixing behavior of RETURN command and
+!				faking a "call-frame" in CALLEM and UUOH.
+!
+!       1-Sep-81        AL      TOPS-10 problem in TTOUTC routine.  Also fixed
+!				to avoid looking for HISEG symbol-table when
+!				running with TOPS-20.
+!
+!	15-Oct-81	AL	n%A notation was bombing out due to wrong
+!				frame being passed to GETARGCNT from
+!				GETARGADR
+!
+!	26-Oct-81	AL	PRCALL incorrectly determined ID of condition
+!				being signalled.
+!
+!	16-Nov-81	AL	Remove references to .EXT.0 and insert dummy
+!				".BREG" as a new module at tail of this module.
+!
+!	22-Dec-81	AL	Make "@" issue "RESERVED for FUTURE use" msg.
+!
+!       28-Dec-81       AL      Dynamic mapping of DDT broken, as MJSYS wasn't
+!                               used to define GET or SEVEC.
+!
+!	 8-Jun-82	TT	Move Maps to routine headers where possible.
+!
+!	18-Jun-82	AL	Implement support for extended addressing.
+!
+!	30-Jun-82	AL	Found out what "BGOBASE" does.
+!
+!
+! END V3.1 BUG FIXES
+!
+! BLISS V4 DEVELOPMENT
+!
+!       22-Jul-82       AL      For TOPS-10, we must define $ARxxx symbols
+!                               locally.
+!
+!	25-Jul-83	TT	Merge Bugs line into Main line.
+!
+!	13-Sep-83	LD	$JBxxx becomes EXTERNAL for TOPS-10
+!				since it is now part of UUOSYM.
+!
+! END OF REVISION HISTORY
+!--
+
+
+LITERAL
+    EXTENDED = %VARIANT EQL 30,	! 30-bit addressing?
+    TOPS10 = %SWITCHES(TOPS10),
+    TOPS20 = %SWITCHES(TOPS20),
+
+%IF EXTENDED
+%THEN
+    AddrMask = %O'37777777'
+%ELSE
+    AddrMask = %O'0777777'
+%FI;
+
+BIND VERSION = UPLIT (%ASCIZ 'V8-7') 	:VECTOR;
+
+MACRO
+    S1036(X,Y) = %IF %VARIANT EQL 10 %THEN X %ELSE Y %FI %,
+
+    NPREGS=	%IF %VARIANT EQL 10
+		%THEN
+		    1,3,4,5,6,7,8,9,10
+		%ELSE
+		    2,3,4,5
+		%FI %,
+
+    PRREGS=	%IF %VARIANT EQL 10
+		%THEN
+		    11,12,13,14,15
+		%ELSE
+		    0,6,7,8,9,10,11,12,14
+		%FI %;
+
+
+GLOBAL BIND
+    SREG	= S1036( 0,%o'17'),	! Default SP for B36 linkages
+    FREG	= S1036( 2,%o'15'),	! Default FP
+    VREG	= S1036( 3,%o'1');	! Default value-return register
+
+LITERAL
+    TRUE = 1,
+    FALSE = 0,
+    SIXUNW = %O'7170',		! Random number used to signal a POP
+
+    SLOWDELETE=0;		! 1 to purge symbols, 0 to clobber them
+				! Must be 0 until some detailed fixing of
+				! the code is done; currently the purge
+				! code is commented out
+
+! These Binds control size of problem
+! -----------------------------------
+
+LITERAL
+    BGOBASE=20,			! I haven't the foggiest notion what this
+				! does! -jmn 6-Jan-81
+				! Ans:
+				!	It controls the number of DEBUG UUOs
+				!	executed before checking for typeahead.
+
+    BUFFERSIZE= CH$ALLOCATION(132),	! Size of input buffer in words
+    EXTRAOPS= 20,		! Number of permitted user-defined
+				!  operators
+    LEVELS=10,			! Maximum nesting depth of SIX12 calls
+    MONITCNT=50,		! Number of locations we can MONITOR/WATCH
+    NMACROS=500,
+    OPSIZE=5,			! Size of the dispatch op table entry
+    ROUTSCNT=50,		! Number of routines we can attach actions
+				!  to
+    ROUTSIZE=5,			! Size of the routine-action table
+    SCRATCHSIZE=20,		! Size of SIXPAT area
+    STACKSIZE=50;		! Maximum depth of parse stack
+
+
+LITERAL					! Useful initial values
+    BIGNUMBER = %O'377777777777',	! Biggest positive number
+    IWDBASE = %O'1000';			! Initial offset of WDBase
+
+BUILTIN
+    FIRSTONE,
+    LSH,
+    POINT,
+    REPLACEN,
+    SCANN,
+    MACHOP,
+    MACHSKIP,
+    UUO,
+    ROT;
+
+MACRO				    ! Random useful machine opcodes we need
+    AOS[] = MACHSKIP(%O'350', %REMAINING) %,
+    BLT[] = MACHOP(%O'251', %REMAINING) %,
+    EXCH[] = MACHOP(%O'250', %REMAINING) %,
+    JRST[] = MACHOP(%O'254', %REMAINING) %,
+    IBP[] =	MACHOP(%o'133', 0, %REMAINING) %,
+    MUL[] = MACHOP(%O'224', %REMAINING) %,
+    POP[] = MACHOP(%O'262', %REMAINING) %,
+    POPJ[] = MACHOP(%O'263', %REMAINING) %,
+    PUSH[] = MACHOP(%O'261', %REMAINING) %,
+    XCT[] = MACHOP(%O'256', %REMAINING) %;
+
+LITERAL			    ! These are values of machops which we need as
+			    ! literals
+    ADDOP=%O'270',
+    ADJSPOP= %O'105',
+    CAIOP=%O'300',
+    JFCLOP=%O'255',
+    JRSTOP=%O'254',
+    JSPOP = %O'265',
+    POPJOP = %O'263',
+    PUSHJOP = %O'260',
+    PUSHOP = %O'261',
+    SUBOP=	%O'274';
+
+%IF TOPS10
+%THEN
+LIBRARY 'BLI:UUOSYM';
+
+
+UNDECLARE
+    %QUOTE CLOSE,
+    %QUOTE ENTER,
+    %QUOTE IN,
+    %QUOTE INBUF,
+    %QUOTE INPUT,
+    %QUOTE LOOKUP,
+    %QUOTE OPEN,
+    %QUOTE OUT,
+    %QUOTE OUTBUF,
+    %QUOTE RESET,
+    %QUOTE SETUWP,
+    %QUOTE STATO,
+    %QUOTE STATZ,
+    %QUOTE SKPINL,
+    %QUOTE WHERE,
+    %QUOTE OUTCHR,
+    %QUOTE INCHRS,
+    %QUOTE OUTSTR,
+    %QUOTE INCHWL,
+    %QUOTE INCHSL,
+    %QUOTE GETLCH,
+    %QUOTE SETLCH,
+    %QUOTE SKPINC;
+
+
+MACRO
+    CALLI[] = MACHOP(%O'47', %REMAINING) %,
+    CLOSE[] = MACHSKIP(%O'70', %REMAINING) %,
+    ENTER[] = MACHSKIP(%O'77', %REMAINING) %,
+    IN[] = MACHSKIP(%O'56', %REMAINING) %,
+    INBUF[] = MACHOP(%O'64', %REMAINING) %,
+    LOOKUP[] = MACHSKIP(%O'76', %REMAINING) %,
+    OPEN[]   = MACHSKIP(%O'50', %REMAINING) %,
+    OUT[] = MACHSKIP(%O'57', %REMAINING) %,
+    OUTBUF[] = MACHSKIP(%O'65', %REMAINING) %,
+    RELEASE[]= MACHSKIP(%O'71', %REMAINING) %,
+    SETUWP(A)=  MACHSKIP(%O'47', A, %O'36') %,
+    STATO[] =  MACHSKIP(%O'61', %REMAINING) %,
+    STATZ[] =  MACHSKIP(%O'63', %REMAINING) %,
+    TTCALL[] = MACHOP(%O'51', %REMAINING) %,
+    SKPINL(D) = MACHSKIP(%O'51',%o'14') %,
+    OUTCHR[] = TTCALL(1, %REMAINING) %,
+    INCHRS[] = TTCALL(2, %REMAINING) %,
+    OUTSTR[] = TTCALL(3, %REMAINING) %,
+    INCHWL(D) = TTCALL(4, D) %,
+    INCHSL(D) = MACHSKIP(%O'51',5,D) %,
+    GETLCH[] = TTCALL(6, %REMAINING) %,
+    SETLCH[] = TTCALL(7, %REMAINING) %,
+    SKPINC(D) = MACHSKIP(%O'51',%o'13',D) %;
+
+LITERAL
+       $AROPC   = 0,
+       $ARPFL   = 1,
+       $AREFA   = 2,
+       $ARNPC   = 3;
+
+EXTERNAL
+
+	$JBDA,
+	$JBDDT,			! DDT start address
+	$JBFF :  VOLATILE,	! Start of free storage
+	$JBHRL,			! Vestigial (hiseg) .JBREL
+	$JBREL,			! Physical end of lowseg
+	$JBSYM,			! Pointer to DDT symbol table
+	$JBUSY			! Undefined symbol chain
+%IF NOT EXTENDED
+%THEN
+	,$JBOPC,		! Old PC
+	$JB41,			! UUO location
+	$JBUUO			! Location where last UUO was stored
+%FI
+	    ;
+%FI
+
+%IF TOPS20
+%THEN
+LIBRARY 'BLI:MONSYM';
+
+MACRO
+    MJSYS(NAME,SKIPCNT,INREG,OUTREG)=
+	%ASSIGN(JSYSNO,NAME)
+	UNDECLARE NAME;
+
+	LINKAGE %NAME('L_',NAME) = JSYS (
+		%IF NOT %NULL(INREG) %THEN RPLIST( %REMOVE(INREG) ) %FI
+		%IF NOT %NULL(OUTREG) %THEN ; RPLIST( %REMOVE(OUTREG) ) %FI
+			)
+		:SKIP(SKIPCNT);
+
+	BIND ROUTINE NAME = JSYSNO: %NAME('L_',NAME); %,
+
+    RPLIST(A)[] = REGISTER=A %IF %LENGTH GTR 1 %THEN ,RPLIST(%REMAINING) %FI %;
+
+
+COMPILETIME
+    JSYSNO=0;
+
+!   JSYS Name  Skips	Inputs		Outputs
+!
+MJSYS(  AIC, 	0,	(1,2),			)	ivate specific software interrupt channels
+MJSYS(  ATI,	0,	(1),			)	! assign terminal code CTRL/CHARACTER
+MJSYS(	BIN,	-1,	(1),		(2)	)	! Byte IN
+MJSYS(	BKJFN,	1,	(1),		(1)	)	! BacK up source JFN
+MJSYS(	BOUT,	0,	(1,2),			)
+MJSYS(	CHFDB,	-1,	(1,2,3),		)	! change file block
+MJSYS(	CLOSF,	1,	(1),		(1)	)
+MJSYS(	CRLNM,	1,	(1,2,3),	(1)	)	!Create logical name
+MJSYS(  DELDF,  -1,     (1,2),		  )       ! Expunge deleted files
+MJSYS(	DELNF,	1,	(1,2),		(1,2)	)	!Delete given number of versions
+MJSYS(  DIC,	0,	(1,2),			)	! deactivates a specified interrupt channel
+MJSYS(	DIRST,	1,	(1,2),		(1)	)	!Get user directory name
+MJSYS(	DISMS,	0,	(1),			)	!Dismiss process for specified time
+MJSYS(	DVCHR,	0,	(1),		(1,2,3)	)
+MJSYS(  EIR,	0,	(1),			)	! enable software interrupt system
+MJSYS(	ERSTR,	2,	(1,2,3),		)	!Translate error code
+MJSYS(  GET,    -1,     (1,2),                  )       !Map image into process
+MJSYS(	GETER,	-1,	(1),		(2)	)	!Get error code
+MJSYS(	GETJI,	1,	(1,2,3),		)	!Get job information
+MJSYS(	GEVEC,	0,	(1),		(2)	)	!Get Entry Vector
+MJSYS(	GNJFN,	1,	(1),		(1)	)	!Get next JFN in group
+MJSYS(	GTAD,	0,	,		(1)	)	!Get date, time in internal form
+MJSYS(	GTJFN,	1,	(1,2),		(1)	)
+MJSYS(	GTFDB,	-1,	(1,2,3),		)
+MJSYS(	HALTF,	0,	,			)	!Exit to monitor
+MJSYS(  IDTIM,  1,      (1,2),	  (1,2)   )       !translate text into interal date-time format
+MJSYS(	JFNS,	0,	(1,2,3,4),	(1)	)
+MJSYS(	LNMST,	1,	(1,2,3),	(1,3)	)	!Translate logical name
+MJSYS(	ODTIM,	0,	(1,2,3),	(1)	)	!Get date and time
+MJSYS(	OPENF,	1,	(1,2),		(1)	)
+MJSYS(	PBOUT,	0,	(1),			)
+MJSYS(	PSOUT,	0,	(1),		(1)	)
+MJSYS(	RCDIR,	-1,	(1,2,3),	(1,2,3)	)	!Get directory info
+MJSYS(	RDTTY,	1,	(1,2,3),	(1,2)	)	!Read from primary input
+MJSYS(	RESET,	0,	,			)	! Init current process
+MJSYS(	RFMOD,	0,	(1),		(2)	)
+MJSYS(  RLJFN,  1,      (1),	    (1)     )       ! Release JFN
+MJSYS(	RPACS,	0,	(1),		(2)	)	! Page Accessibility
+MJSYS(	RSCAN,	1,	(1),			)	!get string from rescan buffer
+MJSYS(	RUNTM,	0,	(1),		(1,2,3)	)
+MJSYS(  SEVEC,  -1,     (1,2),                  )
+MJSYS(	SFMOD,	0,	(1,2),			)
+MJSYS(	SFPTR,	1,	(1,2),		(1)	)
+MJSYS(	SIBE,	1,	(1),		(2)	)	! Skip if input empty
+MJSYS(	SIN,	-1,	(1,2,3,4),	(1,2,3)	)
+MJSYS(  SIR,	0,	(1,2),			)	! set channel and priority table addresses
+MJSYS(	SOUT,	0,	(1,2,3,4),	(1,2,3)	)
+MJSYS(	SPACS,	0,	(1,2),			)	! Set page accessability
+MJSYS(	SWTRP_, 0,	(1,2,3),		)	! Software Trap Set
+
+MJSYS(	TEXTI,	1,	(1),		(1)	)
+MJSYS(	TIME,	0,	,		(1,2)	)
+
+UNDECLARE
+    JSYSNO,
+    %QUOTE MJSYS,
+    %QUOTE RPLIST;
+
+MACRO
+    JBDEF[N]=	EXTERNAL %NAME('.',N); BIND %NAME('$',N)=%NAME('.',N); %;
+
+JBDEF(			! Conspicuous by their absence: .JBHGH, .JBHSM, .HIGH.
+
+	JBDA,
+	JBDDT,			! DDT start address
+	JBFF,			! Start of free storage
+	JBHRL,			! Vestigial (hiseg) .JBREL
+	JBREL,			! Physical end of lowseg
+	JBSYM,			! Pointer to DDT symbol table
+	JBUSY			! Undefined symbol chain
+%IF NOT EXTENDED
+%THEN
+	,JBOPC,			! Old PC
+	JB41,			! UUO location
+	JBUUO			! Location where last UUO was stored
+%FI
+	);
+
+MAP
+    $JBFF	: VOLATILE;
+%FI
+
+EXTERNAL
+	%NAME('EFPNT.'),	! BLISS Enable Frame pointer
+	%NAME('SIGND.');	! Marks end of condition-handling code in OTS
+
+EXTERNAL ROUTINE
+	%NAME('SIGST.'),
+	%NAME('SIGNA.');
+
+BIND
+    EFPNT$	= %NAME('EFPNT.'),
+    SIGND$	= %NAME('SIGND.');
+
+BIND ROUTINE
+    SIGST$	= %NAME('SIGST.'),
+    SIGNA$	= %NAME('SIGNA.');
+
+
+! Storage Declarations
+! --------------------
+
+GLOBAL
+    SIXPAT:	VECTOR[SCRATCHSIZE+1],		! PATCH AREA
+    SIXHDR,			! User parameter printer handler
+    SIXRP	: REF VECTOR,	! Pointer to right operand vector
+    SIXLP	: REF VECTOR,	! Pointer to left operand vector
+    SIXVP	: REF VECTOR,	! Pointer to value-return vector
+    SIXRC,			! Count of right operands
+    SIXLC,			! Count of left operands
+    SIXVC,			! Count of values returned
+    SIXREF,			! Means "use ref-structure" if true
+    SIXVREG,			! User readable/writable VREG value
+    SIXCH,	! LG change	! Communicates with SIXLG interface in LG support
+    SIXSTK,			! Initial stack pointer value
+    SIXACS:	VECTOR[16];	! Saved acs when calling DDT
+
+
+BIND
+    SIXUNWSIGNAL = SIXUNW,	! random number---signals a POP
+    CHAR = SIXCH;		! LG change
+
+GLOBAL BIND
+	SIXSP = SREG;		! Stack pointer register number
+
+EXTERNAL LITERAL		! Refers to globals defined in inner block.
+				! In this way, they may be changed at Link time
+    SIXLSF,			! Delete SIX12 local symbols flag value
+    SIXSTF,			! Initial start flag value
+    SIXENF,			! Initial enable flag value
+    SIXPOL;			! Initial polling flag value
+
+
+OWN
+    STARTFLAG:	INITIAL(SIXSTF),	! This must be the VERY FIRST own!
+    ENABFLAG:	INITIAL(SIXENF),	!on/off	! This must be the VERY SECOND own!
+    NOPOLLFLAG:	INITIAL(SIXPOL),	! This must be the VERY THIRD own!
+    COPQFLAG,				!on/off	! This must be the VERY FOURTH own
+
+!----------------------
+!	Remaining own variables in alphabetical order
+
+%IF EXTENDED
+%THEN
+    $JBOPC,					! Dummy .JBOPC to reenter SIX12
+    $JBUUO,					! Dummy holding copy of LUUO
+    $JB41,					! Dummy holding LUUO dispatch
+%FI
+
+    BUFF:	VECTOR[BUFFERSIZE],		! Input buffer for text line
+    DBGSTK:	VECTOR[STACKSIZE],		! Parse/evaluation stack
+    DCNT,					! Controls DEBUG. sampling rate
+						!  for type-ahead.
+    DEFOPTAB:	VECTOR[OPSIZE*EXTRAOPS],	! User defined operator table
+    DEPTH,					! Current nesting depth for n& prompt
+    DISKIFLAG,			!on/off	! Disk character input flag (RECALL)
+    DISKOFLAG,			!on/off	! Disk character output flag (STORE)
+    DSKHDR:	VECTOR[3],		! Buffer header for disk (TOPS-10)
+    ENTERPNT,				! Saved FP at entry to SIX12
+    ENTERSP,				! Saved SP relative to ENTERPNT
+    ERRORFLAG,			!on/off	! Error seen during evaluation
+    ERRORPARM,				! Used to pass information to Error(n)
+    GOFLAG,				! Controls resumption after command
+					! 0 => no prompt, get more commands
+					! 1 => resume processing
+					! 2 => prompt, get more commands
+    GQUALIFIER,				! global (default) name qualifier
+    HCACHE:	INITIAL(0),		! cache of hiseg symbols
+    HIGH:	INITIAL(0),		! value of .HIGH. if found
+    HQUALIFIER,				! symbol table (.?.JBSYM or 
+					! .(?.JBHGH+?.JBHSM)) in which
+					! Qualifier is defined
+    HSYM,				! Condition of highseg symbols:
+					!   0 - unknown
+					!   1 - must recompute hiseg symbol table
+					!  
+    INSIXHDR,				! Used to detect and ignore recursive
+					! call on SIX12 caused by calling the
+					! routine defined in SIXHDR
+    IOBASE,				! base for number conversion
+    IJOBSYM:	INITIAL(0),		! initial .JBSYM
+    IJOBHSM:	INITIAL(0),		! initial .JBHSM
+    ILLMEM,				! Value which caused ill mem ref
+    JOBHGH:	INITIAL(0),		! value of .JBHGH, if found
+    LGCHAR,				! LG change
+    LPTBUF:	VECTOR[%O'203'],	! Output buffer for LPT output
+    LPTFLAG,				! Line printer output flag
+					! >0 => LPTDUP
+					! =0 => no LPT
+					! <0 => LPTON
+    LPTHDR:	VECTOR[3],		! Header for line printer buffer chain
+    LPTOPENFLAG,		!on/off	! Line print file open flag
+    MODEFLAG,				! Used to aid parsing of multiword
+					! operators, e.g., TRACE AFTER
+    NCHAR,
+    NEWOPS,				! Number of new operators via SIXOP or
+					! DEFINE
+    NNAMES,
+    NPCHAR,
+    NROUTS,				! Index of last entry in debug interest
+					! table (ROUTS)
+    NVALS,				! Index of last entry in MONITOR table
+    OPQCNT,				! Tracks number of OPAQUEs
+    OUTERSIGNAL:	VECTOR[4],	! Signal frame for outermost handler (B36 only)
+    PCHAR:	VECTOR[LEVELS],		! Current character being scanned
+    PARSEDEBUG,				
+    PTEXT,				
+    QUOTFLG,				! Should next symbol be evaluated or
+					!  delivered as radix50?
+    REPORTED,				! Indicates trace output has already
+					!  occurred, additional printout not
+					!  required
+    RTNLVL,				! Routine POSITION:
+					! 1 => AT Routine EXIT,
+					! 0 => AT Routine ENTRY,
+					! -1 => OTHERWISE.
+
+    SAWCR,			! Indicates parser saw CR on this line
+    SAWEOF,			! EOF on disk input during RECALL
+    SIXTOG,
+    STEPFLAG,				! true if in single-step mode
+    SWT		: BLOCK[$ARNPC+1],	! Data-block for LUUO fault data
+    TEXTAREA:	VECTOR[2*NMACROS],	! Allowing avg. 9 chars/Macro; Change routine 'GetText' if changed
+    TOPOP,
+    TOPSTK,				! index of top of evaluation stack
+    TRACEFLAG,				! global tracing is enabled
+    TRCCNT,
+    UNWINDVALUE:	INITIAL(0),	! The value of SS$UNW, obtained from DDT symbol table
+    VTEMP,
+    WDBASE:	INITIAL(IWDBASE),	! Maximum offset for symbolic printout
+    WHACKING,				! doing simultaneous UNWIND with Whacking
+    WHACKS;				! number of SIX12 incarnations to Whack off
+
+
+GLOBAL BIND
+	SIXSTA = STARTFLAG,
+	SIXENB = ENABFLAG,
+	SIXNPL = NOPOLLFLAG;
+
+
+! Macro Table Entry Format
+! ------------------------
+
+!   +-----------------------------------------------------------------------+
+! 0 |			       MACRO_NAME				    |
+!   +-----------------------------------------------------------------------+
+! 1 |   			    RAD50NAME				    |
+!   +-----------------------------------------------------------------------+
+
+FIELD
+    MACRO_FIELDS=
+	SET
+	MACRO_NAME=     [0, 0,36,0],	    ! Macro name in SIXBIT
+	MACRO_BODY=     [1, 0,36,0]	     ! CH$ pointer to body string
+	TES;
+
+OWN
+    SIXNAMES:	BLOCKVECTOR[NMACROS,2] FIELD(MACRO_FIELDS);	! Storage for MACRO names, etc.
+
+LITERAL
+	QUALPREFIX = 1,
+	QUALSUFFIX = 0,
+
+	DORESUME=0,
+	DORESIGNAL=1;
+! Some useful macros
+! ------------------
+
+MACRO
+	RNAME=	$JBUUO<RH> %,
+	RH=0,18  %,
+	LH=18,18 %,
+	FW=0,36, 0 %,
+	WATCHFLAG=23,1,0 %,
+
+	BITFIELD(N)=N,1,0 %,
+	BITVAL(N)=1^(N) %,
+	MASK_[] = (0 OR XMASK_[%REMAINING]) %,
+	XMASK_[N] = (1^N) %,
+	DECRTOG=(SIXTOG = .SIXTOG-BGOBASE) %,
+	INCRTOG=(SIXTOG = .SIXTOG+BGOBASE) %,
+
+	SETON(U)=(U = -1) %,
+	SETOFF(U)=(U = 0) %,
+	ISON(U)=(.U NEQ 0) %,
+	ISOFF(U)=(.U EQL 0) %,
+
+
+	SETINTERNAL(DUMMY)=(RTNLVL = -1) %,
+	SETISEXIT(DUMMY)=(RTNLVL = ISEXIT) %,
+	OUTFLAG(DUMMY)=OUTFLAGRTN() %,
+
+	DDTEND	= (.$JBDDT<LH>) %;
+
+
+MACRO OPRETURN(X)=
+	!+
+	! Forms fullword encoding of OPERATOR
+	!-
+	(  .X + 1
+	 + ((((.(.X+1) NEQ 0) ^1
+	    + (.(.X+2) NEQ 0))^1
+	    + (.(.X+3) NEQ 0))^1
+	    + (.(.X+4) NEQ 0))   ^  18) %;
+
+MACRO
+    DBG_ON_INST =
+	%IF EXTENDED %THEN
+		(JRSTOP^27+ UUOH)
+	%ELSE
+		(PUSHJOP^27 OR SREG^23 OR UUOH)
+	%FI %,
+
+    DBG_OFF_INST =
+	%IF EXTENDED %THEN
+		(JRSTOP^27 OR 2^23 OR 1^22 OR SWT[$AROPC,FW])
+	%ELSE
+		(JFCLOP^27)
+	%FI %;
+
+MACRO	BUGCHECK(CODE,ACTION)=
+	IF .$JB41 EQL DBG_OFF_INST THEN (ERROR(CODE); ACTION) %;
+! Machine Instruction Format
+! ---------------------------
+
+
+!   35		   27 26    23   21   18 17				    0
+!   +----------------+--------+-+-------+-----------------------------------+
+!   |    M_OPCODE    | M_REGF |*|M_INDEX|	    M_OFFSET		    |
+!   +----------------+--------+-+-------+-----------------------------------+
+!
+!	*	- M_INDIRECT
+!
+
+FIELD
+    INSTRUCTION_FIELDS=
+	SET
+	M_OPCODE=	[0,27,9,0],		! Op-code field
+	M_REGF=		[0,23,4,0],		! AC field
+	M_INDIRECT=	[0,22,1,0],		! Indirect bit
+	M_INDEX=	[0,18,4,0],		! Index register
+	M_OFFSET=	[0, 0,18,0],		!
+	M_LHALF=	[0,18,18,0],		! All opcode, AC and indirect
+	M_IMMEDIATE=	[0,0,18,1]		! Signed immediate value
+	TES;
+
+MACRO
+    $INSTRUCTION=	BLOCK[1] FIELD(INSTRUCTION_FIELDS) %;
+
+! Byte Pointer Format
+!
+!   35	    30 29    24 23 22 21     18 17				   0
+!   +---------+--------+--+--+---------+-----------------------------------+
+!   | P_POS   | P_SIZE |  | %| P_INDEX |	    P_OFFSET		   |
+!   +---------+--------+--+--+---------+-----------------------------------+
+!
+!  % - P_INDIRECT
+
+FIELD
+    BYTEPOINTER_FIELDS=
+	SET
+	P_LHALF=	[0, 18,18,0],		! Left half of pointer
+	P_POS=		[0, 30,6,0],		! Field position
+	P_SIZE=		[0, 24,6,0],		!  and size
+	P_POS_SIZE=	[0, 24,12,0],		! Combination for <0,36> checks
+	P_INDIRECT=	[0, 22,1,0],		! Indirect bit
+	P_INDEX=	[0, 18,4,0],		! Index Register
+	P_OFFSET=	[0, 0,18,0],		! Displacement Value
+	P_FWORD=	[0, 0,36,0]		! Entire pointer value
+	TES;
+
+MACRO
+    $BYTE_POINTER=	BLOCK[1] FIELD(BYTEPOINTER_FIELDS) %;
+
+! Symbol Table Data Structures
+! ----------------------------
+
+
+!   +--+----+---------------------------+-----------------------------------+
+! 0 |* |  & |			    RAD50NAME				    |
+!   +-----------------------------------+-----------------------------------+
+! 1 |		SYMBOLCNT		|	    SYMBOLVAL		    |
+!   +-----------------------------------+-----------------------------------+
+!
+!	*	- INVALIDFLAG
+!	&	- RAD50FLAG
+!
+
+STRUCTURE
+    !+
+    ! This is a REF BLOCK structure which uses only an 18-bit offset to
+    ! deal with indirection.  Typically the left-half will be a negative
+    ! count (or trash).
+    !-
+    HBLOCK[OFF, P,S,E; SIZE=1] = [SIZE] ( (.HBLOCK<RH>)+OFF)<P,S,E>;
+
+MACRO
+    SYMBOL=	HBLOCK[1] FIELD(DDT_FIELDS) %;
+
+FIELD
+    DDT_FIELDS=
+	SET
+	NAMEWRD=	[0,0,36,0],
+	VALUEWRD=	[1,0,36,0],
+	ADDRWRD=	[1,0, %IF EXTENDED %THEN 30 %ELSE 18 %FI, 0],
+
+	INVALIDFLAG=	[0,35,1,0],		! Symbol is purged from symtab
+	RAD50FLAG=	[0,32,2,0],
+	RAD50NAME=	[0,0,32,0],
+	SYMBOLVAL=	[1,0,18,0],		! "Address" value (18-bits)
+	SYMBOLCNT=	[1,18,18,1]		! # of symbols in module when
+						!  ste is DDT$_MODULE type.
+	TES;
+
+LITERAL
+    DDT$_MODULE	= 0,		! RAD50FLAG values
+    DDT$_GLOBAL = 1,		! Defined as GLOBAL symbol
+    DDT$_OWN=	  2;		! Defined as non-global
+
+! MODULE_PTR
+!
+!   +-----------------------------------+-----------------------------------+
+! 0 |	    MODSYMCNT			|	    MODSYMPTR		    |
+!   +-----------------------------------+-----------------------------------+
+
+FIELD
+    MODULE_FIELDS=
+	SET
+	MODSYMPTR = [ 0, 0,18,0],
+	MODSYMCNT = [ 0,18,18,1]
+	TES;
+
+MACRO
+    MODULEPTR = BLOCK[1] FIELD(MODULE_FIELDS) %;
+FORWARD ROUTINE
+	ACTBIT2NAM,
+	ACTNAM2BIT,
+	ADVANCE	 : NOVALUE,
+	B36ISUB		: NOVALUE,
+	BEGINSIX12	: NOVALUE,
+	BOOBOO		: NOVALUE,
+	CALL1		: NOVALUE,
+	CALL2		: NOVALUE,
+	CALLENABLED,
+	CFINDR,
+	CHKCOND,
+	CINSERT,
+	CKVALS		: NOVALUE,
+	CLOSELPT	: NOVALUE,
+	CLRSTEP		: NOVALUE,
+	COLON		: NOVALUE,
+	CONTENTS	: NOVALUE,
+	COPYR		: NOVALUE,
+	CREMOVE		: NOVALUE,
+	DABREAK		: NOVALUE,
+	DBLEQL		: NOVALUE,
+	DBREAK		: NOVALUE,
+	DISAB		: NOVALUE,
+	DOMON		: NOVALUE,
+	DOPAQUE		: NOVALUE,
+	DOTVREG,
+	DSTABREAK	: NOVALUE,
+	DTRACE,
+	ENDSIX12	: NOVALUE,
+	EQUALS		: NOVALUE,
+	EQUALS0,
+	ERROR,
+	EXECUTE		: NOVALUE,
+	EXITHANDLER	: NOVALUE,
+	EXITSIGNAL	: NOVALUE,
+	F50TO6,
+	F50TO7,
+	F7TO50,
+	FIELDSPEC	: NOVALUE,
+	FILEOPEN,
+	FINDMODULE,
+	FNDDBGUUO,
+	GETARGADR,
+	GETARGBASE,
+	GETARGCNT,
+	GETCALLFROM,
+	GETLCLCNT,
+	GETLCLADR,
+	GETNAMEOP,
+	GETNUMBER,
+	GETOP,
+	GETSTRING	: NOVALUE,
+	GETSYMBOL,
+	GETTEXT		: NOVALUE,
+	GOER		: NOVALUE,
+	GQUAL,
+	INCHARS,
+	INITSIX12	: NOVALUE,
+	INPUT,
+	INTEXT		: NOVALUE,
+	INWORD,
+	ISADDRESS,
+	ISREADABLE,
+	ISROUTINE,
+	ISUB,
+	ISUBSIG,
+	ISWRITABLE,
+	JOIN		: NOVALUE,
+	KILLSYMBOL	: NOVALUE,
+	LGFLD		: NOVALUE,
+	LGVEC		: NOVALUE,
+	LPAREN,
+	LPTDUP		: NOVALUE,
+	LPTOFF		: NOVALUE,
+	LPTON		: NOVALUE,
+	LPTOUT		: NOVALUE,
+	MODDDT,
+	NOSIX12		: NOVALUE,
+	NOSIXSYMS	: NOVALUE,
+	NSDDTFA,
+	NSDDTW,
+	OPAQUE		: NOVALUE,
+	OPENLPT		: NOVALUE,
+	OPERATE		: NOVALUE,
+	OUTC		: NOVALUE,
+	OUTCRLF		: NOVALUE,
+	OUTERHANDLER,
+	OUTFLAGRTN	: NOVALUE,
+	OUTN,
+	OUTQUAL		: NOVALUE,
+	OUTSA		: NOVALUE,
+	OUTTEXT		: NOVALUE,
+	OUTVALUE	: NOVALUE,
+	OUTWORD		: NOVALUE,
+	PDEBUG,
+	PPSYM		: NOVALUE,
+	PR1ACTION       : NOVALUE,
+	PR1MACRO	: NOVALUE,
+	PRBPTR		: NOVALUE,
+	PRCALL,
+	PRCOUNTEDVECTOR	: NOVALUE,
+	PRDISP		: NOVALUE,
+	PRG		: NOVALUE,
+	PRHANDLER,
+	PRHPARMS	: NOVALUE,
+	PRM		: NOVALUE,
+	PRMVALSNAM	: NOVALUE,
+	PROP		: NOVALUE,
+	PRQ50,
+	PRQUAL		: NOVALUE,
+	PRQUALBP	: NOVALUE,
+	PRS		: NOVALUE,
+	PRSTK		: NOVALUE,
+	PRSYM50,
+	PRSYM6,
+	PRXDISP		: NOVALUE,
+	PSTK		: NOVALUE,
+	PUSHITEM	: NOVALUE,
+	PUSHOPER	: NOVALUE,
+	RABREAK		: NOVALUE,
+	RBREAK		: NOVALUE,
+	RET612		: NOVALUE,
+	ROPQAFT		: NOVALUE,
+	ROPQAT		: NOVALUE,
+	RTABREAK	: NOVALUE,
+	RTRCAFT		: NOVALUE,
+	RTRCAT		: NOVALUE,
+	SDDTFS,
+	SETAFTER	: NOVALUE,
+	SETBIT		: NOVALUE,
+	SETFROM		: NOVALUE,
+	SETTBLBIT	: NOVALUE,
+	SIX12A,
+	SIX36,
+	SIXDD2		: NOVALUE,
+	SIXDDT		: NOVALUE,
+	SIXDPY		: NOVALUE,	! global
+	SIXID		: NOVALUE,
+	SIXOP,				! global
+	SIXXEQ,				! global
+	SLASH		: NOVALUE,
+	STABREAK	: NOVALUE,
+	STOPIT		: NOVALUE,
+	STRUCT		: NOVALUE,
+	SYNTAX,
+	TTOUTN		: NOVALUE,
+	TYPE,
+	UNSETBIT,
+	UUOH		: NOVALUE,
+	XABREAK		: NOVALUE,
+	XADD		: NOVALUE,
+	XAND		: NOVALUE,
+	XASSIGN		: NOVALUE,
+	XBACKTO		: NOVALUE,
+	XBASE		: NOVALUE,
+	XBIND		: NOVALUE,
+	XBREAK		: NOVALUE,
+	XCALL		: NOVALUE,
+	XCLRTRACE	: NOVALUE,
+	XCOPAQUE	: NOVALUE,
+	XDDT		: NOVALUE,
+	XDEBUG		: NOVALUE,
+	XDEFINE		: NOVALUE,
+	X2DEFINE	: NOVALUE,
+	XDEL1		: NOVALUE,
+	XDEL2		: NOVALUE,
+	XDIV		: NOVALUE,
+	XDMONITOR	: NOVALUE,
+	XEQL		: NOVALUE,
+	XEQOR		: NOVALUE,
+	XGEQ		: NOVALUE,
+	XGO		: NOVALUE,
+	XGOCLR		: NOVALUE,
+	XGOTRACE	: NOVALUE,
+	XGTR		: NOVALUE,
+	XHELP		: NOVALUE,
+	XLOAD		: NOVALUE,
+	XMACRO		: NOVALUE,
+	XMONITOR	: NOVALUE,
+	XNOCOPAQUE	: NOVALUE,
+	XNOT		: NOVALUE,
+	XOK		: NOVALUE,
+	XLCALL		: NOVALUE,
+	XLEQ		: NOVALUE,
+	XLSS		: NOVALUE,
+	XNEQ		: NOVALUE,
+	XNOPOLLOFF	: NOVALUE,
+	XNOPOLLON	: NOVALUE,
+	XPOP		: NOVALUE,
+	XPRINT,
+	XPRINT0,
+	XPRINTACT       : NOVALUE,
+	XPRINTMACRO	: NOVALUE,
+	XPRINTMON	: NOVALUE,
+	XPRINTOPER	: NOVALUE,
+	XPRM		: NOVALUE,
+	XPRS		: NOVALUE,
+	XRECALL		: NOVALUE,
+	XRESET		: NOVALUE,
+	XRESIGNAL	: NOVALUE,
+	XRESUME		: NOVALUE,
+	XRETURN		: NOVALUE,
+	XSAVE		: NOVALUE,
+	XSEARCH		: NOVALUE,
+	XSET1		: NOVALUE,
+	XSET2		: NOVALUE,
+	XSET3		: NOVALUE,
+	XSHIFT		: NOVALUE,
+	XSIGNAL		: NOVALUE,
+	XSTEP		: NOVALUE,
+	XSTORE		: NOVALUE,
+	XSTRACE		: NOVALUE,
+	XSUBTRACT	: NOVALUE,
+	XTIMES		: NOVALUE,
+	XTRACE		: NOVALUE,
+	XWATCH		: NOVALUE,
+	XWBASE		: NOVALUE,
+	XWHERE		: NOVALUE;
+! Character codes
+
+LITERAL
+	TAB=		 %O'11',
+	LF=		 %O'12',
+	CR=		 %O'15',
+	ESCAPE=		 %O'33',
+	DQUOTE=		 %O'42',		! "
+	SQUOTE=		 %O'47',		! '
+	LEFTPAREN=	 %O'50',		! (
+	RPAREN=		 %O'51',		! )
+	LPOINTY=	 %O'74',		! <
+	RPOINTY=	 %O'76',		! >
+	LSQUARE=	%O'133',		! [
+	RSQUARE=	%O'135',		! ]
+	LBRACE=		%O'173',		! {	! LG change
+	BAR=		%O'174',		! |	subst for escape!
+	RBRACE=		%O'175';		! }	! LG change
+ROUTINE BEGINSIX12: NOVALUE=
+!+
+! FUNCTION
+!	First code address within SIX12 debugger
+!-
+    BEGIN
+    GLOBAL LITERAL
+	SIXLSF=	-1,		! Delete local symbols 
+	SIXPOL=	0,		! Default is terminal polling
+	SIXSTF=	-1,		! Come up in SIX12
+	SIXENF=	-1;		! DEBUG UUO's will be honored, not JFCL-ed
+    0
+    END;
+ROUTINE STOPIT: NOVALUE=
+    BEGIN
+    SETON(ENABFLAG);
+    IF ISON(TRACEFLAG) THEN INCRTOG;
+    LPTOFF();
+    GOFLAG = 2;				! Indicates prompt for more commands
+    SETOFF(WHACKING)
+    END;
+! Declarations for UUO entry to SIX12
+! -----------------------------------
+
+LITERAL
+	DEBUGUUO=%O'037',
+	TBLPOS=24,		! This bit is DEBUG 2,rtn or DEBUG 3,rtn
+				! and indicates the routine is "interesting"
+	EXITPOS=23,		! This bit means it is DEBUG 1,rtn
+	NOVALUEPOS=25,		! Means the routine (Bliss-36) is
+				! a NoValue routine (DEBUG 5,rtn or
+				! DEBUG 15,rtn)
+	UNWINDPOS=26;		! The special DEBUG after a stack unwind
+				! (DEBUG 11,rtn or DEBUG 15,rtn)
+
+MACRO
+	TBLBIT=BITFIELD(TBLPOS) %,
+	EXITBIT=BITFIELD(EXITPOS) %,
+	NOVALUEBIT=BITFIELD(NOVALUEPOS) %,
+	UNWINDBIT=BITFIELD(UNWINDPOS) %,
+
+	ISINTBL=.$JBUUO<TBLBIT> %,
+	ISEXIT=.$JBUUO<EXITBIT> %,
+	ISNOVALUE=.$JBUUO<NOVALUEBIT> %,
+	ISUNWOUND=.$JBUUO<UNWINDBIT> %,
+
+	CHKUWP(ACTION,ADDRESS)=
+	    BEGIN
+%IF TOPS10
+%THEN
+	    REGISTER
+		RUWP;
+
+	    RUWP = 0;
+	    SETUWP(RUWP);		! Clear and save previous protection
+	    (ACTION);
+	    SETUWP(RUWP);		! Restore to previous state
+%ELSE
+	    IF NOT ISWRITABLE(ADDRESS)
+	    THEN
+		SPACS( $FHSLF^18 +			! This process,
+		    (((ADDRESS) AND %O'777777') ^ (-9)),! specific page
+		      PA_CPY);				! Copy on write
+
+	    IF ISWRITABLE(ADDRESS) THEN (ACTION)
+%FI
+	    END %;
+! TTY and LPT I/O support
+! -----------------------
+
+! Items beginning with 'TT' always write to the TTY.  They
+! will also write to LPT in LPTDUP mode.   Others
+! write either to TTY or LPT-FILE, or both, depending on state of
+! switch 'LPTFlag'  (set by LPTON, LPTDUP, and LPToff). Routines
+! OpenLPT and CloseLPT must be called before and after one
+! complete set of LPT output.
+
+BIND
+	CRLFSTR=CH$PTR(UPLIT (%ASCIZ %STRING(%CHAR(13,10)))),	! STRING FOR CRLF Macro
+	VALSTR=CH$PTR(UPLIT (%ASCIZ %STRING(%CHAR(9),'Value: '))): VECTOR;		! FOR OUTVALUE
+
+MACRO
+	MSG[]= CH$PTR( UPLIT (%ASCIZ %STRING(%REMAINING) ) ) %,
+
+ 	INC=
+	    %IF TOPS10
+	    %THEN
+		BEGIN
+		REGISTER
+		    C;
+		INCHWL(C);
+		.C
+		END
+	    %FI %,
+
+	OUTS[]=	OUTSA( MSG(%REMAINING) ) %,
+
+	TTOUTS[]=	TTOUTSA( MSG(%REMAINING) ) %,
+
+	TTOUTSH(Z)=
+	    BEGIN
+%IF TOPS10
+%THEN
+	    OUTSTR(Z);
+%ELSE
+	    PSOUT( Z )
+%FI
+	    END %,
+
+	OUTM(C,N)=
+	    (DECR QQ FROM (N)-1 TO 0 DO OUTC(C)) %,
+	TTOUTM(C,N)=
+	    (DECR QQ FROM (N)-1 TO 0 DO TTOUTC(C)) %,
+	TTOUTDEC(N)=
+	    TTOUTN(N,10,1) %,
+	CRLF=
+	    OUTCRLF() %,
+	TTCRLF=
+	    BEGIN
+		TTOUTSA(CRLFSTR)
+	    END %,
+	PUTTAB=
+	    OUTC(TAB) %,
+	OUTDEFAULT(Z)=
+	    OUTN((Z),.IOBASE,1) %,
+	OUTRDEF(Z,R)=
+	    OUTN((Z),.IOBASE,(R)) %,
+	OUTD(Z)=
+	    OUTN((Z),10,1) %,
+	OUTDR(Z,N)=
+	    OUTN((Z),10,(N)) %;
+ROUTINE OUTFLAGRTN : NOVALUE=
+    BEGIN
+    CASE .RTNLVL FROM 0 TO 1 OF
+	SET
+	[0]:    OUTS('B:');
+	[1]:    OUTS('A:');
+	[OUTRANGE]:	0	! Routine level can be -1 (which would loop)
+	TES;
+    END;
+ROUTINE OUTCRLF : NOVALUE = OUTSA(CRLFSTR);	! OUTPUT NEWLINE
+
+ROUTINE DBLEQL: NOVALUE = OUTS('  ==  ');	! Output equivalency symbols
+! SUPPORT of LPT and SAVE/LOAD I/O
+! --------------------------------
+
+LITERAL
+	SLCHN=%O'16',
+	LPTCHN=%O'17';
+
+MACRO
+	LPTCNT=LPTHDR[2] %,
+	LPTPTR=LPTHDR[1] %,
+	DSKCNT=DSKHDR[2] %,
+	DSKPTR=DSKHDR[1] %,
+	STATUS=OPENBLOCK[0] %,
+	LDEV=OPENBLOCK[1] %,
+	BUFW=OPENBLOCK[2] %,
+	FNAME=BLOCK[0] %,
+	FEXT=BLOCK[1] %,
+	JUNK=BLOCK[2] %,
+	PPN=BLOCK[3] %;
+
+MACRO
+	ANYLPT(DUMMY) = BEGIN .LPTFLAG NEQ 0 END %,
+	NOLPT(DUMMY) = BEGIN .LPTFLAG EQL 0 END %,
+	LPTDUPPING(DUMMY) = BEGIN .LPTFLAG GTR 0 END %,
+	ANYTERMINALOUTPUT(DUMMY) = BEGIN .LPTFLAG GEQ 0 END %,
+	LPTOUTTING(DUMMY) = BEGIN .LPTFLAG LSS 0 END %;
+ROUTINE OPENLPT : NOVALUE=
+!+
+! FUNCTION
+!	Set up for copying output to hard-copy
+!-
+    BEGIN
+%IF TOPS10
+%THEN
+    LOCAL
+	SAVFF,
+	OPENBLOCK:	VECTOR[4],
+	BLOCK:		VECTOR[4];
+
+    STATUS = 1;
+    LDEV = %SIXBIT 'SIX12';
+    BUFW = LPTHDR^18;
+    IF NOT OPEN(LPTCHN,OPENBLOCK)
+    THEN
+	BEGIN
+	LDEV = %SIXBIT 'LPT';
+	IF NOT OPEN(LPTCHN,OPENBLOCK)
+	THEN
+	    RETURN ERROR(10)
+	END;
+
+    FNAME = %SIXBIT 'SIX12';
+    FEXT = %SIXBIT 'LPT';
+    JUNK = 0;
+    PPN = 0;
+
+    IF NOT ENTER(LPTCHN,BLOCK) THEN RETURN ERROR(10);
+
+    SAVFF = .$JBFF;
+    $JBFF = LPTBUF;
+    OUTBUF(LPTCHN,1);
+    $JBFF = .SAVFF;
+    OUT(LPTCHN,0);
+%ELSE
+    LOCAL
+	JFN;
+
+    IF GTJFN( GJ_FOU+GJ_NEW+GJ_SHT,		! New output file, short form
+		  MSG('SIX12:')                 ! file spec, first try
+		; JFN ) OR                      ! Returned JFN
+       GTJFN( GJ_FOU+GJ_NEW+GJ_SHT,             ! Second, try for "real" LPT
+                  MSG('LPT:SIX12.LPT')          !  and random filespec
+                ; JFN )
+    THEN
+	BEGIN
+	LPTHDR = .JFN<RH>;				! SAVE JFN
+
+	IF NOT OPENF( .JFN, (7^30)+OF_WR )		! 7-bit bytes, write access
+	THEN
+	    RETURN ERROR(10)
+	END
+    ELSE
+	RETURN ERROR(10);
+%FI
+
+    SETON(LPTOPENFLAG)				! Set line printer file open
+    END;
+ROUTINE LPTOUT(CHAR): NOVALUE=
+    BEGIN
+    IF NOLPT() THEN RETURN;
+
+%IF TOPS10
+%THEN
+    IF (LPTCNT = .LPTCNT-1) LEQ 0 THEN OUT(LPTCHN,0);
+    CH$WCHAR_A( .CHAR, LPTPTR )
+%ELSE
+    BOUT(.LPTHDR, .CHAR)
+%FI
+END;
+ROUTINE OUTC(CHAR): NOVALUE=
+!+
+! FUNCTION
+!	Output single character to all relevant output devices
+!
+! INPUTS
+!	CHAR	- 7-bit ASCII character (right-justified)
+!-
+    BEGIN
+    IF ISON(DISKOFLAG) THEN RETURN(OUTWORD(.CHAR));
+    IF ANYTERMINALOUTPUT() 
+    THEN
+%IF TOPS10
+%THEN
+	OUTCHR(CHAR);
+%ELSE
+	PBOUT( .CHAR );
+%FI
+
+    IF ANYLPT() THEN LPTOUT(.CHAR)
+
+    END;
+
+GLOBAL BIND SIXOCH=OUTC;
+ROUTINE OUTSA(STR) : NOVALUE=
+!+
+! INPUTS
+!	STR	- CH$PTR to an ASCIZ string to be printed
+!-
+    BEGIN
+    IF ISON(DISKOFLAG)
+    THEN
+	BEGIN
+	LOCAL
+	    PTR;
+	REGISTER
+	    C;
+
+	PTR = .STR;
+
+	WHILE (C=CH$RCHAR_A(PTR)) NEQ 0 DO OUTC(.C);
+	RETURN
+	END;
+
+    IF ANYTERMINALOUTPUT()
+    THEN
+	BEGIN
+%IF TOPS10
+%THEN
+	IBP( STR );
+	OUTSTR(.STR<RH>)
+%ELSE
+	PSOUT( .STR )
+%FI
+	END;
+
+    IF ANYLPT()
+    THEN
+	BEGIN
+%IF TOPS10
+%THEN
+	REGISTER
+	    PTR,
+	    C;
+
+	PTR = .STR;
+	WHILE (C = CH$RCHAR_A(PTR)) NEQ 0 DO
+	    BEGIN
+	    IF (LPTCNT = .LPTCNT-1) LEQ 0 THEN OUT(LPTCHN,0);
+	    CH$WCHAR_A(.C, LPTPTR)
+	    END
+%ELSE
+	SOUT( .LPTHDR, .STR, 0 )
+%FI
+	END
+    END;
+
+GLOBAL ROUTINE SIXOSA(P)=
+!+
+! FUNCTION
+!	Print string addressed by P, if it is accessible.
+! INPUT
+!	P	- Byte-pointer to a string
+! OUTPUTS
+!	TRUE	- Addressable value
+!	FALSE	- Bad address
+!-
+    BEGIN
+    IF ISREADABLE(.P<RH>)
+    THEN
+	BEGIN
+	OUTSA(.P);
+	RETURN 1
+	END
+    ELSE
+	RETURN 0
+    END;
+ROUTINE INWORD=
+!+
+! FUNCTION
+!	Fetch next word from SAVE/LOAD channel or when reading an
+!	indirect command file (RESTORE command)
+! INPUTS
+!	None
+! OUTPUTS
+!	-1	EOF encountered on input
+!	Other	Data value
+!-
+    BEGIN
+    IF ISON(ERRORFLAG) THEN RETURN -1;
+
+%IF TOPS10
+%THEN
+    IF (DSKCNT = .DSKCNT-1) LEQ 0
+    THEN
+	IF IN(SLCHN,0)
+	THEN				! An I/O error occurred
+	    BEGIN
+	    IF STATZ(SLCHN,IO$EOF)
+	    THEN			! Was NOT EOF, so must have been
+		SETON(ERRORFLAG);  	!  for real.  Flag this as "BAD"
+	    RETURN -1			! Return all errors as EOF
+	    END;
+    RETURN CH$RCHAR_A( DSKPTR )
+%ELSE
+    BEGIN
+    LOCAL
+	RESLT;
+
+    IF BIN( .DSKHDR ; RESLT )
+    THEN
+	RETURN .RESLT;			! Return word read in
+
+    -1					! ERROR ----
+    END
+%FI
+    END;
+ROUTINE INCHARS=
+!+
+! Return next "real" character from input disk file
+!-
+    BEGIN
+    LOCAL
+	C;
+
+    DO
+	BEGIN
+	C = INWORD();
+	IF CH$RCHAR(.DSKPTR)		! Low bit says line-sequenced
+	THEN
+	    DECR I FROM 5 TO 0 DO C = INWORD();	! skip line no.
+	END
+    UNTIL .C NEQ 0;
+
+    .C
+    END;
+ROUTINE OUTFD(VALUE,WID): NOVALUE=
+    BEGIN
+    IF .IOBASE EQL 8 AND ABS(.VALUE) GTR 7 THEN OUTC(%C'#');
+    OUTDR(.VALUE,.WID)
+    END;
+ROUTINE OUTWORD(WRD):NOVALUE=
+!+
+! FUNCTION
+!	Write a word to the disk output
+!-
+    BEGIN
+    IF ISON(ERRORFLAG) THEN RETURN;
+
+%IF TOPS10
+%THEN
+    IF (DSKCNT = .DSKCNT-1) LEQ 0		! When the ring-buffer is full
+    THEN					!  write it out to the device
+	IF OUT(SLCHN,0)
+	THEN
+	    (SETON(ERRORFLAG);  RETURN );
+
+    CH$WCHAR_A(.WRD, DSKPTR)
+%FI
+
+%IF TOPS20
+%THEN
+    BOUT( .DSKHDR, .WRD )
+%FI
+    END;
+ROUTINE CLOSELPT: NOVALUE=
+    BEGIN
+    LPTFLAG = 0;
+
+%IF TOPS10
+%THEN
+    CLOSE(LPTCHN,0);
+    RELEASE(LPTCHN,0);
+%FI
+
+%IF TOPS20
+%THEN
+    CLOSF( .LPTHDR );
+%FI
+    SETOFF(LPTOPENFLAG)
+    END;
+ROUTINE LPTON:NOVALUE= IF ISON(LPTOPENFLAG) THEN LPTFLAG = -1 ELSE ERROR(19);
+
+ROUTINE LPTDUP:NOVALUE= IF ISON(LPTOPENFLAG) THEN LPTFLAG =  1 ELSE ERROR(19);
+
+ROUTINE LPTOFF:NOVALUE= LPTFLAG = 0;
+ROUTINE XRESET: NOVALUE=
+    BEGIN
+    IF ISON(LPTOPENFLAG) THEN RETURN ERROR(20);
+
+%IF TOPS10 %THEN CALLI(0,0) %FI
+
+%IF TOPS20 %THEN RESET() %FI
+
+    END;
+! General purpose number output Routine
+! -------------------------------------
+
+ROUTINE OUTN(N,B,RD)=
+! Returns the number of positions printed
+    BEGIN
+    OWN
+	NUM,
+	NUMNP,
+	BASE,
+	REQD,
+	WRIT,
+	COUNT;
+
+    ROUTINE XN:NOVALUE=
+	BEGIN
+	REGISTER
+	    R;
+	IF .NUM EQL 0
+	THEN
+	    BEGIN
+	    OUTM(%C' ',WRIT = .REQD-.COUNT);
+	    IF ISON(NUMNP) THEN (OUTC(%C'-'); WRIT = .WRIT + 1);
+	    RETURN
+	    END;
+	R = .NUM MOD .BASE;
+	NUM = .NUM/.BASE;
+	COUNT = .COUNT+1;
+	XN();
+	OUTC(R = .R+%C'0');
+	WRIT = .WRIT + 1
+	END;
+
+    NUMNP = COUNT = (.N LSS 0);
+    BASE = .B;
+    REQD = .RD;
+    WRIT = 0;
+
+    IF (NUM = ABS(.N) AND NOT 1^35) NEQ 0 THEN RETURN (XN(); .WRIT);
+
+    OUTM(%C' ',.REQD-1-.NUMNP);
+    IF .NUMNP NEQ 0 THEN OUTC(%C'-');
+    OUTC(%C'0');
+    .REQD    
+    END;
+ROUTINE TTOUTN(B,D,R):NOVALUE=
+    BEGIN
+    LOCAL
+	OLDLPT;
+
+    OLDLPT=.LPTFLAG;
+    LPTOFF();
+    OUTN(.B,.D,.R);
+    LPTFLAG = .OLDLPT
+    END;
+ROUTINE TTOUTC(CH): NOVALUE=
+!+
+! FUNCTION
+!	Write a single character to the terminal, duplicating (if necessary)
+!	into the "log" file.
+! INPUTS
+!	CH	- The ASCII character value to print
+! OUTPUTS
+!	None
+!-
+    BEGIN
+    IF LPTDUPPING() THEN LPTOUT(.CH);
+%IF TOPS10
+%THEN
+    OUTCHR( CH )
+%ELSE
+    PBOUT( .CH )
+%FI
+    END;
+ROUTINE TTOUTSA(STR): NOVALUE=
+    BEGIN
+    IF LPTDUPPING() THEN RETURN OUTSA(.STR);
+    TTOUTSH(.STR<RH>+1)
+    END;
+ROUTINE OUTVALUE(X): NOVALUE=
+!+
+! FUNCTION
+!	Print routine return value.  Use user-supplied routine, if
+!	it is present.
+! INPUT
+!	X	- The value passed back from a ABREAK-ed or TRACE-d routine
+!-
+    BEGIN
+    OUTSA(VALSTR);
+    IF .SIXHDR NEQ 0
+    THEN			! A user-written routine is present.
+	BEGIN %(user routine)%
+	LOCAL
+	    OLDRNAME;
+
+	OLDRNAME = .RNAME;
+	INSIXHDR=1;
+
+	IF (.SIXHDR)(.RNAME,F50TO6(.SDDTFS(.RNAME)),X,1,0)
+	THEN
+	    BEGIN
+	    INSIXHDR=0;
+	    RNAME = .OLDRNAME;
+	    CRLF;
+	    RETURN
+	    END;
+
+	INSIXHDR=0;
+	RNAME = .OLDRNAME
+	END %(user routine)%;
+
+    OUTDEFAULT(.X);
+    DBLEQL();
+    PRDISP(.X);
+    CRLF
+    END;
+ROUTINE SHOWNOVALUE: NOVALUE=
+	BEGIN
+	OUTS(' :NoValue');
+	CRLF
+	END;
+ROUTINE ISHIGHSYMBOLTABLE=
+!+
+! FUNCTION
+!	Returns "true" if there is a separate hiseg symbol table, false
+!	if only one symbol table.
+!-
+    BEGIN
+    ! if the symbol ".JBHGH+.JBHSM" is not defined, there isn't even a hiseg:
+    !
+
+    IF .IJOBHSM EQL 0 THEN RETURN 0;
+
+    ! there may be a hiseg, but it may be absent:
+    !
+
+    IF NOT ISREADABLE(.IJOBHSM) THEN RETURN 0;
+
+    ! if HCache is nonzero, we have already set it up on this SIX12 entry
+    ! since HCache is reset on every SIX12 entry or return from a user
+    ! procedure (since the user can obviously do a call to switch segments)
+    ! we know it must be valid
+    !
+
+    IF .HCACHE NEQ 0 THEN RETURN 1;
+
+    IF .(.IJOBHSM) NEQ 0 AND .(.IJOBHSM) NEQ .$JBSYM
+    THEN
+	BEGIN					%(have two)%
+	HSYM = 1;
+	HCACHE = .(.IJOBHSM);
+	RETURN 1
+	END;
+
+    RETURN 0       
+    END;
+ROUTINE NSDDTW(X,V,SYM: MODULEPTR)=
+!+
+! FUNCTION
+!	Given a symbol search for the address of its next occurrence in
+!	table SYM
+! INPUTS
+!	X	- RAD50_10 value of symbol to look up
+!	V	- If non-zero, where to start looking in the symbol table
+!	SYM	- If V is zero, the address of a symbol-table to look in
+! OUTPUT
+!	<cnt,,adr> of found symbol
+!-
+    BEGIN
+    LOCAL
+	R	: SYMBOL;
+
+    IF .V EQL 0
+    THEN
+	BEGIN
+	R = - .SYM[MODSYMCNT];			! Symboltable count
+	R = .R^18 + .R + .SYM[MODSYMPTR];	! Compute "end" address
+	END
+    ELSE
+	R = .V;
+
+    ! Walk backwards thru the symbol-table looking for a name-match
+    !
+
+    WHILE (R = .R-%O'2000002') GEQ 0 DO
+	IF .R[RAD50NAME] EQL .X THEN RETURN .R;		! Found it
+
+    0
+    END;
+ROUTINE NSDDTFA(X,V)=
+!+
+! FUNCTION
+!	Given a symbol, search for the address of its next occurrence
+!	First use .JBHSM, then .JBSYM; this means that we always check
+!	the overlay first.  If .JBHSM is zero or the same as .JBSYM,
+!	use only .JBSYM
+! INPUT
+!	X	- RAD50 Symbol name to look up
+!	V	- If non-zero, where to begin searching
+!-
+    BEGIN
+    LOCAL
+	T	: SYMBOL;
+
+    IF NOT ISHIGHSYMBOLTABLE()
+    THEN
+	RETURN NSDDTW(.X,.V,.$JBSYM);
+
+    IF (T =NSDDTW(.X,.V,.HCACHE)) EQL 0 
+    THEN
+	NSDDTW(.X,.V,.$JBSYM)
+    ELSE
+	.T
+    END;
+!	Routine SDDTFA(X) =
+!	    ! Given a symbol, search ddt symbol-table for its value
+!	    ! return the value
+!	    begin
+!	    Register R;
+!	    If (R = NSDDTFA(.X,0)) neq 0 then Return @(.R+1);
+!	    Error(0)
+!	    end;
+ROUTINE FINDMODULE(X)=
+!+
+! FUNCTION
+!	Returns a pointer to the module which can be passed to
+!	NSDDTFA and which restricts the search to that module
+!	This is used for qualified-name search algorithm
+! INPUT
+!	X	- RADIX50 name of module
+! OUTPUT
+!	0 => no such module
+!	cnt,,start of module symbol table
+!-
+    BEGIN
+    LOCAL
+	S	: SYMBOL,
+	MODPTR;
+
+    S = NSDDTFA(.X,0);				! Search entire DDT symboltable
+						!  for particular module name
+
+    IF .S EQL 0 THEN RETURN 0;			! module not found!
+
+    MODPTR<RH> = .S;				! Starting address of module
+						!  symbol table
+    MODPTR<LH> = - .S[SYMBOLCNT];		! # of symbols in module
+
+    .MODPTR
+    END;
+ROUTINE HSDDTFS (X, SYM : SYMBOL)=
+!+
+! FUNCTION
+!	Given an address, search table for the symbol most nearly matching it
+! INPUT
+!	X	- a value (address) whose symbol is to be searched for
+!	SYM	- Symbol table to search
+! OUTPUT
+!	A pointer to the DDT symbol table entry for the symbol found
+!-
+    BEGIN
+    LOCAL
+	R	: SYMBOL,
+	BEST	: SYMBOL;
+
+    BIND
+	DMY=UPLIT(0,0);			! Dummy ste for "no-match"
+
+    BEST = DMY;				! Assume no match found
+
+    R = - .SYM<LH,1>;
+    R = .R^18 + .R + .SYM<RH>;
+
+    WHILE (R = .R-%O'2000002') GEQ 0 DO
+	IF NOT .R[INVALIDFLAG]			! Symbol not deleted...
+	THEN
+	    SELECTONE .R[VALUEWRD] OF
+		SET
+		[.X]:				RETURN .R<RH>;	! Exact match
+		[.BEST[VALUEWRD] TO .X]:	BEST = .R<RH>	! Better match
+		TES;
+
+    .BEST
+    END;
+ROUTINE SDDTFS(X)=
+!+
+! FUNCTION
+!	Search symbol-tables for a symbolic name, given a value.  Follows
+!	the same "rules" as NSDDTFA, by first looking for a HISEG symbol
+!	table and then searching the LOWSEG symbol-table.
+! INPUTS
+!	X	- Numeric value
+! OUTPUTS
+!	Address of symbol-table entry or ZERO
+!-
+    BEGIN
+    LOCAL
+	T;
+
+    IF NOT ISHIGHSYMBOLTABLE()
+    THEN
+	RETURN HSDDTFS(.X,.$JBSYM);
+
+    IF (T=HSDDTFS(.X,.HCACHE)) EQL 0 
+    THEN
+	HSDDTFS(.X,.$JBSYM)
+    ELSE
+	.T
+    END;
+ROUTINE KILLSYMBOL(SYMREF: SYMBOL):NOVALUE=
+!+
+! FUNCTION
+!	SymRef is a modified symbol table pointer, where the RH is the address
+!	of the symbol to be deleted, and the LH is the count of symbols
+!	left (including the one to be deleted)
+! INPUTS
+!	SYMREF	- Symbol table pointer (LH is special)
+!-
+    BEGIN
+
+    !+
+    ! Mark the symbol as a suppressed local with an "illegal" name
+    ! to keep it from matching with any interesting symbols.
+    !-
+    SYMREF[NAMEWRD] = 1^35 + DDT$_OWN^32 + (%RAD50_10 '%%%%%%'+1);
+    SYMREF[VALUEWRD] = -1
+    END;
+ROUTINE DSIXSYMS(SYM):NOVALUE=
+!+
+! FUNCTION
+!	Delete SIX36's local symbols from DDT symbol table(s)
+!-
+    BEGIN
+    LOCAL
+	R	: SYMBOL;
+    BIND
+	SIXMODNAME = %RAD50_10 'SIX36';
+
+    R = -.SYM<LH,1>;
+    R = .R^18 + .R + .SYM<RH>;
+
+    WHILE (R = .R - %O'2000002') GEQ 0 DO		! Find SIX36 module
+	BEGIN
+	IF .R[RAD50FLAG] EQL DDT$_MODULE AND .R[RAD50NAME] EQL SIXMODNAME
+	THEN
+	    EXITLOOP
+	END;
+
+    WHILE (R = .R - %O'2000002') GEQ 0 DO		! DELETE LOCALS
+	BEGIN
+	IF .R[RAD50FLAG] EQL DDT$_MODULE THEN EXITLOOP;	! Next MODULE
+	IF .R[RAD50FLAG] EQL DDT$_OWN			! Local
+	    AND .R[RAD50NAME] NEQ %RAD50_10 'STARTF'
+	    AND .R[RAD50NAME] NEQ %RAD50_10 'ENABFL'
+	    AND .R[RAD50NAME] NEQ %RAD50_10 'NOPOLL'
+	THEN
+	    KILLSYMBOL(.R)
+	END
+    END;
+ROUTINE NOSIXSYMS: NOVALUE=
+    BEGIN
+    IF ISHIGHSYMBOLTABLE()
+    THEN
+	DSIXSYMS(.HCACHE);
+    DSIXSYMS(.$JBSYM)
+    END;
+ROUTINE FNDDBGUUO(STRT,ISITEXIT)=
+!+
+! FUNCTION
+!	Starting at given address (STRT), scan forward looking
+!	for DEBUG UUO.
+! INPUTS
+!	STRT	- Starting address
+!	ISITEXIT- Are we looking for routine-entry or exit UUO?
+! OUTPUTS
+!	-1	No DEBUG UUO could be found
+!	0:...	Address of the DEBUG UUO found
+!-
+    BEGIN
+    LOCAL
+	CORELIM,
+	MATCH;
+    BIND
+	BITS = %O'777000777777' OR 1^EXITPOS;
+
+    MATCH = DEBUGUUO^27 OR .ISITEXIT^EXITPOS OR .STRT<RH>;
+
+    IF	.STRT<RH> GEQ $JBDA AND
+	.STRT<RH> LEQ .$JBREL<RH>
+    THEN
+	CORELIM = .$JBREL<RH>
+    ELSE
+	IF .STRT<RH> GEQ ((.$JBHRL<RH>-.$JBHRL<LH>) AND %O'777000') AND
+	    .STRT<RH> LEQ .$JBHRL<RH>
+	THEN
+	    CORELIM = .$JBHRL<RH>
+	ELSE
+	    RETURN -1;
+
+    INCRA J FROM .STRT<RH> TO .CORELIM DO
+	IF (..J AND BITS) EQL .MATCH
+	THEN
+	    RETURN .J;
+    -1
+    END;
+ROUTINE HMODNAME(X, SYM: SYMBOL)=
+!+
+! FUNCTION
+!	Given a start address X (in DDT symbol table), finds entry for
+!	a module name
+! INPUT
+!	X	- DDT Symbol Table Entry
+!	SYM	- Pointer to module record in DDT Symbol Table
+!-
+    BEGIN
+    REGISTER
+	R	: SYMBOL;
+
+    R = .X + (.SYM<LH>^18);
+
+    WHILE (R = .R+%O'2000002') LSS 0 DO
+	IF  .R[RAD50FLAG] EQL DDT$_MODULE AND	! Seek a module definition
+	    .R[NAMEWRD] NEQ %O'637777'^18	! Don't stop on deleted symbol
+	THEN
+	    RETURN .R<RH>;
+
+    0						! No module
+    END;
+ROUTINE MODNAME(X)=
+    BEGIN
+    IF ISHIGHSYMBOLTABLE() AND .X<RH> GEQ .HCACHE<RH> 
+    THEN 
+	HMODNAME(.X,.HCACHE)
+    ELSE
+	HMODNAME(.X,.$JBSYM)
+    END;
+ROUTINE MODDDT(X)=
+!+
+! FUNCTION
+!	Given a start address X in DDT symbol table, returns
+!	Radix50 Module name
+!-
+    BEGIN
+    LOCAL
+	R	: SYMBOL;
+
+    R = MODNAME(.X);			! Do the lookup
+
+    IF .R EQL 0 THEN RETURN .R;		! Not found, return null string
+
+    .R[RAD50NAME]			! Give back a good name
+    END;
+ROUTINE F50TO7(X)=
+!+
+! FUNCTION
+!	Convert base 50 character to Ascii character
+!-
+    BEGIN
+    SELECTONE .X OF
+	SET
+	[0]:		0;		! Blank
+	[0 TO %o'12']:	.X + %o'57';	! "0".."9"
+	[0 TO %o'44']:	.X + %o'66';	! "A".."Z"
+	[%o'45']:	%C'.';		! period
+	[%o'47']:	%C'_';		! % or "_"
+	[%o'46']:	%C'$';		! "$"
+	TES
+    END;
+ROUTINE F50TO6(X)=
+!+
+! FUNCTION
+!	convert Base 50 symbol to SIXBIT symbol
+!-
+    BEGIN
+    LOCAL
+	R,
+	OLD;
+
+    R = 0;
+
+    WHILE .X NEQ 0 DO
+	BEGIN
+	OLD = .X MOD %O'50';
+	X = .X / %O'50';
+	R = .R + (F50TO7(.OLD)-%O'40');
+	R = ROT(.R, -6)
+	END;
+    .R
+    END;
+ROUTINE F7TO50(X)=
+!+
+! FUNCTION
+!	Convert ASCII character to RAD50_10 character
+    BEGIN
+    SELECTONE .X OF
+	SET
+	[0]:			0;		! Ignore
+	[%C'.', %C'&']:		%O'45';		! Map to same code
+	[%C'$']:		%O'46';		!
+	[%C'_', %C'%']:		%O'47';		!  "   "   "    "
+	[%C'0' TO %C'9']:	.X - %O'57';
+	[%C'A' TO %C'Z']:	.X - %O'66';
+	[OTHERWISE]:		.X - %O'126';	! Lower-case alphabetics
+	TES
+    END;
+ROUTINE PRQ50(X)=
+BEGIN
+	
+    ROUTINE PRQA50 (X : BLOCK FIELD(DDT_FIELDS), F)=
+	BEGIN
+	LOCAL
+	    R;
+
+	IF (X = .X[RAD50NAME]) NEQ 0
+	    THEN
+		BEGIN
+		R = .X MOD %O'50';
+		F = .F OR (.R EQL %RAD50_10 '.');
+		F = PRQA50(.X/%O'50',.F);
+		OUTC(F50TO7(.R));
+		RETURN .F
+		END
+	    ELSE
+		BEGIN
+		IF .F THEN OUTC(%C'?');
+		RETURN .F
+		END;
+	END;
+	
+    PRQA50(.X,0)
+END;
+ROUTINE PRSYM50(X)=
+    ! PRINT NAME GIVEN IN BASE 50
+    ! Returns the number of characters printed
+    BEGIN
+    ROUTINE PSYM5 (X : BLOCK FIELD(DDT_FIELDS), Y)=
+	BEGIN
+	LOCAL
+	    VAL,
+	    R;
+
+	IF (VAL = .X[RAD50NAME]) NEQ 0
+	THEN
+	    BEGIN
+	    LOCAL
+		V;
+	    R = .VAL MOD %O'50';
+	    V = PSYM5(.VAL/%O'50',.Y+1);
+	    OUTC(F50TO7(.R));
+	    RETURN .V
+	    END;
+	.Y
+	END;
+    PSYM5(.X,0)
+    END;
+ROUTINE PRSYM6(X)=
+!+
+! FUNCTION
+!	Print a SIXBIT symbolic value
+! INPUTS
+!	X	- SIXBIT value
+! OUTPUT
+!	Returns the number of characters actually printed
+!-
+    BEGIN
+    LOCAL
+	P,
+	C,
+	V;
+
+    V = 0;
+    P = CH$PTR( X, 0, 6 );		! SIXBIT string pointer
+
+    WHILE (C = CH$RCHAR_A(P)) NEQ 0 DO
+	BEGIN
+	V = .V + 1;
+	OUTC(.C+%O'40');
+	IF .V EQL 6 THEN EXITLOOP	! Certainly no more than 6 chars
+	END;
+    .V
+    END;
+ROUTINE PROP(X):NOVALUE=
+!+
+! FUNCTION
+!	Print an operator from the table. Operators come in two flavors,
+!	SIXBIT (left-justified) and 1-character ASCII (stored in <18,7>)
+! INPUT
+!	X	- "print-name" of operator.
+!-
+    BEGIN
+    IF (.X AND %O'777600777777') EQL 0
+    THEN
+	OUTC(.X<LH>)
+    ELSE
+	PRSYM6(.X)
+    END;
+ROUTINE PRDISP(X):NOVALUE=
+!+
+! FUNCTION
+!	Print both halves of .X in "BASE+DISP" form
+!-
+    BEGIN
+    LOCAL
+	BP	: $BYTE_POINTER;
+    LABEL
+	LB;
+    BIND
+	FWPTR = POINT(0, FW) ^(-18) AND %O'777777',
+	LHPTR =	POINT(0,LH) ^(-18) AND %O'777777',
+	RHPTR = POINT(0, RH) ^(-18) AND %O'777777';
+
+    ! Check to see if value looks like a byte-pointer, in which case it
+    ! will have position,size in LH.
+    !
+
+    BP = (IF .X<LH> EQL LHPTR
+	 OR .X<LH> EQL FWPTR
+	 OR .X<LH> EQL RHPTR
+	 OR .X<24,6> EQL 7		! Char string?
+	 OR .X<24,6> EQL 8		! Bliss-16 likes 8-bit bytes
+	 OR .X<24,6> EQL 9		! APLSF uses 9-bit bytes
+	THEN
+	    .X 
+	ELSE
+	    0);
+
+    DECR I FROM 1 TO 0 DO
+LB:	BEGIN
+	LOCAL
+	    Z;
+
+	Z = ( IF .I THEN .X<LH> ELSE .X<RH> );
+
+	IF .Z LSS $JBDA				! JOBDAT areas shouldn't be
+	THEN					!  printed symbolically?
+	    BEGIN
+	    IF .I AND .Z EQL 0 THEN LEAVE LB;
+	    OUTDEFAULT(.Z)
+	    END
+	ELSE
+	    BEGIN
+	    LOCAL
+		L	: SYMBOL,
+		M;
+
+	    L = SDDTFS(.Z);
+	    M = .Z-.L[VALUEWRD];
+	    IF (.WDBASE GEQ 0) AND (.M GTR .WDBASE)	! Value is too far from
+	    THEN					!  symbolic name to be
+		OUTDEFAULT(.Z)				!  printed as B+offset
+	    ELSE
+		BEGIN
+		LOCAL
+		    Q,		! Qualification information
+		    F;
+
+		Q=GQUAL(.L,.L[VALUEWRD]);
+		OUTQUAL(.Q,0,QUALPREFIX);
+		F=PRQ50(.L[RAD50NAME]);
+		OUTQUAL(.Q,.F,QUALSUFFIX);
+		IF .M NEQ 0 THEN (OUTC(%C'+');  OUTDEFAULT(.M))
+		END;
+	    END;
+	IF .I THEN OUTS(',,')
+	END;
+
+    IF .BP NEQ 0
+    THEN
+	BEGIN
+	OUTC(%C'<');
+	OUTFD(.BP[P_POS],0);
+	OUTC(%C',');
+	OUTFD(.BP[P_SIZE],0);
+	OUTC(%C'>')
+	END
+
+    END;
+ROUTINE PRXDISP(X): NOVALUE=
+!+
+! FUNCTION
+!	Print only base of .X<RH>
+! INPUTS
+!	X	- Fullword with Effective address(?) in RH.
+!-
+    PRQUAL( .X<RH> , 0);
+! Routines to parse and display the stack
+!
+
+MACRO
+	WITHINSIX12(PC) =
+		((PC) GTR BEGINSIX12 AND (PC) LSS ENDSIX12) %,
+
+	WITHINSIGNALHANDLER(PC)=
+		BEGIN
+		(PC) GEQA SIGNA$ AND (PC) LSSA SIGND$
+		END %;
+ROUTINE OUTQUAL (Q : SYMBOL, F, CODE): NOVALUE=
+!+
+! FUNCTION
+!	Output a (possibly) qualified name
+! INPUTS
+!	Q	- Qualifying name (DDT symbol table entry) or numeric value
+!	F	- Formatting flag?
+!	CODE	- Indicates prefix or postfix qualification
+! OUTPUTS
+!	None
+!-
+    BEGIN
+    IF .CODE EQL QUALPREFIX
+    THEN
+	IF .Q EQL -1
+	THEN
+	    RETURN			! No qualification present
+	ELSE
+	    IF  .Q LSS 0
+	    THEN
+		BEGIN
+		IF .Q<RH> NEQ .GQUALIFIER<RH> THEN PRQ50(.Q[RAD50NAME]);
+		OUTC(%C'\');
+		RETURN
+		END
+	    ELSE
+		RETURN;
+
+    IF .CODE EQL QUALSUFFIX AND .Q LSS 0 THEN RETURN;	! Ignorable %n suffix
+
+    IF .F THEN OUTC(%C' ');
+    OUTC(%C'%');
+    OUTDEFAULT(.Q)
+    END;
+
+ROUTINE GQUAL(S: SYMBOL,V)=
+!+
+! FUNCTION
+!	???
+! Inputs:
+!	S - Radix50 symbol
+!	V - value of the symbol
+!
+!	Returns one of three conditions:
+!	-1 => no qualification required
+!	-1,,x => x is DDT symbol table address of module qualifier
+!	n => %n qualification
+!
+!	Use is to call GQUAL to get qualification code, then
+!	call OutQual, which decodes it.  OutQual also looks at
+!	Qualifier to decide if name is to be printed at all
+!-
+    BEGIN
+    LOCAL
+	P	: SYMBOL,
+	LJ,
+	J,
+	LP	: SYMBOL;
+
+    P = 0;
+    J = 0;
+
+    WHILE 1 DO
+	BEGIN						%(global search)%
+	J = .J + 1;
+	IF (P=NSDDTFA(.S[RAD50NAME],.P)) EQL 0
+	THEN
+	    BEGIN %(found all)%
+	    ! if 0 on second try, symbol is unique
+	    IF .J EQL 2 THEN EXITLOOP %(global search)%;
+	    ! symbol is not unique if .J gtr 2
+	    IF .J GTR 2 THEN
+		BEGIN %(not unique so far)%
+		LOCAL
+		    P1	: SYMBOL,
+		    MN	: SYMBOL;
+
+		MN = MODNAME(.LP);
+		P1 = (-.MN[SYMBOLCNT] ^18) OR .MN<RH>;
+
+		INCR K FROM 1 DO
+		    BEGIN			%(see if unique in module)%
+		    IF (P1=NSDDTFA(.S[RAD50NAME],.P1)) EQL 0
+		    THEN
+			BEGIN %(local failure)%
+			! if local failure on second try,
+			! module qualification makes it unique
+			IF .K EQL 2 THEN RETURN -1^18 OR .MN;
+			IF .K GTR 2 THEN EXITLOOP %(see if unique in module)%;
+			END %(local failure)%;
+		    END %(see if unique in module)%;
+		END %(not unique so far)%;
+		! if we get here,the local search was also
+		! ambiguous, so we return the numeric qualifier
+		RETURN .LJ;
+	    END %(found all)%
+	ELSE
+	    BEGIN %(found it)%
+	    ! is this symbol the value we want?
+	    !
+	    IF .P[RAD50FLAG] EQL DDT$_MODULE
+	    THEN
+		J = .J - 1
+	    ELSE
+		IF .P[SYMBOLVAL] EQL .V<RH>
+		THEN
+		    BEGIN %(right value)%
+		    LJ = .J;
+		    LP = .P
+		    END %(right value)%
+	    END %(found it)%
+	END %(global search)%;
+
+    RETURN -1
+    END %(gqual)%;
+ROUTINE PRQUAL(X,DISP):NOVALUE=
+!+
+! FUNCTION
+!	Given an address X, print out the symbol which matches it
+!	and add qualification if the name is not unique
+!-
+    BEGIN
+
+    LOCAL
+	S	: SYMBOL,
+	P,
+	D,
+	V,
+	F;
+
+    IF .X<RH> LSS $JBDA
+    THEN
+	BEGIN
+	OUTDEFAULT(.X<RH>);
+	RETURN
+	END;
+
+    S = SDDTFS(.X<RH>);
+    D = (IF .DISP THEN .X<RH>-.S[VALUEWRD] ELSE 0);	! compute displacement
+
+    V = .S[VALUEWRD];				! symbol value we are using
+    P = GQUAL(.S,.V);
+    OUTQUAL(.P,0,QUALPREFIX);
+    F = PRQ50(.S[RAD50NAME]);
+
+
+
+    OUTQUAL(.P,.F,QUALSUFFIX);
+    IF .D NEQ 0 THEN 
+	BEGIN
+	OUTC(%C'+');
+	OUTDEFAULT(.D)
+	END;
+    END;
+GLOBAL ROUTINE SIXDPY(A):NOVALUE=
+    BEGIN
+    PRQUAL(.A<RH>,1)
+    END;
+ROUTINE PRQUALBP(ENTRY:$BYTE_POINTER):NOVALUE=
+!+
+! FUNCTION
+!	Print byte pointer for saving MONITOR location
+! INPUTS
+!	ENTRY	- Hardware Byte-pointer
+!-
+    BEGIN
+    LOCAL
+	T	: $BYTE_POINTER,
+	D	: SYMBOL;
+
+    D = SDDTFS(.ENTRY[P_OFFSET]);
+
+    D = (.ENTRY[P_OFFSET] -.D[VALUEWRD] NEQ 0) AND .ENTRY[P_POS_SIZE] NEQ 0;
+    IF .D  THEN OUTC(%C'(');
+    PRQUAL(.ENTRY[P_OFFSET], 1);		! PRINT NAME
+    IF .D  THEN OUTC(%C')');
+    IF .ENTRY[P_POS_SIZE] NEQ %BPVAL		! Non-fullword pointers are
+    THEN					!  to be qualified
+	BEGIN			! PRINT <P,S>
+	OUTC(%C'<');
+	OUTFD(.ENTRY[P_POS],0);
+	OUTC(%C',');
+	OUTFD(.ENTRY[P_SIZE],0);
+	IF .ENTRY[P_INDEX] NEQ 0
+	THEN
+	    BEGIN
+	    OUTC(%C',');  OUTFD(.ENTRY[P_INDEX],0);
+	    OUTC(%C',');   OUTD(.ENTRY[P_INDIRECT]);
+	    END;
+	OUTC(%C'>');
+	END;
+    END;
+%SBTTL 'Stack-frame, argument-list processing'
+
+FIELD
+    FRAME_FIELDS=
+	SET
+	NEXT_FRAME=	[0, 0,18,0],	! Pointer to caller's frame
+	RET_ADDRESS=	[-1,0,18,0],	! Saved return PC
+	ARGS_BASE=	[-1,0, 0,0],	! Just before last argument
+	LOCALS_BASE=	[ 1,0, 0,0],	! Base of local storage
+	ENABLE_CHAIN=	[ 1,0,36,0]	! Pointer to ENABLE block
+	TES;
+
+MACRO
+    $FRAME = HBLOCK FIELD(FRAME_FIELDS) %,
+
+    !+
+    ! B36 argument lists are pushed left-to-right.  Thus the first formal is
+    !  deepest on the stack.  For an argument list of size LIM, this macro
+    !  provides a BLOCK field-value for the "N"th actual. (Arguments are
+    !  numbered 1..LIM
+    !-
+    ARG_N_OF_M(N,LIM)= (-(LIM+1)) + N + %FIELDEXPAND(ARGS_BASE,0),0,36,0 %;
+
+MAP
+    ENTERPNT	: $FRAME;
+ROUTINE GETARGBASE(F: $FRAME,N)=
+!+
+! FUNCTION
+!	Return address of 1st actual-parameter in a frame.
+! INPUTS
+!	F	- Pointer to FRAME
+!	N	- Number of actual parameters in the call
+!		  which "entered" this frame
+! OUTPUTS
+!	return the address of the first actual parameter
+!-
+	F[ARG_N_OF_M(1,.N)];
+
+
+ROUTINE GETCALLFROM(F: $FRAME)=
+!+
+! FUNCTION
+!	Return address of caller of the frame
+! INPUTS
+!	F	- Procedure call frame address
+! OUTPUTS
+!	Address of a PUSHJ or PJSRT instruction
+!-
+    .F[RET_ADDRESS] - %UPVAL;
+
+ROUTINE GETARGCNT(F:	$FRAME)=
+!+
+! FUNCTION
+!	GET ARG COUNT of CURRENT CALL GIVEN FRAME POINTER
+!-
+    BEGIN
+    LOCAL
+	NP,
+	INSTRPC	: REF $INSTRUCTION;
+
+    INSTRPC = .F[RET_ADDRESS];
+
+    WHILE .INSTRPC[M_LHALF] EQL JRSTOP^9 DO	! JRST 0,-
+	INSTRPC = .INSTRPC[M_OFFSET];		! Follow cross-jumping chain
+
+    NP = 0;
+
+    IF .INSTRPC[M_LHALF] EQL (SUBOP^9 OR SREG^5)	! SUB
+    THEN
+	NP = ..INSTRPC[M_OFFSET] AND %O'777777'
+    ELSE
+	IF .INSTRPC[M_LHALF] EQL (ADJSPOP^9 OR SREG^5)	! ADJSP
+    THEN
+	NP = - .INSTRPC[M_IMMEDIATE];
+
+    IF .NP LSS 0 THEN NP = 0;
+
+    .NP
+    END;
+
+ROUTINE GETARGADR(N,FRAME: $FRAME)=
+!+
+! FUNCTION
+!	Get address of the n'th argument of given frame.
+!	If FRAME IS ZERO then USE CURRENT FRAME.
+! INPUTS
+!	N	- argument index
+!	FRAME	- pointer to procedure frame
+! OUTPUT
+!	Returns address of stack location if found, or -1 if there is no
+!	actual parameter.
+!-
+    BEGIN
+    LOCAL
+	ARGLIST	: REF VECTOR,
+	F	: $FRAME,
+	NA;
+
+    IF .RTNLVL LSS 0 THEN RETURN -1;
+
+    F = (IF .FRAME EQL 0 THEN .ENTERPNT[NEXT_FRAME] ELSE .FRAME<RH>);
+    NA = GETARGCNT(.F);
+
+    IF .N LSS 1 OR .N GTR .NA THEN RETURN -1;
+
+    ARGLIST = GETARGBASE(.F,.NA);
+
+    ARGLIST[.N-1]		! List is zero-origined, but arguments
+    END;			!  are enumerated 1..N
+
+ROUTINE GETLCLCNT(PREVF : $FRAME)=
+!+
+! FUNCTION
+!	Get number of locals for stack frame before given frame.
+! INPUT
+!	PREVF	- Pointer to a stack frame
+! OUTPUT
+!	Count of local parameters
+!-
+    BEGIN
+    LOCAL
+	F	: $FRAME,
+	NL;
+
+    PREVF = .PREVF<RH>;				! Clean address-pointer
+    F = .PREVF[NEXT_FRAME];			! ADDRESS of FRAME of INTEREST
+    IF .F EQL 0 THEN RETURN 0;			!  This is root, can't help you
+
+    IF .PREVF NEQ .ENTERPNT<RH>
+    THEN
+	BEGIN
+	NL = .PREVF -.F -2;			! Distance between two frames
+						!  is # of locals (approx),
+						!  less saved FP and return PC
+	NL = .NL - GETARGCNT(.PREVF)		! Exclude actual parameters to
+	END					!  later routine.
+    ELSE
+	! This is frame which caused us to enter SIX12.  Thus, everything
+	!  between .ENTERPNT and the "saved" value of SP is a local for
+	!  this routine.
+	!
+	IF .ENTERSP<RH> GTR .ENTERPNT<RH>
+	THEN
+	    NL = .ENTERSP<RH> - .ENTERPNT<RH>
+	ELSE
+	    NL = 0;
+
+    IF .NL LEQ 0 THEN RETURN 0;
+
+    .NL
+    END;
+
+ROUTINE GETLCLADR(N, PREVF : $FRAME)=
+!+
+! FUNCTION
+!	Get address of n'th Local of frame before PREVF
+! INPUTS
+!	N	- Index of LOCAL
+!	PREVF	- Frame pointer
+! OUTPUT
+!	Address of the local or -1 if out of bounds.
+!-
+    BEGIN
+    IF .RTNLVL LSS 0 THEN RETURN -1;
+
+    IF .N LSS 1 THEN RETURN -1;				! Bad local#, too small
+
+    IF .PREVF EQL 0
+    THEN
+	BEGIN						! Use current frame
+	IF .N GTR GETLCLCNT(.ENTERPNT[NEXT_FRAME])
+	THEN
+	    RETURN -1;	! Too large...
+
+	.ENTERPNT<RH> + .N
+	END
+    ELSE
+	BEGIN
+	IF .N GTR GETLCLCNT(.PREVF) THEN RETURN -1;
+	.PREVF[NEXT_FRAME] + .N
+	END
+    END;
+
+ROUTINE PRG(B: REF VECTOR,T): NOVALUE=
+!+
+! FUNCTION
+!	Print a contiguous set of WORDS for stack display.
+! INPUTS
+!	B	- Pointer to vector of words
+!	T	- Number of entries to print
+!-
+    INCR I FROM 0 TO .T-1 DO
+	BEGIN 
+	OUTDEFAULT(.I+1);
+	OUTC(%C':'); OUTC(%C' ');
+	PRDISP(.B[.I]);
+	IF .I LSS .T-1
+	THEN
+	    IF .I
+	    THEN
+		(OUTCRLF(); OUTS('		') )	! Two tabs
+	    ELSE
+		OUTS('		')		! spc-spc-tab
+	END;
+
+ROUTINE PRCOUNTEDVECTOR(V: REF VECTOR): NOVALUE=
+    BEGIN
+    OUTS(' =[');
+    OUTDEFAULT(.V[0]);
+    OUTS(']: ');
+	
+    INCR I FROM 1 TO .V[0] DO
+	BEGIN
+	PRDISP(.V[.I]);
+	OUTC(%C' ');
+	IF .I MOD 6 EQL 0 THEN OUTCRLF();
+	END;
+    OUTCRLF()
+    END;
+ROUTINE PRHPARMS(F: $FRAME) : NOVALUE=
+!+
+! FUNCTION
+!	Print argument-lists passed to a condition-handler.
+! INPUT
+!	F	- Pointer to a FRAME
+! OUTPUTS
+!	None
+!-
+    BEGIN
+    LOCAL
+	SIGNL,
+	MECH,
+	ENBL;
+
+    OUTCRLF();
+    SIGNL = GETARGADR(1,.F);
+    MECH  = GETARGADR(2,.F);
+    ENBL  = GETARGADR(3,.F);
+
+    OUTS('Signalv at ');		! Condition signalled
+    PRDISP(..SIGNL);
+    PRCOUNTEDVECTOR(..SIGNL);		!  and the whole SIGNAL arg-list
+
+    OUTS('Mechanismv at ');		! Mechanism information
+    PRDISP(..MECH);
+    PRCOUNTEDVECTOR(..MECH);
+
+    OUTS('Enablev at ');		! ENABLE stuff
+    PRDISP(..ENBL);
+    PRCOUNTEDVECTOR(..ENBL);
+    END;
+ROUTINE PRCALL(F: $FRAME,CALLED: REF $INSTRUCTION)=
+!+
+! FUNCTION
+!	Print a single Routine call with its parameters.
+! INPUTS
+!	F	- Pointer to FRAME
+!	CALLED	- Pointer to instruction which did the call
+! OUTPUTS
+!	Returns address of instruction which called the routine whose
+!	frame we are examining.
+! NOTES
+!	The condition-handling routines are treated special.  There are several
+!	"internal" routines which interact to produce a SIGNAL.  Only the
+!	last routine in the OTS (which calls the handler) will end up with
+!	a mention in the routine-call display.
+!
+!	A side-effect of the above is that when a "CALL n" command is given,
+!	that fewer than "n" frames will be displayed.
+!-
+    BEGIN
+    LOCAL
+	NP,			! NUMBER of PARAMETERS
+	CALLFROM;		! Who called this routine..
+    LABEL
+	L;
+
+    IF (CALLFROM = GETCALLFROM(.F)) LEQ 0 THEN RETURN 0;
+    NP = GETARGCNT(.F);
+
+    IF WithinSignalHandler(.CALLED<RH>) AND
+	NOT WithinSignalHandler(.CALLFROM<RH>)
+    THEN
+	RETURN .CALLFROM<RH>;
+
+    IF WITHINSIGNALHANDLER(.CALLFROM<RH>)
+    THEN
+	! Within SIGNAL Handler.  There are several possible cases.  If
+	! the called routine is ALSO inside the OTS, then suppress it.
+	!
+	BEGIN
+	IF NOT WITHINSIGNALHANDLER(.CALLED<RH>)
+	THEN
+	    BEGIN				%(print signal)%
+	    ! Here we would like to print out
+	    !   SIGNAL(nn)
+	    !   SIGNAL_STOP(nn)
+	    !   Doing UNWIND
+	    !
+	    BIND
+		SIGVAL = .(F[LOCALS_BASE])+1;	! Signalled condition value
+
+
+
+	    IF .UNWINDVALUE NEQ 0 AND .SIGVAL EQL .UNWINDVALUE
+	    THEN
+		OUTS('*** Doing UNWIND ***')
+	    ELSE
+		BEGIN
+		IF .SIGVAL<0,3> EQL 4 
+		THEN
+		    OUTS('*** SIGNAL_STOP(')
+		ELSE
+		    OUTS('*** SIGNAL(');
+		OUTDEFAULT(.SIGVAL);
+		OUTS(') ***')
+		END
+	    END;
+	RETURN(.CALLFROM<RH>)
+	END %(in signal handler)%;
+
+
+    PRXDISP(.CALLED);
+    OUTS(%CHAR(9),'from',%CHAR(9));
+    IF WITHINSIX12(.CALLFROM<RH>)
+    THEN
+	 OUTS('"within SIX12"')
+    ELSE
+	PRDISP(.CALLFROM);
+
+L:  BEGIN
+    IF .NP EQL 0
+    THEN
+	OUTS('  ( )')
+    ELSE
+	BEGIN
+	IF .F[NEXT_FRAME] NEQ 0
+	THEN
+	    BEGIN
+	    IF .NP EQL 3 AND WITHINSIGNALHANDLER(GETCALLFROM(.F[NEXT_FRAME]))
+	    THEN
+		BEGIN
+		PRHPARMS(.F);
+		LEAVE L
+		END
+	    END;
+
+	OUTCRLF();
+	IF .SIXHDR NEQ 0
+	THEN
+	    BEGIN %(user handler)%
+	    LOCAL
+		OLDRNAME,
+		ABASE,
+		ROUT	: SYMBOL;
+
+	    ABASE = GETARGBASE(.F,.NP);
+	    OLDRNAME = .RNAME;
+	    INSIXHDR = 1;
+	    ROUT = SDDTFS(.CALLED<RH>);
+	    IF NOT (.SIXHDR)(.ROUT[VALUEWRD],F50TO6(.ROUT[NAMEWRD]),.ABASE,.NP,1)
+	    THEN
+		BEGIN %(user punted)%
+		OUTS('	Actuals	');
+		PRG( .ABASE, .NP);
+		END;
+	    INSIXHDR = 0;
+	    RNAME = .OLDRNAME;
+	    END %(user handler)%
+	ELSE
+	    BEGIN %(standard handler)%
+	    OUTS('	Actuals	');
+	    PRG( GETARGBASE(.F,.NP), .NP);
+	    END %(standard handler)%;
+	END;
+    END;
+
+
+    .CALLFROM<RH>
+    END;
+
+MACRO
+    $ENABLE	= HBLOCK FIELD(ENABLE_FIELDS) %;
+
+FIELD
+    ENABLE_FIELDS=
+	SET
+	HANDLER_PTR=	[ 0, 0, 36, 0],		! Addr of HANDLER routine
+	EXIT_PTR=	[ 1, 0, 36, 0]		! Addr of exit code to clean
+						!  stack for unwinds, etc.
+	TES;
+
+
+!
+!
+!	efpnt.:
+!	+------------+
+!	|	    |----------+
+!	+------------+		|		|		|
+!				|		+---------------+
+!				|		| rtn addr      |
+!				|		+---------------+
+!				|		| parms	 |
+!				|		/		/
+!				|		/		/
+!				|		|		|
+!				|		+---------------+
+!				|		|   locals      |\
+!				|		/		/ |
+!				|		/		/ |
+!				|		+---------------+ |
+!				|		| rtn addr      | |
+!				|		+---------------+ |
+!				|		| parms	 | |
+!				|		/		/ |
+!				|		/		/ |
+!				|		|	       |/
+!				|		+---------------+
+!				|		|   locals      |\
+!				|		/		/ |
+!				|		/		/ |
+!				|		|		| |
+!				|		+---------------+ |
+!				|      ...<-----| enable ptr    | |
+!				|	  	+---------------+ |
+!				+------->+------| efpnt chain	| |
+!					 |	+---------------+ |
+!					 |	| rtn addr      | |
+!					 |	+---------------+ |
+!					 |	| parms		| |
+!					 |	/		/ |
+!					 |	/		/ |
+!					 |	|		|/
+!					 |	+---------------+
+!					 |	|		|\
+!					 |	   ...		  .
+!					 |	| rtn addr      | |
+!					 |	+---------------+ |
+!					 |	| parms	 | |
+!					 |		...	. .
+!					 |	|		| |
+!					 |      +---------------+ |
+!					 |      | enable ptr    |-+--+
+!					 |	+---------------+ |  |
+!					 +----->| efpnt chain   | |  |
+!						+---------------+ |  |
+!							...	  .  |
+!		+-------------+					     |
+!		| handler  ptr|<-------------------------------------+
+!		+-------------+
+!		| exit ptr    |
+!		+-------------+
+ROUTINE PRHANDLER (F: $FRAME, EFP) =
+!+
+! FUNCTION
+!	returns an updated EFP if in fact a handler is printed
+!-
+    BEGIN
+    IF .F[NEXT_FRAME] NEQ 0 AND
+	.F[NEXT_FRAME] LSS .F<RH>
+    THEN
+	BEGIN
+	IF .EFP GTR .F[NEXT_FRAME] AND .EFP LSS .F<RH>
+	THEN
+	    BEGIN %( have active handler )%
+	    LOCAL
+		ECODE	: REF $INSTRUCTION;	! pointer to exit code
+
+	    ECODE = ..(.EFP+1);
+	    EFP = ..EFP;
+	    WHILE .ECODE[M_OPCODE] NEQ DEBUGUUO DO
+		BEGIN %( scan for call )%
+		IF .ECODE[M_OPCODE] EQL PUSHJOP 
+		THEN
+		    SELECTONE .ECODE[M_OFFSET] OF
+		    SET
+		    [ SIGNA$, SIGST$ ]:
+			EXITLOOP;	! SIGNAL or SIGNAL_STOP
+
+		    [OTHERWISE]:
+			BEGIN
+			OUTCRLF();
+			OUTS('	Handler: ');
+			PRXDISP(.ECODE[M_OFFSET]);
+			EXITLOOP
+			END
+		    TES
+		ELSE
+		    ECODE = .ECODE + 1;
+		END %( scan for call )%;
+	    END %(have active handler )%;
+	END;
+    RETURN .EFP;
+    END;
+
+ROUTINE PSTK(FBACK: $FRAME, SHOWLOCALS, LEVEL):NOVALUE=
+!+
+! FUNCTION
+!	Display call stack to level "Level", "ShowLocals" controls
+!	locals display.
+!-
+    BEGIN
+    LOCAL
+	F	: $FRAME,
+	NAME,
+	NL,
+	EFP	: $ENABLE;
+
+    EFP = .EFPNT$;
+
+    ! now go down the chain (skipping the implicit SIX12 handler)
+    ! until we get to the first handler below the SIX12 entry
+
+    WHILE .EFP<RH> GTR .ENTERPNT<RH> DO EFP = ..EFP;
+
+    IF .RTNLVL GEQ 0
+    THEN
+	NAME = .RNAME
+    ELSE
+	BEGIN
+	IF (NAME = GETCALLFROM(.FBACK)) LSS 0 THEN RETURN;
+	NAME = .(.NAME)<RH>;
+	END;
+
+    F = .FBACK<RH>;
+
+    DO
+	BEGIN
+	LOCAL
+	    NEWEFP;
+
+	IF (NAME = PRCALL(.F,.NAME)) EQL 0 THEN RETURN;
+	NEWEFP = PRHANDLER(.FBACK<RH>,.EFP);
+	IF .SHOWLOCALS
+	THEN 
+	    BEGIN
+	    NL = GETLCLCNT(.FBACK);
+	    IF .NL GTR 0		! PRINT LOCALS
+	    THEN
+		BEGIN
+		OUTCRLF();
+		OUTS('	Locals	');
+		IF .NEWEFP NEQ .EFP	! We found an ENABLE in this frame
+		THEN
+		    PRG( F[LOCALS_BASE]+2, .NL )	! Ignore ENABLE-list
+		ELSE
+		    PRG( F[LOCALS_BASE], .NL)		! Ignore saved FP
+		END
+	    END;
+	EFP = .NEWEFP;
+	CRLF;
+	IF (.F[NEXT_FRAME] NEQ 0) AND (.F[NEXT_FRAME] LSS .F<RH>) AND NOT WITHINSIX12(.NAME<RH>)
+	THEN
+	    BEGIN
+	    FBACK = .F;
+	    F = .F[NEXT_FRAME]
+	    END
+	ELSE
+	    RETURN
+	END
+    UNTIL (LEVEL = .LEVEL-1) LEQ 0;
+
+    END;
+%SBTTL	'Debug Interest Routines'
+!		DEBUG INTEREST ROUTINES
+!		-----------------------
+
+!	The table ROUTS contains information about each Routine
+!	in which the debug system is 'interested'.  The variable
+!	NROUTS (initialized to -1) contains the index of the last
+!	valid entry in ROUTS.  The structure of each entry in ROUTS
+!	is
+!		!------------------+------------------!
+!		! INTEREST BITS    !  Routine ADDRESS ! 0
+!		!------------------+------------------!
+!		! POINTERS to      ! CONDITIONAL      ! 1
+!		!  bit 19 action   !  bit 18 action   !
+!		!------------------+------------------!
+!		! Macro		   ! TEXTS	      ! 2
+!		!  bit 21 action   !  bit 20 action   !
+!		!------------------+------------------!
+!		!		   !		      ! 3
+!		!  bit 23 action   !  bit 22 action   !
+!		!------------------+------------------!
+!		!		   !		      ! 4
+!		!  bit 25 action   !  bit 24 action   !
+!		!------------------+------------------!
+!
+!	(A zero Macro pointer denotes unconditional action.)
+!	Two values are associated with each bit in the interest bits
+!	field.  If bit (35-n) indicates an abc type interest, then
+!	ABCF is a Macro for the bit position in the entry, i.e. 0,N,1.
+!	ABCV is a constant with a 1 in the corresponding bit, i.e. 1^N.
+!
+!	The Routine SETBIT(VAL) does the following for each Routine in @SIXRP:
+!		1) Insert the Routine into ROUTS if it is not already there.
+!		2) Turn on the interest bits indicated by val.
+!		3) Put in conditional Macro pointers as required.
+!
+!	The Routine UNSETBIT(VAL) does the following for each Routine in @SIXRP:
+!		1) Turn off the interest bits indicated by val.
+!		2) Fix up flags if active TRACE or OPAQUE is being deleted.
+!		3) If the interest bit field of any entry becomes
+!		   zero, remove that entry from ROUTS.
+!
+FIELD
+    ROUT_FIELDS=
+	SET
+	ROUT_INFO=	[0, 0, 36, 0],	! ADDR+INFO bits
+	ROUT_ADDR=	[0, 0, 18, 0],	! Routine Address
+	INTEREST_BITS=	[0, 18,18, 0],	! All interest bits, lumped together
+	    BREAKF=	[0, 18, 1, 0],	! Routine BREAK set
+	    ABREAKF=	[0, 19, 1, 0],	! Routine ABREAK set
+	    OPQATF=	[0, 20, 1, 0],	! OPAQUE
+	    OPQAFTF=	[0, 21, 1, 0],	! OPAQUE After
+	    TRCATF=	[0, 22, 1, 0],	! TRACE
+	    TRCAFTF=	[0, 23, 1, 0],	! ATRACE
+	    TABREAKF=	[0, 24, 1, 0],	! ??
+	    PREVSTEPF=	[0, 32, 1, 0],
+	    PREVOFFF=	[0, 33, 1, 0],
+	    IDIDONF=	[0, 34, 1, 0],
+	    IDIDOFFF=	[0, 35, 1, 0],
+	COND_18_ACT=	[1, 0, 18, 0],	! Conditional action on break
+	COND_19_ACT=	[1, 18,18, 0],	! Conditional action on ABREAK
+	COND_20_ACT=	[2, 0, 18, 0],
+	COND_21_ACT=	[2, 18,18, 0],
+	COND_22_ACT=	[3, 0, 18, 0],
+	COND_23_ACT=	[3, 18,18, 0],
+	COND_24_ACT=	[4, 0, 18, 0],
+	COND_25_ACT=	[4, 18,18, 0]
+	TES;
+
+MACRO
+    INTEREST(J) = 0,J,1,0 %,				! The j-th interest bit
+    CNDACTION(J)= 1+((J-18)/2), (J AND 1)*18,18,0 %;	! Conditional text ptr
+							!  for j-th action.
+
+OWN
+	ROUTS	: BLOCKVECTOR[ROUTSCNT,ROUTSIZE] FIELD(ROUT_FIELDS);
+    
+LITERAL
+	BREAKV=BITVAL(18),		ABREAKV=BITVAL(19),
+	OPQATV=BITVAL(20),		OPQAFTV=BITVAL(21),
+	TRCATV=BITVAL(22),		TRCAFTV=BITVAL(23),
+	TABREAKV=BITVAL(24),
+
+	MAXACTRTN=24,
+
+	PREVSTEPV=BITVAL(32),
+	PREVOFFV=BITVAL(33),		IDIDONV=BITVAL(34),
+	IDIDOFFV=BITVAL(35);
+
+ROUTINE CFINDR(R)=
+!+
+! FUNCTION
+!	CONDITIONAL FIND - locate the index of Routine R IN ROUTS.
+! INPUTS
+!	R	- ROUTINE Address
+! OUTPUT
+!	Index in ROUTS of the entry
+!	-1 If not found
+!-
+    DECR I FROM .NROUTS TO 0 DO
+	IF .ROUTS[.I,ROUT_ADDR] EQL .R<RH> THEN RETURN .I;
+
+ROUTINE CINSERT(R)=
+!+
+! FUNCTION
+!	Conditionally insert a routine into ROUTS, if it isn't there already.
+! INPUTS
+!	R	- Routine address
+! OUTPUT
+!	Return THE INDEX of R IN ROUTS. INSERT If NECESSARY
+!-
+    BEGIN
+    LOCAL
+	L;
+    IF (L = CFINDR(.R)) GEQ 0 THEN RETURN .L;
+
+    NROUTS = .NROUTS + 1;			! Not present, add it
+    ROUTS[.NROUTS,ROUT_INFO] = .R<RH>;
+
+    .NROUTS
+    END;
+
+ROUTINE CREMOVE(R,VAL): NOVALUE=
+!+
+! FUNCTION
+!	Conditional remove. Turn off bits specified by VAL in
+!	the entry for R. Delete R if no other interest bits are set.
+! INPUTS
+!	R	- A routine address
+!	VAL	- Mask of un-interesting bits
+!-
+    BEGIN
+    LOCAL
+	L;
+
+    IF (L = CFINDR(.R)) LSS 0 THEN RETURN;	! No EVENTs established
+
+    IF (VAL = .ROUTS[.L,ROUT_INFO] AND .VAL) EQL 0
+    THEN				! The EVENTs we are looking at aren't
+	RETURN;				!  interesting for this routine.
+
+    IF (.VAL AND OPQAFTV) NEQ 0 AND .ROUTS[.L,IDIDOFFF]
+    THEN
+	BEGIN
+	OPQCNT = 0;
+	TRACEFLAG = -.ROUTS[.L,PREVOFFF];
+	STEPFLAG = -.ROUTS[.L,PREVSTEPF];
+	ROUTS[.L,ROUT_INFO] = .ROUTS[.L,ROUT_INFO] AND NOT (IDIDOFFV+PREVOFFV+PREVSTEPV)
+	END;
+
+    IF (.VAL AND TRCAFTV) NEQ 0 AND .ROUTS[.L,IDIDONF]
+    THEN
+	TRCCNT = TRACEFLAG = ROUTS[.L,IDIDONF] = 0;
+
+    ROUTS[.L,ROUT_INFO] = .ROUTS[.L,ROUT_INFO] AND NOT .VAL;
+
+    DECR IDX FROM MAXACTRTN TO 18 DO
+	BEGIN
+	MAP
+	    VAL	: BITVECTOR;			! Count number of conditions
+	IF .VAL[.IDX] THEN INCRTOG;		!  which are active?
+	END;
+
+    IF .ROUTS[.L,INTEREST_BITS] NEQ 0 THEN RETURN;	! Still some EVENTs
+							!  of interest
+
+    ! Nothing interesting remains for this routine.  Remove it from the
+    ! table, by copying up the last routine in the table into the deletion
+    ! slot
+    !
+    IF .L LSS .NROUTS
+    THEN						! Fill in empty holes
+	DECR J FROM ROUTSIZE-1 TO 0 DO			!  by copying down
+	    ROUTS[.L,.J,FW] = .ROUTS[.NROUTS,.J,FW];
+
+    NROUTS = .NROUTS -1
+    END;
+
+ROUTINE SETTBLBIT(ROUTN,ISITEXIT):NOVALUE=
+!+
+! FUNCTION
+!	This routine sets a bit in the DEBUG UUO instruction itself,
+!	indicating that this routine is "interesting"
+! INPUT
+!	ROUTN	- Routine address
+!	ISITEXIT- Flag indicating if we are setting action on routine-entry
+!		  or routine exit.
+!-
+    BEGIN
+    LOCAL
+	PNTR	: REF $INSTRUCTION;
+
+    PNTR = FNDDBGUUO(.ROUTN,.ISITEXIT);
+
+    IF .PNTR LSS 0
+    THEN
+	(PRDISP(.ROUTN);  ERROR(6))
+    ELSE
+	CHKUWP( PNTR[0,TBLBIT] = 1 , .PNTR);
+
+    ! This may be the DEBUG UUO for the unwind exit, try again
+    !
+    IF .PNTR[0,UNWINDBIT]
+    THEN
+	BEGIN
+	PNTR = FNDDBGUUO(.PNTR+1,.ISITEXIT);
+	IF .PNTR LSS 0 
+	THEN
+	    (PRDISP(.ROUTN); ERROR(6))
+	ELSE
+	    CHKUWP( PNTR[0,TBLBIT] = 1, .PNTR)
+	END
+    END;
+ROUTINE SETBIT(VAL:BITVECTOR, FBEGIN, FEND):NOVALUE=
+!+
+! FUNCTION
+!	Set interest bits and action-pointers into the ROUTS table
+! INPUTS
+!	VAL	- mask of interesting bits
+!	FBEGIN	- Flag indicating interest at routine entry
+!	FEND	- Flag indicating interest at routine exit
+!
+! IMPLICIT INPUTS
+!	SIXLP[0]	- CH$PTR to conditional action text
+!	SIXRP[0..N]	- ROUTINE addresses
+! OUTPUT
+!	None
+!-
+    BEGIN
+    LOCAL
+	L;
+
+    IF .SIXLC EQL 0 THEN SIXLP = UPLIT(0);	! Unconditional Actions
+
+    INCR IDX FROM 18 TO MAXACTRTN DO
+	IF .VAL[.IDX]				! Interesting "event"
+	THEN
+	    DECR I FROM .SIXRC-1 TO 0 DO
+		BEGIN
+		L = CINSERT(.SIXRP[.I]);
+		IF NOT .ROUTS[.L, INTEREST(.IDX)] THEN DECRTOG;	! New interest
+		ROUTS[.L, INTEREST(.IDX)] = 1;			!  added
+		ROUTS[.L, CNDACTION(.IDX)] = .SIXLP[0];
+
+		! Mark routine entry and exit as necessary
+		!
+		IF .FBEGIN NEQ 0 THEN SETTBLBIT(.(SIXRP[.I])<RH>,0);
+		IF .FEND NEQ 0 THEN SETTBLBIT(.(SIXRP[.I])<RH>,1)
+		END;
+    END;
+ROUTINE UNSETBIT(VAL)=
+    DECR I FROM .SIXRC-1 TO 0 DO CREMOVE(.SIXRP[.I],.VAL);
+
+
+ROUTINE XBREAK:NOVALUE=
+    BEGIN
+    SETBIT(BREAKV,1,0);
+    BUGCHECK(-34,RETURN)
+    END;
+
+ROUTINE DBREAK : NOVALUE=UNSETBIT(BREAKV);
+
+ROUTINE XABREAK:NOVALUE=SETBIT(ABREAKV,0,1);
+
+ROUTINE DABREAK : NOVALUE =UNSETBIT(ABREAKV);
+
+ROUTINE OPAQUE:NOVALUE=
+	SETBIT(OPQAFTV+(IF .MODEFLAG NEQ 1 THEN OPQATV ELSE 0),1,1);
+
+ROUTINE DOPAQUE : NOVALUE=
+	UNSETBIT(OPQAFTV+(IF .MODEFLAG NEQ 1 THEN OPQATV ELSE 0));
+
+ROUTINE XTRACE:NOVALUE=
+    BEGIN
+    SETBIT((CASE .MODEFLAG FROM 0 TO 2 OF
+		SET
+		[0]:	TRCATV;
+		[1]:	TRCAFTV;
+		[2]:	TRCAFTV+TRCATV
+		TES
+	    ),1,1);
+
+    BUGCHECK(-34,0)
+    END;
+ROUTINE DTRACE=
+	UNSETBIT(CASE .MODEFLAG FROM 0 TO 2 OF
+		SET
+		[0]:	TRCATV;
+		[1]:	TRCAFTV;
+		[2]:	TRCAFTV+TRCATV
+		TES
+		);
+ROUTINE STABREAK(RTN): NOVALUE=
+!+
+! FUNCTION
+!	Set a Temporary ABREAK on a routine.
+! INPUT
+!	RTN	- routine address
+!-
+    BEGIN
+    STACKLOCAL
+	L;			! Dummy for SIXRP target
+
+    SIXLC=0;			! fake unconditional break
+    SIXRC=1;
+    SIXRP=L;			! pointer to name of routine
+    L=(.RTN);			! name of routine
+
+    SETBIT(TABREAKV,0,1)	! go set bit
+    END;
+
+ROUTINE DSTABREAK(RTN): NOVALUE=
+!+
+! FUNCTION
+!	???
+! INPUTS
+!	RTN	- Routine address with a possible TRACE after
+!-
+    BEGIN
+    LOCAL
+	L;
+
+    SIXRC=1;
+    SIXRP=L;
+    L=(.RTN);
+    UNSETBIT(TABREAKV)
+    END;
+%SBTTL	'Monitor|Watch Variables'
+!		MONITORING of VARIABLES
+!		-----------------------
+
+! The monitoring routines use another table with two-word entries,
+! formatted
+!
+!	!---------------!---------------!
+!	!	WATCHED_LOCATION	!
+!	!---------------!---------------!
+!	!	WATCHED_VALUE		!
+!	!---------------!---------------!
+!
+! where location is a *pointer* to the byte being monitored
+! (i.e. it has a position, size field),  and value is the
+! byte's last reported contents.
+
+FIELD
+    WATCH_FIELDS=
+	SET
+	WATCHED_LOCATION=	[0, FW],	! Address
+	WATCHED_VALUE=		[1, FW]		! Old value
+	TES;
+
+OWN
+    MONVALS:	BLOCKVECTOR[MONITCNT,2] FIELD(WATCH_FIELDS);
+
+MACRO
+	WATCHTAG=0, WATCHFLAG %;
+ROUTINE PRBPTR(ENTRY:$BYTE_POINTER):NOVALUE=
+!+
+! FUNCTION
+!	Print out a PDP-10 byte-pointer being used for WATCH or MONITOR
+!	points.
+! INPUT
+!	ENTRY	- Hardware byte pointer
+!-
+    BEGIN
+
+    PRDISP(.ENTRY[P_OFFSET]);				! PRINT NAME
+
+    IF .ENTRY[P_POS_SIZE] NEQ 36	! Non-fullwords get qualified <p,s>
+    THEN
+	BEGIN			! PRINT <P,S>
+	OUTC(%C'<');
+	OUTFD(.ENTRY[P_POS],0);
+	OUTC(%C',');
+	OUTFD(.ENTRY[P_SIZE],0);
+	IF .ENTRY[P_INDEX] NEQ 0
+	THEN
+	    BEGIN
+	    OUTC(%C',');  OUTD(.ENTRY[P_INDEX]);
+	    OUTC(%C',');  OUTD(.ENTRY[P_INDIRECT]);
+	    END;
+	OUTC(%C'>')
+	END
+    END;
+ROUTINE PRMVALSNAM(ENTRY: $BYTE_POINTER):NOVALUE=
+!+
+! FUNCTION
+!	Print byte pointer with W(atch) or M(onitor) indicator
+! INPUT
+!	ENTRY	- Hardware byte pointer
+!-
+    BEGIN
+    IF .ENTRY<WATCHFLAG> THEN OUTC(%C'W') ELSE OUTC(%C'M');
+    OUTC(%C'-'); OUTC(%C' ');
+    PRBPTR(.ENTRY)
+    END;
+ROUTINE CKVALS(RTN,TOG):NOVALUE=
+!+
+! FUNCTION
+!	CHECK FOR CHANGED VALUES IN THE MONITOR TABLE
+! INPUTS
+!	RTN	- Address
+!	TOG	- Controls printout as follows
+!			TOG < 0		Internal call, not from a user
+!					routine. [Probably XASSIGN]
+!			TOG >= 0	Called during DEBUG UUO processing
+!
+!			TOG<0,1>	1 = Break AFTER
+!					0 = Break BEFORE
+!
+!-
+    BEGIN
+    DECR I FROM .NVALS TO 0 DO
+	BEGIN
+	LOCAL
+	    X;
+
+	X = SCANN(MONVALS[.I,WATCHED_LOCATION]);
+	IF .X NEQ .MONVALS[.I,WATCHED_VALUE]
+	THEN
+	    BEGIN
+	    IF .TOG GEQ 0
+	    THEN
+		BEGIN
+		OUTS('*** ');
+		IF .TOG
+		THEN
+		    OUTS('During ')
+		ELSE
+		    OUTS('Before ');
+
+		IF NOT .MONVALS[.I,WATCHTAG] THEN TOG = -1;
+		PRXDISP(.RTN);
+		IF .TOG THEN 0 ELSE
+		    BEGIN
+		    OUTS(' from ');
+		    PRDISP(GETCALLFROM(.ENTERPNT))
+		    END;
+		CRLF
+		END;
+
+	    PRMVALSNAM(.MONVALS[.I,0,FW]);
+	    PUTTAB;
+	    OUTS('Old: ');
+	    OUTDEFAULT(.MONVALS[.I,WATCHED_VALUE]);
+	    PUTTAB;
+	    OUTS('New: ');
+	    OUTDEFAULT(.X);
+	    CRLF;
+	    MONVALS[.I,WATCHED_VALUE] = .X
+	    END
+	END;
+
+    IF .TOG EQL -1  THEN STOPIT()
+    END;
+ROUTINE XPRINTMON:NOVALUE=
+!+
+! FUNCTION
+!	COMMAND: PRINT MONITOR
+!-
+    BEGIN
+    IF .NVALS LSS 0 THEN RETURN OUTS('No monitored locations',%CHAR(13,10));
+
+    DECR I FROM .NVALS TO 0 DO
+	BEGIN
+	PRMVALSNAM(.MONVALS[.I,0,FW]);
+	OUTS(%STRING(%CHAR(9),'= '));
+	OUTDEFAULT(.MONVALS[.I,WATCHED_VALUE]);
+	DBLEQL();
+	PRDISP(.MONVALS[.I,WATCHED_VALUE]);
+	CRLF
+	END
+    END;
+ROUTINE DOMON(WATCHBIT):NOVALUE=
+!+
+! FUNCTION
+!       Implements MONITOR and WATCH commands
+! INPUTS
+!       WATCHBIT	- 0=> MONITOR command
+!			 1=> WATCH command
+!-
+    BEGIN
+    LABEL
+	L;
+    LOCAL
+	X;
+    MAP
+	SIXRP	: REF BLOCKVECTOR[, 1] FIELD(BYTEPOINTER_FIELDS);
+
+    IF .SIXRC EQL 0
+    THEN
+	! Report current entries
+	!
+	BEGIN
+	MODEFLAG = 4;		! SO XPRINTMON WILL BE CALLED
+	RETURN
+	END;
+
+    ! MAKE A NEW ENTRY
+    !
+    DECR I FROM .SIXRC-1 TO 0  DO
+L:	BEGIN
+	IF .SIXRP[.I,P_LHALF] EQL 0	! Change address to a valid byte-ptr
+	THEN				!  with <0,36>
+	    SIXRP[.I,P_LHALF] = %O'004400';
+
+	IF .SIXRP[.I,P_INDEX] NEQ 0 OR
+	    .SIXRP[.I,P_INDIRECT]	! Having index-reg or indirect is
+	THEN				!  frowned upon
+	    (PRMVALSNAM(.SIXRP[.I,P_FWORD]);  RETURN ERROR(18));
+
+	IF NOT ISREADABLE(.SIXRP[.I,P_FWORD] AND AddrMask)
+	THEN
+	    BEGIN
+	    ILLMEM = .SIXRP[.I,P_FWORD] AND AddrMask;
+	    ERROR(IF NOT ISADDRESS(.ILLMEM) THEN 28 ELSE 33);
+	    RETURN
+	    END;
+
+	DECR J FROM .NVALS TO 0 DO
+	    IF (.MONVALS[.J,WATCHED_LOCATION] AND %O'777737777777')  EQL .SIXRP[.I,P_FWORD]
+!					   ^^ mask out watch bit
+	    THEN 
+		BEGIN
+		! same location, we may be changing watch flag
+		MONVALS[.J,WATCHTAG] = .WATCHBIT;
+		LEAVE L;
+		END;
+	DECRTOG;
+	NVALS = .NVALS+1;
+	MONVALS[.NVALS,WATCHED_LOCATION] = .SIXRP[.I,P_FWORD];
+	MONVALS[.NVALS,WATCHTAG] = .WATCHBIT;
+	MONVALS[.NVALS,WATCHED_VALUE] = SCANN(SIXRP[.I,P_FWORD])
+	END;
+
+    BUGCHECK(-34,0)
+    END;
+ROUTINE XMONITOR : NOVALUE= DOMON(0);
+
+ROUTINE XWATCH: NOVALUE = DOMON(1);
+ROUTINE XDMONITOR:NOVALUE=
+!
+! DELETE ENTRY from MONITOR VALUES TABLE
+!
+    BEGIN
+	LABEL LB;
+    LOCAL
+	L;
+    MAP
+	SIXRP	: REF BLOCK;
+
+    DECR I FROM .SIXRC-1 TO 0 DO
+LB:	BEGIN
+	IF .SIXRP[.I,LH,0] EQL 0
+	THEN
+	    SIXRP[.I,LH,0] = %O'004400';	! INSERT <FW>
+	L = (
+	    DECR J FROM .NVALS TO 0 DO
+		IF (.MONVALS[.J,WATCHED_LOCATION] AND %O'777737777777')  EQL .SIXRP[.I,FW]
+		THEN
+		    EXITLOOP .J
+	    );
+
+	IF .L LSS 0
+	THEN
+	    BEGIN
+	    OUTS('No entry for ');
+	    PRMVALSNAM( .SIXRP[.I,FW] );
+	    CRLF;
+	    LEAVE LB;
+	    END;
+	INCRTOG;
+	IF .L LSS .NVALS
+	THEN
+	    BEGIN
+	    MONVALS[.L,WATCHED_LOCATION] = .MONVALS[.NVALS,WATCHED_LOCATION];
+	    MONVALS[.L,WATCHED_VALUE] = .MONVALS[.NVALS,WATCHED_VALUE];
+	    END;
+	NVALS = .NVALS-1;
+	END;
+    END;
+%SBTTL	'Miscellaneous Command Action Routines'
+
+!		THE DEBUG PROCESSING ROUTINES
+!		-----------------------------
+
+ROUTINE DOTVREG =
+!+
+! FUNCTION
+!	"No-op" routine which is used frequently in tables to provide a
+!	default action routine with no nasty side-effects.
+!-
+    BEGIN
+    REGISTER
+	R = VREG;
+
+    .R
+    END;
+ROUTINE RET612:NOVALUE=
+!+
+! FUNCTION
+!	This routine restores the SIX12 registers saved by XDDT before
+!	entering DDT.  Doing a POPJ SP, then returns us to where we were
+!	relative to XDDT.
+!
+! NOTES
+!	This routine is never called directly.
+!-
+    BEGIN
+    REGISTER
+	R;
+    R = SIXACS^18;		! This is JRST-ed to to restore SIX12
+    BLT(R,%O'17')		!  after a visit into DDT
+    END;
+
+ROUTINE XDDT:NOVALUE=
+!+
+! FUNCTION
+!	This routine locates DDT, saves the registers and SP, and
+!	jumps to the DDT entry-point.  ?.JBOPC is pre-loaded with
+!	where to return to.  This is accessed by the DDT command
+!			SIXRET$X
+!	which results in a JRST @.JBOPC instruction.  RET612 is a
+!	critical routine.
+!
+!	BEWARE:	There should be NO "STACKLOCAL" storage in this routine
+!		either!
+!-
+    BEGIN
+    REGISTER
+	R;
+
+    R = SIXACS;
+    BLT(R,SIXACS[15]);		! Preserve the AC's when we enter DDT.
+
+%IF EXTENDED
+%THEN
+    $JBOPC = 1^18+RET612;
+%ELSE
+    $JBOPC = (RET612);		! N.B. that this implies that you cannot
+				!  actually modify a register from DDT, unless
+				!  you modify SIXACS..SIXACS+15
+%FI
+%IF TOPS10
+%THEN
+    IF .$JBDDT<RH> EQL 0 THEN RETURN ERROR(21);
+    JRST(0,.$JBDDT);
+%ELSE
+    BEGIN
+    OWN
+	SAVENTVEC;
+    REGISTER
+	PROTECTION;
+
+    RPACS( $FHSLF^18 + %O'770'; PROTECTION );	! Check page 770 for ddt
+
+    IF (.PROTECTION AND PA_PEX) EQL 0	! Non-existant page...
+    THEN
+	BEGIN
+	LOCAL
+	    JFN;
+
+	GEVEC( $FHSLF ; SAVENTVEC );	! Save entry vector, GET will smash
+
+	IF GTJFN( GJ_OLD+GJ_PHY+GJ_SHT,	! Old file, use system logicals
+		MSG( 'SYS:UDDT.EXE');
+		JFN)
+	THEN
+	    IF GET( $FHSLF^18 + GT_NOV + .JFN )
+	    THEN
+		SEVEC( $FHSLF, .SAVENTVEC )
+	    ELSE
+		RETURN ERROR(21)
+	ELSE					! Can't find file, so quit with
+	    RETURN ERROR(10);			!  appropriate message
+
+	IF .$JBSYM NEQ 0		! Ensure symbols loaded
+	THEN
+	    .%O'770001' = .$JBSYM;	! Copy pointer into DDT
+
+	.%O'770002' = .$JBUSY		! and undefined symbol pointer
+	END;
+
+    JRST(0,%O'770000')			! Always loads at this address
+    END
+%FI
+    END;
+
+ROUTINE SLASH(PARSE):NOVALUE=
+!+
+! FUNCTION
+!       Print range of memory locations according to either the "!" infix
+!       operator or the "/" postfix operator.
+! INPUTS
+!       PARSE   - indicates which parse was detected.
+!-
+    BEGIN
+    LOCAL
+	N;		      ! Number of locations to display
+    MAP
+	SIXLP   : HBLOCK;
+
+    N = (IF .PARSE EQL 3 THEN .SIXRP[0] - 1 ELSE 0);
+
+    INCRA A FROM .SIXLP[0,RH,0] TO .SIXLP[0,RH,0]+.N DO
+	BEGIN
+	PRDISP(.A);
+	OUTC(%C'/');
+	PUTTAB;
+	IF NOT ISREADABLE(.A)
+	THEN
+	    BEGIN
+	    OUTS('?');
+	    CRLF;
+	    EXITLOOP
+	    END;
+	OUTRDEF(..A,14);
+	DBLEQL();
+	PRDISP(..A);
+	CRLF;
+
+	IF ISON(ENABFLAG) AND ISOFF(NOPOLLFLAG) AND (.A MOD 4) EQL 0
+	THEN
+	    BEGIN		! During long type-outs, give user
+%IF TOPS10			!  an opportunity to escape from
+%THEN				!  "core-dump".....
+	    IF SKPINL() THEN EXITLOOP;
+%ELSE
+	    IF NOT SIBE($PRIIN) THEN EXITLOOP;		! Input buffer empty
+%FI
+	    END
+	END
+    END;
+ROUTINE GOER:NOVALUE=
+    BEGIN
+    IF ISON(TRACEFLAG) THEN DECRTOG;
+    GOFLAG = 1;
+    END;
+
+ROUTINE CLRSTEP:NOVALUE=(SETOFF(STEPFLAG));
+
+ROUTINE XGO:NOVALUE=(CLRSTEP(); GOER());
+
+ROUTINE XNOPOLLON:NOVALUE=(SETON(NOPOLLFLAG));
+
+ROUTINE XNOPOLLOFF:NOVALUE=(SETOFF(NOPOLLFLAG));
+
+ROUTINE XCOPAQUE:NOVALUE=(SETON(COPQFLAG));
+
+ROUTINE XNOCOPAQUE:NOVALUE=SETOFF(COPQFLAG);
+
+ROUTINE DISAB:NOVALUE=(SETOFF(ENABFLAG));
+
+ROUTINE XSTEP:NOVALUE=
+    BEGIN
+    BUGCHECK(35,RETURN);
+    SETON(STEPFLAG);
+    GOER()
+    END;
+ROUTINE XOK:NOVALUE=
+! XOK performs the following actions
+!	(1) set a temporary ABREAK at the current routine
+!	(2) do a GO (XGO)
+!
+!	The temporary ABREAK is removed when encountered
+!
+	BEGIN
+
+	BUGCHECK(35,RETURN );
+
+	IF .RTNLVL EQL 0
+	THEN			    ! OK works only at routine entry
+	    BEGIN
+	    STABREAK(.RNAME);
+	    XGO()
+	    END
+	ELSE
+	    ERROR(24)
+	END;
+ROUTINE XSTRACE:NOVALUE=
+    BEGIN
+    IF .OPQCNT GTR 0
+    THEN
+	BEGIN
+	OPQCNT = 0;
+	DECR J FROM .NROUTS TO 0 DO
+	     ROUTS[.J,0,FW] = .ROUTS[.J,0,FW] AND NOT (IDIDOFFV+PREVOFFV+PREVSTEPV)
+	END;
+    SETON(TRACEFLAG);
+    END;
+ROUTINE XCLRTRACE:NOVALUE=(SETOFF(TRACEFLAG));
+ROUTINE XGOTRACE:NOVALUE=(XSTRACE(); CLRSTEP();  GOER());
+ROUTINE XGOCLR:NOVALUE=(SETOFF(TRACEFLAG); CLRSTEP(); GOER());
+ROUTINE NOSIX12:NOVALUE=
+!+
+! FUNCTION
+!       Disable SIX12's UUO handler by placing a JFCL 0 into location
+!       41(8).
+!-
+    IF ISOFF(ERRORFLAG) THEN ($JB41 = DBG_OFF_INST;  GOER());
+ROUTINE XDEBUG: NOVALUE=
+!+
+! FUNCTION
+!	Set up debugging environment by making LUUO trap location be
+!	a call of the SIX12 UUO handler.
+!-
+    IF ISOFF(ERRORFLAG)
+    THEN
+	$JB41 = DBG_ON_INST;		! Transfer to UUOH
+ROUTINE XBASE(K):NOVALUE=
+!+
+! FUNCTION
+!	Set default radix for type-in and type-out.
+! INPUTS
+!	K	- distinguishes between NILADIC and PREFIX command form
+! NOTES
+!	SIXRP[0] contains new radix.
+!-
+    BEGIN		! set IOBase
+    IF .K
+    THEN
+	BEGIN
+	IF .SIXRP[0] EQL 0 THEN (.SIXRP) = 8;
+	IF ((.SIXRP[0] LSS 2) OR (.SIXRP[0] GTR 10))
+	THEN
+	     RETURN ERROR(5)
+	ELSE
+	     (IOBASE = .SIXRP[0])
+	END;
+
+    OUTD(.IOBASE);
+    OUTS(' decimal');
+    OUTCRLF()
+    END;
+ROUTINE XWBASE(K):NOVALUE=
+    BEGIN		! set WDBase
+    IF .K THEN WDBASE = ..SIXRP;
+    OUTDEFAULT(.WDBASE);
+    CRLF;
+    END;
+ROUTINE XBACKTO:NOVALUE=
+    BEGIN
+    IF .DEPTH LEQ 1
+    THEN
+	RETURN ERROR(29);		! no place to go back to
+    IF .SIXRP[0] EQL .DEPTH THEN RETURN;	! Already there!
+
+    IF .SIXRP[0] GTR .DEPTH THEN RETURN ERROR(30);	! can't go back to deeper stack
+    IF .UNWINDVALUE EQL 0 THEN RETURN ERROR(37);	! unwind will fail, don't do it
+    ! do unwinding
+    !
+    WHACKS = .DEPTH - .SIXRP[0] + 1;	! how many levels to whack off
+
+    SIGNAL( SIXUNWSIGNAL )
+    END;
+ROUTINE XPOP(N):NOVALUE=
+    BEGIN
+    LOCAL
+	CNT;
+
+    CNT = (IF .N EQL 0 THEN 1 ELSE .SIXRP[0]);
+
+    IF .CNT GTR .DEPTH THEN CNT = .DEPTH;
+
+    IF .DEPTH LEQ 1 THEN RETURN ERROR(29);	! no place to go back to
+    IF .CNT EQL 0 THEN RETURN;			! already there!
+
+    IF .CNT LSS 0
+    THEN
+	BEGIN
+	CNT = (-.CNT) + .DEPTH;
+	RETURN ERROR(30);		! can't go back to deeper stack
+	END;
+
+    IF .CNT GEQ .DEPTH THEN CNT = .DEPTH;
+
+    IF .UNWINDVALUE EQL 0 THEN RETURN ERROR(37);	! Unwind will fail, don't do it!
+
+    ! do unwinding
+    !
+
+    WHACKS = .CNT+1;				! how many levels to whack off
+
+    SIGNAL( SIXUNWSIGNAL )
+    END;
+ROUTINE XSIGNAL:NOVALUE=
+    BEGIN
+    SIGNAL( .SIXRP[0] )
+    END;
+ROUTINE XSETUNWIND:NOVALUE=
+    BEGIN
+    SETUNWIND()
+    END;
+ROUTINE EXITSIGNAL(P,V,KIND):NOVALUE=
+!+
+! FUNCTION
+!	This implements the RESUME and RESIGNAL commands
+! INPUT
+!	P	- Indicates parse to use, either NILADIC or PREFIX
+!	V	- Value to leave in SIXRP[0]
+!	KIND	- Is this RESUME or RESIGNAL
+! OUTPUTS
+!	None
+!-
+    BEGIN
+    !	Here we see if our return address is in WithinSignalHandler
+    !	If not, we do an Error(27)
+    !
+    LOCAL
+	F	: $FRAME;
+
+    F = .ENTERPNT;
+    IF .F[NEXT_FRAME] NEQ 0 AND
+	.F[NEXT_FRAME] LSS .F<RH>
+    THEN
+	F = .F[NEXT_FRAME]
+    ELSE
+	BEGIN
+	ERROR(27);	! first failure...FREG will be at least
+			! depth 2 in signal handler!
+	RETURN
+	END;
+
+    IF NOT WITHINSIGNALHANDLER(GETCALLFROM(.F<RH>)) 
+    THEN
+	BEGIN
+	ERROR(27);	! second failure...return address is
+			! not to signal handler
+	RETURN
+	END;
+
+    !	We now know that we are about to return to the signal
+    !	handler.  First, we modify the value of the signal
+    !	or return value if necessary
+
+    IF .P						! MONADIC
+    THEN
+	BEGIN %(modify values)%
+	LOCAL
+	    S	: REF VECTOR;
+
+	! Now, what we WANT here is that S=GetArgAdr(n,.F<RH>)
+	! but since the signal handler doesn't follow strict
+	! parameter passing protocols, GetArgAdr will fail.
+	! However, by this point we KNOW that we are being called
+	! from a signal handler routine, so the following code
+	! will indeed return the correct address of the parameter
+	IF .KIND EQL DORESUME THEN
+	    BEGIN %(resuming)%
+	    S = .F[ARG_N_OF_M(2,3)];		! get address of mechanism
+						! vector
+	    S[1] = .SIXRP[0];			! store return value
+						! for signal call
+	    END %(resuming)%;
+	IF .KIND EQL DORESIGNAL THEN
+	    BEGIN %(resignalling)%
+	    S = .F[ARG_N_OF_M(1,3)];		! get address of first arg,
+						! which is the signl vector
+	    S[1] = .SIXRP[0];			! new value stored
+	    END %(resignalling)%;
+	END %(modify values)%;
+
+    SIXRP[0] = .V;
+    XRETURN()
+    END;
+ROUTINE XRESUME(P) : NOVALUE=
+!+
+! FUNCTION
+!	This operator has two parses:
+!		niladic: equivalent to the RETURN 1 command
+!		monadic: sets the return value in the mechanism
+!			vector to the value of SIXRP
+!
+!	This operator is valid only when in the signal handler
+!	routine!
+!
+    BEGIN
+    EXITSIGNAL(.P,1,DORESUME)
+    END;
+ROUTINE XRESIGNAL(P): NOVALUE=
+!+
+! FUNCTION
+!	This operator has two parses:
+!		niladic: equivalent to the RETURN 0 command
+!		monadic: sets the signal value in the mechanism
+!			vector to the value of SIXRP
+!
+!	This operator is valid only when in the signal handler
+!	routine!
+!-
+    BEGIN
+    EXITSIGNAL(.P,0,DORESIGNAL)
+    END;
+ROUTINE CALL1:NOVALUE=
+!+
+! FUNCTION
+!	Implements the CALLS command
+!-
+    BEGIN
+    OUTFLAG();
+    PSTK( .ENTERPNT[NEXT_FRAME], 0,  BIGNUMBER )
+    END;
+
+
+ROUTINE CALL2:NOVALUE=
+!+
+! FUNCTION
+!	Implement the LCALLS command
+!-
+    BEGIN
+    OUTFLAG();
+    PSTK( .ENTERPNT[NEXT_FRAME], 1, BIGNUMBER )
+    END;
+
+
+ROUTINE XCALL(K): NOVALUE=
+!+
+! FUNCTION
+!	Implement the CALL or CALL <n> command
+! INPUT
+!	K	- indicates NILADIC or MONADIC parse
+!-
+    BEGIN
+    OUTFLAG();
+    PSTK( .ENTERPNT[NEXT_FRAME], 0, (IF .K THEN ..SIXRP ELSE 1) )
+    END;
+
+
+ROUTINE XLCALL(K): NOVALUE=
+!+
+! FUNCTION
+!	Implement the LCALL and LCALL <n> commands
+! INPUT
+!	K	- Flag indicating NILADIC or MONADIC parse
+!-
+    BEGIN
+    OUTFLAG();
+    PSTK( .ENTERPNT[NEXT_FRAME], 1, (IF .K THEN ..SIXRP ELSE 1) )
+    END;
+ROUTINE ISADDRESS(P)=
+!+
+! FUNCTION
+!	Is value an address in the user's address space?
+! INPUTS
+!	P	- Address value
+! OUTPUT
+!	True	- Valid address
+!	False	- Non-existant memory
+!-
+    BEGIN
+%IF TOPS10
+%THEN
+    IF .P<RH>  GTR .$JBREL<RH>	 AND	! not in lowseg
+	.$JBHRL NEQ 0
+    THEN
+	IF .P<RH> GTR .$JBHRL<RH> OR
+	   .P<RH>  LSS .$JBHRL<RH> - .$JBHRL<LH>
+	THEN
+	    RETURN 0;
+    RETURN 1
+%ELSE
+    LOCAL
+	PROTECTION;
+
+    RPACS( $FHSLF^18 + (.P<RH>)^(-9) ; PROTECTION );
+
+    (.PROTECTION AND (PA_CPY OR PA_PEX)) NEQ 0			! Does page exist?
+%FI
+    END;
+ROUTINE ISREADABLE(P)=
+!+
+! FUNCTION
+!	Check that the given address is "readable"
+! INPUT
+!	P	- address value
+! OUTPUT
+!	TRUE	- address can be read (no NXM trap will occur)
+!	FALSE	- address is not mapped...
+!-
+    BEGIN
+    LOCAL
+	PAGENUM,
+	PROTECTION;
+
+%IF TOPS10
+%THEN
+    ISADDRESS(.P) 
+%ELSE
+    PAGENUM = (.P AND AddrMask)^(-9);
+
+    RPACS( $FHSLF^18 OR .PAGENUM ; PROTECTION );
+
+    (.PROTECTION AND PA_RD) NEQ 0
+%FI
+    END;
+ROUTINE ISWRITABLE(P)=
+!+
+! FUNCTION
+!	Determine if this address is writable.
+! INPUTS
+!	P	- Virtual address
+! OUTPUTS
+!	TRUE	- location may be written
+!	FALSE	- location is non-writable
+!-
+    BEGIN
+%IF TOPS10
+%THEN
+    RETURN 1
+%ELSE
+    LOCAL
+	PAGENUM,
+	PROTECTION;
+
+    PAGENUM = (.P AND AddrMask)^(-9);
+    RPACS( $FHSLF^18 OR .PAGENUM ; PROTECTION );
+
+    (.PROTECTION AND (PA_WT OR PA_CPY)) NEQ 0	! Writable or copy on write...
+%FI
+    END;
+ROUTINE ISROUTINE(P: REF $INSTRUCTION)=
+!+
+! FUNCTION
+!	See if P is address of a BLISS routine.
+! INPUT
+!	P	- machine address of PDP-10/20 Instruction
+! OUTPUT
+!	0	- not a routine address
+!	#0	- CH$PTR to descriptive text
+!-
+    BEGIN
+    IF NOT ISREADABLE(.P) THEN RETURN 0;	! Location isn't addressable
+
+    !+	
+    ! It is certainly a routine if it contains any one of the
+    ! instructions which start a routine, such as a DEBUG UUO
+    !-
+    SELECTONE .P[M_OPCODE] OF
+	SET
+	[DEBUGUUO]:
+	    IF .P[0,NOVALUEBIT]
+	    THEN
+		RETURN MSG( 'NoValue Routine w/debug' )
+	    ELSE
+		RETURN MSG( 'Routine w/debug' );
+
+	[PUSHOP,POPJOP,PUSHJOP]:
+	    IF .P[M_REGF] EQL SREG
+	    THEN
+		RETURN MSG('Routine')
+	    ELSE
+		RETURN 0;
+
+	[OTHERWISE]:
+	    RETURN 0
+	TES
+    END;
+ROUTINE PPSYM(P:SYMBOL, W):NOVALUE=	! Common code for PRS, SEARCH, PRM
+!+
+! FUNCTION
+!	Formatted dump of selected portions of the symbol table.  Used by
+!       PRS, PRM and SEARCH commands.
+! INPUTS
+!	P	- Pointer to symbol-table entry
+!	W	- Width of symbol-name printed. (Used to align columns)
+!-
+    BEGIN
+    LOCAL
+	T,		      ! Pointer to a text string
+	S;			! Count of symbols in a module
+
+    IF .P[INVALIDFLAG]		! Smashed symbols get "*" to indicate
+    THEN			!  no valid binding
+	BEGIN
+	OUTC(%C'*');
+	W = .W + 1
+	END;
+
+    DECR I FROM 9-.W TO 0 DO OUTC(%C' ');
+
+    IF .P[RAD50FLAG] NEQ DDT$_MODULE		! Not a module
+    THEN
+	OUTRDEF(.P[VALUEWRD],12);		! Display 36 bit value
+
+    PUTTAB;
+
+    CASE .P[RAD50FLAG] FROM DDT$_MODULE TO DDT$_OWN OF
+	SET
+	[DDT$_MODULE]:
+		BEGIN				! Show addr of module base
+		S = -.P[SYMBOLCNT];		! Get count of symbols
+		OUTRDEF(.P[SYMBOLVAL],12);
+
+		IF .P<RH> EQL .GQUALIFIER<RH>
+		THEN
+		    OUTC(%C'\')
+		ELSE
+		    OUTC(%C' ');
+		OUTS('Module');
+		PUTTAB;  PUTTAB;
+		OUTDR(.S/2, 5);
+		OUTS(' symbols');
+		CRLF;
+		RETURN
+		END;
+
+	[DDT$_GLOBAL]:
+		OUTS(' Global');
+	[DDT$_OWN]:
+		OUTS(' Own');
+	[OUTRANGE]:
+		(CRLF; RETURN)
+	TES;
+
+
+    PUTTAB;  
+    PRSYM50(MODDDT(.P)); 
+    IF (T=ISROUTINE(.P[ADDRWRD])) NEQ 0
+    THEN
+	BEGIN
+	PUTTAB;
+	OUTSA(.T)
+	END
+    ELSE
+	IF ISREADABLE(.P[ADDRWRD])
+	THEN
+	    BEGIN
+	    PUTTAB;
+	    OUTDEFAULT(.(.P[ADDRWRD]) );
+	    IF (.P[RAD50NAME] / (%O'50'*%O'50'*%O'50')) EQL %RAD50_10 'P.'
+		AND .(.P[VALUEWRD]) LSS 0 
+		AND NOT .(.P[VALUEWRD])
+	    THEN
+		!+
+		! Heuristics implying that the above is a "BIND" to a string
+		! literal value
+		!-
+		BEGIN
+		LOCAL
+		    T,
+		    C;
+
+		T = CH$PTR(.P[ADDRWRD]);
+		PUTTAB;
+		OUTC(%C'''');
+		INCR I FROM 0 TO 8 DO
+		    BEGIN 
+		    C = CH$RCHAR_A(T);
+		    IF .C EQL 0 THEN EXITLOOP;
+		    IF .C GEQ %C' '
+		    THEN
+			OUTC(.C)
+		    ELSE
+			BEGIN
+			OUTC(%C'?');
+			OUTC(.C+%O'100');
+			END;
+		    END;
+		IF .C NEQ 0 THEN OUTS('...');
+		OUTC(%C'''');
+		END %(string? )%
+	    ELSE
+		IF .(.P[ADDRWRD]) GTR %O'40' AND
+		    .(.P[ADDRWRD]) LSS %O'177'
+		THEN				! Single ASCII character
+		    BEGIN
+		    PUTTAB;
+		    OUTC(%C'"');
+		    OUTC(.(.P[ADDRWRD]));
+		    OUTC(%C'"')
+		    END;
+	END;
+
+    CRLF
+    END;
+ROUTINE PRS:NOVALUE=
+!+
+! FUNCTION
+!	Implements the PRS command
+!	Prints all symbols which have the same name as the input.
+!
+!-
+    BEGIN
+    INCR I FROM 0 TO .SIXRC-1 DO
+	BEGIN
+	LOCAL
+	    NAME,				! SIXBIT name to look up
+	    P	: SYMBOL,			! Matching symbol
+	    W;					! Field-width printed
+
+	P = 0;					! Initially no symbols found
+	NAME = .SIXRP[.I];			! Get next sixbit name
+
+	INCR J FROM 1 DO
+	    BEGIN
+	    IF (P = NSDDTFA(.NAME,.P)) EQL 0
+	    THEN
+		BEGIN
+		IF .J EQL 1
+		THEN
+		    (TTOUTS('No entry for ');  PRSYM50(.NAME);  CRLF);
+		EXITLOOP
+		END;
+
+	    W = PRSYM50(.NAME);
+	    IF .P[RAD50FLAG] NEQ DDT$_MODULE	! Print postfix numeric
+	    THEN				!  qualification for any
+		BEGIN				!  duplicated name.
+		OUTC(%C'%');
+		W = .W + 1;
+		W = .W + OUTDEFAULT(.J)
+		END
+	    ELSE
+		! Do not count module names in %-qualification
+		J = .J -1;
+
+	    PPSYM(.P,.W)
+	    END
+	END
+    END;
+ROUTINE PRMS(SYM,SYMNAME,CHAR): NOVALUE=
+!+
+! FUNCTION
+!	Implement the PRM Command [ PRint Module ]
+! INPUTS
+!	Sym	- The symbol table to use
+!	SymName	- The module name to print out, or 0 if all modules
+!	Char	- the prefix character to use, either SPACE [LOWSEG] or
+!		  UPARROW ("^") [HISEG]
+!-
+    BEGIN
+    LOCAL
+	R	: SYMBOL;
+
+    R = - .SYM<LH,1>;
+    R = (.R^18) + .R + .SYM<RH>;
+
+    WHILE (R = .R-%O'2000002') GEQ 0 DO
+	BEGIN
+	IF .R[RAD50FLAG] EQL DDT$_MODULE
+	THEN
+	    BEGIN  %(have module name)%
+	    IF .SYMNAME EQL 0 OR		! All modules
+		.R[RAD50NAME] EQL .SYMNAME	!  or this specific one
+	    THEN
+		BEGIN %(want this one)%
+		LOCAL
+		    ME, 	    ! My module name
+		    C;
+
+		OUTC(.CHAR);
+		C = PRSYM50(ME = .R[RAD50NAME]);
+		PPSYM(.R<RH>,.C);
+		IF .SYMNAME NEQ 0
+		THEN
+		    BEGIN %(names in module)%
+		    LABEL DONAME;
+		    WHILE (R = .R-%O'2000002') GEQ 0 DO
+DONAME:			BEGIN %(print names)%
+			LABEL CHECK;
+			IF .R[RAD50FLAG] EQL DDT$_MODULE THEN RETURN;
+			IF .R[RAD50NAME] EQL (%RAD50_10 '%%%%%%')+1
+			THEN
+			    LEAVE DONAME; ! Don't print suppressed SIX12 symbols
+			OUTC(.CHAR);
+			C = PRSYM50(.R[RAD50NAME]);
+			PPSYM(.R<RH>,.C);
+
+			! Now, do something about checking lowseg
+			! consistency
+
+			IF ISHIGHSYMBOLTABLE()
+			THEN
+CHECK:			    BEGIN %(check)%
+			    LOCAL
+				L	: SYMBOL,
+				M	: SYMBOL;
+
+			    IF .SYM NEQ .HCACHE OR .R[ADDRWRD] GEQ .IJOBHSM
+			    THEN
+				LEAVE CHECK; 		! symbol is in hiseg
+
+			    M = - .$JBSYM<LH,1>;
+			    M = (.M^18) + .M + .$JBSYM<RH>;
+
+			    WHILE (M = .M- %O'2000002') GEQ 0 DO
+				BEGIN %(scan lowseg for module)%
+				IF .M[RAD50FLAG] EQL DDT$_MODULE AND
+				   .M[RAD50NAME] EQL .ME
+				THEN
+				    EXITLOOP;
+				END;
+	    
+			    IF .M LEQ 0 THEN LEAVE CHECK;	! module not in lowseg
+			    L = NSDDTW(.R[RAD50NAME], .M, .$JBSYM);
+			    IF .L[VALUEWRD] NEQ .R[VALUEWRD]
+			    THEN
+				PPSYM(.L<RH>,0)
+			    END %(check)%;
+			END %(print names)%;
+		    END %(names in module)%;
+		END %(Want this one)%;
+	    END %(have module name)%;
+	END;
+    END;
+ROUTINE PRM:NOVALUE=
+!+
+! FUNCTION
+!	Null: Print out all module names
+!	Prefix: Print out all symbols in module names given
+!-
+    BEGIN
+    IF .SIXRC EQL 0
+    THEN
+	BEGIN
+	IF ISHIGHSYMBOLTABLE() THEN PRMS(.HCACHE,0,%C'^');
+	PRMS(.$JBSYM, 0,%C' ')
+	END
+    ELSE
+	BEGIN %(just what we asked for)%
+	INCR I FROM 0 TO .SIXRC-1 DO
+	    BEGIN %(see if requested)%
+	    IF ISHIGHSYMBOLTABLE()
+	    THEN
+		PRMS(.HCACHE, .SIXRP[.I], %C'^');
+
+	    PRMS(.$JBSYM, .SIXRP[.I], %C' ')
+	    END
+	END
+   END;
+ROUTINE QUAL : NOVALUE=
+!+
+! FUNCTION
+!	Set up default qualification value for symbol table lookups
+!-
+    BEGIN
+    MAP
+	GQUALIFIER	: SYMBOL;
+    LOCAL
+	S;
+
+    IF .SIXRC EQL 0
+    THEN
+	BEGIN %(print out)%
+	IF .GQUALIFIER EQL 0
+	THEN
+	    BEGIN
+	    OUTS('No default module name');
+	    OUTCRLF();
+	    RETURN
+	    END;
+
+	! otherwise, the GQualifier points to the module name
+	! entry
+	IF ISHIGHSYMBOLTABLE()
+	THEN
+	    IF .HQUALIFIER NEQ .HCACHE
+	    THEN
+		BEGIN
+		GQUALIFIER = 0;
+		HQUALIFIER = .$JBSYM;
+		ERROR(36);
+		RETURN;
+		END;
+	    PRSYM50(.GQUALIFIER[RAD50NAME]);
+	    OUTCRLF();
+	    RETURN
+	END %(print out)%;
+
+    S = FINDMODULE(.SIXRP[0]);
+    IF .S EQL 0 THEN RETURN ERROR(0);
+
+    GQUALIFIER = .S;
+    IF ISHIGHSYMBOLTABLE()
+    THEN
+	IF .S<RH> GEQ .HCACHE<RH>
+	THEN
+	    HQUALIFIER = .HCACHE
+	ELSE
+	    HQUALIFIER = .$JBSYM
+    END;
+ROUTINE XQUAL:NOVALUE=
+!+
+! FUNCTION
+!	Push QUALIFY operator onto DBGSTK
+!-
+    BEGIN
+    QUOTFLG = BIGNUMBER;
+    PUSHOPER(4^18 + (UPLIT(10^18+QUAL, 10^18+QUAL, 0,0)))
+    END;
+ROUTINE HSEARCH(SYM : SYMBOL, CHAR):NOVALUE=
+!+
+! FUNCTION
+!	Search under mask for symbols.  This implements the semantics of the
+!		SEARCH "aaa???"
+!	command
+! INPUTS
+!	SYM	- Symbol Table pointer (to MODULE?)
+!	CHAR	- ??
+!-
+    BEGIN
+    LABEL
+	L;
+    LOCAL
+	ALPHA,					! A character temporary
+	P	: SYMBOL,
+	NAME:	VECTOR[6],
+	TNAME:	VECTOR[6],
+	CNT,
+	W,
+	TPTR,
+	TCNT,
+	R50NAME;
+
+    CNT = -1;
+    TPTR = CH$PTR( .SIXRP );
+
+    WHILE (ALPHA = CH$RCHAR_A(TPTR)) NEQ 0 DO
+	IF .CNT LSS 5
+	THEN
+	    NAME[(CNT = .CNT+1)] = (IF .ALPHA EQL %C'?'
+				    THEN
+					0
+				    ELSE
+					F7TO50(.ALPHA))
+	ELSE
+	    EXITLOOP;					! Seen enough chars
+
+    P = - .SYM<LH,1>;
+    P = .P^18 + .P + .SYM<RH>;
+
+    WHILE (P = .P-%O'2000002') GEQ 0 DO
+L:	BEGIN
+	R50NAME = .P[RAD50NAME];
+
+	TCNT = (DECR X FROM 5 TO 0 DO
+		BEGIN
+		TNAME[.X] = .R50NAME MOD %O'50';
+		IF (R50NAME = .R50NAME / %O'50') EQL 0 THEN EXITLOOP .X
+		END);
+
+	IF 5-.TCNT GTR .CNT THEN LEAVE L;	! Wrong # of characters
+	INCR X FROM 0 TO .CNT DO		! Check for equality under
+	    BEGIN				!  masking
+	    IF .NAME[.X] NEQ 0 AND .NAME[.X] NEQ .TNAME[.TCNT]
+	    THEN
+		LEAVE L;
+	    TCNT = .TCNT+1
+	    END;
+
+	OUTC(.CHAR);
+	W = PRSYM50(.P[RAD50NAME]);
+	PPSYM(.P,.W)
+	END;
+    END;
+ROUTINE XSEARCH: NOVALUE=		! ? SEARCH FEATURE
+    BEGIN
+    IF ISHIGHSYMBOLTABLE() THEN HSEARCH(.HCACHE,%C'^');
+
+    HSEARCH(.$JBSYM, %C' ')
+    END;
+ROUTINE XWHERE:NOVALUE=
+!+
+! FUNCTION
+!	Given an address, indicate which module the address can be found in.
+!-
+    INCR I FROM 0 TO .SIXRC-1 DO
+	BEGIN
+	LOCAL
+	    S;
+
+	S = .SIXRP[.I];
+	OUTRDEF(.S<RH>,6);
+	IF ISADDRESS(.S<RH>)
+	THEN
+	    BEGIN
+	    OUTS(': Module ');
+	    PRSYM50(MODDDT(SDDTFS(.S)));
+	    OUTS(', ');
+	    PRDISP(.S<RH>)
+	    END
+	ELSE
+	    OUTS(': Not in address space');
+
+	OUTCRLF()
+	END;
+
+ROUTINE XRETURN: NOVALUE=
+!+
+! FUNCTION
+!	Implement the "RETURN <exp>" command
+!-
+    BEGIN
+    IF .RTNLVL EQL 0
+    THEN
+	!+
+	! Returning while at routine-entry.  So we must locate the DEBUG UUO
+	! marking the exit sequence and resume execution there.
+	!-
+	BEGIN
+	LOCAL
+	    L	: REF $INSTRUCTION;
+	MACRO
+	    POPADR= ENTERPNT[RET_ADDRESS] %;
+
+	L = FNDDBGUUO(.$JBUUO,1);
+
+	IF .L LEQ 0 THEN (PRXDISP(.POPADR);  RETURN ERROR(6));
+
+	! if we found the DEBUG unwind,rtn UUO and we are NOT at
+	! then unwind, we want to exit via the standard exit code
+	!
+
+	IF .L[0,UNWINDBIT] AND .L<RH> NEQ .RNAME
+	THEN
+	    BEGIN
+	    L = FNDDBGUUO(.L+1,1);
+	    IF .L LEQ 0 THEN (PRXDISP(.POPADR); RETURN ERROR(6));
+	    END;
+	POPADR = .L+1			! Advance to next instruction
+	END;
+    SIXVREG = .SIXRP[0];		! Set returned value
+    GOER()
+    END;
+
+ROUTINE XDEL2:NOVALUE=
+!+
+! FUNCTION
+!	Delete a name from the SIX12 "MACRO" table
+! NOTES
+!	Space for name is recovered, but space for definition is not.
+!-
+    BEGIN
+    DECR J FROM .SIXRC-1 TO 0 DO
+	BEGIN
+	LOCAL
+	    PNT;
+
+	! Lookup name in the macro-definition table
+	!
+
+	PNT = (DECR K FROM .NNAMES TO 0 DO
+		IF .SIXRP[.J] EQL .SIXNAMES[.K,MACRO_NAME] THEN EXITLOOP .K);
+
+	IF .PNT GEQ 0
+	THEN 
+	    BEGIN				! Found the name
+	    IF .PNT LSS .NNAMES
+	    THEN
+		BEGIN
+		SIXNAMES[.PNT,MACRO_NAME] = .SIXNAMES[.NNAMES,MACRO_NAME];
+		SIXNAMES[.PNT,MACRO_BODY] = .SIXNAMES[.NNAMES,MACRO_BODY]
+		END;
+	    NNAMES = .NNAMES-1
+	    END
+	END;
+    END;
+ROUTINE XDEL1:NOVALUE=
+!+
+! FUNCTION
+!	COMMAND: FORGET name ,...
+!
+!	CREATE OPERATOR FOR EXECUTION AFTER LIST of NAMES IS BUILT.
+!-
+    BEGIN
+    QUOTFLG = BIGNUMBER;
+    PUSHOPER(4^18 + UPLIT(0, 10^18+XDEL2, 0, 0))
+    END;
+
+MACRO
+    APPLY(OP)=
+	BEGIN
+	SIXVC = .SIXVC+1;
+	SIXVP = VTEMP;
+	VTEMP = ..SIXLP OP ..SIXRP;
+	END %,
+
+    ONEAPPLY(OP)=
+	BEGIN
+	SIXVC = .SIXVC+1;
+	SIXVP = VTEMP;
+	VTEMP = OP ..SIXRP;
+	END %;
+
+ROUTINE XADD: NOVALUE=APPLY(+);
+
+ROUTINE XSUBTRACT(K): NOVALUE=IF .K LSS 2 THEN ONEAPPLY(-) ELSE APPLY(-);
+
+ROUTINE XTIMES: NOVALUE=APPLY(*);
+
+ROUTINE XDIV: NOVALUE =APPLY(/);
+
+ROUTINE XSHIFT:NOVALUE= APPLY(^);
+
+ROUTINE XEQL:NOVALUE=APPLY(EQL);
+ROUTINE XNEQ:NOVALUE=APPLY(NEQ);
+ROUTINE XLSS:NOVALUE=APPLY(LSS);
+ROUTINE XLEQ:NOVALUE=APPLY(LEQ);
+ROUTINE XGTR:NOVALUE=APPLY(GTR);
+ROUTINE XGEQ:NOVALUE=APPLY(GEQ);
+
+ROUTINE XAND:NOVALUE=APPLY(AND);
+ROUTINE XEQOR:NOVALUE=APPLY(OR);
+ROUTINE XNOT:NOVALUE=ONEAPPLY(NOT);
+
+ROUTINE CONTENTS:NOVALUE=
+!+
+! FUNCTION
+!	Fetch contents of specified location.
+!
+!	Location is implicitly supplied thru SIXRP
+!-
+    BEGIN
+    MAP
+	SIXRP	: REF $BYTE_POINTER;
+
+    IF	(.SIXRP[P_POS] + .SIXRP[P_SIZE]) GTR 36 OR	! Validate that the
+	.SIXRP[P_INDEX] NEQ 0				!  pointer is "sane"
+    THEN
+	(PRBPTR(..SIXRP);  RETURN ERROR(18));
+
+    IF NOT ISADDRESS(..SIXRP)
+    THEN
+	BEGIN
+	ILLMEM = ..SIXRP AND AddrMask;
+	ERROR(28);
+	RETURN
+	END;
+    IF NOT ISREADABLE(..SIXRP)
+    THEN
+	BEGIN
+	ILLMEM = ..SIXRP;
+	ERROR(33);
+	RETURN
+	END;
+
+    SIXVC = 1;
+    SIXVP = VTEMP;
+
+    IF .SIXRP[P_LHALF] EQL 0
+    THEN
+	VTEMP = ..SIXRP[0,FW]		! Do 36-bit load
+    ELSE
+	VTEMP = SCANN(SIXRP[0,FW])	! Get value using LDB
+    END;
+ROUTINE XFUTURE : NOVALUE=
+!+
+! FUNCTION
+!	Indicate that "@" is reserved for FUTURE use.  Probably as
+!	a 30-bit addressing operator of some flavor.
+!-
+    BEGIN
+    ERROR(38)
+    END;
+ROUTINE COLON:NOVALUE=
+!+
+!	LG change
+!-
+    BEGIN
+    ERROR(1);		! illegal character;
+    END;
+
+
+ROUTINE SYNTAX=ERROR(2);
+ROUTINE LGFLD:NOVALUE = ERROR(1);
+
+ROUTINE LGVEC:NOVALUE = ERROR(2);	! syntax error
+ROUTINE JOIN:NOVALUE=			! BINARY COMMA (CATENATION)
+!+
+! FUNCTION
+!	"Binary" Comma - CATENATION Operator
+!-
+    BEGIN
+    INCR J FROM 0 TO .SIXRC-1 DO
+	SIXLP[.SIXLC +.J] = .SIXRP[.J];
+
+    SIXVP = .SIXLP;
+    SIXVC = .SIXLC + .SIXRC
+    END;
+ROUTINE LPAREN=			! Routine CALL
+!+
+! FUNCTION
+!	Implement procedure calls
+!-
+    BEGIN
+    LOCAL
+	SCOUNT,
+	SAVEGO,
+	SAVJBUUO,
+	SAVESTEP,
+	SAVETRACE;
+    OWN
+	ARGCOUNT;		! Must be Own for stack trace to find
+
+    SCOUNT = .ARGCOUNT;
+    SAVEGO = .GOFLAG;
+    SAVESTEP = .STEPFLAG;
+    SETOFF(STEPFLAG);
+
+    SAVETRACE = .TRACEFLAG;
+
+    IF ISON(COPQFLAG) THEN SETOFF(TRACEFLAG);
+
+    SAVJBUUO = .$JBUUO;
+    GOFLAG = 1;					! Don't stop in routine
+
+    ARGCOUNT = .SIXRC^18 + .SIXRC;		! SAVE # of PARMS
+
+    !**********************************************************************
+
+    CODECOMMENT	'This is very dangerous code':
+	BEGIN
+	BUILTIN
+	    SP;
+
+	INCR I FROM 0 TO .SIXRC-1 DO		! PUSH PARMS
+	    PUSH(SP, SIXRP[.I]);
+	(..SIXLP) ();	 			! THIS IS IT!
+
+	SP = .SP - .ARGCOUNT;
+    
+	VTEMP = .VREG				! MUST BE AFTER STACK SUBTRACT
+	END;
+    !**********************************************************************
+
+    $JBUUO = .SAVJBUUO;
+    STEPFLAG = .SAVESTEP;
+    TRACEFLAG = .SAVETRACE;
+    GOFLAG = .SAVEGO;
+    ARGCOUNT = .SCOUNT;
+    SIXVC = 1;
+    SIXVP = VTEMP;
+    HCACHE = 0			! Clear cache, since user could call a
+				! segment swapper
+    END;
+ROUTINE FIELDSPEC:NOVALUE=
+!+
+! FUNCTION
+!	Evaluate ADDR<P,S> expression, forming a byte-pointer as the
+!	result.
+!-
+    BEGIN
+    LOCAL
+	R	: $BYTE_POINTER;
+    MAP
+	SIXVP	: REF $BYTE_POINTER;
+
+    IF .SIXRC NEQ 2 THEN RETURN ERROR(3);	! Insufficient arguments
+
+    R = 0;
+    R[P_POS] = .SIXRP[0];			 ! Set up position and
+    R[P_SIZE] = .SIXRP[1];			 !  field values in byte-ptr
+
+    SIXVP = .SIXLP;
+    SIXVC = 1;
+
+    SIXVP[P_LHALF] = .R[P_LHALF];	! Set into LH of addr word
+
+    IF	.SIXRP[0] GTRU %O'77' OR		! Complain about deformed
+	.SIXRP[1] GTRU %O'77'			!  pointer values.
+    THEN
+	BEGIN
+	PRDISP(.(.SIXLP)<RH>);			! Print the displacement
+	OUTC(%C'<');				!  and the suspicious
+	OUTFD(.SIXRP[0]);			!  position and size
+	OUTC(%C',');				!  values
+	OUTFD(.SIXRP[1]);
+	OUTC(%C'>');
+	ERROR(18)
+	END
+    END;
+ROUTINE STRUCT:NOVALUE=
+!+
+! FUNCTION
+!	Fake structure accesses
+! INPUTS
+!	SIXLP	->	Base expression value
+!
+!	SIXRC	- Indicates if we are doing a VECTOR or a BLOCK
+!		  reference
+!-
+    BEGIN
+    LOCAL
+	R;
+    MAP
+	SIXVP   : REF $BYTE_POINTER;
+
+    ! Check for correct number of access actuals in reference.  Either
+    ! one (for VECTOR) or 3 for BLOCK is correct.  All others are suspect.
+
+    IF .SIXRC EQL 2 OR .SIXRC GTR 4 THEN RETURN ERROR(3);
+
+    SIXVP = .SIXLP<RH>;
+    IF .SIXREF THEN SIXVP[0,FW] = ..SIXVP[0,FW];	! Implicit REF is "on"
+
+    SIXVP[P_OFFSET] = .SIXVP[P_OFFSET] + .SIXRP[0];	! Include OFFSET value
+
+    SIXVC = 1;
+
+    IF .SIXRC GTR 1
+    THEN
+	BEGIN
+	SIXVP[P_POS] = .SIXRP[1];	! Get position and
+	SIXVP[P_SIZE] = .SIXRP[2]	!  size in byte-ptr
+	END
+    END;
+%SBTTL'File service routines for SAVE and LOAD commands'
+
+LITERAL
+	BINARYMODE=0,
+	ASCIIMODE=1;
+
+ROUTINE INTEXT:NOVALUE=
+    BEGIN
+    LOCAL
+	W;
+
+    WHILE ISOFF(ERRORFLAG) DO
+	BEGIN
+	IF (W = INWORD()) EQL 0 THEN RETURN;
+
+	.PTEXT = .W;
+	PTEXT = .PTEXT+1;
+	IF .PTEXT<RH> GEQ TEXTAREA[2*NMACROS] THEN RETURN ERROR(12)
+	END
+    END;
+ROUTINE OUTTEXT(POINT):NOVALUE=
+    BEGIN
+    INCR PTR FROM .POINT<RH> DO
+	BEGIN
+	OUTWORD(..PTR);
+	IF .(.PTR)<29,7> EQL %O'177' THEN EXITLOOP;
+	IF .(.PTR)<22,7> EQL %O'177' THEN EXITLOOP;
+	IF .(.PTR)<15,7> EQL %O'177' THEN EXITLOOP;
+	IF .(.PTR)<8,7> EQL %O'177' THEN EXITLOOP;
+	IF .(.PTR)<1,7> EQL %O'177' THEN EXITLOOP
+	END;
+    OUTWORD(0)
+    END;
+
+ROUTINE FILEOPEN(ISINPUT,MODEFLAG)=
+    BEGIN
+%IF TOPS10
+%THEN
+    LOCAL
+	BLOCK:		VECTOR[4],
+	OPENBLOCK:	VECTOR[4],
+	TPPNBUF:	VECTOR[2],
+	BP,
+	PTR,
+	I,
+	C;
+
+    MACRO
+	ASCIITOSIX(C)=(((C)-%O'40') AND %O'77') %,
+	TPPN=I %;
+
+    ROUTINE CMUDEC(PTR)=
+	BEGIN
+	REGISTER
+	    PPNVAL;
+
+	PPNVAL = .PTR<RH>;
+	IF NOT MACHSKIP(%O'47', PPNVAL, -2)	! CMU to DEC PPN conversions
+	THEN
+	    RETURN 0;
+
+	.PPNVAL
+	END;
+
+    ROUTINE UPCASE(CHR) =
+	SELECTONE .CHR OF
+	    SET
+	    [%C'a' TO %C'z']:	.CHR -%o'40';
+	    [OTHERWISE]:	.CHR
+	    TES;
+
+    ROUTINE XTYP(C)=
+	SELECTONE .C OF
+	    SET
+	    [0]:		0;
+	    [%C' ']:		1;
+	    [%C'.']:		2;
+	    [%C'[']:		3;
+	    [%C'A' TO %C'Z']:	4;
+	    [%C'a' TO %C'z']:	4;
+	    [%C'0' TO %C'9']:	4;
+	    [%C':']:		5;
+	    [OTHERWISE]:	6
+	    TES;
+
+    LABEL
+	LB;
+
+    STATUS = (IF .MODEFLAG EQL BINARYMODE THEN $IOIMG ELSE $IOASC);
+
+    LDEV = %SIXBIT 'DSK';
+    BUFW = (IF ISON(ISINPUT) THEN DSKHDR ELSE DSKHDR^18);
+
+    IF NOT OPEN(SLCHN,OPENBLOCK) THEN RETURN ERROR(10);
+
+LB:
+    BEGIN
+    FNAME =  JUNK = PPN = 0;
+    FEXT = %SIXBIT '612';
+    PTR = CH$PTR( .SIXRP );
+    SIXRP[.SIXRC] = 0;			! GUARANTEE asciz STRING
+    BP = CH$PTR( FNAME, 0, 6 );		! Set up SIXBIT pointer
+    I = 6;
+
+    WHILE 1 DO
+	BEGIN			! GET FILENAME
+	C = UPCASE(CH$RCHAR_A( PTR ));
+
+	CASE XTYP(.C) FROM 0 TO 6 OF
+	    SET
+	    [0]:	LEAVE LB;
+	    [1]:	0;
+	    [2]:	EXITLOOP;
+	    [3]:	EXITLOOP;
+	    [4]:	IF (I = .I-1) GEQ 0
+			THEN
+			    CH$WCHAR_A(ASCIITOSIX(.C), BP);
+	    [5]:	BEGIN
+			LDEV = .FNAME;
+			RELEASE(SLCHN);
+			IF NOT OPEN(SLCHN,OPENBLOCK) THEN RETURN ERROR(10);
+			FNAME = 0;
+			BP= CH$PTR(FNAME, 0, 6);
+			I=6
+			END;
+	    [6]:	RETURN ERROR(9)
+	    TES
+	END;
+
+    IF .C EQL %C'.'
+    THEN
+	BEGIN			! GET EXTENSION
+	BP = CH$PTR( FEXT, 0, 6 );
+	FEXT = 0;
+	I = 3;
+	WHILE 1 DO
+	    BEGIN
+	    C = UPCASE( CH$RCHAR_A( PTR ) );
+
+	    CASE XTYP(.C) FROM 0 TO 6 OF 
+		SET
+		[0]:    LEAVE LB;
+		[1]:    0;
+		[2]:    RETURN ERROR(9);
+		[3]:    EXITLOOP;
+		[4]:    IF (I = .I-1) GEQ 0
+			THEN
+			    CH$WCHAR_A(ASCIITOSIX(.C), BP);
+		[5]:    RETURN ERROR(9);
+		[6]:    RETURN ERROR(9)
+		TES
+	    END
+	END;
+    IF .C EQL %C'['
+    THEN
+	BEGIN			! GET PPN
+	IF (I = .PTR;  CH$RCHAR_A(I)) GTR %C'7'
+	THEN
+	    BEGIN			! CMU PPN
+	    BP = CH$PTR( TPPNBUF );
+	    DECR I FROM 7 TO 0 DO
+		BEGIN
+		LOCAL
+		    TCH;
+
+		TCH = CH$RCHAR_A( PTR );
+		CH$WCHAR_A( .TCH, BP );
+		IF .TCH EQL %C']' THEN RETURN ERROR(9)
+		END;
+
+	    IF CH$RCHAR_A(PTR) NEQ %C']' THEN RETURN ERROR(9);
+	    IF (PPN = CMUDEC(TPPNBUF)) EQL 0 THEN RETURN ERROR(9)
+	    END
+	ELSE
+	    BEGIN			! OCTAL PPN
+	    TPPN = 0;
+	    WHILE (C = CH$RCHAR_A(PTR)) NEQ %C']' DO
+		IF .C EQL %C','
+		THEN ((PPN)<LH> = .TPPN;  TPPN = 0)
+		ELSE
+		    IF .C GEQ %C'0' AND .C LEQ %C'7'
+		    THEN (TPPN = .TPPN^3 + .C - %C'0')
+		    ELSE RETURN ERROR(9);
+	    (PPN)<RH> = .TPPN
+	    END 
+	END
+    END;		! of DUMMY BLOCK
+
+    IF ISON(ISINPUT)
+    THEN
+	(IF NOT LOOKUP(SLCHN,BLOCK) THEN RETURN ERROR(10); INBUF(SLCHN,2))
+    ELSE
+	(IF NOT ENTER(SLCHN,BLOCK) THEN RETURN ERROR(10); OUTBUF(SLCHN,2));
+
+%ELSE
+    LOCAL
+	JFN,
+	ACMODE;
+
+    SIXRP[.SIXRC] = 0;				! Guarantee ASCIZ string
+
+    ACMODE = (IF .MODEFLAG EQL BINARYMODE THEN 36^30 ELSE 7^30);
+
+    IF ISON(ISINPUT)
+    THEN
+	BEGIN
+	IF NOT GTJFN( GJ_OLD+GJ_SHT, CH$PTR(.SIXRP); JFN)
+	THEN
+	    RETURN ERROR(10);			! OPEN FAILURE
+
+	DSKHDR = .JFN<RH>;
+
+	IF NOT OPENF( .JFN, .ACMODE+OF_RD ) THEN RETURN ERROR(10)
+	END
+    ELSE
+	BEGIN
+	IF NOT GTJFN( GJ_NEW+GJ_SHT+GJ_FOU, CH$PTR(.SIXRP) ; JFN )
+	THEN
+	    RETURN ERROR(10);			! Open failure	    
+
+	DSKHDR = .JFN<RH>;
+
+	IF NOT OPENF( .JFN, .ACMODE + OF_WR ) THEN RETURN ERROR(10)
+	END;
+
+%FI
+    1
+    END;
+ROUTINE XSAVE: NOVALUE=
+!+
+! FUNCTION
+!	Implement the SAVE command to dump the "internal" state of
+!	SIX12, including user defined macros, operators, etc..
+!-
+    BEGIN
+%IF TOPS10
+%THEN
+    LOCAL
+	SAVFF;
+
+    SAVFF = .$JBFF;		! Remember memory high-water mark
+%FI
+
+    !+
+    ! Open the output file
+    !-
+    IF NOT FILEOPEN(0,BINARYMODE) THEN RETURN;	! You lose....
+
+    SETOFF(ERRORFLAG);
+    OUTWORD(.SIXTOG);
+    OUTWORD(.SIXREF);
+    OUTWORD(.COPQFLAG);
+    OUTWORD(.GQUALIFIER);		! Note that we do not worry
+					! about overlaid hiseg, as binary
+					! save assumes reload in current
+					! state...but we do save...
+    OUTWORD(.HQUALIFIER);
+    INCR J FROM 0 TO .NVALS DO
+	BEGIN				! OUTPUT A MONITOR ENTRY
+	OUTWORD(.MONVALS[.J,WATCHED_LOCATION]);
+	OUTWORD(.MONVALS[.J,WATCHED_VALUE])
+	END;
+    OUTWORD(-1);			! end of MONITORS
+
+    INCR J FROM 0 TO .NNAMES DO
+	BEGIN				! OUTPUT A Macro
+	OUTWORD(.SIXNAMES[.J,MACRO_NAME]);
+	OUTTEXT(.SIXNAMES[.J,MACRO_BODY])
+	END;
+    OUTWORD(-1);			! end of MACROS
+
+    INCR J FROM 0 TO .NROUTS DO
+	BEGIN				! OUTPUT A Routine ENTRY
+	BIND
+	    ENTRY = ROUTS[.J,0,FW]: BLOCK;	! Number of actions associated
+						!  with this routine
+
+	OUTWORD(.ENTRY[0,0,MAXACTRTN,0]);	! Interest bits and routine
+	DECR SUB FROM MAXACTRTN TO 18 DO	! Dump conditional actions
+	    BEGIN				!  for each event
+	    IF .ENTRY[INTEREST(.SUB)]		! This is interesting event
+	    THEN
+		IF .ENTRY[CNDACTION(.SUB)] NEQA 0	! With conditional text
+		THEN
+		    OUTTEXT(.ENTRY[CNDACTION(.SUB)])
+		ELSE
+		    OUTWORD(0)
+	    END
+	END;
+
+    OUTWORD(-1);
+
+%IF TOPS10
+%THEN
+    IF ISON(ERRORFLAG)
+    THEN
+	(ERROR(11);  CLOSE(SLCHN, CL$RST))	! Close, but don't enter into
+    ELSE					!  user's directory
+	CLOSE(SLCHN,0);
+    RELEASE(SLCHN,0);
+    $JBFF = .SAVFF;
+%ELSE
+    CLOSF( .DSKHDR );
+%FI
+    0
+    END;
+ROUTINE XLOAD:NOVALUE=
+!
+! COMMAND
+!
+    BEGIN
+    LOCAL
+	W,
+	W2,
+	SAVFF;
+
+%IF TOPS10 %THEN SAVFF = .$JBFF; %FI
+
+    IF NOT FILEOPEN(1,BINARYMODE) THEN RETURN;
+
+    SETOFF(ERRORFLAG);
+    NVALS = NNAMES = NROUTS = -1;
+    PTEXT = CH$PTR( TEXTAREA );
+    SIXTOG = INWORD();		! *** These must match exactly with XSTORE
+    SIXREF = INWORD();		! ***
+    COPQFLAG = INWORD();	! ***
+    GQUALIFIER = INWORD();	! ***
+    HQUALIFIER = INWORD();	! ***
+
+    WHILE (W = INWORD()) NEQ -1 DO
+	BEGIN						! Get MONITOR entries
+	MONVALS[(NVALS = .NVALS+1),WATCHED_LOCATION] = .W;
+	MONVALS[.NVALS,WATCHED_VALUE] = INWORD()
+	END;
+
+    WHILE (W = INWORD()) NEQ -1 DO
+	BEGIN						! RETRIEVE Macro
+	IF .NNAMES GEQ NMACROS
+	THEN
+	    EXITLOOP ERROR(13);
+
+	SIXNAMES[(NNAMES = .NNAMES+1),MACRO_NAME] = .W;
+	SIXNAMES[.NNAMES,MACRO_BODY] = .PTEXT<RH>;
+	INTEXT();
+	IF ISON(ERRORFLAG) THEN EXITLOOP;
+	END;
+
+    WHILE (W = INWORD()) NEQ -1 DO
+	BEGIN						! Get Routine entries
+	LOCAL
+	    SAVERR;
+
+	SAVERR = .ERRORFLAG;
+	ROUTS[(NROUTS = .NROUTS+1),0,FW] = .W;
+
+	! We do not want to include the TABREAKV bit in these tests...
+	!
+	IF (.W AND (BREAKV+OPQATV+OPQAFTV+TRCATV+TRCAFTV)) NEQ 0
+	THEN
+	     SETTBLBIT(.W<RH>,0);
+	IF (.W AND (ABREAKV+OPQATV+OPQAFTV+TRCATV+TRCAFTV)) NEQ 0
+	THEN
+	    SETTBLBIT(.W<RH>,1);
+	ERRORFLAG = .SAVERR;		! Ignore errors from SETTBLBIT Routine
+	
+	DECR SUB FROM MAXACTRTN TO 18 DO
+	    BEGIN
+	    MAP
+		W:	BLOCK[1];	! Only ACTION bits are valid here
+
+	    IF .W[INTEREST(.SUB)]		! Interesting event
+	    THEN
+		BEGIN
+		IF (W2 = INWORD()) NEQ 0
+		THEN
+		    BEGIN					! Get ptr for
+		    ROUTS[.NROUTS, CNDACTION(.SUB)] = .PTEXT;	!  string area
+		    (.PTEXT) = .W2;			! Save 1st chars
+		    PTEXT = .PTEXT+1;			!  and advance pointer
+		    INTEXT()				! Get remaining chars
+		    END
+		ELSE
+		    ROUTS[.NROUTS, CNDACTION(.SUB)] = 0;	! No conditional text
+		END
+	    ELSE
+		ROUTS[.NROUTS, CNDACTION(.SUB)] = 0
+	    END
+	END;
+
+    IF ISON(ERRORFLAG) THEN (NVALS = NNAMES = NROUTS = -1;  ERROR(11));
+
+%IF TOPS10
+%THEN
+    CLOSE(SLCHN,0);
+    RELEASE(SLCHN,0);
+    $JBFF = .SAVFF;
+%ELSE
+    CLOSF( .DSKHDR );
+%FI
+    END;
+ROUTINE OUTOP(J,T):NOVALUE=
+!+
+! FUNCTION
+!	Utility routine used by XSTORE to reduplicate the command used to
+!	define user-commands
+! INPUTS
+!	J	- ?
+!	T	- ?
+!-
+    BEGIN
+    IF .DEFOPTAB[.J+.T] EQL 0 THEN RETURN;
+    OUTS('Define ');
+    IF (.DEFOPTAB[.J] AND %O'777600777777') EQL 0 
+    THEN
+	BEGIN
+	OUTC(%C'"');
+	OUTC(.(DEFOPTAB[.J])<LH>);
+	OUTC(%C'"')
+	END
+    ELSE
+	BEGIN
+	PRSYM6(.DEFOPTAB[.J]);
+	END;
+    OUTC(%C',');
+    IF  .DEFOPTAB[.J+.T] NEQ 0
+    THEN
+	CASE .T FROM 0 TO 4 OF
+	    SET
+	    [1]:		OUTS('null=');
+	    [2]:		OUTS('prefix=');
+	    [3]:		OUTS('postfix=');
+	    [4]:		OUTS('infix=');
+	    [INRANGE,OUTRANGE]:	0
+	    TES;
+
+    OUTFD(.(DEFOPTAB[.J+.T])<LH>,0);
+    OUTC(%C',');
+    PRQUAL(.(DEFOPTAB[.J+.T])<RH>,1);
+    CRLF
+    END;				! End of OUTOP
+ROUTINE XSTORE:NOVALUE=
+!+
+! FUNCTION
+!       Produce a "re-executable" command sequence to attain present
+!       "state".
+!-
+    BEGIN
+    MAP
+	GQUALIFIER	: SYMBOL;
+%IF TOPS10
+%THEN
+    LOCAL
+	SAVEFF;
+
+    SAVEFF = .$JBFF;
+%FI
+
+    IF NOT FILEOPEN(0,ASCIIMODE) THEN RETURN;
+    SETOFF(ERRORFLAG);
+    SETON(DISKOFLAG);
+    IF ISON(COPQFLAG) THEN OUTS('COPAQUE',%CHAR(CR,LF));
+    IF ISON(NOPOLLFLAG) THEN OUTS('POLLOFF',%CHAR(CR,LF));
+    IF ISON(TRACEFLAG) THEN OUTS('SETTRACE',%CHAR(CR,LF));
+    IF .$JB41 EQL DBG_OFF_INST THEN OUTS('NODEBUG',%CHAR(CR,LF));
+    IF .IOBASE NEQ 8 
+    THEN
+	BEGIN
+	OUTS('Base 0',%CHAR(CR,LF),'Base ');	OUTN(.IOBASE,8,1); CRLF
+	END;
+
+    IF .WDBASE NEQ IWDBASE
+    THEN
+	BEGIN
+	OUTS('WBase ');	OUTDEFAULT(.WDBASE);	CRLF
+	END;
+
+    IF .GQUALIFIER NEQ 0 
+    THEN
+	BEGIN
+	! validate cache
+	ISHIGHSYMBOLTABLE();
+	IF .HQUALIFIER EQL .$JBSYM OR .HQUALIFIER EQL .HCACHE
+	THEN
+	    BEGIN
+	    OUTS('Qualify ');	PRSYM50(.GQUALIFIER[RAD50NAME]); CRLF
+	    END
+	END;
+
+    ! Save all the actions
+    !
+    DECR J FROM .NROUTS TO 0 DO
+	BEGIN
+	LOCAL
+	    T	: BLOCK[1];	! action bits
+
+	T = .ROUTS[.J,0,FW] AND (BREAKV + ABREAKV + OPQATV + OPQAFTV + TRCATV + TRCAFTV);		! actions to save
+
+	DECR IDX FROM MAXACTRTN TO 18 DO
+	    BEGIN
+	    LOCAL
+		TPTR,
+		TCHAR;
+
+
+	    IF .T[INTEREST(.IDX)]			! Interesting EVENT?
+	    THEN
+		BEGIN
+		IF .ROUTS[.J, CNDACTION(.IDX)] NEQ 0	! Look for conditional
+		THEN					!  events and dump
+		    BEGIN				!  the conditional
+		    OUTS('If |');			!  text.
+		    TPTR = CH$PTR(.ROUTS[.J, CNDACTION(.IDX)]);
+		    WHILE (TCHAR = CH$RCHAR_A(TPTR)) NEQ %O'177' DO
+			OUTC(.TCHAR);
+		    OUTS('| ')
+		    END;
+
+		PRSYM50(ACTBIT2NAM(1^.IDX));	! now output the action name
+		OUTC(%C' ');
+		PRQUAL(.ROUTS[.J,0,RH,0],1);	! And Routine name too
+		CRLF
+		END
+	    END
+	END;
+    ! Save the macros
+
+    DECR J FROM .NNAMES TO 0 DO
+	BEGIN
+	LOCAL
+	    PTR;
+	REGISTER
+	    C;
+
+	PTR = CH$PTR(.SIXNAMES[.J,MACRO_BODY]);	! Convert 18-bits to byte-ptr
+	OUTS('Macro ');
+	PRSYM50(.SIXNAMES[.J,MACRO_NAME]);
+	OUTS(' = |');
+	WHILE (C=CH$RCHAR_A(PTR)) NEQ %O'177' DO OUTC(.C);
+	OUTS('|',%CHAR(CR,LF))
+	END;
+
+    ! Save the BINDs
+    BEGIN
+    LOCAL
+	JSYM;
+
+    JSYM = .$JBSYM;
+    $JBSYM = .IJOBSYM;		! don't use new symbols for printout!
+
+    INCR SYM FROM .JSYM<RH> TO (.IJOBSYM<RH>)-2 BY 2 DO
+	BEGIN
+	MAP
+	    SYM : SYMBOL;
+
+	OUTS('Bind ');
+	PRQ50(.SYM[RAD50NAME]);
+	OUTS(' = ');
+	PRQUALBP(.SYM[VALUEWRD],1);
+	CRLF
+	END;
+    $JBSYM = .JSYM
+    END;
+
+    ! Save the user-defined operators
+
+    DECR J FROM .NEWOPS TO 0 BY OPSIZE DO
+	BEGIN
+
+	DECR T FROM 4 TO 1 DO OUTOP(.J,.T)
+	END;
+
+	
+    ! Save the MONITOR locations
+
+    DECR I FROM .NVALS TO 0 DO
+	BEGIN
+	IF .MONVALS[.I,WATCHTAG]
+	THEN
+	    OUTS('Watch ')
+	ELSE
+	    OUTS('Monitor ');
+	PRQUALBP(.MONVALS[.I,WATCHED_LOCATION]);
+	CRLF;
+	END;
+
+    ! Now close the file
+    SETOFF(DISKOFLAG);
+
+%IF TOPS10
+%THEN
+    IF ISON(ERRORFLAG)
+    THEN
+	BEGIN
+	ERROR(11);
+	CLOSE(SLCHN,CL$RST);
+	END
+    ELSE
+	CLOSE(SLCHN,0);
+    RELEASE(SLCHN,0);
+    $JBFF = .SAVEFF;
+%ELSE
+    CLOSF( .DSKHDR );
+%FI
+    END;
+ROUTINE XRECALL : NOVALUE=
+!+
+! FUNCTION
+!	RECALL command - complement of STORE.  Reads commands from a
+!		file.
+!
+!-
+    BEGIN
+    LOCAL
+	SAVEFF,
+	SAVEGO;
+
+%IF TOPS10
+%THEN
+    SAVEFF = .$JBFF;
+%FI
+
+    IF NOT FILEOPEN(1,ASCIIMODE) THEN RETURN;
+
+    SETOFF(ERRORFLAG);
+    SETON(DISKIFLAG);
+    SAVEGO = .GOFLAG;
+    GOFLAG = 0;
+    ISUB();
+    SETOFF(DISKIFLAG);
+    GOFLAG = .SAVEGO;
+
+    IF ISON(ERRORFLAG) THEN ERROR(11);
+
+%IF TOPS10
+%THEN
+    CLOSE(SLCHN,0);
+    RELEASE(SLCHN,0);
+    $JBFF = .SAVEFF
+%ELSE
+    CLOSF( .DSKHDR )
+%FI
+END;
+%SBTTL 'Further Command Routines'
+
+ROUTINE BOOBOO : NOVALUE =ERROR(4);
+
+ROUTINE COPYR : NOVALUE=(SIXVP = .SIXRP;  SIXVC = .SIXRC);
+
+ROUTINE XDEFINE : NOVALUE=(QUOTFLG = 2;  MODEFLAG = 1);
+
+ROUTINE XSET1 : NOVALUE=(QUOTFLG = 1;  MODEFLAG = 1);
+
+ROUTINE XSET2 : NOVALUE=(QUOTFLG = 1;  MODEFLAG = 2);
+
+ROUTINE XSET3 : NOVALUE=(QUOTFLG = 1;  MODEFLAG = 3);
+
+ROUTINE SETAFTER : NOVALUE=(MODEFLAG = 1 );
+
+ROUTINE SETFROM : NOVALUE=(MODEFLAG = 2 );
+
+
+ROUTINE XIDENT : NOVALUE=
+!+
+! FUNCTION
+!	Identify linkage conventions in use.
+!-
+    BEGIN
+    ROUTINE REGLIST(CVP: REF VECTOR) :NOVALUE=
+	!+
+	! FUNCTION
+	!	Utility to output a list of register names
+	!-
+	DECR I FROM .CVP[-1]-1 TO 0 DO
+	    BEGIN
+	    OUTD(.CVP[.I]);
+	    IF .I NEQ 0 THEN OUTC(%C',')
+	    END;
+
+    SIXID();
+    OUTS('Using default linkage with registers (decimal):');  CRLF;
+    OUTS('   Stack pointer: ');  OUTD(SREG);  CRLF;
+    OUTS('   Frame pointer: ');  OUTD(FREG);  CRLF;
+    OUTS('   Value register: '); OUTD(VREG);  CRLF;
+    OUTS('   Preserved registers: '); REGLIST( PLIT(PRREGS) ); CRLF;
+    OUTS('   Non-preserved registers: '); REGLIST( PLIT(NPREGS) ); CRLF
+    END;
+!	The plit below maps print name to Routine
+!	-----------------------------------------
+
+! Remember while inserting entries that the plit is searched *backwards*.
+
+! The plit contains a five-word entry for each predefined
+! operator. Operators defined at run-time are stored in the
+! Same format in 'DEFOPTAB', which is searched first. The format is
+!
+!	!------!----------!------------!-------------!------------!
+!	!PRINT ! WORD FOR !  WORD FOR  !  WORD FOR   !  WORD FOR  !
+!	! NAME !NULL PARSE!PREFIX PARSE!POSTFIX PARSE!BINARY PARSE!
+!	!------!----------!------------!-------------!------------!
+!
+! where Print Name contains the SIXBIT representation of a symbol,
+! or an ASCII char. In its left half for a special-character print name.
+! Each 'Word for...' word has the priority of operation for that parse
+! in its left half, and the address of the Routine which is to be called
+! to execute it in its right half. A zero word denotes "no such parse".
+! A priority P > BraceVal indicates a left brace; The corresponding right
+! brace must have priority P-BraceVal. The right brace Routine is a dummy, which
+! is never executed. The call method for operators is explained in the SIX12 manual.
+
+! These macros simplify entering operators...
+
+MACRO
+    ACHAR(OP,P0,R0,P1,R1,P2,R2,P3,R3)=
+	OP^18,
+	(P0)^18+ R0,
+	(P1)^18+ R1,
+	(P2)^18+ R2,
+	(P3)^18+ R3 %;
+
+MACRO
+    ANAME(OP,P0,R0,P1,R1,P2,R2,P3,R3)=
+	%SIXBIT %STRING(OP),
+	(P0)^18+ R0,
+	(P1)^18+ R1,
+	(P2)^18+ R2,
+	(P3)^18+ R3 %;
+
+
+BIND
+    OPTAB=  PLIT(
+
+!     Name	NULL		PREFIX		POSTFIX		INFIX
+ANAME(ACTION,	50,XSET2,	0,0,		0,0,		0,0),
+ANAME(AFTER,	50,SETAFTER,	0,0,		0,0,		0,0),
+ANAME(FROM,	50,SETFROM,	0,0,		0,0,		0,0),
+ANAME(OPER,	50,XSET1,	0,0,		0,0,		0,0),
+ACHAR(ESCAPE,	50,GETTEXT,	0,0,		0,0,		0,0),
+ACHAR(BAR,	50,GETTEXT,	0,0,		0,0,		0,0),
+!
+!		^  ^  ^
+!		|  |  |
+!	Operators back here do not print out when HELP is done
+ANAME(HELP,	50,XHELP,	0,0,		0,0,		0,0),
+!		
+!	All these commands will be printed by the HELP command
+!		| | |
+!		V V V
+ANAME(ABREAK,	0,0,		10,XABREAK,	0,0,		10,XABREAK),
+ANAME(AND,	0,0,		0,0,		0,0,		32,XAND),
+ANAME(BACKTO,	0,0,		20,XBACKTO,	0,0,		0,0),
+ANAME(BASE,	20,XBASE,	20,XBASE,	0,0,		0,0),
+ANAME(BIND,	50,XSET2,	0,0,		0,0,		0,0),
+ANAME(BREAK,	0,0,		10,XBREAK,	0,0,		10,XBREAK),
+ANAME(CALL,	20,XCALL,	20,XCALL,	0,0,		0,0),
+ANAME(CALLS,	50,CALL1,	0,0,		0,0,		0,0),
+ANAME(CLRTRA,	50,XCLRTRACE,	0,0,		0,0,		0,0),
+ANAME(COPAQU,	50,XCOPAQUE,	0,0,		0,0,		0,0),
+ANAME(DABREA,	0,0,		10,DABREAK,	0,0,		0,0),
+ANAME(DBREAK,	0,0,		10,DBREAK,	0,0,		0,0),
+ANAME(DDT,	50,XDDT,	0,0,		0,0,		0,0),
+ANAME(DEBUG,	50,XDEBUG,	0,0,		0,0,		0,0),
+ANAME(DEFINE,	50,XDEFINE,	0,0,		0,0,		0,0),
+ANAME(DISABL,	50,DISAB,	0,0,		0,0,		0,0),
+ANAME(DMONIT,	0,0,		10,XDMONITOR,	0,0,		0,0),
+ANAME(DOPAQU,	0,0,		10,DOPAQUE,	0,0,		0,0),
+ANAME(DTRACE,	0,0,		10,DTRACE,	0,0,		0,0),
+ANAME(DWATCH,	0,0,		10,XDMONITOR,	0,0,		0,0),
+ANAME(EQL,	0,0,		0,0,		0,0,		36,XEQL),
+ANAME(FORGET,	50,XDEL1,	0,0,		0,0,		0,0),
+ANAME(GEQ,	0,0,		0,0,		0,0,		36,XGEQ),
+ANAME(GO,	50,XGO,		0,0,		0,0,		0,0),
+ANAME(GOCLR,	50,XGOCLR,	0,0,		0,0,		0,0),
+ANAME(GOTRAC,	50,XGOTRACE,	0,0,		0,0,		0,0),
+ANAME(GTR,	0,0,		0,0,		0,0,		36,XGTR),
+ANAME(IDENT,	50,XIDENT,	0,0,		0,0,		0,0),
+ANAME(IF,	50,DOTVREG,	0,0,		0,0,		0,0),
+ANAME(LCALL,	20,XLCALL,	20,XLCALL,	0,0,		0,0),
+ANAME(LCALLS,	50,CALL2,	0,0,		0,0,		0,0),
+ANAME(LOAD,	0,0,		20,XLOAD,	0,0,		0,0),
+ANAME(LPTCLO,	50,CLOSELPT,	0,0,		0,0,		0,0),
+ANAME(LPTDUP,	50,LPTDUP,	0,0,		0,0,		0,0),
+ANAME(LPTOFF,	50,LPTOFF,	0,0,		0,0,		0,0),
+ANAME(LPTON,	50,LPTON,	0,0,		0,0,		0,0),
+ANAME(LPTOPE,	50,OPENLPT,	0,0,		0,0,		0,0),
+ANAME(LEQ,	0,0,		0,0,		0,0,		36,XLEQ),
+ANAME(LSS,	0,0,		0,0,		0,0,		36,XLSS),
+ANAME(MACRO,	50,XSET3,	0,0,		0,0,		0,0),
+ANAME(MONITO,	10,XMONITOR,	10,XMONITOR,	0,0,		0,0),
+ANAME(NEQ,	0,0,		0,0,		0,0,		36,XNEQ),
+ANAME(NOCOPA,   50,XNOCOPAQUE,	0,0,		0,0,		0,0),
+ANAME(NODEBU,	50,NOSIX12,	0,0,		0,0,		0,0),
+ANAME(NOT,	0,0,		34,XNOT,	0,0,		0,0),
+ANAME(OK,	50,XOK,		0,0,		0,0,		0,0),
+ANAME(OPAQUE,	0,0,		10,OPAQUE,	0,0,		10,OPAQUE),
+ANAME(OR,	0,0,		0,0,		0,0,		30,XEQOR),
+ANAME(POLLOF,	50,XNOPOLLON,	0,0,		0,0,		0,0),
+ANAME(POLLON,	50,XNOPOLLOFF,	0,0,		0,0,		0,0),
+ANAME('POP',	20,XPOP,	20,XPOP,	0,0,		0,0),
+ANAME(PRINT,	10,XPRINT,	10,XPRINT,	0,0,		0,0),
+ANAME(PRM,	50,XPRM,	0,0,		0,0,		0,0),
+ANAME(PRS,	50,XPRS,	0,0,		0,0,		0,0),
+ANAME(QUALIF,	50,XQUAL,	0,0,		0,0,		0,0),
+ANAME(RECALL,	0,0,		20,XRECALL,	0,0,		0,0),
+ANAME(RESIGN,	20,XRESIGNAL,	20,XRESIGNAL,	0,0,		0,0),
+ANAME(RESET,	50,XRESET,	0,0,		0,0,		0,0),
+ANAME(RESUME,	20,XRESUME,	20,XRESUME,	0,0,		0,0),
+ANAME(RETURN,	0,0,		20,XRETURN,	0,0,		0,0),
+ANAME(SAVE,	0,0,		20,XSAVE,	0,0,		0,0),
+ANAME(SEARCH,	0,0,		20,XSEARCH,	0,0,		0,0),
+ANAME(SETTRA,	50,XSTRACE,	0,0,		0,0,		0,0),
+ANAME(SIGNAL,	0,0,		20,XSIGNAL,	0,0,		0,0),
+ANAME(STEP,	50,XSTEP,	0,0,		0,0,		0,0),
+ANAME(STORE,	0,0,		20,XSTORE,	0,0,		0,0),
+ANAME(TRACE,	0,0,		10,XTRACE,	0,0,		10,XTRACE),
+ANAME(UNWIND,	50,XSETUNWIND,	0,0,		0,0,		0,0),
+ANAME(WATCH,	10,XWATCH,	10,XWATCH,	0,0,		0,0),
+ANAME(WBASE,	20,XWBASE,	20,XWBASE,	0,0,		0,0),
+ANAME(WHERE,	0,0,		10,XWHERE,	0,0,		0,0),
+ACHAR(LBRACE,	0,0,		0,0,		45,LGFLD,	0,0),  !LG change  {
+ACHAR(RBRACE,	0,0,		0,0,		4,BOOBOO,	0,0),
+ACHAR(LPOINTY,	0,0,		10003,COPYR,	0,0,		10003,FIELDSPEC),
+ACHAR(RPOINTY,	0,0,		0,0,		3,BOOBOO,	0,0),
+ACHAR(LSQUARE,	0,0,		10002,COPYR,	0,0,		10002,STRUCT),
+ACHAR(RSQUARE,	0,0,		0,0,		2,BOOBOO,	0,0),
+ACHAR(LEFTPAREN,0,0,		10001,COPYR,	0,0,		10001,LPAREN),
+ACHAR(RPAREN,	0,0,		0,0,		1,BOOBOO,	0,0),
+ACHAR(%C'=',	0,0,		0,0,		0,0,		9,EQUALS),
+ACHAR(%C';',	5,DOTVREG, 	5,COPYR, 	5,DOTVREG, 	5,COPYR),
+ACHAR(%C'^',	0,0,		0,0,		0,0,		42,XSHIFT),
+ACHAR(%C'*',	0,0,		0,0,		0,0,		40,XTIMES),
+ACHAR(%C':',	0,0,		0,0,		46,COLON,	0,0),  !LG change
+ACHAR(%C'@',	20,XFUTURE,	20,XFUTURE,	0,0,		0,0),
+ACHAR(%C'.',	0,0,		44,CONTENTS,	0,0,		0,0),
+ACHAR(%C'-',	0,0,		38,XSUBTRACT,	0,0,		38,XSUBTRACT),
+ACHAR(%C'+',	0,0,		38,COPYR,	0,0,		38,XADD),
+ACHAR(%C',',	0,0,		0,0,		0,0,		15,JOIN),
+ACHAR(%C'!',	0,0,		0,0,		0,0,		20,SLASH),
+ACHAR(%C'/',	0,0,		0,0,		20,SLASH,	40,XDIV),
+	0 )	:VECTOR;
+LITERAL
+    BRACEVAL = 10000,			! Special indicator for (,{,<,[..
+
+    P_NULL=	21,			! Bit number for valid parses
+    P_PREFIX=	20,
+    P_POSTFIX=	19,
+    P_INFIX=	18;
+
+ROUTINE XPRS:NOVALUE=
+!+
+! FUNCTION
+!	COMMAND: PRS name ,...
+!-
+    BEGIN
+    QUOTFLG = BIGNUMBER;
+
+    PUSHOPER( %(permissible parse: Prefix )% MASK_(P_PREFIX) +
+	 UPLIT(ANAME(XPRS, %(null)% 0,0, %(prefix)% 10,PRS, %(postfix)% 0,0, %(infix)% 0,0)) + 1);
+    END;
+ROUTINE XPRM : NOVALUE=
+    !
+    ! COMMAND: PRM name ,...
+    !
+    BEGIN
+    QUOTFLG = BIGNUMBER;
+    PUSHOPER(%(permissible parse: null, prefix )% MASK_(P_NULL,P_PREFIX) +
+	 UPLIT(ANAME(XPRM, %(null)% 10,PRM, %(prefix)% 10,PRM, %(postfix)% 0,0, %(infix)% 0,0)) + 1)
+    END;
+ROUTINE EQUALS0= ERROR(7);
+GLOBAL ROUTINE SIXOP(NEWOP,PARSE,PRIORITY,RTN)=
+!+
+! FUNCTION
+!	Add a new operator to SIX12
+!-
+    BEGIN
+    LOCAL
+	ENTRY,
+	OLD;
+
+    !+
+    ! Look-up in operator table
+    !-
+    ENTRY = (DECR J FROM .NEWOPS TO 0 BY OPSIZE DO
+		IF .NEWOP EQL .DEFOPTAB[.J] THEN EXITLOOP .J );
+
+    IF .ENTRY LSS 0				! Not found, so
+    THEN					!  insert new entry
+	BEGIN
+	ENTRY = NEWOPS = .NEWOPS+OPSIZE;
+	DEFOPTAB[.NEWOPS] = .NEWOP;
+	OLD = ( DECR J FROM .OPTAB[-1]-(OPSIZE+1) TO 0 BY OPSIZE DO
+		IF .NEWOP EQL .OPTAB[.J] THEN EXITLOOP .J );
+
+	DECR J FROM 3 TO 0 DO		! COPY OLD Entry
+	    DEFOPTAB[.NEWOPS+1+ .J] = 
+		(IF .OLD GEQ 0
+		    THEN .OPTAB[.OLD+1 +.J]
+		    ELSE 0)
+	END;
+    (DEFOPTAB[.ENTRY+1+.PARSE])<LH> = .PRIORITY;
+    (DEFOPTAB[.ENTRY+1+.PARSE])<RH> = .RTN;
+    1
+    END;
+ROUTINE X2DEFINE: NOVALUE=
+!+
+! FUNCTION
+!	Second-level Define action routine (triggered by XDefine)
+!-
+    BEGIN
+    LOCAL
+	OLD,
+	PARSE,
+	ENTRY,				! DEFINE (OPERATOR)
+	NEWOP;
+
+    IF .SIXRC NEQ 2 OR .SIXLC NEQ 2 THEN RETURN ERROR(3);
+
+    PARSE = .SIXLP[1];
+
+    !+
+    ! "Parse" may be a numeric code or a special string
+    !-
+
+    IF .PARSE LSS 0 OR .PARSE GTR 3
+    THEN
+	PARSE =
+	    BEGIN
+	    SELECT .PARSE OF
+		SET
+	       [%RAD50_10 'NULL']:	0;
+	       [%RAD50_10 'PREFIX']:	1;
+	       [%RAD50_10 'POSTFI']:	2;
+	       [%RAD50_10 'INFIX']:	3;
+	       [OTHERWISE]:		(ERROR(31);  RETURN )
+		TES
+	    END;
+
+    NEWOP = ( IF .(.SIXLP)<RH> EQL 0 THEN ..SIXLP ELSE F50TO6(..SIXLP) );
+
+    SIXOP(.NEWOP,.PARSE,.SIXRP[0], .SIXRP[1])
+    END;
+ROUTINE XBIND: NOVALUE=
+!+
+! FUNCTION
+!	Implement the BIND command
+!-
+    BEGIN
+    LOCAL
+	S	: SYMBOL,
+	T	: SYMBOL,
+	R	: SYMBOL;	! Bind (CREATE DDT-SYMBOL)
+    
+    ! This uses only the lowseg symbol table for the BINDs
+    
+    R = .$JBSYM - %O'2000002';
+    
+    IF (S = NSDDTFA(%RAD50_10 'PAT..', 0)) EQL 0	! There isn't any
+    THEN						!  patch area!
+	RETURN ERROR(15);
+    
+    ! see if we are rebinding the symbol
+    
+    T=.$JBSYM;
+
+    WHILE .T<RH> LSS .S<RH> DO
+	BEGIN				%(scan bound symbols)%
+	IF .T[RAD50NAME] EQL ..SIXLP
+	THEN
+	    IF .T[VALUEWRD] NEQ ..SIXRP
+	    THEN
+		BEGIN %(redefined)%
+		OUTS('Redefined ');
+		PRSYM50(..SIXLP);
+		OUTS(', old value was ');
+		OUTDEFAULT(.T[VALUEWRD]);
+		DBLEQL();
+		PRDISP(.T[VALUEWRD]);
+		T[VALUEWRD] = .SIXRP[0];
+		CRLF;
+		RETURN
+		END %(redefined)%
+	    ELSE
+		RETURN;
+
+	T= .T+%O'2000002'
+	END;
+
+    ! if we get here, the symbol is being bound for the first time
+    !
+
+    IF .R<RH> LSS .S[SYMBOLVAL] THEN RETURN ERROR(15);
+
+    R[NAMEWRD] = ..SIXLP OR DDT$_GLOBAL^32;	! DEFINE AS Global SYMBOL
+    R[VALUEWRD] = .SIXRP[0];
+
+    $JBSYM = .R;
+
+    ! Now update the size field of PAT.. module patch area, by adjusting the
+    ! module symbol count appropriately.
+    !
+
+    S[SYMBOLCNT] = .S[SYMBOLCNT] - 2
+    END;
+ROUTINE XMACRO : NOVALUE=
+!+
+! FUNCTION
+!	Establish a MACRO definition
+ !-
+    BEGIN
+    IF .NNAMES GEQ NMACROS THEN RETURN ERROR(13);
+
+    DECR J FROM .NNAMES TO 0 DO
+	IF ..SIXLP EQL .SIXNAMES[.J,MACRO_NAME] THEN RETURN ERROR(14);
+
+    SIXNAMES[(NNAMES = .NNAMES+1),MACRO_NAME] = ..SIXLP;
+    SIXNAMES[.NNAMES,MACRO_BODY] = ..SIXRP
+    END;
+ROUTINE XASSIGN : NOVALUE=
+!+
+! FUNCTION
+!	Implements the "=" operator
+! NOTES
+!	Constant position and size are handled in destination expressions
+!-
+    BEGIN
+    MAP
+	SIXLP	: REF $BYTE_POINTER;
+
+    IF .SIXLP[P_POS_SIZE] EQL 0
+    THEN       					!ADD P,S =<FW>
+	SIXLP[P_SIZE] = 36;
+
+    IF .SIXLP[P_POS] + .SIXLP[P_SIZE] GTR %BPVAL OR
+	.SIXLP[P_INDEX] NEQ 0
+    THEN
+	(PRBPTR(.SIXLP[0,FW]);  RETURN ERROR(18));
+
+    IF NOT ISADDRESS(..SIXLP)
+    THEN
+	BEGIN
+	ILLMEM = .SIXLP[0,FW];
+	ERROR(28);
+	RETURN
+	END;
+    IF NOT ISWRITABLE(.SIXLP[0,FW])
+    THEN
+	BEGIN
+	ILLMEM = .SIXLP[0,FW];
+	ERROR(32);
+	RETURN;
+	END;
+
+    REPLACEN( SIXLP[0,FW], .SIXRP[0] );
+
+    IF .NVALS GEQ 0 THEN CKVALS(0,-2);	! CHECK MONITORED LOCATIONS
+    END;
+
+BIND
+    EQUALSDISP = UPLIT(EQUALS0,X2DEFINE,XBIND,XMACRO,XASSIGN) : VECTOR;
+
+ROUTINE EQUALS :NOVALUE=
+!+
+! FUNCTION
+!	Dispatch to specific ROUTINE
+!-
+    (.EQUALSDISP[.MODEFLAG])();
+!
+!   COMMAND: PRINT
+!
+
+
+BIND
+    XPRINTDISP = UPLIT(XPRINT0,XPRINTOPER,XPRINTACT,XPRINTMACRO,XPRINTMON)	:VECTOR;
+
+ROUTINE XPRINT = (.XPRINTDISP[.MODEFLAG])();	!DISPATCH to SPECIFIC ROUTINES
+
+ROUTINE XPRINT0 = ERROR(2);
+
+ROUTINE XPRINTOPER:NOVALUE =
+!
+! COMMAND: PRINT OPER
+!
+    BEGIN
+    LOCAL
+	WHICHOP,
+	PNTR	: REF VECTOR;			! OPERATOR
+
+    ! If the operator is in radix50, then some bits outside the left
+    ! halfword character code will be set, so we use this test to 
+    ! determine which kind we have
+
+    WHICHOP = ( IF (..SIXRP AND %O'777600777777') NEQ 0
+		THEN
+		    F50TO6(.SIXRP[0])
+		ELSE
+		    .SIXRP[0] );
+
+    IF .SIXRC GTR 1 THEN RETURN ERROR(3);
+
+    PNTR = ( DECR J FROM .NEWOPS TO 0 BY OPSIZE DO
+		IF .WHICHOP EQL .DEFOPTAB[.J]
+		THEN
+		    EXITLOOP (DEFOPTAB[.J]) );
+
+    IF .PNTR LSS 0
+    THEN
+	PNTR = ( DECR J FROM .OPTAB[-1]-(OPSIZE+1) TO 0 BY OPSIZE DO
+			IF .WHICHOP EQL .OPTAB[.J]
+			THEN
+			    EXITLOOP OPTAB[.J] );
+
+    IF .PNTR LSS 0
+    THEN
+	(OUTS('No such operator',%CHAR(CR,LF) );  RETURN);
+
+    PROP(.PNTR[0]);
+    IF .PNTR[1] NEQ 0
+    THEN
+	BEGIN
+	OUTS( %CHAR(CR,LF),'Null',%CHAR(9) );
+	OUTFD(.(PNTR[1])<LH>,5);
+	PUTTAB;
+	PRXDISP(.PNTR[1])
+	END;
+    IF .PNTR[2] NEQ 0
+    THEN
+	BEGIN
+	OUTS( %CHAR(CR,LF),'Prefix',%CHAR(9) );
+	OUTFD(.(PNTR[2])<LH>,5);
+	PUTTAB;
+	PRXDISP(.PNTR[2])
+	END;
+    IF .PNTR[3] NEQ 0
+    THEN
+	BEGIN
+	OUTS( %CHAR(CR,LF),'Postfix',%CHAR(9) );
+	OUTFD(.(PNTR[3])<LH>,5);
+	PUTTAB;
+	PRXDISP(.PNTR[3])
+	END;
+    IF .PNTR[4] NEQ 0
+    THEN
+	BEGIN
+	OUTS( %CHAR(CR,LF),'Infix',%CHAR(9) );
+	OUTFD(.(PNTR[4])<LH>,5);
+	PUTTAB;
+	PRXDISP(.PNTR[4])
+	END;
+    CRLF
+    END;
+! The following definitions are used by
+! the "PRINT ACTION" display routines
+
+MACRO
+    ATM(A,B) = %RAD50_10 A,B %;
+
+BIND
+    ALLACTV =					! ALL ACTION BITS
+	    BREAKV+ABREAKV+OPQATV+OPQAFTV+TRCATV+TRCAFTV+TABREAKV,
+    ACTTBL =
+	    PLIT (
+		ATM('BREAK',	BREAKV ),
+		ATM('ABREAK',	ABREAKV),
+		ATM('OPAQ',	OPQATV),
+		ATM('OPAQAF',	OPQAFTV),
+		ATM('TRACE',	TRCATV),
+		ATM('TRACEA',	TRCAFTV),
+		ATM('OK',	TABREAKV),
+		ATM('ALL',	ALLACTV)
+		)
+		 :	VECTOR;		! <= "ALL" must be the last entry
+ROUTINE ACTBIT2NAM(BIT_VAL) =
+!+
+! FUNCTION
+!	Convert a bit-mask value (action mask) into its print-name
+!-
+    (DECR J FROM .ACTTBL[-1]/2-2 TO 0 DO
+	IF .ACTTBL[.J*2+1] EQL .BIT_VAL
+	THEN EXITLOOP .ACTTBL[.J*2]);
+
+ROUTINE ACTNAM2BIT(NAM) =
+!+
+! FUNCTION
+!	Convert print name to bit mask
+! INPUT
+!	NAM	- Name in ???? (sixbit?)
+! OUTPUT
+!	Bitmask for setting into table or ZERO if name not found
+!-
+    BEGIN
+    DECR J FROM .ACTTBL[-1]/2-1 TO 0 DO
+	IF .ACTTBL[.J*2] EQL .NAM
+	THEN
+	    RETURN .ACTTBL[.J*2+1];
+
+    0
+    END;
+
+ROUTINE PR1ACTION(NAME,TYPE):NOVALUE =
+!+
+! FUNCTION
+!	Print one action.
+! INPUTS
+!	NAME	- Routine address
+!	TYPE	- Mask of action type
+!-
+    BEGIN
+    LOCAL
+	P,			! Index into ROUTS of a routine
+	T;
+    LABEL
+	NEXTACT;
+
+    IF (P = CFINDR(.NAME)) LSS 0
+    THEN
+	(OUTS('No actions set',%CHAR(CR,LF));  RETURN);
+
+    T = .ROUTS[.P,0,FW] AND .TYPE;	! Masked by Events we're interested in
+
+    IF .T NEQ 0 AND .SIXRC EQL 1
+    THEN
+	BEGIN
+	OUTS('Routine ');  PRQUAL(.ROUTS[.P,0,RH,0],1);  CRLF
+	END;
+
+    DECR I FROM MAXACTRTN TO 18 DO
+NEXTACT:
+	BEGIN
+	MAP
+	    T:	BITVECTOR;
+
+	IF NOT .T[.I] THEN LEAVE NEXTACT;	! Ignore uninteresting events
+
+	IF .TYPE EQL ALLACTV		! When ALL actions are desired,
+	THEN				!  print the action-name we are
+	    BEGIN			!  going to display next.
+	    PRSYM50(ACTBIT2NAM(1^.I));
+	    OUTS(':',%CHAR(9) )
+	    END;
+
+	IF .ROUTS[.P, CNDACTION(.I)] EQLA 0
+	THEN
+	    (OUTS('Unconditional'); CRLF)
+	ELSE
+	    BEGIN
+	    LOCAL
+		TV,		! Pointer to conditional text
+		TC;		! Next character
+
+	    TV = CH$PTR( .ROUTS[.P, CNDACTION(.I)] );
+	    WHILE (TC = CH$RCHAR_A(TV)) NEQ %O'177' DO OUTC(.TC);
+	    CRLF
+	    END
+	END
+    END;
+
+ROUTINE XPRINTACT :NOVALUE=
+!+
+! FUNCTION
+!	Implements the		PRINT ACTION <type> <name>
+!	command
+! IMPLICIT INPUTS
+!	SIXRP[0]	- action-type
+!	SIXRP[1]	- optional routine name
+!-
+    BEGIN
+    LOCAL
+	TMP;
+
+    IF .SIXRC LSS 1 OR .SIXRC GTR 2 THEN RETURN ERROR(3);	! Check args
+
+    IF (TMP = ACTNAM2BIT(..SIXRP)) EQL 0 THEN RETURN ERROR(8);	! Bad type
+
+    IF .SIXRC EQL 2
+    THEN
+	PR1ACTION(.SIXRP[1], .TMP)	! Display given name
+    ELSE
+	! Display all names for this action
+	BEGIN
+	IF .NROUTS EQL -1
+	THEN
+	    (OUTS('No actions set',%CHAR(CR,LF));  RETURN);
+
+	DECR J FROM .NROUTS TO 0 DO PR1ACTION(.ROUTS[.J,0,FW],.TMP)
+	END
+    END;
+
+ROUTINE PR1MACRO(NAME) :NOVALUE=
+    ! Print one Macro definition
+    BEGIN
+    LOCAL
+	PNTR,
+	C;
+    PNTR = ( DECR J FROM .NNAMES TO 0 DO
+		IF .NAME EQL .SIXNAMES[.J,0,FW] THEN EXITLOOP .J );
+    IF .PNTR LSS 0
+    THEN
+	(OUTS( 'No such macro',%CHAR(CR,LF) );  RETURN);
+
+    PNTR = CH$PTR(.SIXNAMES[.PNTR,1,FW]);
+
+    WHILE (C =CH$RCHAR_A(PNTR)) NEQ %O'177' DO OUTC(.C);
+
+    CRLF
+    END;
+
+ROUTINE XPRINTMACRO:NOVALUE =
+!
+! COMMAND: PRINT Macro [NAME]
+!
+    BEGIN
+    IF .SIXRC GTR 1 THEN RETURN ERROR(3);
+    IF .SIXRC EQL 1
+    THEN
+	! PRINT GIVEN Macro
+	PR1MACRO(..SIXRP)
+    ELSE
+	! PRINT ALL MACROS
+	BEGIN
+	LOCAL
+	    P;
+	IF .NNAMES EQL -1
+	THEN (OUTS( 'No macros defined',%CHAR(CR,LF) );  RETURN);
+
+	DECR J FROM .NNAMES TO 0 DO
+	    BEGIN
+	    P = .SIXNAMES[.J,0,FW];
+	    PRSYM50(.P);
+	    OUTS(' =',%CHAR(9) );
+	    PR1MACRO(.P)
+	    END
+	END;
+    END;
+
+    	%SBTTL	'Analysis of DEBUG input lines'
+!		-----------------------------
+
+! The parsing algorithm uses a simple stack method based on one first
+! developed By bauer and Samelson.  In order to retain maximum information
+! about context (necessary since operator parse is not fixed), both
+! operators and operands are kept in one stack. The operand stack
+! elements are formatted
+!
+!		!-------------------------!
+!		! NO. of WORDS IN OPERAND !	<- TOP WORD of ENTRY
+!		!-------------------------!
+!		! LAST DATA WORD	  !	^  INCREASING
+!		!	! ! !		  !	^    STACK
+!		! FIRST DATA WORD	  !	^  SUBSCRIPTS
+!		!-------------------------!
+!
+! where the count in the top (last) word does not include the count
+! word itself.  Operator entries are chained together:
+!
+! TOPOP -->	!------------+------------!
+!		! #400000    ! POINTER    !	to IMMEDIATELY PREVIOUS OPERATOR
+!		!------------+------------!
+!		! PARSE INFO ! POINTER    !	to TABLE ENTRY FOR THIS OPERATOR
+!		!------------+------------!
+!
+! thus, operator and operand entries on the stack can be distinguished
+! by the sign of their top word.  The 'PARSE INFO' in the entry is contained
+! in the last 4 bits of the halfword, each of which is 1 when the corresponding
+! parse (null-bit <21,1>, prefix-<20,1>, postfix-<19,1>, infix-<18,1>) might be valid.
+! the pointer to the table entry points to its second word, the
+! print name not being required at this stage of the game.
+
+MACRO
+	ENDOFLINE=(.CHAR EQL CR) %;
+
+MACRO 	PARSEFIELD=18,4,0 %,
+	PARSENULL=21,1,0 %,
+	PARSEPREFIX=20,1,0 %,
+	PARSEPOSTFIX=19,1,0 %,
+	PARSEINFIX=18,1,0 %;
+ROUTINE ADVANCE:NOVALUE=		! GET NEXT CHARACTER
+    BEGIN
+    IF .NPCHAR EQL 0 THEN NCHAR = .NCHAR+1;
+    CHAR = CH$RCHAR_A(PCHAR[.NPCHAR]);
+
+    IF .CHAR EQL %O'177'	! End of input-stream indicator?
+    THEN
+	BEGIN
+	NPCHAR = .NPCHAR-1;	! Back down to previous input-stream
+	CHAR = %C' ';		! Force break in parse at end of Macro
+	END;
+    END;
+LITERAL
+    T_NUMBER	= 0,
+    T_ALPHA	= 1,
+    T_RADIX	= 2,
+    T_QUOTE	= 3,
+    T_OTHER	= 4;
+
+ROUTINE TYPE(TFLAG)=
+!+
+! FUNCTION
+!	Determine type of character in CHAR for input scanning.
+! INPUTS
+!	TFLAG	- Zero for normal name. 1, if name began with "?" to
+!		  quote it.
+! OUTPUTS
+!	value indicating type of character, from set
+!		0	- numeric
+!		1	- alphabetic
+!		2	- numeric over-ride "#"
+!		3	- quoting characters " and '
+!		4	- all other operator chars, etc.
+!-
+    BEGIN
+    SELECTONE .CHAR OF
+	SET
+	[%C'0' TO %C'9']:	.TFLAG;		! ?<digit> is alpha, else num
+	[%C'A' TO %C'Z']:	T_ALPHA;
+	[%C'a' TO %C'z']:	T_ALPHA;
+	[%C'&']:		T_ALPHA;
+	[%C'_', %C'$']:		T_ALPHA;
+	[%C'.', %C'%']:		IF .TFLAG	! MACRO-10 specials, if "?"
+				THEN		!  seen to quote it
+				    T_ALPHA	!  say it's alpha
+				ELSE
+				    T_OTHER;	! No, it's a special character
+	[%C'#']:		T_RADIX;
+	[DQUOTE]:		T_QUOTE;	! ASCII "
+	[SQUOTE]:		T_QUOTE;	! ASCII '
+	[OTHERWISE]:		T_OTHER
+	TES
+    END;
+ROUTINE ERROR(EN)=
+!+
+! FUNCTION
+!	Error message printouts
+!-
+    BEGIN
+    IF .EN GEQ 0 THEN SETON(ERRORFLAG) ELSE EN = - .EN;
+
+    IF ISON(DISKIFLAG)
+    THEN
+	BEGIN
+	LOCAL
+	    PTR,
+	    C;
+	PTR = CH$PTR(BUFF);
+	OUTC(%C'&');
+	WHILE (C=CH$RCHAR_A(PTR)) NEQ CR DO OUTC(.C);
+	CRLF
+	END;
+
+    SELECTONE .EN OF
+	SET
+	[0 TO 4, 16,17,22,25,38]:
+		(TTOUTM(%C'.',.NCHAR);  TTOUTC(%C'^');  TTCRLF);
+	[28,32,33]:
+		(PRBPTR(.ILLMEM))
+	TES;
+
+    CASE .EN FROM 0 TO 38 OF
+	SET
+	[0]:	TTOUTS('Unknown symbol');
+	[1]:	TTOUTS('Illegal character');
+	[2]:	TTOUTS('Syntax error');
+	[3]:	TTOUTS('Incorrect number of arguments');
+	[4]:	TTOUTS('Unmatched brace');
+	[5]:	TTOUTS('Base must be from 2 to 10 decimal');
+	[6]:	TTOUTS(': No debug linkage found for this routine');
+	[7]:	TTOUTS('Invalid equals');
+	[8]:	TTOUTS('ACTION-type must be one of: BREAK, ABREAK, OPAQ, OPAQAF, TRACE, TRACEA or ALL');
+	[9]:	TTOUTS('Improper file-spec');
+	[10]:	TTOUTS('Open failure ');
+	[11]:	TTOUTS('Transmission error');
+	[12]:	TTOUTS('No space for macro text');
+	[13]:	TTOUTS('No space for macro name definition');
+	[14]:	TTOUTS('Name already defined');
+	[15]:	TTOUTS('No space for symbol definition');
+	[16]:	(TTOUTS('Digit invalid for base ');  OUTD(.IOBASE));
+	[17]:	TTOUTS('Actual/Local index out of range');
+	[18]:	TTOUTS(': Invalid field reference (byte pointer)');
+	[19]:	TTOUTS('Line printer file not open');
+	[20]:	TTOUTS('Line printer file still open');
+	[21]:	TTOUTS('DDT not loaded');
+	[22]:	(TTOUTS('Multiple definitions in DDT symbol table for ');  PRSYM50(.ERRORPARM));
+	[23]:	TTOUTS('Impossible error 23');
+	[24]:	TTOUTS('OK works only at routine entry');
+	[25]:	TTOUTS('Ambiguous command name');
+	[26]:	TTOUTS('Not available for Bliss-10');
+	[27]:	TTOUTS('Valid only when in signal handler routine');
+	[28]:	%IF TOPS10
+		%THEN
+		    TTOUTS(': Ill Mem Ref');
+		%ELSE
+		    TTOUTS(': Refers to non-existent page');
+		%FI
+	[29]:	TTOUTS('Already at top SIX12 level');
+	[30]:	(TTOUTS('You are already above level '); OUTD(..SIXRP));
+	[31]:	TTOUTS('Which Parse?');
+	[32]:	TTOUTS(': Memory Write Protected');
+	[33]:	%IF TOPS20 %THEN TTOUTS(': Memory Read Protected') %FI ;
+	[34]:	TTOUTS('Warning: You are in NODEBUG mode');
+	[35]:	TTOUTS('Operation makes no sense in NODEBUG mode');
+	[36]:	TTOUTS('Module is in different high segment');
+	[37]:	TTOUTS('Could not find SS$UNW in symbol table');
+	[38]:	TTOUTS('Reserved for future use');
+	[INRANGE,OUTRANGE]:	
+		0
+	TES;
+%IF TOPS20
+%THEN
+	IF .EN EQL 10
+	THEN
+	    ERSTR( $PRIOU, $FHSLF^18+%O'777777', 0);	! Last JSYS error
+%FI
+    TTCRLF;
+    0
+    END;
+ROUTINE PRSTK(K) : NOVALUE=
+!+
+! FUNCTION
+!	Print the DEBUG parse stack
+! INPUT
+!	K	- depth to print to
+!-
+    BEGIN
+    LOCAL
+	I;
+
+    IF .K EQL 0 THEN K = .TOPSTK;		! except 0 means all of it
+
+    I = .TOPSTK;
+
+    WHILE .I GTR .TOPSTK-.K DO
+	BEGIN %(print it)%
+	IF .DBGSTK[.I] LSS 0
+	THEN
+	    BEGIN %(operator)%
+	    PROP(.(.(DBGSTK[.I-1])<0,18>-1));
+	    OUTC(%C' ');
+	    IF .(DBGSTK[.I-1])<PARSENULL> THEN PRSYM50(%RAD50_10 'NULL.');
+	    IF .(DBGSTK[.I-1])<PARSEPREFIX> THEN PRSYM50(%RAD50_10 'PREFX.');
+	    IF .(DBGSTK[.I-1])<PARSEPOSTFIX> THEN PRSYM50(%RAD50_10 'PSTFX.');
+	    IF .(DBGSTK[.I-1])<PARSEINFIX> THEN PRSYM50(%RAD50_10 'INFIX.');
+	    CRLF;
+	    I = .I - 2;
+	    END %(operator)%
+	ELSE
+	    BEGIN %(operand)%
+	    OUTC(%C'['); OUTFD(.DBGSTK[.I],0); OUTC(%C']');
+	    INCR J FROM .I-.DBGSTK[.I] TO .I-1 DO
+		BEGIN
+		OUTDEFAULT(.DBGSTK[.J]);
+		OUTC(%C' ');
+		END;
+	    CRLF;
+	    I = .I - (.DBGSTK[.I]+1);
+	    END %(operand)%;
+	END %(print it)%;
+    END;
+ROUTINE PUSHOPER(OPERATOR):NOVALUE=
+!+
+! FUNCTION
+!	Push an operator onto the evaluation stack
+    BEGIN
+    TOPSTK = .TOPSTK+2;
+    DBGSTK[.TOPSTK-1] = .OPERATOR;
+    DBGSTK[.TOPSTK] =  1^35 OR .TOPOP<RH>;		! Sign is OPERATOR flag
+    TOPOP = .TOPSTK;
+    IF .PARSEDEBUG THEN (OUTS('op: '); PRSTK(2))	! print this operator
+    END;
+ROUTINE PUSHITEM(AWORD):NOVALUE=
+!+
+! FUNCTION
+!	PUT 1-WORD OPERAND ON STACK
+!-
+    BEGIN
+    IF .TOPSTK GEQ 0 AND .DBGSTK[.TOPSTK] GEQ 0 ! Already a partial operand
+    THEN					!  on stack. Make room for
+	BEGIN					!  one more component
+	TOPSTK = .TOPSTK+1;
+	DBGSTK[.TOPSTK] = .DBGSTK[.TOPSTK-1] + 1;
+	DBGSTK[.TOPSTK-1] = .AWORD;
+	IF .PARSEDEBUG THEN (OUTS('operand: '); PRSTK(2));	! print this operand
+	RETURN
+	END;
+    TOPSTK = .TOPSTK+2;			 ! Make room for new operand
+    DBGSTK[.TOPSTK] = 1;
+    DBGSTK[.TOPSTK-1] = .AWORD;
+    IF .PARSEDEBUG THEN (OUTS('operand: '); PRSTK(2));	! print this operand
+    END;
+ROUTINE GETNUMBER=
+!+
+! FUNCTION
+!	Pick up number
+! NOTES
+!	It is necessary to acquire a register pair for doing the MUL
+!	instruction.
+!-
+    BEGIN
+    REGISTER				! Hope these are preserved regs.
+	VAL = S1036(14,8),
+	VAL2= S1036(15,9);
+
+    VAL = 0;
+
+    IF TYPE(FALSE) NEQ T_NUMBER THEN RETURN ERROR(2);
+
+    DO
+	BEGIN
+	IF (.CHAR - %C'0') GEQ .IOBASE		! Check that digits are in
+	THEN					!  the domain of the current
+	    (NCHAR = .NCHAR+1;  ERROR(16));	!  input radix.
+
+	MUL(VAL,IOBASE);  
+
+	VAL2<35,1> = 0;				! Clear out for "predictability
+
+	IF .VAL THEN VAL2<35,1> = 1;		! Keep sign in LSB's
+
+	VAL = .VAL2 + .CHAR - %C'0';
+	ADVANCE()
+	END
+    WHILE TYPE(FALSE) EQL T_NUMBER;
+
+    .VAL
+    END;
+
+ROUTINE GETSYMBOL(TFLAG)=
+!+
+! FUNCTION
+!	GET RADIX-50 REPRESENTATION of SYMBOL
+!-
+    BEGIN
+    REGISTER
+	Z,
+	N;
+
+    Z = 0;
+    N = 6;
+
+    WHILE 1 DO
+	BEGIN
+	IF (N = .N-1) GEQ 0
+	THEN
+	    Z = %O'50' * .Z + F7TO50(.CHAR) ;
+
+	ADVANCE();
+	IF TYPE(.TFLAG) GTR T_ALPHA THEN EXITLOOP
+	END;
+    .Z
+    END;
+
+ROUTINE XHELP:NOVALUE=
+!+
+! FUNCTION
+!	Implements the HELP command
+!-
+    BEGIN
+    LOCAL
+	R,
+	FLAG,
+	COUNT;
+
+    FLAG = 0;
+    COUNT = 0;
+
+    OUTS('Builtin operators:',%CHAR(CR,LF) );
+
+    INCR I FROM 0 TO .OPTAB[-1]-(OPSIZE+1) BY OPSIZE DO
+	BEGIN
+	IF .OPTAB[.I] EQL %SIXBIT 'HELP' THEN FLAG=1;
+	IF .FLAG
+	THEN
+	    BEGIN
+	    PROP(.OPTAB[.I]);	
+	    IF (COUNT = .COUNT+1) MOD 8 EQL 0 
+	    THEN
+		OUTCRLF()
+	    ELSE
+		PUTTAB
+	    END
+	END;
+
+    IF .NEWOPS GEQ 0 
+    THEN
+	OUTS(%STRING(%CHAR(CR,LF),'User-defined operators:',%CHAR(CR,LF) ));
+
+    COUNT=0;
+    INCR I FROM 0 TO .NEWOPS BY OPSIZE DO
+	BEGIN
+	PROP(.DEFOPTAB[.I]);
+	IF (COUNT = .COUNT+1) MOD 8 EQL 0
+	THEN
+	    OUTCRLF()
+	ELSE
+	    PUTTAB
+	END;
+
+    OUTCRLF()
+    END;
+ROUTINE GETOP(OPNAME)=
+!+
+! FUNCTION
+!	(SECOND) STACK WORD FOR OPERATOR
+!-
+    BEGIN
+    REGISTER
+	R;
+
+    R = ( DECR I FROM .NEWOPS TO 0 BY OPSIZE DO
+		IF .OPNAME EQL .DEFOPTAB[.I] THEN EXITLOOP DEFOPTAB[.I] );
+
+    IF .R LSS 0
+    THEN
+	R = ( DECR I FROM .OPTAB[-1]-(OPSIZE+1) TO 0 BY OPSIZE DO
+		IF .OPNAME EQL .OPTAB[.I] THEN EXITLOOP OPTAB[.I] );
+
+    IF .R LSS 0
+    THEN
+	-1
+    ELSE
+	OPRETURN(R)
+    END;
+
+ROUTINE GETNAMEOP(OPNAME) = 
+!+
+! FUNCTION
+!	Given an operator name (in RAD50) return the encoded value
+!	for the operator.
+! INPUTS
+!	OPNAME	- RAD50 value of a possible operator.
+! OUTPUTS
+!	-1	No matches (not an operator)
+!	-2	Multiple matches (ambiguous)
+!	n>0	Encoding for operator to be pushed on DBGSTK
+!-
+    BEGIN
+    LOCAL
+	R,
+	OP,
+	SIXNAME,
+	MASK,
+	CT,
+	NAME50;
+
+    MACRO CHECK(X) = 
+	BEGIN
+	IF (OP = .(X)) EQL .SIXNAME THEN
+	    (CT = -2; R = (X); LEAVE SEARCHTAB);
+
+	IF (.OP<LH> AND %O'770000') NEQ 0
+	THEN
+	    BEGIN
+	    OP = .OP XOR .SIXNAME;
+	    OP = .OP AND (NOT .MASK);
+	    IF .OP EQL 0 THEN (CT = .CT+1; R = (X))
+	    END
+	END %;
+
+    LABEL SEARCHTAB;
+
+    NAME50 = .OPNAME;
+    OP = 0;
+    MASK = -1;
+
+    !+
+    ! Convert the name from RAD50 into SIXBIT, as the OPTAB stores them
+    ! that way.  Further, it makes it straightforward to compare under a
+    ! mask when forcing at least two characters to match.
+    !-
+    WHILE .NAME50 NEQ 0 DO
+	BEGIN
+	R = .NAME50 MOD %O'50';
+	NAME50 = .NAME50/%O'50';
+	OP = .OP+(F50TO7(.R)-%O'40');
+	OP = ROT(.OP,-6);
+	MASK = LSH(.MASK, -6)
+	END;
+
+    SIXNAME = .OP;
+    MASK<24,12> = 0;	! FORCE AT LEAST TWO CHARACTER MATCH
+    CT = -1;		! COUNT MATCHES
+
+SEARCHTAB:
+    BEGIN
+    DECR I FROM .NEWOPS TO 0 BY OPSIZE DO CHECK(DEFOPTAB[.I]);
+    DECR I FROM .OPTAB[-1]-(OPSIZE+1) TO 0 BY OPSIZE DO CHECK(OPTAB[.I]);
+    END;	! of SEARCHTAB:
+
+    SELECTONE .CT OF
+	SET
+	[-2]:	0;					! Exact match required
+	[-1]:	RETURN -1;				! No match
+	[0]:	IF NSDDTFA(.OPNAME,0) NEQ 0		! One match
+		THEN
+		    RETURN -1;
+      [OTHERWISE]: RETURN -2				! Multiple matches
+      TES;
+
+    RETURN OPRETURN(R)
+    END;
+ROUTINE GETTEXT : NOVALUE=
+!+
+! FUNCTION
+!	Get ASCII text from input stream and store into the macro-text
+!	area.  Since only 18-bit addresses are saved, it is vital that
+!	"new" text always begins on a FULLWORD boundary and is padded
+!	as necessary to end on a fullword also.
+!-
+    BEGIN
+    VTEMP = .PTEXT<RH> + 1;	! This is an ILDB pointer, so RH would be
+				!  one less than actual address.
+    DO
+	BEGIN
+	CH$WCHAR_A( .CHAR, PTEXT );		! Write characters out
+	IF .PTEXT<RH> GEQ TEXTAREA[2*NMACROS]
+	THEN
+	    RETURN ERROR(12);			! No more text space left
+	ADVANCE()				! Get next character
+	END
+    UNTIL ENDOFLINE OR .CHAR EQL ESCAPE OR .CHAR EQL BAR;
+
+    CH$WCHAR_A( %O'177',PTEXT);		! Mark EOT
+    ADVANCE();
+    PTEXT = CH$PTR( .PTEXT<RH>+1 );	! Force ptr to next fullword
+    SIXVP = VTEMP;			! Address of result and
+    SIXVC = 1				!  its size
+    END;
+ROUTINE GETSTRING:NOVALUE=
+!+
+! FUNCTION
+!	Input a text string, either left-justified (ala Bliss-10 syntax)
+!       or right-justified (almost useless for anything bigger than one
+!       character)
+!-
+    BEGIN
+    LOCAL
+	HOLD;
+
+    IF .CHAR EQL SQUOTE
+    THEN
+	BEGIN
+	HOLD = CH$PTR( DBGSTK[.TOPSTK]+1 );	! Bufferspace for a string
+
+	IF .TOPSTK GEQ 0 AND .DBGSTK[.TOPSTK] GEQ 0	! Clean some things off
+	THEN						!  the stack
+	    BEGIN
+	    TOPSTK = .TOPSTK - .DBGSTK[.TOPSTK];
+	    HOLD = .HOLD - 1
+	    END;
+
+	WHILE 1 DO
+	    BEGIN
+	    ADVANCE();
+	    IF ENDOFLINE THEN EXITLOOP;
+	    IF .CHAR EQL SQUOTE			! Eat '' as a single ' value
+	    THEN				!  was terminating "'" value
+		(ADVANCE();  IF .CHAR NEQ SQUOTE THEN EXITLOOP);
+	    CH$WCHAR_A( .CHAR, HOLD )		! copy into output buffer
+	    END;
+
+	CH$WCHAR_A(0, HOLD);			! Make it ASCIZ
+
+	HOLD = (CH$DIFF(.HOLD, CH$PTR(DBGSTK))+4)/5;	! Words since base of
+							!  the stack
+	DBGSTK[.HOLD+1] = .HOLD - .TOPSTK;		! Set length of this
+							!  operand
+	TOPSTK = .HOLD+1				! Mark new TOS
+	END
+    ELSE
+	!+
+	! Should be suspicious of this, as it creates 7-bit ASCII which is
+	!  RIGHT-JUSTIFIED.  This can't be very useful for anything but a
+	!  single character operator, such as is used when defining new
+	!  operators.
+	!-
+	BEGIN
+	HOLD = 0;
+	WHILE 1 DO
+	    BEGIN
+	    ADVANCE();
+	    IF ENDOFLINE THEN EXITLOOP;
+	    IF .CHAR EQL DQUOTE
+	    THEN
+		(ADVANCE();  IF .CHAR NEQ DQUOTE THEN EXITLOOP);
+	    HOLD = .HOLD^7 + .CHAR
+	    END;
+	IF (QUOTFLG = .QUOTFLG-1) GEQ 0 THEN HOLD = .HOLD^18;	! Char operator
+	PUSHITEM(.HOLD)
+	END;
+
+    IF .PARSEDEBUG THEN (OUTS('str: '); PRSTK(2))
+    END;
+ROUTINE EXECUTE: NOVALUE=
+!+
+! FUNCTION
+!	Execute operator on top of SIX12 Parse stack
+!-
+    BEGIN
+    LOCAL
+        SAVEGO,				! These are used to save environment
+        SAVESTEP,			!  if the operator we are executing
+        SAVETRACE,			!  is implemented by USER code, not
+        SAVEUSER,			!  by SIX12 code.
+        SAVEJBUUO,
+
+	PARSE,				! Indicates parse: infix,prefix, etc.
+	ROUTN,				! Semantic action routine
+	OPNAME;				! Print-name of the operator
+    BIND
+	LASTOP=	DBGSTK[.TOPOP-1]	: HBLOCK;
+
+    PARSE = FIRSTONE( .LASTOP<PARSEFIELD> ) -32;
+
+    SIXLC = SIXRC = SIXVC = 0;
+
+    IF .PARSE AND .DBGSTK[.TOPSTK] GTR 0
+    THEN
+	BEGIN					! RIGHT OPERAND
+	SIXRC = .DBGSTK[.TOPSTK];
+	SIXRP = DBGSTK[.TOPSTK-.SIXRC];
+	TOPSTK = .TOPSTK -.SIXRC -1
+	END;
+
+    ROUTN = .LASTOP[.PARSE,RH,0];
+    OPNAME = .LASTOP[-1,FW];
+
+    TOPOP = .DBGSTK[.TOPOP] AND %O'777777';		! POP Operator
+    TOPSTK = .TOPSTK -2;
+
+    IF .PARSE GEQ 2 AND .DBGSTK[.TOPSTK] GTR 0
+    THEN
+	BEGIN						! Left operand
+	SIXLC = .DBGSTK[.TOPSTK];
+	SIXLP = DBGSTK[.TOPSTK-.SIXLC];
+	TOPSTK = .TOPSTK - .SIXLC -1
+	END;
+
+    ! The following state save/restore is required because
+    ! in the case of user-defined operators, the dispatched
+    ! routines could themselves contain debug linkages
+
+    SAVEUSER = NOT WITHINSIX12(.ROUTN);
+    IF .SAVEUSER
+    THEN
+        BEGIN
+        ! We save and restore these only if a User Op because
+        ! internal ops can change the state.  Only a user op
+        ! cannot affect the SIX12 state except by recursive
+        ! call, which is what this state saving is about
+	!
+        SAVEGO=.GOFLAG;
+        SAVESTEP=.STEPFLAG;
+        SETOFF(STEPFLAG);
+        SAVETRACE=.TRACEFLAG;
+        SETOFF(TRACEFLAG);
+        SAVEJBUUO=.$JBUUO;
+        GOFLAG=1
+        END;
+
+    IF .PARSEDEBUG
+    THEN
+	BEGIN
+        OUTS('ex: ');
+        PROP(.OPNAME);
+        CRLF
+        END;
+
+    ( .ROUTN ) (.PARSE);			! Execute SEMANTIC Action
+
+    IF .SAVEUSER
+    THEN
+        BEGIN
+        $JBUUO = .SAVEJBUUO;
+        TRACEFLAG = .SAVETRACE;
+        STEPFLAG = .SAVESTEP;
+        GOFLAG = .SAVEGO
+        END;
+
+    IF ISON(ERRORFLAG) THEN RETURN;
+
+    IF .SIXVC GTR 0
+    THEN
+	BEGIN					! Get result of operation
+	INCR J FROM 0 TO .SIXVC-1  DO DBGSTK[.TOPSTK+1 +.J] = .SIXVP[.J];
+	TOPSTK = .TOPSTK+ .SIXVC +1;
+	DBGSTK[.TOPSTK] = .SIXVC;
+	IF .PARSEDEBUG THEN (OUTS('result: '); PRSTK(2))
+	END
+    END;
+ROUTINE OPERATE(CURRNTOP: HBLOCK):NOVALUE=
+!+
+! FUNCTION
+!	Schedule evaluation of operators on the DBGSTK
+! INPUT
+!	CURRNTOP	- New operator to either push or evaluate
+!-
+    BEGIN
+    MACRO
+	PRIO(OPWD,N)=
+		BEGIN
+		IF (.OPWD AND (1^N)) NEQ 0
+		THEN
+		    .OPWD[21-N, LH, 0]
+		ELSE
+		    0
+		END%,
+
+	BRACE(OPWD)=(.OPWD[1, LH, 0] GTR BRACEVAL) %,
+
+	OPERAND=(.TOPSTK GEQ 0 AND .DBGSTK[.TOPSTK] GEQ 0) %,
+
+	CHKPARSES(OP)= (IF .OP<PARSEFIELD> EQL 0 THEN RETURN ERROR(2)) %;
+
+    LOCAL
+	P,
+	LBRACE;
+    LABEL
+	OPERANDTEST;
+
+    SETOFF(LBRACE);
+    P = PRIO(CURRNTOP, P_POSTFIX);			! Begin with POSTFIX
+
+    IF .P EQL 0 THEN P = PRIO(CURRNTOP, P_INFIX);	! No POSTFIX, try INFIX
+
+    UNTIL .TOPOP<17,1> DO	       		! While the stack isn't empty
+	BEGIN
+	BIND
+	    LASTOP=DBGSTK[.TOPOP-1] : HBLOCK;
+OPERANDTEST:
+        BEGIN
+        IF OPERAND
+        THEN					! Found an operand between
+	    BEGIN				!  this OP and previous one
+	    LOCAL
+		PARSE;
+
+	    LASTOP = .LASTOP AND NOT MASK_(P_NULL, P_POSTFIX);
+	    CHKPARSES(LASTOP);
+	    PARSE = 21 - ( FIRSTONE( .LASTOP<PARSEFIELD> ) - 32);
+	    IF PRIO(LASTOP,.PARSE) LSS .P THEN EXITLOOP
+	    END
+        ELSE
+	    BEGIN
+	    IF (.P EQL 0) OR BRACE(CURRNTOP)
+	        OR ((.LASTOP AND MASK_(P_NULL, P_POSTFIX)) EQL 0)
+	    THEN
+	        BEGIN
+	        IF BRACE(LASTOP) THEN LEAVE OPERANDTEST;
+	        IF .CURRNTOP GEQ 0 THEN EXITLOOP
+	        END;
+	    LASTOP = .LASTOP AND NOT MASK_(P_PREFIX, P_INFIX);
+	    CHKPARSES(LASTOP)
+	    END;
+        END %(OperandTest)%;
+
+	IF  BRACE(LASTOP) AND (.CURRNTOP GEQ 0)
+	THEN
+	    IF .LASTOP[1,LH,0] EQL PRIO(CURRNTOP,P_POSTFIX) + BRACEVAL
+	    THEN
+		SETON(LBRACE)				! Onset of "compound"
+	    ELSE
+		EXITLOOP;
+
+	EXECUTE();					! Previous operator
+	IF ISON(ERRORFLAG) OR .LBRACE THEN RETURN
+	END;
+
+    ! Now stack the current operator
+    !
+
+    IF .CURRNTOP LSS 0 THEN RETURN;
+    CURRNTOP = .CURRNTOP AND NOT (IF OPERAND
+				THEN 
+				    MASK_(P_NULL, P_PREFIX)
+				ELSE
+				    MASK_(P_POSTFIX, P_INFIX) );
+
+    CHKPARSES(CURRNTOP);
+    PUSHOPER(.CURRNTOP);				! Enter in eval stack
+
+    ! If this is a NILARY or POSTFIX Parse, then we can execute it at once
+    !
+    IF (.CURRNTOP AND MASK_(P_PREFIX, P_INFIX)) EQL 0 THEN EXECUTE()
+
+    END;
+ROUTINE PDEBUG(PSWITCH)=
+!+
+! FUNCTION
+!	Parse SIX12 command line and evaluate it
+! INPUTS
+!	PSWITCH	- Determines if result of expression evaluation should
+!		  be printed (1) or suppressed (0)
+! OUTPUTS
+!	???	Possibly the number of entries to remove from the DBGSTK
+!		at end of evaluation
+!-
+    BEGIN
+    ROUTINE IGNORE:NOVALUE=WHILE .CHAR EQL %C' ' OR .CHAR EQL TAB DO ADVANCE();
+
+    LABEL
+	DECODE;
+    LOCAL
+	TFLAG,
+	COUNT,
+	QUALIFIER,
+	SAWQUALIFIER;
+
+    TOPOP = TOPSTK = -1;
+    SETOFF(ERRORFLAG);
+    QUOTFLG = MODEFLAG =  0;
+    QUALIFIER = SAWQUALIFIER = 0;
+    WHILE ISOFF(ERRORFLAG) DO
+	BEGIN
+	IF .QUALIFIER LSS 0
+	THEN
+	    BEGIN
+	    QUALIFIER = -.QUALIFIER;
+	    SAWQUALIFIER = 1
+	    END
+	ELSE
+	    BEGIN
+	    QUALIFIER = 0;
+	    SAWQUALIFIER = 0
+	    END;
+
+	IGNORE();
+
+	IF ENDOFLINE
+	THEN
+	    BEGIN
+	    LOCAL
+		RESLEN;
+
+	    OPERATE(1^35);				! Clean up & stop
+	    IF ISON(ERRORFLAG)
+	    THEN
+		(GOFLAG = 2;  RETURN 0);		! Never GO after error
+	    IF .TOPSTK LEQ 0 THEN RETURN 0;
+
+	    RESLEN = .TOPSTK - .DBGSTK[.TOPSTK];
+	    IF ISON(PSWITCH)
+	    THEN				! Print result
+		INCR J FROM 0 TO .DBGSTK[.TOPSTK]-1  DO
+		    BEGIN
+		    PUTTAB;
+		    OUTRDEF(.DBGSTK[.RESLEN+.J],14);
+		    DBLEQL();
+		    PRDISP(.DBGSTK[.RESLEN+.J]);
+		    CRLF
+		    END;
+	    RETURN .DBGSTK[.RESLEN]
+	    END;
+
+     
+	TFLAG = 0;
+	IF .CHAR EQL %C'?'
+	THEN
+	    BEGIN
+	    TFLAG = 1;
+	    ADVANCE();
+	    IF TYPE(.TFLAG) NEQ T_ALPHA THEN EXITLOOP ERROR(2)
+	    END;
+
+DECODE:
+	BEGIN
+	CASE TYPE(.TFLAG) FROM T_NUMBER TO T_OTHER OF
+	    SET
+
+	    [T_NUMBER]:
+		BEGIN
+		LOCAL
+		    T,
+		    NAME;
+
+		IF .QUOTFLG GTR 0
+		THEN
+		    (ADVANCE();  LEAVE DECODE WITH ERROR(2));
+		T = GETNUMBER();
+		IGNORE();
+		IF .CHAR EQL %C'%'		! Look for local or actual
+		THEN				!  in form of
+		    BEGIN			!	n%A - Actual parameter
+		    ADVANCE();			!	n%L - STACKLOCAL
+		    NAME = GETSYMBOL(.TFLAG);
+		    SELECT .NAME OF
+			SET
+			[%RAD50_10 'A']:	T = GETARGADR(.T,0);
+			[%RAD50_10 'L']:	T = GETLCLADR(.T,0);
+			[OTHERWISE]:		LEAVE DECODE WITH ERROR(2);
+			TES;
+		    IF .T EQL -1 THEN LEAVE DECODE WITH ERROR(17);
+		    END;
+		PUSHITEM(.T)
+		END;
+
+	    [T_ALPHA]:
+		!
+		! GET A SYMBOL and HANDLE MACROS or QUALIFICATION
+		!
+		BEGIN
+		LOCAL
+		    NAME,		! RAD50 Symbol name
+		    STE	: SYMBOL,
+		    PCT_N;		! Indicate SYMBOL%n to get n-th
+					!  definition of "SYMBOL"
+
+		NAME = GETSYMBOL(.TFLAG);
+
+		IF (QUOTFLG = .QUOTFLG-1) GEQ 0
+		THEN
+		    LEAVE DECODE WITH PUSHITEM(.NAME);
+
+		IGNORE();
+
+		IF .CHAR EQL %C'\'
+		THEN
+		    BEGIN
+		    IF .NAME EQL 0 
+		    THEN
+			!+**************************************+!
+			! Don't think this can EVER execute	 !
+			!-**************************************-!
+			BEGIN
+			ISHIGHSYMBOLTABLE();
+			IF .GQUALIFIER EQL 0 OR .HQUALIFIER EQL .$JBSYM OR
+				.HQUALIFIER EQL .HCACHE
+			THEN
+			    QUALIFIER = .GQUALIFIER
+			ELSE
+			    LEAVE DECODE WITH ERROR(36)
+			END
+		    ELSE
+			BEGIN
+			QUALIFIER = FINDMODULE(.NAME);
+			IF .QUALIFIER EQL 0 
+			THEN
+			    LEAVE DECODE WITH ERROR(0)
+			END;
+		    ADVANCE();
+		    TFLAG = 0;
+		    IF .CHAR EQL %C'?'
+		    THEN
+			BEGIN
+			TFLAG = 1;
+			ADVANCE();
+			IF TYPE(.TFLAG) NEQ T_ALPHA
+			THEN
+			    LEAVE DECODE WITH ERROR(2)
+			END;
+		    NAME = GETSYMBOL(.TFLAG);
+		    SAWQUALIFIER = 1
+		    END;
+
+		IF .CHAR NEQ %C'%' AND NOT .SAWQUALIFIER
+		THEN
+		    BEGIN
+		    ! Look for Macro definition
+		    DECR J FROM .NNAMES TO 0 DO
+			IF .SIXNAMES[.J,MACRO_NAME] EQL .NAME
+			THEN
+			    !+
+			    ! Back up byte-pointer in current input stream and
+			    ! change to the MACRO stream
+			    !-
+			    BEGIN
+			    PCHAR[.NPCHAR] = CH$PLUS( .PCHAR[.NPCHAR], -1);
+			    NPCHAR = .NPCHAR+1;
+			    PCHAR[.NPCHAR] = CH$PTR(.SIXNAMES[.J,MACRO_BODY]);
+			    ADVANCE();
+			    LEAVE DECODE
+			    END;
+		    END;
+
+		! Have "%" or Non-Macro
+		PCT_N = -1;			! Allows operator or user name
+		IF .CHAR EQL %C'%'
+		THEN
+		    BEGIN
+		    ADVANCE();
+		    IF .SAWQUALIFIER THEN LEAVE DECODE WITH ERROR(2);	! may not use "%" if "\" seen
+		    PCT_N = GETNUMBER();
+		    IF ISON(ERRORFLAG) THEN LEAVE DECODE
+		    END;
+
+		IF .PCT_N LEQ 0 AND NOT .SAWQUALIFIER
+		THEN
+		    ! look for operator
+		    BEGIN
+		    LOCAL
+			CODING;			! Operator encoded value
+		    CODING = GETNAMEOP(.NAME);
+		    IF .CODING GTR 0
+		    THEN
+			LEAVE DECODE WITH OPERATE(.CODING)
+		    ELSE
+			IF .PCT_N EQL 0 THEN LEAVE DECODE WITH ERROR(0);
+		    IF .CODING EQL -2 THEN LEAVE DECODE WITH ERROR(25)
+		    END;
+
+		IF .PCT_N EQL -1
+		THEN
+		    ! Unqualified or \-qualified  name
+		    BEGIN
+		    LOCAL
+			FIRSTTRY,
+			HOLD	: SYMBOL,
+			PREVSYM	: SYMBOL;
+
+		    FIRSTTRY = 1;
+		    HOLD = .QUALIFIER;
+		    PREVSYM = 0;
+		    WHILE 1 DO
+			BEGIN
+			HOLD = NSDDTFA(.NAME,.HOLD);
+			IF .HOLD EQL 0
+			THEN
+			    BEGIN
+			    IF NOT .FIRSTTRY THEN EXITLOOP;
+			    !+
+			    ! This is the first time thru the loop.  If we
+			    !  found a symbol, save it and look to see if more
+			    !  than one symbol matches (that would be an error)
+			    !-
+			    IF .PREVSYM NEQ 0 THEN EXITLOOP;
+			    HOLD = 0;
+			    FIRSTTRY = 0
+			    END;
+			IF .HOLD[RAD50FLAG] NEQ 0
+			THEN
+			    IF .PREVSYM EQL 0
+			    THEN
+				PREVSYM = .HOLD
+			    ELSE 
+				!+
+				! If values differ for multiply defined symbols
+				!  we will complain.  Otherwise, we allow any
+				!  number of occurances of the same value here.
+				! Further, if a definition is coming from a
+				!  HISEG, we will take it even if it differs
+				!  from a LOSEG symbol-table value.
+				!-
+				IF .HOLD[VALUEWRD] NEQ .PREVSYM[VALUEWRD]
+				THEN
+				    IF ISHIGHSYMBOLTABLE() AND
+					.PREVSYM<RH> GEQ .HCACHE<RH> AND	! hiseg for previous
+					.HOLD<RH> LSS .HCACHE<RH>	! lowseg for this one
+				    THEN
+					0   ! skip
+				    ELSE
+					LEAVE DECODE WITH (ERRORPARM = .HOLD[RAD50NAME];  ERROR(22))
+			END;
+		    ! If we get here, PrevSym is either undefined, or
+		    ! is the symbol table address of the unique symbol
+		    IF .PREVSYM EQL 0
+		    THEN
+			LEAVE DECODE WITH ERROR(0)
+		    ELSE
+			LEAVE DECODE WITH PUSHITEM(.PREVSYM[VALUEWRD])
+		    END;
+
+		! Must be %-qualified user symbol
+		!
+		STE = 0;		! to start symbol search
+		COUNT = .PCT_N;
+		WHILE .COUNT NEQ 0 DO
+		    BEGIN
+		    STE = NSDDTFA(.NAME,.STE);
+		    IF .STE EQL 0 THEN LEAVE DECODE WITH ERROR(0);
+		    IF .STE[RAD50FLAG] NEQ DDT$_MODULE
+		    THEN
+			COUNT = .COUNT-1;	! skip module names
+		    END;
+		PUSHITEM(.STE[VALUEWRD])
+		END;
+
+	    [T_RADIX]:
+		!+
+		! Implements numeric over-ride with the "#" symbol.  If current
+		! radix is decimal, number will be handled as octal (and vice
+		! versa).
+		!-
+		BEGIN
+		LOCAL
+		    SAVEDBASE;
+
+		IF .QUOTFLG GTR 0
+		THEN
+		    (ADVANCE();  LEAVE DECODE WITH ERROR(2));
+		IOBASE = ( IF (SAVEDBASE = .IOBASE) EQL 8 THEN 10 ELSE 8 );
+		ADVANCE();
+		PUSHITEM(GETNUMBER());
+		IOBASE = .SAVEDBASE
+		END;
+
+	    [T_QUOTE]:
+		BEGIN
+		GETSTRING()
+		END;
+
+	    [T_OTHER]:
+		BEGIN
+		LOCAL
+		    CODING;
+
+		IF .CHAR EQL %C'\'
+		THEN
+		    BEGIN
+		    ISHIGHSYMBOLTABLE();
+		    IF .GQUALIFIER EQL 0 OR .HQUALIFIER EQL .$JBSYM OR
+			.HQUALIFIER EQL .HCACHE
+		    THEN
+			QUALIFIER = -.GQUALIFIER;
+		    ADVANCE();
+		    LEAVE DECODE
+		    END;
+		IF .CHAR EQL %C'='
+		THEN
+		    BEGIN
+		    QUOTFLG = 0;
+		    IF .MODEFLAG EQL 0 THEN MODEFLAG = 4
+		    END;
+
+		CODING = GETOP(.CHAR^18);
+		ADVANCE();
+		IF .CODING LSS 0 THEN ERROR(1) ELSE OPERATE(.CODING)
+		END
+	    TES
+	END			!*** End DECODE ***
+	END;
+    CHAR = CR;
+    0
+    END;
+ROUTINE INPUT = 
+!+
+! FUNCTION
+!	Read next input line from "debugging" input
+!-
+    BEGIN
+%IF TOPS20
+%THEN
+    OWN
+	TXIBUF:	VECTOR[$RDBKL+1];
+%FI
+    LOCAL
+	CCOUNT;
+
+    CCOUNT = 0;		! we use this locally for counting non-LFs
+
+    PCHAR[0] = CH$PTR(BUFF);
+    SAWCR = 0;
+    SAWEOF = 0;
+
+    IF ISON(DISKIFLAG)
+    THEN
+	BEGIN
+	DO 
+	    BEGIN
+	    CHAR = INCHARS();
+	    CH$WCHAR_A( .CHAR, PCHAR[0] );
+	    CCOUNT = .CCOUNT+1;
+	    IF ANYLPT() THEN LPTOUT(.CHAR);
+	    IF .CHAR EQL CR THEN SAWCR = 1;
+	    IF .CHAR EQL -1 THEN SAWEOF = 1
+	    END
+	UNTIL .CHAR EQL LF OR .CHAR EQL -1;
+	CH$WCHAR( CR, .PCHAR[0] )
+	END
+    ELSE
+	! Read from terminal instead...
+	!
+	BEGIN
+%IF TOPS10
+%THEN
+	DO
+	    BEGIN
+	    CHAR = INC;
+	    CH$WCHAR_A( .CHAR, PCHAR[0] );
+	    CCOUNT = .CCOUNT + 1;
+	    IF .CHAR EQL CR THEN SAWCR = TRUE
+	    END
+	UNTIL .CHAR EQL LF;
+	IF ANYLPT() THEN OUTSA(CH$PTR(BUFF));	! Echo to LPT as needed
+	CH$WCHAR( CR, .PCHAR[0] )
+%ELSE
+	TXIBUF[$RDCWB] = $RDBKL;		! Number of words following
+	TXIBUF[$RDFLG] = RD_BEL+RD_JFN+RD_BBG;	! Break on CRLF, JFN supplied
+	IF ISON(DISKIFLAG)
+	THEN
+	    TXIBUF[$RDIOJ] = .DSKHDR^18 + $NULIO	! Read from DSK:
+	ELSE
+	    TXIBUF[$RDIOJ] = $PRIIN^18+$PRIOU;	! Use controlling terminal
+
+	TXIBUF[$RDDBP] = CH$PTR(BUFF);		! Destination string
+	TXIBUF[$RDDBC] = BUFFERSIZE*5;		!  and size
+	TXIBUF[$RDBFP] = CH$PTR(BUFF);		!
+	TXIBUF[$RDRTY] = MSG('&');		! ^R retype prompt string
+	TXIBUF[$RDBRK] = 0;			! No break chars supplied
+	TXIBUF[$RDBKL] = CH$PTR(BUFF);		! Back up limit
+
+	TEXTI( TXIBUF );
+
+	CCOUNT = BUFFERSIZE*5 - .TXIBUF[$RDDBC];! compute bytes read
+	IF ANYLPT() THEN OUTSA(CH$PTR(BUFF));	!  and echo to lpt
+
+	IF SCANN(TXIBUF[$RDDBP]) EQL LF
+	THEN
+	    BEGIN
+	    LOCAL
+		PTR;
+
+	    BKJFN( .TXIBUF[$RDDBP] ; PTR );
+	    IF SCANN(PTR) EQL CR
+	    THEN
+		BEGIN
+		SAWCR = 1;
+		CCOUNT = .CCOUNT-1
+		END
+	    END;
+	REPLACEN(TXIBUF[$RDDBP], CR);	! Overwrite LF with CR
+%FI
+	END;
+
+    PCHAR[0] = CH$PTR(BUFF);
+    NPCHAR = 0;
+    IF NOT .SAWCR AND NOT .SAWEOF
+    THEN
+	BEGIN
+	LOCAL
+	    Q;
+	Q = .PCHAR[0];
+	IF CH$RCHAR_A(Q) EQL CR THEN SAWCR = 0
+	END;
+    IF NOT .SAWCR AND NOT .SAWEOF AND .CCOUNT LEQ 1
+    THEN
+	BEGIN %(want step)%
+	PCHAR[0] = MSG('STEP',%CHAR(13));
+	OUTC(CR);
+	END %(want step)%;
+    ADVANCE();
+    NCHAR = 0
+    END;
+ROUTINE PROMPT:NOVALUE=
+!+
+! FUNCTION
+!	Display prompt for debugger command inputs, with indication of
+!		Depth of debugger invocations (if not top-level)
+!		Output logging to DSK or LPT
+!		Whether DEBUG UUO handling is disabled
+!-
+    BEGIN
+    IF .DEPTH GTR 1
+    THEN
+	BEGIN
+	TTOUTDEC(.DEPTH);
+	TTOUTC(%C':')
+	END;
+
+    IF LPTOUTTING() THEN TTOUTC(%C'-');
+    IF .$JB41 EQL DBG_OFF_INST THEN TTOUTC(%C'N');
+    TTOUTC(%C'&')
+    END;
+ROUTINE ISUB=
+!+
+! FUNCTION
+!	Drives syntax analyzer and polls terminal for interrupting command
+!	lines.
+! OUTPUTS
+!	0	- Indicates normal return to caller
+!
+!	1	- Indicates SET_UNWIND done by ISUBSIG to ISUB's caller
+!
+!-
+    BEGIN
+    ENABLE
+	ISUBSIG;		! Establish condition handler
+
+    DEPTH = .DEPTH + 1;
+
+    IF ((DCNT = .DCNT-1) LEQ 0) OR .TRACEFLAG
+    THEN
+	! If we have hit the BGOBASE-th DEBUG UUO and should do further
+	! checking on this "sample", or if we are tracing each routine,
+	! then come in here...
+	!
+	BEGIN
+	IF .DCNT LEQ 0 THEN (DCNT = BGOBASE;  INCRTOG);	! Set to sample again
+
+	IF ISON(ENABFLAG) AND ISOFF(NOPOLLFLAG)		! Want to check for
+	THEN						!  unsolicited TTY:
+	    BEGIN					!  input.
+%IF TOPS10
+%THEN
+	    IF SKPINL() THEN (STOPIT();  GOFLAG = 0);
+%ELSE
+	    IF NOT SIBE($PRIIN)
+	    THEN
+		(STOPIT();  PROMPT(); GOFLAG = 0)
+%FI
+	    END
+	END;
+
+    UNTIL .GOFLAG DO
+	BEGIN
+	DO
+	    ! Read input until we find something that isn't a "comment"
+	    !
+	    BEGIN
+	    IF .GOFLAG GTR 0 THEN PROMPT();	! Don't prompt on "interrupt"
+	    INPUT()
+	    END
+	UNTIL .CHAR NEQ %C'!';
+
+	IF ISOFF(DISKIFLAG) THEN GOFLAG = 2;
+	IF NOT .SAWEOF THEN PDEBUG(1) ELSE GOFLAG = 1;
+	TOPOP = TOPSTK = -1;		! Fudge to ensure proper (?) operation
+					! if SIX12 is entered recursively.
+	END;
+
+    DEPTH = .DEPTH -1;
+    RETURN 0;		! if we return out of here, we leave SIX12
+    END;
+%SBTTL	'Entry into SIX36'
+!	------------------
+
+OWN
+    ROUTPNT:	REF BLOCK FIELD(ROUT_FIELDS),
+    CONDPNT;					! Ptr to conditional action
+						!  text.
+
+GLOBAL ROUTINE SIXXEQ(STR)=			
+!+
+! FUNCTION
+!	Pass a command string to SIX36 for execution
+! INPUT
+!	STR	- Address of an ASCIZ string
+!- 
+    BEGIN
+    LOCAL
+	RETVAL;
+
+    IF NOT ISADDRESS(.STR) THEN RETURN 0;	! Not addressable
+    IF .STR EQL 0 THEN RETURN 0;		!  or invalid pointer
+
+    NPCHAR = 1;
+    PCHAR[1] = CH$PTR(.STR);			! First command to execute
+    PCHAR[0] = MSG(%CHAR(CR,CR,LF));		!  followed by a "step" command
+    ADVANCE();
+    NCHAR = 0;
+
+    ! Invoke parser, but don't print the top-level result.
+    !
+
+    RETVAL = PDEBUG(0);
+
+    TOPOP = TOPSTK = -1;
+
+    .RETVAL
+    END;
+ROUTINE CHKCOND=
+!+
+! FUNCTION
+!	Check condition for action.
+! OUTPUTS
+!	T/F	Indicates if conditional expression is TRUE or FALSE
+!-
+    BEGIN
+    LOCAL
+	RETVAL;
+
+    IF .CONDPNT EQL 0 THEN RETURN 1;	! Unconditional return
+
+    NPCHAR = 1;				! Make input stream be the conditional
+    PCHAR[1] = CH$PTR(.CONDPNT);	!  expression, followed by a "STEP"
+    PCHAR[0] = MSG(%CHAR(CR,CR,LF));	!  command as previous stream
+    ADVANCE();
+    NCHAR = 0;
+
+    RETVAL = PDEBUG(0);			! Evaluate the expression
+    TOPOP = TOPSTK = -1;	
+
+    .RETVAL				! The result of the conditional expr.
+    END;
+ROUTINE RTRCAFT:NOVALUE=
+    BEGIN
+    IF ISEXIT
+    THEN
+	! Check for TRACE where trace-count expires
+	!
+	(IF .ROUTPNT[IDIDONF] AND (TRCCNT = .TRCCNT-1) LEQ 0
+	 THEN
+	    TRACEFLAG = ROUTPNT[IDIDONF] = 0)
+    ELSE
+	IF .OPQCNT LEQ 0 AND .TRACEFLAG GEQ 0
+	THEN
+	    (IF CHKCOND()
+	     THEN
+		(ROUTPNT[IDIDONF] = 1;  TRCCNT = 1;  TRACEFLAG<RH> = -1)
+	    )
+	ELSE
+	    IF .ROUTPNT[IDIDONF] THEN TRCCNT = .TRCCNT+1
+    END;
+ROUTINE RTRCAT: NOVALUE=
+    BEGIN
+    IF .OPQCNT LEQ 0 AND .TRACEFLAG GEQ 0
+    THEN
+	IF CHKCOND() THEN TRACEFLAG = .TRACEFLAG OR NOT 1
+    END;
+ROUTINE ROPQAFT:NOVALUE=
+    BEGIN
+    IF ISEXIT
+    THEN
+	BEGIN
+	IF .ROUTPNT[IDIDOFFF] AND (OPQCNT = .OPQCNT-1) LEQ 0
+	THEN
+	    BEGIN
+	    TRACEFLAG = -.ROUTPNT[PREVOFFF] AND NOT 2;
+	    STEPFLAG = -.ROUTPNT[PREVSTEPF] AND NOT 2;
+	    ROUTPNT[IDIDOFFF] = ROUTPNT[PREVOFFF] = ROUTPNT[PREVSTEPF] = 0
+	    END
+	END
+    ELSE
+	IF .OPQCNT LEQ 0
+	THEN
+	    BEGIN
+	    IF CHKCOND()
+	    THEN
+		BEGIN
+		ROUTPNT[IDIDOFFF] = 1;
+		ROUTPNT[PREVOFFF] = .TRACEFLAG;
+		ROUTPNT[PREVSTEPF] = .STEPFLAG;
+		OPQCNT = 1;
+		STEPFLAG<RH> = 0;
+		TRACEFLAG<RH> = 0
+		END
+	    END
+	ELSE
+	    IF .ROUTPNT[IDIDOFFF] THEN OPQCNT = .OPQCNT+1
+    END;
+ROUTINE ROPQAT: NOVALUE=
+    BEGIN 
+    IF .STEPFLAG LSS 0 THEN STEPFLAG = .STEPFLAG AND 1;
+    IF .TRACEFLAG LSS 0 AND CHKCOND()
+    THEN
+	TRACEFLAG = .TRACEFLAG AND 1
+    END;
+ROUTINE RTABREAK: NOVALUE=
+!+
+! FUNCTION
+!	Do necessary processing to RETURN from an ABREAK-point
+!-
+    BEGIN
+    IF ISEXIT
+    THEN
+	BEGIN
+	STOPIT();
+	IF NOT .REPORTED
+	THEN
+	    BEGIN
+	    OUTS(%CHAR(CR,LF),'<=> After: ');
+	    PRXDISP(.RNAME);
+	    IF ISNOVALUE			! Give appropriate message
+	    THEN				!  for a NOVALUE routine, or
+		SHOWNOVALUE()			!  show the value which is
+	    ELSE				!  being returned.
+		OUTVALUE(.SIXVREG);
+	    REPORTED = 1
+	    END;
+
+	! now, remove the TABREAK from the routine
+	!
+	DSTABREAK(.RNAME)
+	END
+    END;
+ROUTINE RABREAK:NOVALUE=
+!+
+! FUNCTION
+!	Process RETURN from ABREAK points
+!-
+    BEGIN
+    IF ISEXIT AND CHKCOND()
+    THEN
+	BEGIN
+	STOPIT();  
+	IF NOT .REPORTED
+	THEN
+	    BEGIN
+	    OUTS(%CHAR(CR,LF),'<=> After: ');
+	    PRXDISP(.RNAME);  
+	    IF ISNOVALUE THEN SHOWNOVALUE() ELSE OUTVALUE(.SIXVREG);
+	    REPORTED = 1
+	    END
+	END
+    END;
+ROUTINE RBREAK : NOVALUE=
+!+
+! FUNCTION
+!	Report a ROUTINE Break
+!-
+    BEGIN
+    IF NOT ISEXIT AND CHKCOND()
+    THEN 
+        BEGIN
+        STOPIT();  
+        IF NOT .REPORTED
+        THEN
+	    BEGIN
+	    OUTS(%CHAR(CR,LF),'<=> At: ');  
+	    PRCALL(.ENTERPNT[NEXT_FRAME], .RNAME);  
+	    CRLF;
+	    REPORTED = 1
+	    END
+        END
+    END;
+! Dispatch vector for action routines.  This must be updated if
+! additional action bits are added.  Notice that it is indexed with
+! an implicit offset of 18. (the UPLIT(..)-18).
+
+BIND
+    RTNSPLIT=
+	    UPLIT(
+		%( bit 18 action )%	RBREAK,
+		%( bit 19 action )%	RABREAK,
+		%( bit 20 action )%	ROPQAT,
+		%( bit 21 action )%	ROPQAFT,
+		%( bit 22 action )%	RTRCAT,
+		%( bit 23 action )%	RTRCAFT,
+		%( bit 24 action )%	RTABREAK,
+		%( remaining bits )%	REP 11 OF(DOTVREG)
+	    )-18 : VECTOR;
+ROUTINE CALLENABLED(FRAME: REF VECTOR, EXITCODE, HANDLER, CALLEE)=
+!+
+! FUNCTION
+!	This is a VERY DELICATE piece of code. It is the FIRST PLACE you
+!	should look if the signal handler in SIX12 starts blowing up.
+!	Critical assumption is that NO LOCALS and NO REGISTERS are declared,
+!	so only .ENT.0 is called by this routine to set up the Frame Pointer
+!	for the arguments.
+!	This is important, because the ExitHandler routine, which is called
+!	via a JRST (!) instruction from the unwinder, assumes it can POP
+!	 to clean up the stack
+!
+!	It is passed a 4-word "enable frame" pointer.  The frame is set up
+!	to hold the 2-word enable stack frame and the 2-word dispatch vector.
+!	It is the responsibility of the caller to unlink the exception
+!	frame pointer if this is desired.
+!
+!	+----------------------+
+!	| exit code addr       | 3
+!	+----------------------+
+!	| handler code addr    | 2 <----+
+!	+----------------------+	|
+!	| dispatch pointer     | 1 -----+
+!	+----------------------+
+!	| efpnt. link	  | 0
+!	+----------------------+
+!
+    BEGIN
+    FRAME[0] = .EFPNT$;
+    FRAME[1] = FRAME[2];
+    FRAME[2] = .HANDLER<RH>;
+    FRAME[3] = .EXITCODE<RH>;
+
+    EFPNT$ = FRAME[0];
+
+    (.CALLEE)()
+    END;
+
+
+ROUTINE EXITHANDLER:NOVALUE=
+!+
+! FUNCTION
+!	This is a delicate routine.  It assumes that no call is
+!	made on any of .ENT.0 ... etc. so that the pops
+!	will undo the stack in the correct manner for the enable
+!	frame established by CallEnabled
+!
+!-
+    BEGIN
+    POP(SREG,EFPNT$);
+    POP(SREG,FREG);
+    POPJ(SREG,0)
+    END;
+ROUTINE B36ISUB:NOVALUE=
+!+
+! FUNCTION
+!	The purpose of this loop is to handle the case of
+!	an UNWIND when the SIGNAL was intercepted by the
+!	SIX12 condition handler, i.e., we are unwinding back
+!	to SIX12.  If we are doing an UNWIND, the value returned
+!	is 1, so we re-enter the command scanner; otherwise
+!	the value is 0, so we assume that we got here because
+!	we left the command loop in ISUB.
+!-
+    BEGIN
+    LOCAL
+        SAVE:	VECTOR[4];
+
+    SAVE[0] = .ENTERPNT;
+    SAVE[1] = .RTNLVL;
+    SAVE[2] = .INSIXHDR;
+    SAVE[3] = .ENTERSP;
+
+    WHILE ISUB() DO
+	!+
+	! An UNWIND has occurred.  Restore importint info about the current
+	!  invocation of SIX36 and give another command prompt at the present
+	!  level.
+	!-
+        BEGIN
+        ENTERPNT = .SAVE[0];
+        RTNLVL = .SAVE[1];
+        INSIXHDR = .SAVE[2];
+	ENTERSP = .SAVE[3];
+        GOFLAG=2
+        END
+    END;
+ROUTINE ISUBSIG(SIGNL: REF VECTOR,MECH: REF VECTOR,ENBL)=
+!+
+! FUNCTION
+!
+!	We get here under several conditions:
+!
+!	> We are handling a signal which has been generated by
+!	someone SIX12 called.
+!
+!	> We are the first intercept of a SIX12-generated SIGNAL
+!
+!	> We are doing an UNWIND to ourself
+!
+!	> We are doing an UNWIND to some outer handler
+!
+!
+!	SIGNL[1] is the signal value
+!
+!	The cleanup on an UNWIND consists of decrementing the
+!	depth counter
+!-
+    BEGIN
+    REGISTER
+	SAVER;			! This must be a register
+    LOCAL
+	SAVE:	VECTOR[6];
+    BUILTIN
+	SP, FP;
+    MACRO
+	RETURNVALUE(X)=
+			BEGIN 
+			RTNLVL = .SAVE[1]; 
+			ENTERPNT = .SAVE[2]; 
+			INSIXHDR = .SAVE[3];
+			RNAME = .SAVE[4];
+			ENTERSP = .SAVE[5];
+			RETURN (X) 
+			END %;
+
+    SAVER = .SIXVREG;
+    SIXVREG = .VREG;
+
+    SAVE[1] = .RTNLVL;
+    SAVE[2] = .ENTERPNT;
+    SAVE[3] = .INSIXHDR;
+    SAVE[4] = .RNAME;
+    SAVE[5] = .ENTERSP;
+
+    ENTERPNT = .FP<RH>;			! Point to current frame chain
+    ENTERSP = SIGNL;			! SP where this frame's arglist starts?
+
+    IF .SIXSTK EQL 0 THEN SIXSTK = .SP;	! Set up valid saved SP
+
+    IF .SIGNL[1] EQL SIXUNWSIGNAL
+    THEN
+	BEGIN %(start unwind)%
+	IF (WHACKS = .WHACKS - 1) LEQ 0 
+	THEN
+	    BEGIN
+	    ! we've reached the depth we want
+	    !
+	    SETON(WHACKING);
+	    SETUNWIND();
+	    RETURNVALUE(1)
+	    END;
+	RETURNVALUE(0)		! resignal
+	END %(start unwind)%;
+    !
+    ! We would like to make this test based on the (signl)[2]
+    ! value, which should be the PC of the signal caller, but
+    ! which does not currently exist.
+    !
+    !
+    !	Otherwise, a fairly conventional signal
+    !
+    IF WITHINSIX12(GETCALLFROM(.ENTERPNT[NEXT_FRAME])) AND ISOFF(WHACKING)
+    THEN 
+	! This handles the case of the SIGNAL command
+	! from SIX12, so we don't get an unnecessary
+	! call to the user
+	!
+	RETURN 0;
+    
+    IF .SIGNL[1] EQL .UNWINDVALUE 
+    THEN
+	BEGIN %(unwinding)%
+	IF ISOFF(WHACKING)
+	THEN
+	    BEGIN
+	    OUTS('SIX12: Unwinding level ');
+	    OUTD(.DEPTH);
+	    OUTCRLF()
+	    END;
+
+	DEPTH = .DEPTH -1;
+	MECH[1] = 1;		! if unwinding to ourself,
+				    ! this will cause SIX12 to
+				    ! be re-invoked, else it does
+				    ! nothing
+	RETURNVALUE(1)
+	END %(unwinding)%;
+
+    IF .SIGNL[1] EQL .UNWINDVALUE THEN RETURNVALUE(0);
+
+    !	If we get a signal, we first report it and call ourself
+    !	recursively, and then resignal upon return.  
+    !
+    !	If we had the PC in the signl vector, we could determine that
+    !	the signal came from SIX12, and could punt doing this
+    !	call (and could provide useful information when we were not
+    !	handing a SIX12-generated signal, like where it came from!)
+    !
+    
+    OUTS('SIX12 signal handler called from ');
+    PRDISP(GETCALLFROM(.ENTERPNT[NEXT_FRAME]));
+    OUTS(' with signal ');
+    OUTDEFAULT(.SIGNL[1]);
+    OUTCRLF();
+
+    STOPIT();
+    B36ISUB();
+
+    RTNLVL = .SAVE[1];
+    ENTERPNT = .SAVE[2];
+    INSIXHDR = .SAVE[3];
+    RNAME = .SAVE[4];
+    ENTERSP = .SAVE[5];
+
+    EXCH(SAVER,SIXVREG);
+    RETURN 0;					! resignal
+    END;
+
+ROUTINE OUTERHANDLER(SIGNL: REF VECTOR,MECH: REF VECTOR,ENBL)=
+!+
+! FUNCTION
+!	This routine is enabled by INITSIX12 to catch an
+!	otherwise unintercepted signal.  Its default action
+!	(unlike ISubSig) is to RESUME!!!!
+!-
+    BEGIN
+    REGISTER
+        SAVER;
+    LOCAL
+        SAVE:	VECTOR[6];
+
+    SAVER = .SIXVREG;
+    SAVE[1] = .RTNLVL;
+    SAVE[2] = .ENTERPNT;
+    SAVE[3] = .INSIXHDR;
+    SAVE[4] = .$JBUUO;			! Must save 36 bits so that
+    SAVE[5] = .ENTERSP;				!  flags are preserved.
+
+    ENTERPNT = .FREG<RH>;
+
+    OUTS('SIX12 outermost signal handler called ');
+
+    IF .SIGNL[1] EQL .UNWINDVALUE
+    THEN
+        OUTS('during UNWIND')
+    ELSE
+        BEGIN
+        OUTS('from ');
+        PRDISP(GETCALLFROM(..ENTERPNT));
+        OUTS(' with signal ');
+        OUTDEFAULT(.SIGNL[1])
+        END;
+    OUTCRLF();
+
+    STOPIT();
+    B36ISUB();
+
+    RTNLVL= .SAVE[1];
+    ENTERPNT = .SAVE[2];
+    INSIXHDR = .SAVE[3];
+    $JBUUO = .SAVE[4];
+    ENTERSP = .SAVE[5];
+
+    EXCH(SAVER,SIXVREG);
+
+    RETURN 1;						! resume
+    END;
+
+%SBTTL	'DEBUG. UUO Processing'
+LINKAGE
+    SAVEMOST=	PUSHJ: LINKAGE_REGS(SREG,FREG,VREG)
+			PRESERVE(PRREGS,NPREGS);	! Saves all ACs
+
+ROUTINE CALLEM(DUMMY) : SAVEMOST=
+!+
+! FUNCTION
+!       This routine does the bulk of the work in processing a DEBUG. UUO.
+!       It is separate from UUOH, as it is allowed to allocate stack storage
+!       and will be JRST-ed to from UUOH
+! INPUTS
+!	DUMMY	- Dummy formal parameter, such that we can easily determine
+!		  our SP before the routine saves any registers, etc.
+! NOTES
+!	One piece of obscurity is the requirement that this procedure must
+!	have a "saved" FP generated for itself.  This insures that the
+!	ENTERPNT really points to the correct place, such that RETURN et al
+!	will continue to work.
+!
+!-
+    BEGIN
+    REGISTER
+	RSAVE;
+    LOCAL
+	SAVE:	VECTOR[4],
+	L;
+    BUILTIN
+	FP;
+
+    RSAVE = .SIXVREG;
+    REPORTED = 0;				! nothing yet said
+    HCACHE = 0;					! invalidate hiseg sym cache
+    SIXVREG = .VREG;
+    SAVE[0] = .RTNLVL;
+    SETISEXIT();
+    SAVE[1] = .ENTERPNT;
+    SAVE[2] = .DISKIFLAG;			! turn off disk input
+    SAVE[3] = .ENTERSP;
+    IF .INSIXHDR THEN RETURN .RSAVE;
+    SETOFF(DISKIFLAG);
+    ENTERPNT = .FP;
+    ENTERSP = DUMMY-1;				! Ignore the FP when computing
+						!  stack at entry
+
+    WHACKS = 0;					! for unwinding 
+    SETOFF(WHACKING);
+    IF .NVALS GEQ 0 THEN CKVALS(.RNAME, .RTNLVL);
+    IF ISINTBL			  		! Marked as 'interesting'
+    THEN
+	IF (L = CFINDR(.RNAME)) GEQ 0   	! Look-up the routine in the
+	THEN			    		!  action table to see what
+	    BEGIN				!  kind of break|trace this is
+	    ROUTPNT = ROUTS[.L,ROUT_INFO];
+	    DECR J FROM MAXACTRTN TO 18 DO
+		IF .ROUTPNT[INTEREST(.J)]	! Interested in this event
+		THEN
+		    BEGIN
+		    CONDPNT = .ROUTPNT[CNDACTION(.J)];	! Set conditional
+							!  action text ptr
+		    (.RTNSPLIT[.J]) ()
+		    END
+	    END;
+
+
+    IF .TRACEFLAG LSS 0 AND NOT .REPORTED AND .STEPFLAG EQL 0
+    THEN
+	IF ISEXIT 
+	THEN
+	    BEGIN
+	    IF .TRACEFLAG<1,1>
+	    THEN
+		BEGIN
+		OUTS('<-- ');
+		PRXDISP(.RNAME)
+		END;
+	    IF ISNOVALUE THEN SHOWNOVALUE() ELSE OUTVALUE(.SIXVREG)
+	    END
+	ELSE
+	    BEGIN
+	    OUTS('--> ');
+	    PRCALL(.ENTERPNT[NEXT_FRAME],.RNAME);
+	    IF .TRACEFLAG<1,1> THEN CRLF
+	    END;
+
+    IF .STEPFLAG LSS 0
+    THEN
+	IF ISEXIT
+	THEN
+	    RABREAK()
+	ELSE
+	    RBREAK();
+
+    ! The following two statements handle the opaque manipulations
+    ! by converting the value 1 in TraceFlag and StepFlag to -1 when
+    ! appropriate
+    !
+    IF .TRACEFLAG THEN SETON(TRACEFLAG) ELSE SETOFF(TRACEFLAG);
+    IF .STEPFLAG THEN SETON(STEPFLAG) ELSE SETOFF(STEPFLAG);
+
+    B36ISUB();
+
+    RTNLVL = .SAVE[0];
+    ENTERPNT = .SAVE[1];
+    DISKIFLAG = .SAVE[2];
+    ENTERSP = .SAVE[3];
+
+    EXCH(RSAVE,SIXVREG)
+    END;
+ROUTINE UUOH: NOVALUE=
+!+
+! FUNCTION
+!	DEBUG UUO handler.
+!
+! NOTES
+!	This routine MUST not HAVE ANY Local, Register, or DYNAMIC Bind 
+!	DECLARATIONS which would cause registers to be saved.
+!	Further, it should not modify ANY registers, in case GLOBAL REGISTERs
+!	or input-output parameters are present.
+!-
+    BEGIN
+    BUILTIN
+	SP, FP;
+    REGISTER
+	RETVAL=	VREG,
+	RSAVE;			! We need at least one NOPRESERVE REGISTER
+    OWN
+	SAVED_AC;		!  and we will preserve it here
+
+    MAP
+	$JBUUO	: $INSTRUCTION;
+
+%IF EXTENDED
+%THEN
+    PUSH(SP, SWT[$AROPC,FW]);		! Make non-zero "trap" look like
+%FI					!  regular "call" to entrypoint.
+	
+    SAVED_AC = .RSAVE;			! Save otherwise unpreserved register
+
+    RETVAL = .RETVAL;			! Tie up VREG across body of routine
+
+    RSAVE = .INSIXHDR;			! Copy to register for safety
+
+    IF .RSAVE OR ((SIXTOG = .SIXTOG-1) GTR 0 AND .STEPFLAG EQL 0 )
+    THEN 
+	BEGIN
+	DCNT = .DCNT-1; 
+	RSAVE = .SAVED_AC;
+	POPJ(SP,0)
+	END;
+
+%IF NOT EXTENDED
+%THEN
+    BEGIN
+    MAP
+	RSAVE	: $INSTRUCTION;
+
+    RSAVE = ..SP;			! Get return address
+    SWT[$AROPC,FW] = .RSAVE<RH>;	!  and store into dummy SWTRP% block
+    SWT[$ARPFL,LH,0] = .RSAVE<LH>;	! Also get flags,
+
+    RSAVE = .$JBUUO;			! Get offending instruction
+    SWT[$AREFA,FW] = .RSAVE[M_OFFSET];	!  and save effective adr in DEBUG. UUO
+    SWT[$ARPFL,9,9,0] = .RSAVE[M_REGF];	!  and the AC used
+    END;
+%ELSE
+    RSAVE = .SWT[$AROPC,FW];		! Continuation PC
+    RSAVE = .(.RSAVE-1);		! The DEBUG. UUO
+    $JBUUO = .RSAVE;
+%FI
+
+    RSAVE = .$JBUUO;			! Force into my preserved temp reg.
+
+    IF NOT (.RSAVE AND BITVAL(EXITPOS)) NEQ 0
+    THEN
+	BEGIN				! This is a ROUTINE-entry DEBUG. UUO
+	BIND
+	    P= RSAVE: REF $INSTRUCTION;
+	OWN
+	    TSAVE,
+	    ECNT;
+	REGISTER
+	    OPCODE;
+
+	TSAVE = .OPCODE;
+	
+	! Pop the return address off the stack so that the stack-depth
+	!  will be identical to that expected after the DEBUG UUO returns.
+	!  This allows us to XEQ the prolog code with the proper context
+	!
+
+	POP(SP,P);			! Get pushed address back
+
+	OPCODE = .P[M_LHALF];
+
+	IF .OPCODE EQL CAIOP^9
+	THEN
+	    !+
+	    ! Routine entry sequence marker. Determine length
+	    ! of routine prolog from effective address in RH
+	    !-
+	    BEGIN
+	    ECNT = .P[M_IMMEDIATE];
+	    AOS(0,P)			! Advance to 1st prolog instruction
+	    END
+	ELSE
+	    !+
+	    ! No prolog for this routine
+	    !-
+	    ECNT = 0;
+
+	VTEMP = .P;			! Save pointer in static storage
+
+	UNTIL (ECNT = .ECNT-1) LSS 0 DO
+	    BEGIN
+	    XCT(0,VTEMP,0,1);	! Execute instruction(s) after DEBUG UUO
+	    AOS(0,VTEMP)	!  push RETURN past them
+	    END;
+
+	OPCODE = .TSAVE;
+	PUSH(SP,VTEMP)		! and SAVE the return address again
+	END;
+
+    PUSH(SP, FP);		! Enter a FRAME
+    FP = .SP;
+    RSAVE = .SAVED_AC;		! Restore value we were preserving.
+    RETVAL = .RETVAL;		! Continue to tie-up VREG.
+
+    CALLEM();
+    POP(SP, FP);                ! Undo the frame and return to caller
+    END;
+
+GLOBAL BIND SIXUUO = UUOH;
+
+!   This definition just results in a symbol table entry
+!   for "SIXRET".  The value is define dynamically in INITSIX12.
+!
+GLOBAL BIND SIXRET = -1;
+%SBTTL	'Initialization Code - Called from BLISS Main Routine'
+ROUTINE INITSIX12: NOVALUE=
+    BEGIN
+    LOCAL
+	T	: SYMBOL;
+
+    SETOFF(COPQFLAG);
+    STEPFLAG = TRACEFLAG = LPTFLAG = OPQCNT = 0;
+    INSIXHDR = 0;
+    SIXHDR = 0;
+    SETOFF(DISKIFLAG);
+    SETOFF(DISKOFLAG);
+    GQUALIFIER = 0;	
+    HQUALIFIER = 0;
+    HSYM = 0;				! Unknown condition of high symbols
+    DEPTH = 0;
+
+    IF .IJOBSYM EQL 0 THEN IJOBSYM = .$JBSYM;
+
+    NROUTS = NVALS = NNAMES = -1;
+    DCNT = SIXTOG = BGOBASE;
+    GOFLAG = 1;
+    SIXREF = 0;
+    NEWOPS = -OPSIZE;
+    PTEXT = CH$PTR(TEXTAREA);		   ! Reset ptr to MACRO defn area
+
+    IF (T = NSDDTFA(%RAD50_10 'SIXSP', 0)) NEQ 0
+    THEN
+	T[INVALIDFLAG] = 1;			! Suppress use of this symbol
+
+    ! Set up definition of SIXRET as "JRST @.JBOPC", so that we can easily
+    ! return from DDT with the command:
+    !			SIXRET$X
+    !
+    IF (T = NSDDTFA(%RAD50_10 'SIXRET', 0)) NEQ 0
+    THEN
+	T[VALUEWRD] = JRSTOP^27 OR 1^22 OR $JBOPC;
+
+    T = NSDDTW(%RAD50_10 'SS$UNW',0,.$JBSYM);	! use explicit lowseg or only symbol table
+    IF .T NEQ 0 THEN UNWINDVALUE = .T[VALUEWRD];
+
+    WHACKS = 0;
+    SETOFF(WHACKING);
+
+    ! Establish an outermost signal handler which will not be cleaned off the
+    !  stack.  This is SIX12's "last-chance" handler.
+    !
+    CALLENABLED(OUTERSIGNAL,EXITHANDLER,OUTERHANDLER,DOTVREG);
+
+%IF TOPS10
+%THEN
+    ! Now establish the variables we need to check on to see if the
+    ! two-symbol-table hack is going to be used
+
+    T = NSDDTW(%RAD50_10 '.JBHGH',0,.$JBSYM);
+    IF .T NEQ 0 THEN JOBHGH = .T[ADDRWRD];
+
+    T = NSDDTW(%RAD50_10 '.HIGH.',0,.$JBSYM);
+    IF .T NEQ 0 THEN HIGH = .T[ADDRWRD];
+
+    IF .JOBHGH EQL 0 
+    THEN
+	IJOBHSM = 0
+    ELSE
+	BEGIN
+	T = NSDDTW(%RAD50_10 '.JBHSM',0,.$JBSYM);
+	IF .T NEQ 0 
+	THEN
+	    IJOBHSM = .T[ADDRWRD]
+	ELSE
+	    IJOBHSM = 6;
+
+	IF .HIGH NEQ 0
+	THEN
+	    ! We have seen cases where relocating the hiseg on
+	    ! TOPS-20 (at least) does not change the value of
+	    ! .JBHGH (stupid, but what can you expect from TOPS-20?)
+	    ! but in this case, the value .HIGH. is defined
+	    IJOBHSM = .IJOBHSM + .HIGH
+	ELSE
+	    IJOBHSM = .IJOBHSM + .JOBHGH
+	END;
+%ELSE
+    !+
+    ! This stuff just doesn't seem to work right at all on the 20, so we
+    ! will suppress it.  [It probably can't happen anyway!]
+    IJOBHSM = 0;
+    HIGH = 0;
+    JOBHGH = 0;
+%FI
+    IF SIXLSF NEQ 0
+    THEN
+	NOSIXSYMS();	! Kill Local symbols for SIX12 itself
+    IOBASE = 8;
+    WDBASE = IWDBASE;
+
+    $JB41 = DBG_ON_INST;		! Instruction to execute on DEBUG. UUO
+%IF EXTENDED
+%THEN
+    SWT[$ARNPC,FW] = 1^18 + $JB41;		! Set LUUO trap addr
+    SWTRP_( $FHSLF, $SWLUT, 1^18+SWT )		!  and turn on trapper
+%FI
+    END;
+ROUTINE SIXID: NOVALUE=
+!+
+! FUNCTION
+!	Announce what environment we support
+!-
+    BEGIN
+    OUTS('SIX36 ');
+    OUTSA(VERSION);
+%IF TOPS10
+%THEN
+    OUTS(' (TOPS-10 I/O) for Bliss-36');
+%ELSE
+    OUTS(' (TOPS-20 I/O) for Bliss-36');
+%FI
+    CRLF
+    END;
+ROUTINE SIX12A(XP)=
+!+
+! FUNCTION
+!	Common initialization code.
+! INPUT
+!	XP	- Flag indicating type of initialization
+!			Bit 35=1	-> Main Program Entry
+!			Otherwise	-> User initialization (explicit)
+! OUTPUTS
+!	?
+!-
+    BEGIN
+    BUILTIN
+	FP, SP;
+    LOCAL
+	SAVE:	VECTOR[4];
+
+    SAVE[0] = .SIXVREG;
+    SIXVREG = .VREG;
+    SAVE[1] = .RTNLVL;
+    SAVE[2] = .ENTERPNT;
+    SAVE[3] = .ENTERSP;
+
+    ENTERPNT = .FP;
+    ENTERSP = .FP;
+
+    IF .SIXSTK EQL 0 THEN SIXSTK = .SP;
+
+    SELECTONE .XP OF
+	SET
+
+      [%O'400000000000']:			! MAIN PROGRAM ENTRY
+	    BEGIN
+	    INITSIX12();
+	    IF .STARTFLAG NEQ 0
+	    THEN
+		(GOFLAG = 2;  SIXID(); SETINTERNAL())
+	    ELSE
+		RETURN .SIXVREG
+	    END;
+
+      [%O'377777000000']:			! Main program exit (unused?)
+	    RETURN .SIXVREG;
+
+      [OTHERWISE]:				! user call
+	    BEGIN
+	    STOPIT();
+	    CRLF;
+	    OUTS('Pause ');
+	    OUTDEFAULT(.XP);
+	    SIXVREG = .ENTERPNT[RET_ADDRESS];
+
+	    IF WITHINSIX12(.SIXVREG)
+	    THEN
+		OUTS(' from "within SIX12"')
+	    ELSE
+		(OUTS(' at ');  PRDISP(.SIXVREG));
+	    CRLF;
+	    SETINTERNAL();
+	    SIXVREG = -1
+	    END
+
+	TES;
+
+    SIXTOG = .SIXTOG-1;			! to KEEP COUNTERS IN STEP
+    B36ISUB();
+    RTNLVL = .SAVE[1];
+    ENTERPNT = .SAVE[2];
+    ENTERSP = .SAVE[3];
+
+    BEGIN
+    REGISTER
+	VERYTEMP=VREG;
+
+    VERYTEMP = .SAVE[0];
+    EXCH(VERYTEMP, SIXVREG);
+    EXCH(VERYTEMP, SAVE[0])
+    END
+    END;
+
+ROUTINE SIXDD2: NOVALUE=
+    BEGIN
+    LOCAL
+	SAVE:	VECTOR[3];
+
+    IF .SIXSTK EQL 0
+    THEN
+	BEGIN
+	TTOUTS('You must initialize SIX12',%CHAR(CR,LF));
+	TTOUTS('Use "PUSHJ SIXSP,SIX36',%CHAR(CR,LF))
+	END;
+
+    SAVE[0] = .SIXVREG;
+    SIXVREG = .VREG;
+    SAVE[1] = .RTNLVL;
+    SETINTERNAL();
+    SAVE[2] = .ENTERPNT;
+    ENTERPNT = .FREG;
+
+    STOPIT();
+    SIXTOG = .SIXTOG-1;
+    B36ISUB();
+
+    SIXVREG = .SAVE[0];
+    RTNLVL = .SAVE[1];
+    ENTERPNT = .SAVE[2];
+    TTOUTS('Return to DDT',%CHAR(CR,LF))
+    END;
+
+GLOBAL ROUTINE SIXDDT:NOVALUE=
+!+
+! FUNCTION
+!	Transfer control to DDT from SIX12
+!-
+    BEGIN
+    SIXDD2();
+    IF .$JBDDT NEQ 0 THEN JRST(0,.$JBDDT);
+
+%IF TOPS20
+%THEN
+    JRST(0,%O'770000')			! Always loads at 770000
+%FI
+    END;
+
+GLOBAL ROUTINE SIX36=
+!+
+! FUNCTION
+!	Initialization entry used for Bliss-36 compiler.
+!-
+    BEGIN
+    SIX12A(1^35)
+    END;
+
+ROUTINE ENDSIX12:NOVALUE = 0;	! Last code address in SIX12 (except "SIX12")
+
+GLOBAL ROUTINE SIX12(XP)=
+!+
+! FUNCTION
+!	User-callable entrypoint into SIX12
+! INPUT
+!	XP	- initialization parameter value, indicating what sort of
+!		  entry this is....
+!-
+    SIX12A( .XP);
+
+END ELUDOM
+
+MODULE BREGHOME(ENTRY(%NAME('.BREG')), NODEBUG)=
+BEGIN
+GLOBAL
+    %NAME('.BREG');		! Compatibility with B10 environment
+END ELUDOM
+6 
+$

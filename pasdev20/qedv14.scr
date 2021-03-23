@@ -1,0 +1,51 @@
+$num off
+$ver
+PROGRAM: QED                                    DATE: 1/29/79
+VERSION: 1.4                                    AUTHOR: S. M. Roush
+APPROVED BY:
+$jus
+$skip 2
+&RELEASE SCHEDULE&
+$par
+QED version 1.4 is now in NRD: and will be moved to RND: on
+February 12.  
+$skip 1
+&CHANGES&
+$par
+$ind +3
+$par -3
+1.\The BOUND command now accepts a string predicate as a parameter
+as well as a string pattern.
+$par -3
+2.\When a search fails in a line designator, the WHY command now
+indicates if the search was part of the lower bound or part of the upper
+bound.
+$ind -3
+$skip 1
+&BUG FIXES&
+$ind +3
+$par -3
+1.\Extraneous characters following a command were diagnosed only after
+the command was executed.
+$par -3
+2.\The BOUND command did not work properly if the section was a single
+line at the end of the buffer.
+$par -3
+3.\String patterns bracketed by '#' did not consider tab characters to
+be leading whitespace.
+$par -3
+4.\Commands following a LOAD command, and on the same line as the load
+command, did not always work properly.
+$par -3
+5.\QED did not diagnose write errors.
+$par -3
+6.\The following characters were not accepted as valid string pattern
+delimiters: '<', '>', '{', '}', '~', '|' and '`'.
+$par -3
+7.\Nested FIND commands did not always work properly.
+$par -3
+8.\Control characters were not displayed in escaped form ( '&&c' )
+in SUBSTITUTE commands used with the print option.
+$par -3
+9.\Bounds were not properly restored when an attention interupted
+a LIST or WRITE command.

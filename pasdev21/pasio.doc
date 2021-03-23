@@ -1,0 +1,237 @@
+$TITLE LEFT 'PASCAL File I/O Package'
+The PASCAL file I/O package provides random and sequential file access
+in a manner reminiscent of the XDS 940.
+It is implemented as a set of PASCAL-callable routines capable of coexisting
+with the basic PASCAL run-time system.
+$skip
+The file appears to the user of these routines to be a randomly addressible
+collection of words, as on the 940.
+Any number of words may be read or written at a file address specified
+by the user.
+At first glance, this might appear to compromise the machine independence
+of programs using these routines, as word size will, of course, differ
+between machines.
+However, through judicious use of the intrinsic PASCAL function SIZE, which
+is described later, machine independence can be preserved in nearly
+all cases.
+$skip
+The package has eleven entry points:
+$skip
+$ind lef 15
+$par -10
+PASOPN\--\open a file for access with these routines.
+$par -10
+PASCLS\--\close a file opened with PASOPN.
+$par -10
+PASREN\--\close and rename a file opened with PASOPN.
+$par -10
+RDRAND\--\randomly read a block.
+$par -10
+WRRAND\--\randomly write a block.
+$par -10
+RDNEXT\--\sequentially read a block.
+$par -10
+WRNEXT\--\sequentially write a block.
+$par -10
+GETSTA\--\return current file status
+$par
+(sequential I/O cursor, end of file address, I/O mode).
+$par -10
+SETSTA\--\change file status (the cursor only).
+$par -10
+FLUSH1\--\write to disk any internal buffers and update the 
+$par 
+directory information for a specific open file.
+$par -10
+FLUSHA\--\write to disk any internal buffers and update the
+$par
+directory information for all open files.
+$ind lef 0
+$skip
+The package currently resides in RND:IOLIB, a library file which
+should be /SEARCHed at the end of your build to load the routines.
+A PASCAL $INCLUDE file PASIO(.PAS), also in RND:, defines
+the routines and associated types.
+Descriptions of the individual procedures follow after this
+introduction.  The type definitions from the include files
+are duplicated here:
+$skip
+$ver
+  (*DEFINITION OF TYPES IOBLOCK AND IOBLOCKSIZE REQUIRED BEFORE NOW*)
+CONST IOFILEMAX = 34;  (*MAXIMUM FILE NAME BUFFER LENGTH*)
+TYPE
+  IOFILEID = 1..15;
+  IOFILEPTR = 0..377777777777B;  
+  IOERRCODE = (IONOERR,IOERR,IOEOF);
+  IOMODE = (IOIN,IOOUT,IOINOUT);
+  IOCONT = (IODEL,IONODEL);
+  IOFILE = PACKED ARRAY[1..IOFILEMAX] OF CHAR;
+
+$jus
+$skip
+$skip
+Types IOBLOCK and IOBLOCKSIZE define the buffer and buffer size
+to be read or written respectively.
+They must be defined by the
+user &prior& to the $INCLUDE of PASIO.
+IOBLOCK will generally be a RECORD type (possibly with variants, as described
+later) and IOBLOCKSIZE, a subrange type.
+$skip
+Type IOFILEPTR is, in effect, the file word address, and ranges
+between 0 and the maximum positive integer.
+An IOFILEPTR parameter (FILEPTR) is input to the random I/O routines
+(RDRAND, WRRAND), specifying where data is to be read/written
+from/to the file.
+RDRAND and WRRAND update the user supplied file pointer to
+point to the word address of the file beyond the last word
+read or written.
+The internal sequential cursor (see below) is not affected.
+$skip
+The sequential I/O routines (RDNEXT, WRNEXT) read or write data
+at the current file &cursor& address, which is maintained by the I/O
+package.
+It is initially set to zero when the file is opened, and is incremented by
+the number of words read or written on each I/O operation.
+Random reads and writes have no effect on the cursor.
+Thus, when &either& sequentially reading &or& writing a file, no user
+modifications of the cursor are usually required (except possibly
+to rewind to zero).
+However, the CURSOR may be set by the user via routine SETSTA, causing
+the next RDNEXT/WRNEXT to read/write from/to the specified file 
+address (after which the cursor is incremented as explained above).
+It is important to note that modifying the cursor has no effect on the end
+of file address.
+$skip
+$ind lef 0
+$skip
+A parameter of type IOFILE is passed to PASOPN
+to specify the name of the file to be opened and to PASREN
+to specify the new file name.
+The length of the packed array of characters containing a file
+name is defined by constant IOFILEMAX and must not be changed
+by the user\-\the PASIO code assumes that length.
+$skip 2
+$center
+More on Random I/O and Machine Independence
+$jus
+$skip
+As stated earlier, when reading and writing sequentially, you will
+seldom have to deal with file pointers, and thus, machine independence
+will not be compromised.
+The only requirement is that the built-in PASCAL function SIZE be used
+to compute BLOCKSIZE which is passed to RDNEXT and WRNEXT.
+$ski
+When performing random I/O, it is essential that any and all computed
+file pointers be a function of record SIZEs and record counts.
+The only file pointer which can safely be assumed to be the same on
+all machines is the first one, or zero.
+Thus, in a recursive disk structure, i.e., one in which records
+contain pointers to other records, the header or master directory
+record should always be placed at zero.
+The essence of writing machine independent programs using these
+I/O routines is that the only hard file address which should ever
+be used is zero.
+$ski
+$cen
+Creating Mixed File Structures
+$ski
+$jus
+One limitation of PASCAL which impedes the definition and
+manipulation of mixed file structures, i.e., files containing
+a variety of different records, is the restriction that a
+procedure parameter must be of a single fixed type.
+This means that the type IOBLOCK must be the same for all calls
+to the PASCAL I/O routines in a compilation.
+In fact, the I/O routines could care less what an IOBLOCK
+is, since they only need its address.
+This is why BLOCK is always VAR, insuring that its address is
+always passed.
+The actual size of BLOCK is passed in BLOCKSIZE.
+$ski
+The best way to have a mixed file is to define IOBLOCK as a
+record type with variants, in which the variants include all
+the possible records in a file.
+It is important to include tags in SIZE calls, to insure that
+the right length is passed to the I/O routines.
+$ski
+For instance, if you wish to write two different kinds of
+records to a file, namely, FOO and BAH, you can define:
+$ski
+$ver
+   TYPE
+     BLOCKTYPES = (FOO,BAH);
+     IOBLOCK = RECORD
+                 CASE TAG: BLOCKTYPES OF
+                   FOO: ( definition of a FOO );
+                   BAH: ( definition of a BAH )
+               END;
+     IOBLOCKSIZE = 0..X;  (* where X>=max(length(FOO),length(BAH)) *)
+   $INCLUDE PASIO.PAS
+
+then to write a FOO you:
+
+   WRNEXT (ERRCODE,FILEID,BLOCK,SIZE(IOBLOCK,FOO));
+  
+and a BAH:
+
+   WRNEXT (ERRCODE,FILEID,BLOCK,SIZE(IOBLOCK,BAH));
+
+$jus
+It is a good idea in these cases that you make sure BLOCK contains BAH
+data when you write it as such, and that it contains FOO data when you
+write it as a FOO.
+$ski
+If it is either inconvenient or impossible to use variant records, you
+can write separate packages, i.e., separately compiled routines,
+covering access to the PASCAL I/O routines, each manipulating
+different record types.
+For instance, in the previous case, in the program actually
+performing I/O, you would define:
+$ski2
+$ver
+   TYPE
+     FOO = RECORD
+             definition of a FOO
+           END;
+     BAH = RECORD
+             definition of a BAH
+           END;
+     FOOSIZE = 0..X;   (* X>=max(length(FOO)) *)
+     BAHSIZE = 0..Y;   (* Y>=max(length(BAH)) *)
+   EXTERNAL PROCEDURE WRNFOO(VAR ERRCODE:IOERRCODE; FILEID:IOFILEID;
+     VAR AFOO: FOO; FOOLEN:FOOSIZE); 
+   EXTERNAL PROCEDURE WRNBAH(VAR ERRCODE:IOERRCODE; FILEID:IOFILEID;
+     VAR ABAH: BAH; BAHLEN:BAHSIZE); 
+   (* note that definitions of IOERRCODE and IOFILEID are needed *)
+
+then to write a FOO:
+
+   WRNFOO(ERRCODE,FILEID,AFOO,SIZE(FOO));
+
+and a BAH:
+
+   WRNBAH(ERRCODE,FILEID,ABAH,SIZE(BAH));
+
+Of course, the value of FILEID would be the same in both calls.
+
+Now, in a separate compilation you would have:
+
+   (*$M-*)
+   TYPE
+     IOBLOCK = RECORD
+                 definition of a FOO
+               END;
+     IOBLOCKSIZE = 0..X;
+   $INCLUDE PASIO.PAS
+
+...
+
+PROCEDURE WRNFOO(VAR ERRCODE:IOERRCODE; FILEID:IOFIELID;
+  VAR FOO: IOBLOCK; FOOLEN:IOBLOCKSIZE);
+BEGIN
+  WRNEXT(ERRCODE,FILEID,FOO,FOOLEN)
+END;
+
+$jus        
+And in still another compilation you would have WRNBAH, defined in a
+manner analogous to the above, with FOO replaced by BAH.

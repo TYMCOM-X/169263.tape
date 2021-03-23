@@ -1,0 +1,15 @@
+	entry	card
+	twoseg
+	reloc	400000
+  
+card:	movei	1,0
+	movn	0,2
+	tdze	2,0
+	aoja	1,.-2
+	movn	0,3
+	tdze	3,0
+	aoja	1,.-2
+  
+	movem	1,4(17)
+	popj	17,
+	end

@@ -1,0 +1,2224 @@
+       File DSK:EXE005.PAS[31024,274425]   Compiled 10-Aug-82 10:41   Pascal, Version 2A(440)-1
+
+       File DSK:EXE005.PAS[31024,274425]   Compiled 10-Aug-82 10:41   Pascal, Version 2A(440)-1
+
+       File DSK:EXE005.PAS[31024,274425]   Compiled 10-Aug-82 10:41   Pascal, Version 2A(440)-1
+
+       File DSK:EXE005.PAS[31024,274425]   Compiled 10-Aug-82 10:41   Pascal, Version 2A(440)-1
+
+
+
+
+
+			    $$$$$   $   $   $$$$$     $$      $$    $$$$$
+			    $       $   $   $        $  $    $  $   $    
+			    $        $ $    $        $  $    $  $   $$$$ 
+			    $$$       $     $$$      $  $    $  $       $
+			    $        $ $    $        $  $    $  $       $
+			    $       $   $   $        $  $    $  $   $   $
+			    $$$$$   $   $   $$$$$     $$      $$     $$$ 
+
+
+				    DSK:EXE005.PAS[31024,274425]
+
+
+Options in effect: 
+
+	CHECK, NOSPECIAL, NOMAP, NOSYMBOLS, NOCALLS, ASSEMBLY, NOXREF, TRACE, QBLOCKS, NOOPTIMIZE, 
+	CODE, NODEBUG, FINISH, NOGLOBAL, NOMAINSEG, NOOVERLAY, AUTOQUICK, SOURCE, NOSTANDARD, 
+	LENGTH (45), WIDTH (102), NOEXTLENGTH, STORAGE (2048), ALLOC (0), ENABLE(M68)
+
+
+
+
+       File DSK:EXE005.PAS[31024,274425]   Compiled 10-Aug-82 10:41   Pascal, Version 2A(440)-1
+
+       File DSK:EXE005.PAS[31024,274425]   Compiled 10-Aug-82 10:41   Pascal, Version 2A(440)-1
+
+       File DSK:EXE005.PAS[31024,274425]   Compiled 10-Aug-82 10:41   Pascal, Version 2A(440)-1
+
+       File DSK:EXE005.PAS[31024,274425]   Compiled 10-Aug-82 10:41   Pascal, Version 2A(440)-1
+       File DSK:EXE005.PAS[31024,274425]   Compiled 10-Aug-82 10:41   Pascal, Version 2A(440)-1
+
+       File DSK:EXE005.PAS[31024,274425]   Compiled 10-Aug-82 10:41   Pascal, Version 2A(440)-1
+
+       File DSK:EXE005.PAS[31024,274425]   Compiled 10-Aug-82 10:41   Pascal, Version 2A(440)-1
+
+       File DSK:EXE005.PAS[31024,274425]   Compiled 10-Aug-82 10:41   Pascal, Version 2A(440)-1
+
+
+
+
+
+			    $$$$$   $   $   $$$$$     $$      $$    $$$$$
+			    $       $   $   $        $  $    $  $   $    
+			    $        $ $    $        $  $    $  $   $$$$ 
+			    $$$       $     $$$      $  $    $  $       $
+			    $        $ $    $        $  $    $  $       $
+			    $       $   $   $        $  $    $  $   $   $
+			    $$$$$   $   $   $$$$$     $$      $$     $$$ 
+
+
+				    DSK:EXE005.PAS[31024,274425]
+
+
+Options in effect: 
+
+	CHECK, NOSPECIAL, NOMAP, NOSYMBOLS, NOCALLS, ASSEMBLY, NOXREF, TRACE, QBLOCKS, NOOPTIMIZE, 
+	CODE, NODEBUG, FINISH, NOGLOBAL, NOMAINSEG, NOOVERLAY, AUTOQUICK, SOURCE, NOSTANDARD, 
+	LENGTH (45), WIDTH (102), NOEXTLENGTH, STORAGE (2048), ALLOC (0), ENABLE(M68)
+
+
+
+
+       File DSK:EXE005.PAS[31024,274425]   Compiled 10-Aug-82 10:41   Pascal, Version 2A(440)-1
+
+       File DSK:EXE005.PAS[31024,274425]   Compiled 10-Aug-82 10:41   Pascal, Version 2A(440)-1
+
+       File DSK:EXE005.PAS[31024,274425]   Compiled 10-Aug-82 10:41   Pascal, Version 2A(440)-1
+
+       File DSK:EXE005.PAS[31024,274425]   Compiled 10-Aug-82 10:41   Pascal, Version 2A(440)-1
+MODULE  EXE005       DSK:EXE005.PAS[31024,274425]                                      10-Aug-82 10:41
+SECTION 0                                                                                       PAGE 1
+
+    1	(* EXE005 - Getstring and putstring.  *)
+    2	
+    3	program EXE005;
+    4	
+    5	public var
+    6	  flex_fstr: ^packed array [1..*] of char;
+    7	  flex_vstr: ^string[ * ];
+    8	  fstr30: packed array [1..30] of char;
+    9	  vst30a, vst30b: string[ 30 ];
+   10	  fst300 : packed array [ 1..300 ] of char;
+   11	  vst300 : string [ 300 ];
+   12	  i,j,k: integer;
+   13	  b: boolean;
+   14	  bs: packed array [1..5] of char;
+   15	  ch: char;
+   16	  x,y,z: real;
+   17	
+   18	const str150 : string [ 150 ] :=
+   19	  '0aaaaaaaa1bbbbbbbbb2ccccccccc3ddddddddd4eeeeeeeee5fffffffff6ggggggggg7hhhhhhhhh8iiiiiiiii9j
+	jjjjjjjj100kkkkkkk1lllllllll2mmmmmmmmm3nnnnnnnnn4ooooooooo5';
+   20	
+   21	public procedure string_param ( var varfl_varprm: string[ * ]; i: integer );
+   22	
+   23	begin
+   24	  putstring ( varfl_varprm, i );
+   25	end;
+   26	
+   27	public procedure error ( error_number: 1..999 );
+   28	  begin
+   29	    writeln ( ttyoutput, 'Error ', error_number );
+   30	  end;
+   31	
+   32	begin
+   33	  rewrite ( ttyoutput );
+   34	  writeln ( ttyoutput, 'Begin EXE005' );
+   35	  
+   36	  new ( flex_fstr, 40 );
+   37	  new ( flex_vstr, 50 );
+   38	
+   39	  flex_fstr^ := '12345TRUE1.2345a1e5OOOF777';
+   40	  flex_vstr^ := 'BEGIN54321,12345,false';
+   41	  fstr30 := 'abcdef17.012345string';MODULE  EXE005       DSK:EXE005.PAS[31024,274425]                                      10-Aug-82 10:41
+SECTION 0                                                                                       PAGE 2
+
+   42	  vst30a := '987654321TRUE1.0e5OOOF123E2';
+   43	  vst30b := vst30a;
+   44	
+   45	  getstring ( flex_fstr^, i,bs[1:4], x, ch, y, flex_fstr^[23:4], j:3:o );
+   46	  if i <> 12345 then error ( 111 );
+   47	  if bs[1:4] <> 'TRUE' then error ( 112 );
+   48	  if x <> 1.2345 then error ( 113 );
+   49	  if ch <> 'a' then error ( 114 );
+   50	  if y <> 1e5 then error ( 115 );
+   51	  if flex_fstr^[23:4] <> 'OOOF' then error ( 116 );
+   52	  if j <> #o777 then error ( 117 );
+   53	
+   54	  getstring ( flex_vstr^, flex_vstr^[6:5], i, j:4, ch, k, bs );
+   55	  if flex_vstr^[6:5] <> 'BEGIN' then error ( 121 );
+   56	  if i <> 54321 then error ( 122 );
+   57	  if j <> 1234 then error ( 123 );
+   58	  if ch <> '5' then error ( 124 );
+   59	  if k <> 0 then error ( 125 );
+   60	  if bs <> 'false' then error ( 126 );
+   61	
+   62	  getstring ( uppercase ( fstr30 ), fstr30[4:6], x:4, y, fstr30[1:3] );
+   63	  if fstr30[4:6] <> 'ABCDEF' then error ( 131 );
+   64	  if x <> 17.0 then error ( 132 );
+   65	  if y <> 12345.0 then error ( 133 );
+   66	  if fstr30[ 1:3 ] <> 'STR' then error ( 134 );
+   67	
+   68	  getstring ( vst30a[5:22], i, bs[2:4], x, vst30a[22:4], y:3, ch );
+   69	  if i <> 54321 then error ( 141 );
+   70	  if bs[2:4] <> 'TRUE' then error ( 142 );
+   71	  if x <> 1e5 then error ( 143 );
+   72	  if vst30a[22:4] <> 'OOOF' then error ( 144 );
+   73	  if y <> 123.0 then error ( 145 );
+   74	  if ch <> 'E' then error ( 146 );
+   75	
+   76	  getstring ( vst30b, i, vst30b:13, j );
+   77	  if i <> 987654321 then error ( 151 );
+   78	  if vst30b <> 'TRUE1.0e5OOOF' then error ( 152 );
+   79	  if length ( vst30b ) <> 13 then error ( 153 );
+   80	  if j <> 123 then error ( 153 );
+   81	
+   82	  b := true;
+   83	  ch := '?';MODULE  EXE005       DSK:EXE005.PAS[31024,274425]                                      10-Aug-82 10:41
+SECTION 0                                                                                       PAGE 3
+
+   84	  i := 123;
+   85	  j := 54321;
+   86	  k := #o777;
+   87	  x := 1e5;
+   88	  y := 1e-5;
+   89	  z := 123.0;
+   90	  flex_fstr^ := 'FIXED STRING';
+   91	  flex_vstr^ := 'FLEX STRING';
+   92	  fstr30 := 'abcdefghijklm';
+   93	  vst30a := '0123456789876543210';
+   94	  vst30b := 'hi thereits ok';
+   95	  
+   96	  putstring ( flex_fstr^[7:17], i:5:O, 1 = i, -z:6:1, flex_fstr^ );
+   97	  if flex_fstr^ <> 'FIXED 00173FALSE-123.0'
+   98	    then error ( 211 );
+   99	
+  100	  putstring ( flex_vstr^, b, flex_vstr^, j - i, 'ooof' );
+  101	  if flex_vstr^ <> 'TRUEFLEX STRING 54198ooof'
+  102	    then error ( 221 );
+  103	
+  104	  putstring ( fstr30, 1023:6:h, uppercase(fstr30[1:6]), fstr30[1:6], '?':10, 'too long' );
+  105	  if fstr30 <> '0003FFABCDEFabcdef         ?'
+  106	    then error ( 231 );
+  107	
+  108	  putstring ( vst30a[5:13], vst30a[1:5], ch, vst30a[5:3], false, k + 1  );
+  109	  if vst30a <> '012301234?456    10'
+  110	    then error ( 241 );
+  111	  
+  112	  putstring (vst30b, uppercase (vst30b[9:6]):7, ' ', vst30b[4:5], ' now!');
+  113	  if (vst30b <> ' ITS OK there now!') or (length (vst30b) <> 18) 
+  114	    then error ( 251 );
+  115	
+  116	  (* now lets try some things with big strings *)
+  117	
+  118	  dispose ( flex_fstr );
+  119	  dispose ( flex_vstr );
+  120	  new ( flex_fstr , 300 );
+  121	  new ( flex_vstr , 300 );
+  122	
+  123	  putstring ( flex_vstr^ , lowercase ( str150 ) , uppercase ( str150 ) );
+  124	  if ( substr ( flex_vstr^,1,150 ) <> lowercase ( str150 ) )
+  125	  or ( substr ( flex_vstr^,151,150) <> uppercase ( str150 ) )MODULE  EXE005       DSK:EXE005.PAS[31024,274425]                                      10-Aug-82 10:41
+SECTION 0                                                                                       PAGE 4
+
+  126	    then error ( 310 );
+  127	
+  128	  flex_fstr^ := flex_vstr^;
+  129	  fst300 := flex_fstr^;
+  130	  vst300 := flex_fstr^;
+  131	
+  132	  putstring ( vst300[200:20] , uppercase(substr(flex_vstr^,1,10)), '%%%$$#!':10 );
+  133	  if vst300[200:20] <> '0AAAAAAAA1   %%%$$#!'
+  134	    then error ( 320 );
+  135	
+  136	  putstring ( fst300[100:100] , uppercase(flex_vstr^[100:99]):100 );
+  137	  if fst300[100] <> ' '
+  138	    then error ( 330 );
+  139	
+  140	  getstring ( uppercase(flex_fstr^) , j,flex_vstr^[1:8] , x ,fst300[1:9] , k ,
+  141	        bs , ch , vst300[1:3] );
+  142	  if j <> 0 then error ( 351 );
+  143	  if flex_vstr^[1:8] <> 'AAAAAAAA' then error ( 352 );
+  144	  if x <> 1.0 then error ( 353 );
+  145	  if fst300[1:9] <> 'BBBBBBBBB' then error ( 354 );
+  146	  if k <> 2 then error ( 355 );
+  147	  if bs <> 'CCCCC' then error ( 356 );
+  148	  if ch <> 'C' then error ( 357 );
+  149	  if vst300[1:3] <> 'CCC' then error ( 358 );
+  150	
+  151	  vst300 := '654321123456789';
+  152	  i := 7;
+  153	  putstring ( substr(vst300,i,6), 'middle' );
+  154	  if (length(vst300) <> 15) or (vst300 <> '654321middle789') then error ( 360 );
+  155	
+  156	  vst300 := '654321123456789';
+  157	  i := 7;
+  158	  putstring ( substr(vst300, i), 'middle' );
+  159	  if ( length(vst300) <> 15 ) or
+  160	     ( vst300 <> '654321middle   ' ) then error ( 370 );
+  161	
+  162	  string_param ( vst300, 380 );
+  163	  if ( length(vst300) <> 4 ) or ( vst300 <> ' 380' ) then error ( 380 );
+  164	
+  165	  writeln ( ttyoutput, 'End EXE005' );
+  166	end  (* program EXE005 *) .MODULE  EXE005       DSK:EXE005.PAS[31024,274425]                                      10-Aug-82 10:41
+SECTION 0                                                                                       PAGE 5
+
+File   level   on page     name
+
+  0	 0	    1	DSK:EXE005.PAS[31024,274425]
+                                                                                                                                                                                                                                                                                                                                                     		      EXE005     IDNT	   0,0
+		      *
+		      *		 MC68000 Checkout Code Generator,  Aug 10, 1982  10:42:01 am
+		      *
+	 00000002		 SECTION   2
+	 00000000     STATIC.	 EQU	   *
+	 0000000A		 SECTION   10
+	 00000000     CODE.	 EQU	   *
+00000000 C21DC858     C.1	 DC.L	   $C21DC858			       Date-time
+00000004 0000			 DC.W	   0				         $0
+00000006 455845303035		 DC.B	   'EXE005'
+	 00000002		 SECTION   2
+		      *
+		      *		 Unitialized static area
+		      *
+00000000 000002E2		 DS.B	   738
+				 XDEF	   FLEX_FST
+		      FLEX_FST	 EQU	   STATIC.+0
+				 XDEF	   FLEX_VST
+		      FLEX_VST	 EQU	   STATIC.+4
+				 XDEF	   FSTR30  
+		      FSTR30  	 EQU	   STATIC.+8
+				 XDEF	   VST30A  
+		      VST30A  	 EQU	   STATIC.+38
+				 XDEF	   VST30B  
+		      VST30B  	 EQU	   STATIC.+70
+				 XDEF	   FST300  
+		      FST300  	 EQU	   STATIC.+102
+				 XDEF	   VST300  
+		      VST300  	 EQU	   STATIC.+402
+				 XDEF	   I       
+		      I       	 EQU	   STATIC.+704
+				 XDEF	   J       
+		      J       	 EQU	   STATIC.+708
+				 XDEF	   K       
+		      K       	 EQU	   STATIC.+712
+				 XDEF	   B       
+		      B       	 EQU	   STATIC.+716
+				 XDEF	   BS      
+		      BS      	 EQU	   STATIC.+718
+				 XDEF	   CH      
+		      CH      	 EQU	   STATIC.+724
+				 XDEF	   X       
+		      X       	 EQU	   STATIC.+726
+				 XDEF	   Y       		      Y       	 EQU	   STATIC.+730
+				 XDEF	   Z       
+		      Z       	 EQU	   STATIC.+734
+	 0000000A		 SECTION   10
+		      *
+		      *		 Begin subroutine STRING_PARAM
+		      *
+				 XDEF	   STRING_P
+0000000C	      STRING_P
+0000000C 701A	      B.3	 MOVEQ	   #26,D0			         $1A
+0000000E 2F00			 MOVE.L	   D0,-(A7)
+00000010 6114			 BSR.S	   X.3.1(PC)
+00000012 00000000		 DC.L	   C.1
+00000016 0000			 DC.W	   0				         $0
+00000018 000C			 DC.W	   12				       String length word
+0000001A 535452494E47		 DC.B	   'STRING_PARAM'
+00000026 203CFFFFFFF4 X.3.1	 MOVE.L	   #T.3-4,D0			         -8
+0000002C 4EB900000000		 JSR	   M.ENTRY
+		      *							       LINE 23
+		      *							       LINE 24
+00000032 206E0016     L.3.1	 MOVEA.L   22(A6),A0			         VARFL_VARPRM
+00000036 302E0014		 MOVE.W	   22-2(A6),D0			         VARFL_VARPRM
+0000003A 5440			 ADDQ.W	   #2,D0			         $2
+0000003C 4840			 SWAP	   D0
+0000003E 4240			 CLR.W	   D0
+00000040 4840			 SWAP	   D0
+00000042 2F00			 MOVE.L	   D0,-(A7)
+00000044 4EB900000000		 JSR	   M.DYNTMB
+0000004A 224F			 MOVEA.L   A7,A1
+0000004C 4251			 CLR.W	   (A1)
+0000004E 3D6E0014FFFE		 MOVE.W	   22-2(A6),-2(A6)		         VARFL_VARPRM  $FFFFFF
+00000054 426EFFFC		 CLR.W	   -4(A6)			         $FFFFFFFC
+00000058 45D1			 LEA	   (A1),A2
+0000005A 2D4AFFF8		 MOVE.L	   A2,-8(A6)			         $FFFFFFF8
+0000005E 4267			 CLR.W	   -(A7)
+00000060 486E001A		 PEA	   26(A6)			         I
+00000064 486EFFF8		 PEA	   -8(A6)			         $FFFFFFF8
+00000068 4EB900000000		 JSR	   I.PTSTRV
+0000006E 3091			 MOVE.W	   (A1),(A0)
+00000070 48680002		 PEA	   2(A0)			         $2
+00000074 3F2E0014		 MOVE.W	   22-2(A6),-(A7)		         VARFL_VARPRM
+00000078 48690002		 PEA	   2(A1)			         $2
+0000007C 3F11			 MOVE.W	   (A1),-(A7)
+0000007E 4EB900000000		 JSR	   C.MVFF
+		      *							       LINE 2500000084 4EB900000000		 JSR	   M.RETURN
+		      *
+		      *		 Constant area for subroutine ERROR
+		      *
+0000008A 4572726F7220 K.1	 DC.B	   'Error '
+		      *
+		      *		 Begin subroutine ERROR
+		      *
+				 XDEF	   ERROR   
+00000090	      ERROR   
+00000090 7014	      B.4	 MOVEQ	   #20,D0			         $14
+00000092 2F00			 MOVE.L	   D0,-(A7)
+00000094 610E			 BSR.S	   X.4.1(PC)
+00000096 00000000		 DC.L	   C.1
+0000009A 0000			 DC.W	   0				         $0
+0000009C 0005			 DC.W	   5				       String length word
+0000009E 4552524F52		 DC.B	   'ERROR'
+000000A3 00000001		 DS.B	   1				       Fill byte
+000000A4 203CFFFFFFFC X.4.1	 MOVE.L	   #T.4-4,D0			         0
+000000AA 4EB900000000		 JSR	   M.ENTRY
+		      *							       LINE 28
+		      *							       LINE 29
+000000B0 202D0000     L.4.1	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+000000B4 4A80			 TST.L	   D0
+000000B6 6606			 BNE.S	   X.4.2(PC)
+000000B8 4EB900000000		 JSR	   E.FILE
+000000BE 7206	      X.4.2	 MOVEQ	   #6,D1			         $6
+000000C0 3F01			 MOVE.W	   D1,-(A7)
+000000C2 7204			 MOVEQ	   #4,D1			         $4
+000000C4 3F01			 MOVE.W	   D1,-(A7)
+000000C6 487AFFC2		 PEA	   K.1(PC)			         CODE.+$8A
+000000CA 2F00			 MOVE.L	   D0,-(A7)
+000000CC 4EB900000000		 JSR	   T.WRITE
+000000D2 4267			 CLR.W	   -(A7)
+000000D4 486E0014		 PEA	   20(A6)			         ERROR_NUMBER
+000000D8 2F00			 MOVE.L	   D0,-(A7)
+000000DA 4EB900000000		 JSR	   T.WRITE
+000000E0 2F00			 MOVE.L	   D0,-(A7)
+000000E2 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 30
+000000E8 4EB900000000		 JSR	   M.RETURN
+		      *
+		      *		 Constant area for program EXE005
+		      *
+000000EE 23434E	      K.2	 DC.B	   '#CN'000000F1 00000001		 DS.B	   1
+000000F2 426567696E20 K.3	 DC.B	   'Begin EXE005'
+000000FE 313233343554 K.4	 DC.B	   '12345TRUE1.2345a1e5OOOF777'
+00000118 424547494E35 K.5	 DC.B	   'BEGIN54321,12345,false'
+0000012E 616263646566 K.6	 DC.B	   'abcdef17.012345string'
+00000143 00000001		 DS.B	   1
+00000144 393837363534 K.7	 DC.B	   '987654321TRUE1.0e5OOOF123E2'
+0000015F 00000001		 DS.B	   1
+00000160 FFFFCAE3     K.8	 DC.L	   $FFFFCAE3				 -34359626993.99999999
+00000164 E640A660		 DC.L	   $E640A660				 3862996427.0000000000
+00000168 FFFFCAE3     K.9	 DC.L	   $FFFFCAE3				 -34359626993.99999999
+0000016C E640A660		 DC.L	   $E640A660				 3862996427.0000000000
+00000170 54525545     K.10	 DC.B	   'TRUE'
+00000174 9E041941     K.11	 DC.L	   $9E041941				 1.2345
+00000178 C3500051     K.12	 DC.L	   $C3500051				 100000.
+0000017C 4F4F4F46     K.13	 DC.B	   'OOOF'
+00000180 424547494E   K.14	 DC.B	   'BEGIN'
+00000185 00000001		 DS.B	   1
+00000186 66616C7365   K.15	 DC.B	   'false'
+0000018B 00000001		 DS.B	   1
+0000018C FFFFCAE3     K.16	 DC.L	   $FFFFCAE3				 -34359626993.99999999
+00000190 E640A660		 DC.L	   $E640A660				 3862996427.0000000000
+00000194 FFFFCAE3     K.17	 DC.L	   $FFFFCAE3				 -34359626993.99999999
+00000198 E640A660		 DC.L	   $E640A660				 3862996427.0000000000
+0000019C 414243444546 K.18	 DC.B	   'ABCDEF'
+000001A2 88000045     K.19	 DC.L	   $88000045				 17.
+000001A6 C0E4004E     K.20	 DC.L	   $C0E4004E				 12345.
+000001AA 535452	      K.21	 DC.B	   'STR'
+000001AD 00000001		 DS.B	   1
+000001AE FFFFCAE3     K.22	 DC.L	   $FFFFCAE3				 -34359626993.99999999
+000001B2 E640A660		 DC.L	   $E640A660				 3862996427.0000000000
+000001B6 FFFFCAE3     K.23	 DC.L	   $FFFFCAE3				 -34359626993.99999999
+000001BA E640A660		 DC.L	   $E640A660				 3862996427.0000000000
+000001BE 54525545     K.24	 DC.B	   'TRUE'
+000001C2 C3500051     K.25	 DC.L	   $C3500051				 100000.
+000001C6 4F4F4F46     K.26	 DC.B	   'OOOF'
+000001CA F6000047     K.27	 DC.L	   $F6000047				 123.
+000001CE 54525545312E K.28	 DC.B	   'TRUE1.0e5OOOF'
+000001DB 00000001		 DS.B	   1
+000001DC C3500051     K.29	 DC.L	   $C3500051				 100000.
+000001E0 A7C5AC30     K.30	 DC.L	   $A7C5AC30				 0.00001
+000001E4 F6000047     K.31	 DC.L	   $F6000047				 123.
+000001E8 464958454420 K.32	 DC.B	   'FIXED STRING'
+000001F4 464C45582053 K.33	 DC.B	   'FLEX STRING'
+000001FF 00000001		 DS.B	   100000200 616263646566 K.34	 DC.B	   'abcdefghijklm'
+0000020D 00000001		 DS.B	   1
+0000020E 303132333435 K.35	 DC.B	 23456789876543210'
+00000221 00000001		 DS.B	   1
+00000222 686920746865 K.36	 DC.B	   'hi thereits ok'
+00000230 464958454420 K.37	 DC.B	   'FIXED 00173FALSE-123.0'
+00000246 6F6F6F66     K.38	 DC.B	   'ooof'
+0000024A 54525545464C K.39	 DC.B	   'TRUEFLEX STRING 54198ooof'
+00000263 00000001		 DS.B	   1
+00000264 000003FF     K.40	 DC.L	   1023				         $3FF
+00000268 3F	      K.41	 DC.B	   63				         $3F
+00000269 00000001		 DS.B	   1				       Fill byte
+0000026A 746F6F206C6F K.42	 DC.B	   'too long'
+00000272 303030334646 K.43	 DC.B	   '0003FFABCDEFabcdef         ?'
+0000028E 00	      K.44	 DC.B	   0				         $0
+0000028F 00000001		 DS.B	   1				       Fill byte
+00000290 303132333031 K.45	 DC.B	   '012301234?456    10'
+000002A3 00000001		 DS.B	   1
+000002A4 20	      K.46	 DC.B	   32				         $20
+000002A5 00000001		 DS.B	   1				       Fill byte
+000002A6 206E6F7721   K.47	 DC.B	   ' now!'
+000002AB 00000001		 DS.B	   1
+000002AC 20495453204F K.48	 DC.B	   ' ITS OK there now!'
+000002BE 0096	      K.49	 DC.W	   150				       String length word
+000002C0 306161616161		 DC.B	   '0aaaaaaaa1bbbbbbbbb2ccccccccc3ddddddddd4eeeeeeeee5ffffffff
+00000356 252525242423 K.50	 DC.B	   '%%%$$#!'
+0000035D 00000001		 DS.B	   1
+0000035E 304141414141 K.51	 DC.B	   '0AAAAAAAA1   %%%$$#!'
+00000372 FFFFCAE3     K.52	 DC.L	   $FFFFCAE3				 -34359626993.99999999
+00000376 E640A660		 DC.L	   $E640A660				 3862996427.0000000000
+0000037A 414141414141 K.53	 DC.B	   'AAAAAAAA'
+00000382 80000041     K.54	 DC.L	   $80000041				 1.
+00000386 424242424242 K.55	 DC.B	   'BBBBBBBBB'
+0000038F 00000001		 DS.B	   1
+00000390 4343434343   K.56	 DC.B	   'CCCCC'
+00000395 00000001		 DS.B	   1
+00000396 434343	      K.57	 DC.B	   'CCC'
+00000399 00000001		 DS.B	   1
+0000039A 363534333231 K.58	 DC.B	   '654321123456789'
+000003A9 00000001		 DS.B	   1
+000003AA 6D6964646C65 K.59	 DC.B	   'middle'
+000003B0 363534333231 K.60	 DC.B	   '654321middle789'
+000003BF 00000001		 DS.B	   1
+000003C0 363534333231 K.61	 DC.B	   '654321123456789'
+000003CF 00000001		 DS.B	   1000003D0 6D6964646C65 K.62	 DC.B	   'middle'
+000003D6 363534333231 K.63	 DC.B	   '654321middle   '
+000003E5 00000001		 DS.B	   1
+000003E6 20333830     K.64	 DC.B	   ' 380'
+000003EA 456E64204558 K.65	 DC.B	   'End EXE005'
+		      *
+		      *		 Begin program EXE005
+		      *
+				 XDEF	   M.START 
+000003F4	      M.START 
+000003F4 7010	      B.1	 MOVEQ	   #16,D0			         $10
+000003F6 2F00			 MOVE.L	   D0,-(A7)
+000003F8 610E			 BSR.S	   X.1.1(PC)
+000003FA 00000000		 DC.L	   C.1
+000003FE 0000			 DC.W	   0				         $0
+00000400 0006			 DC.W	   6				       String length word
+00000402 455845303035		 DC.B	   'EXE005'
+00000408 203CFFFFFEC4 X.1.1	 MOVE.L	   #T.1-4,D0			         -312
+0000040E 4EB900000000		 JSR	   M.ENTRY
+00000414 2D4FFEC8		 MOVE.L	   A7,ST.1(A6)			         -312
+		      *							       LINE 32
+		      *							       LINE 33
+00000418 487AFCD4     L.1.1	 PEA	   K.2(PC)			         CODE.+$EE
+0000041C 7003			 MOVEQ	   #3,D0			         $3
+0000041E 3F00			 MOVE.W	   D0,-(A7)
+00000420 7032			 MOVEQ	   #50,D0			         $32
+00000422 3F00			 MOVE.W	   D0,-(A7)
+00000424 4EB900000000		 JSR	   T.REWRIT
+0000042A 2B5F0000		 MOVE.L	   (A7)+,TTYOUTPUT-32768(A5)	         TTYOUTPUT
+		      *							       LINE 34
+0000042E 202D0000		 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00000432 4A80			 TST.L	   D0
+00000434 6606			 BNE.S	   X.1.2(PC)
+00000436 4EB900000000		 JSR	   E.FILE
+0000043C 720C	      X.1.2	 MOVEQ	   #12,D1			         $C
+0000043E 3F01			 MOVE.W	   D1,-(A7)
+00000440 7204			 MOVEQ	   #4,D1			         $4
+00000442 3F01			 MOVE.W	   D1,-(A7)
+00000444 487AFCAC		 PEA	   K.3(PC)			         CODE.+$F2
+00000448 2F00			 MOVE.L	   D0,-(A7)
+0000044A 4EB900000000		 JSR	   T.WRITE
+00000450 2F00			 MOVE.L	   D0,-(A7)
+00000452 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 36
+00000458 702A			 MOVEQ	   #42,D0			         $2A0000045A 2F00			 MOVE.L	   D0,-(A7)
+0000045C 4EB900000000		 JSR	   H.NEW
+00000462 201F			 MOVE.L	   (A7)+,D0
+00000464 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         FLEX_FSTR
+00000468 2040			 MOVEA.L   D0,A0
+0000046A 7028			 MOVEQ	   #40,D0			         $28
+0000046C 3080			 MOVE.W	   D0,(A0)
+		      *							       LINE 37
+0000046E 7036			 MOVEQ	   #54,D0			         $36
+00000470 2F00			 MOVE.L	   D0,-(A7)
+00000472 4EB900000000		 JSR	   H.NEW
+00000478 201F			 MOVE.L	   (A7)+,D0
+0000047A 2B408004		 MOVE.L	   D0,STATIC.+4-32768(A5)	         FLEX_VSTR
+0000047E 2040			 MOVEA.L   D0,A0
+00000480 7032			 MOVEQ	   #50,D0			         $32
+00000482 3080			 MOVE.W	   D0,(A0)
+		      *							       LINE 39
+00000484 202D8000		 MOVE.L	   STATIC.+0-32768(A5),D0	         FLEX_FSTR
+00000488 4A80			 TST.L	   D0
+0000048A 6606			 BNE.S	   X.1.3(PC)
+0000048C 4EB900000000		 JSR	   E.PTR
+00000492 2040	      X.1.3	 MOVEA.L   D0,A0
+00000494 48680002		 PEA	   2(A0)			         $2
+00000498 3F10			 MOVE.W	   (A0),-(A7)
+0000049A 487AFC62		 PEA	   K.4(PC)			         CODE.+$FE
+0000049E 701A			 MOVEQ	   #26,D0			         $1A
+000004A0 3F00			 MOVE.W	   D0,-(A7)
+000004A2 4EB900000000		 JSR	   C.MVFFP
+		      *							       LINE 40
+000004A8 202D8004		 MOVE.L	   STATIC.+4-32768(A5),D0	         FLEX_VSTR
+000004AC 4A80			 TST.L	   D0
+000004AE 6606			 BNE.S	   X.1.4(PC)
+000004B0 4EB900000000		 JSR	   E.PTR
+000004B6 2040	      X.1.4	 MOVEA.L   D0,A0
+000004B8 303C0016		 MOVE.W	   #22,D0			         $16
+000004BC B050			 CMP.W	   (A0),D0
+000004BE 6F02			 BLE.S	   X.1.5(PC)
+000004C0 3010			 MOVE.W	   (A0),D0
+000004C2 31400002     X.1.5	 MOVE.W	   D0,2(A0)			         $2
+000004C6 48680004		 PEA	   4(A0)			         $4
+000004CA 3F10			 MOVE.W	   (A0),-(A7)
+000004CC 487AFC4A		 PEA	   K.5(PC)			         CODE.+$118
+000004D0 7016			 MOVEQ	   #22,D0			         $16
+000004D2 3F00			 MOVE.W	   D0,-(A7)
+000004D4 4EB900000000		 JSR	   C.MVFF		      *							       LINE 41
+000004DA 486D8008		 PEA	   STATIC.+8-32768(A5)		         FSTR30
+000004DE 701E			 MOVEQ	   #30,D0			         $1E
+000004E0 3F00			 MOVE.W	   D0,-(A7)
+000004E2 487AFC4A		 PEA	   K.6(PC)			         CODE.+$12E
+000004E6 7015			 MOVEQ	   #21,D0			         $15
+000004E8 3F00			 MOVE.W	   D0,-(A7)
+000004EA 4EB900000000		 JSR	   C.MVFFP
+		      *							       LINE 42
+000004F0 3B7C001B8026		 MOVE.W	   #27,STATIC.+38-32768(A5)	         $1B  VST30A
+000004F6 486D8028		 PEA	   STATIC.+38-32766(A5)		         VST30A
+000004FA 701E			 MOVEQ	   #30,D0			         $1E
+000004FC 3F00			 MOVE.W	   D0,-(A7)
+000004FE 487AFC44		 PEA	   K.7(PC)			         CODE.+$144
+00000502 701B			 MOVEQ	   #27,D0			         $1B
+00000504 3F00			 MOVE.W	   D0,-(A7)
+00000506 4EB900000000		 JSR	   C.MVFF
+		      *							       LINE 43
+0000050C 302D8026		 MOVE.W	   STATIC.+38-32768(A5),D0	         VST30A
+00000510 41ED8026		 LEA	   STATIC.+38-32768(A5),A0	         VST30A
+00000514 43ED8046		 LEA	   STATIC.+70-32768(A5),A1	         VST30B
+00000518 5240			 ADDQ.W	   #1,D0			         $1
+0000051A E248			 LSR.W	   #1,D0			         $1
+0000051C 32D8	      X.1.6	 MOVE.W	   (A0)+,(A1)+
+0000051E 51C8FFFC		 DBF	   D0,X.1.6(PC)
+		      *							       LINE 45
+00000522 202D8000		 MOVE.L	   STATIC.+0-32768(A5),D0	         FLEX_FSTR
+00000526 4A80			 TST.L	   D0
+00000528 6606			 BNE.S	   X.1.7(PC)
+0000052A 4EB900000000		 JSR	   E.PTR
+00000530 2040	      X.1.7	 MOVEA.L   D0,A0
+00000532 7000			 MOVEQ	   #0,D0			         $0
+00000534 3010			 MOVE.W	   (A0),D0
+00000536 2F00			 MOVE.L	   D0,-(A7)
+00000538 4EB900000000		 JSR	   M.DYNTMB
+0000053E 224F			 MOVEA.L   A7,A1
+00000540 4851			 PEA	   (A1)
+00000542 3F10			 MOVE.W	   (A0),-(A7)
+00000544 48680002		 PEA	   2(A0)			         $2
+00000548 3F10			 MOVE.W	   (A0),-(A7)
+0000054A 4EB900000000		 JSR	   C.MVFF
+00000550 3D50FFFE		 MOVE.W	   (A0),-2(A6)			         $FFFFFFFE
+00000554 426EFFFC		 CLR.W	   -4(A6)			         $FFFFFFFC
+00000558 45D1			 LEA	   (A1),A2
+0000055A 2D4AFFF8		 MOVE.L	   A2,-8(A6)			         $FFFFFFF80000055E 4267			 CLR.W	   -(A7)
+00000560 486D82C0		 PEA	   STATIC.+704-32768(A5)	         I
+00000564 486EFFF8		 PEA	   -8(A6)			         $FFFFFFF8
+00000568 4EB900000000		 JSR	   I.GETSTR
+0000056E 7004			 MOVEQ	   #4,D0			         $4
+00000570 3F00			 MOVE.W	   D0,-(A7)
+00000572 700C			 MOVEQ	   #12,D0			         $C
+00000574 3F00			 MOVE.W	   D0,-(A7)
+00000576 486D82CE		 PEA	   STATIC.+718-32768(A5)	         BS
+0000057A 486EFFF8		 PEA	   -8(A6)			         $FFFFFFF8
+0000057E 4EB900000000		 JSR	   I.GETSTR
+00000584 487AFBDA		 PEA	   K.8(PC)			         CODE.+$160
+00000588 7006			 MOVEQ	   #6,D0			         $6
+0000058A 2F00			 MOVE.L	   D0,-(A7)
+0000058C 3F3C0201		 MOVE.W	   #513,-(A7)			         $201
+00000590 486D82D6		 PEA	   STATIC.+726-32768(A5)	         X
+00000594 486EFFF8		 PEA	   -8(A6)			         $FFFFFFF8
+00000598 4EB900000000		 JSR	   I.GETSTR
+0000059E 7001			 MOVEQ	   #1,D0			         $1
+000005A0 3F00			 MOVE.W	   D0,-(A7)
+000005A2 700C			 MOVEQ	   #12,D0			         $C
+000005A4 3F00			 MOVE.W	   D0,-(A7)
+000005A6 486D82D4		 PEA	   STATIC.+724-32768(A5)	         CH
+000005AA 486EFFF8		 PEA	   -8(A6)			         $FFFFFFF8
+000005AE 4EB900000000		 JSR	   I.GETSTR
+000005B4 487AFBB2		 PEA	   K.9(PC)			         CODE.+$168
+000005B8 7006			 MOVEQ	   #6,D0			         $6
+000005BA 2F00			 MOVE.L	   D0,-(A7)
+000005BC 3F3C0201		 MOVE.W	   #513,-(A7)			         $201
+000005C0 486D82DA		 PEA	   STATIC.+730-32768(A5)	         Y
+000005C4 486EFFF8		 PEA	   -8(A6)			         $FFFFFFF8
+000005C8 4EB900000000		 JSR	   I.GETSTR
+000005CE 202D8000		 MOVE.L	   STATIC.+0-32768(A5),D0	         FLEX_FSTR
+000005D2 4A80			 TST.L	   D0
+000005D4 6606			 BNE.S	   X.1.8(PC)
+000005D6 4EB900000000		 JSR	   E.PTR
+000005DC 2440	      X.1.8	 MOVEA.L   D0,A2
+000005DE 7000			 MOVEQ	   #0,D0			         $0
+000005E0 3012			 MOVE.W	   (A2),D0
+000005E2 90BC00000016		 SUB.L	   #22,D0			         $16
+000005E8 0C8000000004		 CMPI.L	   #4,D0			         $4
+000005EE 6C06			 BGE.S	   X.1.10(PC)
+000005F0 4EB900000000 X.1.9	 JSR	   E.SUBSTR
+000005F6 7004	      X.1.10	 MOVEQ	   #4,D0			         $4
+000005F8 3F00			 MOVE.W	   D0,-(A7)000005FA 700C			 MOVEQ	   #12,D0			         $C
+000005FC 3F00			 MOVE.W	   D0,-(A7)
+000005FE 486A0018		 PEA	   24(A2)			         $18
+00000602 486EFFF8		 PEA	   -8(A6)			         $FFFFFFF8
+00000606 4EB900000000		 JSR	   I.GETSTR
+0000060C 7003			 MOVEQ	   #3,D0			         $3
+0000060E 2F00			 MOVE.L	   D0,-(A7)
+00000610 7030			 MOVEQ	   #48,D0			         $30
+00000612 3F00			 MOVE.W	   D0,-(A7)
+00000614 486D82C4		 PEA	   STATIC.+708-32768(A5)	         J
+00000618 486EFFF8		 PEA	   -8(A6)			         $FFFFFFF8
+0000061C 4EB900000000		 JSR	   I.GETSTR
+		      *							       LINE 46
+00000622 0CAD00003039		 CMPI.L	   #12345,STATIC.+704-32768(A5)	         $3039  I
+	 82C0
+0000062A 670C			 BEQ.S	   L.1.3(PC)
+0000062C 2E6EFEC8     L.1.2	 MOVEA.L   ST.1(A6),A7			         -312
+		      *							       LINE 46 (2)
+00000630 706F			 MOVEQ	   #111,D0			         $6F
+00000632 2F00			 MOVE.L	   D0,-(A7)
+00000634 6100FA5A		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+00000638 2E6EFEC8     L.1.3	 MOVEA.L   ST.1(A6),A7			         -312
+		      *							       LINE 47
+0000063C 487AFB32		 PEA	   K.10(PC)			         CODE.+$170
+00000640 7004			 MOVEQ	   #4,D0			         $4
+00000642 3F00			 MOVE.W	   D0,-(A7)
+00000644 486D82CE		 PEA	   STATIC.+718-32768(A5)	         BS
+00000648 7004			 MOVEQ	   #4,D0			         $4
+0000064A 3F00			 MOVE.W	   D0,-(A7)
+0000064C 4EB900000000		 JSR	   C.CPFF
+00000652 6708			 BEQ.S	   L.1.5(PC)
+		      *							       LINE 47 (2)
+00000654 7070	      L.1.4	 MOVEQ	   #112,D0			         $70
+00000656 2F00			 MOVE.L	   D0,-(A7)
+00000658 6100FA36		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+		      *							       LINE 48
+0000065C 2F2D82D6     L.1.5	 MOVE.L	   STATIC.+726-32768(A5),-(A7)	         X
+00000660 2F3AFB12		 MOVE.L	   K.11(PC),-(A7)		         CODE.+$174
+00000664 4EB900000000		 JSR	   F.CMP
+0000066A 6708			 BEQ.S	   L.1.7(PC)
+		      *							       LINE 48 (2)
+0000066C 7071	      L.1.6	 MOVEQ	   #113,D0			         $71
+0000066E 2F00			 MOVE.L	   D0,-(A7)
+00000670 6100FA1E		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+		      *							       LINE 4900000674 7061	      L.1.7	 MOVEQ	   #97,D0			         $61
+00000676 B02D82D4		 CMP.B	   STATIC.+724-32768(A5),D0	         CH
+0000067A 6708			 BEQ.S	   L.1.9(PC)
+		      *							       LINE 49 (2)
+0000067C 7072	      L.1.8	 MOVEQ	   #114,D0			         $72
+0000067E 2F00			 MOVE.L	   D0,-(A7)
+00000680 6100FA0E		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+		      *							       LINE 50
+00000684 2F2D82DA     L.1.9	 MOVE.L	   STATIC.+730-32768(A5),-(A7)	         Y
+00000688 2F3AFAEE		 MOVE.L	   K.12(PC),-(A7)		         CODE.+$178
+0000068C 4EB900000000		 JSR	   F.CMP
+00000692 6708			 BEQ.S	   L.1.11(PC)
+		      *							       LINE 50 (2)
+00000694 7073	      L.1.10	 MOVEQ	   #115,D0			         $73
+00000696 2F00			 MOVE.L	   D0,-(A7)
+00000698 6100F9F6		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+		      *							       LINE 51
+0000069C 202D8000     L.1.11	 MOVE.L	   STATIC.+0-32768(A5),D0	         FLEX_FSTR
+000006A0 4A80			 TST.L	   D0
+000006A2 6606			 BNE.S	   X.1.11(PC)
+000006A4 4EB900000000		 JSR	   E.PTR
+000006AA 2040	      X.1.11	 MOVEA.L   D0,A0
+000006AC 7000			 MOVEQ	   #0,D0			         $0
+000006AE 3010			 MOVE.W	   (A0),D0
+000006B0 90BC00000016		 SUB.L	   #22,D0			         $16
+000006B6 0C8000000004		 CMPI.L	   #4,D0			         $4
+000006BC 6C06			 BGE.S	   X.1.13(PC)
+000006BE 4EB900000000 X.1.12	 JSR	   E.SUBSTR
+000006C4 487AFAB6     X.1.13	 PEA	   K.13(PC)			         CODE.+$17C
+000006C8 7004			 MOVEQ	   #4,D0			         $4
+000006CA 3F00			 MOVE.W	   D0,-(A7)
+000006CC 48680018		 PEA	   24(A0)			         $18
+000006D0 7004			 MOVEQ	   #4,D0			         $4
+000006D2 3F00			 MOVE.W	   D0,-(A7)
+000006D4 4EB900000000		 JSR	   C.CPFF
+000006DA 6708			 BEQ.S	   L.1.13(PC)
+		      *							       LINE 51 (2)
+000006DC 7074	      L.1.12	 MOVEQ	   #116,D0			         $74
+000006DE 2F00			 MOVE.L	   D0,-(A7)
+000006E0 6100F9AE		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+		      *							       LINE 52
+000006E4 0CAD000001FF L.1.13	 CMPI.L	   #511,STATIC.+708-32768(A5)	         $1FF  J
+	 82C4
+000006EC 6708			 BEQ.S	   L.1.15(PC)
+		      *							       LINE 52 (2)000006EE 7075	      L.1.14	 MOVEQ	   #117,D0			         $75
+000006F0 2F00			 MOVE.L	   D0,-(A7)
+000006F2 6100F99C		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+		      *							       LINE 54
+000006F6 202D8004     L.1.15	 MOVE.L	   STATIC.+4-32768(A5),D0	         FLEX_VSTR
+000006FA 4A80			 TST.L	   D0
+000006FC 6606			 BNE.S	   X.1.14(PC)
+000006FE 4EB900000000		 JSR	   E.PTR
+00000704 2040	      X.1.14	 MOVEA.L   D0,A0
+00000706 7000			 MOVEQ	   #0,D0			         $0
+00000708 30280002		 MOVE.W	   2(A0),D0			         $2
+0000070C 2F00			 MOVE.L	   D0,-(A7)
+0000070E 4EB900000000		 JSR	   M.DYNTMB
+00000714 224F			 MOVEA.L   A7,A1
+00000716 4851			 PEA	   (A1)
+00000718 3F280002		 MOVE.W	   2(A0),-(A7)			         $2
+0000071C 48680004		 PEA	   4(A0)			         $4
+00000720 3F280002		 MOVE.W	   2(A0),-(A7)			         $2
+00000724 4EB900000000		 JSR	   C.MVFF
+0000072A 3D680002FFFE		 MOVE.W	   2(A0),-2(A6)			         $2  $FFFFFFFE
+00000730 426EFFFC		 CLR.W	   -4(A6)			         $FFFFFFFC
+00000734 45D1			 LEA	   (A1),A2
+00000736 2D4AFFF8		 MOVE.L	   A2,-8(A6)			         $FFFFFFF8
+0000073A 202D8004		 MOVE.L	   STATIC.+4-32768(A5),D0	         FLEX_VSTR
+0000073E 4A80			 TST.L	   D0
+00000740 6606			 BNE.S	   X.1.15(PC)
+00000742 4EB900000000		 JSR	   E.PTR
+00000748 2440	      X.1.15	 MOVEA.L   D0,A2
+0000074A 7000			 MOVEQ	   #0,D0			         $0
+0000074C 302A0002		 MOVE.W	   2(A2),D0			         $2
+00000750 5B80			 SUBQ.L	   #5,D0			         $5
+00000752 0C8000000005		 CMPI.L	   #5,D0			         $5
+00000758 6C06			 BGE.S	   X.1.17(PC)
+0000075A 4EB900000000 X.1.16	 JSR	   E.SUBSTR
+00000760 7005	      X.1.17	 MOVEQ	   #5,D0			         $5
+00000762 3F00			 MOVE.W	   D0,-(A7)
+00000764 700C			 MOVEQ	   #12,D0			         $C
+00000766 3F00			 MOVE.W	   D0,-(A7)
+00000768 486A0009		 PEA	   9(A2)			         $9
+0000076C 486EFFF8		 PEA	   -8(A6)			         $FFFFFFF8
+00000770 4EB900000000		 JSR	   I.GETSTR
+00000776 4267			 CLR.W	   -(A7)
+00000778 486D82C0		 PEA	   STATIC.+704-32768(A5)	         I
+0000077C 486EFFF8		 PEA	   -8(A6)			         $FFFFFFF8
+00000780 4EB900000000		 JSR	   I.GETSTR00000786 7004			 MOVEQ	   #4,D0			         $4
+00000788 2F00			 MOVE.L	   D0,-(A7)
+0000078A 7010			 MOVEQ	   #16,D0			         $10
+0000078C 3F00			 MOVE.W	   D0,-(A7)
+0000078E 486D82C4		 PEA	   STATIC.+708-32768(A5)	         J
+00000792 486EFFF8		 PEA	   -8(A6)			         $FFFFFFF8
+00000796 4EB900000000		 JSR	   I.GETSTR
+0000079C 7001			 MOVEQ	   #1,D0			         $1
+0000079E 3F00			 MOVE.W	   D0,-(A7)
+000007A0 700C			 MOVEQ	   #12,D0			         $C
+000007A2 3F00			 MOVE.W	   D0,-(A7)
+000007A4 486D82D4		 PEA	   STATIC.+724-32768(A5)	         CH
+000007A8 486EFFF8		 PEA	   -8(A6)			         $FFFFFFF8
+000007AC 4EB900000000		 JSR	   I.GETSTR
+000007B2 4267			 CLR.W	   -(A7)
+000007B4 486D82C8		 PEA	   STATIC.+712-32768(A5)	         K
+000007B8 486EFFF8		 PEA	   -8(A6)			         $FFFFFFF8
+000007BC 4EB900000000		 JSR	   I.GETSTR
+000007C2 7005			 MOVEQ	   #5,D0			         $5
+000007C4 3F00			 MOVE.W	   D0,-(A7)
+000007C6 700C			 MOVEQ	   #12,D0			         $C
+000007C8 3F00			 MOVE.W	   D0,-(A7)
+000007CA 486D82CE		 PEA	   STATIC.+718-32768(A5)	         BS
+000007CE 486EFFF8		 PEA	   -8(A6)			         $FFFFFFF8
+000007D2 4EB900000000		 JSR	   I.GETSTR
+		      *							       LINE 55
+000007D8 202D8004		 MOVE.L	   STATIC.+4-32768(A5),D0	         FLEX_VSTR
+000007DC 4A80			 TST.L	   D0
+000007DE 6606			 BNE.S	   X.1.18(PC)
+000007E0 4EB900000000		 JSR	   E.PTR
+000007E6 2040	      X.1.18	 MOVEA.L   D0,A0
+000007E8 7000			 MOVEQ	   #0,D0			         $0
+000007EA 30280002		 MOVE.W	   2(A0),D0			         $2
+000007EE 5B80			 SUBQ.L	   #5,D0			         $5
+000007F0 0C8000000005		 CMPI.L	   #5,D0			         $5
+000007F6 6C06			 BGE.S	   X.1.20(PC)
+000007F8 4EB900000000 X.1.19	 JSR	   E.SUBSTR
+000007FE 487AF980     X.1.20	 PEA	   K.14(PC)			         CODE.+$180
+00000802 7005			 MOVEQ	   #5,D0			         $5
+00000804 3F00			 MOVE.W	   D0,-(A7)
+00000806 48680009		 PEA	   9(A0)			         $9
+0000080A 7005			 MOVEQ	   #5,D0			         $5
+0000080C 3F00			 MOVE.W	   D0,-(A7)
+0000080E 4EB900000000		 JSR	   C.CPFF
+00000814 670C			 BEQ.S	   L.1.17(PC)00000816 2E6EFEC8     L.1.16	 MOVEA.L   ST.1(A6),A7			         -312
+		      *							       LINE 55 (2)
+0000081A 7079			 MOVEQ	   #121,D0			         $79
+0000081C 2F00			 MOVE.L	   D0,-(A7)
+0000081E 6100F870		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+00000822 2E6EFEC8     L.1.17	 MOVEA.L   ST.1(A6),A7			         -312
+		      *							       LINE 56
+00000826 0CAD0000D431		 CMPI.L	   #54321,STATIC.+704-32768(A5)	         $D431  I
+	 82C0
+0000082E 6708			 BEQ.S	   L.1.19(PC)
+		      *							       LINE 56 (2)
+00000830 707A	      L.1.18	 MOVEQ	   #122,D0			         $7A
+00000832 2F00			 MOVE.L	   D0,-(A7)
+00000834 6100F85A		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+		      *							       LINE 57
+00000838 0CAD000004D2 L.1.19	 CMPI.L	   #1234,STATIC.+708-32768(A5)	         $4D2  J
+	 82C4
+00000840 6708			 BEQ.S	   L.1.21(PC)
+		      *							       LINE 57 (2)
+00000842 707B	      L.1.20	 MOVEQ	   #123,D0			         $7B
+00000844 2F00			 MOVE.L	   D0,-(A7)
+00000846 6100F848		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+		      *							       LINE 58
+0000084A 7035	      L.1.21	 MOVEQ	   #53,D0			         $35
+0000084C B02D82D4		 CMP.B	   STATIC.+724-32768(A5),D0	         CH
+00000850 6708			 BEQ.S	   L.1.23(PC)
+		      *							       LINE 58 (2)
+00000852 707C	      L.1.22	 MOVEQ	   #124,D0			         $7C
+00000854 2F00			 MOVE.L	   D0,-(A7)
+00000856 6100F838		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+		      *							       LINE 59
+0000085A 4AAD82C8     L.1.23	 TST.L	   STATIC.+712-32768(A5)	         K
+0000085E 6708			 BEQ.S	   L.1.25(PC)
+		      *							       LINE 59 (2)
+00000860 707D	      L.1.24	 MOVEQ	   #125,D0			         $7D
+00000862 2F00			 MOVE.L	   D0,-(A7)
+00000864 6100F82A		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+		      *							       LINE 60
+00000868 487AF91C     L.1.25	 PEA	   K.15(PC)			         CODE.+$186
+0000086C 7005			 MOVEQ	   #5,D0			         $5
+0000086E 3F00			 MOVE.W	   D0,-(A7)
+00000870 486D82CE		 PEA	   STATIC.+718-32768(A5)	         BS
+00000874 7005			 MOVEQ	   #5,D0			         $5
+00000876 3F00			 MOVE.W	   D0,-(A7)
+00000878 4EB900000000		 JSR	   C.CPFF0000087E 6708			 BEQ.S	   L.1.27(PC)
+		      *							       LINE 60 (2)
+00000880 707E	      L.1.26	 MOVEQ	   #126,D0			         $7E
+00000882 2F00			 MOVE.L	   D0,-(A7)
+00000884 6100F80A		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+		      *							       LINE 62
+00000888 486EFFE2     L.1.27	 PEA	   -30(A6)			         $FFFFFFE2
+0000088C 701E			 MOVEQ	   #30,D0			         $1E
+0000088E 3F00			 MOVE.W	   D0,-(A7)
+00000890 486D8008		 PEA	   STATIC.+8-32768(A5)		         FSTR30
+00000894 701E			 MOVEQ	   #30,D0			         $1E
+00000896 3F00			 MOVE.W	   D0,-(A7)
+00000898 4EB900000000		 JSR	   C.MVFFU
+0000089E 3D7C001EFFE0		 MOVE.W	   #30,-32(A6)			         $1E  $FFFFFFE0
+000008A4 426EFFDE		 CLR.W	   -34(A6)			         $FFFFFFDE
+000008A8 41EEFFE2		 LEA	   -30(A6),A0			         $FFFFFFE2
+000008AC 2D48FFDA		 MOVE.L	   A0,-38(A6)			         $FFFFFFDA
+000008B0 7006			 MOVEQ	   #6,D0			         $6
+000008B2 3F00			 MOVE.W	   D0,-(A7)
+000008B4 700C			 MOVEQ	   #12,D0			         $C
+000008B6 3F00			 MOVE.W	   D0,-(A7)
+000008B8 486D800B		 PEA	   STATIC.+8-32765(A5)		         FSTR30
+000008BC 486EFFDA		 PEA	   -38(A6)			         $FFFFFFDA
+000008C0 4EB900000000		 JSR	   I.GETSTR
+000008C6 487AF8C4		 PEA	   K.16(PC)			         CODE.+$18C
+000008CA 7004			 MOVEQ	   #4,D0			         $4
+000008CC 2F00			 MOVE.L	   D0,-(A7)
+000008CE 42A7			 CLR.L	   -(A7)
+000008D0 3F3C0291		 MOVE.W	   #657,-(A7)			         $291
+000008D4 486D82D6		 PEA	   STATIC.+726-32768(A5)	         X
+000008D8 486EFFDA		 PEA	   -38(A6)			         $FFFFFFDA
+000008DC 4EB900000000		 JSR	   I.GETSTR
+000008E2 487AF8B0		 PEA	   K.17(PC)			         CODE.+$194
+000008E6 7006			 MOVEQ	   #6,D0			         $6
+000008E8 2F00			 MOVE.L	   D0,-(A7)
+000008EA 3F3C0201		 MOVE.W	   #513,-(A7)			         $201
+000008EE 486D82DA		 PEA	   STATIC.+730-32768(A5)	         Y
+000008F2 486EFFDA		 PEA	   -38(A6)			         $FFFFFFDA
+000008F6 4EB900000000		 JSR	   I.GETSTR
+000008FC 7003			 MOVEQ	   #3,D0			         $3
+000008FE 3F00			 MOVE.W	   D0,-(A7)
+00000900 700C			 MOVEQ	   #12,D0			         $C
+00000902 3F00			 MOVE.W	   D0,-(A7)
+00000904 486D8008		 PEA	   STATIC.+8-32768(A5)		         FSTR30
+00000908 486EFFDA		 PEA	   -38(A6)			         $FFFFFFDA0000090C 4EB900000000		 JSR	   I.GETSTR
+		      *							       LINE 63
+00000912 487AF888		 PEA	   K.18(PC)			         CODE.+$19C
+00000916 7006			 MOVEQ	   #6,D0			         $6
+00000918 3F00			 MOVE.W	   D0,-(A7)
+0000091A 486D800B		 PEA	   STATIC.+8-32765(A5)		         FSTR30
+0000091E 7006			 MOVEQ	   #6,D0			         $6
+00000920 3F00			 MOVE.W	   D0,-(A7)
+00000922 4EB900000000		 JSR	   C.CPFF
+00000928 6708			 BEQ.S	   L.1.29(PC)
+		      *							       LINE 63 (2)
+0000092A 48780083     L.1.28	 PEA	   131				         $83
+0000092E 6100F760		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+		      *							       LINE 64
+00000932 2F2D82D6     L.1.29	 MOVE.L	   STATIC.+726-32768(A5),-(A7)	         X
+00000936 2F3AF86A		 MOVE.L	   K.19(PC),-(A7)		         CODE.+$1A2
+0000093A 4EB900000000		 JSR	   F.CMP
+00000940 6708			 BEQ.S	   L.1.31(PC)
+		      *							       LINE 64 (2)
+00000942 48780084     L.1.30	 PEA	   132				         $84
+00000946 6100F748		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+		      *							       LINE 65
+0000094A 2F2D82DA     L.1.31	 MOVE.L	   STATIC.+730-32768(A5),-(A7)	         Y
+0000094E 2F3AF856		 MOVE.L	   K.20(PC),-(A7)		         CODE.+$1A6
+00000952 4EB900000000		 JSR	   F.CMP
+00000958 6708			 BEQ.S	   L.1.33(PC)
+		      *							       LINE 65 (2)
+0000095A 48780085     L.1.32	 PEA	   133				         $85
+0000095E 6100F730		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+		      *							       LINE 66
+00000962 487AF846     L.1.33	 PEA	   K.21(PC)			         CODE.+$1AA
+00000966 7003			 MOVEQ	   #3,D0			         $3
+00000968 3F00			 MOVE.W	   D0,-(A7)
+0000096A 486D8008		 PEA	   STATIC.+8-32768(A5)		         FSTR30
+0000096E 7003			 MOVEQ	   #3,D0			         $3
+00000970 3F00			 MOVE.W	   D0,-(A7)
+00000972 4EB900000000		 JSR	   C.CPFF
+00000978 6708			 BEQ.S	   L.1.35(PC)
+		      *							       LINE 66 (2)
+0000097A 48780086     L.1.34	 PEA	   134				         $86
+0000097E 6100F710		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+		      *							       LINE 68
+00000982 7000	      L.1.35	 MOVEQ	   #0,D0			         $0
+00000984 302D8026		 MOVE.W	   STATIC.+38-32768(A5),D0	         VST30A
+00000988 5980			 SUBQ.L	   #4,D0			         $40000098A 0C8000000016		 CMPI.L	   #22,D0			         $16
+00000990 6C06			 BGE.S	   X.1.22(PC)
+00000992 4EB900000000 X.1.21	 JSR	   E.SUBSTR
+00000998 486EFFEA     X.1.22	 PEA	   -22(A6)			         $FFFFFFEA
+0000099C 7016			 MOVEQ	   #22,D0			         $16
+0000099E 3F00			 MOVE.W	   D0,-(A7)
+000009A0 486D802C		 PEA	   STATIC.+38-32762(A5)		         VST30A
+000009A4 7016			 MOVEQ	   #22,D0			         $16
+000009A6 3F00			 MOVE.W	   D0,-(A7)
+000009A8 4EB900000000		 JSR	   C.MVFF
+000009AE 3D7C0016FFE8		 MOVE.W	   #22,-24(A6)			         $16  $FFFFFFE8
+000009B4 426EFFE6		 CLR.W	   -26(A6)			         $FFFFFFE6
+000009B8 41EEFFEA		 LEA	   -22(A6),A0			         $FFFFFFEA
+000009BC 2D48FFE2		 MOVE.L	   A0,-30(A6)			         $FFFFFFE2
+000009C0 4267			 CLR.W	   -(A7)
+000009C2 486D82C0		 PEA	   STATIC.+704-32768(A5)	         I
+000009C6 486EFFE2		 PEA	   -30(A6)			         $FFFFFFE2
+000009CA 4EB900000000		 JSR	   I.GETSTR
+000009D0 7004			 MOVEQ	   #4,D0			         $4
+000009D2 3F00			 MOVE.W	   D0,-(A7)
+000009D4 700C			 MOVEQ	   #12,D0			         $C
+000009D6 3F00			 MOVE.W	   D0,-(A7)
+000009D8 486D82CF		 PEA	   STATIC.+718-32767(A5)	         BS
+000009DC 486EFFE2		 PEA	   -30(A6)			         $FFFFFFE2
+000009E0 4EB900000000		 JSR	   I.GETSTR
+000009E6 487AF7C6		 PEA	   K.22(PC)			         CODE.+$1AE
+000009EA 7006			 MOVEQ	   #6,D0			         $6
+000009EC 2F00			 MOVE.L	   D0,-(A7)
+000009EE 3F3C0201		 MOVE.W	   #513,-(A7)			         $201
+000009F2 486D82D6		 PEA	   STATIC.+726-32768(A5)	         X
+000009F6 486EFFE2		 PEA	   -30(A6)			         $FFFFFFE2
+000009FA 4EB900000000		 JSR	   I.GETSTR
+00000A00 7000			 MOVEQ	   #0,D0			         $0
+00000A02 302D8026		 MOVE.W	   STATIC.+38-32768(A5),D0	         VST30A
+00000A06 90BC00000015		 SUB.L	   #21,D0			         $15
+00000A0C 0C8000000004		 CMPI.L	   #4,D0			         $4
+00000A12 6C06			 BGE.S	   X.1.24(PC)
+00000A14 4EB900000000 X.1.23	 JSR	   E.SUBSTR
+00000A1A 7004	      X.1.24	 MOVEQ	   #4,D0			         $4
+00000A1C 3F00			 MOVE.W	   D0,-(A7)
+00000A1E 700C			 MOVEQ	   #12,D0			         $C
+00000A20 3F00			 MOVE.W	   D0,-(A7)
+00000A22 486D803D		 PEA	   STATIC.+38-32745(A5)		         VST30A
+00000A26 486EFFE2		 PEA	   -30(A6)			         $FFFFFFE2
+00000A2A 4EB900000000		 JSR	   I.GETSTR00000A30 487AF784		 PEA	   K.23(PC)			         CODE.+$1B6
+00000A34 7003			 MOVEQ	   #3,D0			         $3
+00000A36 2F00			 MOVE.L	   D0,-(A7)
+00000A38 42A7			 CLR.L	   -(A7)
+00000A3A 3F3C0291		 MOVE.W	   #657,-(A7)			         $291
+00000A3E 486D82DA		 PEA	   STATIC.+730-32768(A5)	         Y
+00000A42 486EFFE2		 PEA	   -30(A6)			         $FFFFFFE2
+00000A46 4EB900000000		 JSR	   I.GETSTR
+00000A4C 7001			 MOVEQ	   #1,D0			         $1
+00000A4E 3F00			 MOVE.W	   D0,-(A7)
+00000A50 700C			 MOVEQ	   #12,D0			         $C
+00000A52 3F00			 MOVE.W	   D0,-(A7)
+00000A54 486D82D4		 PEA	   STATIC.+724-32768(A5)	         CH
+00000A58 486EFFE2		 PEA	   -30(A6)			         $FFFFFFE2
+00000A5C 4EB900000000		 JSR	   I.GETSTR
+		      *							       LINE 69
+00000A62 0CAD0000D431		 CMPI.L	   #54321,STATIC.+704-32768(A5)	         $D431  I
+	 82C0
+00000A6A 6708			 BEQ.S	   L.1.37(PC)
+		      *							       LINE 69 (2)
+00000A6C 4878008D     L.1.36	 PEA	   141				         $8D
+00000A70 6100F61E		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+		      *							       LINE 70
+00000A74 487AF748     L.1.37	 PEA	   K.24(PC)			         CODE.+$1BE
+00000A78 7004			 MOVEQ	   #4,D0			         $4
+00000A7A 3F00			 MOVE.W	   D0,-(A7)
+00000A7C 486D82CF		 PEA	   STATIC.+718-32767(A5)	         BS
+00000A80 7004			 MOVEQ	   #4,D0			         $4
+00000A82 3F00			 MOVE.W	   D0,-(A7)
+00000A84 4EB900000000		 JSR	   C.CPFF
+00000A8A 6708			 BEQ.S	   L.1.39(PC)
+		      *							       LINE 70 (2)
+00000A8C 4878008E     L.1.38	 PEA	   142				         $8E
+00000A90 6100F5FE		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+		      *							       LINE 71
+00000A94 2F2D82D6     L.1.39	 MOVE.L	   STATIC.+726-32768(A5),-(A7)	         X
+00000A98 2F3AF728		 MOVE.L	   K.25(PC),-(A7)		         CODE.+$1C2
+00000A9C 4EB900000000		 JSR	   F.CMP
+00000AA2 6708			 BEQ.S	   L.1.41(PC)
+		      *							       LINE 71 (2)
+00000AA4 4878008F     L.1.40	 PEA	   143				         $8F
+00000AA8 6100F5E6		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+		      *							       LINE 72
+00000AAC 7000	      L.1.41	 MOVEQ	   #0,D0			         $0
+00000AAE 302D8026		 MOVE.W	   STATIC.+38-32768(A5),D0	         VST30A00000AB2 90BC00000015		 SUB.L	   #21,D0			         $15
+00000AB8 0C8000000004		 CMPI.L	   #4,D0			         $4
+00000ABE 6C06			 BGE.S	   X.1.26(PC)
+00000AC0 4EB900000000 X.1.25	 JSR	   E.SUBSTR
+00000AC6 487AF6FE     X.1.26	 PEA	   K.26(PC)			         CODE.+$1C6
+00000ACA 7004			 MOVEQ	   #4,D0			         $4
+00000ACC 3F00			 MOVE.W	   D0,-(A7)
+00000ACE 486D803D		 PEA	   STATIC.+38-32745(A5)		         VST30A
+00000AD2 7004			 MOVEQ	   #4,D0			         $4
+00000AD4 3F00			 MOVE.W	   D0,-(A7)
+00000AD6 4EB900000000		 JSR	   C.CPFF
+00000ADC 6708			 BEQ.S	   L.1.43(PC)
+		      *							       LINE 72 (2)
+00000ADE 48780090     L.1.42	 PEA	   144				         $90
+00000AE2 6100F5AC		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+		      *							       LINE 73
+00000AE6 2F2D82DA     L.1.43	 MOVE.L	   STATIC.+730-32768(A5),-(A7)	         Y
+00000AEA 2F3AF6DE		 MOVE.L	   K.27(PC),-(A7)		         CODE.+$1CA
+00000AEE 4EB900000000		 JSR	   F.CMP
+00000AF4 6708			 BEQ.S	   L.1.45(PC)
+		      *							       LINE 73 (2)
+00000AF6 48780091     L.1.44	 PEA	   145				         $91
+00000AFA 6100F594		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+		      *							       LINE 74
+00000AFE 7045	      L.1.45	 MOVEQ	   #69,D0			         $45
+00000B00 B02D82D4		 CMP.B	   STATIC.+724-32768(A5),D0	         CH
+00000B04 6708			 BEQ.S	   L.1.47(PC)
+		      *							       LINE 74 (2)
+00000B06 48780092     L.1.46	 PEA	   146				         $92
+00000B0A 6100F584		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+		      *							       LINE 76
+00000B0E 486EFFE2     L.1.47	 PEA	   -30(A6)			         $FFFFFFE2
+00000B12 3F2D8046		 MOVE.W	   STATIC.+70-32768(A5),-(A7)	         VST30B
+00000B16 486D8048		 PEA	   STATIC.+70-32766(A5)		         VST30B
+00000B1A 3F2D8046		 MOVE.W	   STATIC.+70-32768(A5),-(A7)	         VST30B
+00000B1E 4EB900000000		 JSR	   C.MVFF
+00000B24 3D6D8046FFE0		 MOVE.W	   STATIC.+70-32768(A5),-32(A6)	         VST30B  $FFFFFFE0
+00000B2A 426EFFDE		 CLR.W	   -34(A6)			         $FFFFFFDE
+00000B2E 41EEFFE2		 LEA	   -30(A6),A0			         $FFFFFFE2
+00000B32 2D48FFDA		 MOVE.L	   A0,-38(A6)			         $FFFFFFDA
+00000B36 4267			 CLR.W	   -(A7)
+00000B38 486D82C0		 PEA	   STATIC.+704-32768(A5)	         I
+00000B3C 486EFFDA		 PEA	   -38(A6)			         $FFFFFFDA
+00000B40 4EB900000000		 JSR	   I.GETSTR
+00000B46 700D			 MOVEQ	   #13,D0			         $D00000B48 2F00			 MOVE.L	   D0,-(A7)
+00000B4A 701E			 MOVEQ	   #30,D0			         $1E
+00000B4C 3F00			 MOVE.W	   D0,-(A7)
+00000B4E 701B			 MOVEQ	   #27,D0			         $1B
+00000B50 3F00			 MOVE.W	   D0,-(A7)
+00000B52 486D8046		 PEA	   STATIC.+70-32768(A5)		         VST30B
+00000B56 486EFFDA		 PEA	   -38(A6)			         $FFFFFFDA
+00000B5A 4EB900000000		 JSR	   I.GETSTR
+00000B60 4267			 CLR.W	   -(A7)
+00000B62 486D82C4		 PEA	   STATIC.+708-32768(A5)	         J
+00000B66 486EFFDA		 PEA	   -38(A6)			         $FFFFFFDA
+00000B6A 4EB900000000		 JSR	   I.GETSTR
+		      *							       LINE 77
+00000B70 0CAD3ADE68B1		 CMPI.L	   #987654321,STATIC.+704-32768(A5)      $3ADE68B1  I
+	 82C0
+00000B78 6708			 BEQ.S	   L.1.49(PC)
+		      *							       LINE 77 (2)
+00000B7A 48780097     L.1.48	 PEA	   151				         $97
+00000B7E 6100F510		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+		      *							       LINE 78
+00000B82 487AF64A     L.1.49	 PEA	   K.28(PC)			         CODE.+$1CE
+00000B86 700D			 MOVEQ	   #13,D0			         $D
+00000B88 3F00			 MOVE.W	   D0,-(A7)
+00000B8A 486D8048		 PEA	   STATIC.+70-32766(A5)		         VST30B
+00000B8E 3F2D8046		 MOVE.W	   STATIC.+70-32768(A5),-(A7)	         VST30B
+00000B92 4EB900000000		 JSR	   C.CPFF
+00000B98 6708			 BEQ.S	   L.1.51(PC)
+		      *							       LINE 78 (2)
+00000B9A 48780098     L.1.50	 PEA	   152				         $98
+00000B9E 6100F4F0		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+		      *							       LINE 79
+00000BA2 700D	      L.1.51	 MOVEQ	   #13,D0			         $D
+00000BA4 B06D8046		 CMP.W	   STATIC.+70-32768(A5),D0	         VST30B
+00000BA8 6708			 BEQ.S	   L.1.53(PC)
+		      *							       LINE 79 (2)
+00000BAA 48780099     L.1.52	 PEA	   153				         $99
+00000BAE 6100F4E0		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+		      *							       LINE 80
+00000BB2 707B	      L.1.53	 MOVEQ	   #123,D0			         $7B
+00000BB4 B0AD82C4		 CMP.L	   STATIC.+708-32768(A5),D0	         J
+00000BB8 6708			 BEQ.S	   L.1.55(PC)
+		      *							       LINE 80 (2)
+00000BBA 48780099     L.1.54	 PEA	   153				         $99
+00000BBE 6100F4D0		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+		      *							       LINE 8200000BC2 7001	      L.1.55	 MOVEQ	   #1,D0			         $1
+00000BC4 1B4082CC		 MOVE.B	   D0,STATIC.+716-32768(A5)	         B
+		      *							       LINE 83
+00000BC8 703F			 MOVEQ	   #63,D0			         $3F
+00000BCA 1B4082D4		 MOVE.B	   D0,STATIC.+724-32768(A5)	         CH
+		      *							       LINE 84
+00000BCE 707B			 MOVEQ	   #123,D0			         $7B
+00000BD0 2B4082C0		 MOVE.L	   D0,STATIC.+704-32768(A5)	         I
+		      *							       LINE 85
+00000BD4 2B7C0000D431		 MOVE.L	   #54321,STATIC.+708-32768(A5)	         $D431  J
+	 82C4
+		      *							       LINE 86
+00000BDC 2B7C000001FF		 MOVE.L	   #511,STATIC.+712-32768(A5)	         $1FF  K
+	 82C8
+		      *							       LINE 87
+00000BE4 2B7AF5F682D6		 MOVE.L	   K.29(PC),STATIC.+726-32768(A5)        CODE.+$1DC  X
+		      *							       LINE 88
+00000BEA 2B7AF5F482DA		 MOVE.L	   K.30(PC),STATIC.+730-32768(A5)        CODE.+$1E0  Y
+		      *							       LINE 89
+00000BF0 2B7AF5F282DE		 MOVE.L	   K.31(PC),STATIC.+734-32768(A5)        CODE.+$1E4  Z
+		      *							       LINE 90
+00000BF6 202D8000		 MOVE.L	   STATIC.+0-32768(A5),D0	         FLEX_FSTR
+00000BFA 4A80			 TST.L	   D0
+00000BFC 6606			 BNE.S	   X.1.27(PC)
+00000BFE 4EB900000000		 JSR	   E.PTR
+00000C04 2040	      X.1.27	 MOVEA.L   D0,A0
+00000C06 48680002		 PEA	   2(A0)			         $2
+00000C0A 3F10			 MOVE.W	   (A0),-(A7)
+00000C0C 487AF5DA		 PEA	   K.32(PC)			         CODE.+$1E8
+00000C10 700C			 MOVEQ	   #12,D0			         $C
+00000C12 3F00			 MOVE.W	   D0,-(A7)
+00000C14 4EB900000000		 JSR	   C.MVFFP
+		      *							       LINE 91
+00000C1A 202D8004		 MOVE.L	   STATIC.+4-32768(A5),D0	         FLEX_VSTR
+00000C1E 4A80			 TST.L	   D0
+00000C20 6606			 BNE.S	   X.1.28(PC)
+00000C22 4EB900000000		 JSR	   E.PTR
+00000C28 2040	      X.1.28	 MOVEA.L   D0,A0
+00000C2A 303C000B		 MOVE.W	   #11,D0			         $B
+00000C2E B050			 CMP.W	   (A0),D0
+00000C30 6F02			 BLE.S	   X.1.29(PC)
+00000C32 3010			 MOVE.W	   (A0),D0
+00000C34 31400002     X.1.29	 MOVE.W	   D0,2(A0)			         $2
+00000C38 48680004		 PEA	   4(A0)			         $4
+00000C3C 3F10			 MOVE.W	   (A0),-(A7)00000C3E 487AF5B4		 PEA	   K.33(PC)			         CODE.+$1F4
+00000C42 700B			 MOVEQ	   #11,D0			         $B
+00000C44 3F00			 MOVE.W	   D0,-(A7)
+00000C46 4EB900000000		 JSR	   C.MVFF
+		      *							       LINE 92
+00000C4C 486D8008		 PEA	   STATIC.+8-32768(A5)		         FSTR30
+00000C50 701E			 MOVEQ	   #30,D0			         $1E
+00000C52 3F00			 MOVE.W	   D0,-(A7)
+00000C54 487AF5AA		 PEA	   K.34(PC)			         CODE.+$200
+00000C58 700D			 MOVEQ	   #13,D0			         $D
+00000C5A 3F00			 MOVE.W	   D0,-(A7)
+00000C5C 4EB900000000		 JSR	   C.MVFFP
+		      *							       LINE 93
+00000C62 3B7C00138026		 MOVE.W	   #19,STATIC.+38-32768(A5)	         $13  VST30A
+00000C68 486D8028		 PEA	   STATIC.+38-32766(A5)		         VST30A
+00000C6C 701E			 MOVEQ	   #30,D0			         $1E
+00000C6E 3F00			 MOVE.W	   D0,-(A7)
+00000C70 487AF59C		 PEA	   K.35(PC)			         CODE.+$20E
+00000C74 7013			 MOVEQ	   #19,D0			         $13
+00000C76 3F00			 MOVE.W	   D0,-(A7)
+00000C78 4EB900000000		 JSR	   C.MVFF
+		      *							       LINE 94
+00000C7E 3B7C000E8046		 MOVE.W	   #14,STATIC.+70-32768(A5)	         $E  VST30B
+00000C84 486D8048		 PEA	   STATIC.+70-32766(A5)		         VST30B
+00000C88 701E			 MOVEQ	   #30,D0			         $1E
+00000C8A 3F00			 MOVE.W	   D0,-(A7)
+00000C8C 487AF594		 PEA	   K.36(PC)			         CODE.+$222
+00000C90 700E			 MOVEQ	   #14,D0			         $E
+00000C92 3F00			 MOVE.W	   D0,-(A7)
+00000C94 4EB900000000		 JSR	   C.MVFF
+		      *							       LINE 96
+00000C9A 202D8000		 MOVE.L	   STATIC.+0-32768(A5),D0	         FLEX_FSTR
+00000C9E 4A80			 TST.L	   D0
+00000CA0 6606			 BNE.S	   X.1.30(PC)
+00000CA2 4EB900000000		 JSR	   E.PTR
+00000CA8 2040	      X.1.30	 MOVEA.L   D0,A0
+00000CAA 7000			 MOVEQ	   #0,D0			         $0
+00000CAC 3010			 MOVE.W	   (A0),D0
+00000CAE 5D80			 SUBQ.L	   #6,D0			         $6
+00000CB0 0C8000000011		 CMPI.L	   #17,D0			         $11
+00000CB6 6C06			 BGE.S	   X.1.32(PC)
+00000CB8 4EB900000000 X.1.31	 JSR	   E.SUBSTR
+00000CBE 3D7C0011FFEC X.1.32	 MOVE.W	   #17,-20(A6)			         $11  $FFFFFFEC
+00000CC4 426EFFEA		 CLR.W	   -22(A6)			         $FFFFFFEA
+00000CC8 43EEFFEE		 LEA	   -18(A6),A1			         $FFFFFFEE00000CCC 2D49FFE6		 MOVE.L	   A1,-26(A6)			         $FFFFFFE6
+00000CD0 7005			 MOVEQ	   #5,D0			         $5
+00000CD2 2F00			 MOVE.L	   D0,-(A7)
+00000CD4 7030			 MOVEQ	   #48,D0			         $30
+00000CD6 3F00			 MOVE.W	   D0,-(A7)
+00000CD8 486D82C0		 PEA	   STATIC.+704-32768(A5)	         I
+00000CDC 486EFFE6		 PEA	   -26(A6)			         $FFFFFFE6
+00000CE0 4EB900000000		 JSR	   I.PTSTRF
+00000CE6 7001			 MOVEQ	   #1,D0			         $1
+00000CE8 B0AD82C0		 CMP.L	   STATIC.+704-32768(A5),D0	         I
+00000CEC 57C1			 SEQ	   D1
+00000CEE C27C0001		 AND.W	   #1,D1			         $1
+00000CF2 7005			 MOVEQ	   #5,D0			         $5
+00000CF4 3F00			 MOVE.W	   D0,-(A7)
+00000CF6 1D41FFE4		 MOVE.B	   D1,-28(A6)			         $FFFFFFE4
+00000CFA 486EFFE4		 PEA	   -28(A6)			         $FFFFFFE4
+00000CFE 486EFFE6		 PEA	   -26(A6)			         $FFFFFFE6
+00000D02 4EB900000000		 JSR	   I.PTSTRF
+00000D08 202D82DE		 MOVE.L	   STATIC.+734-32768(A5),D0	         Z
+00000D0C 4A80			 TST.L	   D0
+00000D0E 6704			 BEQ.S	   X.1.33(PC)
+00000D10 08400007		 BCHG.L	   #7,D0			         $7
+00000D14 7206	      X.1.33	 MOVEQ	   #6,D1			         $6
+00000D16 2F01			 MOVE.L	   D1,-(A7)
+00000D18 7201			 MOVEQ	   #1,D1			         $1
+00000D1A 2F01			 MOVE.L	   D1,-(A7)
+00000D1C 3F3C0111		 MOVE.W	   #273,-(A7)			         $111
+00000D20 2D40FFE0		 MOVE.L	   D0,-32(A6)			         $FFFFFFE0
+00000D24 486EFFE0		 PEA	   -32(A6)			         $FFFFFFE0
+00000D28 486EFFE6		 PEA	   -26(A6)			         $FFFFFFE6
+00000D2C 4EB900000000		 JSR	   I.PTSTRF
+00000D32 202D8000		 MOVE.L	   STATIC.+0-32768(A5),D0	         FLEX_FSTR
+00000D36 4A80			 TST.L	   D0
+00000D38 6606			 BNE.S	   X.1.34(PC)
+00000D3A 4EB900000000		 JSR	   E.PTR
+00000D40 2240	      X.1.34	 MOVEA.L   D0,A1
+00000D42 3F11			 MOVE.W	   (A1),-(A7)
+00000D44 7004			 MOVEQ	   #4,D0			         $4
+00000D46 3F00			 MOVE.W	   D0,-(A7)
+00000D48 48690002		 PEA	   2(A1)			         $2
+00000D4C 486EFFE6		 PEA	   -26(A6)			         $FFFFFFE6
+00000D50 4EB900000000		 JSR	   I.PTSTRF
+00000D56 486EFFE6		 PEA	   -26(A6)			         $FFFFFFE6
+00000D5A 4EB900000000		 JSR	   I.PTSTRD
+00000D60 48680008		 PEA	   8(A0)			         $800000D64 7011			 MOVEQ	   #17,D0			         $11
+00000D66 3F00			 MOVE.W	   D0,-(A7)
+00000D68 486EFFEE		 PEA	   -18(A6)			         $FFFFFFEE
+00000D6C 7011			 MOVEQ	   #17,D0			         $11
+00000D6E 3F00			 MOVE.W	   D0,-(A7)
+00000D70 4EB900000000		 JSR	   C.MVFF
+		      *							       LINE 97
+00000D76 202D8000		 MOVE.L	   STATIC.+0-32768(A5),D0	         FLEX_FSTR
+00000D7A 4A80			 TST.L	   D0
+00000D7C 6606			 BNE.S	   X.1.35(PC)
+00000D7E 4EB900000000		 JSR	   E.PTR
+00000D84 2040	      X.1.35	 MOVEA.L   D0,A0
+00000D86 487AF4A8		 PEA	   K.37(PC)			         CODE.+$230
+00000D8A 7016			 MOVEQ	   #22,D0			         $16
+00000D8C 3F00			 MOVE.W	   D0,-(A7)
+00000D8E 48680002		 PEA	   2(A0)			         $2
+00000D92 3F10			 MOVE.W	   (A0),-(A7)
+00000D94 4EB900000000		 JSR	   C.CPFF
+00000D9A 6708			 BEQ.S	   L.1.57(PC)
+		      *							       LINE 98
+00000D9C 487800D3     L.1.56	 PEA	   211				         $D3
+00000DA0 6100F2EE		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+		      *							       LINE 100
+00000DA4 202D8004     L.1.57	 MOVE.L	   STATIC.+4-32768(A5),D0	         FLEX_VSTR
+00000DA8 4A80			 TST.L	   D0
+00000DAA 6606			 BNE.S	   X.1.36(PC)
+00000DAC 4EB900000000		 JSR	   E.PTR
+00000DB2 2040	      X.1.36	 MOVEA.L   D0,A0
+00000DB4 3010			 MOVE.W	   (A0),D0
+00000DB6 5440			 ADDQ.W	   #2,D0			         $2
+00000DB8 4840			 SWAP	   D0
+00000DBA 4240			 CLR.W	   D0
+00000DBC 4840			 SWAP	   D0
+00000DBE 2F00			 MOVE.L	   D0,-(A7)
+00000DC0 4EB900000000		 JSR	   M.DYNTMB
+00000DC6 224F			 MOVEA.L   A7,A1
+00000DC8 4251			 CLR.W	   (A1)
+00000DCA 3D50FFFE		 MOVE.W	   (A0),-2(A6)			         $FFFFFFFE
+00000DCE 426EFFFC		 CLR.W	   -4(A6)			         $FFFFFFFC
+00000DD2 45D1			 LEA	   (A1),A2
+00000DD4 2D4AFFF8		 MOVE.L	   A2,-8(A6)			         $FFFFFFF8
+00000DD8 7005			 MOVEQ	   #5,D0			         $5
+00000DDA 3F00			 MOVE.W	   D0,-(A7)
+00000DDC 486D82CC		 PEA	   STATIC.+716-32768(A5)	         B
+00000DE0 486EFFF8		 PEA	   -8(A6)			         $FFFFFFF800000DE4 4EB900000000		 JSR	   I.PTSTRV
+00000DEA 202D8004		 MOVE.L	   STATIC.+4-32768(A5),D0	         FLEX_VSTR
+00000DEE 4A80			 TST.L	   D0
+00000DF0 6606			 BNE.S	   X.1.37(PC)
+00000DF2 4EB900000000		 JSR	   E.PTR
+00000DF8 2440	      X.1.37	 MOVEA.L   D0,A2
+00000DFA 3F2A0002		 MOVE.W	   2(A2),-(A7)			         $2
+00000DFE 7003			 MOVEQ	   #3,D0			         $3
+00000E00 3F00			 MOVE.W	   D0,-(A7)
+00000E02 486A0004		 PEA	   4(A2)			         $4
+00000E06 486EFFF8		 PEA	   -8(A6)			         $FFFFFFF8
+00000E0A 4EB900000000		 JSR	   I.PTSTRV
+00000E10 202D82C4		 MOVE.L	   STATIC.+708-32768(A5),D0	         J
+00000E14 90AD82C0		 SUB.L	   STATIC.+704-32768(A5),D0	         I
+00000E18 4267			 CLR.W	   -(A7)
+00000E1A 2D40FFF4		 MOVE.L	   D0,-12(A6)			         $FFFFFFF4
+00000E1E 486EFFF4		 PEA	   -12(A6)			         $FFFFFFF4
+00000E22 486EFFF8		 PEA	   -8(A6)			         $FFFFFFF8
+00000E26 4EB900000000		 JSR	   I.PTSTRV
+00000E2C 7004			 MOVEQ	   #4,D0			         $4
+00000E2E 3F00			 MOVE.W	   D0,-(A7)
+00000E30 7004			 MOVEQ	   #4,D0			         $4
+00000E32 3F00			 MOVE.W	   D0,-(A7)
+00000E34 487AF410		 PEA	   K.38(PC)			         CODE.+$246
+00000E38 486EFFF8		 PEA	   -8(A6)			         $FFFFFFF8
+00000E3C 4EB900000000		 JSR	   I.PTSTRV
+00000E42 31510002		 MOVE.W	   (A1),2(A0)			         $2
+00000E46 48680004		 PEA	   4(A0)			         $4
+00000E4A 3F10			 MOVE.W	   (A0),-(A7)
+00000E4C 48690002		 PEA	   2(A1)			         $2
+00000E50 3F11			 MOVE.W	   (A1),-(A7)
+00000E52 4EB900000000		 JSR	   C.MVFF
+		      *							       LINE 101
+00000E58 202D8004		 MOVE.L	   STATIC.+4-32768(A5),D0	         FLEX_VSTR
+00000E5C 4A80			 TST.L	   D0
+00000E5E 6606			 BNE.S	   X.1.38(PC)
+00000E60 4EB900000000		 JSR	   E.PTR
+00000E66 2040	      X.1.38	 MOVEA.L   D0,A0
+00000E68 487AF3E0		 PEA	   K.39(PC)			         CODE.+$24A
+00000E6C 7019			 MOVEQ	   #25,D0			         $19
+00000E6E 3F00			 MOVE.W	   D0,-(A7)
+00000E70 48680004		 PEA	   4(A0)			         $4
+00000E74 3F280002		 MOVE.W	   2(A0),-(A7)			         $2
+00000E78 4EB900000000		 JSR	   C.CPFF
+00000E7E 670C			 BEQ.S	   L.1.59(PC)00000E80 2E6EFEC8     L.1.58	 MOVEA.L   ST.1(A6),A7			         -312
+		      *							       LINE 102
+00000E84 487800DD		 PEA	   221				         $DD
+00000E88 6100F206		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+00000E8C 2E6EFEC8     L.1.59	 MOVEA.L   ST.1(A6),A7			         -312
+		      *							       LINE 104
+00000E90 3D7C001EFFE0		 MOVE.W	   #30,-32(A6)			         $1E  $FFFFFFE0
+00000E96 426EFFDE		 CLR.W	   -34(A6)			         $FFFFFFDE
+00000E9A 41EEFFE2		 LEA	   -30(A6),A0			         $FFFFFFE2
+00000E9E 2D48FFDA		 MOVE.L	   A0,-38(A6)			         $FFFFFFDA
+00000EA2 7006			 MOVEQ	   #6,D0			         $6
+00000EA4 2F00			 MOVE.L	   D0,-(A7)
+00000EA6 7050			 MOVEQ	   #80,D0			         $50
+00000EA8 3F00			 MOVE.W	   D0,-(A7)
+00000EAA 487AF3B8		 PEA	   K.40(PC)			         CODE.+$264
+00000EAE 486EFFDA		 PEA	   -38(A6)			         $FFFFFFDA
+00000EB2 4EB900000000		 JSR	   I.PTSTRF
+00000EB8 486EFFD4		 PEA	   -44(A6)			         $FFFFFFD4
+00000EBC 7006			 MOVEQ	   #6,D0			         $6
+00000EBE 3F00			 MOVE.W	   D0,-(A7)
+00000EC0 486D8008		 PEA	   STATIC.+8-32768(A5)		         FSTR30
+00000EC4 7006			 MOVEQ	   #6,D0			         $6
+00000EC6 3F00			 MOVE.W	   D0,-(A7)
+00000EC8 4EB900000000		 JSR	   C.MVFFU
+00000ECE 7006			 MOVEQ	   #6,D0			         $6
+00000ED0 3F00			 MOVE.W	   D0,-(A7)
+00000ED2 7004			 MOVEQ	   #4,D0			         $4
+00000ED4 3F00			 MOVE.W	   D0,-(A7)
+00000ED6 486EFFD4		 PEA	   -44(A6)			         $FFFFFFD4
+00000EDA 486EFFDA		 PEA	   -38(A6)			         $FFFFFFDA
+00000EDE 4EB900000000		 JSR	   I.PTSTRF
+00000EE4 7006			 MOVEQ	   #6,D0			         $6
+00000EE6 3F00			 MOVE.W	   D0,-(A7)
+00000EE8 7004			 MOVEQ	   #4,D0			         $4
+00000EEA 3F00			 MOVE.W	   D0,-(A7)
+00000EEC 486D8008		 PEA	   STATIC.+8-32768(A5)		         FSTR30
+00000EF0 486EFFDA		 PEA	   -38(A6)			         $FFFFFFDA
+00000EF4 4EB900000000		 JSR	   I.PTSTRF
+00000EFA 700A			 MOVEQ	   #10,D0			         $A
+00000EFC 2F00			 MOVE.L	   D0,-(A7)
+00000EFE 7001			 MOVEQ	   #1,D0			         $1
+00000F00 3F00			 MOVE.W	   D0,-(A7)
+00000F02 7014			 MOVEQ	   #20,D0			         $14
+00000F04 3F00			 MOVE.W	   D0,-(A7)
+00000F06 487AF360		 PEA	   K.41(PC)			         CODE.+$26800000F0A 486EFFDA		 PEA	   -38(A6)			         $FFFFFFDA
+00000F0E 4EB900000000		 JSR	   I.PTSTRF
+00000F14 7008			 MOVEQ	   #8,D0			         $8
+00000F16 3F00			 MOVE.W	   D0,-(A7)
+00000F18 7004			 MOVEQ	   #4,D0			         $4
+00000F1A 3F00			 MOVE.W	   D0,-(A7)
+00000F1C 487AF34C		 PEA	   K.42(PC)			         CODE.+$26A
+00000F20 486EFFDA		 PEA	   -38(A6)			         $FFFFFFDA
+00000F24 4EB900000000		 JSR	   I.PTSTRF
+00000F2A 486EFFDA		 PEA	   -38(A6)			         $FFFFFFDA
+00000F2E 4EB900000000		 JSR	   I.PTSTRD
+00000F34 486D8008		 PEA	   STATIC.+8-32768(A5)		         FSTR30
+00000F38 701E			 MOVEQ	   #30,D0			         $1E
+00000F3A 3F00			 MOVE.W	   D0,-(A7)
+00000F3C 486EFFE2		 PEA	   -30(A6)			         $FFFFFFE2
+00000F40 701E			 MOVEQ	   #30,D0			         $1E
+00000F42 3F00			 MOVE.W	   D0,-(A7)
+00000F44 4EB900000000		 JSR	   C.MVFF
+		      *							       LINE 105
+00000F4A 487AF326		 PEA	   K.43(PC)			         CODE.+$272
+00000F4E 701C			 MOVEQ	   #28,D0			         $1C
+00000F50 3F00			 MOVE.W	   D0,-(A7)
+00000F52 486D8008		 PEA	   STATIC.+8-32768(A5)		         FSTR30
+00000F56 701E			 MOVEQ	   #30,D0			         $1E
+00000F58 3F00			 MOVE.W	   D0,-(A7)
+00000F5A 4EB900000000		 JSR	   C.CPFF
+00000F60 6708			 BEQ.S	   L.1.61(PC)
+		      *							       LINE 106
+00000F62 487800E7     L.1.60	 PEA	   231				         $E7
+00000F66 6100F128		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+		      *							       LINE 108
+00000F6A 7000	      L.1.61	 MOVEQ	   #0,D0			         $0
+00000F6C 302D8026		 MOVE.W	   STATIC.+38-32768(A5),D0	         VST30A
+00000F70 5980			 SUBQ.L	   #4,D0			         $4
+00000F72 0C800000000D		 CMPI.L	   #13,D0			         $D
+00000F78 6C06			 BGE.S	   X.1.40(PC)
+00000F7A 4EB900000000 X.1.39	 JSR	   E.SUBSTR
+00000F80 3D7C000DFFF0 X.1.40	 MOVE.W	   #13,-16(A6)			         $D  $FFFFFFF0
+00000F86 426EFFEE		 CLR.W	   -18(A6)			         $FFFFFFEE
+00000F8A 41EEFFF2		 LEA	   -14(A6),A0			         $FFFFFFF2
+00000F8E 2D48FFEA		 MOVE.L	   A0,-22(A6)			         $FFFFFFEA
+00000F92 7000			 MOVEQ	   #0,D0			         $0
+00000F94 302D8026		 MOVE.W	   STATIC.+38-32768(A5),D0	         VST30A
+00000F98 90BC00000000		 SUB.L	   #0,D0			         $0
+00000F9E 0C8000000005		 CMPI.L	   #5,D0			         $500000FA4 6C06			 BGE.S	   X.1.42(PC)
+00000FA6 4EB900000000 X.1.41	 JSR	   E.SUBSTR
+00000FAC 7005	      X.1.42	 MOVEQ	   #5,D0			         $5
+00000FAE 3F00			 MOVE.W	   D0,-(A7)
+00000FB0 7004			 MOVEQ	   #4,D0			         $4
+00000FB2 3F00			 MOVE.W	   D0,-(A7)
+00000FB4 486D8028		 PEA	   STATIC.+38-32766(A5)		         VST30A
+00000FB8 486EFFEA		 PEA	   -22(A6)			         $FFFFFFEA
+00000FBC 4EB900000000		 JSR	   I.PTSTRF
+00000FC2 7001			 MOVEQ	   #1,D0			         $1
+00000FC4 3F00			 MOVE.W	   D0,-(A7)
+00000FC6 7004			 MOVEQ	   #4,D0			         $4
+00000FC8 3F00			 MOVE.W	   D0,-(A7)
+00000FCA 486D82D4		 PEA	   STATIC.+724-32768(A5)	         CH
+00000FCE 486EFFEA		 PEA	   -22(A6)			         $FFFFFFEA
+00000FD2 4EB900000000		 JSR	   I.PTSTRF
+00000FD8 7000			 MOVEQ	   #0,D0			         $0
+00000FDA 302D8026		 MOVE.W	   STATIC.+38-32768(A5),D0	         VST30A
+00000FDE 5980			 SUBQ.L	   #4,D0			         $4
+00000FE0 0C8000000003		 CMPI.L	   #3,D0			         $3
+00000FE6 6C06			 BGE.S	   X.1.44(PC)
+00000FE8 4EB900000000 X.1.43	 JSR	   E.SUBSTR
+00000FEE 7003	      X.1.44	 MOVEQ	   #3,D0			         $3
+00000FF0 3F00			 MOVE.W	   D0,-(A7)
+00000FF2 7004			 MOVEQ	   #4,D0			         $4
+00000FF4 3F00			 MOVE.W	   D0,-(A7)
+00000FF6 486D802C		 PEA	   STATIC.+38-32762(A5)		         VST30A
+00000FFA 486EFFEA		 PEA	   -22(A6)			         $FFFFFFEA
+00000FFE 4EB900000000		 JSR	   I.PTSTRF
+00001004 7005			 MOVEQ	   #5,D0			         $5
+00001006 3F00			 MOVE.W	   D0,-(A7)
+00001008 487AF284		 PEA	   K.44(PC)			         CODE.+$28E
+0000100C 486EFFEA		 PEA	   -22(A6)			         $FFFFFFEA
+00001010 4EB900000000		 JSR	   I.PTSTRF
+00001016 202D82C8		 MOVE.L	   STATIC.+712-32768(A5),D0	         K
+0000101A 5280			 ADDQ.L	   #1,D0			         $1
+0000101C 4267			 CLR.W	   -(A7)
+0000101E 2D40FFE6		 MOVE.L	   D0,-26(A6)			         $FFFFFFE6
+00001022 486EFFE6		 PEA	   -26(A6)			         $FFFFFFE6
+00001026 486EFFEA		 PEA	   -22(A6)			         $FFFFFFEA
+0000102A 4EB900000000		 JSR	   I.PTSTRF
+00001030 486EFFEA		 PEA	   -22(A6)			         $FFFFFFEA
+00001034 4EB900000000		 JSR	   I.PTSTRD
+0000103A 486D802C		 PEA	   STATIC.+38-32762(A5)		         VST30A
+0000103E 700D			 MOVEQ	   #13,D0			         $D00001040 3F00			 MOVE.W	   D0,-(A7)
+00001042 486EFFF2		 PEA	   -14(A6)			         $FFFFFFF2
+00001046 700D			 MOVEQ	   #13,D0			         $D
+00001048 3F00			 MOVE.W	   D0,-(A7)
+0000104A 4EB900000000		 JSR	   C.MVFF
+		      *							       LINE 109
+00001050 487AF23E		 PEA	   K.45(PC)			         CODE.+$290
+00001054 7013			 MOVEQ	   #19,D0			         $13
+00001056 3F00			 MOVE.W	   D0,-(A7)
+00001058 486D8028		 PEA	   STATIC.+38-32766(A5)		         VST30A
+0000105C 3F2D8026		 MOVE.W	   STATIC.+38-32768(A5),-(A7)	         VST30A
+00001060 4EB900000000		 JSR	   C.CPFF
+00001066 6708			 BEQ.S	   L.1.63(PC)
+		      *							       LINE 110
+00001068 487800F1     L.1.62	 PEA	   241				         $F1
+0000106C 6100F022		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+		      *							       LINE 112
+00001070 426EFFE0     L.1.63	 CLR.W	   -32(A6)			         $FFFFFFE0
+00001074 3D7C001EFFDE		 MOVE.W	   #30,-34(A6)			         $1E  $FFFFFFDE
+0000107A 426EFFDC		 CLR.W	   -36(A6)			         $FFFFFFDC
+0000107E 41EEFFE0		 LEA	   -32(A6),A0			         $FFFFFFE0
+00001082 2D48FFD8		 MOVE.L	   A0,-40(A6)			         $FFFFFFD8
+00001086 7000			 MOVEQ	   #0,D0			         $0
+00001088 302D8046		 MOVE.W	   STATIC.+70-32768(A5),D0	         VST30B
+0000108C 5180			 SUBQ.L	   #8,D0			         $8
+0000108E 0C8000000006		 CMPI.L	   #6,D0			         $6
+00001094 6C06			 BGE.S	   X.1.46(PC)
+00001096 4EB900000000 X.1.45	 JSR	   E.SUBSTR
+0000109C 486EFFD2     X.1.46	 PEA	   -46(A6)			         $FFFFFFD2
+000010A0 7006			 MOVEQ	   #6,D0			         $6
+000010A2 3F00			 MOVE.W	   D0,-(A7)
+000010A4 486D8050		 PEA	   STATIC.+70-32758(A5)		         VST30B
+000010A8 7006			 MOVEQ	   #6,D0			         $6
+000010AA 3F00			 MOVE.W	   D0,-(A7)
+000010AC 4EB900000000		 JSR	   C.MVFFU
+000010B2 7007			 MOVEQ	   #7,D0			         $7
+000010B4 2F00			 MOVE.L	   D0,-(A7)
+000010B6 7006			 MOVEQ	   #6,D0			         $6
+000010B8 3F00			 MOVE.W	   D0,-(A7)
+000010BA 7014			 MOVEQ	   #20,D0			         $14
+000010BC 3F00			 MOVE.W	   D0,-(A7)
+000010BE 486EFFD2		 PEA	   -46(A6)			         $FFFFFFD2
+000010C2 486EFFD8		 PEA	   -40(A6)			         $FFFFFFD8
+000010C6 4EB900000000		 JSR	   I.PTSTRV
+000010CC 7001			 MOVEQ	   #1,D0			         $1000010CE 3F00			 MOVE.W	   D0,-(A7)
+000010D0 7004			 MOVEQ	   #4,D0			         $4
+000010D2 3F00			 MOVE.W	   D0,-(A7)
+000010D4 487AF1CE		 PEA	   K.46(PC)			         CODE.+$2A4
+000010D8 486EFFD8		 PEA	   -40(A6)			         $FFFFFFD8
+000010DC 4EB900000000		 JSR	   I.PTSTRV
+000010E2 7000			 MOVEQ	   #0,D0			         $0
+000010E4 302D8046		 MOVE.W	   STATIC.+70-32768(A5),D0	         VST30B
+000010E8 5780			 SUBQ.L	   #3,D0			         $3
+000010EA 0C8000000005		 CMPI.L	   #5,D0			         $5
+000010F0 6C06			 BGE.S	   X.1.48(PC)
+000010F2 4EB900000000 X.1.47	 JSR	   E.SUBSTR
+000010F8 7005	      X.1.48	 MOVEQ	   #5,D0			         $5
+000010FA 3F00			 MOVE.W	   D0,-(A7)
+000010FC 7004			 MOVEQ	   #4,D0			         $4
+000010FE 3F00			 MOVE.W	   D0,-(A7)
+00001100 486D804B		 PEA	   STATIC.+70-32763(A5)		         VST30B
+00001104 486EFFD8		 PEA	   -40(A6)			         $FFFFFFD8
+00001108 4EB900000000		 JSR	   I.PTSTRV
+0000110E 7005			 MOVEQ	   #5,D0			         $5
+00001110 3F00			 MOVE.W	   D0,-(A7)
+00001112 7004			 MOVEQ	   #4,D0			         $4
+00001114 3F00			 MOVE.W	   D0,-(A7)
+00001116 487AF18E		 PEA	   K.47(PC)			         CODE.+$2A6
+0000111A 486EFFD8		 PEA	   -40(A6)			         $FFFFFFD8
+0000111E 4EB900000000		 JSR	   I.PTSTRV
+00001124 3B6EFFE08046		 MOVE.W	   -32(A6),STATIC.+70-32768(A5)	         $FFFFFFE0  VST30B
+0000112A 486D8048		 PEA	   STATIC.+70-32766(A5)		         VST30B
+0000112E 701E			 MOVEQ	   #30,D0			         $1E
+00001130 3F00			 MOVE.W	   D0,-(A7)
+00001132 486EFFE2		 PEA	   -30(A6)			         $FFFFFFE2
+00001136 3F2EFFE0		 MOVE.W	   -32(A6),-(A7)		         $FFFFFFE0
+0000113A 4EB900000000		 JSR	   C.MVFF
+		      *							       LINE 113
+00001140 487AF16A		 PEA	   K.48(PC)			         CODE.+$2AC
+00001144 7012			 MOVEQ	   #18,D0			         $12
+00001146 3F00			 MOVE.W	   D0,-(A7)
+00001148 486D8048		 PEA	   STATIC.+70-32766(A5)		         VST30B
+0000114C 3F2D8046		 MOVE.W	   STATIC.+70-32768(A5),-(A7)	         VST30B
+00001150 4EB900000000		 JSR	   C.CPFF
+00001156 6608			 BNE.S	   L.1.65(PC)
+00001158 7012	      L.1.64	 MOVEQ	   #18,D0			         $12
+0000115A B06D8046		 CMP.W	   STATIC.+70-32768(A5),D0	         VST30B
+0000115E 6708			 BEQ.S	   L.1.66(PC)
+		      *							       LINE 11400001160 487800FB     L.1.65	 PEA	   251				         $FB
+00001164 6100EF2A		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+		      *							       LINE 118
+00001168 2F2D8000     L.1.66	 MOVE.L	   STATIC.+0-32768(A5),-(A7)	         FLEX_FSTR
+0000116C 4EB900000000		 JSR	   H.DISPOS
+		      *							       LINE 119
+00001172 2F2D8004		 MOVE.L	   STATIC.+4-32768(A5),-(A7)	         FLEX_VSTR
+00001176 4EB900000000		 JSR	   H.DISPOS
+		      *							       LINE 120
+0000117C 4878012E		 PEA	   302				         $12E
+00001180 4EB900000000		 JSR	   H.NEW
+00001186 201F			 MOVE.L	   (A7)+,D0
+00001188 2B408000		 MOVE.L	   D0,STATIC.+0-32768(A5)	         FLEX_FSTR
+0000118C 2040			 MOVEA.L   D0,A0
+0000118E 30BC012C		 MOVE.W	   #300,(A0)			         $12C
+		      *							       LINE 121
+00001192 48780130		 PEA	   304				         $130
+00001196 4EB900000000		 JSR	   H.NEW
+0000119C 201F			 MOVE.L	   (A7)+,D0
+0000119E 2B408004		 MOVE.L	   D0,STATIC.+4-32768(A5)	         FLEX_VSTR
+000011A2 2040			 MOVEA.L   D0,A0
+000011A4 30BC012C		 MOVE.W	   #300,(A0)			         $12C
+		      *							       LINE 123
+000011A8 202D8004		 MOVE.L	   STATIC.+4-32768(A5),D0	         FLEX_VSTR
+000011AC 4A80			 TST.L	   D0
+000011AE 6606			 BNE.S	   X.1.49(PC)
+000011B0 4EB900000000		 JSR	   E.PTR
+000011B6 2040	      X.1.49	 MOVEA.L   D0,A0
+000011B8 3010			 MOVE.W	   (A0),D0
+000011BA 5440			 ADDQ.W	   #2,D0			         $2
+000011BC 4840			 SWAP	   D0
+000011BE 4240			 CLR.W	   D0
+000011C0 4840			 SWAP	   D0
+000011C2 2F00			 MOVE.L	   D0,-(A7)
+000011C4 4EB900000000		 JSR	   M.DYNTMB
+000011CA 224F			 MOVEA.L   A7,A1
+000011CC 4251			 CLR.W	   (A1)
+000011CE 3D50FFFE		 MOVE.W	   (A0),-2(A6)			         $FFFFFFFE
+000011D2 426EFFFC		 CLR.W	   -4(A6)			         $FFFFFFFC
+000011D6 45D1			 LEA	   (A1),A2
+000011D8 2D4AFFF8		 MOVE.L	   A2,-8(A6)			         $FFFFFFF8
+000011DC 486EFF62		 PEA	   -158(A6)			         $FFFFFF62
+000011E0 3F3C0096		 MOVE.W	   #150,-(A7)			         $96
+000011E4 487AF0DA		 PEA	   K.49+2(PC)			         CODE.+$2BE
+000011E8 3F3C0096		 MOVE.W	   #150,-(A7)			         $96000011EC 4EB900000000		 JSR	   C.MVFFL
+000011F2 3F3C0096		 MOVE.W	   #150,-(A7)			         $96
+000011F6 7004			 MOVEQ	   #4,D0			         $4
+000011F8 3F00			 MOVE.W	   D0,-(A7)
+000011FA 486EFF62		 PEA	   -158(A6)			         $FFFFFF62
+000011FE 486EFFF8		 PEA	   -8(A6)			         $FFFFFFF8
+00001202 4EB900000000		 JSR	   I.PTSTRV
+00001208 486EFECC		 PEA	   -308(A6)			         $FFFFFECC
+0000120C 3F3C0096		 MOVE.W	   #150,-(A7)			         $96
+00001210 487AF0AE		 PEA	   K.49+2(PC)			         CODE.+$2BE
+00001214 3F3C0096		 MOVE.W	   #150,-(A7)			         $96
+00001218 4EB900000000		 JSR	   C.MVFFU
+0000121E 3F3C0096		 MOVE.W	   #150,-(A7)			         $96
+00001222 7004			 MOVEQ	   #4,D0			         $4
+00001224 3F00			 MOVE.W	   D0,-(A7)
+00001226 486EFECC		 PEA	   -308(A6)			         $FFFFFECC
+0000122A 486EFFF8		 PEA	   -8(A6)			         $FFFFFFF8
+0000122E 4EB900000000		 JSR	   I.PTSTRV
+00001234 31510002		 MOVE.W	   (A1),2(A0)			         $2
+00001238 48680004		 PEA	   4(A0)			         $4
+0000123C 3F10			 MOVE.W	   (A0),-(A7)
+0000123E 48690002		 PEA	   2(A1)			         $2
+00001242 3F11			 MOVE.W	   (A1),-(A7)
+00001244 4EB900000000		 JSR	   C.MVFF
+		      *							       LINE 124
+0000124A 202D8004		 MOVE.L	   STATIC.+4-32768(A5),D0	         FLEX_VSTR
+0000124E 4A80			 TST.L	   D0
+00001250 6606			 BNE.S	   X.1.50(PC)
+00001252 4EB900000000		 JSR	   E.PTR
+00001258 2040	      X.1.50	 MOVEA.L   D0,A0
+0000125A 7000			 MOVEQ	   #0,D0			         $0
+0000125C 30280002		 MOVE.W	   2(A0),D0			         $2
+00001260 90BC00000000		 SUB.L	   #0,D0			         $0
+00001266 0C8000000096		 CMPI.L	   #150,D0			         $96
+0000126C 6C06			 BGE.S	   X.1.52(PC)
+0000126E 4EB900000000 X.1.51	 JSR	   E.SUBSTR
+00001274 486EFF6A     X.1.52	 PEA	   -150(A6)			         $FFFFFF6A
+00001278 3F3C0096		 MOVE.W	   #150,-(A7)			         $96
+0000127C 487AF042		 PEA	   K.49+2(PC)			         CODE.+$2BE
+00001280 3F3C0096		 MOVE.W	   #150,-(A7)			         $96
+00001284 4EB900000000		 JSR	   C.MVFFL
+0000128A 486EFF6A		 PEA	   -150(A6)			         $FFFFFF6A
+0000128E 3F3C0096		 MOVE.W	   #150,-(A7)			         $96
+00001292 48680004		 PEA	   4(A0)			         $4
+00001296 3F3C0096		 MOVE.W	   #150,-(A7)			         $960000129A 4EB900000000		 JSR	   C.CPFF
+000012A0 665C			 BNE.S	   L.1.68(PC)
+000012A2 2E6EFEC8     L.1.67	 MOVEA.L   ST.1(A6),A7			         -312
+000012A6 202D8004		 MOVE.L	   STATIC.+4-32768(A5),D0	         FLEX_VSTR
+000012AA 4A80			 TST.L	   D0
+000012AC 6606			 BNE.S	   X.1.53(PC)
+000012AE 4EB900000000		 JSR	   E.PTR
+000012B4 2040	      X.1.53	 MOVEA.L   D0,A0
+000012B6 7000			 MOVEQ	   #0,D0			         $0
+000012B8 30280002		 MOVE.W	   2(A0),D0			         $2
+000012BC 90BC00000096		 SUB.L	   #150,D0			         $96
+000012C2 0C8000000096		 CMPI.L	   #150,D0			         $96
+000012C8 6C06			 BGE.S	   X.1.55(PC)
+000012CA 4EB900000000 X.1.54	 JSR	   E.SUBSTR
+000012D0 486EFED4     X.1.55	 PEA	   -300(A6)			         $FFFFFED4
+000012D4 3F3C0096		 MOVE.W	   #150,-(A7)			         $96
+000012D8 487AEFE6		 PEA	   K.49+2(PC)			         CODE.+$2BE
+000012DC 3F3C0096		 MOVE.W	   #150,-(A7)			         $96
+000012E0 4EB900000000		 JSR	   C.MVFFU
+000012E6 486EFED4		 PEA	   -300(A6)			         $FFFFFED4
+000012EA 3F3C0096		 MOVE.W	   #150,-(A7)			         $96
+000012EE 4868009A		 PEA	   154(A0)			         $9A
+000012F2 3F3C0096		 MOVE.W	   #150,-(A7)			         $96
+000012F6 4EB900000000		 JSR	   C.CPFF
+000012FC 670C			 BEQ.S	   L.1.69(PC)
+000012FE 2E6EFEC8     L.1.68	 MOVEA.L   ST.1(A6),A7			         -312
+		      *							       LINE 126
+00001302 48780136		 PEA	   310				         $136
+00001306 6100ED88		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+		      *							       LINE 128
+0000130A 202D8004     L.1.69	 MOVE.L	   STATIC.+4-32768(A5),D0	         FLEX_VSTR
+0000130E 4A80			 TST.L	   D0
+00001310 6606			 BNE.S	   X.1.56(PC)
+00001312 4EB900000000		 JSR	   E.PTR
+00001318 2040	      X.1.56	 MOVEA.L   D0,A0
+0000131A 202D8000		 MOVE.L	   STATIC.+0-32768(A5),D0	         FLEX_FSTR
+0000131E 4A80			 TST.L	   D0
+00001320 6606			 BNE.S	   X.1.57(PC)
+00001322 4EB900000000		 JSR	   E.PTR
+00001328 2240	      X.1.57	 MOVEA.L   D0,A1
+0000132A 48690002		 PEA	   2(A1)			         $2
+0000132E 3F11			 MOVE.W	   (A1),-(A7)
+00001330 48680004		 PEA	   4(A0)			         $4
+00001334 3F280002		 MOVE.W	   2(A0),-(A7)			         $2
+00001338 4EB900000000		 JSR	   C.MVFFP		      *							       LINE 129
+0000133E 202D8000		 MOVE.L	   STATIC.+0-32768(A5),D0	         FLEX_FSTR
+00001342 4A80			 TST.L	   D0
+00001344 6606			 BNE.S	   X.1.58(PC)
+00001346 4EB900000000		 JSR	   E.PTR
+0000134C 2040	      X.1.58	 MOVEA.L   D0,A0
+0000134E 486D8066		 PEA	   STATIC.+102-32768(A5)	         FST300
+00001352 3F3C012C		 MOVE.W	   #300,-(A7)			         $12C
+00001356 48680002		 PEA	   2(A0)			         $2
+0000135A 3F10			 MOVE.W	   (A0),-(A7)
+0000135C 4EB900000000		 JSR	   C.MVFFP
+		      *							       LINE 130
+00001362 202D8000		 MOVE.L	   STATIC.+0-32768(A5),D0	         FLEX_FSTR
+00001366 4A80			 TST.L	   D0
+00001368 6606			 BNE.S	   X.1.59(PC)
+0000136A 4EB900000000		 JSR	   E.PTR
+00001370 2040	      X.1.59	 MOVEA.L   D0,A0
+00001372 3010			 MOVE.W	   (A0),D0
+00001374 0C40012C		 CMPI.W	   #300,D0			         $12C
+00001378 6F04			 BLE.S	   X.1.60(PC)
+0000137A 303C012C		 MOVE.W	   #300,D0			         $12C
+0000137E 3B408192     X.1.60	 MOVE.W	   D0,STATIC.+402-32768(A5)	         VST300
+00001382 486D8194		 PEA	   STATIC.+402-32766(A5)	         VST300
+00001386 3F3C012C		 MOVE.W	   #300,-(A7)			         $12C
+0000138A 48680002		 PEA	   2(A0)			         $2
+0000138E 3F10			 MOVE.W	   (A0),-(A7)
+00001390 4EB900000000		 JSR	   C.MVFF
+		      *							       LINE 132
+00001396 7000			 MOVEQ	   #0,D0			         $0
+00001398 302D8192		 MOVE.W	   STATIC.+402-32768(A5),D0	         VST300
+0000139C 90BC000000C7		 SUB.L	   #199,D0			         $C7
+000013A2 0C8000000014		 CMPI.L	   #20,D0			         $14
+000013A8 6C06			 BGE.S	   X.1.62(PC)
+000013AA 4EB900000000 X.1.61	 JSR	   E.SUBSTR
+000013B0 3D7C0014FFEA X.1.62	 MOVE.W	   #20,-22(A6)			         $14  $FFFFFFEA
+000013B6 426EFFE8		 CLR.W	   -24(A6)			         $FFFFFFE8
+000013BA 41EEFFEC		 LEA	   -20(A6),A0			         $FFFFFFEC
+000013BE 2D48FFE4		 MOVE.L	   A0,-28(A6)			         $FFFFFFE4
+000013C2 202D8004		 MOVE.L	   STATIC.+4-32768(A5),D0	         FLEX_VSTR
+000013C6 4A80			 TST.L	   D0
+000013C8 6606			 BNE.S	   X.1.63(PC)
+000013CA 4EB900000000		 JSR	   E.PTR
+000013D0 2040	      X.1.63	 MOVEA.L   D0,A0
+000013D2 7000			 MOVEQ	   #0,D0			         $0
+000013D4 30280002		 MOVE.W	   2(A0),D0			         $2000013D8 90BC00000000		 SUB.L	   #0,D0			         $0
+000013DE 0C800000000A		 CMPI.L	   #10,D0			         $A
+000013E4 6C06			 BGE.S	   X.1.65(PC)
+000013E6 4EB900000000 X.1.64	 JSR	   E.SUBSTR
+000013EC 486EFFDA     X.1.65	 PEA	   -38(A6)			         $FFFFFFDA
+000013F0 700A			 MOVEQ	   #10,D0			         $A
+000013F2 3F00			 MOVE.W	   D0,-(A7)
+000013F4 48680004		 PEA	   4(A0)			         $4
+000013F8 700A			 MOVEQ	   #10,D0			         $A
+000013FA 3F00			 MOVE.W	   D0,-(A7)
+000013FC 4EB900000000		 JSR	   C.MVFFU
+00001402 700A			 MOVEQ	   #10,D0			         $A
+00001404 3F00			 MOVE.W	   D0,-(A7)
+00001406 7004			 MOVEQ	   #4,D0			         $4
+00001408 3F00			 MOVE.W	   D0,-(A7)
+0000140A 486EFFDA		 PEA	   -38(A6)			         $FFFFFFDA
+0000140E 486EFFE4		 PEA	   -28(A6)			         $FFFFFFE4
+00001412 4EB900000000		 JSR	   I.PTSTRF
+00001418 700A			 MOVEQ	   #10,D0			         $A
+0000141A 2F00			 MOVE.L	   D0,-(A7)
+0000141C 7007			 MOVEQ	   #7,D0			         $7
+0000141E 3F00			 MOVE.W	   D0,-(A7)
+00001420 7014			 MOVEQ	   #20,D0			         $14
+00001422 3F00			 MOVE.W	   D0,-(A7)
+00001424 487AEF30		 PEA	   K.50(PC)			         CODE.+$356
+00001428 486EFFE4		 PEA	   -28(A6)			         $FFFFFFE4
+0000142C 4EB900000000		 JSR	   I.PTSTRF
+00001432 486EFFE4		 PEA	   -28(A6)			         $FFFFFFE4
+00001436 4EB900000000		 JSR	   I.PTSTRD
+0000143C 486D825B		 PEA	   STATIC.+402-32567(A5)	         VST300
+00001440 7014			 MOVEQ	   #20,D0			         $14
+00001442 3F00			 MOVE.W	   D0,-(A7)
+00001444 486EFFEC		 PEA	   -20(A6)			         $FFFFFFEC
+00001448 7014			 MOVEQ	   #20,D0			         $14
+0000144A 3F00			 MOVE.W	   D0,-(A7)
+0000144C 4EB900000000		 JSR	   C.MVFF
+		      *							       LINE 133
+00001452 7000			 MOVEQ	   #0,D0			         $0
+00001454 302D8192		 MOVE.W	   STATIC.+402-32768(A5),D0	         VST300
+00001458 90BC000000C7		 SUB.L	   #199,D0			         $C7
+0000145E 0C8000000014		 CMPI.L	   #20,D0			         $14
+00001464 6C06			 BGE.S	   X.1.67(PC)
+00001466 4EB900000000 X.1.66	 JSR	   E.SUBSTR
+0000146C 487AEEF0     X.1.67	 PEA	   K.51(PC)			         CODE.+$35E
+00001470 7014			 MOVEQ	   #20,D0			         $1400001472 3F00			 MOVE.W	   D0,-(A7)
+00001474 486D825B		 PEA	   STATIC.+402-32567(A5)	         VST300
+00001478 7014			 MOVEQ	   #20,D0			         $14
+0000147A 3F00			 MOVE.W	   D0,-(A7)
+0000147C 4EB900000000		 JSR	   C.CPFF
+00001482 6708			 BEQ.S	   L.1.71(PC)
+		      *							       LINE 134
+00001484 48780140     L.1.70	 PEA	   320				         $140
+00001488 6100EC06		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+		      *							       LINE 136
+0000148C 3D7C0064FF9A L.1.71	 MOVE.W	   #100,-102(A6)		         $64  $FFFFFF9A
+00001492 426EFF98		 CLR.W	   -104(A6)			         $FFFFFF98
+00001496 41EEFF9C		 LEA	   -100(A6),A0			         $FFFFFF9C
+0000149A 2D48FF94		 MOVE.L	   A0,-108(A6)			         $FFFFFF94
+0000149E 202D8004		 MOVE.L	   STATIC.+4-32768(A5),D0	         FLEX_VSTR
+000014A2 4A80			 TST.L	   D0
+000014A4 6606			 BNE.S	   X.1.68(PC)
+000014A6 4EB900000000		 JSR	   E.PTR
+000014AC 2040	      X.1.68	 MOVEA.L   D0,A0
+000014AE 7000			 MOVEQ	   #0,D0			         $0
+000014B0 30280002		 MOVE.W	   2(A0),D0			         $2
+000014B4 90BC00000063		 SUB.L	   #99,D0			         $63
+000014BA 0C8000000063		 CMPI.L	   #99,D0			         $63
+000014C0 6C06			 BGE.S	   X.1.70(PC)
+000014C2 4EB900000000 X.1.69	 JSR	   E.SUBSTR
+000014C8 486EFF30     X.1.70	 PEA	   -208(A6)			         $FFFFFF30
+000014CC 7063			 MOVEQ	   #99,D0			         $63
+000014CE 3F00			 MOVE.W	   D0,-(A7)
+000014D0 48680067		 PEA	   103(A0)			         $67
+000014D4 7063			 MOVEQ	   #99,D0			         $63
+000014D6 3F00			 MOVE.W	   D0,-(A7)
+000014D8 4EB900000000		 JSR	   C.MVFFU
+000014DE 7064			 MOVEQ	   #100,D0			         $64
+000014E0 2F00			 MOVE.L	   D0,-(A7)
+000014E2 7063			 MOVEQ	   #99,D0			         $63
+000014E4 3F00			 MOVE.W	   D0,-(A7)
+000014E6 7014			 MOVEQ	   #20,D0			         $14
+000014E8 3F00			 MOVE.W	   D0,-(A7)
+000014EA 486EFF30		 PEA	   -208(A6)			         $FFFFFF30
+000014EE 486EFF94		 PEA	   -108(A6)			         $FFFFFF94
+000014F2 4EB900000000		 JSR	   I.PTSTRF
+000014F8 486EFF94		 PEA	   -108(A6)			         $FFFFFF94
+000014FC 4EB900000000		 JSR	   I.PTSTRD
+00001502 486D80C9		 PEA	   STATIC.+102-32669(A5)	         FST300
+00001506 7064			 MOVEQ	   #100,D0			         $6400001508 3F00			 MOVE.W	   D0,-(A7)
+0000150A 486EFF9C		 PEA	   -100(A6)			         $FFFFFF9C
+0000150E 7064			 MOVEQ	   #100,D0			         $64
+00001510 3F00			 MOVE.W	   D0,-(A7)
+00001512 4EB900000000		 JSR	   C.MVFF
+		      *							       LINE 137
+00001518 7020			 MOVEQ	   #32,D0			         $20
+0000151A B02D80C9		 CMP.B	   STATIC.+102-32669(A5),D0	         FST300
+0000151E 6708			 BEQ.S	   L.1.73(PC)
+		      *							       LINE 138
+00001520 4878014A     L.1.72	 PEA	   330				         $14A
+00001524 6100EB6A		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+		      *							       LINE 140
+00001528 202D8000     L.1.73	 MOVE.L	   STATIC.+0-32768(A5),D0	         FLEX_FSTR
+0000152C 4A80			 TST.L	   D0
+0000152E 6606			 BNE.S	   X.1.71(PC)
+00001530 4EB900000000		 JSR	   E.PTR
+00001536 2040	      X.1.71	 MOVEA.L   D0,A0
+00001538 7000			 MOVEQ	   #0,D0			         $0
+0000153A 3010			 MOVE.W	   (A0),D0
+0000153C 2F00			 MOVE.L	   D0,-(A7)
+0000153E 4EB900000000		 JSR	   M.DYNTMB
+00001544 224F			 MOVEA.L   A7,A1
+00001546 4851			 PEA	   (A1)
+00001548 3F10			 MOVE.W	   (A0),-(A7)
+0000154A 48680002		 PEA	   2(A0)			         $2
+0000154E 3F10			 MOVE.W	   (A0),-(A7)
+00001550 4EB900000000		 JSR	   C.MVFFU
+00001556 3D50FFFE		 MOVE.W	   (A0),-2(A6)			         $FFFFFFFE
+0000155A 426EFFFC		 CLR.W	   -4(A6)			         $FFFFFFFC
+0000155E 45D1			 LEA	   (A1),A2
+00001560 2D4AFFF8		 MOVE.L	   A2,-8(A6)			         $FFFFFFF8
+00001564 4267			 CLR.W	   -(A7)
+00001566 486D82C4		 PEA	   STATIC.+708-32768(A5)	         J
+0000156A 486EFFF8		 PEA	   -8(A6)			         $FFFFFFF8
+0000156E 4EB900000000		 JSR	   I.GETSTR
+00001574 202D8004		 MOVE.L	   STATIC.+4-32768(A5),D0	         FLEX_VSTR
+00001578 4A80			 TST.L	   D0
+0000157A 6606			 BNE.S	   X.1.72(PC)
+0000157C 4EB900000000		 JSR	   E.PTR
+00001582 2440	      X.1.72	 MOVEA.L   D0,A2
+00001584 7000			 MOVEQ	   #0,D0			         $0
+00001586 302A0002		 MOVE.W	   2(A2),D0			         $2
+0000158A 90BC00000000		 SUB.L	   #0,D0			         $0
+00001590 0C8000000008		 CMPI.L	   #8,D0			         $800001596 6C06			 BGE.S	   X.1.74(PC)
+00001598 4EB900000000 X.1.73	 JSR	   E.SUBSTR
+0000159E 7008	      X.1.74	 MOVEQ	   #8,D0			         $8
+000015A0 3F00			 MOVE.W	   D0,-(A7)
+000015A2 700C			 MOVEQ	   #12,D0			         $C
+000015A4 3F00			 MOVE.W	   D0,-(A7)
+000015A6 486A0004		 PEA	   4(A2)			         $4
+000015AA 486EFFF8		 PEA	   -8(A6)			         $FFFFFFF8
+000015AE 4EB900000000		 JSR	   I.GETSTR
+000015B4 487AEDBC		 PEA	   K.52(PC)			         CODE.+$372
+000015B8 7006			 MOVEQ	   #6,D0			         $6
+000015BA 2F00			 MOVE.L	   D0,-(A7)
+000015BC 3F3C0201		 MOVE.W	   #513,-(A7)			         $201
+000015C0 486D82D6		 PEA	   STATIC.+726-32768(A5)	         X
+000015C4 486EFFF8		 PEA	   -8(A6)			         $FFFFFFF8
+000015C8 4EB900000000		 JSR	   I.GETSTR
+000015CE 7009			 MOVEQ	   #9,D0			         $9
+000015D0 3F00			 MOVE.W	   D0,-(A7)
+000015D2 700C			 MOVEQ	   #12,D0			         $C
+000015D4 3F00			 MOVE.W	   D0,-(A7)
+000015D6 486D8066		 PEA	   STATIC.+102-32768(A5)	         FST300
+000015DA 486EFFF8		 PEA	   -8(A6)			         $FFFFFFF8
+000015DE 4EB900000000		 JSR	   I.GETSTR
+000015E4 4267			 CLR.W	   -(A7)
+000015E6 486D82C8		 PEA	   STATIC.+712-32768(A5)	         K
+000015EA 486EFFF8		 PEA	   -8(A6)			         $FFFFFFF8
+000015EE 4EB900000000		 JSR	   I.GETSTR
+000015F4 7005			 MOVEQ	   #5,D0			         $5
+000015F6 3F00			 MOVE.W	   D0,-(A7)
+000015F8 700C			 MOVEQ	   #12,D0			         $C
+000015FA 3F00			 MOVE.W	   D0,-(A7)
+000015FC 486D82CE		 PEA	   STATIC.+718-32768(A5)	         BS
+00001600 486EFFF8		 PEA	   -8(A6)			         $FFFFFFF8
+00001604 4EB900000000		 JSR	   I.GETSTR
+0000160A 7001			 MOVEQ	   #1,D0			         $1
+0000160C 3F00			 MOVE.W	   D0,-(A7)
+0000160E 700C			 MOVEQ	   #12,D0			         $C
+00001610 3F00			 MOVE.W	   D0,-(A7)
+00001612 486D82D4		 PEA	   STATIC.+724-32768(A5)	         CH
+00001616 486EFFF8		 PEA	   -8(A6)			         $FFFFFFF8
+0000161A 4EB900000000		 JSR	   I.GETSTR
+00001620 7000			 MOVEQ	   #0,D0			         $0
+00001622 302D8192		 MOVE.W	   STATIC.+402-32768(A5),D0	         VST300
+00001626 90BC00000000		 SUB.L	   #0,D0			         $0
+0000162C 0C8000000003		 CMPI.L	   #3,D0			         $300001632 6C06			 BGE.S	   X.1.76(PC)
+00001634 4EB900000000 X.1.75	 JSR	   E.SUBSTR
+0000163A 7003	      X.1.76	 MOVEQ	   #3,D0			         $3
+0000163C 3F00			 MOVE.W	   D0,-(A7)
+0000163E 700C			 MOVEQ	   #12,D0			         $C
+00001640 3F00			 MOVE.W	   D0,-(A7)
+00001642 486D8194		 PEA	   STATIC.+402-32766(A5)	         VST300
+00001646 486EFFF8		 PEA	   -8(A6)			         $FFFFFFF8
+0000164A 4EB900000000		 JSR	   I.GETSTR
+		      *							       LINE 142
+00001650 4AAD82C4		 TST.L	   STATIC.+708-32768(A5)	         J
+00001654 670C			 BEQ.S	   L.1.75(PC)
+00001656 2E6EFEC8     L.1.74	 MOVEA.L   ST.1(A6),A7			         -312
+		      *							       LINE 142 (2)
+0000165A 4878015F		 PEA	   351				         $15F
+0000165E 6100EA30		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+00001662 2E6EFEC8     L.1.75	 MOVEA.L   ST.1(A6),A7			         -312
+		      *							       LINE 143
+00001666 202D8004		 MOVE.L	   STATIC.+4-32768(A5),D0	         FLEX_VSTR
+0000166A 4A80			 TST.L	   D0
+0000166C 6606			 BNE.S	   X.1.77(PC)
+0000166E 4EB900000000		 JSR	   E.PTR
+00001674 2040	      X.1.77	 MOVEA.L   D0,A0
+00001676 7000			 MOVEQ	   #0,D0			         $0
+00001678 30280002		 MOVE.W	   2(A0),D0			         $2
+0000167C 90BC00000000		 SUB.L	   #0,D0			         $0
+00001682 0C8000000008		 CMPI.L	   #8,D0			         $8
+00001688 6C06			 BGE.S	   X.1.79(PC)
+0000168A 4EB900000000 X.1.78	 JSR	   E.SUBSTR
+00001690 487AECE8     X.1.79	 PEA	   K.53(PC)			         CODE.+$37A
+00001694 7008			 MOVEQ	   #8,D0			         $8
+00001696 3F00			 MOVE.W	   D0,-(A7)
+00001698 48680004		 PEA	   4(A0)			         $4
+0000169C 7008			 MOVEQ	   #8,D0			         $8
+0000169E 3F00			 MOVE.W	   D0,-(A7)
+000016A0 4EB900000000		 JSR	   C.CPFF
+000016A6 6708			 BEQ.S	   L.1.77(PC)
+		      *							       LINE 143 (2)
+000016A8 48780160     L.1.76	 PEA	   352				         $160
+000016AC 6100E9E2		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+		      *							       LINE 144
+000016B0 2F2D82D6     L.1.77	 MOVE.L	   STATIC.+726-32768(A5),-(A7)	         X
+000016B4 2F3AECCC		 MOVE.L	   K.54(PC),-(A7)		         CODE.+$382
+000016B8 4EB900000000		 JSR	   F.CMP
+000016BE 6708			 BEQ.S	   L.1.79(PC)		      *							       LINE 144 (2)
+000016C0 48780161     L.1.78	 PEA	   353				         $161
+000016C4 6100E9CA		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+		      *							       LINE 145
+000016C8 487AECBC     L.1.79	 PEA	   K.55(PC)			         CODE.+$386
+000016CC 7009			 MOVEQ	   #9,D0			         $9
+000016CE 3F00			 MOVE.W	   D0,-(A7)
+000016D0 486D8066		 PEA	   STATIC.+102-32768(A5)	         FST300
+000016D4 7009			 MOVEQ	   #9,D0			         $9
+000016D6 3F00			 MOVE.W	   D0,-(A7)
+000016D8 4EB900000000		 JSR	   C.CPFF
+000016DE 6708			 BEQ.S	   L.1.81(PC)
+		      *							       LINE 145 (2)
+000016E0 48780162     L.1.80	 PEA	   354				         $162
+000016E4 6100E9AA		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+		      *							       LINE 146
+000016E8 7002	      L.1.81	 MOVEQ	   #2,D0			         $2
+000016EA B0AD82C8		 CMP.L	   STATIC.+712-32768(A5),D0	         K
+000016EE 6708			 BEQ.S	   L.1.83(PC)
+		      *							       LINE 146 (2)
+000016F0 48780163     L.1.82	 PEA	   355				         $163
+000016F4 6100E99A		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+		      *							       LINE 147
+000016F8 487AEC96     L.1.83	 PEA	   K.56(PC)			         CODE.+$390
+000016FC 7005			 MOVEQ	   #5,D0			         $5
+000016FE 3F00			 MOVE.W	   D0,-(A7)
+00001700 486D82CE		 PEA	   STATIC.+718-32768(A5)	         BS
+00001704 7005			 MOVEQ	   #5,D0			         $5
+00001706 3F00			 MOVE.W	   D0,-(A7)
+00001708 4EB900000000		 JSR	   C.CPFF
+0000170E 6708			 BEQ.S	   L.1.85(PC)
+		      *							       LINE 147 (2)
+00001710 48780164     L.1.84	 PEA	   356				         $164
+00001714 6100E97A		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+		      *							       LINE 148
+00001718 7043	      L.1.85	 MOVEQ	   #67,D0			         $43
+0000171A B02D82D4		 CMP.B	   STATIC.+724-32768(A5),D0	         CH
+0000171E 6708			 BEQ.S	   L.1.87(PC)
+		      *							       LINE 148 (2)
+00001720 48780165     L.1.86	 PEA	   357				         $165
+00001724 6100E96A		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+		      *							       LINE 149
+00001728 7000	      L.1.87	 MOVEQ	   #0,D0			         $0
+0000172A 302D8192		 MOVE.W	   STATIC.+402-32768(A5),D0	         VST300
+0000172E 90BC00000000		 SUB.L	   #0,D0			         $000001734 0C8000000003		 CMPI.L	   #3,D0			         $3
+0000173A 6C06			 BGE.S	   X.1.81(PC)
+0000173C 4EB900000000 X.1.80	 JSR	   E.SUBSTR
+00001742 487AEC52     X.1.81	 PEA	   K.57(PC)			         CODE.+$396
+00001746 7003			 MOVEQ	   #3,D0			         $3
+00001748 3F00			 MOVE.W	   D0,-(A7)
+0000174A 486D8194		 PEA	   STATIC.+402-32766(A5)	         VST300
+0000174E 7003			 MOVEQ	   #3,D0			         $3
+00001750 3F00			 MOVE.W	   D0,-(A7)
+00001752 4EB900000000		 JSR	   C.CPFF
+00001758 6708			 BEQ.S	   L.1.89(PC)
+		      *							       LINE 149 (2)
+0000175A 48780166     L.1.88	 PEA	   358				         $166
+0000175E 6100E930		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+		      *							       LINE 151
+00001762 3B7C000F8192 L.1.89	 MOVE.W	   #15,STATIC.+402-32768(A5)	         $F  VST300
+00001768 486D8194		 PEA	   STATIC.+402-32766(A5)	         VST300
+0000176C 3F3C012C		 MOVE.W	   #300,-(A7)			         $12C
+00001770 487AEC28		 PEA	   K.58(PC)			         CODE.+$39A
+00001774 700F			 MOVEQ	   #15,D0			         $F
+00001776 3F00			 MOVE.W	   D0,-(A7)
+00001778 4EB900000000		 JSR	   C.MVFF
+		      *							       LINE 152
+0000177E 7007			 MOVEQ	   #7,D0			         $7
+00001780 2B4082C0		 MOVE.L	   D0,STATIC.+704-32768(A5)	         I
+		      *							       LINE 153
+00001784 202D82C0		 MOVE.L	   STATIC.+704-32768(A5),D0	         I
+00001788 7200			 MOVEQ	   #0,D1			         $0
+0000178A 322D8192		 MOVE.W	   STATIC.+402-32768(A5),D1	         VST300
+0000178E 4A80			 TST.L	   D0
+00001790 6F0C			 BLE.S	   X.1.82(PC)
+00001792 9280			 SUB.L	   D0,D1
+00001794 5281			 ADDQ.L	   #1,D1			         $1
+00001796 0C8100000006		 CMPI.L	   #6,D1			         $6
+0000179C 6C06			 BGE.S	   X.1.83(PC)
+0000179E 4EB900000000 X.1.82	 JSR	   E.SUBSTR
+000017A4 5380	      X.1.83	 SUBQ.L	   #1,D0			         $1
+000017A6 41ED8194		 LEA	   STATIC.+402-32766(A5),A0	         VST300
+000017AA 3D7C0006FFF8		 MOVE.W	   #6,-8(A6)			         $6  $FFFFFFF8
+000017B0 426EFFF6		 CLR.W	   -10(A6)			         $FFFFFFF6
+000017B4 43EEFFFA		 LEA	   -6(A6),A1			         $FFFFFFFA
+000017B8 2D49FFF2		 MOVE.L	   A1,-14(A6)			         $FFFFFFF2
+000017BC 7206			 MOVEQ	   #6,D1			         $6
+000017BE 3F01			 MOVE.W	   D1,-(A7)
+000017C0 7204			 MOVEQ	   #4,D1			         $4000017C2 3F01			 MOVE.W	   D1,-(A7)
+000017C4 487AEBE4		 PEA	   K.59(PC)			         CODE.+$3AA
+000017C8 486EFFF2		 PEA	   -14(A6)			         $FFFFFFF2
+000017CC 4EB900000000		 JSR	   I.PTSTRF
+000017D2 486EFFF2		 PEA	   -14(A6)			         $FFFFFFF2
+000017D6 4EB900000000		 JSR	   I.PTSTRD
+000017DC 48700800		 PEA	   0(A0,D0.L)			         $0
+000017E0 7206			 MOVEQ	   #6,D1			         $6
+000017E2 3F01			 MOVE.W	   D1,-(A7)
+000017E4 486EFFFA		 PEA	   -6(A6)			         $FFFFFFFA
+000017E8 7206			 MOVEQ	   #6,D1			         $6
+000017EA 3F01			 MOVE.W	   D1,-(A7)
+000017EC 4EB900000000		 JSR	   C.MVFF
+		      *							       LINE 154
+000017F2 700F			 MOVEQ	   #15,D0			         $F
+000017F4 B06D8192		 CMP.W	   STATIC.+402-32768(A5),D0	         VST300
+000017F8 6618			 BNE.S	   L.1.91(PC)
+000017FA 487AEBB4     L.1.90	 PEA	   K.60(PC)			         CODE.+$3B0
+000017FE 700F			 MOVEQ	   #15,D0			         $F
+00001800 3F00			 MOVE.W	   D0,-(A7)
+00001802 486D8194		 PEA	   STATIC.+402-32766(A5)	         VST300
+00001806 3F2D8192		 MOVE.W	   STATIC.+402-32768(A5),-(A7)	         VST300
+0000180A 4EB900000000		 JSR	   C.CPFF
+00001810 6708			 BEQ.S	   L.1.92(PC)
+		      *							       LINE 154 (2)
+00001812 48780168     L.1.91	 PEA	   360				         $168
+00001816 6100E878		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+		      *							       LINE 156
+0000181A 3B7C000F8192 L.1.92	 MOVE.W	   #15,STATIC.+402-32768(A5)	         $F  VST300
+00001820 486D8194		 PEA	   STATIC.+402-32766(A5)	         VST300
+00001824 3F3C012C		 MOVE.W	   #300,-(A7)			         $12C
+00001828 487AEB96		 PEA	   K.61(PC)			         CODE.+$3C0
+0000182C 700F			 MOVEQ	   #15,D0			         $F
+0000182E 3F00			 MOVE.W	   D0,-(A7)
+00001830 4EB900000000		 JSR	   C.MVFF
+		      *							       LINE 157
+00001836 7007			 MOVEQ	   #7,D0			         $7
+00001838 2B4082C0		 MOVE.L	   D0,STATIC.+704-32768(A5)	         I
+		      *							       LINE 158
+0000183C 202D82C0		 MOVE.L	   STATIC.+704-32768(A5),D0	         I
+00001840 7200			 MOVEQ	   #0,D1			         $0
+00001842 322D8192		 MOVE.W	   STATIC.+402-32768(A5),D1	         VST300
+00001846 5281			 ADDQ.L	   #1,D1			         $1
+00001848 9280			 SUB.L	   D0,D1
+0000184A 7400			 MOVEQ	   #0,D2			         $00000184C 342D8192		 MOVE.W	   STATIC.+402-32768(A5),D2	         VST300
+00001850 4A81			 TST.L	   D1
+00001852 6D0C			 BLT.S	   X.1.84(PC)
+00001854 4A80			 TST.L	   D0
+00001856 6F08			 BLE.S	   X.1.84(PC)
+00001858 9480			 SUB.L	   D0,D2
+0000185A 5282			 ADDQ.L	   #1,D2			         $1
+0000185C B481			 CMP.L	   D1,D2
+0000185E 6C06			 BGE.S	   X.1.85(PC)
+00001860 4EB900000000 X.1.84	 JSR	   E.SUBSTR
+00001866 5380	      X.1.85	 SUBQ.L	   #1,D0			         $1
+00001868 41ED8194		 LEA	   STATIC.+402-32766(A5),A0	         VST300
+0000186C 4841			 SWAP	   D1
+0000186E 4241			 CLR.W	   D1
+00001870 4841			 SWAP	   D1
+00001872 2F01			 MOVE.L	   D1,-(A7)
+00001874 4EB900000000		 JSR	   M.DYNTMB
+0000187A 224F			 MOVEA.L   A7,A1
+0000187C 3D41FFFE		 MOVE.W	   D1,-2(A6)			         $FFFFFFFE
+00001880 426EFFFC		 CLR.W	   -4(A6)			         $FFFFFFFC
+00001884 45D1			 LEA	   (A1),A2
+00001886 2D4AFFF8		 MOVE.L	   A2,-8(A6)			         $FFFFFFF8
+0000188A 7406			 MOVEQ	   #6,D2			         $6
+0000188C 3F02			 MOVE.W	   D2,-(A7)
+0000188E 7404			 MOVEQ	   #4,D2			         $4
+00001890 3F02			 MOVE.W	   D2,-(A7)
+00001892 487AEB3C		 PEA	   K.62(PC)			         CODE.+$3D0
+00001896 486EFFF8		 PEA	   -8(A6)			         $FFFFFFF8
+0000189A 4EB900000000		 JSR	   I.PTSTRF
+000018A0 486EFFF8		 PEA	   -8(A6)			         $FFFFFFF8
+000018A4 4EB900000000		 JSR	   I.PTSTRD
+000018AA 48700800		 PEA	   0(A0,D0.L)			         $0
+000018AE 3F01			 MOVE.W	   D1,-(A7)
+000018B0 4851			 PEA	   (A1)
+000018B2 3F01			 MOVE.W	   D1,-(A7)
+000018B4 4EB900000000		 JSR	   C.MVFF
+		      *							       LINE 159
+000018BA 700F			 MOVEQ	   #15,D0			         $F
+000018BC B06D8192		 CMP.W	   STATIC.+402-32768(A5),D0	         VST300
+000018C0 661C			 BNE.S	   L.1.94(PC)
+000018C2 2E6EFEC8     L.1.93	 MOVEA.L   ST.1(A6),A7			         -312
+000018C6 487AEB0E		 PEA	   K.63(PC)			         CODE.+$3D6
+000018CA 700F			 MOVEQ	   #15,D0			         $F
+000018CC 3F00			 MOVE.W	   D0,-(A7)
+000018CE 486D8194		 PEA	   STATIC.+402-32766(A5)	         VST300000018D2 3F2D8192		 MOVE.W	   STATIC.+402-32768(A5),-(A7)	         VST300
+000018D6 4EB900000000		 JSR	   C.CPFF
+000018DC 670C			 BEQ.S	   L.1.95(PC)
+000018DE 2E6EFEC8     L.1.94	 MOVEA.L   ST.1(A6),A7			         -312
+		      *							       LINE 160
+000018E2 48780172		 PEA	   370				         $172
+000018E6 6100E7A8		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+		      *							       LINE 162
+000018EA 4878017C     L.1.95	 PEA	   380				         $17C
+000018EE 486D8192		 PEA	   STATIC.+402-32768(A5)	         VST300
+000018F2 3F3C012C		 MOVE.W	   #300,-(A7)			         $12C
+000018F6 6100E714		 BSR.L	   B.3(PC)			         STRING_PARAM = CODE.+
+		      *							       LINE 163
+000018FA 7004			 MOVEQ	   #4,D0			         $4
+000018FC B06D8192		 CMP.W	   STATIC.+402-32768(A5),D0	         VST300
+00001900 6618			 BNE.S	   L.1.97(PC)
+00001902 487AEAE2     L.1.96	 PEA	   K.64(PC)			         CODE.+$3E6
+00001906 7004			 MOVEQ	   #4,D0			         $4
+00001908 3F00			 MOVE.W	   D0,-(A7)
+0000190A 486D8194		 PEA	   STATIC.+402-32766(A5)	         VST300
+0000190E 3F2D8192		 MOVE.W	   STATIC.+402-32768(A5),-(A7)	         VST300
+00001912 4EB900000000		 JSR	   C.CPFF
+00001918 6708			 BEQ.S	   L.1.98(PC)
+		      *							       LINE 163 (2)
+0000191A 4878017C     L.1.97	 PEA	   380				         $17C
+0000191E 6100E770		 BSR.L	   B.4(PC)			         ERROR = CODE.+$90
+		      *							       LINE 165
+00001922 202D0000     L.1.98	 MOVE.L	   TTYOUTPUT-32768(A5),D0	         TTYOUTPUT
+00001926 4A80			 TST.L	   D0
+00001928 6606			 BNE.S	   X.1.86(PC)
+0000192A 4EB900000000		 JSR	   E.FILE
+00001930 720A	      X.1.86	 MOVEQ	   #10,D1			         $A
+00001932 3F01			 MOVE.W	   D1,-(A7)
+00001934 7204			 MOVEQ	   #4,D1			         $4
+00001936 3F01			 MOVE.W	   D1,-(A7)
+00001938 487AEAB0		 PEA	   K.65(PC)			         CODE.+$3EA
+0000193C 2F00			 MOVE.L	   D0,-(A7)
+0000193E 4EB900000000		 JSR	   T.WRITE
+00001944 2F00			 MOVE.L	   D0,-(A7)
+00001946 4EB900000000		 JSR	   T.WRTLN
+		      *							       LINE 166
+0000194C 4EB900000000		 JSR	   M.STOP
+				 XREF	   M.ENTRY
+				 XREF	   M.DYNTMB
+				 XREF	   I.PTSTRV				 XREF	   C.MVFF
+				 XREF	   M.RETURN
+				 XREF	   TTYOUTPU
+				 XREF	   E.FILE
+				 XREF	   T.WRITE
+				 XREF	   T.WRTLN
+				 XREF	   T.REWRIT
+				 XREF	   H.NEW
+				 XREF	   E.PTR
+				 XREF	   C.MVFFP
+				 XREF	   I.GETSTR
+				 XREF	   E.SUBSTR
+				 XREF	   C.CPFF
+				 XREF	   F.CMP
+				 XREF	   C.MVFFU
+				 XREF	   I.PTSTRF
+				 XREF	   I.PTSTRD
+				 XREF	   H.DISPOS
+				 XREF	   C.MVFFL
+				 XREF	   M.STOP
+		      *
+		      *		 Code area:      00001646 bytes (5702 decimal)
+		      *		 Constant area:  0000030C bytes (780 decimal)
+		      *		 Static area:    000002E2 bytes (738 decimal)
+		      *
+	 00000000		 END
+    ? ~z

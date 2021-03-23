@@ -1,0 +1,18 @@
+		LINK symbol map of	001LNK		page 1
+	Produced by LINK version 4(771030)-4 on  7-Feb-80 at 19:10:48
+
+	Low  segment starts at	     0 ends at	     0 length	     0 = 0P
+	512 words free in Low segment
+	64 Global symbols loaded, therefore min. hash size is 72
+	No start address
+
+		*************
+
+JOBDAT-INITIAL-SYMBOLS
+
+	Zero length module
+
+		*************
+
+
+	[End of LINK map of	001LNK]

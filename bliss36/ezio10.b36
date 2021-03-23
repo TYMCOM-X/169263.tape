@@ -1,0 +1,649 @@
+!<BLF/LOWERCASE_USER>
+MODULE ezio10 (OTS = '',
+		LANGUAGE (BLISS36),
+		IDENT = '1(4)'
+%IF %VARIANT
+%THEN
+		    ,
+		    BLISS10_REGS
+%FI
+		) =
+BEGIN
+
+
+! Functional description:
+!    Provides basic file and tty i/o services to bliss-36
+!    Programs.
+!
+!			  COPYRIGHT (c) 1977, 1978 BY
+!	      DIGITAL EQUIPMENT CORPORATION, MAYNARD, MASS.
+!
+! THIS SOFTWARE IS FURNISHED UNDER A LICENSE AND MAY BE USED AND  COPIED
+! ONLY  IN  ACCORDANCE  WITH  THE  TERMS  OF  SUCH  LICENSE AND WITH THE
+! INCLUSION OF THE ABOVE COPYRIGHT NOTICE.  THIS SOFTWARE OR  ANY  OTHER
+! COPIES  THEREOF MAY NOT BE PROVIDED OR OTHERWISE MADE AVAILABLE TO ANY
+! OTHER PERSON.  NO TITLE TO AND OWNERSHIP OF  THE  SOFTWARE  IS  HEREBY
+! TRANSFERRED.
+!
+! THE INFORMATION IN THIS SOFTWARE IS SUBJECT TO CHANGE  WITHOUT  NOTICE
+! AND  SHOULD  NOT  BE  CONSTRUED  AS  A COMMITMENT BY DIGITAL EQUIPMENT
+! CORPORATION.
+!
+! DIGITAL ASSUMES NO RESPONSIBILITY FOR THE USE OR  RELIABILITY  OF  ITS
+! SOFTWARE ON EQUIPMENT WHICH IS NOT SUPPLIED BY DIGITAL.
+!
+
+!++
+! FACILITY: A transportable, Easy to use, I/O interface (EZIO)
+!
+! ABSTRACT:
+!    Provides basic file and TTY I/O services to BLISS-36 programs.
+!
+! ENVIRONMENT: TOPS-10 user program subroutine.
+!
+! AUTHOR: Paul Dickson & Bruce Dawson, CREATION DATE: sometime in 1977
+!
+! MODIFIED BY:
+!
+!	Bruce Dawson, 24-July-78 : VERSION 0(1)
+! 01	- FILIN was returning -1 when it got EOF in the process of getting
+!	another buffer. However, there may still be data in the buffer, so
+!	the returning of -1 was delayed until the next request for a buffer.
+!
+! 02	FILOPN was only checking the low order bit to determine input or 
+!	output. The documentation says only 1 or 0 is allowed. The check
+!	was made more strigent.
+!
+! 03	FILIN apparently never worked after the functionality to ignore
+!	line numbers was added. It should work now.
+!
+!   Bruce Dawson, 4-Oct-78 : version 1(4)
+! 04	Edit 03 didn't quite do it all. One expression in FILIN was
+!	undeleted. Also, EOF was initialized for a channel in FILOPN.
+!
+!
+!--
+
+!
+!   TABLE OF CONTENTS
+!
+FORWARD ROUTINE
+    filcls,					! Closes a file.
+    filin,					! Gets one line from a file.
+    filopn,					! Opens a file.
+    filout,					! Writes a string to a file.
+    getoct,					! Picks up an octal word.
+    getsix;					! Picks up a sixbit word.
+
+FIELD
+    words =
+	SET
+	w0 = [0, 0, 36, 0],
+	w1 = [1, 0, 36, 0],
+	w2 = [2, 0, 36, 0],
+	w3 = [3, 0, 36, 0]
+	TES,
+    bufh =
+	SET
+	bufptr = [1, 0, 36, 0],			! Byte pointer into buffer.
+	bufcnt = [2, 0, 36, 0],			! Count of bytes.
+	eof = [3, 0, 1, 0]		! EOF indicator bit		!A001
+	TES,
+    opnf =
+	SET
+	statbits = [0, 0, 36, 0],		! Status bits.
+	device = [1, 0, 36, 0],			! Device name.
+	obufh = [2, 18, 18, 0],			! Output buffer header.
+	ibufh = [2, 0, 18, 0]			! Input buffer header.
+	TES,
+    lookf =
+	SET
+	filename = [0, 0, 36, 0],		! File name.
+	ext = [1, 18, 18, 0],			! Extension.
+	proj = [3, 18, 18, 0],			! Project number.
+	prog = [3, 0, 18, 0]			! Programmer number.
+	TES;
+
+LITERAL
+    NUMCHANS = 3,				! Number of channels open at once
+						! (-1 excluded)
+    failure = 0,				! Return codes.
+    success = 1,
+    gotdev = 1,					! Codes for parser action.
+    gotfil = 2,
+    gotext = 3,
+    gotp = 4,
+    gotpn = 5,
+    goterr = 0;
+
+
+STRUCTURE
+    matrix [r, c; nr, nc] =
+	[nr*nc]
+	(matrix + r*nc + c)<0, 36>;
+
+!<BLF/NOFORMAT>
+BIND
+    action = UPLIT(		! Parser action table.
+	gotdev,	gotfil,	gotfil,	0,	0,	gotfil,	!
+	0,	gotfil,	gotfil,	0,	0,	gotfil,	!
+	0,	0,	gotext,	0,	0,	gotext,	!
+	0,	0,	0,	gotp,	0,	0,	!
+	0,	0,	0,	0,	gotpn,	0) : matrix[5,6];
+!<BLF/FORMAT>
+
+OWN
+    carr_return : INITIAL(%O'15'),		!
+    linefeed : INITIAL(%O'12'),			!
+!    io : BLOCKVECTOR [NUMCHANS, 3]		! Buffer headers go here. !D001
+!	FIELD (words, bufh) INITIAL( REP NUMCHANS*3 OF (0)),		  !D001
+    io : BLOCKVECTOR [NUMCHANS, 4]	! Buffer headers go here.	  !A001
+	FIELD (words, bufh) INITIAL( REP NUMCHANS*4 OF (0)),		  !A001
+    
+
+    unseen,					! Unscanned length of filespec.
+    first : INITIAL(1),				! First-time flag.
+    spec;					! Pointer to filespec.
+
+LITERAL
+    openuuo = %O'50',				! Monitor calls.
+    renameuuo = %O'55',
+    lookupuuo = %O'76',
+    enteruuo = %O'77',
+    releaseuuo = %O'71',
+    ttcall = %O'51',
+    calli = %O'47',
+    inuuo = %O'56',
+    outuuo = %O'57',
+    outchr = %O'1',				! TTCALL codes.
+    inchwl = %O'4',
+    reset = %O'0';				! CALLI codes.
+
+MACRO
+    bldop (op, ac, y) =
+	BEGIN
+	LOCAL inst_;
+	inst_ = 0;
+	inst_<27,9> = op;
+	inst_<23,4> = ac;
+	inst_<0,18> = y;
+	machop(%O'256',0,inst_)
+	END%,
+    bldskip (op, ac, y) =
+	BEGIN
+	LOCAL inst_;
+	inst_ = 0;
+	inst_<27,9> = op;
+	inst_<23,4> = ac;
+	inst_<0,18> = y;
+	machskip(%O'256',0,inst_)
+	END%;
+
+MACRO
+    put_char (arg) =
+	BEGIN
+	CH$WCHAR_A (arg, io [.chan, bufptr]);
+	IF (io [.chan, bufcnt] = .io [.chan, bufcnt] -1) LEQ 0
+	THEN
+	    IF bldskip (outuuo, .chan, 0)
+	    THEN RETURN failure
+	END	%;
+
+BUILTIN
+    machop,
+    machskip;
+
+
+GLOBAL ROUTINE filcls (chan) =
+!+
+! Functional description:
+!    Closes a file previously opened by filopn.
+!
+! Inputs:
+!    Chan:	a channel number.
+!-
+    BEGIN
+
+    IF .chan LSS 0
+    THEN
+	RETURN;
+
+    IO[.CHAN,EOF] = 0;
+    bldop (releaseuuo, .chan, 0);
+    RETURN success
+    END;
+
+
+GLOBAL ROUTINE filin (chan, len, stgptr) =
+!+
+! Functional description:
+!    Inputs one line from the specified channel.
+!
+! Inputs:
+!    Chan:	channel number. -1 is tty.
+!    Len:	length of string for buffer.
+!    Stgptr:	string pointer.
+!
+! Value:
+!    Count of characters read.  -1 means eof was hit.
+!
+! Discussion:
+!    Characters are read until a linefeed is hit, or
+!    The string is filled, whichever comes first.  if
+!    The string is too short, the next call will pick
+!    Up where the previous one left off.
+!    Line numbers (and the tab following) are skipped over.
+!-
+    BEGIN
+
+    LOCAL
+	ptr,					! Pointer to buffer.
+	ch,					! A character.
+	count;				! Count of chars read.
+
+    ptr = .stgptr;				! Initialize.
+    count = 0;
+
+    IF .chan LSS 0				! Tty?
+    THEN
+	BEGIN
+
+	INCR k FROM 1 TO .len DO
+	    BEGIN
+	    machop (ttcall, inchwl, ch);
+	    CH$WCHAR_A (.ch, ptr);
+	    count = .count + 1;
+
+	    IF .ch EQL .linefeed
+	    THEN
+		BEGIN
+		ch = CH$RCHAR (CH$PLUS (.ptr, -2));
+
+		IF .ch GEQ %O'13' AND 		!
+		    .ch LEQ %O'15'
+		THEN
+		    RETURN .count - 2		! Trime cr/ff/vt,lf
+		ELSE
+		    RETURN .count - 1;		! Trim lf only.
+
+		END;
+
+	    END;
+
+	IF .ch GEQ %O'13' AND .ch LEQ %O'15'
+	THEN
+	    RETURN .len - 1
+	ELSE
+	    RETURN .len
+
+	END;
+
+    WHILE .count LSS .len DO
+	BEGIN
+
+	! Read in a new buffer if necessary
+	IF .io [.chan, bufcnt] leq 0
+	THEN
+
+!	    IF bldskip (inuuo, .chan, 0)			    !D001
+!	    THEN						    !D001
+!		RETURN -1					    !D001
+!	    ELSE						    !D001
+!		io [.chan, bufcnt] = .io [.chan, bufcnt] - 1;	    !D001
+!								    !D001
+	    BEGIN						    !A001
+	    LOCAL						    !A003
+		buf : ref vector;	! Pointer to buffer	    !A003
+
+	    ! Return if EOF set by prior input			    !A001
+	    IF .io[.chan, eof] THEN RETURN -1;			    !A001
+
+	    ! If the INUUO skips, then the last block in the file was read
+	    io [.chan, bufptr] = %O'4400000000';		    !A003
+	    IF bldskip (inuuo, .chan, 0)			    !A001
+	    THEN io[.chan, eof] = 1;				    !A001
+
+	    ! Change all sequence numbers in the buffer to nulls.   !A003
+	    ! Note that at this point (after the INUUO), the buffer !A003
+	    ! count and pointer are in terms of words.		    !A003
+	    buf = .io [.chan, bufptr] + 1;			    !A003
+	    INCR i from 0 to .io [.chan, bufcnt] - 1 do		    !A003
+		IF .buf[.i]					    !A003
+		THEN						    !A003
+		    BEGIN	! If line # bit on, then clear word !A003
+		    buf[.i] = 0;				    !A003
+		    ch$wchar (0, ch$ptr(buf[.i+1]));	! Clear tab !A003
+		    END;					    !A003
+
+	    ! Make the count and pointer in the buffer header be    !A003
+	    !  for characters instead of words.			    !A003
+	    io[.chan, bufptr] = ch$ptr(.io[.chan, bufptr] + 1);	    !A003
+	    io[.chan, bufcnt] = .io[.chan, bufcnt] * 5;		    !A003
+	    END;						    !A001
+
+	ch = CH$RCHAR_A (io [.chan, bufptr]);  ! Read a character.
+	io [.chan, bufcnt] = .io [.chan, bufcnt] - 1;
+
+	IF .ch NEQ 0			! Skip nulls.
+	THEN
+	    BEGIN
+	    CH$WCHAR_A (.ch, ptr);      ! Put character in caller's buffer.
+	    count = .count + 1;
+	    END;
+
+	IF .ch EQL .linefeed
+	THEN
+	    BEGIN
+	    ch = CH$RCHAR (CH$PLUS (.ptr, -2));
+
+	    IF .ch GEQ %O'13' AND
+		.ch LEQ %O'15'
+	    THEN
+		RETURN .count - 2		! Trim cr/ff/vt,lf
+	    ELSE
+		RETURN .count - 1;		! Trim lf only.
+
+	    END;
+
+	! Return count if LF is not the last thing in the buffer. If
+	! no characters are in the buffer (don't forget about NULs), then
+	! return EOF.
+	IF .IO[.CHAN,EOF] AND .COUNT EQL 0 THEN RETURN -1;	    !A004
+	IF .IO[.CHAN,EOF] THEN RETURN .COUNT;			    !D003!A004
+
+	END;
+
+    ! If we managed to fill up the caller's buffer, then we must
+    ! check the last character in the buffer. Thiracter must
+    ! be effectively deleted if it is a carriage control character.
+
+    IF .ch GEQ %O'13' AND .ch LEQ %O'15'
+    THEN
+	RETURN .len - 1
+    ELSE
+	RETURN .len
+
+    END;
+
+
+GLOBAL ROUTINE filopn (chan, speclen, specptr, output) =
+!+
+! Functional description:
+!    Opens a file.
+!
+! Inputs:
+!    Chan:	a channel number from 0 to 15.
+!    Speclen:	length of the filespec.
+!    Specptr:	string pointer to a filespec of the form:
+!		  Device:filnam.ext[p,pn]
+!		With the usual defaults.
+!    Output:	low-order bit is 1 for output. bits <1,4> are mode.
+!
+! Value:
+!    1 If successful. otherwise 0.
+!-
+    BEGIN
+
+    LOCAL
+	state,					! State of the parser.
+	sep,					! Code of seperator.
+	w,					! A word with a lexeme in it.
+	lookarg : 				! Lookup/enter arg block
+	    BLOCK [4] FIELD (words, lookf),
+	opnarg : 				! Open arg block.
+	    BLOCK [3] FIELD (words, opnf);
+
+    IF .CHAN GTR NUMCHANS-1
+    THEN RETURN FAILURE;
+
+    IF .first					! Initialize everything once.
+    THEN
+	BEGIN
+	first = 0;
+	machop (calli, 0, reset)
+	END;
+
+    IF .chan LSS 0				! TTY?
+    THEN
+	RETURN success;
+
+    state = 0;					! Initialize.
+    spec = .specptr;
+    unseen = .speclen;
+    opnarg [device] = %sixbit'DSK   ';		! Move in defaults.
+    opnarg [statbits] = 0;
+    opnarg [obufh] = opnarg [ibufh] = 0;
+    io [.chan, w0] = io [.chan, w1] = io [.chan, w2] = 0;
+    io [.chan, eof] = 0;
+    lookarg [w0] = lookarg [w1] = lookarg [w2] = lookarg [w3] = 0;
+
+    WHILE .state LSS 5 DO
+	BEGIN
+	sep = (IF .state LSS 3 THEN getsix ELSE getoct) (w);
+
+	CASE .action [.state, .sep] FROM 0 TO 5 OF
+	    SET
+
+	    [gotdev] :
+		opnarg [device] = .w;
+
+	    [gotfil] :
+		lookarg [filename] = .w;
+
+	    [gotext] :
+		lookarg [ext] = .w<18, 18>;
+
+	    [gotp] :
+		lookarg [proj] = .w;
+
+	    [gotpn] :
+		lookarg [prog] = .w;
+
+	    [goterr] :
+		RETURN failure
+	    TES;
+
+	state = (IF .sep LSS 5 THEN .sep + 1 ELSE .sep)
+	END;
+
+    IF .output EQL 1				! Set up buffers.	!R002
+    THEN
+	opnarg [obufh] = io [.chan, w0]
+    ELSE
+	opnarg [ibufh] = io [.chan, w0];
+
+
+    IF NOT bldskip (openuuo, .chan, opnarg)
+    THEN
+	RETURN failure;
+
+    w = (IF .output EQL 1 THEN enteruuo ELSE lookupuuo);		!R002
+
+    IF NOT bldskip (.w, .chan, lookarg)
+    THEN
+	BEGIN
+	bldop (releaseuuo, .chan, 0);
+	RETURN failure
+	END;
+
+    IF .output EQL 1							!R002
+    THEN
+
+	IF bldskip (outuuo, .chan, 0)
+	THEN
+	    RETURN failure;
+
+    RETURN success
+    END;
+
+
+GLOBAL ROUTINE filout (chan, len, stgptr) =
+!+
+! Functional description:
+!    Outputs a string on the specified channel.
+!
+! Inputs:
+!    Chan:	Channel number. -1 is TTY.
+!    Len:	Length of string. If negative, current
+!		buffer is output.
+!    Stgptr:	String pointer.
+!
+! Value:
+!    1 If everything goes Ok. Otherwise 0.
+!-
+    BEGIN
+
+    LOCAL
+	ch,					! A character.
+	ptr;					! Pointer to next char to send.
+
+    ptr = .stgptr;				! Initialize.
+
+    IF .chan LSS 0				! TTY?
+    THEN
+	BEGIN
+
+	INCR k FROM 1 TO .len DO
+	    BEGIN
+	    ch = CH$RCHAR_A (ptr);
+	    bldop (ttcall, outchr, ch)
+	    END;
+
+	bldop (ttcall, outchr, carr_return);
+	bldop (ttcall, outchr, linefeed);
+	RETURN success
+	END;
+
+    IF .len LSS 0				! Force block?
+    THEN
+	RETURN NOT bldskip (outuuo, .chan, 0);
+
+    INCR k FROM 1 TO .len DO
+	BEGIN
+	put_char (CH$RCHAR_A (ptr));
+	END;
+
+    put_char (.carr_return);
+    put_char (.linefeed);
+    RETURN success
+    END;
+
+
+ROUTINE getoct (wadr) =
+!+
+! Functional description:
+!    Scans an octal word from the filespec.
+!
+! Inputs:
+!    Wadr:	address of where the word goes.
+!
+! Value:
+!    A code indicating the reason for stopping.  this
+!    Is useful to the parser.
+!-
+    BEGIN
+
+    LOCAL
+	len,
+	ch;					! A character.
+
+    BIND
+	w = .wadr;				! The destination.
+
+    w = len = 0;				! Initialize.
+
+    WHILE .unseen GTR 0 DO
+	BEGIN
+	ch = CH$RCHAR_A (spec);			! Get a character.
+
+	IF .ch GEQ %C'0' AND .ch LEQ %C'7'	! Test numeric.
+	THEN
+	    w = .w^3 + (.ch - %C'0')
+	ELSE
+
+	    IF .ch EQL %C','
+	    THEN
+		RETURN 3			! Test stopping.
+	    ELSE
+		RETURN 4;
+
+	unseen = .unseen - 1
+	END;
+
+    RETURN 5
+    END;
+
+
+ROUTINE getsix (wadr) =
+!+
+! Functional description:
+!    Scans a sixbit word from the filespec.
+!
+! Inputs:
+!    Wadr:	address of where the word goes.
+!
+! Value:
+!    A code indicating the reason for stopping.  this
+!    Is useful to the parser.
+!-
+    BEGIN
+
+    LOCAL
+	vp,					! Pointer to output string.
+	len,					! Count of characters taken.
+	ch;					! A character.
+
+    BIND
+	w = .wadr;				! The destination.
+
+    w = len = 0;				! Initialize.
+    vp = CH$PTR (w, 0, 6);
+
+    WHILE .unseen GTR 0 DO
+	BEGIN
+	ch = CH$RCHAR_A (spec);			! Get a character.
+
+	IF .ch GEQ %C'a' AND .ch LEQ %C'z'
+	THEN
+	    ch = .ch - 32;			! Uppercase.
+
+	SELECTONE .ch				! See if should stop.
+	OF
+	    SET
+
+	    [%C':'] :
+		RETURN 0;
+
+	    [%C'.'] :
+		RETURN 1;
+
+	    [%C'['] :
+		RETURN 2;
+
+	    [OTHERWISE] :
+		BEGIN
+
+		IF .ch LEQ 32
+		THEN
+		    RETURN 5;
+
+		IF .len LSS 6
+		THEN
+		    BEGIN
+		    len = .len + 1;
+		    CH$WCHAR_A (.ch + 32, vp)
+		    END
+
+		END
+	    TES;
+
+	unseen = .unseen - 1
+	END;
+
+    RETURN 5
+    END;
+
+END
+
+ELUDOM
+   !$(5Ý

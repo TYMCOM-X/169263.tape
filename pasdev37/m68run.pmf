@@ -1,0 +1,528 @@
+$TOP 4
+#define(#note,text,&
+$SKI
+[? text ?]
+$SKI)
+#document(MDSI Pascal M68000 Runtime Specification,<:October 20, 1981:>,48)
+#sect_default(4)
+#footnotes(left)
+#title_page_1(MDSI Pascal Motorola 68000,Runtime Specification,#date)
+#sect(Introduction)
+This document describes the overall design and the interface
+specifications for the runtime routine package for the
+Motorola 68000 implementation of MDSI Pascal.
+Implementors and maintainers of the runtime should also see
+the document ^UMDSI Pascal M68000 Runtime Conventions And Standards|U.
+The I/O runtime is described in the document ^UMC68000 Pascal
+I/O Runtime Notes|U.
+#sect(Procedure Calling Conventions)
+This section describes the stack frame format, parameter passing
+conventions and procedure calling and returning code.
+#beginlevel
+#sect(Stack Frame Format)
+The format of a stack frame is shown in the figure below.
+Most of the fields are self-explanatory; however, the
+remaining subsections on procedure calling conventions
+describe the contents and maintenance of the stack in
+more detail.
+Register A6 is reserved for use as the frame pointer.
+In non-quick routines, register A5 is reserved for use
+as an argument block pointer.
+#beginfigure(21,0)
+	|			|	    ^
+	+-----------------------+	    |
+	|	 locals		|<-- SP	    |
+	|	  and		|         lower
+	|	 temps		|       addresses
+	|			| -8(A6)
+	+-----------------------+
+	| copy of arg ptr (A5)	| -4(A6)
+	+-----------------------+
+	|	old A6		|<-- A6
+	+-----------------------+
+	|	HBT addr	|  4(A6)
+	+-----------------------+
+	|    entry block addr	|  8(A6)
+	+-----------------------+
+	|    return address	| 12(A6)
+	+-----------------------+
+	|   [static link]	| 16(A6)    (only if lvl > 1)
+	+-----------------------+
+	|	caller's	| 16(A6) or 20(A6)
+	|	 frame		|
+#endfigure
+#sect(Parameter Passing)
+This section describes the argument block and the conventions used in
+passing parameters to Pascal routines.
+#beginlevel
+#sect(The Argument Block)
+Addresses in an argument block occupy four bytes and are
+word aligned.
+Flex upperbound words for strings occupy two bytes and are
+word aligned.
+Flex upperbound words for arrays occupy four bytes and are
+word aligned.
+A parameter passed by value has the same storage allocation
+and alignment as a simple variable of the same type.
+Thus arguments occupying a single byte ^Umay|U have to be followed by
+a padding byte.
+#sect(VAR Parameters)
+All VAR parameters are passed by address.
+If the type of the formal is a flexible type, then the
+address is preceded by an upperbound word or longword.
+#sect(Value Parameters)
+All strings, records, arrays and sets are passed by address.
+If the type of the formal is a flexible type, then the address
+is preceded by an upperbound word or longword.
+All other value parameters are passed by value.
+#sect(Function Return Values)
+Function return values are always treated as an implicit
+zeroth parameter.
+If the return type would be passed by address if it was the
+type of a formal value parameter, then an address is passed
+in the argument block.
+If the return type would be passed by value if it was the
+type of a formal value parameter, then space is simply
+reserved in the argument block.
+In essence, the function return value is treated as an uninitialized
+value parameter.
+
+#endlevel
+#sect(Calling A Non-quick Routine)
+This section describes the code used to call, enter and exit
+a non-quick routine.
+#beginlevel
+#sect(Calling Code)
+At the point of the call, the caller constructs an argument
+block in a static temp in the caller's frame.
+The caller passes the callee the address of the argument
+block in register A5.
+Immediately before transfering control to the callee, the
+caller saves any registers which are in use.
+The code which appears at the call point is described in the figure
+below:
+#beginfigure(6)
+LEA	K1(A6),A5		; set up argument pointer
+<code to move args to static temp>
+MOVEM.L	<regs in use>,-(SP)	; excluding WITH regs and A5
+[ <code to push static link> ]	; only if callee's level > 1
+JSR	<callee's entry point>
+<code to restore regs>		; includes WITH regs
+#endfigure
+The load effective address instruction (LEA) loads the argument
+pointer register with the address of the first byte
+ of the static temp which will
+contain the argument block.
+(If the first argument is an uninitialized function return value,
+then A5 may be initialized to the address of the second argument.)
+Note that ^Uif|U the caller is using A5 as an argument pointer for its
+own arguments, A5 need not be saved
+before the LEA instruction
+ because the caller's frame
+contains a copy of the caller's argument pointer.
+Next, the arguments are evaluated and stored in the argument block.
+Since A5 is already pointing to the argument block, the arguments
+may be efficiently moved to the argument block using "(A5)+"
+as the destination's address mode.
+An ^C"ADDQ.L\\\#1,A5"|C instruction may be used to skip any unused bytes
+in the argument block.
+The last move should use the addressing mode "(A5)";
+this will leave the argument pointer pointing at the last
+argument of the block.
+The callee will then address the arguments as zero or negative offsets
+from A5.
+If a function call appears as an actual argument, then
+A5 must be saved before evaluating the functions arguments
+and restored afterwards.
+If the caller's arguments must be referenced to evaluate a
+parameter, then the caller's argument pointer must be loaded into
+one of A0 through A4 from the copy in the caller's stack frame.
+The argument pointer need not be initialized for parameterless
+subroutines.
+#par
+Next any registers in use, other than A5 or WITH registers,
+are saved by pushing them onto the stack.
+#par
+If the lexic level of the callee is greater than one, then
+the callee's static link is pushed onto the stack.
+The static link field of the stack frame is not present for
+routines at lexic level zero or one.
+#par
+The callee is then called with a JSR instruction.
+Upon return the registers saved before the call,
+possibly the caller's argument pointer, 
+ and any active
+WITH registers are restored.
+The contents of A5 must be explicitly restored after the call in one
+circumstance only.
+If, before the LEA instruction, A5 did not contain the caller's argument
+pointer, then A5 must have been saved before the LEA and must be restored
+again after the JSR.
+This can only occur when the call appears in an actual argument list.
+#sect(Entry Code)
+The following code and data appears at the routine's entry point:
+#beginfigure(3)
+JSR	M.ENTRY		; call runtime entry routine
+<stack frame size>
+<debug addr>
+#endfigure
+
+"M.ENTRY" is one of two routine entry runtime routines.
+The second routine, "M.CK_ENTRY", is used when the user specifies
+that stack overflow checking should be done upon procedure
+entry.
+The stack frame size specifies the number of bytes above the
+saved copy of A5 which should be allocated for the frame.
+The size specification occupies four bytes.
+The next four bytes are occupied by the address of a block of
+information used by the debugger.
+The eight bytes of data present at the entry point are known
+as the ^Uroutine entry block|U.
+#par
+One possible coding of the subroutine entry runtime routine
+"M.ENTRY" is shown below:
+#beginfigure(8)
+M.ENTRY:
+	MOVEA.L	(SP),A0		; set ptr to entry block
+	CLR.L	-(SP)		; clear HBT addr
+^C	LINK	A6,#0		; save old frame ptr and
+				;    set new one|C
+	MOVE.L	A5,-(SP)	; save argument ptr
+	SUBA.L	(A0),SP		; Alloc rest of frame
+	JMP	8(A0)		; return
+#endfigure
+#sect(Return Code)
+The only code which appears at the return point is a
+JMP to a subroutine exit runtime routine.
+Two exit routines are used;
+"M.L1_RET" is used to return from level one routines;
+"M.L2_RET" is used to return from routines at lexic level two 
+or greater.
+A possible coding of the procedure exit routines is shown
+below.
+The optional instruction would be present in "M.L2_RET" only.
+#beginfigure(7)
+SF.RET	EQU	12		; offset of return addr
+SF.AP	EQU	-4		; offset of arg ptr copy
+
+M.Lx_RET:
+^C	UNLK	A6		; cut stack back some and
+				;    restore old frame ptr|C
+	MOVEA.L	SF.AP(A6),A5	; Restore old arg ptr
+^C	LEA	SF.RET-4(SP),SP	; Cut stack back to ret addr|C
+      [ MOVE.L	(SP)+,(SP) ]	; only in "M.L2_RET"
+	RTS			; return to caller
+#endfigure
+#endlevel
+#sect(Calling A Quick Routine)
+This section describes the code at the point of call, at the entry
+point and at the exit point of a quick-blocked routine.
+#beginlevel
+#sect(Calling Code)
+The following code appears at the point of a call to a quick routine:
+#beginfigure(4)
+<move args to argument block>
+MOVEM.L	<regs in use>,K(A6)
+JSR	<callee's entry point addr>
+<code to restore regs>
+#endfigure
+Unlike non-quick routines, quick routines do not use an argument
+block pointer register.
+Instead, the argument block is allocated at a fixed offset in
+the frame of the owner of the callee.
+The argument block is allocated in that portion of the frame 
+corresponding to the routine which is the immediate dominator of the callee.
+The space allocated for the argument block is dedicated to that purpose and
+is allocated as long as the immediate dominator is active, i.e.,
+the argument block is treated just like the local variables of
+the immediate dominator.
+#note(<:The argument block could also be allocated in that portion of the
+owner's frame corresponding to the owner.
+This would be less space efficient (in stack space), but would
+be easier to implement.:>)
+#par
+The calling sequence begins with code to move the arguments
+to the argument block.
+Next any registers currently in use, other than WITH registers and
+A5, are saved.
+The callee is then called with a JSR instruction.
+After the point of the call, WITH registers and any registers
+saved before the point of the call are restored.
+(If registers other than WITH registers must be saved before the call,
+then a space optimization may be achieved by saving the WITH
+registers before the call also.
+This would permit all registers to be restored after the call with 
+a single instruction.
+This could be done for calls to non-quick routines also.)
+#par
+Quick routines save A5 upon entry and restore it before returning.
+Thus A5 need never be saved before
+or restored after a call to a quick routine.
+#par
+Quick routines will only use A5 when calling non-quick routines.
+They may not use A5 as a general purpose address register 
+because the code generator has no general register spilling
+mechanism.
+Such a mechanism would be necessary if A5 was in use as a general
+purpose register when a non-quick routine was to be called.
+#sect(Entry Code)
+Upon entry to a quick routine, register A5 must be saved.
+Note that a code generator created local variable (i.e., a temp
+whose lifetime is the entire duration of the
+subroutine's activation) must be used to save the copy of A5.
+#sect(Return Code)
+At an exit point, A5 must be restored.
+After the restore instruction, an RTS instruction is used
+to return to the caller.
+Note that all dynamic temps must be deallocated at
+the time of the return.
+#endlevel
+#endlevel
+#sect(Memory Organization)
+This section describes the layout of the data segment and the usage
+of the "sections" which form the basis of the linker's memory allocation.
+#beginlevel
+#sect(Section Allocation)
+All code and data must be generated in a section numbered from zero
+to fifteen.
+The linker groups sections into at least one and at most four
+"segments".
+Compiler generated code and constants are generated in section ten.
+Compiler generated read/write data is placed in section two.
+Runtime code and constants are generated in section nine.
+Runtime read/write data is placed in section one.
+#par
+The grouping of sections into segments is determined at link time.
+However, the linker's default action, given the above section
+allocations, will be to place the runtime and compiler generated
+code and constants into a single read-only segment named "SEG1".
+By default, the runtime and compiler generated read/write data
+will be placed in a read/write segment named "SEG0".
+#sect(Data Section Layout)
+The layout of the section containing compiler
+generated read/write data is pictured below:
+#beginfigure(18)
+	+-----------------------+
+	|    static storage	|  high addresses
+	|			|
+	+-----------------------+
+	|	 stack		|
+	|	   |		|
+	|	   |		|
+	|	   V		|
+	|			|
+	|			|
+	|	   ^		|
+	|	   |		|
+	|	   |		|
+	|	  heap		|
+	+-----------------------+
+	|    static storage	|
+	|			|  low addresses
+	+-----------------------+
+#endfigure
+The stack and heap are allocated in a contiguous block of
+memory, with the stack growing down and the heap growing up.
+The ratio of the sizes of the stack and heap is unrestricted;
+however it is an error if the boundaries of the two cross
+at any time during user program execution.
+#par
+The size allocated for the stack and heap is determined by
+the compiler's STORAGE option.
+The default value will be 32K bytes.
+#par
+Checking for collision of the stack and heap must be done
+in software.
+These overruns can occur at one of three points:
+procedure entry, dynamic temp allocation and during a call to NEW or ALLOCATE.
+The heap allocation runtime routine will always check for a
+collision and signal a STORAGE_OVERFLOW exception if an
+overrun occurs.
+A compiler block option will be used to control whether or
+not checking is done at procedure entry and during dynamic
+temp allocation.
+The default setting will enable the checks.
+If an overrun is detected during procecedure entry or dynamic
+temp allocation then the STACK_OVERFLOW exception will be
+signalled.
+#note(Switch name must be determined.)
+#sect(Data Section Allocation)
+The compiler must reserve space for the stack and heap
+when the main program is compiled.
+As described in the above section, the amount of space reserved
+is determined by the STORAGE option.
+In addition to reserving the requested space, the compiler
+must also define two global labels.
+The symbol "M.HEAPBASE" must be defined such that its value is the
+address of the first byte of the area reserved.
+The symbol "M.STACKBASE" must be defined such that its value is
+the address of the final longword of the area reserved (i.e.,
+the address of the final byte minus three).
+The reserved area must start on a word boundary.
+#endlevel
+#sect(Runtime Calling Conventions)
+This section describes the runtime calling conventions
+relevant to the caller.
+All the runtime routines are called with a JSR instruction;
+the effective address field of the instruction is a 32 bit
+direct address.
+All registers except those used to return results are preserved.
+Any arguments pushed onto the stack are popped off before the
+runtime routine returns.
+However, some runtime routines may return a value on top
+of the stack.
+Two general approaches are used for parameter passing.
+Each of these schemes is described below.
+These descriptions are inteneded only to present the
+general approaches used to pass parameters to the runtime;
+the descriptions of the individual routines must be consulted
+for specifics.
+#beginlevel
+#sect(The Standard Conventions)
+The parameter passing conventions described in this section
+are used in most cases.
+Input and input/output parameters are pushed onto the
+stack before the call to the runtime routine.
+The parameters may be passed either by value or by address.
+It is important to note that if more than one parameter is
+passed via the stack, then the code generator must evaluate
+all the parameters before pushing any of them onto the stack.
+This is necessary to avoid having a dynamic temp allocated
+on the stack between two of the parameters.
+#par
+Output parameters (return values) may be handled in one of three
+ways.
+First, the address of the location to receive the result may
+be pushed onto the stack before the call.
+#par
+In the second approach, the value is returned in a register.
+Since none of the registers are volatile and the code
+generator controls register allocation for the in-line code,
+for a given function several entry points will be provided which
+perform the same function but return the result in different
+registers.
+Typically, a given function will have entry points for
+returning the result in some subset of either the data
+or address registers and an 'escape' entry point which
+returns the result in a memory location whose
+address is passed in on the stack.
+The multiple entry points can be implemented by providing multiple
+short wrapper routines for a central routine which actually implements
+the given function.
+The wrappers would each be placed in a separate object module so
+that only the wrappers actually required by a user program
+would be pulled from the runtime object library.
+This approach would clearly complicate maintainance of the
+runtime and should only be used for frequently called
+runtime routines.
+#par
+The third approach is to leave return values on the top of
+the stack.
+This approach may be appropriate for double precision
+math routines.
+#sect(A More Space Efficient Approach)
+The following approach would require less code in-line,
+but would require many wrapper routines.
+It may be an appropriate technique for very frequently
+called runtime routines such as floating point add,
+subtract, multiply and divide and integer multiply and
+divide, if they require runtime calls.
+#par
+In this approach, input and input/output parameters as well
+as output arguments could be passed in the registers.
+As in the second approach to handling output arguments
+discussed above, many registers or register combinations
+would be made available through the use of multiple
+entry points and wrapper routines.
+A number of variations are possible.
+For example, consider floating point addition.
+A set of wrapper routines might be available  
+where one operand was in a register and the other
+operand was in memory.
+The address of the memory operand would be pushed onto the stack
+and the result would over write the register operand.
+Another possibility would be to have wrappers specific to
+two registers.
+Both operwould be in registers and the result would
+be left in one of the registers.
+#endlevel
+#sect(Debugging Aids)
+#sect(Exceptional Condition Handling)
+#sect(Program Initialization And Termination)
+This section describes the initial format of certain runtime data
+structures, e.g., the initial stack, and also describes the functions
+performed by the runtime initialization and termination routines.
+#beginlevel
+#sect(The Initial Stack)
+The format of the stack frame for the main routine, as it appears
+immediately after the execution of the runtime initialization
+routine, is shown below.
+#beginfigure(16)
+	|	    -		|
+	+-----------------------+
+	|			|<-- SP
+	|			|
+	|     main's temps	| -8(A6)
+	+-----------------------+
+	|	    0		| -4(A6)
+	+-----------------------+
+	|	    0		|<-- A6
+	+-----------------------+
+	|	    0		|  4(A6)
+	+-----------------------+
+	|    entry block addr	|  8(A6)
+	+-----------------------+
+	|	    0		| 12(A6)
+	+-----------------------+
+#endfigure
+The copy of the argument pointer, the old frame pointer,
+and the return address fields are zero and should remain
+zero at all times.
+The handler branch table address is initially zero but may
+be set to an HBT address if the main routine contains a handler clause.
+#par
+The following code should appear at the entry point for
+the main routine:
+#beginfigure(4)
+M.START:
+	JMP	M.INIT
+	<main's frame size>
+	<debug addr>
+#endfigure
+The routine "M.INIT" is the runtime initialization routine.
+The symbol "M.START" must be emitted as a global definition
+by the compiler.
+The frame size specifies the number of bytes above the
+longword reserved for the saved copy of the argument block 
+pointer which should be allocated for main's frame.
+#note(Exactly what the debug address is must be resolved.)
+#sect(The Initial Heap)
+#sect(The Initialization Routine)
+The program initialization runtime routine must perform the following
+actions:
+#beginitem(3)
+#item()Initialize the stack and heap.
+#item()Initiate interception of the standard conditions.
+#item()Begin execution of the user program.
+#enditem
+
+#sect(The Termination Routine)
+The termination routine should be called once at the end of
+the main routine.
+It requires no parameters; 
+its name is "M.STOP".
+A call to this routine is also generated for the Pascal
+STOP
+statement.
+#endlevel
+#sect(Math Routines)
+#sect(Heap Management Routines)
+#sect(Environmental Routines)
+#sect(Miscellaneous Routines)
+#sect(String Routines)
+#sect(Set Routines)
+#toc
+$ski 3
+(pasdev4)m68run.pmf
+  Ee*
+

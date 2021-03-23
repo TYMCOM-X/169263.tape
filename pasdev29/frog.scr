@@ -1,0 +1,725 @@
+$ind left+5
+$ind right +3
+$number off
+$foot left 'Prepared by: Peter Lee, PD&&T' left 'Last updated: May 1, 1980'
+$cen
+$ski 8
+An Introduction to
+MDSI Pascal Input/Output
+$ski
+_____
+$title left 'MDSI Pascal Input/Output' right 'Table of Contents'
+$foot left 'May 1, 1980'
+$jus
+$page
+$tabs 20,30,40,50
+$ver
+$ski 3
+$spacing 2
+$ind+5
+$par-2
+&Section&	&Title&
+1.	Introduction
+2.	File Variables
+3.	Examples of File Variable Declaration
+4.	File Association and Dissociation
+4.1	Filenames
+4.2	Association and Dissociation Functions
+4.3	Examples of Association and Dissociation
+5.	Simple GET and PUT
+6.	Examples of GET and PUT
+7.	TEXT files
+7.1	The Predefined Type TEXT
+7.2	The Predefined Textfiles
+7.3	READLN and WRITELN
+7.4	Examples of READLN and WRITELN
+7.5	READ, WRITE, and BREAK
+8.	More File Routines
+9.	More Examples of Textfile Interaction
+10.	GETSTRING and PUTSTRING
+11.	Some Extras
+11.1	Random Input/Output
+11.2	Error Recovery
+11.3	Binary Files
+11.4	Formatted I/O
+$jus
+$ind-5
+$number 1
+$spacing 1
+$title left 'MDSI Pascal Input/Output' right 'Page \'
+$foot left 'May 1, 1980' right 'Introduction'
+$page
+1.\\&Introduction&
+$ski2
+$par+5
+This paper is an introduction to input and output
+with MDSI Pascal (.run NEWPAS, Version 1Q of May, 1980).
+It is &not& intended to be a definition. For a definition of
+MDSI Pascal input/output see the text,
+&MDSI Pascal&.
+$ski
+$par+5
+MDSI Pascal offers a powerful set of language constructs for transferring
+data to and from a Pascal program. In addition to being
+extremely flexible, the language constructs implementing these
+routines are elegant -- they do not detract from the overall
+good style of a program in the same way that many other
+language implementations of input/output routines do.
+For example, file variables are remarkably similar to Pascal 
+pointer variables. This leads to "typed" files, and in many
+instances, the usage of a file variable as though it were a
+pointer in a linked list.
+File variables may be used in assignment statements and
+relational operations just as though they had a pointer value.
+$par+5
+One drawback of such an input/output system is that because of
+the differences with other languages, many programmers
+are initially uncomfortable with Pascal I/O. This paper hopes
+to alleviate some of this problem.
+$foot left 'May 1, 1980' right 'File Variables'
+$page
+2.\\&File Variables&
+$ski2
+$par+5
+The transfer of data to and from a Pascal program is accomplished
+through a file variable. Once a file variable is declared in a program,
+it may be thought of as a buffer from which input data can be 
+retrieved or to which output data can be stored. 
+A file variable, &F&, can be "dereferenced" with a construct of the
+form, &F^&, to gain access to the file buffer's contents. F^, then, is a
+"window" into the buffer's data. Output data can be assigned to
+F^, and input data can be retrieved from F^. More on exactly
+how these buffers are filled and flushed will be given later.
+$par+5
+Note that if file variables are passed as parameters to subprograms,
+they must be declared as VAR parameters. One advantage of the
+definition of the file variable is that only the file variable
+need be passed to routines performing I/O instead of a parameter
+specifying the file and another to hold the data.
+$ski3
+3.\\&Examples of File Variable Declaration&
+$ski2
+$par+5
+All Pascal variables, including files, have a type.
+Here are some example declarations:
+$ski
+$ver
+type
+
+  color = (white, yellow, green, red, blue, black);
+  channel = 0..15;
+
+
+var
+
+  file1 : file of 0..255;       (* a file of eightbit integers *)
+  file2 : file of color;        (* a file of the type COLOR *)
+  file3 : packed file of channel; (* a PACKED file *)
+
+$jus
+$par+5
+If file1 were a file used for input, then the variable, file1^,
+would have a value in the range 0..255. Similarly, file2^ would
+be value of the type COLOR.
+File3 is a PACKED file. The PACKED attribute indicates, as it does
+in any other type or variable declaration, that the components of the
+variable are to be packed for storage efficiency, usually sacrificing
+speed of storage or access.
+$foot left 'May 1, 1980' right 'File Association and Dissociation'
+$page
+4.\\&File Association and Dissociation&
+$ski2
+Before communication with an external file or device can begin,
+a file variable must be associated with it. 
+Also, provisions for dissociating a file 
+from a file variable are needed (in order, say, to "free" the file to allow
+other programs gain access to it).
+MDSI Pascal offers several functions that handle this
+association and dissociation.  A description of these routines
+is now presented.
+$ski3
+4.1\\Filenames
+$ski2
+$par+5
+Filenames consist of a maximum of 10 alphanumeric characters --
+a six character &name&, followed by a '.', followed by a three
+character &extension&. The &name& identifies the file, and the
+&extension& usually indicates the type of the file. For example:
+$ski
+$ind+12
+$par-10
+NAME1.PAS\-\A Pascal source file. When the Pascal compiler is given
+"NAME1" as a source file, it automatically assumes the extension
+".PAS".
+$par-10
+NAME2.REL\-\A relocatable object file. Most compilers will produce
+this relocatable object file.
+$par-10
+NAME3.EXE\-\An executable file. When a "RUN" command is given to the
+monitor with a filename "NAME3", it searches for the file "NAME3.EXE".
+$par-10
+NAME4.TMP\-\A temporary file. At log-off, all files with the extension
+".TMP" are automatically deleted.
+$ind-12
+$ski
+$par+5
+If the Pascal compiler were only given one name, "NAME1", then it
+would take "NAME1.PAS" as the source file, and "NAME2.REL" as the
+object file. In addition to the above standard file extensions,
+there are numerous others, and different programming applications
+usually define their own. (A note to MTS users -- Pascal programs
+are able to create, empty, and destroy files.)
+$ski3
+4.2\\Association and Dissociation Functions
+$ski2
+$par+5
+There are six standard association and dissociation routines. The format
+of a call to any of these routines is
+$ver
+
+     <operation> (<file variable> [,<file name>][,<option set>])
+
+$jus
+$par+5
+$need 4
+The <operation>s are:
+$ski
+$ind+12
+$par-10
+OPEN\\\\\\open the file for input and associate it to the specified file
+variable. Valid only with TEXT files (see section 7.).
+$Par-10
+$ski
+RESET\\\\\open the file for input and associate it to the specified file
+variable. Also, input the first record into the file buffer.
+Valid with any type of file.
+$par-10
+$ski
+REWRITE\\\open the file for output
+ and associate it to the specified file variable.
+If the file already exists, then delete its contents, otherwise
+create an empty file.
+$par-10
+$ski
+UPDATE\\\\open the file for both input and output, preserving the
+previous contents of the file or creating a new file, and
+associate it to the specified file variable. Random access is
+allowed (see section 11.).
+$ski
+$par-10
+CLOSE\\\\\close the file. If the file variable is omitted, then
+all files are dissociatied as if the program had terminated.
+$par-10
+$ski
+SCRATCH\\\dissociate the file from the file variable and delete the
+file. If the deletion fails, the effect is the same as close.
+$ski
+$ind-12
+$par+5
+If the <file name> is omitted, then a "default" file is used.
+The <option set> may consist of the following items:
+$ski
+$ind+12
+$par-10
+SEEKOK\\\\allow random access.
+$par-10
+PRESERVE\\do not delete previous contents of the file. This overrides
+the default deletion of REWRITE.
+$par-10
+ASCII\\\\\do not skip/ignore non-printing characters in TEXT files.
+$par-10
+CONTROL\\\interpret the first character of output lines as a carriage
+control.
+$par-10
+RETRY\\\\\on fatal I/O errors, return control to the program
+for a recovery attempt.
+$ind-12
+$ski2
+$need 10
+4.3\\Examples of File Association and Dissociation
+$ski2
+$par+5
+$ver
+  NAME := 'NAME2.TMP';
+  S1 := 'NAME3';
+  S2 := '.PAS';
+
+   RESET (F, 'NAME1.DAT', [RETRY]);
+   REWRITE (F, NAME, [PRESERVE, SEEKOK]);
+   OPEN (F, S1 ||| S2);
+$jus
+$foot left 'May 1, 1980' right 'Simple Get and PUT'
+$page
+5.\\&Simple GET and PUT&
+$ski2
+$par+5
+The most basic input/output functions are GET and PUT.
+&GET& inputs the next record from the file and places the
+data element in the file buffer.
+&PUT& outputs to the end of the file the contents of the file buffer.
+$ski3
+6.\\&Examples of GET and PUT&
+$ski2
+$ver
+   var
+
+     f: file of integer;
+     g: file of integer;
+
+   begin
+     rewrite (f, 'TEST.RES');  (* the output file *)
+     reset   (g, 'TEST.DAT');  (* the DATa file   *)
+
+ (*  The RESET above has already input the first data
+     element from TEST.DAT and placed it in g^.      *)
+
+     f^ := g^;                 (* the first data element *)
+     get (g);                  (* GET the next data element *)
+
+     f^ := f^ + g^;            (* add the data elements *)
+
+     put (f)                   (* PUT the sum  *)
+   end;
+$jus
+$foot left 'May 1, 1980' right 'TEXT files'
+$page
+7.\\&TEXT files&
+$ski2
+$par+5
+The input/output system described in sections 1.-6.\is
+adequate only if all input is done with fixed length
+records. In other words, if a file contains records that
+all have the same type and size.
+However, one very important type of I/O cannot conform to this
+restriction -- I/O with files containing textual material.
+This type of I/O is probably the most frequently used. All
+communication with a terminal, for example, is text I/O.
+The problem with text I/O is that the records in the file, more commonly
+called &lines&, are of varying length, and a program handling   the
+characters in the file
+may need conversions from, say, string to integer or real.
+This cannot be done easily with simple GET and PUT. MDSI
+Pascal, therefore, makes special provisions for textfile
+handling.
+$par+5
+ A textfile buffer is different from file buffers of other types.
+In the file buffers that we have been discussing to this point,
+ the type of the file variable indicated
+the type of the buffer variable. In textfiles, although the
+type of the variable is CHAR, the buffer actually contains
+a &string& of characters.
+A GET with a text file retrieves only one character from a generally
+multi-character buffer. Similarly, a PUT merely 
+places one character onto the end of the buffer.
+GET and PUT do not usually cause the actual I/O operations to occur,
+but simply "look" into or add onto the buffer.
+Also, GET and PUT do not do any automatic type conversions. GET will
+always return a single character, and PUT always puts a single
+character.
+This is not always desirable, especially if, for example,
+a program's input data
+consists of a table of numeric reals, typed in from the terminal.
+Therefore, the special textfile I/O routines are able to convert
+values for the program automaically.
+$ski3
+7.1\\The Predefined Type TEXT
+$ski2
+$par+5
+A file of textual material (i.e., the terminal) can be regarded
+as a file of the following declaration:
+$ver
+
+   var textfile : packed file of char;
+
+$jus
+$par+5
+but with special "punctuation" marks signalling the ends of lines,
+pages, and file.
+A special predefined type TEXT is used to declare textfiles.
+$ver
+
+   (* The predefined type TEXT = packed file of char  *)
+   var textfile : text;
+
+$jus
+$ski
+7.2\\The Predefined Textfiles
+$ski2
+$par+5
+MDSI Pascal
+implements four predefined text files.
+$ski
+$ind+12
+$par-10
+TTY\\\\\\\when OPENed without a file name specification, i.e., OPEN (TTY),
+it is automatically associated with input from the interactive terminal.
+$par-10
+TTYOUTPUT\when REWRITE (TTYOUTPUT) is called, it is automatically
+associated with output to the interactive terminal.
+$par-10
+INPUT,\OUTPUT\\if a file variable is omitted in a call to a standard I/O
+routine, INPUT or OUTPUT is operated on.
+$ind-12
+$ski
+$par+5
+These predefined files are &public&, or global, variables.
+Note that the name TTY can be used in place of TTYOUTPUT in all
+places except when passing it as a parameter or using
+it in an assignment. For example, REWRITE (TTY) is equivalent to
+REWRITE (TTYOUTPUT).
+$ski3
+7.3\\READLN and WRITELN
+$ski2
+$par+5
+The standard input/output routines READLN and WRITELN provide
+buffer control and type conversions on I/O operations with
+textfiles.
+The general form of a call to these routines is:
+$ver
+
+   readln [(F [,Vi]* )];
+   writeln[(F [,Vi]* )];
+
+$jus
+$par+5
+where F is a file variable and the Vi's are variables to be
+input or output. If the file variable is omitted, either INPUT
+or OUTPUT is operated on. If the variable list is omitted
+in a call to READLN, then the input line is put into the buffer
+as a string. If omitted in a call to WRITELN, then the current
+buffer is output.
+$par+5
+READLN first attempts to take values from the current buffer
+and place them into the variables in the variable list, converting
+the string input to other types if necessary.
+It then discards the rest of the buffer and inputs the next line
+of the file into the buffer.
+$par+5
+WRITELN takes the values of the variables in the variable list,
+converts them to a string-compatible form if necessary, and
+places them onto the end of the file buffer.
+Then the entire buffer is flushed to the file, with an line marker
+(<cr><lf>) appended.
+$ski3
+7.4\\Examples of READLN and WRITELN
+$ski2
+$ver
+   var
+     f, g : text;
+     i : 1..10;
+
+   begin
+     open (f, 'TEST.DAT');        (* open the DATa file *)
+     rewrite (g, 'TEST.RES');     (* open the output file *)
+
+     readln(f)                    (* input the first line *)
+ (*  Now F's buffer contains the first line of the file,
+     TEST.DAT.                                            *)
+
+     for i := 1 to 10 do begin
+       g^ := f^;
+       get (f);
+       put (g)
+     end;
+  (* Now G's buffer contains the first 10 characters of F's
+     first line                                    *)
+   
+     writeln (g)       (* output the partial line *)
+   end;
+
+   (*-------- a second example --------*)
+
+   var x, y, z : real;
+
+   begin
+     open (tty);           (* open the teletype *)
+     rewrite (tty);        (* actually TTYOUTPUT *)
+
+     readln (tty, x, y, z);  (* user input of three reals *)
+
+     writeln (tty, x*y*z)    (* output their product *)
+   end;
+
+$jus
+$par+5
+Note that if a call to RESET had been used instead of OPEN,
+then the call to READLN would have been unnecessary.
+If the terminal input to the second program fragment was
+$ver
+   1.0, 3.3, 2.0, 5.6 <cr>
+$jus
+then the output would have been  "6.6".
+$ski3
+7.5\\READ, WRITE, and BREAK
+$ski2
+$par+5
+READ is just like READLN, except that when the variable list
+has been exhausted, the buffer variable is left pointing to the
+character immediately following the end of the last data item input.
+In other words, the rest of the buffer is not discarded.
+If two calls to READ were
+$ver
+
+   read (f, x,y);
+   read (f, z,t);
+
+$jus
+where x,y,z and t are integer variables and the input is
+$ver
+   1,2,3,4 <cr>
+$jus
+then x,y,z and t would get the values 1,2,3, and 4, respectively.
+Note that READ of a single character-compatible variable is equivalent
+to the sequence
+$ver
+   V:=F^;GET(F);
+$jus
+$par+5
+WRITE is just like WRITELN, except that when the variable list
+has been exhausted, the buffer is not flushed, and subsequent
+PUTs and WRITEs will append to the buffer. Note that the buffer
+automatically flushes itself to the file when it contains 255
+characters.
+Note also that WRITE of a single character-compatible variable
+is equivalent to the sequence
+$ver
+   F^:=V;PUT(F);
+$jus
+$par+5
+BREAK takes as an argument a file variable, and it causes
+it's output buffer to be flushed immediately.
+This is useful for terminal I/O.
+Because of the buffering in input/output transfers, output to a
+terminal many times "lags" behind input, causing the terminal
+user some confusion. This is especially apparent when the
+program wishes to prompt the user. If BREAK is not called before
+input is desired, then many times the prompt character will just
+sit in the output buffer while the program is waiting for input.
+$foot left 'May 1, 1980' right 'More File Routines'
+$page
+8.\\&More File Routines&
+$ski2
+$ind+12
+$par-10
+EMPTY(<file variable>)\-\deletes the contents of the associated
+physical file.
+$ski
+$par-10
+FILENAME(<file variable>)\-\returns the name of the associated
+physical file or device as a string.
+$ski
+$par-10
+EOLN(<file variable>)\-\TRUE if end of line just encountered on input.
+$ski
+$par-10
+EOPAGE(<file variable>)\-\TRUE if end of page just encountered on input.
+$ski
+$par-10
+EOF(<file variable>)\-\TRUE if end of file just encountered on input.
+$ski
+$par-10
+PAGE(<file variable>)\-\terminate the current page on output.
+$ind-12
+$foot left 'May 1, 1980' right 'More Examples of Textfile Interaction'
+$page
+9.\\&More Examples of Textfile Interaction&
+$ski2
+$ver
+(*      A short program to read two real numbers and an operation
+     on the numbers from the terminal, and print the result.   *)
+
+program operate;
+
+type
+  operation = (add, subtract, multiply, divide, quit, undefined);
+
+const
+  op_name = array[operation] of string[20] := 
+    (  'ADD',
+       'SUBTRACT',
+       'MULTIPLY',
+       'DIVIDE',
+       'QUIT',
+       ''         );
+
+var
+  command : operation;
+  line : string[20];
+  x,y : real;
+  i : operation;
+
+begin   (* the mainline *)
+
+  open (tty);            (* get the terminal setup *)
+  rewrite (tty);
+
+  repeat
+  
+  writeln (tty);         (* skip a line for neatness *)
+
+    write (tty, 'Enter two numbers > ');
+    break (tty);
+
+    readln(tty);         (* input the line *)
+    read (tty, x,y);     (* get the two reals *)
+
+    write (tty, 'Enter an operation > ');
+    break (tty);
+
+    readln (tty);
+    read (tty, line);    (* get the input line *)
+
+    command := undefined;
+    for i := add to quit do
+      exit if op_name[i] = uppercase(line) do
+        command := i;
+
+    write (tty, op_name[command], ' X and Y : ');
+
+    case command of
+
+add:      writeln (tty, x+y);ubtract: writeln (tty, x-y);
+
+multiply: writeln (tty, x*y);
+
+divide:   writeln (tty, x/y);
+
+quit:  (* do nothing *);
+
+others:   writeln (tty, '?Bad operation given')
+
+    end (* case *)
+
+  until command = quit
+
+end (* program *).
+
+$jus
+$par+5
+A sample run of this program looks like this (user input is underlined):
+$ver
+
+Enter two numbers > &4.3,2.0&
+Enter an operation > &add&
+
+ADD X and Y : 6.3
+Enter two numbers > &6.0 2.1&
+Enter an operation > &multiply&
+
+MULTIPLY X and Y : 12.6
+Enter two numbers > &0 0&
+Enter an operation > &quit&
+
+EXIT
+$page
+(*  A second example to show EOF usage.  *)
+
+program eof_test;
+
+external procedure process ( f : text );
+
+begin (* the main program *)
+
+  reset (input, 'test.dat');    (* this associates the predefined
+                                   textfile INPUT to the external
+                                   file TEST.DAT,  and inputs the
+                                   first line into the buffer. *)
+  while not eof (input) do begin
+
+    process (input);            (* call the procedure *)
+    readln                      (* input the next line *)
+  end  (* while loop *)
+end (* program eof_test *).
+
+$jus
+$foot left 'May 1, 1980' right 'GETSTRING and PUTSTRING'
+$page
+10.\\&GETSTRING and PUTSTRING&
+$ski 2
+$par+5
+The GETSTRING and PUTSTRING make available to a program
+the string conversion routines used by the I/O system.
+No input/output takes place; values are only placed into
+a string or extracted from a string.
+$par+5
+A call to one of these functions has the form:
+$ver
+
+  <operation> (<string>, V1,...Vn);
+
+$jus
+In GETSTRING, characters are taken in a sequence from the string
+until values have been converted into all items, or the end of the
+string is reached.
+This routine behaves like READ, where the <string> is the file buffer.
+$par+5
+In PUTSTRING, items are processed until the maximum length of the
+string is reached or all items have been converted into
+string values and placed into the <string>. This is similar to the
+action of WRITE, where the <string> is the output file buffer.
+$foot left 'May 1, 1980' right 'Some Extras'
+$page
+11.\\&Some Extras&
+$ski2
+$par+5
+Sections 1.-10.\are usually adequate for most applications.
+However, MDSI Pascal does offer several other "nice" features.
+For a complete description and definition of Pascal I/O,
+consult the text, &MDSI Pascal&. Three of these features,
+random input/output, error recovery, and binary (untyped) files, are
+ discussed in this
+section.
+$ski3
+11.1\\Random Input/Output
+$ski2
+$par+5
+A file which has been associated with the UPDATE function or
+with the SEEKOK option can be accessed or written randomly.
+These functions are now described:
+$ski
+$ind+12
+$par-10
+SEEK\(f,\n)\-\the file "cursor" is placed over location n.
+If input is allowed, the file contents at location n are placed
+into f^.
+$ski
+$par-10
+READRN\(f,\n,\v1,...vn)\-\the file "cursor" is placed over location
+n and variables v1 through vn are given the values in the file
+starting with location n.
+$ski
+$par-10
+WRITERN\(f,\n,\v1,...vn)\-\the file "cursor" is placed over location
+n nd variables v1 through vn are output to the file starting
+with location n.
+$ski
+$par-10
+EXTENT\(f)\-\returns the "size" of the file, i.e. the number
+of data elements written to the file.
+$ski
+$par-10
+CURSOR\(f)\-\returns the present "cursor" position, i.e. where the
+next input or output value is in file.
+$ski
+$ind-12
+$par+5
+The cursor position is given as an integer. The location pointed
+to by n is given in part by the type of the file. In other words,
+the type of the file determines the size of each location that
+a cursor value points to. If the file were a file of integers, for
+example, then the cursor value, n, would point to the n&th& integer
+in the file.
+$ski3
+11.2\\Error Recovery
+$ski2
+$par+5
+(Please refer to the attached appendix)
+$ski3
+11.3\\Binary Files
+$ski
+(To be discussed)
+$ski2
+11.4\\Formatted I/O
+$ski
+(To be discussed)
+WL6

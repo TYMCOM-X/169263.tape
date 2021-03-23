@@ -1,0 +1,597 @@
+    
+$LENGTH 66
+    
+$MARGIN 10
+    
+$WIDTH 75
+
+$TITLE LEFT 'MDSI Pascal Version 2                                     Page \' LEFT '13 August 1981' 
+     
+$TABS 09,17,25,33,41,49,57,65
+$NUMBER off
+    
+
+
+   
+            
+$SKIP 0
+$trans '%' '$'
+$PAGE
+$SKIP 2  $INDENT +10
+$PARAGRAPH -10
+To:\\\\\\\All Ann Arbor Employees
+$SKIP $PARAGRAPH -10
+From:\\\\\N.\Faiman/Programming Languages
+$SKIP $PARAGRAPH -10
+Date:\\\\\13 August 1981
+$SKIP $PARAGRAPH -10 
+Subject:\\MDSI Pascal Version 2
+$SKIP 3  $INDENT -10 
+$PARAGRAPH 0
+
+$NEED 5
+$SECTION
+$ENTRY ''
+$ENTRY '^#	RELEASE SCHEDULE	\'
+$ENTRY ''
+^#.\\&Release Schedule&
+$SKIP 2
+$PARAGRAPH 5
+Version 2 of MDSI Pascal is now available on account [52250,261] on ADP systems
+14 and 12, along with compatible versions of the Pascal library (PASLIB),
+debugger, utilities library (RDLIB), and utilities.
+If no serious problems are reported with the new compiler system by Friday,
+August 21, then between 4:00 pm and 6:00 pm on Friday, August 21:
+$INDENT LEFT +4
+$SKIP 1
+$SKIP 0   $PARAGRAPH -4
+\1.\Version 1U of the compiler system will be removed from account
+[52250,234].
+$SKIP 0   $PARAGRAPH -4
+\2.\Version 1V of the compiler system will be transferred from account
+[52250,220] to account [52250,234].
+$SKIP 0   $PARAGRAPH -4
+\3.\Version 2 of the compiler system will be transferred from account
+[52250,261] to account [52250,220].
+Version 2 will also remain on account [52250,261] until Friday, August 28.
+$INDENT -4
+$SKIP 1
+This schedule is tentative.
+For updates and further details, check the message file RELEAS.NOT[52250,261].
+$SKIP 1 
+$NEED 2  $PARAGRAPH 5 
+Version 2 of the compiler system is incompatible with version 1.
+Modules compiled with the two versions cannot be linked together.
+Environment files created with one version cannot be used with the other.
+Programs compiled with one version cannot be loaded with the PASLIB, RDLIB,
+or overlay system from the other version.
+However, no source code changes are required to use the new compiler version.
+$PARAGRAPH 0
+
+$SKIP 3 
+$NEED 5
+$SECTION
+$ENTRY ''
+$ENTRY '^#	NEW PROGRAM NAMES	\'
+$ENTRY ''
+^#.\\&New Program Names&
+$SKIP 2
+$PARAGRAPH 5
+The main program of the new compiler is now named PASCAL rather than NEWPAS.
+The program which reads the source files for a compilation is named PASANL
+rather than P10DRV or VAXDRV.
+(This may require EFA file changes for anyone who is using EFA to control
+access to their source files.)
+$PARAGRAPH 0
+
+$SKIP 3 
+$NEED 5
+$SECTION
+$ENTRY ''
+$ENTRY '^#	ENHANCEMENTS AND IMPROVEMENTS	\'
+$ENTRY ''
+^#.\\&Enhancements and Improvements&
+$SKIP 2
+$PARAGRAPH 5
+The biggest change in the version 2 Pascal compiler is that it is now
+compiled by itself, rather than by the "old Pascal" compiler (RND:PASCAL).
+
+$LEVEL +1
+
+
+$PARAGRAPH 0
+
+
+$SKIP 2
+$NEED 4
+$SECTION
+$ENTRY '^#	:TARGET VAX	\'
+^#.\:TARGET VAX
+$SKIP 1
+$PARAGRAPH 5
+The new compiler fully supports the :TARGET\VAX and :TARGET\P10 compiler
+commands, and will generate code for both the PDP-10 and the VAX-11.
+VAX code from Pascal Version 2 is compatible with the code from the VAX-only
+NEWPAS Version 1C, which is on account [52250,227].
+It is not compatible with code from the VAX-only NEWPAS Version 1B, which
+is on account [52250,274].
+$PARAGRAPH 0
+
+
+$SKIP 2
+$NEED 4
+$SECTION
+$ENTRY '^#	/SEARCH Switch	\'
+^#.\/SEARCH Switch
+$SKIP 1
+$PARAGRAPH 5
+The compiler now supports a new command line switch, the /SEARCH switch.
+The SEARCH switch provides a generalized version of the LIBRARY feature
+of the SETSRC program.
+It may be specified in either of the following formats:
+$SKIP 1        $IND +5
+$VERBATIM          
+SEARCH ':' file-name-part
+SEARCH '(' file-name-part [',' file-name-part]... ')'
+$JUS
+$IND -5
+$SKIP 1 
+A file-name-part is any file name, or some collection of pieces of a file name.
+The following would all be legal file name parts:
+$SKIP 1        $IND +5
+$VERBATIM          
+ALPHA.PAS
+.INC
+[37256,401135]
+DSKB:.AVR
+$JUS
+$IND -5
+$SKIP 1 
+When the compiler fails in its attempt to open a source file (either the main
+source file or an included file), it will repeat the attempt, using each
+file-name-part from the SEARCH list to replace omitted pieces of the
+source file name, until it succeeds in opening a source file or exhausts the
+search list.
+A search list file-name-part cannot replace an explicitly specified piece
+of a source file name.
+$SKIP 1 
+$NEED 2  $PARAGRAPH 5 
+For example, suppose the search list is "(.DER,[123,335],.PAR[17,77])".
+Upon encountering the directive "%INCLUDE AMD", the compiler will successively
+attempt to open AMD.INC in the current account, AMD.DER in  the current account,
+AMD.INC[123,335], and AMD.PAR[17,777].
+Upon encountering the directive "%INCLUDE VXR.INC", it will attempt to open
+VXR.INC in the current account, VXR.INC in the current account (again),
+VXR.INC[123,335], and VXR.INC[17,77].
+$PARAGRAPH 0
+
+
+$SKIP 2
+$NEED 4
+$SECTION
+$ENTRY '^#	Binary, Octal, and Hexadecimal Constants	\'
+^#.\Binary, Octal, and Hexadecimal Constants
+$SKIP 1
+$PARAGRAPH 5
+The compiler will now recognize binary, octal, and hexadecimal integer constants,
+written as follows:
+$SKIP 1        $IND +5
+$VERBATIM          
+unsigned-integer ::= binary-integer || octal-integer ||
+                     decimal-integer || hexadecimal-integer
+
+binary-integer ::= '#B' binary-digit ...
+octal-integer ::= '#O' octal-digit ...
+decimal-integer ::= ['#D'] decimal-digit ...
+hexadecimal-integer ::= '#H' hex-digit ...
+
+binary-digit ::= '0' || '1'
+octal-digit ::= '0' || '1' || '2' || '3' ||
+                '4' || '5' || '6' || '7'
+decimal-digit ::= octal-digit || '8' || '9'
+hex-digit ::= decimal-digit || 'A' || 'B' || 'C' || 'D' ||
+                              'E' || 'F'
+
+Example:  #B1011011 = #O133 = #D91 = 91 = #H5B
+$JUS
+$IND -5
+$SKIP 1 
+Radix codes (B, O, D, and H) and alphabetic hexadecimal "digits" (A through F)
+may be in either upper or lower case.
+$SKIP 1 
+$NEED 2  $PARAGRAPH 5 
+The old octal notation (digit\...\'B') will still be accepted, but ought to
+be converted to the new notation ('#O'\digit\...).
+$PARAGRAPH 0
+
+
+$SKIP 2
+$NEED 4
+$SECTION
+$ENTRY '^#	Target Machine Conditional Compilation Switches	\'
+^#.\Target Machine Conditional Compilation Switches
+$SKIP 1
+$PARAGRAPH 5
+The compiler will automatically enable a conditional compilation switch
+with the same name as the target machine the code is being compiled for.
+Thus, a program could contain code such as:
+$SKIP 1        $IND +5
+$VERBATIM          
+%IF vax
+   write (x:8:h);
+%ENDIF
+%IF p10
+   write (x:6:o);
+%ENDIF
+$JUS
+$IND -5
+$SKIP 1 
+which would be compiled differently, depending on whether the target machine had
+been set to P10 or VAX.
+$PARAGRAPH 0
+
+
+$SKIP 2
+$NEED 4
+$SECTION
+$ENTRY '^#	Stack Frame Format	\'
+^#.\Stack Frame Format
+$SKIP 1
+$PARAGRAPH 5
+The static and dynamic (parent and caller) links have been interchanged in
+word 2 of the PDP-10 stack frame.
+This should result in a slight speed improvement for Pascal programs.
+$PARAGRAPH 0
+
+
+$SKIP 2
+$NEED 4
+$SECTION
+$ENTRY '^#	PDP-10 Traceback	\'
+^#.\PDP-10 Traceback
+$SKIP 1
+$PARAGRAPH 5
+Following a fatal error or a "control-C" interrupt in a Pascal program running
+on the PDP-10, the REENTER monitor command will cause the Pascal runtime to
+print a stack traceback.
+It is no longer necessary to use both the REENTER and the CONTINUE commands.
+In fact, if you get a stack traceback wth REENTER, a CONTINUE will then attempt
+to continue the program (which is possible following a control-C interrupt or
+an assertion or case index error).
+
+$LEVEL -1
+
+
+$PARAGRAPH 0
+
+$SKIP 3 
+$NEED 5
+$SECTION
+$ENTRY ''
+$ENTRY '^#	BUG FIXES	\'
+$ENTRY ''
+^#.\\&Bug Fixes&
+$SKIP 2
+$PARAGRAPH 5
+A great many bugs have been fixed in Pascal Version 2.
+In the notes below, VAX refers to a problem in the VAX code generator, Q to
+a problem in the PDP-10 /QUICK code generator, and NOQ to a problem in the
+PDP-10 /NOQUICK code generator.
+
+$LEVEL +1
+
+
+$PARAGRAPH 0
+
+
+$SKIP 2
+$NEED 4
+$SECTION
+$ENTRY '^#	Syntax Error Recovery	\'
+^#.\Syntax Error Recovery
+$SKIP 1
+$PARAGRAPH 5
+The version 1 compiler frequently died or looped when it encountered certain
+syntax errors in source programs.
+Such failures should now be much less frequent.
+In particular, compiler failure should no longer occur in the following cases:
+$INDENT LEFT +2
+$SKIP 1
+$SKIP 0   $PARAGRAPH -2
+o\A standard procedure or function name is used as a parameter in a
+procedure or function call.
+$SKIP 0   $PARAGRAPH -2
+o\The keyword ^uconst|u is not followed by any constant declarations.
+$SKIP 0   $PARAGRAPH -2
+o\The keyword ^uvar|u is not followed by any variable declarations.
+$SKIP 0   $PARAGRAPH -2
+o\The name of a formal parameter is omitted in a procedure or function
+declaration.
+$SKIP 0   $PARAGRAPH -2
+o\The tag field specification in a variant record declaration is badly
+mangled.
+$SKIP 0   $PARAGRAPH -2
+o\A case statement doesn't contain at least one case.
+$INDENT -2
+$SKIP 1
+$PARAGRAPH 0
+
+
+$SKIP 2
+$NEED 4
+$SECTION
+$ENTRY '^#	Getstring and Putstring	\'
+^#.\Getstring and Putstring
+$SKIP 1
+$PARAGRAPH 5
+The PDP-10 /NOQUICK code generator generated bad code for getstring and
+putstring operations when the target string of the call (i.e., the string
+in the first argument) also occurred in one of the subsequent arguments.
+This has now been fixed, so that all getstring and putstring calls should
+work as you would expect with all code generators.
+$PARAGRAPH 0
+
+
+$SKIP 2
+$NEED 4
+$SECTION
+$ENTRY '^#	Diagnostics	\'
+^#.\Diagnostics
+$SKIP 1
+$PARAGRAPH 5
+The compiler would sometimes print an incorrect error message, or fail to
+detect an error:
+$INDENT LEFT +2
+$SKIP 1
+$SKIP 0   $PARAGRAPH -2
+o\The compiler would not allow a call to GET or PUT with no arguments.
+(These are legal, with INPUT and OUTPUT as the default arguments.)
+$SKIP 0   $PARAGRAPH -2
+o\The compiler would not allow two integer subrange variables to be used
+in the same expression if one was a packed subrange and the other was an
+unpacked subrange.
+$SKIP 0   $PARAGRAPH -2
+o\If SF was a function returning a set, and S1 and S2 were set variables,
+then the compiler would not allow "S1\:=\S2\*\SF;".
+$SKIP 0   $PARAGRAPH -2
+o\The compiler allowed "NEW(X)" when X was a variable of type PTR.
+$SKIP 0   $PARAGRAPH -2
+o\When an aggregate constructor contained a set expression (e.g.,
+"X\:=\(...,[A],...)", the compiler would give an erroneous "set truncated"
+message.
+$PARAGRAPH 0
+
+
+$SKIP 2
+$NEED 4
+$SECTION
+$ENTRY '^#	Set Code Problems	\'
+^#.\Set Code Problems
+$SKIP 1
+$PARAGRAPH 5
+The compiler generated bad code for many expressions and statements involving
+sets:
+$INDENT LEFT +2
+$SKIP 1
+$SKIP 0   $PARAGRAPH -2
+o\(Q) The empty set constant ("[]") was not passed correctly as a
+parameter when the formal parameter was a set with more than 72 elements.
+$SKIP 0   $PARAGRAPH -2
+o\(Q) An ^uin|u test "if x in set_expr" would give incorrect results
+if the variable X was greater than 255.
+$SKIP 0   $PARAGRAPH -2
+o\(NOQ) Bad code was generated for an assignment such as "S1:=S2",
+where S1 and S2 were set variables with the same lower bound, and S1 had
+36 or fewer elements, and S2 had between 37 and 72 elements.
+$SKIP 0   $PARAGRAPH -2
+o\(NOQ) An ^uin|u test "constant in set_expr" gave incorrect
+results when the set_expr had more than 72 elements.
+$SKIP 0   $PARAGRAPH -2
+o\(All) Set constants were created with one element too many.
+$SKIP 0   $PARAGRAPH -2
+o\(NOQ) An ^uin|u test "if x in set_expr", where the upperbound of
+the set could not be approximated at compile time (e.g., [l,\m..n])
+gave bad results.
+$SKIP 0   $PARAGRAPH -2
+o\(NOQ) Bad code was generated for functions which returned sets with more
+than 72 elements.
+$SKIP 0   $PARAGRAPH -2
+o\(VAX) The compiler failed when the function return symbol of a set
+function was passed as a var parameter to another procedure or function.
+$SKIP 0   $PARAGRAPH -2
+o\(Q,NOQ) A comparison "if set_expr = []" gave incorrect results, when the
+set expression had more than 72 elements.
+$SKIP 0   $PARAGRAPH -2
+o\(Q,NOQ) A set constructor [0..-1], which ought to generate the empty set,
+was generating unpredictable results.
+$SKIP 0   $PARAGRAPH -2
+o\(NOQ) Set equality test involving arbitrary long set expressions
+gave the wrong results.
+$SKIP 0   $PARAGRAPH -2
+o\(NOQ) There were other miscellaneous problems involving sets with
+more than 72 elements.
+$INDENT -2
+$SKIP 1
+$PARAGRAPH 0
+
+
+$SKIP 2
+$NEED 4
+$SECTION
+$ENTRY '^#	Assertion Failures	\'
+^#.\Assertion Failures
+$SKIP 1
+$PARAGRAPH 5
+There were many cases where the compiler would indicate an assertion failure
+in one of the code generators:
+$INDENT LEFT +2
+$SKIP 1
+$SKIP 0   $PARAGRAPH -2
+o\(Q) A substring of a flexible string was assigned to a flexible string.
+$SKIP 0   $PARAGRAPH -2
+o\(Q) An aggregate constructor was assigned to a flexible array variable.
+$SKIP 0   $PARAGRAPH -2
+o\(Q) The target of a PUTSTRING was a flexible varying string.
+$SKIP 0   $PARAGRAPH -2
+o\(VAX) Some PUTSTRING calls.
+$SKIP 0   $PARAGRAPH -2
+o\(VAX) An UPPERCASE call, whose argument was a function which returned
+a character, was assigned to an element of an array of characters.
+$SKIP 0   $PARAGRAPH -2
+o\(VAX,Q) The body of a with statement ended with a goto statement (i.e.,
+WITH REC DO BEGIN\...\GOTO 100 END).
+$SKIP 0   $PARAGRAPH -2
+o\(Q) The first argument in a read or write statement was an
+expression whose evaluation required runtime checking (e.g., READ (X^)).
+$SKIP 0   $PARAGRAPH -2
+o\(Q) A with statement contained a call to a procedure which was
+a field of the with statement's record.
+$SKIP 0   $PARAGRAPH -2
+0\(Q) A var parameter was used as the field width argument in a read
+or write call.
+$INDENT -2
+$SKIP 1
+$PARAGRAPH 0
+
+
+$SKIP 2
+$NEED 4
+$SECTION
+$ENTRY '^#	Miscellaneous Bad Code	\'
+^#.\Miscellaneous Bad Code
+$SKIP 1
+$PARAGRAPH 5
+$INDENT LEFT +2
+$SKIP 1
+$SKIP 0   $PARAGRAPH -2
+o\(All) Bad code was generated for the ALLOCATE function.
+$SKIP 0   $PARAGRAPH -2
+o\(Q) A flexible string was passed to a routine whose formal parameter
+was a non-flexible string.
+$SKIP 0   $PARAGRAPH -2
+o\(VAX,Q) The termination value in a FOR loop involved array indexing or
+pointer accesses.
+$SKIP 0   $PARAGRAPH -2
+o\(Q) Some cases when a procedure name was assigned to a procedure variable
+or passed as a procedural parameter.
+$SKIP 0   $PARAGRAPH -2
+o\(Q,NOQ) READ(x:n), where X was real, would not stop reading after N
+characters.
+$SKIP 0   $PARAGRAPH -2
+o\(All) A constant string which was produced by concatenating two other
+constant strings (e.g., CONST S = 'ABC' |||| 'DEF') would have the wrong value.
+$SKIP 0   $PARAGRAPH -2
+o\(NOQ) Bad code was generated for ORD(NIL).
+$SKIP 0   $PARAGRAPH -2
+o\(All) Bad code was frequently generated for operations involving
+zero-length objects (array[1..0], record end, set of 1..0, string[0], etc.).
+$SKIP 0   $PARAGRAPH -2
+o\(NOQ) Bad code was generated for an aggregate constructor for a
+record ending with a flexible array or string.
+$SKIP 0   $PARAGRAPH -2
+o\(All) Code was generated to check ASSERT statements, even when NOCHECK
+was specified.
+$SKIP 0   $PARAGRAPH -2
+o\(VAX) Value string parameters were sometimes passed incorrectly.
+$SKIP 0   $PARAGRAPH -2
+o\(VAX) Long string constants were generated incorrectly.
+$INDENT -2
+$SKIP 1
+$PARAGRAPH 0
+
+
+$SKIP 2
+$NEED 4
+$SECTION
+$ENTRY '^#	Runtime System Bug Fixes	\'
+^#.\Runtime System Bug Fixes
+$SKIP 1
+$PARAGRAPH 5
+$INDENT LEFT +2
+$SKIP 1
+$SKIP 0   $PARAGRAPH -2
+o\(Q,NOQ) UNMASK in an overlaid program caused an infinite loop.
+$SKIP 0   $PARAGRAPH -2
+o\(Q,NOQ) An OPEN, RESET, REWRITE, or UPDATE failure incorrectly saved
+status codes for subsequent IOSTATUS calls.
+$SKIP 0   $PARAGRAPH -2
+o\(Q,NOQ) An OPEN, RESET, REWRITE, or UPDATE call which required the
+expansion of the heap for allocation of a file buffer lost information necessary
+for further file operations.
+$SKIP 0   $PARAGRAPH -2
+o\(Q,NOQ) Support for EXTENT(pointer) was missing from the runtime library.
+$SKIP 0   $PARAGRAPH -2
+o\(VAX) Single and double precision cotangent functions were omitted
+from the runtime library.
+$SKIP 0   $PARAGRAPH -2
+o\(VAX) Typed files opened with RESET and the SEEKOK option
+wrongly required write access to the file;
+the open would fail if the file was protected against write access.
+$SKIP 0   $PARAGRAPH -2
+o\(VAX) Some math routines in VMSRTL behave differently from
+MDSI Pascal definitions in degenerate cases, and did not have wrappers
+to fix this.
+In particular, arctangent(x,y) for y=0 and 0**n for n<=0 gave wrong results.
+$SKIP 0   $PARAGRAPH -2
+o\(VAX) RANDOM(0) caused subsequent RANDOM calls to return 0.
+$SKIP 0   $PARAGRAPH -2
+o\(VAX) EXTENT, CURSOR and EOF functions on binary files
+opened with SEEKOK sometimes returned wrong results.
+$INDENT -2
+$SKIP 1
+$PARAGRAPH 0
+
+
+$SKIP 2
+$NEED 4
+$SECTION
+$ENTRY '^#	Miscellaneous Improvements	\'
+^#.\Miscellaneous Improvements
+$SKIP 1
+$PARAGRAPH 5
+$INDENT LEFT +2
+$SKIP 1
+$SKIP 0   $PARAGRAPH -2
+o\The contents of the SYM files written under the GLOBAL option have
+been refined.
+$SKIP 0   $PARAGRAPH -2
+o\The new compiler will no longer leave XRF and ERR temporary files
+lying around.
+$SKIP 0   $PARAGRAPH -2
+o\The VAX and PDP-10 assembly listings written under the ASSEMBLY
+option have been improved.
+$INDENT -2
+$SKIP 1
+$PARAGRAPH 0
+
+
+$SKIP 2
+$NEED 4
+$SECTION
+$ENTRY '^#	ODMS	\'
+^#.\ODMS
+$SKIP 1
+$PARAGRAPH 5
+$INDENT LEFT +2
+$SKIP 1
+$SKIP 0   $PARAGRAPH -2
+o\The bug ANC discovered which limited directory files in an ODMS
+database to 16 entries is fixed. Now directory entries for ODMS databases
+can contain up to 256 entries.
+$SKIP 0   $PARAGRAPH -2
+o\Database files were opened for update,
+requiring write access. Commands like PRINT and VERIFY do not require
+write access and therefore are now opened with an OPEN.
+$SKIP 0   $PARAGRAPH -2
+o\An MDL with no entry points defined used to cause a dereference
+of a NIL pointer. This has been fixed.
+$SKIP 0   $PARAGRA
+o\ODMS now allows implicit ".EXE" entensions for filenames used
+to indicate sharable overlays to the VERIFY command.
+$SKIP 0   $PARAGRAPH -2
+o\In general, the error handling in ODMS should be more graceful.
+$SKIP 0   $PARAGRAPH -2
+o\All known bugs in ODMS have been fixed.
+$INDENT -2
+$SKIP 1
+   h@eò

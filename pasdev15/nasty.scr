@@ -1,0 +1,174 @@
+$center
+INEFFICIENCIES AND OTHER NASTIES
+IN THIS PROGRAM
+J. D. ROSEN
+$JUSTIFY
+$skip 4
+There are several things in this code that, given three or four weeks to polish,
+I would do differently.  I'll go through it module by module and try to spell
+them out.
+$skip 2
+&ODMS&
+$indent left +5
+In general, the filename representations differ from module to module.  The
+problem is that some modules(i.e. TOKEN2) use the pre-defined PASCAL I/O
+operators, and others use the Kortesojan random I/O routines.  Naturally,
+the conventions are a bit different, hence all the little procedures of the
+ilk of FPACK, FNME, FEXPND, etc.  Also, the error flag passing conventions
+are a bit ragged, and some modules write error messages on the terminal, while
+others let ODMS do it.  
+$paragraph
+Look in procedure PROCESS, the case on command-type PACK, and notice how I
+determined the number of defined modules--by walking the linked list of them,
+and returning the index of the last one.  This same little trick is used
+in several other places (see BUILD), and is undoubtedly clumsy.
+$paragraph
+Finally, it might not be a bad idea to check the documentation available
+by typing 'HELP USE' to the TOPS-10 monitor, and having ODMS generate a
+use file that would do all the assembling and linking of the modules in
+one fell swoop.  That's what I did by hand when checking this beast out
+with SCRIBE, and such a feature might not be too bad for non-NCS applications.
+$indent left -5
+$skip 2
+&USE&
+$INDENT LEFT +5
+What can I say?  First off, fix the error message reporter to print out errors
+by printing the erroneous line once, with several up-arrows (check a counter
+every time GETNEWLINE is called) instead of printing the line for each error.
+Perhaps the error messages are a bit too specific--experiment and insure that
+they are accurate, and then maybe generalize them.  This would simplify error
+detection in each and every one of the non-terminal item routines.
+$paragraph
+This whole module could be made tighter and smaller if you worked at it, but
+it &does& process a correct description correctly
+$paragraph
+Perhaps this one could use the Kortesojan sequential I/O routines.  This would
+enable users to USE a file not on their account, which would be very
+useful.  Or else go through the hassle of having different PPN's and giving
+them to PASCAL through the options on OPEN and REWRITE.
+$indent left -5
+$skip 2
+&PUTUP&
+$indent left +5
+I really can't see what to do with this one.  The trickiness with placing the
+first symbol on the symbol tree lends itself no easy solution.  It's up to
+the caller either to pass the actual symbol pointer as parameter, or manually
+adjust his symboltable pointer after the first entry.  Other than that, it's
+OK.  Notice the $X compilation in ENDINORDERWALK--this can lead to quite
+lengthy printouts.
+$indent left -5
+$skip 2
+&UPDATE&
+$INDENT LEFT +5
+The necessary ordering of the operations requires this code to be rather
+monolithic and ploddingly stupid, but again, it works.  At least it seems to--
+I'd check it out carefully with module numbers above 127 and 254.  Check out
+the program DUMP on [2250,247]--it will give you a list of all non-zero
+words in a file in octal format, and you can then manually check the linkages
+within the database.   You could make the pointer conventions easier
+to work with, with little loss at the runtime level.  The use of block 
+pointers instead of word pointers originated when we were worried about the
+number of bits available in the run-time module table for storing current
+version disk pointers.  I think a conversion to word pointers would be workable
+all across the board, with a real increase in performance and efficiency.
+$paragraph
+A word about DUMP--give it a file name in this format:
+$center
+FFFFFFXXX
+$justify
+where the F's is the file name(fill in the blanks), and the X's are the 
+extension.  Do &not& type a period, and fill all nine character positions.
+$indent left -5
+$skip 2
+&TRICKY&
+$indent left +5
+Nothing to it.
+$skip 2
+$indent left -5
+&MODMAK&
+$indent left +5
+This is one of the few artifacts left from the original designer, Bob
+Sheff.  I think the padding up to 200B between the high code and the static
+storage could be eliminated--this was just for efficiency in reading the
+stuff in at run-time.  Notice that a module must leave room for the
+(at current) 3 database header words, to prevent the loss of the first 
+few words of static storage.  Conceivably, UPDATE could do this, but it
+would be clumsy.  However, it would lead to more efficient .OVL files.
+$indent left -5
+$skip 2
+&DELMOD&
+$indent left +5
+Not a whole lot to say...it's culmsy because, again, of the necessary 
+ordering of operations to maintain database integrity.  I think it bears
+a bit of polishing.
+$indent left -5
+$skip 2
+&BUILD&
+$indent left +5
+Here especially, notice how much I have to walk the linked lists.  Perhaps,
+for example, the module record could have a pointer to its area record
+instead of its index.  And so on with other associations between symbols
+in the symbol tree.  Perhaps the run-time symbols 'FILE' and 'MODULE' could
+be renamed.  Notice carefully the somewhat clumsy defaulting that is going
+on in the generation of the FILE and MODULE tables.
+$indent left -5
+$skip 2
+&WRTSYM&
+$indent left +5
+Presumable you will be asked to convert this morass to something that will
+directly lay down binary .REL files, thus eliminating the assembly of
+the transfer vectors and the tables.  I tried to keep it as modular as
+possible, in functional terms.   Good luck!
+$indent left -5
+$skip 2
+&TOKEN2&
+$indent left +5
+Le grande kludge.  I caught lots of static by making this monster a keyword
+scanner instead of a standard BNF-type non-terminal processor.  Notice
+that I re-designed the language slightly to make it a keyword language,
+and that components of a command can be entered anywhere in the line.
+If any major changes are made to the language, you may have a problem on your
+hands.  However, also notice that small changes can be made painlessly.
+$indent left -5
+$skip 2
+&PACK&
+$indent left +5
+I really hope our user doesn't have a file called GZRXT$.LFH !!
+If so, she's in trouble, and so will you shortly thereafter.  Notice that
+once a second directory block is created, it will always be included in
+the packed database, even though there may be no modules above 127 (or
+whatever).  In UPDATE, I defined my own versions of RDRAND, etc., to
+get rid of the annoying fact that they advance the file pointer after
+the operation.   You'll cringe to see all the subtracting of
+BLOCKSIZE going on.  
+$indent left -5
+$skip 2
+&RENAME&
+$indent left +5
+Simplicity itself, if you read the RENAME monitor call description.
+$indent left -5
+$skip 2
+&PRINT&
+$indent left +5
+ You can do better, all around.  The fact that leading zeroes are
+suppressed when printing the date-time is a real hassle.  However, the
+time is necessary (according to the NCS people in my acquaintance), so
+keep it and polish it.  Unfortunately, the date-time UUO's are nasty
+in terms of what they return, so watch it.
+$indent left -5
+$skip 2
+&NEWOVL&
+$indent left +5
+Ah, the run-time overlay manager!!  Many little kludges here, very deceptively
+hidden.  The code whose comments are in parens are more artifacts from Bob
+Sheff.  One of the last things I did was to take the external file bit and
+place it in the file table where it belongs.  Which did nasty things to
+the previous channel number conventions.  Now, the channel number is
+contained in the second half-word of the first word in the file table
+entry, the first bit of the word is the external file bit, and the other
+17 are 'reserved for the user' as DEC would say.  
+$paragraph
+Check out the run-time entry points OVLVER and such very carefully--again,
+this was one of the last things I did, and I didn't have much time to
+check them.  It might be nice to parse the filename in OVEXTF, so that a
+non-existant file wouldn't bomb out the run-time.

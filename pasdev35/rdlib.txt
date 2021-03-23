@@ -1,0 +1,1190 @@
+
+
+
+                                                     VAX-RDLIB User's Guide
+                                                            August 23, 1982
+                                                                     Page 1
+
+     1.0 Introduction         ____________
+
+     The Research  and  Development  Library,  RDLIB,  contains  a  set  of
+     Pascal-callable  routines which are used to perform functions that are
+     not  part  of  Pascal.  RDLIB  contains  routines   which   manipulate
+     directories,  determine baud rates, etc..  This document describes the
+     VAX version of RDLIB.  The description includes a list of the routines
+     that  are  available, and notes differences between these routines and
+     their DEC-10 counterparts.  If a DEC-10 RDLIB routine is not described
+     in  this  document,  it  is  not  available  on the VAX.  If a routine
+     described here is not available on the DEC-10, the description of that
+     routine  will  mention  that  fact.  Appendix  A  at  the  end of this
+     document alphabetically lists the names of the routines in VAX  RDLIB,
+     along with a terse description of their functions.
+
+     RDLIB  is  a searchable object library.  It is referenced at link time
+     through the system wide logical name "RDLIB".  A Pascal program  named
+     "FOO" would be linked as follows:
+
+           $ LINK FOO,RDLIB/LIB,PLINK/OPT
+
+
+
+     2.0 Routines         ________
+
+     This document describes the routines in the VAX version of RDLIB.  The
+     description includes the external procedure/function  declaration  and
+     an  indication  of  any  type  or  include files that are needed.  The
+     routine description also contains a terse explanation of the routine's
+     function,  and  any differences between the VAX version and its DEC-10
+     counterpart.  To make  things  easier  to  find,  this  document  will
+     maintain  the  same grouping into packages as in the previous versions
+     of RDLIB.  The packages are:  INFPAC, DAYTIME, PASDIR, FILUTL, CMDUTL,
+     TERIO and Miscellaneous.
+
+
+     2.1 INFPAC         ______
+
+     INFPAC is a set of routines which return information about the calling
+     program's environment.  The INFPAC package is DEC-10 specific and  not
+     available  on  the VAX.  Three of the functions provided in the INFPAC
+     package are available on the VAX; one determines  the  system-assigned
+     job  number,  JOBNUM,  another  returns  the full pathname of the file
+     which is currently being executed, and the third  returns  the  user's
+     PPN, GET_USER_ACNT.  These routines are described in section 2.7.
+
+
+     2.2 DAYTIME         _______
+
+     The  DAYTIME package contains a set of routines for manipulating dates
+     and times.  The package is based, as is the  DEC-10  version,  upon  a
+     standard  internal  day/time,  e.g.  a single encoding of a date and a
+     time of day in one storage unit.  On the DEC-10 the storage unit is  a
+
+
+
+
+
+
+
+
+
+                                                     VAX-RDLIB User's Guide
+                                                            August 23, 1982
+                                                                     Page 2
+
+     PDP-10 word; on the VAX the storage unit is a quadword, i.e.  8 bytes.
+     The VAX version of the DAYTIME package consists of  the  same  set  of
+     routines as on the DEC-10, except that GMDTIME is not available on the
+     VAX.  The only other user-noticeable difference between  the  VAX  and
+     DEC-10   versions  is  that  the  user  must  include  different  type
+     declarations.   DTIME.TYP,   on   [52250,227],   contains   the   type
+     declarations   for   the   VAX   version  of  DAYTIME,  DTIME.TYP,  on
+     [52250,220], contains the type declarations for the DEC-10 version  of
+     DAYTIME.  DTIME.INC,  on  [52250,220], contains the external procedure
+     declarations for the VAX and DEC-10 versions of DAYTIME.
+
+     Since the VAX and the DEC-10 versions are the  same,  except  for  the
+     type  files  and the omission of GMDTIME, the procedures and functions
+     will not be listed here.  Appendix A  at  the  end  of  this  document
+     contains  a  list  of the procedures and functions that are available.
+     If further information is desired, see the R&D Programming Manual.
+
+
+     2.3 PASDIR         ______
+
+     PASDIR is a set of routines  which  perform  directory  manipulations.
+     All  the  DEC-10  PASDIR  modules are available on the VAX:  DIR_OPEN,
+     DIR_CLOSE, DIR_NEXT, DIR_MATCH, and DIR_ATTR.  The functions of  these
+     routines  remain the same, although some of the data returned by these
+     routines has changed because of differences between the  VAX  and  the
+     DEC-10.  These changes will be discussed with each individual routine.
+     Furthermore, as in  the  DAYTIME  package,  the  type  files  will  be
+     different   for   the   VAX   and   DEC-10  versions.  PASDIR.TYP,  on
+     [52250,227], contains the type declarations for  the  VAX  version  of
+     PASDIR, and PASDIR.TYP, on [52250,220], contains the type declarations
+     for the DEC-10 version  of  PASDIR.  The  external  procedure/function
+     declarations  for  the  PASDIR  package  are  the same for the VAX and
+     DEC-10 versions.  The  external  declarations  are  in  PASDIR.INC  on
+     [52250,220].  Both  the  VAX and DEC-10 versions of PASDIR.TYP require
+     that DTIME.TYP be included before PASDIR.TYP  is  included.  DTIME.TYP
+     must   be   included   from  the  same  account  as  PASDIR.TYP,  i.e.
+     [52250,220] for  the  DEC-10  version  and  [52250,227]  for  the  VAX
+     version.
+
+         DIR_OPEN - This routine opens a specified directory.  This routine
+             is used in conjunction with DIR_NEXT to determine the names of
+             the  files  contained  in a specified directory.  This routine
+             functions as the DEC-10 version does.  The external  procedure
+             declaration is:
+
+                  External Procedure DIR_OPEN (
+                    Var ERR : DIR_ERRORS;
+                    Var INT_ID : DIR_INT_ID;
+                        EXT_ID : DIR_EXT_ID );
+
+             Any  valid  VAX  directory specification may be used as EXT_ID
+             ("[250230]", "LIB:", "[250,230]", "[--.PASDEV.RDLIB]", etc.).
+
+
+
+
+
+
+
+
+
+
+                                                     VAX-RDLIB User's Guide
+                                                            August 23, 1982
+                                                                     Page 3
+
+         DIR_CLOSE - This routine closes a directory that has  been  opened
+             by  DIR_OPEN.  This  routine frees the storage associated with
+             keeping the specified directory open.  The external  procedure
+             declaration is:
+
+                  External Procedure DIR_CLOSE (
+                    Var ERR : DIR_ERRORS;
+                        INT_ID : DIR_INT_ID );
+
+             On  the DEC-10 this routine may return a success code, DIR_OK,
+             or one of two error codes, DIR_NOT_OPEN or DIR_BAD_INT_ID.  On
+             the   VAX   there  is  no  way  to  detect  error  conditions.
+             Therefore, if DIR_CLOSE is called with a bad INT_ID, DIR_CLOSE
+             will fail, causing a runtime error.
+
+         DIR_NEXT - This  routine  scans  through  a  directory  opened  by
+             DIR_OPEN, returning the names of the files contained  in  that
+             directory, one for each call.  DIR_NEXT works on the VAX as it
+             does on the DEC-10,  except  that  the  filename  returned  by
+             DIR_NEXT    is    a    complete   pathname,   including   disk
+             identification, directory specification, and  version  number.
+             The external declaration is:
+
+                  External Procedure DIR_NEXT (
+                    Var ERR : DIR_ERRORS;
+                        INT_ID : DIR_INT_ID;
+                    Var FNAME : DIR_FNAME );
+
+             Both the DEC-10 and VAX versions of DIR_NEXT may return one of
+             two non-error codes:  DIR_OK  or  DIR_EOF.  DIR_EOF  indicates
+             that  the end of the directory has been reached.  DIR_EOF will
+             be returned on the call AFTER the call which returns the  last
+             filename  in  the  directory.  On  the  DEC-10,  there are two
+             possible error return codes, DIR_BAD_INT_ID and  DIR_NOT_OPEN.
+             On   the   VAX,   there   is   only  one  error  return  code,
+             DIR_BAD_INT_ID, which will be returned  if  the  INT_ID  value
+             passed to DIR_NEXT is bad.
+
+         DIR_MATCH - This  routine matches a string to a wild card pattern,
+             returning  true  if  the  string  matches  the  pattern.  This
+             routine  is  the same on the VAX and the DEC-10.  The external
+             declaration is:
+
+                  External Function DIR_MATCH (
+                    FNAME : DIR_FNAME;
+                    PATTERN : DIR_M_STR ) : Boolean;
+
+         DIR_ATTR - This routine returns the attributes of  a  given  file.
+             The  attributes  are:  protection,  creation day/time, size in
+             bytes, pathname of the file , and the last revision  day/time.
+             On  the  DEC-10  the date of the last read access is returned.
+             This is not  available  on  the  VAX,  so  the  last  revision
+             day/time is returned instead.  The DEC-10 version also returns
+
+
+
+
+
+
+
+
+
+                                                     VAX-RDLIB User's Guide
+                                                            August 23, 1982
+                                                                     Page 4
+
+             the filename in a formatted, packed  array  of  9  characters,
+             where the first six represent the name, and the last three are
+             the extension  (see  the  R&D  Programming  Manual).  The  VAX
+             version  of  DIR_ATTR  returns  the  full  pathname  of a file
+             instead.  The DEC-10 uses a 3-character protection  code,  and
+             therefore  so  does  PASDIR.  The  VAX,  however,  uses a more
+             elaborate scheme.  To handle this scheme  the  following  type
+             declarations  are  used (For a description of file protections
+             on the VAX see VAX I/O Reference Guide):
+
+                  Type DIR_PROT_SCLS = (
+                        DIR_READ,       (* permit read access         *)
+                        DIR_WRITE,      (* Allow write access         *)
+                        DIR_EXECUTE,    (* Allow execution privileges *)
+                        DIR_DELETE );   (* Allow deletion             *)
+
+                       DIR_ACCT_SCLS = (
+                        DIR_SYSTEM,     (* The system accounts        *)
+                        DIR_OWNER,      (* The owner of the file      *)
+                        DIR_GROUP,      (* First UIC number the same  *)
+                        DIR_WORLD );    (* The rest of the accounts.  *)
+
+                       DIR_PROT_SET = Set of DIR_PROT_SCLS;
+
+                       DIR_PROT = Packed Array [ DIR_ACCT_SCLS ]
+                                    of DIR_PROT_SET;
+
+             The DIR_ACCT_SCLS scalars correspond to the digit positions in
+             the   DEC-10   protection   code,   i.e.   "<abc>".  DIR_WORLD
+             corresponds to the last digit position,  i.e.  "c",  DIR_GROUP
+             corresponds to the middle digit position, i.e.  "b", DIR_OWNER
+             corresponds  to  the  first  digit  position,  i.e.  "a",  and
+             DIR_SYSTEM has no corresponding meaning on the DEC-10.  On the
+             DEC-10, the type of file access that a user has  is  indicated
+             by   a   digit:   "7"  indicates  "no-access",  "6"  indicates
+             "execute-only", "5" indicates "read  and  execute",  etc..  On
+             the VAX the access types, read, write, execute and delete, are
+             mutually exclusive, e.g.  permitting write access  to  a  file
+             implys absolutely nothing about read access to that file.  The
+             following example shows how a file protected "<057>" would  be
+             protected on the VAX:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                     VAX-RDLIB User's Guide
+                                                            August 23, 1982
+                                                                     Page 5
+
+                  Var PRO : DIR_PROT;
+                        .
+                        .
+                        .
+                    (* The SYSTEM reference, of [SYS,OWNER,GROUP,WORLD]
+                       has no user-available counterpart on the DEC-10.
+                       On the VAX the SYSTEM field should permit all
+                       accesses, RWED. *)
+
+                    PRO [ DIR_SYSTEM ] := [ DIR_READ , DIR_WRITE ,
+                                            DIR_EXECUTE , DIR_DELETE ];
+
+                    (* OWNER Protection "0" of "<057>" *)
+
+                    PRO [ DIR_OWNER ] := [ DIR_READ , DIR_WRITE ,
+                                         DIR_EXECUTE , DIR_DELETE ];
+
+                    (* GROUP Protection "5" of "<057>" *)
+
+                    PRO [ DIR_GROUP ] := [ DIR_READ , DIR_EXECUTE ];
+
+                    (* WORLD Protection "7" of "<057>" *)
+
+                    PRO [ DIR_WORLD ] := [ ];
+
+
+             The  type  declaration  is found in PASDIR.TYP on [52250,227].
+             The external declaration is:
+
+                  External Procedure DIR_ATTR (
+                    Var ERR : DIR_ERRORS;
+                        FNAME : DIR_FNAME;
+                    Var ATTR : DIR_ATTRS );
+
+             For further inforation on any of the PASDIR routines  see  the
+             R&D Programming Manual.
+
+
+     2.4 FILUTL-File Utilities         _____________________
+
+     FILUTL contains two routines, PR_FILE_ID and OPEN_FILE, which serve as
+     command utilities  to  handle  filename  parsing  and  file  openings.
+     CMDUTL.TYP,  on  [52250,220],  must  be  included by any Pascal module
+     using  either  or  both  of  these  routines.  The  external  function
+     declarations  are  found in FILUTL.INC on [52250,220].  PR_FILE_ID and
+     OPEN_FILE are both written in Pascal and are available on the VAX  and
+     the DEC-10.
+
+         PR_FILE_ID - This  routine  extracts  a  filename  from  an  input
+             string.  If the filename parses  correctly,  the  filename  is
+             returned, the string cursor is advanced past the filename, and
+             true is  returned  as  the  value  of  the  function.  If  the
+             filename is incorrectly formed, the cursor is left pointing to
+
+
+
+
+
+
+
+
+
+                                                     VAX-RDLIB User's Guide
+                                                            August 23, 1982
+                                                                     Page 6
+
+             the character which is in error, the filename to  be  returned
+             is  left  unchanged,  and  the  function  returns  false.  The
+             external function declaration is:
+
+                  External Function PR_FILE_ID (
+                        LINE : CMDLINE;
+                    Var IDX  : CMDLINEIDX;
+                    Var FID  : FILE_ID ) : Boolean;
+
+         OPEN_FILE - This routine opens a text file for  input  or  output.
+             If  the  file is to be opened for output, the user may request
+             append mode and new/old file prompting.  The caller  may  also
+             supply a default extension for the filename.  The value of the
+             function  is  a  boolean  indicating  whether  the  open   was
+             successful.  The external procedure declaration is:
+
+                  External Function OPEN_FILE (
+                    Var F : Text;
+                        FID : FILE_ID;
+                        EXT : EXTENSION;
+                        MODE : ( INPUT_MODE , OUTPUT_MODE );
+                        OPTION_SET : Set of
+                          ( APPEND_MODE , CONFIRM_MODE , ASCII_MODE )
+                      ) : Boolean;
+
+
+
+     2.5 CMDUTL-Command Processing Utilities         ___________________________________
+
+     CMDUTL is a set of routines for processing command lines.  This set of
+     routines is written entirely in Pascal, and is exactly the same on the
+     VAX  as  on  the DEC-10.  CMDUTL contains routines which parse command
+     lines, removing numbers, punctuation, strings and  alphabetic  tokens.
+     Appendix  A  contains  a  list  of  the entry points into CMDUTL.  For
+     further  specifications  see  the  Development  Software  Group.   The
+     include  file  containing the external procedure/function declarations
+     is CMDUTL.INC, on [52250,220].
+
+
+     2.6 TERIO - Terminal I/O Package         _____ _ ________ ___ _______
+
+     A collection of routines is available for doing 8-bit  or  image  mode
+     I/O  to  an arbitrary terminal device.  A "terminal device" is defined
+     as any device which the VAX communicates  with  through  the  terminal
+     device  driver.  These  routines  are  very  similar  to  the routines
+     GET8BITSFROMTTY,  PUT8BITSTOTTY,   GET_TERMINAL_CHARACTERISTICS,   and
+     SET_TERMINAL_CHARACTERISTICS.  The  primary difference between the set
+     of routines described in this section and the routines listed above is
+     that the former routines work with an arbitrary terminal device, while
+     the latter routines  assume  the  device  is  the  user's  controlling
+     terminal.
+
+     The error code returned by each of these routines is a VMS error code.
+
+
+
+
+
+
+
+
+
+                                                     VAX-RDLIB User's Guide
+                                                            August 23, 1982
+                                                                Page 7
+
+     The routine is successful if "ODD ( ERROR )" is true.
+
+     The include file  for  these  routines  is  TERIO.INC[52250,220].  The
+     include  file  TERCHR.INC[52250,220] must be included before TERIO.INC
+     in order to supply some common type definitions.
+
+     These routines are not available on the DEC10.
+
+
+         TER_OPEN - This  routine  associates  a  terminal  device  with  a
+             channel.  The device name may be a logical name.  This routine
+             must be called before any of the other routines of the package
+             may be used.  The external declaration is:
+
+                   External Procedure TER_OPEN (
+                         DEVICE: FILE_NAME;
+                     var CHANNEL: TER_CHANNEL_NUMBER;
+                     var ERROR: TER_ERROR_CODE );
+
+         TER_CLOSE  - This routine deassigns the device associated with the
+             specified channel.  The external declaration is:
+
+                   External Procedure TER_CLOSE (
+                         CHANNEL: TER_CHANNEL_NUMBER;
+                     var ERROR: TER_ERROR_CODE );
+
+         TER_READ - This routine reads a  byte  in  pass-all  mode  from  a
+             device  which was previously assigned with TER_OPEN.  If 8-bit
+             data is to be read, TER_SET_CHARACTERISTICS should  be  called
+             first  to  set  the eight bit characteristic (TC_EIGHTBIT) for
+             the device.  The external declaration is:
+
+                   External Procedure TER_READ (
+                         CHANNEL: TER_CHANNEL_NUMBER;
+                     var VALUE: 0..255;
+                     var ERROR: TER_ERROR_CODE );
+
+         TER_WRITE - This routine writes a  byte  in  pass-all  mode  to  a
+             device which was previously assigned with TER_OPEN.  The eight
+             bit characteristic need NOT be set for eight bit  writes.  The
+             external declaration is:
+
+                   External Procedure TER_WRITE (
+                         CHANNEL: TER_CHANNEL_NUMBER;
+                         VALUE: 0..255;
+                     var ERROR: TER_ERROR_CODE );
+
+         TER_GET_CHARACTERISTICS  -  This routine reads the characteristics
+             of a VAX terminal device  which  was  previously  opened  with
+             TER_OPEN.  The  terminal  characteristics are represented as a
+             Pascal set.  The include file TERCHR.INC defines an enumerated
+             type and a set type for representation of the characteristics.
+             See      the      descriptions      of      the       routines
+
+
+
+
+
+
+
+
+
+                                                     VAX-RDLIB User's Guide
+                                                            August 23, 1982
+                                                                     Page 8
+
+             GET_TERMINAL_CHARACTERISTICS  and SET_TERMINAL_CHARACTERISTICS
+             for more information on the representation and meaning of  the
+             terminal characteristics.  The external declaration is:
+
+                   External Procedure TER_GET_CHARACTERISTICS (
+                         CHANNEL: TER_CHANNEL_NUMBER;
+                     var CHARACTERISTICS: TC_SET;
+                     var ERROR: TER_ERROR_CODE );
+
+         TER_SET_CHARACTERISTICS - This routine sets the characteristics of
+             a  VAX  terminal  device  which  was  previously  opened  with
+             TER_OPEN.   This   routine  always  sets  ALL  of  the  device
+             characteristics each time called.  See the description of  the
+             routine  SET_TERMINAL_CHARACTERISTICS  for a discussion of the
+             implications of this  and  an  example  of  how  to  use  both
+             routines.  The external declaration is:
+
+                   External Procedure TER_SET_CHARACTERISTICS (
+                         CHANNEL: TER_CHANNEL_NUMBER;
+                         CHARACTERISITCS: TC_SET;
+                     var ERROR: TER_ERROR_CODE );
+
+
+
+     2.7 Miscellaneous         _____________
+
+     This  final  category  contains the routines which are not part of any
+     other package.
+
+         CONTIME - This routine returns the time elapsed, in seconds, since
+             the job has logged in.  The external procedure declaration is:
+
+                  External Function CONTIME:0..Maximum(Integer);
+
+             The  external  declaration  is  in  CONTIM.INC on [52250,220].
+             CONTIME is not supported on the DEC-10.
+
+         DO_CMD - This routine issues a VAX DCL command.  Control does  not
+             return  to  the calling program, unless an error occurs.  This
+             routine  is  not  supported  on  the  DEC-10.   The   external
+             procedure declaration is:
+
+                External Procedure DO_CMD (
+                   Cmd : string [ 256 ] );
+
+             where Cmd is the DCL command.
+
+         GET8BITSFROMTTY - This routine reads a character from the terminal
+             and returns the  character  without  any  translation  to  the
+             user's program.  The external procedure declaration is:
+
+                  External Procedure GET8BITSFROMTTY ( Var BYTE:0..255 );
+
+
+
+
+
+
+
+
+
+
+                                                     VAX-RDLIB User's Guide
+                                                            August 23, 1982
+                                                                     Page 9
+
+             The  external  procedure  declaration  for  the VAX and DEC-10
+             versions is in GET8BI.INC on [52250,220].  The name  for  this
+             routine  may  be somewhat misleading.  On the VAX the terminal
+             driver normally sets the eigth  bit  to  zero  and  sends  the
+             character.  If  the  user  wants  all  eight  bits  opassed on
+             through, the user must set  the  terminal  characteristics  to
+             pass  all  eight  bits, setting the TC_EIGHTBIT attribute with
+             SET_TERMINAL_CHARACTERISTICS.
+
+         GET_TERMINAL_CHARACTERISTICS - This    routine     returns     the
+             characteristics  of the user's terminal to the user's program.
+             The characteristics include:  number of fill characters, 8-bit
+             character  transfer,  half-duplex, etc..  This routine returns
+             the characteristics as a set.  The definition of the  set  and
+             its  elements,  as  well  as the external declaration for this
+             routine, are in TERCHR.INC on  [52250,220].  This  routine  is
+             not  supported  on  the  DEC-10.  For  an  example  using this
+             routine see SET_TERMINAL_CHARACTERISTICS in section  2.7.  The
+             external declaration for this routine is:
+
+                  External Procedure GET_TERMINAL_CHARACTERISTICS (
+                    Var TC : TC_SET;
+                    Var ERR: TCERR );
+
+             The   error   parameter   indicates   whether   the   terminal
+             characteristics were  successfully  retrieved  or  not.  TC_OK
+             indicates that the value in TC represents the current terminal
+             characteristics.  TC_ERR indicates some failure in determining
+             the terminal characteristics.
+
+         GET_USER_ACNT - This  routine  returns the UIC associated with the
+             calling process (the UIC the current user is logged in under).
+             The  UIC  is  returned  as a string of the form:  '[xxx,yyy]'.
+             The  external  declaration  for  this  function  is  found  in
+             GETACT.INC on [52250,220].  The function is declared:
+
+                  External Function GET_USER_ACNT: String[15];
+
+             GET_USER_ACNT  is  not  supported  on  the  DEC-10.  The  same
+             function is provided as part of the JOBINFO subroutine of  the
+             INFPAC package (see the R&D Programming Manual).
+
+         IMAGE_FILE_NAME - Returns  the  full  pathname of the file that is
+             currently being executed.  This routine is  not  supported  on
+             the  DEC-10.  This  routine can be used to replace the part of
+             the DEC-10 JOBINFO routine  which  returns  the  high  segment
+             owner's     PPN.    The    pathname    on    the    VAX    is:
+             "_DRA1:[250245.QED]FILE.EXT;2".  The caller  of  this  routine
+             can   remove   the   directory   specification  using  Pascal:
+             Substr( NAME, 1, Index( NAME,']') ).  The external declaration
+             is:
+
+                  Type IMAGE_ERROR = ( IMAGE_OK , IMAGE_ERR );
+
+
+
+
+
+
+
+
+
+                                                     VAX-RDLIB User's Guide
+                                                            August 23, 1982
+                                                                    Page 10
+
+                  External Procedure IMAGE_FILE_NAME (
+                     Var NAME : File_name;
+                     Var ERR  : IMAGE_ERROR );
+
+             The  external  procedure  declaration is in file, IMAGE.INC on
+             [52250,220].  The error parameter is currently only a boolean,
+             fail  or  succeed,  because  no error conditions have yet been
+             identified.
+
+         JOBNUM - Returns the system-assigned job number.  On  the  VAX  it
+             returns  an  ASCII string of 8 hexadecimal digits representing
+             the 8 digits of the  process  id  for  the  current  job.  The
+             external  declaration  is  in  JOBNUM.INC on [52250,220].  The
+             function is declared:
+
+                External Function JOBNUM: String [ 8 ];
+
+             JOBNUM is supported on the DEC-10, and also returns  a  string
+             of length three as on the VAX.
+
+         LINSPD - This   routine  returns  the  baud  rate  of  the  user's
+             terminal.  The value returned  is  the  commonly-used  integer
+             representation,  i.e.  300,  1200,  9600,  etc..  The external
+             function declaration is:
+
+                  External Function LINSPD : Integer;
+
+             The VAX and DEC-10 versions  share  the  same  user-interface.
+             The  external  function  declaration  for  both versions is in
+             LINSPD.INC on [52250,220].
+
+         PUT8BITSTOTTY - This routine writes an 8-bit value to  the  user's
+             terminal.  This  routine  performs as does the DEC-10 version.
+             The external procedure declaration is:
+
+                  External Procedure PUT8BITSTOTTY (
+                    BYTE : 0..255 );
+
+             The external procedure declaration  for  the  VAX  and  DEC-10
+             versions is in PUT8.INC on [52250,220].
+
+         QUERY - This  routine  serves  as  a  command  utility  to  ask  a
+             caller-supplied question and get a yes or no  reply.  YES,  Y,
+             NO,  N, or <eoln>, meaning yes, are accepted as valid replies.
+             REPEAT, is accepted as a request to repeat the question.  This
+             routine  performs  as  does  the DEC-10 version.  The external
+             function declaration is:
+
+                  External Function QUERY (
+                    QUESTION : String [ 255 ] ) : Boolean;
+
+             The external function  declaration  for  the  VAX  and  DEC-10
+             versions is in QUERY.INC on [52250,220].
+
+
+
+
+
+
+
+
+
+                                                     VAX-RDLIB User's Guide
+                                                            August 23, 1982
+                                                                    Page 11
+
+         RENAME - This  routine  is  used  to  rename  a  given file.  This
+             routine only requires that the filename provided are correctly
+             formed  filenames,  e.g.  "FILE.EXT;1"  and not ".EXT;1 FILE".
+             The user  must  have  write  access  to  rename  a  file.  The
+             external declaration for RENAME is:
+
+                  External Procedure RENAME (
+                        FROM : File_name;
+                        TARG : File_name;
+                    Var ERR  : RNM_ERR );
+
+             where RNM_ERR is defined to be:
+
+                  Type RNM_ERR = (
+                        RNM_OK,          (* Successful renaming operation*)
+                        RNM_DIR_NOT_FOUND, (* DIR specification not found*)
+                        RNM_FILE_EXISTS,(* TO file already exists        *)
+                        RNM_FILE_NOT_FOUND,(* From file not found        *)
+                        RNM_PROT_VIOLATION,(* Protection violation       *)
+                        RNM_RENAME_FAIL ); (* Catch-all, not one of above*)
+
+             The  RNM_OK  return code indicates that the renaming operation
+             was completed successfully.  Any of  the  other  return  codes
+             indicate   that   the  file  was  not  renamed.  The  external
+             procedure  declaration  for  RENAME  is   in   RENAME.INC   on
+             [52250,227].  There  is  a  RENAME  procedure  for  the DEC-10
+             version.  It returns a boolean indicating success or  failure,
+             rather than the enumerated scalar type.
+
+         REPROTECT - This  routine is used to reprotect a given file.  This
+             routine has the requirement that the  file  being  reprotected
+             must   allow   write   access  to  the  calling  process.  The
+             protection supplied to this routine  is  the  same  protection
+             that  is  used for the PASDIR routines (see Section 2.3).  The
+             external procedure declaration is:
+
+                  External Procedure REPROTECT (
+                        FNAME : File_name;
+                        PRO   : DIR_PROT;
+                    Var ERR   : PRO_ERR );
+
+             where PRO_ERR is defined to be:
+
+                  Type PRO_ERR = (
+                        PRO_OK,         (* Successful reprotection *)
+                        PRO_BAD_FILE,   (* File couldn't be opened *)
+                        PRO_NO_WRITE ); (* Can't reprotect the file*)
+
+             The external procedure declaration for REPROTECT is REPROT.INC
+             on  [52250,220].  This routine is not available on the DEC-10,
+             but the RENAME routine on the DEC-10 may be  used  to  perform
+             the same function.
+
+
+
+
+
+
+
+
+
+
+                                                     VAX-RDLIB User's Guide
+                                                            August 23, 1982
+                                                                    Page 12
+
+         RUN - This  routine  loads and executes a program stored in a .EXE
+             file.  The calling program is replaced by the  new  one.  This
+             routine  performs  the  same  way  as the DEC-10 version.  The
+             external procedure declaration is:
+
+                External Procedure RUN (
+                   FN : string [ 256 ] ;
+                   PROMPT : boolean );
+
+
+
+         SET_TERMINAL_CHARACTERISTICS - This     routine      sets      the
+             characteristics  of a user's terminal.  This routine is called
+             with a set which specifies the desired characteristics of  the
+             user's  terminal.  The definition of the set and its elements,
+             along  with  the  external  procedure   declaration   are   in
+             TERCHR.INC  on  [52250,220].  This routine is not supported on
+             the DEC-10.  The elements of the set are explained further  in
+             the  VAX  I/O  User's  Guide  in  the  section on the terminal
+             driver.  The external declaration is:
+
+                  External Procedure SET_TERMINAL_CHARACTERISTICS (
+                        TER : TC_SET;
+                    Var ERR : TCERR );
+
+             The return value ERR may return with one of two values:  TC_OK
+             or  TC_ERR.  TC_OK  indicates  successful  completion  of  the
+             operation.  TC_ERR indiates that an error has occured and  the
+             terminal  characteristics  may be in a changed state, in which
+             case GET_TERMINAL_CHARACTERISTICS should be used to  determine
+             the state.
+
+             Note  that  the set passed to SET_TERMINAL_CHARACTERISTICS not
+             only contains those attributes the user wants to  change,  but
+             all  the  characteristics of the user's terminal.  To use this
+             routine,  the  user  calls   GET_TERMINAL_CHARACTERISTICS   to
+             determine  what  the  terminal  characteristics currently are,
+             then modifies the  terminal  characteristic  set  returned  by
+             GET_TERMINAL_CHARACTERISTICS,             and            calls
+             SET_TERMINAL_CHARACTERISTICS to have the changes made.
+
+             The following  example  shows  how  the  user  would  set  the
+             terminal  so  that characters typed at the user's terminal are
+             not echoed, and then reset the terminal  characteristics  back
+             to what they previously were.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                     VAX-RDLIB User's Guide
+                                                            August 23, 1982
+                                                                    Page 13
+
+                Var ERR : TCERR;
+                    TER : TC_SET;
+                      .
+                      .
+                      .
+                    (* Get the current terminal characteristics *)
+
+                    GET_TERMINAL_CHARACTERISTICS ( TER , ERR );
+                    Assert ( ERR = TC_OK );
+
+                    (* Enable the NOECHO bit in the characteristics set *)
+
+                    TER := TER + [ TC_NOECHO ];
+
+                    (* Enable the NOECHO characteristic *)
+
+                    SET_TERMINAL_CHARACTERISTICS ( TER , ERR );
+                    Assert ( ERR = TC_OK );
+                      .
+                      .
+                      .
+                    (* Code to read in "noecho" mode *)
+                      .
+                      .
+                      .
+                    (* Read the current terminal characteristics *)
+
+                    GET_TERMINAL_CHARACTERISTICS ( TER , ERR );
+                    Assert ( ERR = TC_OK );
+
+                    (* Turn off the specified bit. *)
+
+                    TER := TER - [ TC_NOECHO ];
+                    SET_TERMINAL_CHARACTERISTICS ( TER , ERR );
+                    Assert ( ERR = TC_OK );
+
+
+
+
+         SLEEP - This routine causes the calling process to hibernate for a
+             given period of time.  The length of time, in milliseconds, is
+             provided by the user as a parameter ot the SLEEP routine.  The
+             external procedure declaration is in SLEEP.INC on [52250,220].
+             SLEEP  is not supported on the DEC-10.  The external procedure
+             declaration is:
+
+                External Procedure SLEEP (
+                      MILLISECONDS: 0..Maximum(Integer) );
+
+
+
+         TEMP_FILE_NAME - This routine forms a file  name  from  a  one  to
+             three  character  string  passed  in as a parameter.  The file
+
+
+
+
+
+
+
+
+
+                                                     VAX-RDLIB User's Guide
+                                                            August 23, 1982
+                                                                    Page 14
+
+             name is formed by concatenating the current  process  id,  the
+             string  passed  in,  and  the  extension  ".TMP".  While  this
+             routine is intended to be used  to  create  unique  names  for
+             temporary  files,  the  files  created are not truly temporary
+             files, i.e., they must be explicitly deleted by the user.  The
+             external declaration is:
+
+                External Function TEMP_FILE_NAME (
+                      S: string[ 3 ] ): file_name;
+
+
+
+          TT_IDENTIFIER - This  routine  returns  a  string  containing the
+             terminal identifier.  The terminal identifier  is  the  string
+             that  the  VAX  uses  to  represent  the user's terminal, i.e.
+             TTB3.  The routine returns the null  string  when  running  in
+             batch.  The external procedure declaration is in TTTRAN.INC on
+             [52250,220].  TT_IDENTIFIER is not supported  on  the  DEC-10.
+             The external procedure declaration is:
+
+                External Procedure TT_IDENTIFIER (
+                   Var TT_ID : String [ 7 ] );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                     VAX-RDLIB User's Guide
+                                                            August 23, 1982
+                                                                    Page 15
+
+                                   Appendix A                                   __________
+
+
+     This is an alphabetical list of the entry points to RDLIB.  After each
+     routine name is a terse explanation of the function of  that  routine.
+     If a name within double-quotes, "name", occurs within the description,
+     it indicates the package to which this routine belongs, and  indicates
+     where in the R&D Programming Manual more information will be found.
+
+
+     ADD_DAYS        "DTIME",  adds  a  specified  number  of  days  to  an
+                     internal day/time.
+
+     ADD_SECS        "DTIME", adds a specified  number  of  seconds  to  an
+                     internal day/time.
+
+     CMD_CHECK_PUNCT "CMDUTL",  compares  the  character  at a given cursor
+                     position to a given puncuation character.
+
+     CMD_DISPLAY_TABLE "CMDUTL,  displays  an  array  of   command   lookup
+                     records.
+
+     CMD_DQSTRING    "CMDUTL",  removes  a  string  enclosed  within double
+                     quotes from a command line, permitting embedded double
+                     quotes.
+
+     CMD_EOL         "CMDUTL",  determines from the given string and cursor
+                     position if the end of the line has been reached.
+
+     CMD_FILE_NAME   "CMDUTL", parses filenames as does  PR_FILE_ID  except
+                     that the null string is an acceptable filename.
+
+     CMD_GETLINE     "CMDUTL",  reads  a command line from the terminal and
+                     sets the command line scanning cursor to 1.
+
+     CMD_LOOKUP      "CMDUTL", scans a given command line for  a  specified
+                     token.
+
+     CMD_NUMBER      "CMDUTL", removes a number from a command line.
+
+     CMD_QUERY       "CMDUTL",  is  a  special version of QUERY for command
+                     processing.
+
+     CMD_SKIP_BLANKS "CMDUTL", skips blanks on a given command line.
+
+     CMD_STRING      "CMDUTL", removes  a  string  enclosed  within  double
+                     quotes  from  a  given  command  line,  not permitting
+                     double qoutes embedded within the string.
+
+     CMD_TOKEN       "CMDUTL", removes the  next  token  from  the  command
+                     line.
+
+     CONTIME         Returns the time elapsed since this job logged in.
+
+
+
+
+
+
+
+
+
+                                                     VAX-RDLIB User's Guide
+                                                            August 23, 1982
+                                                                    Page 16
+
+     DAY_OF_WEEK     "DTIME",  returns the day of the week on which a given
+                     internal day/time falls.
+
+     DAYS_DIFF       "DTIME", calculates the number  of  days  between  two
+                     internal day/times.
+
+     DAYTIME         "DTIME",   returns   the  current  local  day/time  in
+                     internal form.
+
+     DC_DATE         "DTIME, returns the binary date  record  corresponding
+                     to a given internal day/time.
+
+     DC_DTIME        "DTIME",  returns the binary day/time corresponding to
+                     a given internal day/time.
+
+     DC_EXT          "DTIME", converts an internal day/time to the standard
+                     external form, i.e.  'dd-mmm-yy  hh:mm:ss'.
+
+     DC_TIME         "DTIME",  returns  the  binary time corresponding to a
+                     given internal time.
+
+     DIR_ATTR        "PASDIR", returns the attributes of a given file.
+
+     DIR_CLOSE       "PASDIR", closes a directory that has been  opened  by
+                     DIR_OPEN.
+
+     DIR_MATCH      "PASDIR",   performs   wildcard  matching  of  strings,
+                     usually used in filename matching.
+
+     DIR_NEXT       "PASDIR", traverses a directory that has been opened by
+                     DIR_OPEN,   returning   the  name  of  the  next  file
+                     contained within.
+
+     DIR_OPEN       "PASDIR", opens a specified directory so that  DIR_NEXT
+                     may be used.
+
+     DO_CMD          Issues a VAX DCL command.
+
+     DT_COMBINE      "DTIME",   contructs  an  internal  day/time  from  an
+                     internal date and an internal time.
+
+     EC_DATE         "DTIME", returns the binary date record  corresponding
+                     to a given internal date.
+
+     EC_DCDATE       "DTIME",  returns the internal date corresponding to a
+                     given DEC-10 date.
+
+     EC_DCTIME       "DTIME", returns the internal time corresponding to  a
+                     given DEC-10 time (milliseconds since midnight).
+
+     EC_DTIME        "DTIME",  returns  the internal day/time corresponding
+                     to a given binary day/time record.
+
+
+
+
+
+
+
+
+
+
+                                                     VAX-RDLIB User's Guide
+                                                            August 23, 1982
+                                                                    Page 17
+
+     EC_EXT          "DTIME", converts external dates and/or times, in  any
+                     of several formats, to the internal day/time.
+
+     EC_TIME         "DTIME",  returns the internal time corresponding to a
+                     given binary time record.
+
+     EXTR_DATE       "DTIME", extracts an internal date  from  an  internal
+                     day/time.
+
+     EXTR_TIME       "DTIME",  extracts  an  internal time from an internal
+                     day/time.
+
+     GET8BITSFROMTTY Reads an 8-bit value from the controlling terminal.
+
+     GET_USER_ACNT   Returns the UIC associated with the calling process.
+
+     GET_TERMINAL_CHARACTERISTICS  Returns  the  characteristics   of   the
+                     user's terminal
+
+     IMAGE_FILE_NAME Returns  the  full  pathname of the image file that is
+                     currently being executed (full pathname  contains  the
+                     disk  identification,  directory  specification,  file
+                     name, and the version).
+
+     JOBNUM          Returns the system-assigned job number.
+
+     LINSPD          Returns the baud rate of the user's terminal.
+
+     NS_D1           "DTIME", converts an internal date to  a  non-standard
+                     external date format:  'mm/dd/yy'.
+
+     NS_D2           "DTIME",  converts  an internal date to a non-standard
+                     external date format:  'mmm dd, yyyy'.
+
+     NS_T1           "DTIME", converts an  internal  time  to  non-standard
+                     external time format:  'hh:mm:ss [A/P]M'.
+
+     OPEN_FILE       Opens a text file for input or output.
+
+     PR_FILE_ID      Parses  a  filename  and  insures that it is formatted
+                     properly for the VAX.
+
+     PUT8BITSTOTTY   Writes  a  given  8-bit  value  to   the   controlling
+                     terminal.
+
+     QUERY           Asks  a  caller-supplied question, and waits for a yes
+                     or no response.
+
+     RENAME          Renames a file, giving it the new user-supplied name.
+
+     REPROTECT       Reprotects a given file with the user's specified  new
+                     protection.
+
+
+
+
+
+
+
+
+
+
+                                                     VAX-RDLIB User's Guide
+                                                            August 23, 1982
+                                                                    Page 18
+
+     RUN             Loads  and executes a file stored in a .EXE file.  The
+                     calling program is replaced by the new one.
+
+     SECS_DIFF       "DTIME", calculates the number of seconds between  two
+                     internal day/times.
+
+     SET_TERMINAL_CHARACTERISTICS  Sets  the  characteristics of the user's
+                     terminal.
+
+     SLEEP           Causes the user's process to hibernate for a specified
+                     number of milliseconds.
+
+     TEMP_FILE_NAME  Returns  a  file  name  constructed from a given three
+                     character string and the process  id  of  the  calling
+                     process.
+
+     TER_CLOSE       Closes a terminal device opened with TER_OPEN.
+
+     TER_GET_CHARACTERISTICS  Returns  the  device  characteristics  for  a
+                     terminal device previously opened with TER_OPEN.
+
+     TER_OPEN        Associates a terminal device with a channel.
+
+     TER_READ        Reads a byte in pass-all mode from a  terminal  device
+                     previously opened with TER_OPEN.
+
+     TER_SET_CHARACTERISTICS  Set the device characteristics for a terminal
+                     device previously opened with TER_OPEN.
+
+     TER_WRITE       Writes a byte in pass-all mode to  a  terminal  device
+                     previously opened with TER_OPEN.
+
+     TT_IDENTIFIER   Returns   a   Pascal  string  containing  the  current
+                     terminal identifier.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  b@6L

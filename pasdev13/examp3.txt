@@ -1,0 +1,23 @@
+.^Ur link|U	(relink - no MDL changes)
+*^U@writer|U
+
+EXIT
+
+.^Uru odms[52250,220]|U
+ODMS Version 3.0
+
+*^Uuse scribe|U
+[System (SCRIBE), compiled 17-Jul-80 09:00:27]
+*^Uverify writer overlay=writer.exe|U	
+
+ Actual code at          022000, 002000(1024 decimal) words
+ MDL declared code at    022000, 002000(1024 decimal) words
+
+ Actual module index is 2
+
+ Actual static at        002050, 000160(112 decimal) words
+ MDL declared static at  002050, 002000(1024 decimal) words
+
+*^Uquit|U
+
+EXIT

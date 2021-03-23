@@ -1,0 +1,86 @@
+	TITLE	PRGDIR  -- FETCHES HIGH SEG PPN
+	TWOSEG
+	RELOC	400000
+	SEARCH	PASSYM
+
+;    +----------------------------------------------------------------+
+;    I                                                                I
+;    I                         P R G D I R                            I
+;    I                         - - - - - -                            I
+;    I                                                                I
+;    +----------------------------------------------------------------+
+;
+;    MDSI, COMPANY CONFIDENTIAL
+;
+;    STARTED:  7-Apr-78
+;
+;    PURPOSE: This module returns the ppn  in  which  the  active  high
+;       segment  resides.  The  two  entrypoints  return  the ppn as an
+;       integer or as a string.
+;
+;    USAGE:
+;       EXTERNAL PROCEDURE PRGM_PPN ( VAR PPN: INTEGER );
+;
+;       EXTERNAL FUNCTION PRGM_DIR (): STRING[15];
+;
+;    NOTES: If the program is run under link  (with  /e/g),  this  will
+;       return a ppn of [0,0].
+;
+;    RESPONSIBLE: Software Tools
+;
+;    CHANGES: NONE.
+;
+;    ------------------------------------------------------------------
+
+	CURHGH=	-1			; GETTAB PARAMETERS
+	.GTFPN=	-25
+
+	ENTRY	PRGM%P
+PRGM%P:	MOVE	REG1,[CURHGH,,.GTFPN]	; REQUEST PPN FOR CURRENT HIGH SEG
+	GETTAB	REG1,
+	SETZ	REG1,			; ERROR - RETURN ZERO
+	MOVEM	REG1,0(REG)		; SET VAR PARAMETER TO RESULT
+	POPJ	TOPP,
+
+	ENTRY	PRGM%D
+PRGM%D:	MOVE	REG1,AC0		; GET PTR TO RETURN VAL IN USEABLE REG
+	MOVE	REG2,[POINT 7,1(REG1)]	; GET BYTE PTR TO STRING TO RETURN
+	SETZM	0(REG1)			; RETURN NULL STRING
+
+	MOVE	REG,[CURHGH,,.GTFPN]	; REQUEST PPN OF HIGH SEG
+	GETTAB	REG,
+	POPJ	TOPP,			; RETURN NULL STRING IF ERROR
+
+	MOVEI	REG4,"["		; OUTPUT [ PROG , PROJ ]
+	PUSHJ	TOPP,WRCHR
+	HLRZ	REG3,REG		; PROJ IN LH
+	PUSHJ	TOPP,WRNUM
+	MOVEI	REG4,","		; COMMA IS THE SEPARATOR
+	PUSHJ	TOPP,WRCHR
+	HRRZ	REG3,REG		; PROG IN RH
+	PUSHJ	TOPP,WRNUM
+	MOVEI	REG4,"]"		; TERMINATE PPN
+	PUSHJ	TOPP,WRCHR
+	POPJ	TOPP,			; RETURN PPN STRING
+
+;
+;    Write routines move text into return string
+;
+
+WRCHR:	AOS	0(REG1)			; INCREMENT LENGTH
+	IDPB	REG4,REG2
+	POPJ	TOPP,
+
+WRNUM:	MOVE	REG4,REG3		; ISOLATE LOW ORDER DIGIT
+	ANDI	REG4,7
+	ADDI	REG4,"0"		; MAKE IT ASCII
+	PUSH	TOPP,REG4		; SAVE IT
+	LSH	REG3,-3			; WRITE NEXT ORDER CHAR FIRST, IF NOT 0
+	SKIPE	REG3
+	PUSHJ	TOPP,WRNUM		; RECURSION WRITES LEFTMOST DIGIT 1ST
+	POP	TOPP,REG4		; WRITE RIGHT HAND DIGIT
+	PUSHJ	TOPP,WRCHR
+	POPJ	TOPP,
+
+	LIT
+	END

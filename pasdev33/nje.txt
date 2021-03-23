@@ -1,0 +1,317 @@
+
+
+
+          M68000 Project - NJE                                                               Page 1
+          February 8, 1982
+
+
+          1  EGAN             ____
+
+
+
+              1.1 Introduction to the M68000 and the runtime
+
+
+                  Description:  To get a general idea of the system I will be working on I was  told
+                               to  read  some  background  manuals  and  specs.  Included  were  the
+                               following:
+
+                                1.  68000 user's manual
+                                2.  68000 assembly manual
+                                3.  runtime conventions and standards
+                                4.  portions of the runtime specification
+
+
+                                 Start       Completion                               __________    __________
+
+                  Scheduled:     2/8/82      2/10/82
+
+                  Actual:        2/8/82      2/10/82
+
+
+                  Progress -- 2/12/82
+
+                      I have finished the  suggested  reading,  although  I  will  have  to  re-read
+                      portions  once  I  have  started  working  on projects that use the macros and
+                      general runtime philosophy.
+
+
+
+
+
+
+
+
+
+
+
+
+          M68000 Project - NJE                                                               Page 2
+          February 8, 1982
+
+
+
+
+
+              1.2 Code and debug RTGRTIME
+
+
+                  Description:  As an introduction to the runtime system, I am to  write  a  runtime
+                               module  which  just  returns  a  zero.  I  will  also have to write a
+                               routine in assembler that looks like a  pascal  program  to  test  it
+                               since the pascal compiler for the 68000 does not work yet.
+
+                                 Start       Completion                               __________    __________
+
+                  Scheduled:     2/10/82     2/11/82
+
+                  Actual:        2/10/82     2/11/82
+
+
+                  Progress -- 2/12/82
+
+                      Finished the RTGRTIME routine and put it under the 1000 user number.
+
+
+
+
+              1.3 Code and debug RTGBLKMV
+
+
+                  Description:  Write and test a block move routine callable by pascal.
+
+
+
+
+
+
+
+
+
+
+
+
+          M68000 Project - NJE                                                               Page 3
+          February 8, 1982
+
+
+                                 Start       Completion                               __________    __________
+
+                  Scheduled:     2/11/82     2/15/82
+
+                  Actual:        2/11/82     2/15/82
+
+
+                  Progress -- 2/12/82
+
+                      I have finished coding the routine, but have not as yet completed the testing.
+                      I should finish on Monday.
+
+                  Progress -- 2/19/82
+
+                      RTGBLKMV completed and moved under the 1000 user number.
+
+
+
+
+              1.4 Code and debug M.TRACE for RTMMAIN
+
+
+                  Description:  Write and test the stack traceback  routine  which  prints  out  all
+                               pascal procedure names and begin addresses from the stack.
+
+                                 Start       Completion                               __________    __________
+
+                  Scheduled:     2/15/82     2/22/82
+
+                  Actual:        2/15/82     2/22/82
+
+
+
+
+
+
+
+
+
+
+
+          M68000 Project - NJE                                                               Page 4
+          February 8, 1982
+
+
+                  Progress -- 2/19/82
+
+                      I  think the routine is done, but Steve Roush is checking it over.  There will
+                      probobly be at least minor changes.
+
+                  Progress -- 2/26/82
+
+                      I put in the changes suggested by Steve Roush and inserted  the  routine  into
+                      RTMMAIN.
+
+
+
+
+              1.5 Document routines
+
+
+                  Description:   Steve  Roush told me that all routines need to be documented on the
+                               TYMESHARE system and listed in RTFILES.
+
+                                 Start       Completion                               __________    __________
+
+                  Scheduled:     2/19/82     2/19/82
+
+                  Actual:        2/19/82     2/19/82
+
+
+                  Progress -- 2/19/82
+
+                      Routines are documented as requested.
+
+
+
+
+
+
+
+
+
+
+
+
+          M68000 Project - NJE                                                               Page 5
+          February 8, 1982
+
+
+              1.6 Code and debug the Binary io routines
+
+
+                  Description:  The routines to associate to a binary file, read from or write to  a
+                               binary file, empty or close a binary file need to be written.  I have
+                               broken this project down into the following subtasks:
+
+                                1.  Read background information,
+                                2.  Code the routines,
+                                3.  Code test routines,
+                                4.  Test and debug routines.
+
+
+                                 Start       Completion                               __________    __________
+
+                  Scheduled:     2/22/82     3/31/82
+
+                  Progress -- 3/5/82
+
+                      I read the i/o chapter in the MDSI pascal report, the binary i/o design notes,
+                      the  Motorola  "File  Management  Services" manual, and the pascal i/o runtime
+                      notes.  I have also done most of the inital coding for all  of  the  routines,
+                      but  there  are probobly many problems in there.  I plan to go over my code in
+                      the next week and make sure that I correctly understood the various  documents
+                      on  my  first pass.  The routines should be correctly coded by the end of next
+                      week.
+
+                  Progress -- 3/12/82
+
+                      This week I started working more with Bill Hope on the i/o routines.  I needed
+                      to  modify  a  lot  of my code to stay consistent with what he has implemented
+                      and/or planned.  I may be able to use pascal programs to do the testing.  I'll
+
+
+
+
+
+
+
+
+
+          M68000 Project - NJE                                                               Page 6
+          February 8, 1982
+
+
+                      find  out more about this on Monday.  I plan to start on the search and verify
+                      routines next week (if that is really what I'll be working on).
+
+                  Progress -- 3/19/82
+
+                      I found out that I really can use pascal to  test  the  binary  i/o  routines.
+                      Drew  Montag explained how to do this.  I did walk throughs of all my routines
+                      and of Bill Hope's common i/o routines.  Bill also  read  through  all  of  my
+                      routines.  I  did some initial testing with pascal which showed that there are
+                      bugs (no great suprise) but started search and verify  rather  than  finishing
+                      the  debugging now.  I will finish up with the debugging either late next week
+                      or early the week after, depending on how long search and verify takes.
+
+                  Progress -- 3/26/82
+
+                      I did not work on binary i/o this week.
+
+                  Progress -- 4/2/82
+
+                      I restarted the testing of binary i/o this week.  Bill and I decided  to  have
+                      the  BREAK and EMPTY routines completely separate for each type of file.  This
+                      involved some re-writing of my code.  The cursor, extent, eof, rname,  chkval,
+                      and   b.init   routines  seem  to  work.  The  write  routine  does  something
+                      reasonable, but I have not carefully tested  it  as  yet.  I  need  the  close
+                      routine to call B.IBREAK and the I.IEMPTY routine to exist before I can easily
+                      continue testing.  This should be done by Monday.  It now  looks  like  binary
+                      i/o  will  be  done  about April 9 - 13.  I don't think that there will be any
+                      more redesigns.
+
+
+
+
+
+
+
+
+
+
+
+
+
+          M68000 Project - NJE                                                               Page 7
+          February 8, 1982
+
+
+              1.7 Code and debug the search and verify routines
+
+
+                  Description:  Write the string search and  verify  routines  callable  by  pascal.
+                               These routines are documented in the runtime spec.
+
+                                 Start       Completion                               __________    __________
+
+                  Scheduled:     3/19/82     3/26/82
+
+                  Progress -- 3/19/82
+
+                      I  have  talked  to Steve Medlin about what the search and verify routines are
+                      supposed to do and to Dave Wilson about the format of a set  that  I  will  be
+                      looking  at.  I  have a general idea of what needs to do done.  I plan to do a
+                      bit of initial coding and documentation by Monday morning and pass it by Steve
+                      Medlin  to  see  if I really do have the right idea.  The routines do not look
+                      very difficult.
+
+                  Progress -- 3/26/82
+
+                      The search and verify routines are written  and  seem  to  work.  Testing  the
+                      routines  uncovered  some  small bugs in the pascal compiler, which have since
+                      been fixed.  I spent part of this week just learning the basics of  pascal  to
+                      do  the  testing.  Testing  has been done with EXE002.  I put some extra tests
+                      into the program.  My version is (pasdev4)nje2.pas.  I haven't run  the  extra
+                      tests as yet, but they should work.  I will finish testing on Monday.
+
+                  Progress -- 4/2/82
+
+                      Testing on the search and verify routines is complete.
+
+
+
+
+
+
+
+
+  

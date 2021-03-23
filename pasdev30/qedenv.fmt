@@ -1,0 +1,827 @@
+type cmd_lookup_record = record
+	text: packed array [1..10] of char;
+	abbrev: 1 .. 10;
+	code: integer;
+     end;
+external procedure cmd_skip_blanks
+      ( packed array [1..*] of char;
+	var integer );
+external function cmd_check_punct
+      ( packed array [1..*] of char;
+	var integer;
+	char ): boolean;
+external function cmd_token
+      ( packed array [1..*] of char;
+	var integer;
+	set of char;
+	var string [*] ): boolean;
+external function cmd_number
+      ( packed array [1..*] of char;
+	var integer;
+	boolean;
+	var integer ): boolean;
+external function cmd_lookup
+      ( packed array [1..*] of char;
+	var integer;
+	set of char;
+	array [1..*] of cmd_lookup_record;
+	var integer ): boolean;
+external function cmd_string
+      ( packed array [1..*] of char;
+	var integer;
+	char;
+	var string [*] ): boolean;
+external function cmd_dqstring
+      ( packed array [1..*] of char;
+	var integer;
+	char;
+	var string [*] ): boolean;
+external function cmd_file_name
+      ( packed array [1..*] of char;
+	var integer;
+	boolean;
+	var string [*] ): boolean;
+external function cmd_eol
+      ( packed array [1..*] of char;
+	var integer ): boolean;
+external function cmd_query
+      ( packed array [1..*] of char;
+	packed array [1..*] of char ): boolean;
+external procedure cmd_getline
+      ( packed array [1..*] of char;
+	var string [*];
+	var integer );
+external procedure cmd_display_table
+      ( array [1..*] of cmd_lookup_record;
+	integer;
+	integer );
+(* ERROR CODES *)
+(* ----------- *)
+
+TYPE
+ QERRCODE = (
+  QOK,						(*NORMAL RETURN*)
+  QFATAL,					(*INTERNAL ERROR -- FATAL SITUTATION*)
+  QBADLN,					(*NON-EXISTANT LINE NUMBER PASSED*)
+  QBADLB,					(*NON-EXISTANT LOWER BOUND PASSED*)
+  QBADUB,					(*NON-EXISTANT UPPER BOUND PASSED*)
+  QBADRN,					(*LOWER BOUND > UPPER BOUND*)
+  QBADARGNO,					(* WRONG NUMBER OF LA'S IN LD *)
+  QBADCMD,					(* BAD COMMAND NAME PARSED *)
+  QNOCMD,					(* CMD INVALID IN CONTEXT USED *)
+  QBADFILE,					(* BAD FILENAME PARSED *)
+  QNOFILE,					(*NON-EXISTANT FILE*)
+  QNOCLOSE,					(*NO CLOSING DELIMITER IN STRING PATTERN*)
+  QNODEFAULT,					(*DEFAULT PATTERN HAS NOT BEED DEFINED*)
+  QNO2NDLA,					(*NO SECOND LINE ADDRESS AFTER COMMA *)
+  QNOINPAREN,					(*INVALID FIELD WITHIN PARENS OF STRING PREDICATE*)
+  QNOCLOSPAREN,					(*NO CLOSING PARENTHESIS*)
+  QNONOT_OP,					(*INVALID FIELD AFTER "NOT" OPERATOR*)
+  QNORTOP,					(*INVALID FIELD AFTER "AND" OR "OR" OPERATOR*)
+  QOFFIRST,					(* SIGNED OFFSET FOUND AS FIRST PART OF LA*)
+  QNONUMF,					(*NO NUMERIC FIELD FOUND AFTER '+' OR '-'*)
+  QONLYFIRST,					(*  '*','$', OR '.' FOUND NOT AS FIRST PART OF LA*)
+  QNOPREVIOUS,					(*  '*' ONLY ALLOWED IN SECOND HALF OF LD *)
+  QSPNOTFND,					(* STRING PREDICATE NOT FOUND IN RANGE *)
+  QOUTRANGE,					(* EVALUATED LD OUT OF BUFFER OR SPECIAL RANGE*)
+  QSTUPID,					(* UNMATCHABLE PREDICATE DETECTED IN PARSE *)
+  QLNLONG,					(*LINE TOO LONG, FROM SPLIT, SUBSTITUTE*)
+  QQUIT,					(* QUIT COMMAND GIVEN *)
+  QNOMARK,					(* NO LINE MATCHING MARKSTRING WAS FOUND *)
+  QBADSUBST,					(* SYNTAX ERROR IN SUBSTITUTE PATTERNS *)
+  QBADOPT,					(* BAD OPTION WAS PARSED *)
+  QEXTRATXT,					(* EXTRANEOUS TEXT FOLLOWS COMMAND *)
+  QTOOBIG,					(* INTEGER TOO BIG TO BE PARSED AS LINE NUMBER *)
+  QNOFINDPRED,					(* NO SPATTERN GIVEN IN FIND COMMAND *)
+  QNOMOVELA,					(* 1 LA EXPECTED AFTER MOVE, 0 OR 2 FOUND *)
+  QBADMOVELA,					(* LA WAS WITHIN TEXT BEING MOVED *)
+  QNOTOPEN,					(* OUTPUT COMMAND WAS ISSUED WITH NO OPEN FILE *)
+  QBADPARAM,					(* MISSING OR INVALID SET PARAMETER *)
+  QNOPARAMVAL,					(* NO VALUE GIVEN FOR SET PARAMETER *)
+  QJOINTOOFEW,					(* FEWER THAN TWO LINES GIVEN TO JOIN *)
+  QNOSPLITPAT,					(* INVALID OR MISSING PATTERN FOR SPLIT *)
+  QEMPTY,					(* BUFFER IS EMPTY *)
+  QTOOSHORT,					(* NOT ENOUGH LEADING SPACE TO INDENT *)
+  QWRTERR,					(* EOF(F) FALSE AFTER WRITE STATEMENT *)
+  QLA1NOTFND,					(* SPRED IN FIRST LA NOT FOUND *)
+  QLA2NOTFND,					(* SPRED IN SECOND LA NOT FOUND *)
+  QLA1OUTRANGE,					(* FIRST LA OUT OF RANGE *)
+  QLA2OUTRANGE,					(* SECOND LA OUT OF RANGE *)
+  QHEAPFULL,					(* HEAP OVERFLOW *)
+  QBADNTH,					(* BAD Nth OCCURRANCE PATTERN *)
+  QNOINDNO,					(* AMOUNT TO INDENT NOT SPECIFIED *)
+  QMOVOUTRANGE,					(* DESTINATION OF MOVE OUT OF RANGE *)
+  QNOINFILE,					(* FAILURE TO OPEN INPUT FILE *)
+  QNOOUTFILE,					(* FAILURE TO OPEN OUTPUT FILE *)
+  QNOCOPYLA,					(* 1 LA EXPECTED AFTER COPY, 0 OR 2 FOUND *)
+  QBADSLINK,                                     (* Error occurred in slink *)
+  QNOLABEL);					(* No label found for _ kludge	*)
+(* STRING PATTERN definitions represent a parsed QED string matching pattern.
+   Details may be found in the 'Definition of QED.' *)
+
+TYPE
+  SPATTERN_FORMS =				(* AS DETERMINED FROM DELIMITER *)
+    (	SIMPLE,					(* MATCH ANYWHERE WITHIN LINE *)
+	LEFT,					(* MATCHES AT THE BEGINNING OF THE LINE *)
+	RIGHT,					(* MATCHES AT THE END OF THE LINE *)
+	LEADSTRING,				(* MATCH CHARS FOLLOWING LEADING WHITESPACE *)
+	TOKEN,					(* MATCH A DELIMITED STRING *)
+	NULLSPAT	);			(* REPRESENTS INVALID DEFAULT PATTERN *)
+
+  SIDE_TYPE = (
+	LEFTSIDE,				(* STAR ON THE LEFT SIDE OF PATTERN *)
+	RIGHTSIDE,				(* ETC. *)
+	BOTHSIDES,
+	NEITHER	);
+
+  SPATTERN =
+    RECORD					(* INTERNAL REPRSENTATION OF A STRING PATTERN *)
+      STYPE: SPATTERN_FORMS;			(* MATCHING BOUNDARY CONDITIONS *)
+      WILDCARD: BOOLEAN;			(* TRUE IF STRING CONTAINS A '*' *)
+      SIDESTARS: SIDE_TYPE;			(* POSITIONS OF SIDE STARS *)
+      SLENGTH: QSTRINGIDX;			(* LENGTH OF PATTERN MINUS WILDCARDS *)
+      LIST: ^SPATREC;				(* POINTER TO HEAD OF LIST OF PATTERNS *)
+      LASTREC: ^SPATREC				(* POINTER TO LAST TOKEN IN PATTERN LIST*)
+    END;
+
+  SPATLIST = ^SPATREC;
+
+  SPATREC =
+    RECORD
+	WILDCHAR: BOOLEAN;			(* TRUE IF STRING CONTAINS A '?' *)
+	SSTRING: QSTRING;			(* STRING TO BE MATCHED *)
+	NEXT: SPATLIST;				(* POINTER TO NEXT PATTERN TOKEN *)
+	PREVTOK: SPATLIST			(* POINTER TO PREVIOUS PATTERN TOKEN *)
+    END;
+(* STRING PREDICATE definitions reprenting a parsed QED string predicated.
+   For details see the 'Definition of QED'. *)
+
+TYPE
+  SPRED_KINDS =
+    (	PATTERN_SPOP,				(* MATCH A LINE CONTAINING PATTERN *)
+	NOT_SPOP,				(* MATCH A LINE NOT MATCHING PREDICATE OPERAND *)
+	AND_SPOP,				(* MATCH A LINE MATCHING BOTH PREDICATE OPERANDS *)
+	OR_SPOP		);			(* MATCH A LINE MATCHING EITHER PREDICATE OPERANDS *)
+
+  SPRED = ^ SPRED_NODE;				(* REPRESENTED AS A TREE OF NODES *)
+  SPRED_NODE =
+    RECORD
+      CASE PREDKIND: SPRED_KINDS OF
+	NOT_SPOP:				(* NOT <NOPER> *)
+	      (  NOPER: SPRED  );
+	AND_SPOP, OR_SPOP:			(* <LOPER> OP <ROPER> *)
+	      (  LOPER, ROPER: SPRED  );
+	PATTERN_SPOP:
+	      (  PATTERN: SPATTERN  )
+    END;
+
+  TOKTYP = (AND_TOK, OR_TOK, NOT_TOK);
+(* CMDUTL.typ - last modified 7/8/82 - type declarations for command 
+   utility subroutines. *)
+
+
+TYPE						(* system dependent file name types *)
+  FILE_ID = FILE_NAME;				(* changed 7-8-82: max string length to 'file_name' *)
+  EXTENSION = PACKED ARRAY [1..3] OF CHAR;
+
+
+CONST CMDLINELEN = 254;				(* command line declaration *)
+TYPE
+  CMDLINE = STRING[254];			(* string itself *)
+  CMDLINEIDX = 0..255;				(* index of above *)
+
+(********************************************************************* *)
+
+		      (* QED type definitions *)
+		      (* -------------------- *)
+
+
+CONST QMAXLINES = 99999;			(* maximum line number *)
+
+TYPE
+  QLINEP = ^QLINE;				(* ptr to line descriptor *)
+  QLINENO = 0..QMAXLINES;			(* QED line number *)
+  QLNOFFSET = -99999..QMAXLINES;		(* line offset *)
+
+  (* BUFFER DESCRIPTOR - callers should only access the following fields:
+     curlineno, lbound, hbound, lastlineno, curfile, curfileok, mark, changes.
+     All other fields are implementation specific. *)
+
+  QBUFFER = RECORD
+    FIRSTLINEP,					(* ptr to dummy 0th line desc *)
+    LASTLINEP,					(* to last line desc *)
+    GETLINEP: QLINEP;				(* ptr to last line gotten *)
+    GETLINENO: QLINENO;				(* line number of last line gotten *)
+    CURLINENO,					(* current line number *)
+    FIRSTLINENO: QLINENO;                       (* first line number *)
+    LASTLINENO: QLINENO;			(* last line number *)
+    TMP2_LAST: QLINENO;                         (* last line nbr. in TMP2 *)
+    NEXT_INPUT: QLINENO;                      (* INPUT FILE HIGH WATER MARK *)
+    buffer_limit: QLINENO;                      (* size limit of in_core_buffer *)
+    nbr_in_entire_file: qlineno;  (* how many records in the file *)
+    GARBLINEP: QLINEP;				(* lines to be deleted *)
+    LBOUND,
+    HBOUND: QLINENO;				(* bounded range *)
+    LBOUNDP,
+    HBOUNDP: QLINEP;				(* pointers to bounds *)
+    OFFSET: QLINENO;				(* ANC line bounding offset *)
+    OLDOFFSET: QLINENO;				(* offset previous to above *)
+    MARK: SPRED;				(* boundary mark *)
+    CURFILE: FILE_ID;				(* name of defaul file *)
+    empty_buff: boolean;                      (* is in-core buffer empty ? *)
+    TMP1: FILE OF *;
+    TMP2: FILE OF *;
+    TMP3: TEXT;
+    f: TEXT;
+    CURFILEOK: BOOLEAN;				(* valid filename in above ? *)
+    CHANGES: BOOLEAN;				(* unwritten changes in buffer *)
+    S940: BOOLEAN				(* true if current file is 940 file	*)
+  END;
+
+(********************************************************************* *)
+(* QLINE.TYP - last modified 9/21/81 by djm to remove $IF ANC tag field from
+               this version.  The field is still present in the ANC version. *)
+
+TYPE
+  QLINE = PACKED RECORD				(* QED line descriptor *)
+    PREVLINEP,					(* previous line pointer *)
+    NEXTLINEP: QLINEP;				(* next line pointer *)
+    SOURCE: QSTRING				(* text of line *)
+  END;						(* note: users of QED routines
+						should never mess with qlines *)
+(* LINE DESIGNATOR defintions.  An LD is represented as a linked list of nodes
+   giving the atomic parts of a line designator such as predicates, symbolic
+   addresses, and punctuation. Details may be found in the 'Definition of QED.' *)
+
+
+TYPE
+  LD_FORMS =
+     (	NUM_LD,					(* LINE OFFSET FROM LAST ADDRESSED LINE *)
+	FORWARD_LD,				(* ADDRESS SPECIFIED BY PREDICATE *)
+	BACKWARD_LD,				(* ADDRESS SPECIFIED BY ^PREDICATE *)
+	DOT_LD,					(* CURRENT LINE *)
+	DOLLAR_LD,				(* LAST LINE *)
+	STAR_LD,				(* FIRST LINE OF RANGE *)
+	COMMA_LD	);			(* RANGE SEPARATOR *)
+
+
+  LDCHAIN = ^ LDPART;				(* NODE ON LDCHAIN LIST *)
+  LDPART =
+    RECORD
+      NEXT: LDCHAIN;				(* POINTER TO NEXT NODE ON LIST, OR NIL *)
+      CASE LDKIND : LD_FORMS OF			(* VARIOUS ATOMIC PARTS *)
+	NUM_LD:	     (  OFFSET: QLNOFFSET  );	(* OFFSET OR ABSOLUTE LINENO *)
+	FORWARD_LD,BACKWARD_LD:  (  PRED: SPRED  ); (* PREDICATES TO SEARCH FOR *)
+	DOT_LD,DOLLAR_LD,STAR_LD,COMMA_LD: ()
+    END;
+
+  LDCOUNT = 0..2;				(* NUMBER OF ADDRESSES IN AN LD *)
+  LDRANGE =					(* EVALUATED LD CHAIN, GIVES LIMITS OF RANGE *)
+    RECORD
+      LBOUND: QLINENO;				(* FIRST LINE ADDRESSED *)
+      HBOUND: QLINENO				(* SECOND LINE, SAME AS FIRST IF LD NOT RANGE *)
+    END;
+(* QED.TYP - modified 9/16/81 by djm to add case_param *)
+
+type
+  qedcmds =
+      ( append, change, delete, insert, edit, modify, load, print, substitute,
+        after, before, writecmd, save, find, gotocmd, resetcmd, join, copy,
+        move, transfer, bound, list, eqcmd, number, opencmd, outputcmd, closecmd,
+        setcmd, split, quit, exitcmd, uparrow, why, indent, underbar, readcmd);
+
+  qed_cmd_set =
+    set of qedcmds;
+
+  set_params =
+      ( del_param, lcnt_param, mark_param, tab_param, wild_param, case_param );
+
+  set_param_set = set of set_params;
+TYPE
+  SPLIT_OPTIONS = (NUMBER_SPLITOP, CONFIRM_SPLITOP, PRINT_SPLITOP,
+			ALL_SPLITOP, DELETE_SPLITOP);
+
+  SPLIT_OPT_SET = SET OF SPLIT_OPTIONS;
+(* QSUBST.TYP - created 04/30/82 by djm *)
+
+type
+  sub_options =
+    ( confirm_sop, all_sop, print_sop, number_sop  );
+
+  sub_opt_set = set of sub_options;
+(*  Declarations for QED routines to read and write 940 style files *)
+(*  RLD:CMDUTL.TYP must be $INCLUDEd previously to define "file_id" *)
+(*  RND:QSTR.TYP must be $INCLUDEd previously to define "qstring"   *)
+
+TYPE WCHANNEL = 0..15;				(* channel number obtained from Pascal runtime *)
+
+     (* error codes returned by routines in this package *)
+
+     WCODES = (WOK, WTENFILE, WBADNAME, WBADFILE, WEOF, WINERROR, WOUTERROR);
+
+     (* following type is for the file name modifier wtring passed to
+	wfileconvert.  Its length is 6 to force the old compiler to
+	pass it by address for compatibility with the new compiler *)
+
+     WMODIFIER = STRING[6];
+
+     (* argument to wopen specifying data transfer direction *)
+
+     WIOMODES = (WINPUT, WOUTPUT);
+(* QEDTYP.TYP - created 04/29/82 by djm *)
+
+const
+  token_chars : set of char = ['A' .. 'Z'];
+
+type
+  rangetypes = (one, dollar, dot, dotp1, lb, lbp1);
+
+  rangelist = record
+      lbound, hbound1, hbound2: rangetypes;
+      required, permitted: 0..2
+  end;
+
+  cmd_range = 1 .. ord (maximum (qedcmds)) + 1;
+  sub_opt_range = 1 .. ord (maximum (sub_options)) + 1;
+  set_param_range = 1 .. ord (maximum (set_params)) + 1;
+  split_opt_range = 1 .. ord (maximum (split_options)) + 1;
+  caller_range = 1 .. ord (maximum (toktyp)) + 1;
+
+  qcmdlist = array [cmd_range] of cmd_lookup_record;
+  sub_opt_list = array [sub_opt_range] of cmd_lookup_record;
+  set_par_list = array [set_param_range] of cmd_lookup_record;
+  split_op_list = array [split_opt_range] of cmd_lookup_record;
+  caller_list = array [caller_range] of cmd_lookup_record;
+  defrangelist = array [qedcmds] of rangelist;
+(**********  FILUTL.inc  last modified 6/19/78 **********)
+
+
+
+(* PR FILE ID extracts a file title form an input string. If the title parses
+   correctly, file_id information is set, the string cursor is advanced past
+   the title and true is returned.  If the title is incorrectly formed, false
+   is returned, and the cursor is left pointing to the character which is in
+   error.  The file_id information is not changed. *)
+
+EXTERNAL FUNCTION PR_FILE_ID
+	    (	LINE: CMDLINE; VAR IDX: CMDLINEIDX;
+		VAR FID: FILE_ID		      ): BOOLEAN;
+
+
+
+(* OPEN FILE opens a text file for input or output. The mode is specified by
+   the caller. For an output file the user can also request append mode and
+   old/new file prompting. The caller may supply a default extension to be used
+   in the file_id if none appears.  A flag is returned indicating if the open
+   was successful. *)
+
+TYPE
+  IO_MODE = ( INPUT_MODE, OUTPUT_MODE );
+  IO_OPTION_SET = SET OF ( APPEND_MODE, CONFIRM_OPEN, ASCII_MODE );
+
+EXTERNAL FUNCTION OPEN_FILE
+	    (   VAR F: TEXT;
+		FID: FILE_ID;
+		EXT: EXTENSION;
+		MODE: IO_MODE;
+		OPTION_SET: IO_OPTION_SET   ): BOOLEAN;
+
+
+
+(* PATHNAME returns the actual file_id of an opened PASCAL file.  This file_id
+   reflects any directory searching in effect. *)
+
+EXTERNAL FUNCTION PATHNAME  ( VAR F: TEXT ):  FILE_ID;
+
+
+(* QUERY asks a caller supplied question, and checks for a yes or no reply.
+   Y, YES, NO, N, or <eoln> meaning yes are accepted as replys. Also,
+   REPEAT is accepted as a request to repeat the question.  If no such 
+   replies are received, another response is requested and processed. Notes:
+   This routine appends a question mark to the question. It is assumed that
+   the terminal is in the desired column (i.e. one) when called. *)
+
+TYPE QUERY_STRING = STRING[256];
+
+EXTERNAL FUNCTION QUERY (QUESTION: QUERY_STRING): BOOLEAN;
+
+(* QSPAT.INC - modified 9/16/81 by djm to add QSETCASE declaration *)
+
+(* QSETCASE sets the CASE flag in QSPAT. *)
+
+EXTERNAL PROCEDURE QSETCASE (X:BOOLEAN);
+
+(* SPATPARSE extracts a string pattern from an input line.  The parse begins
+   at a caller supplied index. Preceding blanks are ignored. If the first 
+   nonblank character is not a valid string pattern delimiter, then false is
+   returned.  The index is not advanced.  If a valid delimiter is found, then
+   the line is scanned to complete the pattern. An error occurs if there is
+   no closing delimiter or if the default pattern is used and there it has no
+   current value.  If the pattern is valid, the pattern record is filled in;
+   the parsing index is advanced to the character past the closing delimiter;
+   and true is returned. If there is an error, true is returned with an error
+   code set. The index is set to the openning delimiter; the pattern record is
+   not modified. *)
+
+
+EXTERNAL FUNCTION SPATPARSE
+	    (	LINE: CMDLINE;		(* LINE TO BE PARSED *)
+		VAR IDX: CMDLINEIDX;	(* PARSING CURSOR, ADVANCED IF TRUE RETURNED *)
+		VAR PAT: SPATTERN;	(* PATTERN DESCRIPTION, SET IF COMPLETE PATTERN FOUND *)
+		WILDSWITCH: BOOLEAN;	(* WILDCARDING SET SWITCH *)
+		VAR ERR: QERRCODE	(* ERROR CODE, SET IF SOMETHING FOUND *)
+				): BOOLEAN;
+
+
+
+(* SPATMATCH attempts to find a substring matching a pattern somewhere within
+   a caller supplied line.  If no match is found, then false is returned.  If
+   a match is found, then the starting index and length of the substring are
+   set, and true is returned. *)
+
+
+EXTERNAL FUNCTION SPATMATCH
+	    (	LINE: QSTRING;		(* LINE TO SCAN FOR A MATCHING SUBSTRING *)
+		PAT: SPATTERN;		(* PATTERN TO BE MATCHED *)
+		VAR POS, LEN: QSTRINGIDX;  (* STARTING POSITION AND LENGTH OF SUBSTRING *)
+		VAR ERR: QERRCODE	(* ERROR REPORT *)
+				): BOOLEAN;
+
+
+
+
+(* SPATDISPOSE disposes of the doubly-linked list in the given SPATTERN *)
+
+EXTERNAL PROCEDURE SPATDISPOSE (PATTERN: SPATTERN);
+
+(* SPATSETDEFAULT sets the default string pattern - i.e. // or equivalent.
+   Initially it has no value; an attempt to reference it causes an error to
+   be reported by SPATMATCH. *)
+
+
+EXTERNAL PROCEDURE SPATSETDEFAULT (PATTERN: SPATTERN);
+
+(* SPATGETDEFAULT returns the value of the current
+default spattern. Useful for preventing sub-commands of FIND from
+changing it. Will not report an error if the pattern
+is null. *)
+
+EXTERNAL FUNCTION SPATGETDEFAULT: SPATTERN;
+
+(* QTOKENGET searches for the next non-blank character in line and sets idx
+to that position. The function returns FALSE if no token is found *)
+
+EXTERNAL FUNCTION QTOKENGET(LINE : CMDLINE; VAR IDX : CMDLINEIDX) : BOOLEA* SPREDPARSE extracts a string predicate from an input line.  The parse begins
+   at a caller supplied index. If the first token at or following the index is
+   not a valid initial token for a string predicate, false is returned. No
+   additional parameters, including the line index, are modified. If the
+   token is acceptable, an attempt is made to parse a complete string predicate
+   An error occurs if there is a syntactic error, an error in a contained
+   string pattern, or an AND operator whose operands are both ::, @@, or ##
+   form patterns.  If there is no error, then a pointer to the base of the
+   predicate tree is filled in; the index is set to the character position
+   following the end of the predicate; and true is returned.  If there is an
+   error, true is returned with a nonnull error code.  The index is set to
+   the start of the token at which the error occurred. The predicate tree
+   base is not set. *)
+
+EXTERNAL FUNCTION SPREDPARSE
+	    (	LINE: QSTRING;			(* STRING TO BE PARSED *)
+		VAR IDX: QSTRINGIDX;		(* PARSING CURSOR, ADVANCED IF SOMETHING FOUND *)
+		VAR PRED: SPRED;		(* PREDICATE TREE, SET IF COMPLETE PATTERN FOUND *)
+		WILDSWITCH: BOOLEAN;		(* ON/OFF SWITCH FOR WILDCARDING *)
+		VAR ERR: QERRCODE		(* ERROR CODE, SET IF SOMETHING FOUND *)
+				): BOOLEAN;
+
+
+
+(* SPREDMATCH attempts to match a line against a string predicate. The rules
+   for interpreting a predicate is given in the 'Definition of QED'.  A flag is
+   returned indicating whether or not there was a match. *)
+
+EXTERNAL FUNCTION SPREDMATCH
+	    (	LINE: QSTRING;			(* LINE TO MATCH AGAINST *)
+		PRED: SPRED;			(* PREDICATE TO MATCH *)
+		VAR ERR: QERRCODE		(* ERROR REPORT *)
+				  ): BOOLEAN;	(* TRUE IF MATCH FOUND *)
+
+
+
+(* SPREDDISPOSE deletes the nodes of a string predicate tree. It is passed
+   a possibly nil pointer to the base of a tree. *)
+
+EXTERNAL PROCEDURE SPREDDISPOSE (PRED: SPRED);
+(**********  QEDERR.inc  last modified 3/6/81  **********)
+
+TYPE QEDERRLEVEL = 1..10;
+
+EXTERNAL PROCEDURE QEDERROR
+    (	VAR F: TEXT;				(* file to write error message to *)
+	CODE: QERRCODE;				(* error to report *)
+	LEVEL: QEDERRLEVEL  );			(* level of message desired *)
+
+(* QLDPARSE extracts a line designator from an input line. It returns a count
+   of line addresses seen, and a representation of the LD.  The parse begins
+   with the first token at or following a caller supplied index.  If no LD at
+   all appears, a zero count and nil LD chain are returned. There is no error.
+   If the start of an LD appears, then the parse continues until the first
+   token, not a part of an LD, is seen or an error is detected. If a valid LD
+   is found, the count of address (one for a single address, two for a
+   range) and the LD chain built up are returned with a null error code. An
+   error occurs if there is a syntactic error in a contained string predicate,
+   star is used improperly, or a line address or offset is out of range. In
+   such a case, the count and LD chain parameters are not returned; and a
+   nonnull error code is returned. The index is set to the start of the first
+   token following the LD if there is no error; otherwise is set to point to
+   the start of the erroneous token.  The caller should insure that the LD
+   chain has been initialized by QLDDISPOSEing any records on it, and then
+   setting LD to nil.   *)
+
+
+EXTERNAL PROCEDURE QLDPARSE
+	    (	LINE: CMDLINE;			(* LINE TO BE PARSED *)
+		VAR IDX: CMDLINEIDX;		(* PARSING CURSOR *)
+		VAR NLD: LDCOUNT;		(* NUMBER OF LINE ADDRESSES SEEN *)
+		VAR LD: LDCHAIN;		(* REPRESENTATION *)
+		WILDSWITCH: BOOLEAN;		(* SWITCH FOR WILDCARDING *)
+		VAR ERR: QERRCODE	);	(* INDICATES SUCCESS OR NATURE OF FAILURE *)
+
+
+
+(* QLDEVAL resolves a line designation within the range of lines specified,
+   and returns the line numbers of the addressed lines.  The rules governing
+   the evaluation of an LD are given in the 'Definition of QED'.  If an error
+   is detected, the error code is set nonnull, and the range left undefined. *)
+
+EXTERNAL PROCEDURE QLDEVAL
+	    (	VAR BUF: QBUFFER;		(* BUFFER TO SEARCH *)
+		LD: LDCHAIN;			(* PARSED LD TO EVALUATE *)
+		SEARCHRANGE: LDRANGE;		(* LIMITS OF SEARCH *)
+		VAR RANGE: LDRANGE;		(* CONTAINS RETURNED LINE ADDRESSES *)
+		VAR ERR: QERRCODE	);	(* INDICATES SUCCESS OR NATURE OF FAILURE *)
+
+
+
+(* QLDDISPOSE frees the storage associated with an LD chain. It is passed a
+   pointer to the start of the chain to free. This pointer may be nil. *)
+
+EXTERNAL PROCEDURE QLDDISPOSE (LD: LDCHAIN );
+(* QEDLN.INC - last modified 9/21/81 by djm to remove external references to
+               procedures QTAG, QTAGSET, and QTAGCLEAR.  These procedures are 
+               still present in the ANC version. *)
+
+EXTERNAL PROCEDURE QINITBUF			(* call once for each buffer *)
+(	VAR BUFFER: QBUFFER);			(* buffer to be created *)
+
+EXTERNAL PROCEDURE QDELBUF			(* clear and re-initialize buffer *)
+(	VAR BUFFER: QBUFFER);			(* buffer to be purged *)
+
+EXTERNAL FUNCTION QGETLINE			(* returns text of specified line *)
+(	VAR BUFFER: QBUFFER;			(* working buffer *)
+	L: QLINENO;				(* number of line to be gotten *)
+	VAR ERR: QERRCODE			(* what went wrong? *)
+		): QSTRING;			(* text of line *)
+
+EXTERNAL PROCEDURE QMODLINE			(* change text of specified line *)
+(	VAR BUFFER: QBUFFER;			(* in this buffer *)
+	L: QLINENO;				(* line to be changed *)
+	NEWTEXT: QSTRING;			(* new line's text *)
+	VAR ERR: QERRCODE);			(* in case of trouble *)
+
+EXTERNAL PROCEDURE QDELLINES			(* delete specified range of lines *)
+(	VAR BUFFER: QBUFFER;			(* from this buffer *)
+	F, L: QLINENO;				(* from F to L *)
+	VAR ERR: QERRCODE);			(* everything QOK? *)
+
+EXTERNAL PROCEDURE QADDLINE			(* add line of text to specified place *)
+(	VAR BUFFER: QBUFFER;			(* in this buffer *)
+	L: QLINENO;				(* after this line *)
+	TEXT: QSTRING;				(* line to add *)
+	VAR ERR: QERRCODE);			(* did it work? *)
+
+EXTERNAL FUNCTION QBUFLENGTH			(* return length of bounded buffer *)
+(	VAR BUFFER: QBUFFER
+		): QLINENO;
+
+EXTERNAL FUNCTION QDOLLAR_VAL			(* return the value of a $ ld *)
+(       VAR BUFFER: QBUFFER
+		): QLINENO;
+
+EXTERNAL FUNCTION QFIRST_VAL			(* return the value of the 1st bounded line*)
+(       VAR BUFFER: QBUFFER
+		): QLINENO;
+
+EXTERNAL PROCEDURE QMOVELINES			(* relocate a section of the buffer *)
+(	VAR BUFFER: QBUFFER;			(* working buffer *)
+	FIRST, LAST: QLINENO;			(* range of lines to be moved *)
+	DEST: QLINENO;				(* where to move them to *)
+	VAR ERR: QERRCODE);			(* error report *)
+
+EXTERNAL PROCEDURE QCOPYLINES
+(	VAR BUFFER: QBUFFER;			(* working buffer *)
+	FIRST, LAST: QLINENO;			(* range of lines to copy *)
+	DEST: QLINENO;				(* where to copy them to *)
+	VAR ERR: QERRCODE);			(* error report *)
+
+EXTERNAL PROCEDURE QSETOFFSET			(* sets offset for addressing bounded lines *)
+(	NEWOFFSET: QLINENO;			(* new buffer offset *)
+	VAR BUFFER: QBUFFER);			(* working buffer *)
+
+EXTERNAL PROCEDURE QSETBOUNDS			(* set up bounded region in buffer *)
+(	VAR BUFFER: QBUFFER;			(* working buffer *)
+	F, L: QLINENO;				(* bounds (in bounded linenos) *)
+	ABSOLUTE: BOOLEAN;			(* flag for line addressing mode *)
+	VAR ERR: QERRCODE);			(* any problem? *)
+
+EXTERNAL PROCEDURE QUNBOUND			(* resets buffer bounds to whole buffer *)
+(	VAR BUFFER: QBUFFER;			(* working buffer *)
+	VAR ERR: QERRCODE);			(* done? *)
+
+EXTERNAL PROCEDURE QFILELOAD			(* read text from file *)
+(	VAR BUFFER: QBUFFER;			(* in this buffer *)
+	s940id: file_id;			(* from this file	*)
+	wmod: wmodifier;			(* 940 file type modifier	*)
+	WHERE: QLINENO;				(* append to this line *)
+	VAR CNT: QLINENO;			(* number of lines appended *)
+	VAR ERR: QERRCODE);			(* and report any problems *)
+
+EXTERNAL PROCEDURE QFILEAPPEND			(* read text from file *)
+(	VAR BUFFER: QBUFFER;			(* in this buffer *)
+	s940id: file_id;			(* from this file	*)
+	wmod: wmodifier;			(* 940 file type modifier	*)
+	WHERE: QLINENO;				(* append to this line *)
+	VAR CNT: QLINENO;			(* number of lines appended *)
+	VAR ERR: QERRCODE);			(* and report any problems *)
+
+EXTERNAL PROCEDURE QTTYAPPEND			(* append text from the TTY *)
+(	VAR BUFFER: QBUFFER;			(* in this buffer *)
+	WHERE: QLINENO;				(* append to this line *)
+	VAR CNT: QLINENO;			(* number of lines appended *)
+	VAR ERR: QERRCODE);			(* report failures *)
+
+EXTERNAL PROCEDURE QFILEWRITE			(* write text to file *)
+(	VAR BUFFER: QBUFFER;			(* buffer to write from *)
+	s940id: file_id;			(* file to write to	*)
+	wmod: wmodifier;			(* 940 file type modifier	*)
+	FNO, LNO: QLINENO;			(* range to write *)
+	CONFIRM: BOOLEAN;			(* new/old file prompting desired? *)
+	VAR ERR: QERRCODE);			(* error report *)
+ 
+EXTERNAL PROCEDURE QTMPSCRATCH                    (* scratch all open temp files *)
+  
+     ( var buffer: qbuffer);
+EXTERNAL PROCEDURE QMARKMATCH			(* matches lines to the markstring *)
+(	VAR BUFFER: QBUFFER;			(* in this buffer *)
+	MARK: SPRED;				(* predicate to match *)
+	SECT_NAME: SPRED;			(* name predicate to AND in *)
+	START: QLINENO;				(* place to start looking *)
+	VAR FNO, LNO: QLINENO;			(* return args, new bounds *)
+	BACKWARD: BOOLEAN;			(* search direction flag *)
+	WRAP: BOOLEAN;				(* wrap/no-wrap around buffer flag *)
+	VAR ERR: QERRCODE);			(* error report *)
+EXTERNAL PROCEDURE PRLINE (VAR OUTFILE: TEXT; LINE: QSTRING;
+	TAB_PRINT: BOOLEAN; VAR ERR: QERRCODE);
+
+(* outputs the line to the specified file, converting
+   all control characters except &G through &M to &x form. *)
+
+EXTERNAL PROCEDURE QLISTLINES (VAR BUFFER: QBUFFER; LOW, HIGH: QLINENO;
+	VAR F: TEXT; CTL_CHAR, NUMBER, TAB_PRINT: BOOLEAN; VAR ERR: QERRCODE);
+
+(* qlistlines outputs the specified range of lines to
+   the tty. uses prline. *)
+(* QSUBSTITUTE replaces zero or more occurrences of a pattern within a line
+   with a caller supplied string.  The caller may select among the following
+   options:
+
+     confirm - display the line, bracketing the matched pattern with BACKSLASH,
+       and query the user to confirm the substitution. It is assumed that
+       the teletype has been opened.
+
+     all - substitute for all occurences of the pattern in the line; if not
+       selected, only the first occurrence may be replaced.
+
+     print - after applying all substitutions, display the resulting line
+       if modifications have been made.
+
+     number - if a match for the pattern is found, display a caller supplied
+       line number before the first substitution.
+
+   This routine returns the modified line, a count of the number of substitutions
+   performed, and a flag indication that a match was found for the pattern. The
+   flag may be true when the count is zero if the substitutions were not confirmed
+   by the user.
+
+   An error is reported if insertion of the replacement string would result in
+   a line that is too long. If on return, the error code is nonnull, then
+   the flag function value is true, but the values of the other values are
+   undefined. 
+   N_PAR is the Nth occurrance parameter. This parameter instructs QSUBST on 
+   which occurrance of matching the pattern substitution(s) should begin.
+   Variable NTH is a count of the number of matches found and not 
+   substituted for. If NTH is less than N_PAR, then no substitution will be
+   made and QSUBST will return false.
+   CMD must be either SUBSTITUTE, BEFORE, or AFTER qedcmd. This instructs
+   QSUBST whether to substitute or insert the replacement string in the
+   line.         *)
+
+EXTERNAL FUNCTION QSUBSTITUTE
+	    (	VAR LINE: QSTRING;		(* LINE TO BE MODIFIED *)
+		LINENO: QLINENO;		(* NUMBER OF ABOVE *)
+		PAT: SPATTERN;			(* PATTERN TO BE REPLACED *)
+		RPLMTSTR: QSTRING;		(* STRING TO REPLACE PATTERN *)
+		OPTION_LIST: SUB_OPT_SET;
+		VAR CNT: QSTRINGIDX;		(* COUNT OF SUBSTITUTIONS PERFORMED *)
+		CMD : QEDCMDS;			(* PARSED COMMAND *)
+		VAR NTH : QLINENO;		(* COUNT OF OCCURRANCES *)
+		N_PAR : QLINENO;		(* OCCURRANCE PARAMETER *)
+		VAR ERR: QERRCODE		(* INDICATES IF RESULT TOO LONG *)
+					): BOOLEAN; (* INDICATES MATCH FOUND *)
+
+EXTERNAL PROCEDURE QJOINLINES			(* turn two (or more) lines into one *)
+(	VAR BUFFER: QBUFFER;			(* working buffer *)
+	FIRST,
+	LAST: QLINENO;				(* range of lines to join *)
+	CONTMARK: QSTRING;			(* string to replace CRs with *)
+	VAR ERR: QERRCODE);			(* error report *)
+EXTERNAL FUNCTION QSPLITLINES			(* split selected lines into smaller ones *)
+(	VAR BUFFER: QBUFFER;			(* working buffer *)
+	LINENO: QLINENO;			(* addr of line to split *)
+	PAT: SPATTERN;				(* where to split each line *)
+	OPTION_LIST: SPLIT_OPT_SET;		(* various action-controllers *)
+	VAR CNT: QLINENO;			(* number of splits - new lines created *)
+	VAR ERR: QERRCODE			(* error report *)
+		): BOOLEAN;			(* true if a match for pat found *)
+TYPE
+  QIOMODE = (QINPUT_MODE, QOUTPUT_MODE);
+  QIOOPTIONS = (QIO_APPEND, QIO_CONFIRM, QIO_ASCII);
+  QIOOPTION_SET = SET OF QIOOPTIONS;
+
+EXTERNAL PROCEDURE QOPENFILE ( VAR F: TEXT;	(* file to open *)
+			     FID: FILE_NAME;	(* name of file *)
+			     EXT: STRING[3];	(* default extension *)
+			     MODE: QIOMODE;	(* I/O mode *)
+			     OPTS: QIOOPTION_SET;   (* options *)
+			     VAR ERR: QERRCODE );   (* error code *)
+(* QED.INC - modified 9/24/81 by djm to add const declarations of 
+             tab, lf, cr, and esc *)
+
+CONST   TAB = CHR (#O11);                       (* Tab             *)
+        LF  = CHR (#O12);                       (* Line Feed       *)
+        CR  = CHR (#O15);                       (* Carriage Return *)
+        ESC = CHR (#O33);                       (* Escape          *)
+
+EXTERNAL PROCEDURE QEDCL			(* main command loop for QED *)
+(	VAR BUFFER: QBUFFER;			(* pre-setup buffer *)
+	ALLOWED_CMDS: QED_CMD_SET);		(* command set to work with *)
+
+EXTERNAL PROCEDURE QINITEXEC			(* equiv to qinit and qinitbuf *)
+(	VAR BUFFER: QBUFFER);			(* buffer to be used *)
+
+EXTERNAL PROCEDURE QINIT			(* setup QED to run *)
+(	VAR BUFFER: QBUFFER);			(* buffer to initialize *)
+
+EXTERNAL PROCEDURE QSETTABDEFAULT		(* SET TABS switch default set *)
+(	DEFAULT: BOOLEAN);			(* true for SET TABS ON default *)
+
+EXTERNAL PROCEDURE QSETMARKDEFAULT		(* mark string default setter *)
+(	LINE: CMDLINE);				(* the default mark string *)
+
+EXTERNAL PROCEDURE QEXECUTE			(* parse and execute one command line *)
+(	VAR BUFFER: QBUFFER;			(* working buffer *)
+	VAR LINE: CMDLINE;			(* command line to parse *)
+	VAR LINDEX: CMDLINEIDX;			(* place marker *)
+	VAR EXECRANGE: LDRANGE;			(* limits of execution *)
+	VAR BLE: QLINENO;			(* bottommost line examined *)
+	FINDFLAG: BOOLEAN;			(* running under find? *)
+	ALLOWED_CMDS: QED_CMD_SET;		(* commands permitted to be executed *)
+	VAR ERR: QERRCODE);			(* errors? *)
+(* TEMPFI.INC - include file for RDLIB routine TEMP_FILE_NAME. *)
+
+external function temp_file_name ( string[ 3 ] ): file_name;
+(* VAX IMAGE_FILE_NAME external procedure declaration *)
+
+Type IMAGE_ERROR = (
+	IMAGE_OK,
+	IMAGE_ERR );
+
+External Procedure IMAGE_FILE_NAME (
+	Var IMAGE_NAME : File_name;
+	Var IMGERR : IMAGE_ERROR );
+external function qlabelfind
+(	var buffer:	qbuffer;	  
+	start:		qlineno;	(* where to start search *)
+	top:		qlineno;	(* upper search limit *)
+	var qlabel:	qstring;	(* label name, if found *)
+	var displ:	qlineno;	(* disp. of label from start *)
+	var err:	qerrcode):	(* error code *)
+			boolean;	(* true if label found, else false *)
+
+(* QLABELFIND searches the buffer from the start line backwards to the
+   TOP line for a line with a label. If one is found, the label's name
+   and its displacement from the START line are returned, with the value
+   TRUE. Otherwise, if no label is found, FALSE is returned. 
+   A label begins in column one with a character in the set
+   ['A'..'Z','a'..'z','0'..'9','$'] and ends with the character
+   preceding the next tab, blank, or end of line.  *)
+ =o	Ó

@@ -1,0 +1,191 @@
+$num off
+$page
+$cen $ski 2
+ODMS COMMAND LANGUAGE SUMMARY
+ODMS Version 2.0
+May 7, 1980
+$jus $ski 2
+$tit right 'ODMS Command Language Summary/\' right 'May 7, 1980'
+In this description of the ODMS command language, the following
+conventions are used.
+Language keywords are capitalized, with the minimal abbreviation
+underlined.
+The characters "=" and "," appear without quotes in the command
+BNF, but should be used where indicated.
+Parentheses are used to enclose a sequence of items, separated by
+vertical bars, of which exactly one is to be chosen.
+The entities <file>, <module>, and <num> are defined below.
+In general, optional items, which are denoted by square brackets and
+usually contain a keyword, can occur anywhere within the command line.
+$ski 2
+&MDL Processing Commands&
+$ski
+Before any other commands can be given, ODMS must contain a description
+of the program being overlaid.
+Normal users will use the USE command, which loads a heap file containing
+the memory description.
+The default components of the filename given for the USE command are
+"\.MDO".
+System managers and other users will use the COMPILE command, which
+prepares a memory description object (.MDO) file and then USEs it.
+The default components of the input filename for the COMPILE command
+are "\.MDL"; for the output filename default components, the input filename
+is used, followed by the string "[].MDO".
+$ski $ver $ind left +3
+&U&SE <file>
+&CO&MPILE [ <file> = ] <file>
+$ski $jus $ind left -3
+$ski
+&Database Commands&
+$ski
+The UPDATE command is used to insert single module versions into an
+overlay database.
+If no DATABASE filename is given, the default database filename is used,
+which is the system name (from the SYSTEM section of the MDL, or the
+file name of the USE or COMPILE file) with the extension ".ODB".
+The name of the module to be updated must be included.
+The version to be updated defaults to zero; a message is printed if
+a currently existing version is overwritten.
+The input file, if not specified by the OVERLAY qualifier, is taken
+from the name of the module, with the extension ".EXE".
+The action of the UPDATE command is as follows:
+the overlay database is searched for a currently existing version
+of that module; if found, a message is printed; the new one is allocated
+space, written to the database, and linked in; the original, if any,
+is deleted.
+$ski $ver $ind left +3
+&UP&DATE [ &D&ATABASE = <file> ] [ &O&VERLAY = <file> ]
+         [ &V&ERSION = <num> ] <module>
+$ski 2 $just $ind left -3
+The DELETE command is used to delete single module versions in an
+overlay database.
+The defaults for database name and version number are the same
+as for the UPDATE command.
+The action of the DELETE command is as follows:
+the version to be deleted is located;
+if present, it is unchained, and then its space is freed within the file.
+$ski $ver $ind left +3
+&DE&LETE [ &D&ATABASE = <file> ]
+           [ ( &V&ERSION = <num> || &ALL& ) ] <module>
+$ski 2 $jus $ind left -3
+The RENUMBER command is used to modify the version identification of
+existing overlays within a database.
+The default database name and version number are the same as for
+the UPDATE and RENUMBER commands.
+The NEWVERSION qualifier must appear; version zero is renamed to
+the NEWVERSION if no VERSION specification appears.
+The action of the RENUMBER command is as follows: make sure that
+VERSION exists and that NEWVERSION does not; find the version
+identification word of the overlay and change it.
+$ski  $ver $ind left +3
+&R&ENUMBER [ &D&ATABASE = <file> ] [ &V&ERSION = <num> ]
+         &N&EWVERSION = <num>   <module>
+$ski 2 $jus $ind left -3
+The PACK command is used to rewrite an existing database, eliminating
+both dead space and duplicate versions.
+The filename defaults in the same manner as the DATABASE qualifiers
+of the commands described above.
+The action of the PACK command is as follows: create a temporary file
+on the user's account and initialize it as a database;
+perform a sequence of UPDATEs on the new file, using the original database
+as input; if a duplicate version is found,
+print a message without including it;
+delete the original database; rename the new database.
+$ski $ver $ind left +3
+&PA&CK [ <file> ]
+$ski 2 $jus $ind left -3
+&Generation of Overlays&
+$ski
+The BUILD command is used to prepare the various command and auxilliary
+files needed to generate an overlay from Pascal code.
+There are three distinct forms of the command.
+The BUILD RESIDENT, below, defines the user resident command string
+for LINK-10 to use when building a sharable overlay.
+Every sharable overlay must include all RESIDENT routines used
+by the program; this string tells LINK to load any user-defined resident code.
+The BUILD <module> command prepares a collection of files for use
+in the generation of an overlay module.
+A ".SYM" file contains the local transfer vector, and MTV definitions
+required for linking the module; a ".CMD" file contains instructions
+for LINK; a ".MIC" file runs the MACRO assembler to produce the ".SRL"
+file used by LINK.
+Finally, the BUILD MAIN command prepares a collection of files for
+use in the generation of the main component of the overlaid program.
+The DATABASE qualifier respecifies the default database; the FILES
+qualfier specifies the runtime size of the overlay manager's file table.
+In all BUILD commands, the string following the USING keyword is copied
+verbatim into the LINK command files generated by the commands.
+If the last character of a BUILD command line is an ampersand ("&&"), the
+next line is also taken verbatim for LINK; the ampersand is deleted.
+If the last character of a BUILD command line is a percent sign ("%"),
+the next line is taken, as with ampersand, except that the percent
+sign is replaced by an end-of-line.
+When such a line is to be input, the command prompt changes from "*"
+to "Build:\".
+$ski $ver $ind left +3
+&B&UILD   <module> &USING& xxxx
+&B&UILD   &RESIDENT& &USING& xxxx
+&B&UILD   &MAIN& [ &D&ATABASE = <file> ] [ &F&ILES = <num> ]
+          [ &C&HANNELS = <num> ]  &USING& xxxx
+$ski 2 $jus $ind left -3
+&General Purpose Commands&
+$ski
+The PRINT command provides information about the overlaid system.
+It also examines overlays within databases.
+There are three forms of the PRINT command.
+PRINT <module> gives information about that module's versions within
+a database, or the default database without the DATABASE qualifier,
+and also gives information about the database file itself,
+such as percentage of dead space, number of directory blocks,
+and the number of blocks used for each version of the desired module.
+The INFO option gives information about the known areas, modules, and
+symbols in the overlaid program.
+The AREAS suboption gives names, sizes, and modules for the declared
+areas in the program; MODULES gives the names and numbers of symbols
+of the declaread modules in the program, as well as each module's area;
+PROGRAM gives general statistics about the overlaid program,
+such as the addresses of overlay and static areas, and the number
+of known interoverlay and resident symbols;
+the ALL option gives all three suboptions.
+Finally, the SYMBOLS option lists the symbols in a given module.
+$ski $ver $ind left +3
+&P&RINT   [ &D&ATABASE = <file> ] <module>
+^1uPRINT   ^1uINFO = ( ^1uAREAS || ^1uMODULES || ^2uPROGRAM || ^3uALL )
+&P&RINT   &S&YMBOLS = <module>
+$ski 2 $jus $ind left -3
+The VERIFY command checks the correctness of overlays, either in single
+files or within databases.
+It can be used to examine the extent of rebuilding necessary after
+a system change requires changing the MDL for the program.
+There are two forms of the command, one for databases and one for
+single files.
+VERIFY <module> OVERLAY = <file> checks the correctness of the overlay
+module located in <file>.
+VERIFY <module> checks specific versions in the default database, or an
+explicit database.
+VERIFY insures that module indices, relocations, and total sizes are
+suitable for use under the current MDL.
+$ski $ver $ind left +3
+$NEED 5
+&VERI&FY  <module> &O&VERLAY = <file>
+&VERI&FY  <module> [ &D&ATABASE = <file>]
+          [ ( &V&ERSION = <num> || &ALL& ) ]
+$ski 2 $jus $ind left -3
+The HELP command provides a quick summary of the function of any
+primary command, or a list of all primary commands.
+$ski $ver $ind left +3
+HELP [ <command> ]
+$ski 2 $jus $ind left -3
+The EXIT, QUIT, and STOP commands all terminate ODMS.
+$ski $ver $ind left +3
+&ST&OP
+&Q&UIT
+&E&XIT
+$ski 2 $jus $ind left -3
+&Other Definitions&
+$ski
+<module>, as used in this document, is the name of any module
+declared in the MDL.  Syntactically, it is an alphanumeric string
+including ".", "%", and "$", whose first character cannot be numeric.
+<num> is a numeric value, decimal unless its last character is
+the character "B" or "b", in which case it is interpreted as octal.

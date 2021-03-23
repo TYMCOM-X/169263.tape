@@ -1,0 +1,1122 @@
+$title right'VAX-RDLIB User''s Guide' right'August 23, 1982' right'Page \'
+$number off
+$justify
+$control off
+$tabs 7,15,23,31,35,41,47,55,63,71,79,87
+1.0\&Introduction&
+$skip
+The Research and Development Library, RDLIB, contains a set of
+Pascal-callable routines which are used to perform
+functions that are not part
+of Pascal. RDLIB contains routines which manipulate directories,
+determine baud rates, etc..
+This document describes the VAX version of RDLIB.
+The description includes a list of the routines that are available, and
+notes differences between these routines and
+their DEC-10 counterparts.
+If a DEC-10 RDLIB routine is not described in this document, it
+is not available on the VAX. If a routine described here
+is not available on the DEC-10, the description of that routine
+will mention that fact.
+Appendix A at the end of this document alphabetically lists
+the names of the routines in VAX RDLIB, along with
+a terse description of their functions.
+$ski
+RDLIB is a searchable object library.
+It is referenced at link time through the system wide logical name
+"RDLIB".
+A Pascal program named "FOO" would be linked as follows:
+$ski
+$ver
+	$ LINK FOO,RDLIB/LIB,PLINK/OPT
+$jus
+$ski
+$skip2
+2.0\&Routines&
+$skip
+This document describes the routines in the VAX version
+of RDLIB. The description includes the external procedure/function
+declaration and an indication of any type or include files that
+are needed. The routine description also contains a terse explanation
+of the routine's function, and any differences between
+the VAX version and its DEC-10 counterpart.
+To make things easier to find, this document will maintain the same
+grouping into packages as in the previous versions of RDLIB.
+The packages are:
+INFPAC, DAYTIME, PASDIR, FILUTL, CMDUTL, TERIO and Miscellaneous.
+$skip2
+2.1\&INFPAC&
+$skip
+INFPAC is a set of routines which return
+information about the calling program's environment. The INFPAC
+package is DEC-10 specific and not available on the VAX.
+Three of the functions provided in the INFPAC package are available
+on the VAX; one determines the system-assigned job number,
+JOBNUM, another returns the full pathname of the file which is currently
+being executed, and the third returns the user's PPN, GET_USER_ACNT.
+These routines are described in section 2.7.
+$skip2
+2.2\&DAYTIME&
+$skip
+The DAYTIME package contains a set of
+routines for manipulating dates and times. The package is
+based, as is the DEC-10 version, upon a standard internal
+day/time, e.g. a single encoding of a date and a time of day in
+one storage unit. On the DEC-10 the storage unit is a PDP-10
+word; on the VAX the storage unit is a quadword, i.e. 8 bytes.
+The VAX version
+of the DAYTIME package consists of the same set of routines
+as on the DEC-10, except
+that GMDTIME is not available on the VAX. The only other
+user-noticeable
+difference between the VAX and DEC-10 versions is that the
+user must include different type declarations.
+DTIME.TYP, on [52250,227], contains the
+type declarations for the VAX version of DAYTIME, DTIME.TYP,
+on [52250,220], contains the type declarations for the DEC-10
+version of DAYTIME. DTIME.INC,
+on [52250,220],
+contains the external procedure declarations for the VAX and
+DEC-10 versions of DAYTIME.
+$skip
+Since the VAX and the DEC-10 versions are the same, except for the
+type files and the omission of GMDTIME, the procedures and functions
+will not be listed
+here. Appendix A at the end of this document contains a list of the
+procedures and functions that are available. If further
+information is desired, see the R&&D Programming Manual.
+$skip2
+2.3\&PASDIR&
+$skip
+PASDIR is a set of routines which perform directory
+manipulations.
+All the DEC-10 PASDIR modules are available on the VAX: DIR_OPEN,
+DIR_CLOSE, DIR_NEXT, DIR_MATCH, and DIR_ATTR. The functions of
+these routines remain the same, although some of the data returned by these
+routines has changed because of differences between the VAX and the DEC-10.
+These changes will be discussed with each individual routine.
+Furthermore, as in the DAYTIME package, the type files will be
+different for the VAX and DEC-10 versions.
+PASDIR.TYP, on [52250,227], contains the type declarations for the
+VAX version of PASDIR, and PASDIR.TYP, on [52250,220], contains the
+type declarations for the DEC-10 version of PASDIR. 
+The external procedure/function declarations for the PASDIR package
+are the same for the VAX and DEC-10 versions. The external
+declarations are in PASDIR.INC on [52250,220].
+Both the VAX and DEC-10 versions of PASDIR.TYP require that
+DTIME.TYP be included before PASDIR.TYP is included. DTIME.TYP
+must be included from the same account as PASDIR.TYP, i.e.
+[52250,220] for the DEC-10 version and [52250,227] for the VAX version.
+$skip
+$indent+8
+$para-4
+DIR_OPEN\-\This routine opens a specified directory. This routine
+is used in conjunction with DIR_NEXT to determine the names of the
+files contained in a specified directory. This routine functions
+as the DEC-10 version does. The external procedure
+declaration is:
+$skip
+$indent+5
+$verbatim
+$need 4
+External Procedure DIR_OPEN (
+  Var ERR : DIR_ERRORS;
+  Var INT_ID : DIR_INT_ID;
+      EXT_ID : DIR_EXT_ID );
+$justify
+$indent-5
+$skip
+Any valid VAX directory specification may be used as EXT_ID
+("[250230]", "LIB:", "[250,230]", "[--.PASDEV.RDLIB]", etc.).
+$skip
+$para-4
+DIR_CLOSE\-\This routine closes a directory that has been opened by
+DIR_OPEN. This routine frees the storage associated with
+keeping the specified directory open. The external procedure
+declaration is:
+$skip
+$verbatim
+$indent+5
+$need 3
+External Procedure DIR_CLOSE (
+  Var ERR : DIR_ERRORS;
+      INT_ID : DIR_INT_ID );
+$skip
+$justify
+$indent-5
+On the DEC-10 this routine may return a success code, DIR_OK,
+or one of two error codes, DIR_NOT_OPEN or DIR_BAD_INT_ID. On the
+VAX there is no way to detect error conditions. Therefore, if
+DIR_CLOSE is called with a bad INT_ID, DIR_CLOSE will fail,
+causing a runtime error.
+$skip
+$para-4
+DIR_NEXT\-\This routine scans through a directory opened by DIR_OPEN,
+returning the names of the files contained in that directory,
+one for each call.
+DIR_NEXT works on the VAX as it does on the DEC-10,
+except that the filename returned by DIR_NEXT is a complete
+pathname, including
+disk identification, directory specification, and version number.
+The external declaration is:
+$skip
+$verbatim
+$indent+5
+$need 4
+External Procedure DIR_NEXT (
+  Var ERR : DIR_ERRORS;
+      INT_ID : DIR_INT_ID;
+  Var FNAME : DIR_FNAME );
+$skip
+$justify
+$indent-5
+Both the DEC-10 and VAX versions of DIR_NEXT may return one of two
+non-error codes: DIR_OK or DIR_EOF. DIR_EOF
+indicates that the end of the directory has been reached. DIR_EOF
+will be returned on the call AFTER the call which returns the last
+filename in the directory. On the DEC-10, there are two possible
+error return codes, DIR_BAD_INT_ID and DIR_NOT_OPEN. On the
+VAX, there is only one error return code, DIR_BAD_INT_ID, which
+will be returned if the INT_ID value passed to DIR_NEXT is bad.
+$skip
+$para-4
+DIR_MATCH\-\This routine matches a string to a wild card pattern,
+returning true if the string matches the pattern. This routine is
+the same on the VAX and the DEC-10. The external
+declaration is:
+$skip
+$indent+5
+$verbatim
+$need 3
+External Function DIR_MATCH (
+  FNAME : DIR_FNAME;
+  PATTERN : DIR_M_STR ) : Boolean;
+$skip
+$justify
+$indent-5
+$para-4
+DIR_ATTR\-\This routine returns the attributes of a given file.
+The attributes are: protection, creation day/time, size in bytes,
+pathname of the file , and the last revision day/time. On the DEC-10
+the date of the last read access is returned. This is not available on
+the VAX, so the last revision day/time is returned instead. The
+DEC-10 version also returns the filename in a formatted, packed array
+of 9 characters, where the first six represent the name, and the last
+three are the extension (see the R&&D Programming Manual).
+The VAX version of DIR_ATTR returns the full pathname of a file instead.
+The DEC-10 uses a
+3-character protection code, and therefore so does PASDIR.
+The VAX, however, uses a more elaborate scheme. To handle
+this scheme the following type declarations are used
+(For a description of file protections on the VAX see VAX I/O
+Reference Guide):
+$skip
+$indent+5
+$verbatim
+$need 16
+Type DIR_PROT_SCLS = (
+	DIR_READ,	(* permit read access	      *)
+	DIR_WRITE,	(* Allow write access         *)
+	DIR_EXECUTE,	(* Allow execution privileges *)
+	DIR_DELETE );	(* Allow deletion             *)
+
+     DIR_ACCT_SCLS = (
+	DIR_SYSTEM,	(* The system accounts        *)
+	DIR_OWNER,	(* The owner of the file      *)
+	DIR_GROUP,	(* First UIC number the same  *)
+	DIR_WORLD );	(* The rest of the accounts.  *)
+
+     DIR_PROT_SET = Set of DIR_PROT_SCLS;
+
+     DIR_PROT = Packed Array [ DIR_ACCT_SCLS ]
+                  of DIR_PROT_SET;
+$skip
+$indent-5
+$justify
+The DIR_ACCT_SCLS scalars correspond to the digit positions in the
+DEC-10 protection code, i.e. "<abc>". DIR_WORLD corresponds to the
+last digit position, i.e. "c", DIR_GROUP corresponds to the
+middle digit position, i.e. "b", DIR_OWNER corresponds to the
+first digit position, i.e. "a", and DIR_SYSTEM has no corresponding
+meaning on the DEC-10. On the DEC-10, the type of file access that
+a user has is indicated by a digit: "7" indicates "no-access", "6"
+indicates "execute-only", "5" indicates "read and execute", etc..
+On the VAX the access types, read, write, execute and delete,
+are mutually exclusive, e.g. permitting write access to a file
+implys absolutely nothing about read access to that file.
+The following example shows how a file protected "<057>" would
+be protected on the VAX:
+$skip
+$indent+5
+$verbatim
+$need 24
+Var PRO : DIR_PROT;
+	.
+	.
+	.
+  (* The SYSTEM reference, of [SYS,OWNER,GROUP,WORLD]
+     has no user-available counterpart on the DEC-10.
+     On the VAX the SYSTEM field should permit all
+     accesses, RWED. *)
+
+  PRO [ DIR_SYSTEM ] := [ DIR_READ , DIR_WRITE ,
+                          DIR_EXECUTE , DIR_DELETE ];
+
+  (* OWNER Protection "0" of "<057>" *)
+
+  PRO [ DIR_OWNER ] := [ DIR_READ , DIR_WRITE ,
+			 DIR_EXECUTE , DIR_DELETE ];
+
+  (* GROUP Protection "5" of "<057>" *)
+
+  PRO [ DIR_GROUP ] := [ DIR_READ , DIR_EXECUTE ];
+
+  (* WORLD Protection "7" of "<057>" *)
+
+  PRO [ DIR_WORLD ] := [ ];
+$justify
+$skip2
+$indent-5
+The type declaration is found in PASDIR.TYP on [52250,227].
+The external declaration is:
+$verbatim
+$skip
+$indent+5
+$need 4
+External Procedure DIR_ATTR (
+  Var ERR : DIR_ERRORS;
+      FNAME : DIR_FNAME;
+  Var ATTR : DIR_ATTRS );
+$indent-5
+$skip
+$justify
+For further inforation on any of the PASDIR routines see the
+R&&D Programming Manual.
+$indent-8
+$skip2
+2.4\&FILUTL-File\Utilities&
+$skip
+FILUTL contains two routines, PR_FILE_ID and OPEN_FILE, which
+serve as command utilities to handle filename parsing and file
+openings. CMDUTL.TYP, on [52250,220], must be included by any Pascal
+module using either or both of these routines.
+The external function declarations are found in
+FILUTL.INC on [52250,220].
+PR_FILE_ID and OPEN_FILE are both written in Pascal and are available
+on the VAX and the DEC-10.
+$skip
+$indent+8
+$para-4
+PR_FILE_ID\-\This routine extracts a filename from an input string.
+If the filename parses correctly, the filename is returned, the
+string cursor is advanced past the filename, and true is returned as
+the value of the function.
+If the filename is incorrectly formed, the cursor is left pointing
+to the character which is in error, the filename to be returned
+is left unchanged, and the function returns false.
+The external function declaration is:
+$skip
+$indent+5
+$verbatim
+$need 4
+External Function PR_FILE_ID (
+      LINE : CMDLINE;
+  Var IDX  : CMDLINEIDX;
+  Var FID  : FILE_ID ) : Boolean;
+$skip
+$justify
+$indent-5
+$para-4
+OPEN_FILE\-\This routine opens a text file for input or output.
+If the file is to be opened for output, the user may request
+append mode and new/old file prompting. The caller may also supply
+a default extension for the filename. The value of the
+function is a boolean indicating whether the open was successful.
+The external procedure declaration is:
+$skip
+$verbatim
+$indent+5
+$need 8
+External Function OPEN_FILE (
+  Var F : Text;
+      FID : FILE_ID;
+      EXT : EXTENSION;
+      MODE : ( INPUT_MODE , OUTPUT_MODE );
+      OPTION_SET : Set of
+        ( APPEND_MODE , CONFIRM_MODE , ASCII_MODE )
+    ) : Boolean;
+$skip
+$justify
+$indent-5
+$skip2
+$indent-8
+2.5\&CMDUTL-Command\Processing\Utilities&
+$skip
+CMDUTL is a set of routines for processing command lines. This
+set of routines is written entirely in Pascal, and is exactly
+the same on the VAX as on the DEC-10. CMDUTL contains
+routines which parse command lines, removing numbers, punctuation,
+strings and alphabetic tokens. Appendix A contains a list of the
+entry points into CMDUTL. For further specifications see the
+Development Software Group.
+The include
+file containing the external procedure/function declarations
+is CMDUTL.INC, on [52250,220].
+$ski 2
+2.6\&TERIO - Terminal I/O Package&
+$ski
+A collection of routines is available for doing 8-bit or image mode
+I/O to an arbitrary terminal device.
+A "terminal device" is defined as any device which the VAX communicates
+with through the terminal device driver.
+These routines are very similar to the routines GET8BITSFROMTTY,
+PUT8BITSTOTTY, GET_TERMINAL_CHARACTERISTICS,
+and SET_TERMINAL_CHARACTERISTICS.
+The primary difference between the set of routines described in
+this section and the routines listed above is that the former
+routines work with an arbitrary terminal device, while the
+latter routines assume the device is the user's controlling terminal.
+$ski
+The error code returned by each of these routines is a VMS
+error code.
+The routine is successful if "ODD ( ERROR )" is true.
+$ski
+The include file for these routines is TERIO.INC[52250,220].
+The include file TERCHR.INC[52250,220] must be included
+before TERIO.INC in order to supply some common type definitions.
+$ski
+These routines are not available on the DEC10.
+$ski 2
+$ind +8
+$par -4
+TER_OPEN - This routine associates a terminal device with a channel.
+The device name may be a logical name.
+This routine must be called before any of the other routines
+of the package may be used.
+The external declaration is:
+$ski
+$ver
+	External Procedure TER_OPEN (
+	      DEVICE: FILE_NAME;
+	  var CHANNEL: TER_CHANNEL_NUMBER;
+	  var ERROR: TER_ERROR_CODE );
+$jus $ski
+$par -4
+TER_CLOSE - This routine deassigns the device associated with the specified
+channel.
+The external declaration is:
+$ski $ver
+	External Procedure TER_CLOSE (
+	      CHANNEL: TER_CHANNEL_NUMBER;
+	  var ERROR: TER_ERROR_CODE );
+$jus $ski
+$par -4
+TER_READ - This routine reads a byte in pass-all mode from a device
+which was previously assigned with TER_OPEN.
+If 8-bit data is to be read, TER_SET_CHARACTERISTICS should be
+called first to set the eight bit characteristic (TC_EIGHTBIT)
+for the device.
+The external declaration is:
+$ski $ver
+	External Procedure TER_READ (
+	      CHANNEL: TER_CHANNEL_NUMBER;
+	  var VALUE: 0..255;
+	  var ERROR: TER_ERROR_CODE );
+$jus $ski
+$par -4
+TER_WRITE - This routine writes a byte in pass-all mode to a device which 
+was previously assigned with TER_OPEN.
+The eight bit characteristic need NOT be set for eight bit writes.
+The external declaration is:
+$ski $ver
+	External Procedure TER_WRITE (
+	      CHANNEL: TER_CHANNEL_NUMBER;
+	      VALUE: 0..255;
+	  var ERROR: TER_ERROR_CODE );
+$jus $ski
+$par -4
+TER_GET_CHARACTERISTICS - This routine reads the characteristics
+of a VAX terminal device which was previously opened with
+TER_OPEN.
+The terminal characteristics are represented as a Pascal set.
+The include file TERCHR.INC defines an enumerated type and
+a set type for representation of the characteristics.
+See the descriptions of the routines GET_TERMINAL_CHARACTERISTICS
+and SET_TERMINAL_CHARACTERISTICS for more information on
+the representation and meaning of the terminal characteristics.
+The external declaration is:
+$ski $ver
+	External Procedure TER_GET_CHARACTERISTICS (
+	      CHANNEL: TER_CHANNEL_NUMBER;
+	  var CHARACTERISTICS: TC_SET;
+	  var ERROR: TER_ERROR_CODE );
+$jus $ski
+$par -4
+TER_SET_CHARACTERISTICS - This routine sets the characteristics of a 
+VAX terminal device which was previously opened with TER_OPEN.
+This routine always sets ALL of the device characteristics each
+time called.
+See the description of the routine SET_TERMINAL_CHARACTERISTICS
+for a discussion of the implications of this and an example
+of how to use both routines.
+The external declaration is:
+$ski $ver
+	External Procedure TER_SET_CHARACTERISTICS (
+	      CHANNEL: TER_CHANNEL_NUMBER;
+	      CHARACTERISITCS: TC_SET;
+	  var ERROR: TER_ERROR_CODE );
+$jus $ski
+$ind -8
+$skip2
+2.7\&Miscellaneous&
+$skip
+This final category contains the routines which are not part of
+any other package.
+$skip
+$indent+8
+$para-4
+CONTIME\-\This routine returns the time elapsed, in seconds, since
+the job has logged in. The external procedure
+declaration is:
+$skip
+$verbatim
+$para+5
+External Function CONTIME:0..Maximum(Integer);
+$skip
+$justify
+The external declaration is in CONTIM.INC on [52250,220].
+CONTIME is not supported on the DEC-10.
+$skip
+$para-4
+DO_CMD\-\This routine issues a VAX DCL command.  Control does not return to the
+calling program, unless an error occurs.  This routine is not supported on
+the DEC-10.  The external procedure declaration is:
+$indent+3
+$skip
+External\Procedure\DO_CMD\(
+$para+0
+\\\Cmd\:\string\[\256\]\);
+$para+0
+$ind-3
+$skip
+where Cmd is the DCL command.
+$justify
+$skip
+$para-4
+GET8BITSFROMTTY\-\This routine reads a character from the terminal and
+returns the character without any translation to the user's program.
+The external
+procedure declaration is:
+$skip
+$para+5
+$verbatim
+External Procedure GET8BITSFROMTTY ( Var BYTE:0..255 );
+$justify
+$skip
+The external procedure declaration for the VAX and DECersions
+is in GET8BI.INC on [52250,220].
+The name for this routine may be somewhat misleading. On the VAX the
+terminal driver normally sets the eigth bit to zero and sends the
+character. If the user wants all eight bits opassed on through,
+the user must set the terminal characteristics to pass all eight bits,
+setting the TC_EIGHTBIT attribute with SET_TERMINAL_CHARACTERISTICS.
+$skip
+$para-4
+GET_TERMINAL_CHARACTERISTICS\-\This routine returns the
+characteristics of the user's terminal
+to the user's program. The characteristics include: number of
+fill characters, 8-bit character transfer, half-duplex, etc..
+This routine returns the characteristics as a set.
+The definition of the set and its elements,
+as well as the external declaration for this routine, are
+in TERCHR.INC on [52250,220]. This routine is not
+supported on the DEC-10. For an example using this
+routine see SET_TERMINAL_CHARACTERISTICS in section 2.7.
+The external declaration for
+this routine is:
+$skip
+$verbatim
+$indent+5
+$need 3
+External Procedure GET_TERMINAL_CHARACTERISTICS (
+  Var TC : TC_SET;
+  Var ERR: TCERR );
+$indent-5
+$skip
+$justify
+The error parameter indicates whether the terminal characteristics
+were successfully retrieved or not. TC_OK indicates
+that the value in TC represents the current terminal
+characteristics. TC_ERR indicates some failure in determining the
+terminal characteristics.
+$skip
+$para -4
+GET_USER_ACNT\-\This routine returns the UIC associated with the
+calling process (the UIC the current user is logged in under). The
+UIC is returned as a string of the form: '[xxx,yyy]'. The external
+declaration for this function is found in GETACT.INC on [52250,220].
+The function is declared:
+$skip
+$para+5
+External\Function\GET_USER_ACNT:\String[15];
+$skip
+GET_USER_ACNT is not supported on the DEC-10. The same function
+is provided as part of the JOBINFO subroutine of the INFPAC package
+(see the R&&D Programming Manual).
+$skip
+$para-4
+IMAGE_FILE_NAME\-\Returns the full pathname of the file that is currently
+being executed. This routine is not supported on the DEC-10. 
+This routine can be used to replace the part of the DEC-10 JOBINFO
+routine which returns the high segment owner's PPN. The pathname on the
+VAX is: "_DRA1:[250245.QED]FILE.EXT;2".
+The caller of this routine can remove the directory specification using
+Pascal: Substr(\NAME,\1,\Index(\NAME,']')\).
+The external declaration is:
+$skip
+$indent +5
+$verbatim
+Type IMAGE_ERROR = ( IMAGE_OK , IMAGE_ERR );
+$skip
+External Procedure IMAGE_FILE_NAME (
+\\\Var\NAME\:\File_name;
+\\\Var\ERR\\:\IMAGE_ERROR\);
+$justify
+$skip
+$indent-5
+The external procedure declaration is in file, IMAGE.INC on [52250,220].
+The error parameter is currently only a boolean, fail or succeed, because
+no error conditions have yet been identified.
+$skip
+$para -4
+JOBNUM\-\Returns the system-assigned job number. On the VAX it
+returns an ASCII string of 8 hexadecimal digits representing the
+8 digits of the process id for the current job. The
+external declaration is in JOBNUM.INC on [52250,220]. The
+function is declared:
+$skip
+$para+3
+External\Function\JOBNUM:\String\[\8\];
+$skip
+JOBNUM is supported on the DEC-10. 
+The DEC-10 version returns a string of length three, instead of 
+length eight.
+$para-4
+$skip
+LINSPD\-\This routine returns the baud rate of the user's terminal.
+The value returned is the commonly-used integer representation,
+i.e. 300, 1200, 9600, etc.. The external
+function declaration is:
+$skip
+$para+5
+$verbatim
+External Function LINSPD : Integer;
+$justify
+$skip
+The VAX and DEC-10 versions share the same user-interface. The
+external function declaration for both versions is in
+LINSPD.INC on [52250,220].
+$skip
+$para-4
+PUT8BITSTOTTY\-\This routine writes an 8-bit value
+to the user's terminal. This routine performs
+as does the DEC-10 version. The external procedure declaration is:
+$skip
+$verbatim
+$need 2
+$indent+5
+External Procedure PUT8BITSTOTTY (
+  BYTE : 0..255 );
+$indent-5
+$skip
+$justify
+The external procedure declaration for the VAX and DEC-10 versions
+is in PUT8.INC on [52250,220].
+$skip
+$para-4
+QUERY\-\This routine serves as a command utility to ask
+a caller-supplied question and get a yes or no reply.
+YES, Y, NO, N, or <eoln>, meaning yes, are accepted as valid
+replies. REPEAT, is accepted as a request to repeat the
+question. This routine performs as does
+the DEC-10 version.
+The external function declaration is:
+$skip
+$indent+5
+$verbatim
+$need 2
+External Function QUERY (
+  QUESTION : String [ 255 ] ) : Boolean;
+$indent-5
+$skip
+$justify
+The external function declaration for the VAX and DEC-10 versions
+is in QUERY.INC on [52250,220].
+$skip
+$para-4
+RENAME\-\This routine is used to rename a given file. This routine
+only requires that the filename provided are correctly formed filenames,
+e.g. "FILE.EXT;1" and not ".EXT;1 FILE". The user must have
+write access to rename a file. The external declaration for RENAME is:
+$skip
+$indent+5
+$verbatim
+$need 4
+External Procedure RENAME (
+      FROM : File_name;
+      TARG : File_name;
+  Var ERR  : RNM_ERR );
+$skip
+$para-5
+where RNM_ERR is defined to be:
+$skip
+$need 7
+Type RNM_ERR = (
+	RNM_OK,          (* Successful renaming operation*)
+	RNM_DIR_NOT_FOUND, (* DIR specification not found*)
+	RNM_FILE_EXISTS,(* TO file already exists        *)
+	RNM_FILE_NOT_FOUND,(* From file not found        *)
+	RNM_PROT_VIOLATION,(* Protection violation       *)
+	RNM_RENAME_FAIL ); (* Catch-all, not one of above*)
+$indent-5
+$skip
+$justify
+The RNM_OK return code indicates that the renaming operation was
+completed successfully. Any of the other return codes indicate that the
+file was not renamed.
+The external procedure declaration for RENAME is in RENAME.INC on
+[52250,227]. There is a RENAME procedure for the DEC-10 version.
+It returns a boolean indicating success or failure, rather than
+the enumerated scalar type.
+$skip
+$para-4
+REPROTECT\-\This routine is used to reprotect a given file.
+This routine has the requirement that the file being
+reprotected must allow write access to the calling process.
+The protection supplied to this routine is the same
+protection that is used for the PASDIR routines (see Section 2.3).
+The external procedure declaration is:
+$skip
+$indent+5
+$verbatim
+$need 4
+External Procedure REPROTECT (
+      FNAME : File_name;
+      PRO   : DIR_PROT;
+  Var ERR   : PRO_ERR );
+$skip
+$para-5
+where PRO_ERR is defined to be:
+$verbatim
+$skip
+$need 4
+Type PRO_ERR = (
+      PRO_OK,		(* Successful reprotection *)
+      PRO_BAD_FILE,	(* File couldn't be opened *)
+      PRO_NO_WRITE );	(* Can't reprotect the file*)
+$skip
+$justify
+$indent-5
+The external procedure declaration for REPROTECT is
+REPROT.INC on [52250,220].
+This routine is not available on the DEC-10, but the RENAME routine
+on the DEC-10 may be used to perform the same function.
+$skip
+$para-4
+RUN\-\This routine loads and executes a program stored in a .EXE file.
+The calling program is replaced by the new one.   This routine
+performs the same way as the DEC-10 version.  The external procedure
+declaration is:
+$skip
+$indent+3
+External\Procedure\RUN\(
+$para+0
+\\\FN\:\string\[\256\]\;
+$para+0
+\\\PROMPT\:\boolean\);
+$indent-3
+$jus
+$skip3
+$para-4
+SET_TERMINAL_CHARACTERISTICS\-\This routine sets the characteristics of
+a user's terminal.
+This routine is called with a set which specifies the desired
+characteristics
+of the user's terminal. The definition of the set and its
+elements, along with the external procedure
+declaration are in TERCHR.INC on [52250,220]. This
+routine is not supported on the DEC-10.
+The elements of the set are explained further in the
+VAX I/O User's Guide in
+the section on the terminal driver. The external declaration is:
+$skip
+$verbatim
+$indent+5
+$need 3
+External Procedure SET_TERMINAL_CHARACTERISTICS (
+      TER : TC_SET;
+  Var ERR : TCERR );
+$skip
+$indent-5
+$justify
+The return value ERR may return with one of two values: TC_OK or TC_ERR.
+TC_OK indicates successful completion of the operation. TC_ERR indiates
+that an error has occured and the terminal characteristics may
+be in a changed state, in which case GET_TERMINAL_CHARACTERISTICS should
+be used to determine the state.
+$skip
+Note that the set passed to SET_TERMINAL_CHARACTERISTICS not only
+contains those attributes the user wants to change, but all the
+characteristics of the user's terminal. To use this routine, the
+user calls GET_TERMINAL_CHARACTERISTICS to determine what the
+terminal characteristics currently are, then modifies the
+terminal characteristic set returned by GET_TERMINAL_CHARACTERISTICS,
+and calls SET_TERMINAL_CHARACTERISTICS to have the changes made.
+$skip
+The following example shows how the user would set the terminal
+so that characters typed at the user's terminal are not echoed,
+and then reset the terminal characteristics back to what they
+previously were.
+$skip
+$indent+3
+$verbatim
+$need 36
+Var ERR : TCERR;
+    TER : TC_SET;
+	.
+	.
+	.
+    (* Get the current terminal characteristics *)
+
+    GET_TERMINAL_CHARACTERISTICS ( TER , ERR );
+    Assert ( ERR = TC_OK );
+
+    (* Enable the NOECHO bit in the characteristics set *)
+
+    TER := TER + [ TC_NOECHO ];
+
+    (* Enable the NOECHO characteristic *)
+
+    SET_TERMINAL_CHARACTERISTICS ( TER , ERR );
+    Assert ( ERR = TC_OK );
+	.
+	.
+	.
+    (* Code to read in "noecho" mode *)
+	.
+	.
+	.
+    (* Read the current terminal characteristics *)
+
+    GET_TERMINAL_CHARACTERISTICS ( TER , ERR );
+    Assert ( ERR = TC_OK );
+
+    (* Turn off the specified bit. *)
+
+    TER := TER - [ TC_NOECHO ];
+    SET_TERMINAL_CHARACTERISTICS ( TER , ERR );
+    Assert ( ERR = TC_OK );
+$skip
+$indent-3
+$justify
+$skip3
+$para-4
+SLEEP\-\This routine causes the calling process to hibernate
+for a given period of time. The length of time, in milliseconds, is
+provided by the user as a parameter ot the SLEEP routine.
+The external procedure declaration is in SLEEP.INC on [52250,220].
+SLEEP is not supported on the DEC-10.
+The external procedure declaration is:
+$skip
+$indent+3
+$verbatim
+External Procedure SLEEP (
+      MILLISECONDS: 0..Maximum(Integer) );
+$justify
+$indent-3
+$ski 3
+$par -4
+TEMP_FILE_NAME\-\This routine forms a file name from a one to three character
+string passed in as a parameter.
+The file name is formed by concatenating the current process id, the
+string passed in, and the extension ".TMP".
+While this routine is intended to be used to create unique names
+for temporary files, the files created are not truly temporary files,
+i.e., they must be explicitly deleted by the user.
+The external declaration is:
+$ski $ind +3 $ver
+External Function TEMP_FILE_NAME (
+      S: string[ 3 ] ): file_name;
+$ind -3 $jus
+$skip3
+$para-3
+TT_IDENTIFIER\-\This routine returns a string containing the terminal
+identifier. The terminal identifier is the string that the VAX uses to
+represent the user's terminal, i.e. TTB3. The routine returns the null
+string when running in batch. The external procedure declaration is in
+TTTRAN.INC on [52250,220]. TT_IDENTIFIER is not supported on the DEC-10.
+The external procedure declaration is:
+$skip
+$indent+3
+External\Procedure\TT_IDENTIFIER\(
+$para+0
+\\\Var\TT_ID\:\String\[\7\]\);
+$ind -3 $jus
+$indent-8
+$page
+$center
+$indent0
+&Appendix\A&
+$skip2
+$justify
+This is an alphabetical list of the entry points
+to RDLIB. After each routine name is a terse explanation of the function
+of that routine.
+If a name within double-quotes, "name", occurs within the description,
+it indicates the package to which this routine belongs, and
+indicates where in the R&&D Programming Manual more information
+will be found.
+$skip2
+$indent+16
+$para-16
+ADD_DAYS\\\\\\\\"DTIME", adds a specified number of days to an internal
+day/time.
+$skip
+$para-16
+ADD_SECS\\\\\\\\"DTIME", adds a specified number of seconds to an
+internal day/time.
+$skip
+$para-16
+CMD_CHECK_PUNCT\"CMDUTL", compares the character at a given cursor position
+to a given puncuation character.
+$skip
+$para-16
+CMD_DISPLAY_TABLE\"CMDUTL, displays an array of command lookup records.
+$skip
+$para-16
+CMD_DQSTRING\\\\"CMDUTL", removes a string enclosed within double quotes
+from a command line, permitting embedded double quotes.
+$skip
+$para-16
+CMD_EOL\\\\\\\\\"CMDUTL", determines from the given string and cursor
+position if the end of the line has been reached.
+$skip
+$para-16
+CMD_FILE_NAME\\\"CMDUTL", parses filenames as does PR_FILE_ID except
+that the null string is an acceptable filename.
+$skip
+$para-16
+CMD_GETLINE\\\\\"CMDUTL", reads a command line from the terminal and sets
+the command line scanning cursor to 1.
+$skip
+$para-16
+CMD_LOOKUP\\\\\\"CMDUTL", scans a given command line for a specified token.
+$skip
+$para-16
+CMD_NUMBER\\\\\\"CMDUTL", removes a number from a command line.
+$skip
+$para-16
+CMD_QUERY\\\\\\\"CMDUTL", is a special version of QUERY for command
+processing.
+$skip
+$para-16
+CMD_SKIP_BLANKS\"CMDUTL", skips blanks on a given command line.
+$skip
+$para-16
+CMD_STRING\\\\\\"CMDUTL", removes a string enclosed within double
+quotes from a given
+command line, not permitting double qoutes embedded within the string.
+$skip
+$para-16
+CMD_TOKEN\\\\\\\"CMDUTL", removes the next token from the command
+line.
+$skip
+$para-16
+CONTIME\\\\\\\\\Returns the time elapsed since this job 
+logged in.
+$skip
+$para-16
+DAY_OF_WEEK\\\\\"DTIME", returns the day of the week on which a given
+internal day/time falls.
+$skip
+$para-16
+DAYS_DIFF\\\\\\\"DTIME", calculates the number of days between two
+internal day/times.
+$skip
+$para-16
+DAYTIME\\\\\\\\\"DTIME", returns the current local day/time in internal
+form.
+$skip
+$para-16
+DC_DATE\\\\\\\\\"DTIME, returns the binary date record corresponding
+to a given internal day/time.
+$skip
+$para-16
+DC_DTIME\\\\\\\\"DTIME", returns the binary day/time corresponding
+to a given internal day/time.
+$skip
+$para-16
+DC_EXT\\\\\\\\\\"DTIME", converts an internal day/time to the standard
+external form, i.e. 'dd-mmm-yy\\hh:mm:ss'.
+$skip
+$para-16
+DC_TIME\\\\\\\\\"DTIME", returns the binary time corresponding to a
+given internal time.
+$skip
+$para-16
+DIR_ATTR\\\\\\\\"PASDIR", returns the attributes of a given file.
+$skip
+$para-16
+DIR_CLOSE\\\\\\\"PASDIR", closes a directory that has been opened by DIR_OPEN.
+$skip
+$para-16
+DIR_MATCH\\\\\\"PASDIR", performs wildcard matching of strings, usually used
+in filename matching.
+$skip
+$para-16
+DIR_NEXT\\\\\\\"PASDIR", traverses a directory that has been opened by DIR_OPEN,
+returning the name of the next file contained within.
+$skip
+$para-16
+DIR_OPEN\\\\\\\"PASDIR", opens a specified directory so that DIR_NEXT may be used.
+$skip
+$para-16
+DO_CMD\\\\\\\\\\Issues a VAX DCL command. 
+$skip
+$para-16
+DT_COMBINE\\\\\\"DTIME", contructs an internal day/time from an
+internal date and an internal time.
+$skip
+$para-16
+EC_DATE\\\\\\\\\"DTIME", returns the binary date record corresponding
+to a given internal date.
+$skip
+$para-16
+EC_DCDATE\\\\\\\"DTIME", returns the internal date corresponding to a given
+DEC-10 date.
+$skip
+$para-16
+EC_DCTIME\\\\\\\"DTIME", returns the internal time corresponding to a
+given DEC-10 time (milliseconds since midnight).
+$skip
+$para-16
+EC_DTIME\\\\\\\\"DTIME", returns the internal day/time corresponding to
+a given binary day/time record.
+$skip
+$para-16
+EC_EXT\\\\\\\\\\"DTIME", converts external dates and/or times,
+in any of several formats, to the internal day/time.
+$skip
+$para-16
+EC_TIME\\\\\\\\\"DTIME", returns the internal time corresponding to a
+given binary time record.
+$skip
+$para-16
+EXTR_DATE\\\\\\\"DTIME", extracts an internal date from an internal
+day/time.
+$skip
+$para-16
+EXTR_TIME\\\\\\\"DTIME", extracts an internal time from an internal
+day/time.
+$skip
+$para-16
+GET8BITSFROMTTY\Reads an 8-bit value from the controlling terminal.
+$skip
+$para-16
+GET_USER_ACNT\\\Returns the UIC associated with the calling process.
+$skip
+$para-16
+GET_TERMINAL_CHARACTERISTICS\\Returns the characteristics
+of the user's terminal
+$skip
+$para-16
+IMAGE_FILE_NAME\Returns the full pathname of the image file that is currently
+being executed (full pathname contains the disk identification, directory
+specification, file name, and the version).
+$skip
+$para-16
+JOBNUM\\\\\\\\\\Returns the system-assigned job number.
+$skip
+$para-16
+LINSPD\\\\\\\\\\Returns the baud rate of the user's terminal.
+$skip
+$para-16
+NS_D1\\\\\\\\\\\"DTIME", converts an internal date to a non-standard
+external date format: 'mm/dd/yy'.
+$skip
+$para-16
+NS_D2\\\\\\\\\\\"DTIME", converts an internal date to a non-standard
+external date format: 'mmm\dd,\yyyy'.
+$skip
+$para-16
+NS_T1\\\\\\\\\\\"DTIME", converts an internal time to non-standard
+external time format: 'hh:mm:ss\[A/P]M'.
+$skip
+$para-16
+OPEN_FILE\\\\\\\Opens a text file for input or output.
+$skip
+$para-16
+PR_FILE_ID\\\\\\Parses a filename and insures that it is
+formatted properly for the VAX.
+$skip
+$para-16
+PUT8BITSTOTTY\\\Writes a given 8-bit value to the controlling terminal.
+$skip
+$para-16
+QUERY\\\\\\\\\\\Asks a caller-supplied question, and waits for a
+yes or no response.
+$skip
+$para-16
+RENAME\\\\\\\\\\Renames a file, giving it the new user-supplied name.
+$skip
+$para-16
+REPROTECT\\\\\\\Reprotects a given file with the
+user's specified new protection.
+$skip
+$para-16
+RUN\\\\\\\\\\\\\Loads and executes a file stored in a .EXE file.  The
+calling program is replaced by the new one.
+$skip
+$para-16
+SECS_DIFF\\\\\\\"DTIME", calculates the number of seconds between
+two internal day/times.
+$skip
+$para-16
+SET_TERMINAL_CHARACTERISTICS\\Sets the characteristics of the user's terminal.
+$skip
+$para-16
+SLEEP\\\\\\\\\\\Causes the user's process to hibernate for a specified
+number of milliseconds.
+$skip
+$para-16
+TEMP_FILE_NAME\\Returns a file name constructed from a
+given three character string and the process id of the calling process.
+$ski
+$par -16
+TER_CLOSE\\\\\\\Closes a terminal device opened with TER_OPEN.
+$ski
+$par -16
+TER_GET_CHARACTERISTICS\\Returns the device characteristics for a terminal
+device previously opened with TER_OPEN.
+$ski
+$par -16
+TER_OPEN\\\\\\\\Associates a terminal device with a channel.
+$ski
+$par -16
+TER_READ\\\\\\\\Reads a byte in pass-all mode from a terminal device
+previously opened with TER_OPEN.
+$ski
+$par -16
+TER_SET_CHARACTERISTICS\\Set the device characteristics for a terminal
+device previously opened with TER_OPEN.
+$ski
+$par -16
+TER_WRITE\\\\\\\Writes a byte in pass-all mode to a terminal device
+previously opened with TER_OPEN.
+$skip
+$para-16
+TT_IDENTIFIER\\\Returns a Pascal string containing the current terminal
+identifier.
+$skip3
+$indent-16
+  .rCBÿ

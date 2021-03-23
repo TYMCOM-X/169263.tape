@@ -1,0 +1,95 @@
+*ADD_NAME   PASUTL
++NEW       
+*ENTERNAME  PASUTL
+ ADD_NAME  
+ ADD_NAME  
+ ADD_NAME  
+*CST_INT    PASUTL
+ ERR_TEXT  
+ ERR_PRINT 
+ ERR_TEXT  
+ CST_SCALAR
+ CST_SCALAR
+*CST_REAL   PASUTL
+ DRLCNV    
+ ERR_TEXT  
+ MKREAL    
+*CST_STRING PASUTL
+ MAKESTRING
+*CST_NIL    PASUTL
+*NEW_BLK    PASUTL
++NEW       
++NEW       
++NEW       
++NEW       
++NEW       
++NEW       
++NEW       
++NEW       
+*NEW_SYM    PASUTL
++NEW       
++NEW       
++NEW       
++NEW       
++NEW       
++NEW       
++NEW       
++NEW       
++NEW       
++NEW       
+*NEW_TYPE   PASUTL
++NEW       
++NEW       
++NEW       
++NEW       
++NEW       
++NEW       
++NEW       
++NEW       
++NEW       
++NEW       
++NEW       
++NEW       
++NEW       
++NEW       
++NEW       
++NEW       
++NEW       
+*NEW_PROC   PASUTL
++NEW       
++NEW       
+*DCL_SUBRAN PASUTL
+ NEW_TYPE  
+*DCL_INT    PASUTL
+ DCL_SUBRAN
+*DCL_CHAR   PASUTL
+ DCL_SUBRAN
+*DCL_REAL   PASUTL
+ NEW_TYPE  
+*DCL_SET    PASUTL
+ NEW_TYPE  
+*DCL_POINTE PASUTL
+ NEW_TYPE  
+*DCL_STRING PASUTL
+ NEW_TYPE  
+*DCL_FILE   PASUTL
+ NEW_TYPE  
+*DCL_ARRAY  PASUTL
+ NEW_TYPE  
+ DCL_SUBRAN
+ DCL_SUBRAN
+*CHAIN_SYM  PASUTL
+*POP_SCOPE  PASUTL
+*DECLARE    PASUTL
+ ERR_NODE  
+ NEW_SYM   
+ CHAIN_SYM 
+ CHAIN_SYM 
+ CHAIN_SYM 
+*DCL_RT_SYM PASUTL
+ ERR_NODE  
+ NEW_SYM   
+*INT_STRING PASUTL
+*MAKE_LABEL PASUTL
+ ENTERNAME 
+ INT_STRING

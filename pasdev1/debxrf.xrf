@@ -1,0 +1,1608 @@
+Cross Reference Listing for Pascal Debugger							  Page 1
+											       27-Oct-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     A$$BACKWAR  DEBRE$		A$$IGN      DEBPR$   A$$ERT      DEBUG$
+						     BIT_ADDRES  DEBRE$
+
+     A$$ERT      DEBUG$		A$$BACKWAR  DEBRE$   WRIT$STR    DEBIO$
+				ARGUMENT_A  DEBRE$
+				CONS        DEBRE$
+				CSTMT_INFO  DEBUG$
+				DMP$LOCATI  DEBDM$
+				DMP$MODULE  DEBDM$
+				DMP$SCOPE   DEBDM$
+				DMP$STACK   DEBDM$
+				EXT$ADDRES  DEBRE$
+				EXT$LENSTR  DEBRE$
+				EXT$STRCHA  DEBRE$
+				GET$MOD$NA  DEBBR$
+				GET_ADDRES  DEBRE$
+				LEX$SCAN    DEBLE$
+				LOAD$OVERL  DEBSC$
+				OPEN_CHILD  DEBSC$
+				OPEN_STACK  DEBSC$
+				PRINT_INT   DEBPR$
+				PRINT_POIN  DEBPR$
+				PROCESS_DE  DEBUG$
+				RET$ADDR    DEBSC$
+				SCANNED_ID  DEBUG$
+				SCANNED_IN  DEBUG$
+				SCOPE_ADDR  DEBUG$
+				SET$KIND    DEBRE$
+				STO$LENSTR  DEBRE$
+				STO$STRCHA  DEBRE$
+				WRIT$INT    DEBIO$
+
+     A$$IGN      DEBPR$		ASSIGN_OR_  DEBUG$   A$$BACKWAR  DEBRE$
+						     CHECK$TYPE  DEBRE$
+						     EXT$ADDRES  DEBRE$
+						     EXT$LENSTR  DEBRE$
+						     EXT$REAL    DEBRE$
+						     EXT$SCALAR  DEBRE$
+						     EXT$SETELE  DEBRE$
+						     EXT$STRCHA  DEBRE$Cross Reference Listing for Pascal Debugger							  Page 2
+											       27-Oct-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     A$$IGN      DEBPR$ (cont.)			     MIN         *SYS* 
+						     ORD         *SYS* 
+						     STO$LENSTR  DEBRE$
+						     STO$SCALAR  DEBRE$
+						     STO$SETELE  DEBRE$
+						     STO$STRCHA  DEBRE$
+
+     ABORT$      DEBAS$		PROCESS_DE  DEBUG$
+
+     ABS         *SYS* 		PRINT_REAL  DEBPR$
+
+     ADDRESS     *SYS* 		CONS        DEBRE$
+				DEREF$PTR   DEBSY$
+				GET$DESCRI  DEBRE$
+				GET$PROG$P  DEBBR$
+				INDEX_REF   DEBRE$
+				MAK$SCALAR  DEBRE$
+				OPEN_NAMED  DEBSC$
+
+     ARGUMENT_A  DEBRE$		GET_ADDRES  DEBRE$   A$$ERT      DEBUG$
+				SET$BOUNDS  DEBRE$   DEREF$PTR   DEBSY$
+						     ORD         *SYS* 
+
+     ASCTOR50    DEBSC$		MOD$LOOKUP  DEBSC$   LENGTH      *SYS* 
+				SEARCH_MOD  DEBSC$   MIN         *SYS* 
+						     ORD         *SYS* 
+
+     ASSIGN_OR_  DEBUG$		DO_CMD      DEBUG$   A$$IGN      DEBPR$
+						     CHECK_DEBU  DEBUG$
+						     CHECK_END   DEBUG$
+						     CHECK_STAT  DEBUG$
+						     CONDITIONA  DEBUG$
+						     GET$DESCRI  DEBRE$
+						     LENGTH      *SYS* 
+						     PRINT$      DEBPR$
+						     SCANNED_ID  DEBUG$
+
+     BIT_ADDRES  DEBRE$		A$$BACKWAR  DEBRE$
+
+     CALC_FIELD  DEBPR$		PRINT_ARRA  DEBPR$   DEREF$PTR   DEBSY$Cross Reference Listing for Pascal Debugger							  Page 3
+											       27-Oct-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     CALC_FIELD  DEBPR$ (cont.)			     LENGTH      *SYS* 
+						     MAX         *SYS* 
+						     ORD         *SYS* 
+						     PUTSTRING   *SYS* 
+
+     CALL$BASIS  DEBSC$		DMP$STACK   DEBDM$   MAIN$FRAME  DEBSC$
+				LOAD$OVERL  DEBSC$
+				OPEN$FRAME  DEBSC$
+				SUBR_INVOC  DEBSC$
+
+     CHECK$TYPE  DEBRE$		A$$IGN      DEBPR$   COMP$TYPES  DEBRE$
+				INDEX_CHEC  DEBRE$   DEREF$PTR   DEBSY$
+				SET_MEMBER  DEBBO$   EXT$REAL    DEBRE$
+				SET_RANGE   DEBRE$   EXT$SCALAR  DEBRE$
+						     SET$KIND    DEBRE$
+
+     CHECK_DEBU  DEBUG$		ASSIGN_OR_  DEBUG$   CHECK_STAT  DEBUG$
+				GET_SOURCE  DEBUG$
+				PROCESS_DE  DEBUG$
+
+     CHECK_END   DEBUG$		ASSIGN_OR_  DEBUG$   CHECK_STAT  DEBUG$
+				DO_CMD      DEBUG$   GET_TOKEN   DEBUG$
+				DO_IF_CMD   DEBUG$   SCANNED_TO  DEBUG$
+				DO_OPEN_CM  DEBUG$
+
+     CHECK_FOR_  DEBUG$		PROCESS_DE  DEBUG$   CHECK_STAT  DEBUG$
+						     GET_TOKEN   DEBUG$
+						     SCANNED_TO  DEBUG$
+
+     CHECK_STAT  DEBUG$		ASSIGN_OR_  DEBUG$   ERROR       DEBUG$
+				CHECK_DEBU  DEBUG$   WRIT$NL     DEBIO$
+				CHECK_END   DEBUG$
+				CHECK_FOR_  DEBUG$
+				DEBUG$      DEBUG$
+				DO_CMD      DEBUG$
+				DO_IF_CMD   DEBUG$
+				DO_OPEN_CM  DEBUG$
+				GET_SOURCE  DEBUG$
+				GET_TOKEN   DEBUG$
+				PROCESS_CM  DEBUG$Cross Reference Listing for Pascal Debugger							  Page 4
+											       27-Oct-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     CHECK_STAT  DEBUG$ (cont.)	PROCESS_DE  DEBUG$
+				SCANNED_IN  DEBUG$
+				SCAN_STMT   DEBUG$
+
+     CHR         *SYS* 		CONVERT_CH  DEBSC$
+				EXT$STRCHA  DEBRE$
+				PRINT_CHAR  DEBPR$
+
+     CLOSE       *SYS* 		ST$OPEN     DEBSY$
+
+     CLR$ALL$BR  DEBBR$		DEBUG$      DEBUG$   MAXIMUM     *SYS* 
+				PROCESS_DE  DEBUG$   MINIMUM     *SYS* 
+						     RT$BASE     PASLIB
+
+     CLR$BRKPT   DEBBR$		PROCESS_DE  DEBUG$   MAXIMUM     *SYS* 
+						     MINIMUM     *SYS* 
+						     RT$BASE     PASLIB
+
+     COMP        DEBRE$		COMP$TYPES  DEBRE$   COMP$TYPES  DEBRE$
+						     SET$KIND    DEBRE$
+
+     COMP$TYPES  DEBRE$		CHECK$TYPE  DEBRE$   COMP        DEBRE$
+				COMP        DEBRE$   DEREF$PTR   DEBSY$
+				GET_RELATI  DEBBO$   ORD         *SYS* 
+
+     CONDITIONA  DEBUG$		ASSIGN_OR_  DEBUG$   GET_TOKEN   DEBUG$
+				DO_CMD      DEBUG$   SCANNED_TO  DEBUG$
+				DO_IF_CMD   DEBUG$
+				GET_FILE    DEBUG$
+				GET_FRAME   DEBUG$
+				GET_MODULE  DEBUG$
+				GET_PAGE    DEBUG$
+				GET_ROUTIN  DEBUG$
+				PROCESS_DE  DEBUG$
+				SCAN_STMT   DEBUG$
+
+     CONS        DEBRE$		GET$DESCRI  DEBRE$   A$$ERT      DEBUG$
+						     ADDRESS     *SYS* 
+						     LEX$SCAN    DEBLE$
+						     ORD         *SYS* Cross Reference Listing for Pascal Debugger							  Page 5
+											       27-Oct-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     CONS        DEBRE$ (cont.)			     SET$KIND    DEBRE$
+						     SET_RANGE   DEBRE$
+
+     CONVERT_CH  DEBSC$		R50$ASC     DEBSC$   CHR         *SYS* 
+
+     CSTMT_INFO  DEBUG$		GET_SOURCE  DEBUG$   A$$ERT      DEBUG$
+						     INFO$STMT   DEBBR$
+						     LD$OVL      PASLIB
+						     ORD         *SYS* 
+
+     DB$BASE     PASLIB		DEBUG$      DEBUG$
+				DMP$BREAKS  DEBDM$
+				DMP$LOCATI  DEBDM$
+				DMP$MODULE  DEBDM$
+				DMP$STACK   DEBDM$
+				LOAD$OVERL  DEBSC$
+				SET$BRKPT   DEBBR$
+				SUBR_INVOC  DEBSC$
+				WITH_LOOKU  DEBRE$
+
+     DB$OPEN     PASLIB		ST$OPEN     DEBSY$
+
+     DEB$CALL    DEBAS$		PROCESS_DE  DEBUG$
+
+     DEBUG$      DEBUG$		<NONE>               CHECK_STAT  DEBUG$
+						     CLR$ALL$BR  DEBBR$
+						     DB$BASE     PASLIB
+						     DMP$LOCATI  DEBDM$
+						     OPEN$STACK  DEBSC$
+						     PREPARE_TO  DEBUG$
+						     PROCESS_CM  DEBUG$
+						     READ$LINE   DEBIO$
+						     RT$BASE     PASLIB
+						     SAV$IO      PASLIB
+						     SCOPE_ADDR  DEBUG$
+						     ST$INIT     DEBSY$
+						     WRIT$EOL    DEBIO$
+						     WRIT$NL     DEBIO$
+						     WRIT$STR    DEBIO$Cross Reference Listing for Pascal Debugger							  Page 6
+											       27-Oct-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     DEREF$PTR   DEBSY$		ARGUMENT_A  DEBRE$   ADDRESS     *SYS* 
+				CALC_FIELD  DEBPR$   FATAL_ERRO  DEBSY$
+				CHECK$TYPE  DEBRE$   GETBLOCK    DEBSY$
+				COMP$TYPES  DEBRE$   IOSTATUS    *SYS* 
+				DMP$SCOPE   DEBDM$   ORD         *SYS* 
+				FIELD_REF   DEBRE$   SEARCHMAP   DEBSY$
+				FIND_VARIA  DEBPR$   SEEK        *SYS* 
+				FUNC_SYM    DEBRE$   ST$BASE     PASLIB
+				GET$MOD$NA  DEBBR$   ST$FILE     DEBSY$
+				GET_ADDRES  DEBRE$
+				GET_NEXT_F  DEBPR$
+				ID_LOOKUP   DEBRE$
+				OPEN$DEB$F  DEBSC$
+				OPEN_CHILD  DEBSC$
+				OPEN_MODUL  DEBSC$
+				PASSED_BY_  DEBRE$
+				PRINT_RECO  DEBPR$
+				PRINT_SCAL  DEBPR$
+				PROCESS_DE  DEBUG$
+				PTR_REF     DEBRE$
+				SET$BOUNDS  DEBRE$
+				SET$FIELD$  DEBRE$
+				SET$KIND    DEBRE$
+				SET$SIZE    DEBRE$
+				SET_ID_DES  DEBRE$
+				SYM_LIST_L  DEBRE$
+
+     DIMENSION   *SYS* 		PRINT_WORD  DEBUG$
+
+     DMP$BREAKS  DEBDM$		PROCESS_DE  DEBUG$   DB$BASE     PASLIB
+						     DMP_SOURCE  DEBDM$
+						     INFO$STMT   DEBBR$
+						     LD$OVL      PASLIB
+						     MAXIMUM     *SYS* 
+						     MINIMUM     *SYS* 
+						     RT$BASE     PASLIB
+						     WRIT$INT    DEBIO$
+						     WRIT$NL     DEBIO$
+						     WRIT$STR    DEBIO$Cross Reference Listing for Pascal Debugger							  Page 7
+											       27-Oct-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     DMP$FILES   DEBDM$		PROCESS_DE  DEBUG$   GET$PROG$P  DEBBR$
+						     WRIT$EOL    DEBIO$
+						     WRIT$INT    DEBIO$
+						     WRIT$STR    DEBIO$
+
+     DMP$LOCATI  DEBDM$		DEBUG$      DEBUG$   A$$ERT      DEBUG$
+				PROCESS_DE  DEBUG$   DB$BASE     PASLIB
+						     DMP_SOURCE  DEBDM$
+						     INFO$STMT   DEBBR$
+						     LD$OVL      PASLIB
+						     LOAD$OVERL  DEBSC$
+						     MAIN$FRAME  DEBSC$
+						     ORD         *SYS* 
+						     OVER$LAID   DEBSC$
+						     PROC$BLK    DEBSC$
+						     PROC$NAME   DEBSC$
+						     RT$BASE     PASLIB
+						     WRIT$EOL    DEBIO$
+						     WRIT$INT    DEBIO$
+						     WRIT$NL     DEBIO$
+						     WRIT$STR    DEBIO$
+
+     DMP$MODULE  DEBDM$		PROCESS_DE  DEBUG$   A$$ERT      DEBUG$
+						     DB$BASE     PASLIB
+						     FIRST$MODU  DEBSC$
+						     INDEX       *SYS* 
+						     LD$OVL      PASLIB
+						     NEXT$MODUL  DEBSC$
+						     ORD         *SYS* 
+						     R50$ASC     DEBSC$
+						     WRIT$EOL    DEBIO$
+						     WRIT$STR    DEBIO$
+
+     DMP$PAGES   DEBDM$		PROCESS_DE  DEBUG$   GET$FILE$P  DEBBR$
+						     GET$PROG$P  DEBBR$
+						     ORD         *SYS* 
+						     WRIT$EOL    DEBIO$
+						     WRIT$INT    DEBIO$
+						     WRIT$STR    DEBIO$Cross Reference Listing for Pascal Debugger							  Page 8
+											       27-Oct-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     DMP$SCOPE   DEBDM$		PROCESS_DE  DEBUG$   A$$ERT      DEBUG$
+						     DEREF$PTR   DEBSY$
+						     GET$MOD$NA  DEBBR$
+						     ORD         *SYS* 
+						     SUBSTR      *SYS* 
+						     WRIT$INT    DEBIO$
+						     WRIT$NL     DEBIO$
+						     WRIT$STR    DEBIO$
+
+     DMP$STACK   DEBDM$		PROCESS_DE  DEBUG$   A$$ERT      DEBUG$
+						     CALL$BASIS  DEBSC$
+						     DB$BASE     PASLIB
+						     DMP_SOURCE  DEBDM$
+						     INFO$STMT   DEBBR$
+						     LD$OVL      PASLIB
+						     MAIN$FRAME  DEBSC$
+						     ORD         *SYS* 
+						     PROC$BLK    DEBSC$
+						     PROC$NAME   DEBSC$
+						     RET$ADDR    DEBSC$
+						     RT$BASE     PASLIB
+						     WRIT$EOL    DEBIO$
+						     WRIT$INT    DEBIO$
+						     WRIT$STR    DEBIO$
+
+     DMP_SOURCE  DEBDM$		DMP$BREAKS  DEBDM$   WRIT$INT    DEBIO$
+				DMP$LOCATI  DEBDM$   WRIT$STR    DEBIO$
+				DMP$STACK   DEBDM$
+
+     DO_CMD      DEBUG$		DO_CMD      DEBUG$   ASSIGN_OR_  DEBUG$
+				DO_IF_CMD   DEBUG$   CHECK_END   DEBUG$
+				PROCESS_CM  DEBUG$   CHECK_STAT  DEBUG$
+						     CONDITIONA  DEBUG$
+						     DO_CMD      DEBUG$
+						     GET_TOKEN   DEBUG$
+						     PROCESS_DE  DEBUG$
+						     SCANNED_TO  DEBUG$
+
+     DO_IF_CMD   DEBUG$		PROCESS_DE  DEBUG$   CHECK_END   DEBUG$
+						     CHECK_STAT  DEBUG$Cross Reference Listing for Pascal Debugger							  Page 9
+											       27-Oct-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     DO_IF_CMD   DEBUG$ (cont.)			     CONDITIONA  DEBUG$
+						     DO_CMD      DEBUG$
+						     EVAL$BOOL$  DEBBO$
+						     SCAN_STMT   DEBUG$
+
+     DO_OPEN_CM  DEBUG$		PROCESS_DE  DEBUG$   CHECK_END   DEBUG$
+						     CHECK_STAT  DEBUG$
+						     GET_TOKEN   DEBUG$
+						     LD$OVL      PASLIB
+						     MAXIMUM     *SYS* 
+						     OPEN$DEB$F  DEBSC$
+						     OPEN$FRAME  DEBSC$
+						     OPEN$ROUTI  DEBSC$
+						     PARSE_SCOP  DEBUG$
+						     SCANNED_IN  DEBUG$
+						     SCANNED_TO  DEBUG$
+						     SCOPE_ADDR  DEBUG$
+						     WRIT$INT    DEBIO$
+						     WRIT$NL     DEBIO$
+						     WRIT$STR    DEBIO$
+
+     ERROR       DEBUG$		CHECK_STAT  DEBUG$   WRIT$NL     DEBIO$
+						     WRIT$STR    DEBIO$
+
+     EVAL$BOOL$  DEBBO$		DO_IF_CMD   DEBUG$   EVAL_REL_E  DEBBO$
+				PRIMITIVE_  DEBBO$   EXTRACT_BO  DEBBO$
+						     LEX$SCAN    DEBLE$
+						     MAXIMUM     *SYS* 
+						     MINIMUM     *SYS* 
+						     TERM        DEBBO$
+
+     EVAL_REL_E  DEBBO$		EVAL$BOOL$  DEBBO$   GET_RELATI  DEBBO$
+						     SET_MEMBER  DEBBO$
+
+     EXT$ADDRES  DEBRE$		A$$IGN      DEBPR$   A$$ERT      DEBUG$
+				GET_RELATI  DEBBO$   EXT$SCALAR  DEBRE$
+				PRINT_POIN  DEBPR$
+				PRINT_SUBR  DEBPR$
+				PTR_REF     DEBRE$Cross Reference Listing for Pascal Debugger							 Page 10
+											       27-Oct-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     EXT$LENSTR  DEBRE$		A$$IGN      DEBPR$   A$$ERT      DEBUG$
+				GET_RELATI  DEBBO$
+				PRINT_STRI  DEBPR$
+
+     EXT$REAL    DEBRE$		A$$IGN      DEBPR$   EXT$SCALAR  DEBRE$
+				CHECK$TYPE  DEBRE$
+				GET$DESCRI  DEBRE$
+				GET_RELATI  DEBBO$
+				PRINT_REAL  DEBPR$
+
+     EXT$SCALAR  DEBRE$		A$$IGN      DEBPR$   LD$BYTE     DEBAS$
+				CHECK$TYPE  DEBRE$
+				EXT$ADDRES  DEBRE$
+				EXT$REAL    DEBRE$
+				EXT$STRCHA  DEBRE$
+				EXTRACT_BO  DEBBO$
+				GET$DESCRI  DEBRE$
+				GET_NEXT_F  DEBPR$
+				GET_RELATI  DEBBO$
+				INDEX_CHEC  DEBRE$
+				INDEX_REF   DEBRE$
+				PRINT_CHAR  DEBPR$
+				PRINT_INT   DEBPR$
+				PRINT_SCAL  DEBPR$
+				SET_MEMBER  DEBBO$
+				SET_RANGE   DEBRE$
+
+     EXT$SETELE  DEBRE$		A$$IGN      DEBPR$
+				GET_RELATI  DEBBO$
+				PRINT_SET   DEBPR$
+				SET_MEMBER  DEBBO$
+
+     EXT$STRCHA  DEBRE$		A$$IGN      DEBPR$   A$$ERT      DEBUG$
+				GET_RELATI  DEBBO$   CHR         *SYS* 
+				PRINT_STRI  DEBPR$   EXT$SCALAR  DEBRE$
+				SET_MEMBER  DEBBO$
+
+     EXTRACT_BO  DEBBO$		EVAL$BOOL$  DEBBO$   EXT$SCALAR  DEBRE$
+				FACTOR      DEBBO$   ORD         *SYS* 
+				TERM        DEBBO$Cross Reference Listing for Pascal Debugger							 Page 11
+											       27-Oct-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     EXTRACT_BO  DEBBO$ (cont.)	UNARY_EXPR  DEBBO$
+
+     FACTOR      DEBBO$		TERM        DEBBO$   EXTRACT_BO  DEBBO$
+						     LEX$SCAN    DEBLE$
+						     SET_BOOLEA  DEBBO$
+						     UNARY_EXPR  DEBBO$
+
+     FATAL_ERRO  DEBSY$		DEREF$PTR   DEBSY$   SEARCH      *SYS* 
+				ST$OPEN     DEBSY$   SUBSTR      *SYS* 
+						     WRIT$NL     DEBIO$
+						     WRIT$STR    DEBIO$
+
+     FIELD_REF   DEBRE$		REF         DEBRE$   DEREF$PTR   DEBSY$
+						     LEX$SCAN    DEBLE$
+						     ORD         *SYS* 
+						     SET$BOUNDS  DEBRE$
+						     SET$FIELD$  DEBRE$
+						     SET$KIND    DEBRE$
+						     SET$SIZE    DEBRE$
+						     SYM_LIST_L  DEBRE$
+
+     FIND$STMT$  DEBBR$		PROCESS_DE  DEBUG$   GET$FILE$P  DEBBR$
+				SET$BRKPT   DEBBR$   GET$PAGE$P  DEBBR$
+						     GET$PROG$P  DEBBR$
+						     GET$STMT$P  DEBBR$
+
+     FIND_VARIA  DEBPR$		GET_NEXT_F  DEBPR$   DEREF$PTR   DEBSY$
+						     ORD         *SYS* 
+
+     FIRST$MODU  DEBSC$		DMP$MODULE  DEBDM$   ORD         *SYS* 
+				MOD$LOOKUP  DEBSC$
+				SYM$LOOKUP  DEBSC$
+
+     FUNC_SYM    DEBRE$		GET_ADDRES  DEBRE$   DEREF$PTR   DEBSY$
+
+     GET$DESCRI  DEBRE$		ASSIGN_OR_  DEBUG$   ADDRESS     *SYS* 
+				INDEX_REF   DEBRE$   CONS        DEBRE$
+				PRIMITIVE_  DEBBO$   EXT$REAL    DEBRE$
+				PROCESS_DE  DEBUG$   EXT$SCALAR  DEBRE$
+				SET_RANGE   DEBRE$   INIT$DESC   DEBRE$Cross Reference Listing for Pascal Debugger							 Page 12
+											       27-Oct-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     GET$DESCRI  DEBRE$ (cont.)			     LEX$SCAN    DEBLE$
+						     ORD         *SYS* 
+						     REF         DEBRE$
+
+     GET$ELEMEN  DEBRE$		INDEX_REF   DEBRE$
+				PRINT_ARRA  DEBPR$
+
+     GET$FILE$P  DEBBR$		DMP$PAGES   DEBDM$   QUERY$      DEBUG$
+				FIND$STMT$  DEBBR$   UPPERCASE   *SYS* 
+						     WRIT$INT    DEBIO$
+						     WRIT$STR    DEBIO$
+
+     GET$MOD$NA  DEBBR$		DMP$SCOPE   DEBDM$   A$$ERT      DEBUG$
+				GET_SOURCE  DEBUG$   DEREF$PTR   DEBSY$
+				INFO$STMT   DEBBR$   OPEN$DEB$F  DEBSC$
+						     ST$FILE     DEBSY$
+						     ST$OPEN     DEBSY$
+						     SUBSTR      *SYS* 
+
+     GET$PAGE$P  DEBBR$		FIND$STMT$  DEBBR$   ORD         *SYS* 
+						     QUERY$      DEBUG$
+						     UPPERCASE   *SYS* 
+						     WRIT$INT    DEBIO$
+						     WRIT$STR    DEBIO$
+
+     GET$PROG$P  DEBBR$		DMP$FILES   DEBDM$   ADDRESS     *SYS* 
+				DMP$PAGES   DEBDM$   MOD$LOOKUP  DEBSC$
+				FIND$STMT$  DEBBR$   ORD         *SYS* 
+
+     GET$STMT$P  DEBBR$		FIND$STMT$  DEBBR$   ORD         *SYS* 
+						     QUERY$      DEBUG$
+						     WRIT$INT    DEBIO$
+						     WRIT$STR    DEBIO$
+
+     GETBLOCK    DEBSY$		DEREF$PTR   DEBSY$
+
+     GETSTRING   *SYS* 		LEX$SCAN    DEBLE$
+
+     GET_ADDRES  DEBRE$		SET_ID_DES  DEBRE$   A$$ERT      DEBUG$
+						     ARGUMENT_A  DEBRE$Cross Reference Listing for Pascal Debugger							 Page 13
+											       27-Oct-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     GET_ADDRES  DEBRE$ (cont.)			     DEREF$PTR   DEBSY$
+						     FUNC_SYM    DEBRE$
+						     ORD         *SYS* 
+						     PASSED_BY_  DEBRE$
+						     SUBSTR      *SYS* 
+						     SYM$LOOKUP  DEBSC$
+
+     GET_FILE    DEBUG$		PARSE_SOUR  DEBUG$   CONDITIONA  DEBUG$
+				PROCESS_DE  DEBUG$   SCANNED_ID  DEBUG$
+						     SCANNED_IN  DEBUG$
+						     SCANNED_TO  DEBUG$
+
+ ET_FRAME   DEBUG$		PARSE_SCOP  DEBUG$   CONDITIONA  DEBUG$
+						     GET_TOKEN   DEBUG$
+						     SCANNED_IN  DEBUG$
+						     SCANNED_TO  DEBUG$
+
+     GET_MODULE  DEBUG$		PARSE_SCOP  DEBUG$   CONDITIONA  DEBUG$
+				PARSE_SOUR  DEBUG$   SCANNED_ID  DEBUG$
+				PROCESS_DE  DEBUG$
+
+     GET_NEXT_F  DEBPR$		PRINT_RECO  DEBPR$   DEREF$PTR   DEBSY$
+						     EXT$SCALAR  DEBRE$
+						     FIND_VARIA  DEBPR$
+						     ORD         *SYS* 
+
+     GET_PAGE    DEBUG$		PARSE_SOUR  DEBUG$   CONDITIONA  DEBUG$
+						     SCANNED_ID  DEBUG$
+						     SCANNED_IN  DEBUG$
+						     SCANNED_TO  DEBUG$
+
+     GET_RELATI  DEBBO$		EVAL_REL_E  DEBBO$   COMP$TYPES  DEBRE$
+						     EXT$ADDRES  DEBRE$
+						     EXT$LENSTR  DEBRE$
+						     EXT$REAL    DEBRE$
+						     EXT$SCALAR  DEBRE$
+						     EXT$SETELE  DEBRE$
+						     EXT$STRCHA  DEBRE$
+						     MAX         *SYS* 
+						     MIN         *SYS* Cross Reference Listing for Pascal Debugger							 Page 14
+											       27-Oct-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     GET_ROUTIN  DEBUG$		PARSE_SCOP  DEBUG$   CONDITIONA  DEBUG$
+						     SCANNED_ID  DEBUG$
+
+     GET_SOURCE  DEBUG$		PROCESS_DE  DEBUG$   CHECK_DEBU  DEBUG$
+						     CHECK_STAT  DEBUG$
+						     CSTMT_INFO  DEBUG$
+						     GET$MOD$NA  DEBBR$
+						     LENGTH      *SYS* 
+						     MIN         *SYS* 
+						     PARSE_SOUR  DEBUG$
+						     SUBSTR      *SYS* 
+						     UPPERBOUND  *SYS* 
+						     UPPERCASE   *SYS* 
+
+     GET_TOKEN   DEBUG$		CHECK_END   DEBUG$   CHECK_STAT  DEBUG$
+				CHECK_FOR_  DEBUG$   LEX$SCAN    DEBLE$
+				CONDITIONA  DEBUG$
+				DO_CMD      DEBUG$
+				DO_OPEN_CM  DEBUG$
+				GET_FRAME   DEBUG$
+				PARSE_SOUR  DEBUG$
+				PROCESS_CM  DEBUG$
+				PROCESS_DE  DEBUG$
+				SCAN_STMT   DEBUG$
+
+     ID_LOOKUP   DEBRE$		SET_ID_DES  DEBRE$   DEREF$PTR   DEBSY$
+						     ORD         *SYS* 
+						     SYM_LIST_L  DEBRE$
+
+     INDEX       *SYS* 		DMP$MODULE  DEBDM$
+				LEX$SCAN    DEBLE$
+				PRINT_WORD  DEBUG$
+
+     INDEX_CHEC  DEBRE$		INDEX_REF   DEBRE$   CHECK$TYPE  DEBRE$
+						     EXT$SCALAR  DEBRE$
+
+     INDEX_REF   DEBRE$		REF         DEBRE$   ADDRESS     *SYS* 
+						     EXT$SCALAR  DEBRE$
+						     GET$DESCRI  DEBRE$
+						     GET$ELEMEN  DEBRE$Cross Reference Listing for Pascal Debugger							 Page 15
+											       27-Oct-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     INDEX_REF   DEBRE$ (cont.)			     INDEX_CHEC  DEBRE$
+						     LEX$SCAN    DEBLE$
+						     ORD         *SYS* 
+						     SET$BOUNDS  DEBRE$
+						     SET$KIND    DEBRE$
+
+     INFO$STMT   DEBBR$		CSTMT_INFO  DEBUG$   GET$MOD$NA  DEBBR$
+				DMP$BREAKS  DEBDM$
+				DMP$LOCATI  DEBDM$
+				DMP$STACK   DEBDM$
+
+     INIT$DESC   DEBRE$		GET$DESCRI  DEBRE$   ORD         *SYS* 
+				MAK$SCALAR  DEBRE$
+				PRINT_ARRA  DEBPR$
+				PRINT_RECO  DEBPR$
+
+     INIT_MAP_T  DEBSY$		ST$INIT     DEBSY$   ST$BASE     PASLIB
+				ST$OPEN     DEBSY$
+
+     IOSTATUS    *SYS* 		DEREF$PTR   DEBSY$
+				LEX$SCAN    DEBLE$
+				PROCESS_DE  DEBUG$
+				ST$OPEN     DEBSY$
+
+     LD$BYTE     DEBAS$		EXT$SCALAR  DEBRE$
+
+     LD$OVL      PASLIB		CSTMT_INFO  DEBUG$
+				DMP$BREAKS  DEBDM$
+				DMP$LOCATI  DEBDM$
+				DMP$MODULE  DEBDM$
+				DMP$STACK   DEBDM$
+				DO_OPEN_CM  DEBUG$
+				LOAD$OVERL  DEBSC$
+				OPEN_OVL_M  DEBSC$
+				PREPARE_TO  DEBUG$
+				PROCESS_DE  DEBUG$
+
+     LENGTH      *SYS* 		ASCTOR50    DEBSC$
+				ASSIGN_OR_  DEBUG$
+				CALC_FIELD  DEBPR$Cross Reference Listing for Pascal Debugger							 Page 16
+											       27-Oct-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     LENGTH      *SYS*  (cont.)	GET_SOURCE  DEBUG$
+				LEX$KEYWOR  DEBLE$
+				LOOKUP_WOR  DEBUG$
+				NEXT_CHAR   DEBLE$
+				PRINT_CHAR  DEBPR$
+				PRINT_INT   DEBPR$
+				PRINT_POIN  DEBPR$
+				PRINT_STRI  DEBPR$
+				PROCESS_CM  DEBUG$
+				READ$LINE   DEBIO$
+				WRIT$INT    DEBIO$
+
+     LEX$KEYWOR  DEBLE$		LOOKUP_WOR  DEBUG$   LENGTH      *SYS* 
+						     UPPERCASE   *SYS* 
+
+     LEX$SCAN    DEBLE$		CONS        DEBRE$   A$$ERT      DEBUG$
+				EVAL$BOOL$  DEBBO$   GETSTRING   *SYS* 
+				FACTOR      DEBBO$   INDEX       *SYS* 
+				FIELD_REF   DEBRE$   IOSTATUS    *SYS* 
+				GET$DESCRI  DEBRE$   LOWERBOUND  *SYS* 
+				GET_TOKEN   DEBUG$   NEXT_CHAR   DEBLE$
+				INDEX_REF   DEBRE$   SEARCH      *SYS* 
+				PRIMITIVE_  DEBBO$   UC_NEXT_CH  DEBLE$
+				REF         DEBRE$   UPPERBOUND  *SYS* 
+				SET_RANGE   DEBRE$   UPPERCASE   *SYS* 
+				TERM        DEBBO$   WRIT$INT    DEBIO$
+				UNARY_EXPR  DEBBO$   WRIT$NL     DEBIO$
+						     WRIT$STR    DEBIO$
+
+     LOAD$OVERL  DEBSC$		DMP$LOCATI  DEBDM$   A$$ERT      DEBUG$
+				OPEN$STACK  DEBSC$   CALL$BASIS  DEBSC$
+						     DB$BASE     PASLIB
+						     LD$OVL      PASLIB
+						     RET$ADDR    DEBSC$
+						     RT$BASE     PASLIB
+
+     LOOKUP_WOR  DEBUG$		PROCESS_DE  DEBUG$   LENGTH      *SYS* 
+						     LEX$KEYWOR  DEBLE$
+						     SUBSTR      *SYS* Cross Reference Listing for Pascal Debugger							 Page 17
+											       27-Oct-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     LOWERBOUND  *SYS* 		LEX$SCAN    DEBLE$
+
+     MAIN$FRAME  DEBSC$		CALL$BASIS  DEBSC$   ORD         *SYS* 
+				DMP$LOCATI  DEBDM$
+				DMP$STACK   DEBDM$
+				RET$ADDR    DEBSC$
+				SUBR_INVOC  DEBSC$
+
+     MAK$SCALAR  DEBRE$		PRINT_SET   DEBPR$   ADDRESS     *SYS* 
+				SET_BOOLEA  DEBBO$   INIT$DESC   DEBRE$
+						     ORD         *SYS* 
+						     SET$KIND    DEBRE$
+
+     MAX         *SYS* 		CALC_FIELD  DEBPR$
+				GET_RELATI  DEBBO$
+				PRINT_CHAR  DEBPR$
+				PRINT_INT   DEBPR$
+				PRINT_POIN  DEBPR$
+				PRINT_SCAL  DEBPR$
+				PRINT_STRI  DEBPR$
+				SET$BRKPT   DEBBR$
+				SET_RANGE   DEBRE$
+
+     MAXIMUM     *SYS* 		CLR$ALL$BR  DEBBR$
+				CLR$BRKPT   DEBBR$
+				DMP$BREAKS  DEBDM$
+				DO_OPEN_CM  DEBUG$
+				EVAL$BOOL$  DEBBO$
+				PARSE_SCOP  DEBUG$
+				PRINT_CHAR  DEBPR$
+				PRINT_WORD  DEBUG$
+				PROCESS_DE  DEBUG$
+				SET$BRKPT   DEBBR$
+
+     MIN         *SYS* 		A$$IGN      DEBPR$
+				ASCTOR50    DEBSC$
+				GET_RELATI  DEBBO$
+				GET_SOURCE  DEBUG$
+				PRINT_STRI  DEBPR$
+				SET_RANGE   DEBRE$Cross Reference Listing for Pascal Debugger							 Page 18
+											       27-Oct-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     MINIMUM     *SYS* 		CLR$ALL$BR  DEBBR$
+				CLR$BRKPT   DEBBR$
+				DMP$BREAKS  DEBDM$
+				EVAL$BOOL$  DEBBO$
+				PRINT_CHAR  DEBPR$
+				PROCESS_DE  DEBUG$
+				SET$BRKPT   DEBBR$
+
+     MOD$LOOKUP  DEBSC$		GET$PROG$P  DEBBR$   ASCTOR50    DEBSC$
+				OPEN_NAMED  DEBSC$   FIRST$MODU  DEBSC$
+				SYM$LOOKUP  DEBSC$   NEXT$MODUL  DEBSC$
+
+     NEW_LINE    DEBPR$		PRINT_ARRA  DEBPR$   WRIT$EOL    DEBIO$
+				PRINT_RECO  DEBPR$
+				PRINT_SET   DEBPR$
+				PRINT_STRI  DEBPR$
+				PRINT_SUBR  DEBPR$
+				WRITE_STRI  DEBPR$
+
+     NEXT$MODUL  DEBSC$		DMP$MODULE  DEBDM$   ORD         *SYS* 
+				MOD$LOOKUP  DEBSC$
+				SEARCH_MOD  DEBSC$
+				SYM$LOOKUP  DEBSC$
+
+     NEXT_CHAR   DEBLE$		LEX$SCAN    DEBLE$   LENGTH      *SYS* 
+				UC_NEXT_CH  DEBLE$
+
+     OPEN$DEB$F  DEBSC$		DO_OPEN_CM  DEBUG$   DEREF$PTR   DEBSY$
+				GET$MOD$NA  DEBBR$   ST$OPEN     DEBSY$
+				OPEN$STACK  DEBSC$   WRIT$NL     DEBIO$
+				OPEN_NAMED  DEBSC$
+				OPEN_OVL_M  DEBSC$
+
+     OPEN$FRAME  DEBSC$		DO_OPEN_CM  DEBUG$   CALL$BASIS  DEBSC$
+						     OPEN$STACK  DEBSC$
+						     RT$BASE     PASLIB
+
+     OPEN$ROUTI  DEBSC$		DO_OPEN_CM  DEBUG$   OPEN_KIDS   DEBSC$
+						     OPEN_MOD    DEBSC$
+						     PARENT_BAS  DEBSC$Cross Reference Listing for Pascal Debugger							 Page 19
+											       27-Oct-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     OPEN$ROUTI  DEBSC$ (cont.)			     SUBR_INVOC  DEBSC$
+
+     OPEN$STACK  DEBSC$		DEBUG$      DEBUG$   LOAD$OVERL  DEBSC$
+				OPEN$FRAME  DEBSC$   OPEN$DEB$F  DEBSC$
+						     OPEN_PAREN  DEBSC$
+						     OPEN_STACK  DEBSC$
+						     ORD         *SYS* 
+						     OVER$LAID   DEBSC$
+						     PROC$BLK    DEBSC$
+
+     OPEN_CHILD  DEBSC$		OPEN_KIDS   DEBSC$   A$$ERT      DEBUG$
+						     DEREF$PTR   DEBSY$
+						     ORD         *SYS* 
+						     SUBSTR      *SYS* 
+						     UPPERCASE   *SYS* 
+
+     OPEN_KIDS   DEBSC$		OPEN$ROUTI  DEBSC$   OPEN_CHILD  DEBSC$
+
+     OPEN_MOD    DEBSC$		OPEN$ROUTI  DEBSC$   OPEN_NAMED  DEBSC$
+						     OPEN_OVL_M  DEBSC$
+						     OVER$LAID   DEBSC$
+						     SYM$LOOKUP  DEBSC$
+						     UPPERCASE   *SYS* 
+
+     OPEN_MODUL  DEBSC$		OPEN_NAMED  DEBSC$   DEREF$PTR   DEBSY$
+				OPEN_OVL_M  DEBSC$   ORD         *SYS* 
+				OPEN_PAREN  DEBSC$
+
+     OPEN_NAMED  DEBSC$		OPEN_MOD    DEBSC$   ADDRESS     *SYS* 
+						     MOD$LOOKUP  DEBSC$
+						     OPEN$DEB$F  DEBSC$
+						     OPEN_MODUL  DEBSC$
+						     ORD         *SYS* 
+
+     OPEN_OVL_M  DEBSC$		OPEN_MOD    DEBSC$   LD$OVL      PASLIB
+						     OPEN$DEB$F  DEBSC$
+						     OPEN_MODUL  DEBSC$
+						     ORD         *SYS* 
+
+     OPEN_PAREN  DEBSC$		OPEN$STACK  DEBSC$   OPEN_MODUL  DEBSC$Cross Reference Listing for Pascal Debugger							 Page 20
+											       27-Oct-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     OPEN_PAREN  DEBSC$ (cont.)			     OPEN_STACK  DEBSC$
+						     PARENT_BAS  DEBSC$
+
+     OPEN_STACK  DEBSC$		OPEN$STACK  DEBSC$   A$$ERT      DEBUG$
+				OPEN_PAREN  DEBSC$   ORD         *SYS* 
+						     PROC$BLK    DEBSC$
+
+     ORD         *SYS* 		A$$IGN      DEBPR$
+				ARGUMENT_A  DEBRE$
+				ASCTOR50    DEBSC$
+				CALC_FIELD  DEBPR$
+				COMP$TYPES  DEBRE$
+				CONS        DEBRE$
+				CSTMT_INFO  DEBUG$
+				DEREF$PTR   DEBSY$
+				DMP$LOCATI  DEBDM$
+				DMP$MODULE  DEBDM$
+				DMP$PAGES   DEBDM$
+				DMP$SCOPE   DEBDM$
+				DMP$STACK   DEBDM$
+				EXTRACT_BO  DEBBO$
+				FIELD_REF   DEBRE$
+				FIND_VARIA  DEBPR$
+				FIRST$MODU  DEBSC$
+				GET$DESCRI  DEBRE$
+				GET$PAGE$P  DEBBR$
+				GET$PROG$P  DEBBR$
+				GET$STMT$P  DEBBR$
+				GET_ADDRES  DEBRE$
+				GET_NEXT_F  DEBPR$
+				ID_LOOKUP   DEBRE$
+				INDEX_REF   DEBRE$
+				INIT$DESC   DEBRE$
+				MAIN$FRAME  DEBSC$
+				MAK$SCALAR  DEBRE$
+				NEXT$MODUL  DEBSC$
+				OPEN$STACK  DEBSC$
+				OPEN_CHILD  DEBSC$
+				OPEN_MODUL  DEBSC$
+				OPEN_NAMED  DEBSC$Cross Reference Listing for Pascal Debugger							 Page 21
+											       27-Oct-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     ORD         *SYS*  (cont.)	OPEN_OVL_M  DEBSC$
+				OPEN_STACK  DEBSC$
+				PRINT_ARRA  DEBPR$
+				PRINT_CHAR  DEBPR$
+				PRINT_POIN  DEBPR$
+				PRINT_RECO  DEBPR$
+				PRINT_SET   DEBPR$
+				PROCESS_DE  DEBUG$
+				PTR_REF     DEBRE$
+				PUT_CHAR    DEBPR$
+				RET$ADDR    DEBSC$
+				SEARCH_MOD  DEBSC$
+				SET$BOUNDS  DEBRE$
+				SET$KIND    DEBRE$
+				SET_BOOLEA  DEBBO$
+				SET_ID_DES  DEBRE$
+				SET_MEMBER  DEBBO$
+				SET_RANGE   DEBRE$
+				SYM_LIST_L  DEBRE$
+				WITH_LOOKU  DEBRE$
+
+     OVER$LAID   DEBSC$		DMP$LOCATI  DEBDM$   SYM$LOOKUP  DEBSC$
+				OPEN$STACK  DEBSC$
+				OPEN_MOD    DEBSC$
+				RET$ADDR    DEBSC$
+
+     PARENT_BAS  DEBSC$		OPEN$ROUTI  DEBSC$   PROC$BLK    DEBSC$
+				OPEN_PAREN  DEBSC$
+
+     PARSE_SCOP  DEBUG$		DO_OPEN_CM  DEBUG$   GET_FRAME   DEBUG$
+						     GET_MODULE  DEBUG$
+						     GET_ROUTIN  DEBUG$
+						     MAXIMUM     *SYS* 
+
+     PARSE_SOUR  DEBUG$		GET_SOURCE  DEBUG$   GET_FILE    DEBUG$
+						     GET_MODULE  DEBUG$
+						     GET_PAGE    DEBUG$
+						     GET_TOKEN   DEBUG$
+						     SCANNED_IN  DEBUG$
+						     SCANNED_TO  DEBUG$Cross Reference Listing for Pascal Debugger							 Page 22
+											       27-Oct-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     PASSED_BY_  DEBRE$		GET_ADDRES  DEBRE$   DEREF$PTR   DEBSY$
+
+     PREPARE_TO  DEBUG$		DEBUG$      DEBUG$   LD$OVL      PASLIB
+						     RES$IO      PASLIB
+
+     PRIMITIVE_  DEBBO$		UNARY_EXPR  DEBBO$   EVAL$BOOL$  DEBBO$
+						     GET$DESCRI  DEBRE$
+						     LEX$SCAN    DEBLE$
+						     SET_BOOLEA  DEBBO$
+
+     PRINT$      DEBPR$		ASSIGN_OR_  DEBUG$   PRINT_DESC  DEBPR$
+						     WRIT$EOL    DEBIO$
+
+     PRINT_ARRA  DEBPR$		PRINT_DESC  DEBPR$   CALC_FIELD  DEBPR$
+						     GET$ELEMEN  DEBRE$
+						     INIT$DESC   DEBRE$
+						     NEW_LINE    DEBPR$
+						     ORD         *SYS* 
+						     PRINT_DESC  DEBPR$
+						     SET$BOUNDS  DEBRE$
+						     SET$KIND    DEBRE$
+
+     PRINT_CHAR  DEBPR$		PRINT_DESC  DEBPR$   CHR         *SYS* 
+						     EXT$SCALAR  DEBRE$
+						     LENGTH      *SYS* 
+						     MAX         *SYS* 
+						     MAXIMUM     *SYS* 
+						     MINIMUM     *SYS* 
+						     ORD         *SYS* 
+						     PUT_CHAR    DEBPR$
+						     WRITE_STRI  DEBPR$
+
+     PRINT_DESC  DEBPR$		PRINT$      DEBPR$   PRINT_ARRA  DEBPR$
+				PRINT_ARRA  DEBPR$   PRINT_CHAR  DEBPR$
+				PRINT_RECO  DEBPR$   PRINT_INT   DEBPR$
+				PRINT_SET   DEBPR$   PRINT_POIN  DEBPR$
+						     PRINT_REAL  DEBPR$
+						     PRINT_RECO  DEBPR$
+						     PRINT_SCAL  DEBPR$
+						     PRINT_SET   DEBPR$Cross Reference Listing for Pascal Debugger							 Page 23
+											       27-Oct-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     PRINT_DESC  DEBPR$ (cont.)			     PRINT_STRI  DEBPR$
+						     PRINT_SUBR  DEBPR$
+
+     PRINT_INT   DEBPR$		PRINT_DESC  DEBPR$   A$$ERT      DEBUG$
+						     EXT$SCALAR  DEBRE$
+						     LENGTH      *SYS* 
+						     MAX         *SYS* 
+						     PUTSTRING   *SYS* 
+						     SUBSTR      *SYS* 
+						     WRITE_STRI  DEBPR$
+
+     PRINT_POIN  DEBPR$		PRINT_DESC  DEBPR$   A$$ERT      DEBUG$
+						     EXT$ADDRES  DEBRE$
+						     LENGTH      *SYS* 
+						     MAX         *SYS* 
+						     ORD         *SYS* 
+						     PUTSTRING   *SYS* 
+						     SUBSTR      *SYS* 
+						     VERIFY      *SYS* 
+						     WRITE_STRI  DEBPR$
+
+     PRINT_REAL  DEBPR$		PRINT_DESC  DEBPR$   ABS         *SYS* 
+						     EXT$REAL    DEBRE$
+						     PUTSTRING   *SYS* 
+						     WRITE_STRI  DEBPR$
+
+     PRINT_RECO  DEBPR$		PRINT_DESC  DEBPR$   DEREF$PTR   DEBSY$
+						     GET_NEXT_F  DEBPR$
+						     INIT$DESC   DEBRE$
+						     NEW_LINE    DEBPR$
+						     ORD         *SYS* 
+						     PRINT_DESC  DEBPR$
+						     SET$BOUNDS  DEBRE$
+						     SET$FIELD$  DEBRE$
+						     SET$KIND    DEBRE$
+						     SET$SIZE    DEBRE$
+						     SUBSTR      *SYS* 
+						     WRITE_STRI  DEBPR$
+
+     PRINT_SCAL  DEBPR$		PRINT_DESC  DEBPR$   DEREF$PTR   DEBSY$Cross Reference Listing for Pascal Debugger							 Page 24
+											       27-Oct-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     PRINT_SCAL  DEBPR$ (cont.)			     EXT$SCALAR  DEBRE$
+						     MAX         *SYS* 
+						     WRITE_STRI  DEBPR$
+
+     PRINT_SET   DEBPR$		PRINT_DESC  DEBPR$   EXT$SETELE  DEBRE$
+						     MAK$SCALAR  DEBRE$
+						     NEW_LINE    DEBPR$
+						     ORD         *SYS* 
+						     PRINT_DESC  DEBPR$
+						     WRITE_STRI  DEBPR$
+
+     PRINT_STRI  DEBPR$		PRINT_DESC  DEBPR$   EXT$LENSTR  DEBRE$
+						     EXT$STRCHA  DEBRE$
+						     LENGTH      *SYS* 
+						     MAX         *SYS* 
+						     MIN         *SYS* 
+						     NEW_LINE    DEBPR$
+						     PUT_CHAR    DEBPR$
+						     WRIT$INT    DEBIO$
+						     WRIT$NL     DEBIO$
+						     WRIT$STR    DEBIO$
+						     WRITE_STRI  DEBPR$
+
+     PRINT_SUBR  DEBPR$		PRINT_DESC  DEBPR$   EXT$ADDRES  DEBRE$
+						     NEW_LINE    DEBPR$
+						     PUTSTRING   *SYS* 
+						     WRITE_STRI  DEBPR$
+
+     PRINT_WORD  DEBUG$		PROCESS_DE  DEBUG$   DIMENSION   *SYS* 
+						     INDEX       *SYS* 
+						     MAXIMUM     *SYS* 
+						     SUBSTR      *SYS* 
+						     WRIT$EOL    DEBIO$
+						     WRIT$NL     DEBIO$
+						     WRIT$STR    DEBIO$
+
+     PROC$BLK    DEBSC$		DMP$LOCATI  DEBDM$
+				DMP$STACK   DEBDM$
+				OPEN$STACK  DEBSC$
+				OPEN_STACK  DEBSC$Cross Reference Listing for Pascal Debugger							 Page 25
+											       27-Oct-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     PROC$BLK    DEBSC$ (cont.)	PARENT_BAS  DEBSC$
+				PROC$NAME   DEBSC$
+
+     PROC$NAME   DEBSC$		DMP$LOCATI  DEBDM$   PROC$BLK    DEBSC$
+				DMP$STACK   DEBDM$
+
+     PROCESS_CM  DEBUG$		DEBUG$      DEBUG$   CHECK_STAT  DEBUG$
+						     DO_CMD      DEBUG$
+						     GET_TOKEN   DEBUG$
+						     LENGTH      *SYS* 
+						     SCANNED_TO  DEBUG$
+
+     PROCESS_DE  DEBUG$		DO_CMD      DEBUG$   A$$ERT      DEBUG$
+						     ABORT$      DEBAS$
+						     CHECK_DEBU  DEBUG$
+						     CHECK_FOR_  DEBUG$
+						     CHECK_STAT  DEBUG$
+						     CLR$ALL$BR  DEBBR$
+						     CLR$BRKPT   DEBBR$
+						     CONDITIONA  DEBUG$
+						     DEB$CALL    DEBAS$
+						     DEREF$PTR   DEBSY$
+						     DMP$BREAKS  DEBDM$
+						     DMP$FILES   DEBDM$
+						     DMP$LOCATI  DEBDM$
+						     DMP$MODULE  DEBDM$
+						     DMP$PAGES   DEBDM$
+						     DMP$SCOPE   DEBDM$
+						     DMP$STACK   DEBDM$
+						     DO_IF_CMD   DEBUG$
+						     DO_OPEN_CM  DEBUG$
+						     FIND$STMT$  DEBBR$
+						     GET$DESCRI  DEBRE$
+						     GET_FILE    DEBUG$
+						     GET_MODULE  DEBUG$
+						     GET_SOURCE  DEBUG$
+						     GET_TOKEN   DEBUG$
+						     IOSTATUS    *SYS* 
+						     LD$OVL      PASLIB
+						     LOOKUP_WOR  DEBUG$Cross Reference Listing for Pascal Debugger							 Page 26
+											       27-Oct-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     PROCESS_DE  DEBUG$ (cont.)			     MAXIMUM     *SYS* 
+						     MINIMUM     *SYS* 
+						     ORD         *SYS* 
+						     PRINT_WORD  DEBUG$
+						     PUTSTRING   *SYS* 
+						     QUERY$      DEBUG$
+						     RES$IO      PASLIB
+						     SCANNED_ID  DEBUG$
+						     SCANNED_IN  DEBUG$
+						     SCANNED_TO  DEBUG$
+						     SET$BRKPT   DEBBR$
+						     SET_WITH    DEBUG$
+						     SUBSTR      *SYS* 
+						     SYM$LOOKUP  DEBSC$
+						     WRIT$EOL    DEBIO$
+						     WRIT$INT    DEBIO$
+						     WRIT$NL     DEBIO$
+						     WRIT$STR    DEBIO$
+
+     PTR_REF     DEBRE$		REF         DEBRE$   DEREF$PTR   DEBSY$
+						     EXT$ADDRES  DEBRE$
+						     ORD         *SYS* 
+						     SET$BOUNDS  DEBRE$
+						     SET$KIND    DEBRE$
+
+     PUTSTRING   *SYS* 		CALC_FIELD  DEBPR$
+				PRINT_INT   DEBPR$
+				PRINT_POIN  DEBPR$
+				PRINT_REAL  DEBPR$
+				PRINT_SUBR  DEBPR$
+				PROCESS_DE  DEBUG$
+				PUT_CHAR    DEBPR$
+				WRIT$INT    DEBIO$
+
+     PUT_CHAR    DEBPR$		PRINT_CHAR  DEBPR$   ORD         *SYS* 
+				PRINT_STRI  DEBPR$   PUTSTRING   *SYS* 
+
+     QUERY$      DEBUG$		GET$FILE$P  DEBBR$   READ$LINE   DEBIO$
+				GET$PAGE$P  DEBBR$   UPPERCASE   *SYS* 
+				GET$STMT$P  DEBBR$   WRIT$STR    DEBIO$Cross Reference Listing for Pascal Debugger							 Page 27
+											       27-Oct-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     QUERY$      DEBUG$ (cont.)	PROCESS_DE  DEBUG$
+
+     R50$ASC     DEBSC$		DMP$MODULE  DEBDM$   CONVERT_CH  DEBSC$
+				SYM$LOOKUP  DEBSC$
+
+     READ$LINE   DEBIO$		DEBUG$      DEBUG$   LENGTH      *SYS* 
+				QUERY$      DEBUG$   TT$IN       DEBAS$
+						     UPPERBOUND  *SYS* 
+
+     REF         DEBRE$		GET$DESCRI  DEBRE$   FIELD_REF   DEBRE$
+						     INDEX_REF   DEBRE$
+						     LEX$SCAN    DEBLE$
+						     PTR_REF     DEBRE$
+						     SET_ID_DES  DEBRE$
+
+     RES$IO      PASLIB		PREPARE_TO  DEBUG$
+				PROCESS_DE  DEBUG$
+
+     RET$ADDR    DEBSC$		DMP$STACK   DEBDM$   A$$ERT      DEBUG$
+				LOAD$OVERL  DEBSC$   MAIN$FRAME  DEBSC$
+				SUBR_INVOC  DEBSC$   ORD         *SYS* 
+						     OVER$LAID   DEBSC$
+						     SYM$LOOKUP  DEBSC$
+
+     RT$BASE     PASLIB		CLR$ALL$BR  DEBBR$
+				CLR$BRKPT   DEBBR$
+				DEBUG$      DEBUG$
+				DMP$BREAKS  DEBDM$
+				DMP$LOCATI  DEBDM$
+				DMP$STACK   DEBDM$
+				LOAD$OVERL  DEBSC$
+				OPEN$FRAME  DEBSC$
+				SET$BRKPT   DEBBR$
+				SUBR_INVOC  DEBSC$
+
+     SAV$IO      PASLIB		DEBUG$      DEBUG$
+
+     SCANNED_ID  DEBUG$		ASSIGN_OR_  DEBUG$   A$$ERT      DEBUG$
+				GET_FILE    DEBUG$
+				GET_MODULE  DEBUG$Cross Reference Listing for Pascal Debugger							 Page 28
+											       27-Oct-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     SCANNED_ID  DEBUG$ (cont.)	GET_PAGE    DEBUG$
+				GET_ROUTIN  DEBUG$
+				PROCESS_DE  DEBUG$
+
+     SCANNED_IN  DEBUG$		DO_OPEN_CM  DEBUG$   A$$ERT      DEBUG$
+				GET_FILE    DEBUG$   CHECK_STAT  DEBUG$
+				GET_FRAME   DEBUG$
+				GET_PAGE    DEBUG$
+				PARSE_SOUR  DEBUG$
+				PROCESS_DE  DEBUG$
+
+     SCANNED_TO  DEBUG$		CHECK_END   DEBUG$
+				CHECK_FOR_  DEBUG$
+				CONDITIONA  DEBUG$
+				DO_CMD      DEBUG$
+				DO_OPEN_CM  DEBUG$
+				GET_FILE    DEBUG$
+				GET_FRAME   DEBUG$
+				GET_PAGE    DEBUG$
+				PARSE_SOUR  DEBUG$
+				PROCESS_CM  DEBUG$
+				PROCESS_DE  DEBUG$
+				SCAN_STMT   DEBUG$
+
+     SCAN_STMT   DEBUG$		DO_IF_CMD   DEBUG$   CHECK_STAT  DEBUG$
+				SCAN_STMT   DEBUG$   CONDITIONA  DEBUG$
+						     GET_TOKEN   DEBUG$
+						     SCANNED_TO  DEBUG$
+						     SCAN_STMT   DEBUG$
+
+     SCOPE_ADDR  DEBUG$		DEBUG$      DEBUG$   A$$ERT      DEBUG$
+				DO_OPEN_CM  DEBUG$
+
+     SEARCH      *SYS* 		FATAL_ERRO  DEBSY$
+				LEX$SCAN    DEBLE$
+
+     SEARCHMAP   DEBSY$		DEREF$PTR   DEBSY$
+
+     SEARCH_MOD  DEBSC$		SYM$LOOKUP  DEBSC$   ASCTOR50    DEBSC$
+						     NEXT$MODUL  DEBSC$Cross Reference Listing for Pascal Debugger							 Page 29
+											       27-Oct-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     SEARCH_MOD  DEBSC$ (cont.)			     ORD         *SYS* 
+
+     SEEK        *SYS* 		DEREF$PTR   DEBSY$
+
+     SET$BOUNDS  DEBRE$		FIELD_REF   DEBRE$   ARGUMENT_A  DEBRE$
+				INDEX_REF   DEBRE$   DEREF$PTR   DEBSY$
+				PRINT_ARRA  DEBPR$   ORD         *SYS* 
+				PRINT_RECO  DEBPR$
+				PTR_REF     DEBRE$
+				SET_ID_DES  DEBRE$
+
+     SET$BRKPT   DEBBR$		PROCESS_DE  DEBUG$   DB$BASE     PASLIB
+						     FIND$STMT$  DEBBR$
+						     MAX         *SYS* 
+						     MAXIMUM     *SYS* 
+						     MINIMUM     *SYS* 
+						     RT$BASE     PASLIB
+
+     SET$FIELD$  DEBRE$		FIELD_REF   DEBRE$   DEREF$PTR   DEBSY$
+				PRINT_RECO  DEBPR$
+				SET_ID_DES  DEBRE$
+
+     SET$KIND    DEBRE$		CHECK$TYPE  DEBRE$   A$$ERT      DEBUG$
+				COMP        DEBRE$   DEREF$PTR   DEBSY$
+				CONS        DEBRE$   ORD         *SYS* 
+				FIELD_REF   DEBRE$
+				INDEX_REF   DEBRE$
+				MAK$SCALAR  DEBRE$
+				PRINT_ARRA  DEBPR$
+				PRINT_RECO  DEBPR$
+				PTR_REF     DEBRE$
+				SET_ID_DES  DEBRE$
+
+     SET$SIZE    DEBRE$		FIELD_REF   DEBRE$   DEREF$PTR   DEBSY$
+				PRINT_RECO  DEBPR$
+				SET_ID_DES  DEBRE$
+
+     SET_BOOLEA  DEBBO$		FACTOR      DEBBO$   MAK$SCALAR  DEBRE$
+				PRIMITIVE_  DEBBO$   ORD         *SYS* 
+				TERM        DEBBO$Cross Reference Listing for Pascal Debugger							 Page 30
+											       27-Oct-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     SET_BOOLEA  DEBBO$ (cont.)	UNARY_EXPR  DEBBO$
+
+     SET_ID_DES  DEBRE$		REF         DEBRE$   DEREF$PTR   DEBSY$
+						     GET_ADDRES  DEBRE$
+						     ID_LOOKUP   DEBRE$
+						     ORD         *SYS* 
+						     SET$BOUNDS  DEBRE$
+						     SET$FIELD$  DEBRE$
+						     SET$KIND    DEBRE$
+						     SET$SIZE    DEBRE$
+						     WITH_LOOKU  DEBRE$
+
+     SET_MEMBER  DEBBO$		EVAL_REL_E  DEBBO$   CHECK$TYPE  DEBRE$
+						     EXT$SCALAR  DEBRE$
+						     EXT$SETELE  DEBRE$
+						     EXT$STRCHA  DEBRE$
+						     ORD         *SYS* 
+
+     SET_RANGE   DEBRE$		CONS        DEBRE$   CHECK$TYPE  DEBRE$
+						     EXT$SCALAR  DEBRE$
+						     GET$DESCRI  DEBRE$
+						     LEX$SCAN    DEBLE$
+						     MAX         *SYS* 
+						     MIN         *SYS* 
+						     ORD         *SYS* 
+
+     SET_WITH    DEBUG$		PROCESS_DE  DEBUG$
+
+     SIZE        *SYS* 		ST$INIT     DEBSY$
+
+     ST$BASE     PASLIB		DEREF$PTR   DEBSY$
+				INIT_MAP_T  DEBSY$
+				ST$FILE     DEBSY$
+				ST$INIT     DEBSY$
+				ST$OPEN     DEBSY$
+
+     ST$BYTE     DEBAS$		STO$SCALAR  DEBRE$
+
+     ST$FILE     DEBSY$		DEREF$PTR   DEBSY$   ST$BASE     PASLIB
+				GET$MOD$NA  DEBBR$Cross Reference Listing for Pascal Debugger							 Page 31
+											       27-Oct-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     ST$INIT     DEBSY$		DEBUG$      DEBUG$   INIT_MAP_T  DEBSY$
+						     SIZE        *SYS* 
+						     ST$BASE     PASLIB
+						     ST$LEN      PASLIB
+
+     ST$LEN      PASLIB		ST$INIT     DEBSY$
+
+     ST$OPEN     DEBSY$		GET$MOD$NA  DEBBR$   CLOSE       *SYS* 
+				OPEN$DEB$F  DEBSC$   DB$OPEN     PASLIB
+						     FATAL_ERRO  DEBSY$
+						     INIT_MAP_T  DEBSY$
+						     IOSTATUS    *SYS* 
+						     ST$BASE     PASLIB
+
+     STO$LENSTR  DEBRE$		A$$IGN      DEBPR$   A$$ERT      DEBUG$
+						     STO$SCALAR  DEBRE$
+
+     STO$SCALAR  DEBRE$		A$$IGN      DEBPR$   ST$BYTE     DEBAS$
+				STO$LENSTR  DEBRE$
+
+     STO$SETELE  DEBRE$		A$$IGN      DEBPR$
+
+     STO$STRCHA  DEBRE$		A$$IGN      DEBPR$   A$$ERT      DEBUG$
+
+     SUBR_INVOC  DEBSC$		OPEN$ROUTI  DEBSC$   CALL$BASIS  DEBSC$
+						     DB$BASE     PASLIB
+						     MAIN$FRAME  DEBSC$
+						     RET$ADDR    DEBSC$
+						     RT$BASE     PASLIB
+
+     SUBSTR      *SYS* 		DMP$SCOPE   DEBDM$
+				FATAL_ERRO  DEBSY$
+				GET$MOD$NA  DEBBR$
+				GET_ADDRES  DEBRE$
+				GET_SOURCE  DEBUG$
+				LOOKUP_WOR  DEBUG$
+				OPEN_CHILD  DEBSC$
+				PRINT_INT   DEBPR$
+				PRINT_POIN  DEBPR$
+				PRINT_RECO  DEBPR$Cross Reference Listing for Pascal Debugger							 Page 32
+											       27-Oct-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     SUBSTR      *SYS*  (cont.)	PRINT_WORD  DEBUG$
+				PROCESS_DE  DEBUG$
+				SYM_LIST_L  DEBRE$
+				WRIT$INT    DEBIO$
+
+     SYM$LOOKUP  DEBSC$		GET_ADDRES  DEBRE$   FIRST$MODU  DEBSC$
+				OPEN_MOD    DEBSC$   MOD$LOOKUP  DEBSC$
+				OVER$LAID   DEBSC$   NEXT$MODUL  DEBSC$
+				PROCESS_DE  DEBUG$   R50$ASC     DEBSC$
+				RET$ADDR    DEBSC$   SEARCH_MOD  DEBSC$
+
+     SYM_LIST_L  DEBRE$		FIELD_REF   DEBRE$   DEREF$PTR   DEBSY$
+				ID_LOOKUP   DEBRE$   ORD         *SYS* 
+				WITH_LOOKU  DEBRE$   SUBSTR      *SYS* 
+						     UPPERCASE   *SYS* 
+
+     TERM        DEBBO$		EVAL$BOOL$  DEBBO$   EXTRACT_BO  DEBBO$
+						     FACTOR      DEBBO$
+						     LEX$SCAN    DEBLE$
+						     SET_BOOLEA  DEBBO$
+
+     TT$IN       DEBAS$		READ$LINE   DEBIO$
+
+     TT$OUT      DEBAS$		WRIT$EOL    DEBIO$
+				WRIT$STR    DEBIO$
+
+     UC_NEXT_CH  DEBLE$		LEX$SCAN    DEBLE$   NEXT_CHAR   DEBLE$
+						     UPPERCASE   *SYS* 
+
+     UNARY_EXPR  DEBBO$		FACTOR      DEBBO$   EXTRACT_BO  DEBBO$
+						     LEX$SCAN    DEBLE$
+						     PRIMITIVE_  DEBBO$
+						     SET_BOOLEA  DEBBO$
+
+     UPPERBOUND  *SYS* 		GET_SOURCE  DEBUG$
+				LEX$SCAN    DEBLE$
+				READ$LINE   DEBIO$
+				WRIT$STR    DEBIO$
+				WRITE_STRI  DEBPR$Cross Reference Listing for Pascal Debugger							 Page 33
+											       27-Oct-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     UPPERCASE   *SYS* 		GET$FILE$P  DEBBR$
+				GET$PAGE$P  DEBBR$
+				GET_SOURCE  DEBUG$
+				LEX$KEYWOR  DEBLE$
+				LEX$SCAN    DEBLE$
+				OPEN_CHILD  DEBSC$
+				OPEN_MOD    DEBSC$
+				QUERY$      DEBUG$
+				SYM_LIST_L  DEBRE$
+				UC_NEXT_CH  DEBLE$
+
+     VERIFY      *SYS* 		PRINT_POIN  DEBPR$
+				WRIT$INT    DEBIO$
+
+     WITH_LOOKU  DEBRE$		SET_ID_DES  DEBRE$   DB$BASE     PASLIB
+						     ORD         *SYS* 
+						     SYM_LIST_L  DEBRE$
+
+     WRIT$EOL    DEBIO$		DEBUG$      DEBUG$   TT$OUT      DEBAS$
+				DMP$FILES   DEBDM$
+				DMP$LOCATI  DEBDM$
+				DMP$MODULE  DEBDM$
+				DMP$PAGES   DEBDM$
+				DMP$STACK   DEBDM$
+				NEW_LINE    DEBPR$
+				PRINT$      DEBPR$
+				PRINT_WORD  DEBUG$
+				PROCESS_DE  DEBUG$
+				WRIT$NL     DEBIO$
+				WRITE_STRI  DEBPR$
+
+     WRIT$INT    DEBIO$		DMP$BREAKS  DEBDM$   A$$ERT      DEBUG$
+				DMP$FILES   DEBDM$   LENGTH      *SYS* 
+				DMP$LOCATI  DEBDM$   PUTSTRING   *SYS* 
+				DMP$PAGES   DEBDM$   SUBSTR      *SYS* 
+				DMP$SCOPE   DEBDM$   VERIFY      *SYS* 
+				DMP$STACK   DEBDM$   WRIT$STR    DEBIO$
+				DMP_SOURCE  DEBDM$
+				DO_OPEN_CM  DEBUG$
+				GET$FILE$P  DEBBR$Cross Reference Listing for Pascal Debugger							 Page 34
+											       27-Oct-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     WRIT$INT    DEBIO$ (cont.)	GET$PAGE$P  DEBBR$
+				GET$STMT$P  DEBBR$
+				LEX$SCAN    DEBLE$
+				PRINT_STRI  DEBPR$
+				PROCESS_DE  DEBUG$
+
+     WRIT$NL     DEBIO$		CHECK_STAT  DEBUG$   WRIT$EOL    DEBIO$
+				DEBUG$      DEBUG$   WRIT$STR    DEBIO$
+				DMP$BREAKS  DEBDM$
+				DMP$LOCATI  DEBDM$
+				DMP$SCOPE   DEBDM$
+				DO_OPEN_CM  DEBUG$
+				ERROR       DEBUG$
+				FATAL_ERRO  DEBSY$
+				LEX$SCAN    DEBLE$
+				OPEN$DEB$F  DEBSC$
+				PRINT_STRI  DEBPR$
+				PRINT_WORD  DEBUG$
+				PROCESS_DE  DEBUG$
+
+     WRIT$STR    DEBIO$		A$$ERT      DEBUG$   TT$OUT      DEBAS$
+				DEBUG$      DEBUG$   UPPERBOUND  *SYS* 
+				DMP$BREAKS  DEBDM$
+				DMP$FILES   DEBDM$
+				DMP$LOCATI  DEBDM$
+				DMP$MODULE  DEBDM$
+				DMP$PAGES   DEBDM$
+				DMP$SCOPE   DEBDM$
+				DMP$STACK   DEBDM$
+				DMP_SOURCE  DEBDM$
+				DO_OPEN_CM  DEBUG$
+				ERROR       DEBUG$
+				FATAL_ERRO  DEBSY$
+				GET$FILE$P  DEBBR$
+				GET$PAGE$P  DEBBR$
+				GET$STMT$P  DEBBR$
+				LEX$SCAN    DEBLE$
+				PRINT_STRI  DEBPR$
+				PRINT_WORD  DEBUG$
+				PROCESS_DE  DEBUG$Cross Reference Listing for Pascal Debugger							 Page 35
+											       27-Oct-82
+     Procedure   in             Called By   in       Calls       in
+     ----------  ------         ----------  ------   ----------  ------
+
+     WRIT$STR    DEBIO$ (cont.)	QUERY$      DEBUG$
+				WRIT$INT    DEBIO$
+				WRIT$NL     DEBIO$
+				WRITE_STRI  DEBPR$
+
+     WRITE_STRI  DEBPR$		PRINT_CHAR  DEBPR$   NEW_LINE    DEBPR$
+				PRINT_INT   DEBPR$   UPPERBOUND  *SYS* 
+				PRINT_POIN  DEBPR$   WRIT$EOL    DEBIO$
+				PRINT_REAL  DEBPR$   WRIT$STR    DEBIO$
+				PRINT_RECO  DEBPR$
+				PRINT_SCAL  DEBPR$
+				PRINT_SET   DEBPR$
+				PRINT_STRI  DEBPR$
+				PRINT_SUBR  DEBPR$
+Module Cross Reference Listing for Pascal Debugger						  Page 1
+											       27-Oct-82
+     Module         #Procs  Called  #Procs      #Procs  Call    #Procs
+     ------         ------  ------  ------      ------  ------  ------
+
+     DEBAS$	         2  DEBIO$  3
+		         2  DEBRE$  2
+		         2  DEBUG$  1
+
+     DEBBO$	        10  DEBBO$  6		     6  DEBBO$  10
+		         1  DEBUG$  1		     5  DEBLE$  1
+						     5  DEBRE$  10
+
+     DEBBR$	         6  DEBBR$  3		     3  DEBBR$  6
+		         4  DEBDM$  6		     3  DEBIO$  2
+		         6  DEBUG$  4		     2  DEBSC$  2
+						     1  DEBSY$  3
+						     4  DEBUG$  2
+						     3  PASLIB  2
+
+     DEBDM$	         1  DEBDM$  3		     6  DEBBR$  4
+		         7  DEBUG$  2		     3  DEBDM$  1
+						     8  DEBIO$  4
+						     3  DEBSC$  10
+						     1  DEBSY$  1
+						     4  DEBUG$  1
+						     4  PASLIB  3
+
+     DEBIO$	         2  DEBBR$  3		     3  DEBAS$  2
+		         4  DEBDM$  8		     2  DEBIO$  2
+		         2  DEBIO$  2		     1  DEBUG$  1
+		         3  DEBLE$  1
+		         4  DEBPR$  4
+		         1  DEBSC$  1
+		         2  DEBSY$  1
+		         5  DEBUG$  8
+
+     DEBLE$	         1  DEBBO$  5		     1  DEBIO$  3
+		         2  DEBLE$  2		     2  DEBLE$  2
+		         1  DEBRE$  6		     1  DEBUG$  1
+		         2  DEBUG$  2
+
+     DEBPR$	        17  DEBPR$  14		     4  DEBIO$  4
+		         2  DEBUG$  1		    14  DEBPR$  17
+						    12  DEBRE$  19Module Cross Reference Listing for Pascal Debugger						  Page 2
+											       27-Oct-82
+     Module         #Procs  Called  #Procs      #Procs  Call    #Procs
+     ------         ------  ------  ------      ------  ------  ------
+
+     DEBPR$ (cont.)				     5  DEBSY$  1
+						     2  DEBUG$  1
+
+     DEBRE$	        10  DEBBO$  5		     2  DEBAS$  2
+		        19  DEBPR$  12		     6  DEBLE$  1
+		        30  DEBRE$  22		    22  DEBRE$  30
+		         1  DEBUG$  2		     1  DEBSC$  1
+						    15  DEBSY$  1
+						    10  DEBUG$  1
+						     1  PASLIB  1
+
+     DEBSC$	         2  DEBBR$  2		     1  DEBIO$  1
+		        10  DEBDM$  3		    20  DEBSC$  26
+		         1  DEBRE$  1		     3  DEBSY$  2
+		        26  DEBSC$  20		     4  DEBUG$  1
+		         5  DEBUG$  3		     4  PASLIB  3
+
+     DEBSY$	         3  DEBBR$  1		     1  DEBIO$  2
+		         1  DEBDM$  1		     3  DEBSY$  5
+		         1  DEBPR$  5		     5  PASLIB  3
+		         1  DEBRE$  15
+		         2  DEBSC$  3
+		         5  DEBSY$  3
+		         2  DEBUG$  2
+
+     DEBUG$	         2  DEBBR$  4		     1  DEBAS$  2
+		         1  DEBDM$  4		     1  DEBBO$  1
+		         1  DEBIO$  1		     4  DEBBR$  6
+		         1  DEBLE$  1		     2  DEBDM$  7
+		         1  DEBPR$  2		     8  DEBIO$  5
+		         1  DEBRE$  10		     2  DEBLE$  2
+		         1  DEBSC$  4		     1  DEBPR$  2
+		        33  DEBUG$  26		     2  DEBRE$  1
+						     3  DEBSC$  5
+						     2  DEBSY$  2
+						    26  DEBUG$  33
+						     5  PASLIB  5
+
+     PASLIB	         2  DEBBR$  3
+		         3  DEBDM$  4Module Cross Reference Listing for Pascal Debugger						  Page 3
+											       27-Oct-82
+     Module         #Procs  Called  #Procs      #Procs  Call    #Procs
+     ------         ------  ------  ------      ------  ------  ------
+
+     PASLIB (cont.)      1  DEBRE$  1
+		         3  DEBSC$  4
+		         3  DEBSY$  5
+		         5  DEBUG$  5
+
+>,x.

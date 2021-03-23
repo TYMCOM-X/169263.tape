@@ -1,0 +1,719 @@
+		LINK symbol map of	KI0CAL		page 1
+	Produced by LINK version 4(771025)-4 on 28-Dec-79 at 16:17:21
+
+	Low  segment starts at	     0 ends at	 13766 length	 13767 = 12P
+	High segment starts at	400000 ends at	515014 length	115015 = 78P
+	9 words free in Low segment, 499 words free in high segment
+	492 Global symbols loaded, therefore min. hash size is 547
+	Start address is 403252, located in program PASRUN
+
+		*************
+
+JOBDAT-INITIAL-SYMBOLS
+
+	Zero length module
+
+		*************
+
+PASCAL	from DSK:KI0CAL.REL[52250,264]	created on 28-Dec-79 at 14:07:00
+	Low  segment starts at	   140 ends at	 13170 length	 13031 (octal),  5657. (decimal)
+	High segment starts at	400010 ends at	403251 length	  3242 (octal),  1698. (decimal)
+
+	PASCAL	      403100	Entry	Relocatable 		READFI	      400343	Global	Relocatable 	
+	SET%PT	      400146	Global	Relocatable 		ALC%US	         231	Global	Relocatable 	
+	ALFAPT	      400020	Global	Relocatable 		ALLOCA	         230	Global	Relocatable 	
+	ALPHAB	      400040	Global	Relocatable 		ARBPTR	      400021	Global	Relocatable 	
+	AREA%M	         223	Global	Relocatable 		BLOCKB	      400060	Global	Relocatable 	
+	BOOLPT	      400014	Global	Relocatable 		BREAKC	       10414	Global	Relocatable 	
+	CBPSSA	        7754	Global	Relocatable 		CH	         147	Global	Relocatable 	
+	CHARPT	      400013	Global	Relocatable 		CIX	        7747	Global	Relocatable 	
+	CODE	         452	Global	Relocatable 		CODEEN	         154	Global	Relocatable 	
+	COMPSW	         214	Global	Relocatable 		CONSTB	      400050	Global	Relocatable 	
+	CORSIZ	         217	Global	Relocatable 		CORTMP	         176	Global	Relocatable 	
+	CURPRO	        7752	Global	Relocatable 		DATEPT	      400017	Global	Relocatable 	
+	DAY	       10075	Global	Relocatable 		DBLREA	         210	Global	Relocatable 	
+	DEBUG	         167	Global	Relocatable 		DEBUGC	         163	Global	Relocatable 	
+	DEB%WO	       10061	Global	Relocatable 		DIGITS	      400036	Global	Relocatable 	
+	DISPLA	         313	Global	Relocatable 		DISX	         311	Global	Relocatable 	
+	DMOVE	         211	Global	Relocatable 		DP	         200	Global	Relocatable 	
+	ENTRY	       10073	Global	Relocatable 		ENTRYD	       10077	Global	Relocatable 	
+	EOFN	         150	Global	Relocatable 		EOL	         151	Global	Relocatable 	
+	ERRMSG	       13101	Global	Relocatable 		FACBEG	      400064	Global	Relocatable 	
+	FILEMA	       10211	Global	Relocatable 		FILENA	       10071	Global	Relocatable 	
+	FILENU	       10210	Global	Relocatable 		FILEPT	       10554	Global	Relocatable 	
+	FIRSTK	         305	Global	Relocatable 		FWPTR	         303	Global	Relocatable 	
+	GATTR	         412	Global	Relocatable 		GLISTS	         203	Global	Relocatable 	
+	GLOBTE	         306	Global	Relocatable 		HEAD%S	      400023	Global	Relocatable 	
+	HEXADI	      400042	Global	Relocatable 		HIGHES	       10065	Global	Relocatable 	
+	I	       13123	Global	Relocatable 		IC	         152	Global	Relocatable 	
+	ID	         145	Global	Relocatable 		INCOMP	         213	Global	Relocatable 	
+	INCORE	         221	Global	Relocatable 		ININUS	         170	Global	Relocatable 	
+	INPUTF	      400026	Global	Relocatable 		INTPTR	      400011	Global	Relocatable 	
+	KL10SW	         212	Global	Relocatable 		LANGUA	      400046	Global	Relocatable 	
+	LASTBT	       10553	Global	Relocatable 		LC	         153	Global	Relocatable 	
+	LCMAX	        7753	Global	Relocatable 		LCPAR	         157	Global	Relocatable 	
+	LENSUB	         260	Global	Relocatable 		LETTER	      400044	Global	Relocatable 	
+	LEVEL	         307	Global	Relocatable 		LEVEL0	         312	Global	Relocatable 	
+		LINK symbol map of	KI0CAL		page 2
+PASCAL
+	LGTH	         144	Global	Relocatable 		LIBIX	       10100	Global	Relocatable 	
+	LIBORD	       10101	Global	Relocatable 		LIBRAR	       13036	Global	Relocatable 	
+	LINEST	         234	Global	Relocatable 		LINEWI	         233	Global	Relocatable 	
+	LISTCO	         164	Global	Relocatable 		LISTIN	         206	Global	Relocatable 	
+	LISTNA	       10156	Global	Relocatable 		LISTSO	         204	Global	Relocatable 	
+	LOADNO	         162	Global	Relocatable 		LOCALP	         302	Global	Relocatable 	
+	LST	       13077	Global	Relocatable 		MAIN	         173	Global	Relocatable 	
+	MAINST	       10064	Global	Relocatable 		MASK%O	         222	Global	Relocatable 	
+	NILPTR	      400015	Global	Relocatable 		OP	         142	Global	Relocatable 	
+	OPTLEN	         256	Global	Relocatable 		OPTLIN	         257	Global	Relocatable 	
+	OUTFPT	      400027	Global	Relocatable 		OUTINU	         171	Global	Relocatable 	
+	OVERLA	         202	Global	Relocatable 		OVFL%M	         224	Global	Relocatable 	
+	PAGELE	         235	Global	Relocatable 		PAS	       13076	Global	Relocatable 	
+	PASMSG	       10130	Global	Relocatable 		PATCHS	        7746	Global	Relocatable 	
+	PFBLOC	        7750	Global	Relocatable 		PFLIST	       10062	Global	Relocatable 	
+	PFSTAR	        7745	Global	Relocatable 		PROGCH	        7751	Global	Relocatable 	
+	PROGRE	         201	Global	Relocatable 		PRTERR	         175	Global	Relocatable 	
+	REALPT	      400012	Global	Relocatable 		REALTT	       10415	Global	Relocatable 	
+	REGC	        7744	Global	Relocatable 		REGCMA	        7743	Global	Relocatable 	
+	REL	       13100	Global	Relocatable 		RELBLO	         426	Global	Relocatable 	
+	RELFIL	        7755	Global	Relocatable 		RELNAM	       10173	Global	Relocatable 	
+	RELOUT	         205	Global	Relocatable 		RELWOR	       10057	Global	Relocatable 	
+	RFIDER	       13122	Global	Relocatable 		RNTS	       12275	Global	Relocatable 	
+	RTIME	         155	Global	Relocatable 		RUNTMC	         161	Global	Relocatable 	
+	SELSYS	      400062	Global	Relocatable 		SFILEP	       10555	Global	Relocatable 	
+	SHL%AR	         227	Global	Relocatable 		SHORTE	         207	Global	Relocatable 	
+	SHR%AR	         226	Global	Relocatable 		SIMPTY	      400052	Global	Relocatable 	
+	SLASTB	         304	Global	Relocatable 		SMBFIL	       10003	Global	Relocatable 	
+	SPECIA	         174	Global	Relocatable 		SRCNAM	       10212	Global	Relocatable 	
+	STARTA	       10063	Global	Relocatable 		STATBE	      400066	Global	Relocatable 	
+	STATLC	         156	Global	Relocatable 		STMT%I	         301	Global	Relocatable 	
+	STRPTR	      400022	Global	Relocatable 		SUBTIT	         261	Global	Relocatable 	
+	SWFLAG	         177	Global	Relocatable 		SY	         141	Global	Relocatable 	
+	SYMBOL	       10067	Global	Relocatable 		SYMFIL	       10031	Global	Relocatable 	
+	TESTPA	         160	Global	Relocatable 		TEXTPT	      400016	Global	Relocatable 	
+	TITLE	         236	Global	Relocatable 		TITLEL	         232	Global	Relocatable 	
+	TOP	         310	Global	Relocatable 		TOUTFP	      400025	Global	Relocatable 	
+	TRACER	         165	Global	Relocatable 		TTYFPT	      400024	Global	Relocatable 	
+	TTYI	       10102	Global	Relocatable 		TTYINU	         172	Global	Relocatable 	
+	TYPEBE	      400054	Global	Relocatable 		TYPEDE	      400056	Global	Relocatable 	
+	UCSTPT	      400031	Global	Relocatable 		UFCTPT	      400035	Global	Relocatable 	
+	UFLDPT	      400033	Global	Relocatable 		UPRCPT	      400034	Global	Relocatable 	
+	UTYPPT	      400030	Global	Relocatable 		UVARPT	      400032	Global	Relocatable 	
+	VAL	         143	Global	Relocatable 		VIRTUA	         220	Global	Relocatable 	
+	V%NIL	         225	Global	Relocatable 		WITHIX	       10066	Global	Relocatable 	
+	WORDSW	       10060	Global	Relocatable 		XREF	         166	Global	Relocatable 	
+
+		*************
+
+PASRUN	from DSK:PASRUN.REL[52250,264]	created by MACRO on 19-Apr-79 at 20:05:00
+	Low  segment starts at	 13171 ends at	 13171 length	     1 (octal),     1. (decimal)
+	High segment starts at	403252 ends at	403255 length	     4 (octal),     4. (decimal)
+
+	AUTO%R	       13171	Entry	Relocatable 	
+		LINK symbol map of	KI0CAL		page 3
+PASRUN
+
+		*************
+
+VERSIO	from DSK:PASVER.REL[52250,264]	created by MACRO on  9-Nov-79 at 21:16:00
+	High segment starts at	403256 ends at	403257 length	     2 (octal),     2. (decimal)
+
+	DATEOF	      403256	Entry	Relocatable 	
+
+		*************
+
+PASLX	from DSK:KI0LX.REL[52250,264]	created on 28-Dec-79 at 14:13:00
+	Low  segment starts at	 13172 ends at	 13172 length	     1 (octal),     1. (decimal)
+	High segment starts at	403260 ends at	404170 length	   711 (octal),   457. (decimal)
+
+	NEXTCH	      404151	Global	Relocatable 		LITCH	      404066	Global	Relocatable 	
+	SGETLI	      404012	Global	Relocatable 		SREADL	      403743	Global	Relocatable 	
+	SREAD	      403654	Global	Relocatable 		SEOF	      403506	Global	Relocatable 	
+	SEOLN	      403433	Global	Relocatable 		DECNES	      403415	Global	Relocatable 	
+	INCNES	      403377	Global	Relocatable 		ZERONE	      403357	Global	Relocatable 	
+	SETNES	      403337	Global	Relocatable 		PASLX	      403337	Entry	Relocatable 	
+
+		*************
+
+PASLEX	from DSK:KI0LEX.REL[52250,264]	created on 28-Dec-79 at 14:10:00
+	Low  segment starts at	 13173 ends at	 13467 length	   275 (octal),   189. (decimal)
+	High segment starts at	404171 ends at	413137 length	  6747 (octal),  3559. (decimal)
+
+	FINDLA	      413056	Global	Relocatable 		SEARCH	      413005	Global	Relocatable 	
+	DCLLAB	      412726	Global	Relocatable 		ERRAND	      412703	Global	Relocatable 	
+	IFERRS	      412662	Global	Relocatable 		SKIPIF	      412541	Global	Relocatable 	
+	GETBOU	      412457	Global	Relocatable 		SRCHID	      412266	Global	Relocatable 	
+	SRCHSE	      412205	Global	Relocatable 		ENTERI	      412062	Global	Relocatable 	
+	INSYMB	      410323	Global	Relocatable 		ERRORW	      407210	Global	Relocatable 	
+	ERROR	      407011	Global	Relocatable 		ENDOFL	      406212	Global	Relocatable 	
+	GETNEX	      405601	Global	Relocatable 		WRITEB	      405545	Global	Relocatable 	
+	WRITEL	      405363	Global	Relocatable 		NEXTFI	      405240	Global	Relocatable 	
+	LEXINI	      405134	Global	Relocatable 		PASLEX	      405134	Entry	Relocatable 	
+	BUFFER	       13302	Global	Relocatable 		CHCNT	       13301	Global	Relocatable 	
+	COMMEN	       13407	Global	Relocatable 		ERRLIN	       13335	Global	Relocatable 	
+	ERRORF	       13220	Global	Relocatable 		ERRORI	       13221	Global	Relocatable 	
+	ERR%CN	       13222	Global	Relocatable 		FILECN	       13277	Global	Relocatable 	
+	FILEDA	       13260	Global	Relocatable 		FILEIC	       13300	Global	Relocatable 	
+	FIRSTN	       13406	Global	Relocatable 		FOLLOW	       13223	Global	Relocatable 	
+	INCL2F	       13437	Global	Relocatable 		INCLFI	       13411	Global	Relocatable 	
+	INCLNA	       13226	Global	Relocatable 		INCLNE	       13225	Global	Relocatable 	
+	INCL%L	       13466	Global	Relocatable 		IN%SYS	       13467	Global	Relocatable 	
+	LINES%	       13465	Global	Relocatable 		NESTLV	       13404	Global	Relocatable 	
+	ORIGCH	       13410	Global	Relocatable 		PASS%P	       13403	Global	Relocatable 	
+	PNESTL	       13405	Global	Relocatable 		SAVEDP	       13216	Global	Relocatable 	
+	SAVEIC	       13217	Global	Relocatable 		SOURCE	       13224	Global	Relocatable 	
+
+		*************
+
+		LINK symbol map of	KI0CAL		page 4
+
+
+PASCMP	from DSK:KI0CMP.REL[52250,264]	created on 28-Dec-79 at 14:12:00
+	Low  segment starts at	 13470 ends at	 13470 length	     1 (octal),     1. (decimal)
+	High segment starts at	413140 ends at	414012 length	   653 (octal),   427. (decimal)
+
+	STRFOR	      413735	Global	Relocatable 		STRING	      413676	Global	Relocatable 	
+	COMPTY	      413217	Global	Relocatable 		PASCMP	      413217	Entry	Relocatable 	
+
+		*************
+
+PASCST	from DSK:KI0CST.REL[52250,264]	created on 28-Dec-79 at 14:15:00
+	Low  segment starts at	 13471 ends at	 13471 length	     1 (octal),     1. (decimal)
+	High segment starts at	414013 ends at	414516 length	   504 (octal),   324. (decimal)
+
+	CONSTA	      414072	Global	Relocatable 		PASCST	      414072	Entry	Relocatable 	
+
+		*************
+
+PASHAK	from DSK:PASHAK.REL[52250,264]	created by MACRO on  4-Jan-79 at 16:45:00
+	Low  segment starts at	 13472 ends at	 13475 length	     4 (octal),     4. (decimal)
+	High segment starts at	414517 ends at	414600 length	    62 (octal),    50. (decimal)
+
+	DATE%R	      414576	Entry	Relocatable 		DUMP%T	      414540	Entry	Relocatable 	
+	FILEB$	      414523	Entry	Relocatable 		LEFT%S	      414517	Entry	Relocatable 	
+	TIME%R	      414574	Entry	Relocatable 		USER%P	      414572	Entry	Relocatable 	
+
+		*************
+
+PASCSN	from DSK:KI0CSN.REL[52250,264]	created on 28-Dec-79 at 14:16:00
+	Low  segment starts at	 13476 ends at	 13504 length	     7 (octal),     7. (decimal)
+	High segment starts at	414601 ends at	420155 length	  3355 (octal),  1773. (decimal)
+
+	CST%DE	      417402	Global	Relocatable 		VAR%LI	      417227	Global	Relocatable 	
+	PASCSN	      417227	Entry	Relocatable 	
+
+		*************
+
+PASBLK	from DSK:KI0BLK.REL[52250,264]	created on 28-Dec-79 at 14:18:00
+	Low  segment starts at	 13505 ends at	 13505 length	     1 (octal),     1. (decimal)
+	High segment starts at	420156 ends at	430652 length	 10475 (octal),  4413. (decimal)
+
+	BLOCK	      430303	Global	Relocatable 		PASBLK	      430303	Entry	Relocatable 	
+
+		*************
+
+PASBOD	from DSK:KI0BOD.REL[52250,264]	created on 28-Dec-79 at 14:23:00
+	Low  segment starts at	 13506 ends at	 13506 length	     1 (octal),     1. (decimal)
+	High segment starts at	430653 ends at	435656 length	  5004 (octal),  2564. (decimal)
+
+	BODY	      435434	Global	Relocatable 		PASBOD	      435434	Entry	Relocatable 	
+
+		*************
+
+		LINK symbol map of	KI0CAL		page 5
+
+
+PASEXP	from DSK:KI0EXP.REL[52250,264]	created on 28-Dec-79 at 14:26:00
+	Low  segment starts at	 13507 ends at	 13517 length	    11 (octal),     9. (decimal)
+	High segment starts at	435657 ends at	442743 length	  5065 (octal),  2613. (decimal)
+
+	EXPRES	      441377	Global	Relocatable 		MAKERE	      435736	Global	Relocatable 	
+	PASEXP	      435736	Entry	Relocatable 	
+
+		*************
+
+PASSEL	from DSK:KI0SEL.REL[52250,264]	created on 28-Dec-79 at 14:28:00
+	Low  segment starts at	 13520 ends at	 13520 length	     1 (octal),     1. (decimal)
+	High segment starts at	442744 ends at	445455 length	  2512 (octal),  1354. (decimal)
+
+	SELECT	      443222	Global	Relocatable 		FINSCO	      443030	Global	Relocatable 	
+	PASSEL	      443030	Entry	Relocatable 	
+
+		*************
+
+PASCLL	from DSK:KI0CLL.REL[52250,264]	created on 28-Dec-79 at 14:30:00
+	Low  segment starts at	 13521 ends at	 13521 length	     1 (octal),     1. (decimal)
+	High segment starts at	445456 ends at	464202 length	 16525 (octal),  7509. (decimal)
+
+	CALL	      463355	Global	Relocatable 		PASCLL	      463355	Entry	Relocatable 	
+
+		*************
+
+PASMC	from DSK:KI0MC.REL[52250,264]	created on 28-Dec-79 at 14:36:00
+	Low  segment starts at	 13522 ends at	 13524 length	     3 (octal),     3. (decimal)
+	High segment starts at	464203 ends at	472745 length	  6543 (octal),  3427. (decimal)
+
+	WRITEM	      472652	Global	Relocatable 		ALIGN	      464262	Global	Relocatable 	
+	PASMC	      464262	Entry	Relocatable 	
+
+		*************
+
+PASCGN	from DSK:KI0CGN.REL[52250,264]	created on 28-Dec-79 at 14:39:00
+	Low  segment starts at	 13525 ends at	 13525 length	     1 (octal),     1. (decimal)
+	High segment starts at	472746 ends at	473437 length	   472 (octal),   314. (decimal)
+
+	INCREM	      473417	Global	Relocatable 		CHECKL	      473373	Global	Relocatable 	
+	MAC3B	      473341	Global	Relocatable 		MAC3R	      473312	Global	Relocatable 	
+	MAC4R	      473262	Global	Relocatable 		MAC3	      473233	Global	Relocatable 	
+	MAC4	      473203	Global	Relocatable 		MAC5	      473152	Global	Relocatable 	
+	MAC	      473025	Global	Relocatable 		PASCGN	      473025	Entry	Relocatable 	
+
+		*************
+
+PASCG	from DSK:KI0CG.REL[52250,264]	created on 28-Dec-79 at 14:40:00
+	Low  segment starts at	 13526 ends at	 13526 length	     1 (octal),     1. (decimal)
+	High segment starts at	473440 ends at	501500 length	  6041 (octal),  3105. (decimal)
+
+	LDADDR	      501404	Global	Relocatable 		LOADAD	      501234	Global	Relocatable 	
+	STORE	      501047	Global	Relocatable 		LOAD	      500754	Global	Relocatable 	
+		LINK symbol map of	KI0CAL		page 6
+PASCG
+	VLOAD	      500564	Global	Relocatable 		MAKECO	      477346	Global	Relocatable 	
+	GETPAR	      477304	Global	Relocatable 		FETCHB	      476732	Global	Relocatable 	
+	LEAVEB	      476501	Global	Relocatable 		ENTERB	      475563	Global	Relocatable 	
+	ADJSP	      475517	Global	Relocatable 		NEWLIN	      475444	Global	Relocatable 	
+	NEWPAG	      475274	Global	Relocatable 		NEWFIL	      475113	Global	Relocatable 	
+	EMITST	      475036	Global	Relocatable 		FWDPAG	      474772	Global	Relocatable 	
+	FWDFIL	      474726	Global	Relocatable 		SUPPOR	      474417	Global	Relocatable 	
+	DEPCST	      473667	Global	Relocatable 		INSERT	      473626	Global	Relocatable 	
+	FULLWO	      473517	Global	Relocatable 		PASCG	      473517	Entry	Relocatable 	
+
+		*************
+
+PASSTR	from DSK:KI0STR.REL[52250,264]	created on 28-Dec-79 at 14:42:00
+	Low  segment starts at	 13527 ends at	 13527 length	     1 (octal),     1. (decimal)
+	High segment starts at	501501 ends at	505541 length	  4041 (octal),  2081. (decimal)
+
+	STRCAT	      505366	Global	Relocatable 		MVSTRI	      503757	Global	Relocatable 	
+	STRPAR	      503320	Global	Relocatable 		STRDES	      502734	Global	Relocatable 	
+	MAXLEN	      502653	Global	Relocatable 		STROP	      502603	Global	Relocatable 	
+	ALTERS	      502400	Global	Relocatable 		SAVEEX	      502100	Global	Relocatable 	
+	STRKIN	      501632	Global	Relocatable 		DCLSTR	      501560	Global	Relocatable 	
+	PASSTR	      501560	Entry	Relocatable 	
+
+		*************
+
+PASOPT	from DSK:KI0OPT.REL[52250,264]	created on 28-Dec-79 at 14:44:00
+	Low  segment starts at	 13530 ends at	 13531 length	     2 (octal),     2. (decimal)
+	High segment starts at	505542 ends at	507443 length	  1702 (octal),   962. (decimal)
+
+	ENTITL	      507163	Global	Relocatable 		WIDTH	      507135	Global	Relocatable 	
+	OPTION	      506161	Global	Relocatable 		ERRSKI	      506136	Global	Relocatable 	
+	SKIPBL	      506111	Global	Relocatable 		IVALUE	      506054	Global	Relocatable 	
+	READID	      505772	Global	Relocatable 		PASOPT	      505772	Entry	Relocatable 	
+	IDLENG	       13531	Global	Relocata
+
+		*************
+
+.MAIN	from DSK:PASLOG.REL[52250,264]	created by MACRO on  7-Nov-79 at 19:33:00
+	High segment starts at	507444 ends at	507444 length	     1 (octal),     1. (decimal)
+
+	WRT%LO	      507444	Entry	Relocatable 	
+
+		*************
+
+TMPCOR	from DSK:PASCOR.REL[52250,264]	created by MACRO on 23-Apr-79 at 20:52:00
+	Low  segment starts at	 13532 ends at	 13541 length	    10 (octal),     8. (decimal)
+	High segment starts at	507445 ends at	507567 length	   123 (octal),    83. (decimal)
+
+	TEOF	      507565	Entry	Relocatable 		TEOLN	      507562	Entry	Relocatable 	
+	TMPCOR	      507445	Entry	Relocatable 		TREAD	      507544	Entry	Relocatable 	
+	TREADL	      507553	Entry	Relocatable 	
+
+		*************
+
+		LINK symbol map of	KI0CAL		page 7
+
+
+DCEXT	from DSK:KDLIB.REL[52250,264]	created on 28-Dec-79 at 16:13:00
+	Low  segment starts at	 13542 ends at	 13542 length	     1 (octal),     1. (decimal)
+	High segment starts at	507570 ends at	510045 length	   256 (octal),   174. (decimal)
+
+	DC%EXT	      507575	Entry	Relocatable 		DCEXT	      507575	Entry	Relocatable 	
+
+		*************
+
+CHARS2	from DSK:KDLIB.REL[52250,264]	created on 28-Dec-79 at 16:13:00
+	Low  segment starts at	 13543 ends at	 13543 length	     1 (octal),     1. (decimal)
+	High segment starts at	510046 ends at	510146 length	   101 (octal),    65. (decimal)
+
+	CHARS2	      510053	Entry	Relocatable 	
+
+		*************
+
+DCDTIM	from DSK:KDLIB.REL[52250,264]	created on 28-Dec-79 at 16:13:00
+	Low  segment starts at	 13544 ends at	 13544 length	     1 (octal),     1. (decimal)
+	High segment starts at	510147 ends at	510222 length	    54 (octal),    44. (decimal)
+
+	DC%DTI	      510154	Entry	Relocatable 		DCDTIM	      510154	Entry	Relocatable 	
+
+		*************
+
+CVBINS	from DSK:KDLIB.REL[52250,264]	created on 28-Dec-79 at 16:13:00
+	Low  segment starts at	 13545 ends at	 13545 length	     1 (octal),     1. (decimal)
+	High segment starts at	510223 ends at	510354 length	   132 (octal),    90. (decimal)
+
+	CV%BIN	      510242	Entry	Relocatable 		CVBINS	      510242	Entry	Relocatable 	
+
+		*************
+
+DCMONT	from DSK:KDLIB.REL[52250,264]	created on 28-Dec-79 at 16:13:00
+	Low  segment starts at	 13546 ends at	 13546 length	     1 (octal),     1. (decimal)
+	High segment starts at	510355 ends at	510442 length	    66 (octal),    54. (decimal)
+
+	DC%MON	      510412	Entry	Relocatable 		DCMONT	      510412	Entry	Relocatable 	
+
+		*************
+
+DCDATE	from DSK:KDLIB.REL[52250,264]	created on 28-Dec-79 at 16:13:00
+	Low  segment starts at	 13547 ends at	 13547 length	     1 (octal),     1. (decimal)
+	High segment starts at	510443 ends at	511002 length	   340 (octal),   224. (decimal)
+
+	DC%DAT	      510465	Entry	Relocatable 		DCDATE	      510465	Entry	Relocatable 	
+
+		*************
+
+DCTIME	from DSK:KDLIB.REL[52250,264]	created on 28-Dec-79 at 16:13:00
+	Low  segment starts at	 13550 ends at	 13550 length	     1 (octal),     1. (decimal)
+	High segment starts at	511003 ends at	511056 length	    54 (octal),    44. (decimal)
+
+	DC%TIM	      511010	Entry	Relocatable 		DCTIME	      511010	Entry	Relocatable 	
+		LINK symbol map of	KI0CAL		page 8
+DCTIME
+
+		*************
+
+LOOKUP	from DSK:KDLIB.REL[52250,264]	created on 28-Dec-79 at 16:13:00
+	Low  segment starts at	 13551 ends at	 13551 length	     1 (octal),     1. (decimal)
+	High segment starts at	511057 ends at	511262 length	   204 (octal),   132. (decimal)
+
+	LOOKUP	      511064	Entry	Relocatable 	
+
+		*************
+
+DAYTIM	from NRD:RDLIB.REL[52250,12]	created by MACRO on 31-Jan-79 at 21:41:00
+	High segment starts at	511263 ends at	511300 length	    16 (octal),    14. (decimal)
+
+	DAYTIM	      511265	Entry	Relocatable 	
+
+		*************
+
+EXTRD	from NRD:RDLIB.REL[52250,12]	created by MACRO on 31-Jan-79 at 21:41:00
+	High segment starts at	511301 ends at	511302 length	     2 (octal),     2. (decimal)
+
+	EXTR%D	      511301	Entry	Relocatable 	
+
+		*************
+
+EXTRT	from NRD:RDLIB.REL[52250,12]	created by MACRO on 31-Jan-79 at 21:41:00
+	High segment starts at	511303 ends at	511304 length	     2 (octal),     2. (decimal)
+
+	EXTR%T	      511303	Entry	Relocatable 	
+
+		*************
+
+PRGDIR	from NRD:RDLIB.REL[52250,12]	created by MACRO on 31-Jan-79 at 21:41:00
+	High segment starts at	511305 ends at	511351 length	    45 (octal),    37. (decimal)
+
+	PRGM%D	      511312	Entry	Relocatable 		PRGM%P	      511305	Entry	Relocatable 	
+
+		*************
+
+.MAIN	from DSK:PASLIB.REL[52250,264]	created by MACRO on 25-Oct-79 at 15:22:00
+
+	Zero length module
+
+		*************
+
+.MAIN	from DSK:PASLIB.REL[52250,264]	created by MACRO on 25-Oct-79 at 15:22:00
+	High segment starts at	511352 ends at	511352 length	     1 (octal),     1. (decimal)
+
+	INIT0.	      511352	Entry	Relocatable 	
+
+		*************
+
+		LINK symbol map of	KI0CAL		page 9
+
+
+.MAIN	from DSK:PASLIB.REL[52250,264]	created by MACRO on 25-Oct-79 at 15:22:00
+
+	Zero length module
+
+		*************
+
+PASMON	from DSK:PASLIB.REL[52250,264]	created by MACRO on 25-Oct-79 at 15:22:00
+	Low  segment starts at	 13552 ends at	 13554 length	     3 (octal),     3. (decimal)
+	High segment starts at	511353 ends at	511642 length	   270 (octal),   184. (decimal)
+
+	BFPAD.	       13553	Global	Relocatable 		CSTMT.	       13554	Global	Relocatable 	
+	DIE.	      511405	Global	Relocatable 		END.	      511400	Global	Relocatable 	
+	EXIT.	      511400	Global	Relocatable 		INITP.	      511353	Entry	Relocatable 	
+	TRACE	      511515	Global	Relocatable 		VINI0.	      511353	Entry	Relocatable 	
+	VINI1.	      511353	Global	Relocatable 		VINI2.	      511353	Global	Relocatable 	
+	VINI3.	      511353	Global	Relocatable 		VINI4.	      511353	Global	Relocatable 	
+	VINI5.	      511353	Global	Relocatable 		WRTDC.	      511477	Global	Relocatable 	
+	WRTPC.	      511467	Global	Relocatable 	
+
+		*************
+
+QUICKF	from DSK:PASLIB.REL[52250,264]	created by MACRO on 25-Oct-79 at 15:22:00
+	Low  segment starts at	 13555 ends at	 13561 length	     5 (octal),     5. (decimal)
+	High segment starts at	511643 ends at	512277 length	   435 (octal),   285. (decimal)
+
+	ALC0.	      511660	Entry	Relocatable 		DSPOS.	      512146	Entry	Relocatable 	
+	MARK.	      512207	Entry	Relocatable 		NEW.	      511717	Entry	Relocatable 	
+	ON%HEA	      511643	Entry	Relocatable 		RLEAS.	      512216	Entry	Relocatable 	
+
+		*************
+
+PASIOU	from DSK:PASLIB.REL[52250,264]	created by MACRO on 25-Oct-79 at 15:22:00
+	Low  segment starts at	 13562 ends at	 13567 length	     6 (octal),     6. (decimal)
+	High segment starts at	512300 ends at	513301 length	  1002 (octal),   514. (decimal)
+
+	BREAK.	      513162	Entry	Relocatable 		CLOSE.	      513001	Entry	Relocatable 	
+	CONER.	      513172	Entry	Relocatable 		FIXSP.	      513106	Entry	Relocatable 	
+	FLIST.	       13563	Entry	Relocatable 		FLTRCC	      513205	Entry	Relocatable 	
+	FLTRCR	      513200	Entry	Relocatable 		FRECN.	      513034	Entry	Relocatable 	
+	GET.	      512425	Entry	Relocatable 		GETCH.	      512304	Entry	Relocatable 	
+	GETCN.	      513016	Entry	Relocatable 		GETLN.	      512300	Entry	Relocatable 	
+	OPEN.	      512543	Entry	Relocatable 		PASSCC	      513176	Entry	Relocatable 	
+	PASSCR	      513207	Entry	Relocatable 		PUT.	      512454	Entry	Relocatable 	
+	PUTCH.	      512442	Entry	Relocatable 		PUTLN.	      512505	Entry	Relocatable 	
+	PUTPG.	      512512	Entry	Relocatable 		RESET.	      512536	Entry	Relocatable 	
+	REWRT.	      512563	Entry	Relocatable 		TTYOP.	      513165	Entry	Relocatable 	
+	TWAIT.	      513140	Entry	Relocatable 	
+
+		*************
+
+		LINK symbol map of	KI0CAL		page 10
+
+
+WROCT	from DSK:PASLIB.REL[52250,264]	created by MACRO on 25-Oct-79 at 15:22:00
+	High segment starts at	513302 ends at	513322 length	    21 (octal),    17. (decimal)
+
+	WROCT.	      513302	Entry	Relocatable 	
+
+		*************
+
+WRINT	from DSK:PASLIB.REL[52250,264]	created by MACRO on 25-Oct-79 at 15:22:00
+	High segment starts at	513323 ends at	513355 length	    33 (octal),    27. (decimal)
+
+	WRINT.	      513323	Entry	Relocatable 	
+
+		*************
+
+PASNIO	from DSK:PASLIB.REL[52250,264]	created by MACRO on 25-Oct-79 at 15:22:00
+	High segment starts at	513356 ends at	514102 length	   525 (octal),   341. (decimal)
+
+	CNVTOR	      513746	Entry	Relocatable 		CVTOI.	      513732	Entry	Relocatable 	
+	CVTOR.	      513746	Entry	Relocatable 		READI.	      513627	Entry	Relocatable 	
+	READR.	      513752	Entry	Relocatable 		STR2R.	      513736	Entry	Relocatable 	
+	WRTRL.	      513356	Entry	Relocatable 	
+
+		*************
+
+WRITC	from DSK:PASLIB.REL[52250,264]	created by MACRO on 25-Oct-79 at 15:22:00
+	High segment starts at	514103 ends at	514112 length	    10 (octal),     8. (decimal)
+
+	WRITC.	      514103	Entry	Relocatable 	
+
+		*************
+
+WRTSTR	from DSK:PASLIB.REL[52250,264]	created by MACRO on 25-Oct-79 at 15:22:00
+	High segment starts at	514113 ends at	514133 length	    21 (octal),    17. (decimal)
+
+	WRPST.	      514117	Entry	Relocatable 		WRSST.	      514113	Entry	Relocatable 	
+	WRUST.	      514121	Entry	Relocatable 		WRVST.	      514115	Entry	Relocatable 	
+
+		*************
+
+READC	from DSK:PASLIB.REL[52250,264]	created by MACRO on 25-Oct-79 at 15:22:00
+	High segment starts at	514134 ends at	514137 length	     4 (octal),     4. (decimal)
+
+	READC.	      514134	Entry	Relocatable 	
+
+		*************
+
+WRTSUB	from DSK:PASLIB.REL[52250,264]	created by MACRO on 25-Oct-79 at 15:22:00
+	High segment starts at	514140 ends at	514164 length	    25 (octal),    21. (decimal)
+
+	TOSML.	      514161	Entry	Relocatable 		WRBLK.	      514140	Entry	Relocatable 	
+	WRMIN.	      514157	Entry	Relocatable 		WROPN.	      514145	Entry	Relocatable 	
+	WRSGN.	      514155	Entry	Relocatable 	
+
+		LINK symbol map of	KI0CAL		page 11
+
+		*************
+
+INTRL	from DSK:PASLIB.REL[52250,264]	created by MACRO on 25-Oct-79 at 15:22:00
+	High segment starts at	514165 ends at	514203 length	    17 (octal),    15. (decimal)
+
+	INTRL.	      514165	Entry	Relocatable 	
+
+		*************
+
+ROUND	from DSK:PASLIB.REL[52250,264]	created by MACRO on 25-Oct-79 at 15:22:00
+	High segment starts at	514204 ends at	514221 length	    16 (octal),    14. (decimal)
+
+	ROUND.	      514204	Entry	Relocatable 	
+
+		*************
+
+LINK	from DSK:PASLIB.REL[52250,264]	created by MACRO on 25-Oct-79 at 15:22:00
+	Low  segment starts at	 13570 ends at	 13576 length	     7 (octal),     7. (decimal)
+	High segment starts at	514222 ends at	514235 length	    14 (octal),    12. (decimal)
+
+	LINK	      514222	Entry	Relocatable 	
+
+		*************
+
+FTTYOU	from DSK:PASLIB.REL[52250,264]	created by MACRO on 25-Oct-79 at 15:22:00
+	Low  segment starts at	 13577 ends at	 13624 length	    26 (octal),    22. (decimal)
+
+	TTYOUT	       13577	Entry	Relocatable 	
+
+		*************
+
+FINPUT	from DSK:PASLIB.REL[52250,264]	created by MACRO on 25-Oct-79 at 15:22:00
+	Low  segment starts at	 13625 ends at	 13652 length	    26 (octal),    22. (decimal)
+
+	INPUT	       13625	Entry	Relocatable 	
+
+		*************
+
+FOUTPU	from DSK:PASLIB.REL[52250,264]	created by MACRO on 25-Oct-79 at 15:22:00
+	Low  segment starts at	 13653 ends at	 13700 length	    26 (octal),    22. (decimal)
+
+	OUTPUT	       13653	Entry	Relocatable 	
+
+		*************
+
+CBPSS	from DSK:PASLIB.REL[52250,264]	created by MACRO on 25-Oct-79 at 15:22:00
+	High segment starts at	514236 ends at	514242 length	     5 (octal),     5. (decimal)
+
+	CBPSS.	      514236	Entry	Relocatable 	
+
+		*************
+
+		LINK symbol map of	KI0CAL		page 12
+
+
+PRTSTR	from DSK:PASLIB.REL[52250,264]	created by MACRO on 25-Oct-79 at 15:22:00
+	High segment starts at	514243 ends at	514357 length	   115 (octal),    77. (decimal)
+
+	CMFF.	      514243	Entry	Relocatable 		CMPSS.	      514305	Entry	Relocatable 	
+	CMSF.	      514247	Entry	Relocatable 		CMSSR.	      514267	Entry	Relocatable 	
+	CTSS.	      514344	Entry	Relocatable 	
+
+		*************
+
+PRTIXF	from DSK:PASLIB.REL[52250,264]	created by MACRO on 25-Oct-79 at 15:22:00
+	High segment starts at	514360 ends at	514417 length	    40 (octal),    32. (decimal)
+
+	IX3SS.	      514361	Entry	Relocatable 		IXSS.	      514360	Entry	Relocatable 	
+
+		*************
+
+PRTSRF	from DSK:PASLIB.REL[52250,264]	created by MACRO on 25-Oct-79 at 15:22:00
+	High segment starts at	514420 ends at	514444 length	    25 (octal),    21. (decimal)
+
+	SR3SS.	      514421	Entry	Relocatable 		SRSS.	      514420	Entry	Relocatable 	
+
+		*************
+
+PRTVFF	from DSK:PASLIB.REL[52250,264]	created by MACRO on 25-Oct-79 at 15:22:00
+	High segment starts at	514445 ends at	514471 length	    25 (octal),    21. (decimal)
+
+	VF3SS.	      514446	Entry	Relocatable 		VFSS.	      514445	Entry	Relocatable 	
+
+		*************
+
+PRFID	from DSK:PASLIB.REL[52250,264]	created by MACRO on 25-Oct-79 at 15:22:00
+	High segment starts at	514472 ends at	514704 length	   213 (octal),   139. (decimal)
+
+	PRFID.	      514472	Entry	Relocatable 	
+
+		*************
+
+PASERR	from DSK:PASLIB.REL[52250,264]	created by MACRO on 25-Oct-79 at 15:22:00
+	High segment starts at	514705 ends at	514767 length	    63 (octal),    51. (decimal)
+
+	CORER.	      514716	Entry	Relocatable 		FORER.	      514721	Entry	Relocatable 	
+	INXER.	      514710	Entry	Relocatable 		PTRER.	      514705	Entry	Relocatable 	
+	SRERR.	      514713	Entry	Relocatable 	
+
+		*************
+
+PASENT	from DSK:PASLIB.REL[52250,264]	created by MACRO on 25-Oct-79 at 15:22:00
+	High segment starts at	514770 ends at	515000 length	    11 (octal),     9. (decimal)
+
+	KI10N.	      514770	Entry	Relocatable 		KI10X.	      514775	Entry	Relocatable 	
+	PNTRY.	      514770	Entry	Relocatable 		PRTRN.	      514775	Entry	Relocatable 	
+
+		*************
+		LINK symbol map of	KI0CAL		page 13
+
+
+UNWND	from DSK:PASLIB.REL[52250,264]	created by MACRO on 25-Oct-79 at 15:22:00
+	High segment starts at	515001 ends at	515011 length	    11 (octal),     9. (decimal)
+
+	UNWND.	      515001	Entry	Relocatable 	
+
+		*************
+
+PFCALL	from DSK:PASLIB.REL[52250,264]	created by MACRO on 25-Oct-79 at 15:22:00
+	High segment starts at	515012 ends at	515014 length	     3 (octal),     3. (decimal)
+
+	PCALL.	      515012	Entry	Relocatable 	
+
+		*************
+
+DATE	from SYS:FORLIB.REL[1,301]	created by MACRO on 13-Oct-77 at 17:32:00
+	Low  segment starts at	 13701 ends at	 13760 length	    60 (octal),    48. (decimal)
+	High segment starts at	515015 ends at	 13760 length	 -501034 (octal),     -164380. (decimal)
+
+	DATE	       13702	Entry	Relocatable 	
+
+		*************
+
+CFRXIT	from SYS:FORLIB.REL[1,301]	created by MACRO on 13-Oct-77 at 17:32:00
+	Low  segment starts at	 13761 ends at	 13766 length	     6 (octal),     6. (decimal)
+
+	CEXIT.	       13761	Entry	Relocatable 	
+
+		*************
+
+
+	Index to LINK symbol map of	KI0CAL		page 14
+
+	Name	Page	Name	Page	Name	Page	Name	Page
+
+	CBPSS	11	INTRL	11	PASIOU	 9	PRTVFF	12
+	CFRXIT	13	LINK	11	PASLEX	 3	QUICKF	 9
+	CHARS2	 7	LOOKUP	 8	PASLX	 3	READC	10
+	CVBINS	 7	PASBLK	 4	PASMC	 5	ROUND	11
+	DATE	13	PASBOD	 4	PASMON	 9	TMPCOR	 6
+	DAYTIM	 8	PASCAL	 1	PASNIO	10	UNWND	13
+	DCDATE	 7	PASCG	 5	PASOPT	 6	VERSIO	 3
+	DCDTIM	 7	PASCGN	 5	PASRUN	 2	WRINT	10
+	DCEXT	 7	PASCLL	 5	PASSEL	 5	WRITC	10
+	DCMONT	 7	PASCMP	 4	PASSTR	 6	WROCT	10
+	DCTIME	 7	PASCSN	 4	PFCALL	13	WRTSTR	10
+	EXTRD	 8	PASCST	 4	PRFID	12	WRTSUB	10
+	EXTRT	 8	PASENT	12	PRGDIR	 8	.MAIN	 6
+	FINPUT	11	PASERR	12	PRTIXF	12	.MAIN	 8
+	FOUTPU	11	PASEXP	 5	PRTSRF	12	.MAIN	 8
+	FTTYOU	11	PASHAK	 4	PRTSTR	12	.MAIN	 9
+
+	[End of LINK map of	KI0CAL]
+ c |ð

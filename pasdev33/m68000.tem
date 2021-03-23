@@ -1,0 +1,2072 @@
+
+
+
+          M68000 Project Progress Report                                                     Page 1
+          January 08 1982
+
+
+          1  FAIMAN             ______
+
+
+
+              1.1 Code Generator Design Notes
+
+
+                  Description:  Preliminary documentation will be written to describe the  form  and
+                               use of code generator data structures, and to outline the fundamental
+                               procedures that will  be  needed  to  do  code  generation.  Detailed
+                               algorithms will not be provided -- this document provides a framework
+                               for the code generator, but no more.  (Some sections will be  written
+                               by Steve Medlin.)
+
+                                 Start       Completion                               __________    __________
+
+                  Scheduled:   11/2/81       12/4/81
+
+                  Progress --12/7/81
+
+                      Most  sections of the design notes are complete.  A section is still needed on
+                      the treatment of multiple-use expressions.
+
+
+
+                  1.1.1 Code Generator Design Notes - Review
+
+                                     Start       Completion                                   __________    __________
+
+                      Scheduled:   12/9/81       12/9/81
+
+
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report                                                     Page 2
+          January 08 1982
+
+
+
+
+
+              1.2 Pass 1
+
+
+                  Description:  The type and storage allocation tables, as well as the miscellaneous
+                               target machine constants, must be defined in the initialization pass.
+
+                                 Start       Completion                               __________    __________
+
+                  Scheduled:   11/16/81      11/27/81
+
+                  Actual:      12/4/81       12/4/81
+
+
+                  Progress --12/4/81
+
+                      The   initialization  pass  (M68INI)  has  been  completed.  Programs  may  be
+                      processed by the analysis pass, using the :TARGET M68 command.  Only the  code
+                      generator remains to be written.
+
+
+
+
+              1.3 Register Allocation
+
+
+                  Description:   Coding  of  low-level  utility  routines  for  register  allocation
+                               (specified in the Design Notes).
+
+
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report                                                     Page 3
+          January 08 1982
+
+
+                                 Start       Completion                               __________    __________
+
+                  Scheduled:   11/30/81      12/11/81
+
+                  Actual:      12/7/81       12/7/81
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report                                                     Page 4
+          January 08 1982
+
+
+          2  ROUSH             _____
+
+
+
+              2.1 Memo on code sharing
+
+
+                  Description:  Write a memo  to  the  application  group  managers  describing  the
+                               approach  we  are taking to code sharing and detailing its advantages
+                               and disadvantages.
+
+                                 Start       Completion                               __________    __________
+
+                  Scheduled:   12/4/81       12/7/81
+
+                  Actual:      12/4/81       12/7/81
+
+
+
+
+              2.2 EXORmacs installation
+
+
+                  Description:  Assist in and learn from installation of  our  EXORmacs  development
+                               system.
+
+                                 Start       Completion                               __________    __________
+
+                  Scheduled:   12/7/81       12/8/81
+
+                  Actual:      12/7/81       12/11/81
+
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report                                                     Page 5
+          January 08 1982
+
+
+              2.3 Complete runtime specification
+
+
+                  Description:  Update  the  runtime  specification  document to reflect the changes
+                               necessary for code sharing in  an  unmapped  system.  Distribute  the
+                               runtime specification and hold a design review for the runtime.
+
+                  Rescheduled: 12/3/81       12/16/81
+
+                  Actual:      12/3/81       12/16/81
+
+
+                  Progress --12/11/81
+
+                      Runtime spec complete.  Review scheduled for 12/16/81.
+
+
+
+                  2.3.1 Partial spec update
+
+
+                      Description:  Update  all  sections of the specification except the section on
+                                   procedure calling conventions.
+
+                      Rescheduled: 12/3/81       12/8/81
+
+                      Actual:      12/3/81       12/11/81
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report                                                     Page 6
+          January 08 1982
+
+
+                  2.3.2 Update procedure calling conventions
+
+
+                      Description:  Decide if a dedicated argument pointer  register  is  acceptable
+                                   now  that  a  dedicated  static area register is necessary.  If a
+                                   dedicated argument pointer register is unacceptable, then  design
+                                   a document an alternative procedure calling mechanism.
+
+                      Rescheduled: 12/7/81       12/11/81
+
+                      Actual:      12/7/81       12/11/81
+
+
+
+                  2.3.3 Hold design review
+
+                      Rescheduled: 12/16/81      12/16/81
+
+                      Actual:      12/16/81      12/16/81
+
+
+
+
+              2.4 File transfer
+
+
+                  Description:  Work  with  Neil  Krone in getting his file transfer program working
+                               and documented.
+
+                                 Start       Completion                               __________    __________
+
+
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report                                                     Page 7
+          January 08 1982
+
+
+                  Scheduled:   12/14/81      12/18/81
+                  Rescheduled: 12/18/81      1/13/81
+
+                  Progress --12/17/81
+
+                      We've decided not to try using Neil Krone's simple  transfer  program  because
+                      Motorola's  official  transfer  program with error checking and retransmission
+                      capability is available.  This will undoubtably take longer to get up  because
+                      of  its  increased  complexity  but may eliminate the need for writing our own
+                      later.  The start of this task has been delayed for two reasons.  First,  Neil
+                      Krone  must  obtain some missing components of the transfer program.  Second I
+                      wanted to establish the initial library, with initialization  routine,  before
+                      starting  on the transfer task.  The initialization routine will make creation
+                      of test harnesses much easier for others working on the runtime.
+
+
+
+
+              2.5 Exception handling macros
+
+
+                  Description:  Write, enter and document macros  for  the  runtime  which  generate
+                               exception handling data structures.
+
+                  Rescheduled: 12/10/81      12/15/81
+
+                  Actual:      12/10/81      12/14/81
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report                                                     Page 8
+          January 08 1982
+
+
+              2.6 Runtime Initialization Routine
+
+
+                  Description:  Write  and  test  the runtime initialization routine.  This includes
+                               setting up the initial searchable object library and testing most  of
+                               the  ideas  involved  in  the  proposed scheme for sharing code on an
+                               unmapped system.
+
+                  Rescheduled: 12/14/81      12/23/81
+
+                  Actual:      12/14/81      12/17/81
+
+
+                  Progress --12/17/81
+
+                      I calling this routine done, but somewhere down the line it  will  undoubtably
+                      have  to  be  rewritten.  This has become apparent as we've learned more about
+                      the  OEM  version  of  VERSados.  However,  before  the  final  form  of   the
+                      initialization  routine  can  be  determined  we'll have to find out even more
+                      about OEM VERSados.  The present routine will enable work to proceed.
+
+
+                  2.6.1 Versados experimentation
+
+
+                      Description:  Some of the ideas critical to the code sharing  approach  chosen
+                                   will be tried out on the EXORmacs system.
+
+                      Rescheduled: 12/14/81      12/16/81
+
+                      Actual:      12/14/81      12/15/81
+
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report                                                     Page 9
+          January 08 1982
+
+
+                  2.6.2 Design initialization routine
+
+
+                      Description:  The  approach  used  in  support of code sharing will be decided
+                                   upon.  The initialization routine and the methodology to used  in
+                                   testing it will be designed.
+
+                      Rescheduled: 12/15/81      12/17/81
+
+                      Actual:      12/15/81      12/15/81
+
+
+
+                  2.6.3 Code initialization routine
+
+
+                      Description:   The   initialization  routine  will  be  coded,  keyed  in  and
+                                   assembled.
+
+                      Rescheduled: 12/17/81      12/21/81
+
+                      Actual:      12/15/81      12/17/81
+
+
+
+                  2.6.4 Set up initial library
+
+
+                      Description:  An initial version of the runtime object library will be set up.
+                                   A command file for constructing it will be set up also.
+                      Rescheduled: 12/21/81      12/21/81
+
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report                                                     Page 10
+          January 08 1982
+
+
+                      Actual:      12/17/81      12/17/81
+
+
+
+                  2.6.5 Test initialization routine
+
+
+                      Description:  The initialization routine and library ordering will be tested.
+
+                      Rescheduled: 12/22/81      12/23/81
+
+                      Actual:      12/17/81      12/17/81
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report                                                     Page 11
+          January 08 1982
+
+
+          3  MEDLIN             ______
+
+
+
+              3.1 Code Generator Design
+
+
+                  Description:  In  consultation  with  Neil  Faiman  and  Dave  Wilson,  define the
+                               structure of the code generator and the data structures employed.
+
+                                 Start       Completion                               __________    __________
+
+                  Scheduled:   11/1/81       12/1/81
+
+                  Actual:      11/1/81       1/1/82
+
+
+
+
+              3.2 Support Routines
+
+
+                  Description:  Specification and coding of numerous routines useful throughout  the
+                               code  generator.  These will be subject to frequent revision over the
+                               course of the project.
+
+                                 Start       Completion                               __________    __________
+
+                  Scheduled:   11/16/81      12/19/81
+
+                  Actual:      12/7/81       1/9/82
+
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report                                                     Page 12
+          January 08 1982
+
+
+              3.3 Instruction Emission
+
+
+                  Description:  Specification of the  routines  used  to  emit  instructions  during
+                               compilation.  This includes checks for consistency and legality.
+
+                                 Start       Completion                               __________    __________
+
+                  Scheduled:   11/30/81      12/19/81
+
+                  Actual:      12/7/81       1/11/82
+
+
+                  Progress --12/23/81
+
+                      All instruction emission routines have been defined and written.
+
+
+                  Progress --1/7/82
+
+                      The  decision that GEN_INST must translate generic to specific opcodes, a task
+                      previously postponed till object file emission, requires a major restructuring
+                      of that routine and invalidates much of the error checking code.
+
+
+
+
+              3.4 String Runtime Interface
+
+
+                  Description:  Specification  of  all runtime routines used for string manipulation
+                               as well as their calling sequences and parameter formats.
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report                                                     Page 13
+          January 08 1982
+
+
+                                 Start       Completion                               __________    __________
+
+                  Scheduled:   1/4/82        1/11/82
+
+                  Progress --1/8/82
+
+                      This will be delayed approximately one week.
+
+
+
+
+              3.5 Subroutine Calls and Parameters
+
+
+                  Description:  Evaluation and emission of parameter lists for calls to  Pascal  and
+                               FORTRAN routines.
+
+                                 Start       Completion                               __________    __________
+
+                  Scheduled:   1/11/82       2/8/82
+
+
+
+              3.6 String Expressions
+
+
+                  Description:   Basic  string  manipulation  including  assignment,  concatenation,
+                               substring, subscript, upper/lowercasing, etc.
+                                 Start       Completion                               __________    __________
+
+                  Scheduled:   2/8/82        3/8/82
+
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report                                                     Page 14
+          January 08 1982
+
+
+              3.7 Instrinsic String Functions
+
+
+                  Description:  Completion of the SEARCH, VERIFY, and INDEX functions.
+
+                  Rescheduled: 3/8/82        3/29/82
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report                                                     Page 15
+          January 08 1982
+
+
+          4  HOPE             ____
+
+
+
+              4.1 M68000 MDSI Pascal I/O Runtime
+
+
+                  Description:  My assignment for the foreseeable  future  is  to  provide  the  I/O
+                               runtime routines for the M68000 implementation of MDSI Pascal.
+
+
+
+                  4.1.1 I/O Design Spec
+
+                                     Start       Completion                                   __________    __________
+
+                      Scheduled:   9/?/81        11/13/81
+
+                      Actual:      9/?/81        11/13/81
+
+
+                      Progress --11/13/81
+
+                          The spec was completed.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report                                                     Page 16
+          January 08 1982
+
+
+
+
+                  4.1.2 I/O Design Review
+
+                                     Start       Completion                                   __________    __________
+
+                      Scheduled:   11/18/81      11/18/81
+
+                      Actual:      11/18/81      11/18/81
+
+
+
+                  4.1.3 Text File Association
+
+                                     Start       Completion                                   __________    __________
+
+                      Scheduled:   11/16/81      12/4/81
+                      Rescheduled: 11/16/81      12/18/81
+
+                      Actual:      11/16/81      ?
+
+
+                      Progress --11/25/81
+
+                          Using the EXORmacs system at the local Motorola sales office, a modem, and
+                          my ADM terminal, with the Motorola editor in line mode, I have  set  up  a
+                          file  of  literals to be used not only on textfile association, but on all
+                          phases of the I/O runtime project.  These include all literals  needed  to
+                          address  a  file  block,  and  the  values  of  MDSI  Pascal standard type
+                          IO_ERROR.
+
+
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report                                                     Page 17
+          January 08 1982
+
+
+                          When the Text File Association part of the I/O  runtime  is  complete,  it
+                          will  not  be  testable  until  the  code for some rudimentary writing and
+                          reading of files is completed.  If this happens substantially  before  the
+                          NEW routine is available, a NEW routine will have to be dummied up for the
+                       sting.
+
+
+                      Progress --12/2/81
+
+                          I have devised a method of parsing a string passed in to  the  association
+                          routines and extracting a resource name acceptable to VERSAdos.
+
+
+                      Progress --12/3/81
+
+                          I  badly  underestimated  this  task.  Several  factors contributed to the
+                          underestimate.  A minor contribution came from  an  underestimate  of  the
+                          difficulty  of using the Motorola editor in line mode.  Having an EXORmacs
+                          system in house will make possible use of the editor in page mode,  which,
+                          because  it  was the intended mode for this editor, and has been in use by
+                          many other people, has had most of  the  bugs  worked  out  of  it.  Also,
+                          having  the EXORmacs in house will greatly increase its availability.  The
+                          greatest factor was that I did not realize how much was  involved  in  the
+                          task.  Perhaps  it  would  have  been  better  to  leave the resource name
+                          parsing and all its ramifications for later,  and  pony  up  some  minimum
+                          parsing  function for this task only.  At any rate, I have rescheduled the
+                          entire task, and I am further breaking the task down as follows:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report                                                     Page 18
+          January 08 1982
+
+
+
+
+                      4.1.3.1 File block manipulation
+
+
+                          Description:  Without a NEW function, this involves creating  and  working
+                                       with  a  very few file blocks at fixed locations.  What is to
+                                       be done is to create file blocks which contain IOS blocks and
+                                       FHS  blocks  which  VERSAdos  will  buy.  This  also involves
+                                       finding out how to treat logical unit numbers,  how  VERSAdos
+                                       reacts  to such things as lower case letters in resource name
+                                       strings, and generally how to work with VERSAdos.
+
+                                         Start       Completion                                       __________    __________
+
+                          Scheduled:   12/7/81       12/10/81
+
+                          Actual:      12/7/81       
+
+
+                          Progress --12/11/81
+
+                              I have made less progress than  I  had  hoped  on  the  EXORmacs.  The
+                              EXORmacs  has  been  flaky since it was delivered, and it has not been
+                              uncommon to lose several hours worth of editted data.  I am doing more
+                              frequent  SAVEs  and  backup  procedures  have  been  instituted which
+                              alleviate this somewhat.  Chasing and recovering  from  system  errors
+                              has  taken much too much time.  We now know more about how to recover,
+                              and have a good logging system, both of which will free up more time.
+
+
+
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report                                                     Page 19
+          January 08 1982
+
+
+
+
+                      4.1.3.2 T.OPEN and T.RESET
+
+                                         Start       Completion                                       __________    __________
+
+                          Scheduled:   12/10/81      12/14/81
+
+                          Actual:      12/10/81      
+
+
+                          Progress --12/11/81
+
+                              T.OPEN is coded, but gets assembler syntax errors which I believe  are
+                              related  to the way static storage is declared.  The error numbers are
+                              listed in the manual as "RELOCATION  OF  BYTE  FIELD  ATTEMPTED",  and
+                              "SYNTAX  ERROR".  These  errors  occur  on lines which refer to static
+                              variables.  T.RESET is a call to T.OPEN followed by a call to T.GET.
+
+
+                          Progress --12/15/81
+
+                              T.OPEN and T.RESET are coded and get no syntax errors.
+
+                          Progress --12
+
+                              T.OPEN and T.RESET will open files, and the  information  in  the  FHS
+                              block looks reasonable.
+
+
+
+
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report                                                     Page 20
+          January 08 1982
+
+
+
+
+                      4.1.3.3 T.REWRITE
+
+                                         Start       Completion                                       __________    __________
+
+                          Scheduled:   12/14/81      12/16/81
+
+                          Actual:      12/14/81      
+
+
+                          Progress --12/15/81
+
+                              T.REWRITE is coded and gets no syntax errors.
+
+                          Progress --12
+
+                              T.REWRIT will create files.
+
+
+                          Progress --1/6/82
+
+                              A  file  can  be  created with T.REWRITE, but VERSAdos doesn't want to
+                              overwrite an existing file of the same name.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report                                                     Page 21
+          January 08 1982
+
+
+
+
+                      4.1.3.4 Testing
+
+
+                          Description:  See if a file opened with T.OPEN appears in  the  directory,
+                                       see  if  a  file  open  with  T.REWRIT is emptied, see if the
+                                       information placed in the file block looks reasonable.
+
+                                         Start       Completion                                       __________    __________
+
+                          Scheduled:   12/16/81      12/18/81
+
+                          Progress --12/27/81
+
+                              T.OPEN, T.RESET, and T.REWRIT leave reasonable data in  the  directory
+                              and in the file block.
+
+
+
+                  4.1.4 Text I/O
+
+                                     Start       Completion                                   __________    __________
+
+                      Scheduled:   12/7/81       2/12/82
+                      Rescheduled: 12/21/81      2/19/82
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report                                                     Page 22
+          January 08 1982
+
+
+
+
+                      4.1.4.1 T.PUT and T.WRTLN
+
+                                         Start       Completion                                       __________    __________
+
+                          Scheduled:   12/7/81       12/23/81
+                          Rescheduled: 12/21/81      1/12/82
+
+                          Actual:      12/28/81      
+
+
+                          Progress --12/30/81
+
+                              T.PUT and T.GET are coded and get no syntax errors.
+
+
+
+                      4.1.4.2 T.READLN and T.GET
+
+                                         Start       Completion                                       __________    __________
+
+                          Scheduled:   12/28/81      1/15/81
+                          Rescheduled: 1/13/82       2/1/82
+
+                          Actual:      12/28/81      
+
+
+                          Progress --12/30/81
+
+                              T.READLN and T.GET are coded and get no syntax errors.
+
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report                                                     Page 23
+          January 08 1982
+
+
+          5  WILSON             ______
+
+
+
+              5.1 Statement level operators
+
+
+                  Description:  Development  of  the  module  M68GEN,  which  is invoked by PASS4 to
+                               compile an entire source module.  M68GEN  contains  all  routines  to
+                               control the overall progress of code generation, down to the level of
+                               generating the specific code for many statement tuples, and  invoking
+                               routines  in other modules for the remainder.  The groups of routines
+                               involved are:
+
+                                1. High-level control
+                                2. Control of generation within a  single  procedure,  function,  or
+                                   mainline
+                                3. Management  of  basic  blocks;  temporary  storage allocation and
+                                   deallocation
+                                4. Code generation for those statement tuples not complex enough  to
+                                   require their own modules
+
+
+                                 Start       Completion                               __________    __________
+
+                  Scheduled:   11/16/81      12/18/81
+                  Rescheduled: 11/30/81      1/8/82
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report                                                     Page 24
+          January 08 1982
+
+
+
+
+                  5.1.1 High-level control
+
+
+                      Description:   These  routines  control  the  structure  of  code  generation:
+                                   initialization, invoking lower level processing for  each  block,
+                                   and termination.  The specific routines are
+
+                                    1. GEN_CODE
+                                    2. COMPILE_MAIN
+                                    3. COMPILE_SUBR
+                                    4. INIT_STATIC
+                                    5. FATAL_ERROR
+
+
+
+                      Progress --12/4/81
+
+                          Done.
+
+
+
+                  5.1.2 Control within a single block
+
+
+                      Description:  These routines handle initialization for a block, generate entry
+                                   code, scan the intermediate-form tuples for the block, and handle
+                                   termination for a block.  The routines are
+
+                                    1. COMPILE_BODY (but only skeleton of IF scanning)
+                                    2. PROLOGUE
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report                                                     Page 25
+          January 08 1982
+
+
+                      Progress --12/11/81
+
+                          Done.
+
+
+
+                  5.1.3 Management of basic blocks; temporaries
+
+
+                      Description:   These   routines   handle  allocation  of  static  and  dynamic
+                                   temporaries, and the processing at the beginning and end of  each
+                                   basic block.  The routines are
+
+                                    1. BB_START
+                                    2. BB_END
+                                    3. RESET_STACK
+                                    4. GET_TEMP
+                                    5. KILL_TEMPS
+
+
+
+                      Progress --12/18/81
+
+                          Done.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report                                                     Page 26
+          January 08 1982
+
+
+                  5.1.4 Code generation for some statements
+
+
+                      Description:  These  routines  generate code for many statements.  For others,
+                                   such as string operations, sets, and some of the I/O  operations,
+                                   routines  in  other  modules are invoked.  The complete reference
+                                   and expression generating mechanisms utilized by  these  routines
+                                   are in other modules.  The routines are
+
+                                    1. COMPILE_BODY (flesh out IF scanning, generating code for some
+                                       statements on the spot, invoking routines for rest)
+                                    2. VALUE_CHECK
+                                    3. POINTER_CHECK
+                                    4. SUBSTRING_CHECK
+                                    5. COMPATABILITY_CHECK
+                                    6. COND_HANDLER_STMTS (skeleton only)
+                                    7. CASE_JUMP
+                                    8. EXPAND_AGG_CONSTRUCTOR
+                                    9. AGG_ASSIGNMENT
+                                   10. PROC_FUNC_ASSIGNMENT
+                                   11. SCALAR_ASSIGNMENT
+
+
+
+
+
+              5.2 Constant emission
+
+
+                  Description:
+
+
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report                                                     Page 27
+          January 08 1982
+
+
+                                 Start       Completion                               __________    __________
+
+                  Scheduled:   12/21/81      12/25/81
+
+
+
+              5.3 Expressions
+
+
+                  Description:
+                                 Start       Completion                               __________    __________
+
+                  Scheduled:   /1/4/82       1/29/82
+
+
+
+              5.4 Sets
+
+
+                  Description:
+                                 Start       Completion                               __________    __________
+
+                  Scheduled:   2/1/82        3/26/82
+
+
+
+              5.5 Constant pooling
+
+
+                  Description:
+
+
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report                                                     Page 28
+          January 08 1982
+
+
+                                 Start       Completion                               __________    __________
+
+                  Scheduled:   3/29/82       4/2/82
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report                                                     Page 29
+          January 08 1982
+
+
+          6  MONTAG             ______
+
+
+
+              6.1 Object File Analyzer
+
+
+                  Description:  The Object File Analyzer is a stand-alone program that reads in  the
+                               relocatable  object file generated by the Pascal compiler, breaks its
+                               contents up into their logical records, and prints out the values  of
+                               each of the component fields of these logical records.
+                                 Start       Completion                               __________    __________
+
+                  Scheduled:   11/16/81      12/07/81
+
+                  Actual:      11/16/81      12/04/81
+
+
+                  Progress --12/04/81
+
+                      The Analyzer is complete and tested, currently in (PASDEV40)M68DMP.PAS.
+
+
+
+              6.2 Code List Emission routines
+
+
+                  Description:  The  Code List Emission routines are are collection of routines that
+                               do all the processing on the code lists once they have been generated
+                               by  the  Code Generator to create the Relocatable Object File and the
+                               Assembly Code Listing.
+
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report                                                     Page 30
+          January 08 1982
+
+
+                                 Start       Completion                               __________    __________
+
+                  Scheduled:   12/07/81      01/18/82
+
+                  Actual:      12/07/81      
+
+
+                  Progress --12/11/81
+
+                      Started.
+
+                  Progress --01/08/82
+
+                      Due to illness the week before Christmas, and a  long  vacation,  the  emitter
+                      routines appear to be 3 weeks behind schedule.
+
+
+                  6.2.1 Emission routines
+
+
+                      Description:  The  Emission  routines are 5 routines that are the only 5 entry
+                                   points to the emission  section  of  the  Code  Generator.  These
+                                   routines  check  to  see  which  options  are  set,  and use this
+                                   information to determine whether or not to call the  Object  File
+                                   routines and/or the Assembly Listing routines.
+                                     Start       Completion                                   __________    __________
+
+                      Scheduled:   12/07/81      01/11/82
+
+                      Actual:      12/07/81      
+
+
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report                                                     Page 31
+          January 08 1982
+
+
+                      Progress --12/11/81
+
+                          Started.
+
+                      Progress --01/08/82
+
+                          3  of  the  5  routines are done.  This section appears to be about 1 week
+                          behind schedule.
+
+
+                      6.2.1.1 Design Emission routines
+
+                                         Start       Completion                                       __________    __________
+
+                          Scheduled:   12/07/81      01/06/82
+
+                          Actual:      12/07/81      01/06/82
+
+
+                          Progress --12/11/81
+
+                              Started.
+
+                          Progress --01/08/82
+
+                              The emission routines are designed.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report                                                     Page 32
+          January 08 1982
+
+
+                      6.2.1.2 Implement skeleton program with stubs
+
+                                         Start       Completion                                       __________    __________
+
+                          Scheduled:   12/07/81      12/14/81
+
+                          Actual:      12/07/81      12/11/81
+
+
+                          Progress --12/11/81
+
+                              The skeleton program  with  stubs  is  complete  and  tested,  and  is
+                              currently in (PASDEV40)M68EMT.PAS.
+
+
+                      6.2.1.3 Fill out stubs
+
+                                         Start       Completion                                       __________    __________
+
+                          Scheduled:   12/14/81      01/11/82
+
+                          Actual:      12/11/81      
+
+
+                          Progress --12/11/81
+
+                              Started.
+
+                          Progress --01/08/82
+
+                              There are still 2 routines to be coded, which will probably take about
+                              1 week.
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report                                                     Page 33
+          January 08 1982
+
+
+                  6.2.2 Object File Emission routines
+
+
+                      Description:  The Object File Emission routines are a collection  of  routines
+                                   that  actually  emit  the object code into the relocatable object
+                                   file, using the internal data structures of the compiler.
+                                     Start       Completion                                   __________    __________
+
+                      Scheduled:   11/16/81      01/18/82
+
+                      Actual:      11/16/81      
+
+
+                      Progress --12/04/81
+
+                          A preliminary version of the Emitter is running to generate  object  files
+                          to test the Object File Analyzer with.  It emits all four types of logical
+                          records, including all subtypes.  It does not yet  contain  the  logic  to
+                          convert  an  actual  compiler  code  list  into object code to be emitted.
+                          Instead, it generates records containing dummy information.
+
+                      Progress --01/08/82
+
+                          Due to illness the week before Christmas vacation, and  a  long  vacation,
+                          this section appears to be about 3 weeks behind schedule.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report                                                     Page 34
+          January 08 1982
+
+
+                      6.2.2.1 Design Object File Emission routines
+
+                                         Start       Completion                                       __________    __________
+
+                          Scheduled:   11/16/81      01/11/82
+
+                          Actual:      11/16/81      
+
+
+                          Progress --12/11/81
+
+                              Started.
+
+                          Progress --01/08/82
+
+                              One  of  the  major  routines, the routine to convert a code list into
+                              actual object code, is still not completely  designed.  It  should  be
+                              designed within 10 days.
+
+
+                      6.2.2.2 Implement skeleton program with stubs
+
+                                         Start       Completion                                       __________    __________
+
+                          Scheduled:   11/16/81      12/11/81
+
+                          Actual:      11/16/81      12/11/81
+
+
+                          Progress --12/11/81
+
+                              The  skeleton  program  with  stubs  is  complete  and  tested, and is
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report                                                     Page 35
+          January 08 1982
+
+
+                              currently in (PASDEV40)M68REL.PAS.
+
+
+                      6.2.2.3 Fill out stubs
+
+                                         Start       Completion                                       __________    __________
+
+                          Scheduled:   12/14/81      01/18/82
+
+                          Actual:      12/11/81      
+
+
+                          Progress --12/11/81
+
+                              Started.
+
+                          Progress --01/08/82
+
+                              Most of the stubs are filled out, with  the  major  exception  of  the
+                              routine  to  convert  a  code list to actual object code, which hasn't
+                              been designed yet.  It should take about 3 weeks to complete this.
+
+
+                  6.2.3 Assembly Code Listing routines
+
+
+                      Description:  The Assembly Code Listing routines are a collection of  routines
+                                   that  print out a listing of the assembler instructions generated
+                                   by the code generator.
+                                     Start       Completion                                   __________    __________
+
+
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report                                                     Page 36
+          January 08 1982
+
+
+                      Scheduled:   12/07/81      01/18/82
+
+                      Actual:      12/07/81      
+
+
+                      Progress --01/08/82
+
+                          Due to illness the week before Christmas vacation, and a long vacation, it
+                          appears that this section is about 2 weeks behind schedule.
+
+
+                      6.2.3.1 Design Assembly Code Listing routines
+
+                                         Start       Completion                                       __________    __________
+
+                          Scheduled:   12/07/81      01/11/82
+
+                          Actual:      12/07/81      
+
+
+                          Progress --12/11/81
+
+                              Started.
+
+                          Progress --01/08/82
+
+                              There  are  still  many  of the routines that need to be designed.  It
+                              appears to be about 1 week behind schedule.
+
+
+
+
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report                                                     Page 37
+          January 08 1982
+
+
+                      6.2.3.2 Implement skeleton program with stubs
+
+                                         Start       Completion                                       __________    __________
+
+                          Scheduled:   12/07/81      12/14/81
+
+                          Actual:      12/07/81      12/11/81
+
+
+                          Progress --12/11/81
+
+                              The skeleton program  with  stubs  is  complete  and  tested,  and  is
+                              currently in (PASDEV40)M68MAC.PAS.
+
+
+                      6.2.3.3 Fill out stubs
+
+                                         Start       Completion                                       __________    __________
+
+                          Scheduled:   12/14/81      01/18/82
+
+                          Actual:      12/11/81      
+
+
+                          Progress --12/11/81
+
+                              Started.
+
+                          Progress --01/08/82
+
+                              Many  of  the  stubs are still left to be filled out.  Appears to be 2
+                              weeks behind schedule.
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report                                                     Page 38
+          January 08 1982
+
+
+                  7  RASMUSSEN                     _________
+
+
+
+              7.1 Motorola Runtime Memory Management - NEW and DISPOSE
+
+
+                  Description:
+
+                  Progress --1/8/82
+
+                      Functional testing for NEW and DISPOSE complete.  NEW  and  DISPOSE  added  to
+                      library  (PASLIB)  on  m68000.  Runtime  specification reflects all changes in
+                      calling sequence, etc.
+
+
+
+              7.2 Four byte integer multiplication and division runtime routines.
+
+
+                  Description:
+
+                  Progress --1/8/82
+
+                      Modules I4MULT and I4DIV complete, and added to runtime  library.  Must  still
+                      make updates to M68000 runtime specs.  Should be complete today, 1/8/82.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report                                                     Page 39
+          January 08 1982
+
+
+
+
+
+              7.3 Exceptional condition handling for M68000
+
+
+                  Description:  Study  of the following documents must precede any detailed planning
+                               for   exceptional   condition   handling:   1).    Pascal    language
+                               specification, 2) M68000 Runtime Specification section on exceptions,
+                               3) Language enhaancement notes  #2B  --  Exceptions,  conditions  and
+                               handlers, 4) VAX Exceptional condition handling design notes.  Expect
+                               a detailed plan of attack by Monday, January 18.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report                                                     Page 40
+          January 08 1982
+
+
+                           8  KENNEDY                              _______
+
+
+
+              8.1 Intro to the M68000 and RDLIB
+
+
+                  Description:  At the present I can not put much detail into my schedule as to  the
+                               specific  tasks I will have.  For the near future the following items
+                               are topics in which I will be involved:
+
+                                1. Learning about the current RDLIB routines on both the  DEC10  and
+                                   the VAX;
+                                2. Finding out which RDLIB routines ANC uses;
+                                3. Learning the M68000 Assembler;
+                                4. Studying the relevant M68000 Spec documents;
+                                5. Determining  a  priority  (or  order)  for  working  on the RDLIB
+                                   routines that  will  be  needed,  and  expand  this  schedule  in
+                                   accordance with the determined order.
+
+                                 Start       Completion                               __________    __________
+
+                  Scheduled:   11/30/81      1/4/82
+
+                  Actual:      11/30/81      1/4/82
+
+
+                  Progress --1/4/82
+
+
+                       1. The available documentation on RDLIB has been read.
+
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report                                                     Page 41
+          January 08 1982
+
+
+                       2. It  will most likely be more efficient for us to come up with our own list
+                          of routines we know ANC uses and present this list to ANC for  review  and
+                          modification.  There  are  some  (perhaps many) items that will have to be
+                          discussed with ANC to determine what they "need" and what will be possible
+                          to provide.
+
+                       3. I  have  read  and  gone over both the M68000 16-Bit Microprocessor User's
+                          Manual and the Resident Structured Assembler Reference Manual.
+
+                       4. I have read the M68000 design documents that  have  been  distributed  and
+                          have a general understanding of them.
+
+                       5. Once  we  come  up with our list of RDLIB routines for ANC a more specific
+                          schedule for studying, coding, implementing, and  testing  these  routines
+                          will be determined.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report                                                     Page 42
+          January 08 1982
+
+
+                  9  REMBOSKI                     ________
+
+
+
+              9.1 Define Double Precision Format
+
+
+                  Description:  An  analysis of the Motorola FFP single precision arithmetic package
+                               will be performed.  The results of the analysis will be used to  help
+                               choose a double precision number representation format.
+
+                                 Start       Completion                               __________    __________
+
+                  Scheduled:   12/3/81       12/18/81
+
+
+
+              9.2 Define Floating Point Calling Conventions
+
+
+                  Description:  Calling  conventions for the floating point arithmetic routines will
+                               be defined.  Exceptional condition handling will also be defined.
+
+
+
+
+              9.3 Convert FFP to Double Precision
+
+
+                  Description:  The FFP arithmetic routines will be rewritten to do double precision
+                               arithmetic.  The  unmodified  FFP  routines  will  be used for single
+                               precision arithmetic.
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report
+          January 08 1982
+
+
+
+
+
+                                              Table of Contents                                              _____ __ ________
+
+
+          SECTION                                                    PAGE
+
+          1        FAIMAN                                              1
+
+          1.1      Code Generator Design Notes                         1
+          1.1.1       Code Generator Design Notes - Review             1
+          1.2      Pass 1                                              2
+          1.3      Register Allocation                                 2
+
+          2        ROUSH                                               4
+
+          2.1      Memo on code sharing                                4
+          2.2      EXORmacs installation                               4
+          2.3      Complete runtime specification                      5
+          2.3.1       Partial spec update                              5
+          2.3.2       Update procedure calling conventions             6
+          2.3.3       Hold design review                               6
+          2.4      File transfer                                       6
+          2.5      Exception handling macros                           7
+          2.6      Runtime Initialization Routine                      8
+          2.6.1       Versados experimentation                         8
+          2.6.2       Design initialization routine                    9
+          2.6.3       Code initialization routine                      9
+          2.6.4       Set up initial library                           9
+          2.6.5       Test initialization routine                      10
+
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report
+          January 08 1982
+
+
+          3        MEDLIN                                              11
+
+          3.1      Code Generator Design                               11
+          3.2      Support Routines                                    11
+          3.3      Instruction Emission                                12
+          3.4      String Runtime Interface                            12
+          3.5      Subroutine Calls and Parameters                     13
+          3.6      String Expressions                                  13
+          3.7      Instrinsic String Functions                         14
+
+          4        HOPE                                                15
+
+          4.1      M68000 MDSI Pascal I/O Runtime                      15
+          4.1.1       I/O Design Spec                                  15
+          4.1.2       I/O Design Review                                16
+          4.1.3       Text File Association                            16
+          4.1.3.1        File block manipulation                       18
+          4.1.3.2        T.OPEN and T.RESET                            19
+          4.1.3.3        T.REWRITE                                     20
+          4.1.3.4        Testing                                       21
+          4.1.4       Text I/O                                         21
+          4.1.4.1        T.PUT and T.WRTLN                             22
+          4.1.4.2        T.READLN and T.GET                            22
+
+          5        WILSON                                              23
+
+          5.1      Statement level operators                           23
+          5.1.1       High-level control                               24
+          5.1.2       Control within a single block                    24
+          5.1.3       Management of basic blocks; temporaries          25
+          5.1.4       Code generation for some statements              26
+          5.2      Constant emission                                   26
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report
+          January 08 1982
+
+
+          5.3      Expressions                                         27
+          5.4      Sets                                                27
+          5.5      Constant pooling                                    27
+
+          6        MONTAG                                              29
+
+          6.1      Object File Analyzer                                29
+          6.2      Code List Emission routines                         29
+          6.2.1       Emission routines                                30
+          6.2.1.1        Design Emission routines                      31
+          6.2.1.2        Implement skeleton program with stubs         32
+          6.2.1.3        Fill out stubs                                32
+          6.2.2       Object File Emission routines                    33
+          6.2.2.1        Design Object File Emission routines          34
+          6.2.2.2        Implement skeleton program with stubs         34
+          6.2.2.3        Fill out stubs                                35
+          6.2.3       Assembly Code Listing routines                   35
+          6.2.3.1        Design Assembly Code Listing routines         36
+          6.2.3.2        Implement skeleton program with stubs         37
+          6.2.3.3        Fill out stubs                                37
+
+          7        RASMUSSEN                                           38
+
+          7.1      Motorola Runtime Memory Management - NEW and DISPOSE 38
+          7.2      Four byte integer multiplication and division runtime routines. 38
+          7.3      Exceptional condition handling for M68000           39
+
+          8        KENNEDY                                             40
+
+          8.1      Intro to the M68000 and RDLIB                       40
+
+          9        REMBOSKI                                            42
+
+
+
+
+
+
+
+
+
+          M68000 Project Progress Report
+          January 08 1982
+
+
+
+          9.1      Define Double Precision Format                      42
+          9.2      Define Floating Point Calling Conventions           42
+          9.3      Convert FFP to Double Precision                     42
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+5K$ç

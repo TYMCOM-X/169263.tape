@@ -1,0 +1,10 @@
+/stat,quick,debug,names,mainseg
+scribe[,320156]
+doscri[,320156]
+/stat,quick,debug,names,nomainseg,overlay
+getlin[,320156]
+reader[,320156]
+writer[,320156]
+justfy[,320156]
+scan[,320156]
+/exit

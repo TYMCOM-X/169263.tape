@@ -1,0 +1,145 @@
+
+
+
+		ECLIPSE INSTRUCTION SET SUMMARY
+
+
+ADC[c][sh][#]  acs,acd[,skip]           Add Complement
+ADD[c][sh][#]  acs,acd[,skip]           Add
+ADDI           i,ac                     Extended Add Immediate
+ADI            n,ac                     Add Immediate
+ANC            acs,acd                  AND With Complemented Source
+AND[c][sh][#]  acs,acd[,skip]           AND
+ANDI           i,ac                     AND Immediate
+BAM                                     Block Add and Move
+BLM                                     Block Move
+BTO            acs,acd                  Set Bit To One
+BTZ            acs,acd                  Set Bit To Zero
+CLM            acs,acd                  Compare To Limits
+CMP                                     Character Compare
+CMT                                     Character Move Until True
+CMV                                     Character Move
+COB            acs,acd                  Count Bits
+COM[c][sh][#]  acs,acd[,skip]           Complement
+CTR                                     Character Translate
+DAD            acs,acd                  Decimal Add
+DHXL           n,ac                     Double Hex Shift Left
+DHXR           n,ac                     Double Hex Shift Right
+DIV                                     Unsigned Divide
+DIVS                                    Signed Divide
+DLSH           acs,acd                  Double Logical Shift
+DSB            acs,acd                  Decimal Subtract
+DSPA           ac,[@]disp[,index]       Dispatch
+DSZ            [@]disp[,index]          Decrement And Skip If Zero
+EDSZ           [@]disp[,index]          Extended Decrement And Skip If Zero
+EISZ           [@]disp[,index]          Extended Increment And Skip If Zero
+EJMP           [@]disp[,index]          Extended Jump
+EJSR           [@]disp[,index]          Extended Jump To Subroutine
+ELDA           ac,[@]disp[,index]       Extended Load Accumulator
+ELDB           ac,disp[,index]          Extended Load Byte
+ELEF           ac,[@]disp[,index]       Extended Load Effective Address
+ESTA           ac,[@]disp[,index]       Extended Store Accumulator
+ESTB           ac,disp[,index]          Extended Store Byte
+FAB            fpac                     Absolute Value
+FAD            facs,facd                Add Double
+FAMD           fpac,[@]disp[,index]     Add Double
+FAMS           fpac,[@]disp[,index]     Add Single
+FAS            facs,facd                Add Single
+FCLE                                    Clear Errors
+FCMP           facs,facd                Compare Floating Point
+FDD            facs,facd                Divide Double
+FDMD           fpac,[@]disp[,index]     Divide Double
+FDMS           fpac,[@]disp[,index]     Divide Single
+FDS            facs,facd                Divide Single
+FEXP           fpac                     Load Exponent
+FFAS           ac,fpac                  Fix To AC
+FFMD           fpac,[@]disp[,index]     Fix To Memory
+FHLV           fpac                     Halve
+FINT           fpac                     Integerize
+FLAS           ac,fpac                  Float From AC
+FLDD           fpac,[@]disp[,index]     Load Floating Point Double
+FLDS           fpac,[@]disp[,index]     Load Floating Point Single
+FLMD           fpac,[@]disp[,index]     Float From Memory
+FLST           [@]disp[,index]          Load Floating Point Status
+FMD            facs,facd                Multiply Double
+FMMD           fpac,[@]disp[,index]     Multiply Double
+FMMS           fpac,[@]disp[,index]     Multiply Single
+FMOV           facs,facd                Move Floating Point
+FMS            facs,facd                Multiply Single
+FNEG           fpac                     Negate
+FNOM           fpac                     Normalize
+FPOP                                    Pop Floating Point State
+FPSH                                    Push Floating Point State
+FSA                                     Skip Always
+FSCAL          fpac                     Scale
+FSD            facs,facd                Subtact Double
+FSEQ                                    Skip On Zero
+FSGE                                    Skip On Greater Than Or Equal To Zero
+FSLE                                    Skip On Less Than Or Equal To Zero
+FSLT                                    Skip On Less Than Zero
+FSMD           fpac,[@]disp[,index]     Subtract Double
+FSMS           fpac,[@]disp[,index]     Subtract Single
+FSND                                    Skip On No Zero Divide
+FSNE                                    Skip On Non-Zero
+FSNER                                   Skip On No Error
+FSNO                                    Skip On No Overflow
+FSNOD                                   Skip On No Overflow And No Zero Divide
+FSNU                                    Skip On No Underflow
+FSNUD                                   Skip On No Underflow And No Zero Divide
+FSNUO                                   Skip On No Underflow And No Overflow
+FSS            facs,facd                Subtract Single
+FSST           [@]disp[,index]          Store Floating Point Status
+FSTD           fpac,[@]disp[,index]     Store Floating Point Double
+FSTS           fpac,[@]disp[,index]     Store Floating Point Single
+FTD                                     Trap Disable
+FTE                                     Trap Enable
+HLV            ac                       Halve
+HXL            n,ac                     Hex Shift Left
+HXR            n,ac                     Hex Shift Right
+INC[c][sh][#]  acs,acd[,skip]           Increment
+IOR            acs,acd                  Inclusive OR
+IORI           i,ac                     Inclusive OR Immediate
+ISZ            [@]disp[,index]          Increment And Skip If Zero
+JMP            [@]disp[,index]          Jump
+JSR            [@]disp[,index]          Jump To Subroutine
+LDA            ac,[@]disp[,index]       Load Accumulator
+LDB            acs,acd                  Load Byte
+LEF            ac,[@]disp[,index]       Load Effective Address
+LOB            acs,acd                  Locate Lead Bit
+LRB            acs,acd                  Locate And Reset Lead Bit
+MOV[c][sh][#]  acs,acd[,skip]           Move
+MSKO           ac                       Mask Out
+MSP            ac                       Modify Stack Pointer
+MUL                                     Unsigned Multiply
+MULS                                    Signed Multiply
+NEG[c][sh][#]  acs,acd[,skip]           Negate
+POP            acs,acd                  Pop Multiple Accumulators
+POPB                                    Pop Block
+POPJ                                    Pop PC And Jump
+PSH            acs,acd                  Push Multiple Accumulators
+PSHJ           [@]disp[,index]          Push Jump
+PSHR                                    Push Return Address
+RSTR                                    Restore
+RTN                                     Return
+SAVE           i                        Save
+SBI            n,ac                     Subtract Immediate
+SGE            acs,acd                  Skip If ACS Greater Than Or Equal To ACD
+SGT            acs,acd                  Skip If ACS Greater Than ACD
+SNB            acs,acd                  Skip On Non-Zero Bit
+STA            ac,[@]disp[,index]       Store Accumulator
+STB            acs,acd                  Store Byte
+STBN           acs,acd                  Store Byte
+SUB[c][sh][#]  acs,acd[,skip]           Subtract
+SYC            acs,acd                  System Call
+SZB            acs,acd                  Skip On Zero Bit
+SZBO           acs,acd                  Skip On Zero Bit And Set To One
+XCH            acs,acd                  Exchange Accumulators
+XCT            ac                       Execute
+XOP            acs,acd,operation #      Extended Operation
+XOP1           acs,acd,operation #      Alternate Extended Operation
+XOR            acs,acd                  Exclusive OR
+XORI           i,ac                     Exclusive OR Immediate
+
+
+(pasdev6)einstr.pmf
+    

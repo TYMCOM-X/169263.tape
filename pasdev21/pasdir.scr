@@ -1,0 +1,81 @@
+$num off
+$tit right 'PASDIR Directory Manipulation Routines' right '1/29/79'
+$page $ski $cen
+&PACKAGE DESCRIPTION&
+$jus $ski 2
+PASDIR is a set of PASCAL-callable routines for performing directory
+manipulations. Although the operations are primitive, they can be combined
+easily into more useful functions. In addition, the pattern matching facility
+can be used in other applications.
+$ski
+Five primitive functions are provided by the PASDIR package:
+$ind left +10 $ski $par -5
+DIR_OPEN - open the directory of a specified PPN.
+$par -5
+DIR_CLOSE - close a directory opened by DIR_OPEN.
+$par -5
+DIR_NEXT - return the next file name in a directory opened by DIR_OPEN.
+$par -5
+DIR_MATCH - given a wild card pattern and a string, return TRUE if
+the string is matched by the pattern, FALSE otherwise.
+$par -5
+DIR_ATTR - given a file name, return a record with attributes of the file.
+$ind left -10 $ski 2
+Directories are specified to DIR_OPEN by a string describing the PPN in
+the "normal" DEC format, e.g.\"[52250,10]". DIR_OPEN reutrns an integer
+index to be used in subsequent operations on that directory. The user
+program can have several directories open simultaneously; in practice,
+the maximum number is limited by the number of available channels, and
+PASDIR supports a maximum of 16.
+$ski
+DIR_NEXT returns the name of the next file in a directory in string format,
+e.g.\"FOO.PAS". The end of the directory returns both an error code and
+the null string as the next file name. Thus, the error code can be tested
+in a manner analogous to testing "eof(f)" while peforming "get(f)", i.e.\the
+error code should be tested before the returned data is used.
+$ski
+The exact operations of DIR_MATCH are explained later, but in general, the
+wild card matching operations of DIR_MATCH are a superset of those commonly
+provided by DEC software, in that a period is interpreted no differently
+than any other character in the pattern. Thus a pattern need not include
+a period to match a file name if it contains a wild card element to match
+the period in the file name, e.g.\"*PAS" will work (for file names) basically
+the same as "*.PAS". Unlike the DEC matching facility, there is no limit
+to the number of wild fields in a pattern, e.g.\"*M*M*" will match any
+string containing two or more "M" characters in it without regard to
+a period in a file name, such as "MAC.CMD", "MEM.SCR", or "FOO.MEM".
+Notice that lower case and upper case for letters are &distinguished&
+during the match; since DIR_NEXT returns capital letters, the user should
+uppercase the pattern.
+$ski
+DIR_ATTR takes a string describing the file to be opened, using an extended
+LOOKUP operation to extract information. The PASCAL run-time file name
+parser is used, so any string accepted by OPEN, etc., will be accepted
+by DIR_ATTR. To get attributes of a file on a PPN different from that of
+the user, the PPN must be concatenated onto the file specification.
+$ski
+DIR_ATTR returns a record of the following type giving information:
+$ski $ind left +5 $ver
+DIR_ATTRS = record
+  NAME: packed array[1..9]
+          of char;        (* filename and extension packed *)
+  PROTECT: packed array
+    [1..3] of char;       (* protection code in digits *)
+  SIZE: 0..?;             (* integer number of words *)
+  CREATION: DTIME_INT;    (* day/time is in DTIME format *)
+  ACCESSED: DATE_INT      (* access date in DTIME format *)
+  end;
+$ski $ind left 0 $jus
+Notice that the NAME returned in the DIR_ATTRS record is &not& a string,
+but rather nine characters with blanks in unused positions.
+There is &no& period separating the file name from the extension; this
+field may not be used in the same manner as the string returned from
+DIR_NEXT.
+A call to DIR_ATTR with the file name
+descriptor "RND:PMF.EXE" will return the characters "PMF___EXE", with
+underscores representing blanks, in the NAME field.
+$ski
+DIR_ATTR requires the DTIME package to convert CREATION and ACCESSED
+into their proper formats. The user must explicitly "$INCLUDE" the
+DTIME include files DTIME.TYP  prior to the inclusion of
+the PASDIR $INCLUDE file when using DIR_ATTR.

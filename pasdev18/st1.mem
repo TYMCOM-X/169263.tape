@@ -1,0 +1,614 @@
+$center
+ST-1 SOFTWARE SPECIFICATION
+$skip 2
+$justify
+The editing terminal supports six commands at the system
+readiness symbol (:):
+&QED&, which allows simple tape-to-tape editing;
+&COPY&,
+which transfers data from one device to another
+optionally performing conversion of the data in the process;
+&DUPLICATE&,
+which produces a verbatim copy of a tape;
+&ONLINE&,
+which allows the terminal and peripherals to be used in
+conjunction with a remote timesharing system;
+&TAPE&,
+which produces a printed listing and machine tape from
+a COMPACT II listing file;
+and &CHECKSUM&,
+which reads a tape, and displays the computed character count and checksum.
+$skip
+In the descriptions of commands and subcommands that follow,
+literal keywords appear in uppercase.
+In general, the minimum, unambiguous
+abbreviation may be used.
+User supplied information is indicated by a lowercase pharse
+describing the information required.
+Note that the format of a "device" specification is defined in Appendix A.
+Brackets ([]) surround optional items;
+vertical bars (||) surround a list of items
+from which one is to be selected.
+$skip 2
+&QED&
+$skip
+Before describing the commands,
+it should be recognized that this is a line at a time tape
+eidtor.
+This means that the input can be edited in only
+one direction --
+from the beginning to the end without backup.
+The file to be edited is read from an input device,
+and the edited version is written to an output device
+as the user advances through the file by 
+searches or commands applied to a range of lines.
+QED on the ST-1 can be viewed as operating in window mode --
+with a one line window.
+$skip
+Unless otherwise specified by the user,
+it is assumed that the input device is the paper tape reader
+and that the output device is the paper tape punch.
+The data is assumed to be ASCII.
+The APPEND and OUTPUT commands may be used to change these defaults.
+$skip
+In the descriptions of the editing commands that follow,
+a line designation is represented as "ld".
+It may take the following forms:
+$skip
+$indent left 9
+$par -4
+A.\\A line number. (See the note below.)
+$par -4
+B.\\A bracket search string,
+[...string...],
+as defined in the QED manual.
+$par -4
+C. A colon search string,
+:...string...:,
+as defined in the QED manual.
+$par -4
+D. A current line number (.) or relative line number (.+number)
+as in the standard QED.
+$indent left 0
+$skip
+Note that line numbers are handled differently in QED on the ST-1
+than in the standard QED.
+The number of a line is its absolute line position in the
+input file.
+This means that the line number of a source line &does not&
+change if lines are inserted or deleted in front of it
+during one pass of the editing process.
+On subsequent passes, the line number reflects
+the insertions or deletions made.
+$skip
+$need 4
+The editing commands are as follows:
+$skip
+$indent left 9
+$par -4
+1.\\[ ld ]  APPEND  [ device ]
+$skip
+The APPEND command inserts new text after
+the current line or the designated line, if an ld is given.
+If no device is specified,
+the text to be inserted is read from the terminal
+keyboard
+and is terminated with a control-D character.
+If a device is specified,
+the input source for the session is set.
+Subsequent searches, print commands, etc. will
+scan text from that device.
+$skip
+In the initial implementation,
+a device specification given in a subsequent APPEND command
+causes an implicit FINISH operation to process the remaining
+text from the previous input source.
+(In future releases, this may be changed to cause the input source
+to be stacked so that files can be merged.  Such a change
+would require rethinking the definition of line numbers.)
+$skip
+Note that since the current ST-1 configuration has only one
+bulk input device, the paper tape reader,
+the device specification on an APPEND command
+is useful only to change the modes before editing a tape.
+$skip
+$need 4
+$par -4
+2.\\OUTPUT\\| device |
+$par
+\\\\\\\\|\\NONE\\|
+$skip
+The OUTPUT command designates the device to which text is written
+as the user advances through the input file.
+If NONE is specified in place of a device,
+the text is not output, but is simply discarded.
+This feature is useful when only printing portions of a file.
+An error is reported if modifications are made
+with output set to NONE.
+$skip
+Note that with the current configuration,
+the OUTPUT command is useful only to change the modes in
+effect for the paper tape punch.
+$skip
+$need 4
+$par -4
+3.\\[ ld [ , ld ]]\\SUBSTITUTE\\|\/ps/rs/\options\|
+$par
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\|\\\\\\PRINT\\\\\\|
+$par
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\|\\\\DELETE\\n\\\\|
+$skip
+The first form has the same format as the standard QED command,
+except that the SEEK option is not supported.
+Execution of the command is deferred;
+it is applied on a line by line basis as lines within the range specified
+are actually read.
+This means that QED may verify or check substitutions in
+response to commands that cause the input to be scanned or searched.
+This also means that the substitutions take effect
+before subsequent commands or searches examine each new input line.
+Up to four substitute commands may be stacked in this manner.
+They are applied to a line in the order entered.
+$skip
+The print form displays the current stack of
+deferred substitutes.
+$skip
+The delete form removes the nth (as numbered by the print form)
+deferred subsitute from the stack.
+A substitute command is implicitly removed when its range is
+exhausted.
+$skip
+$need 4
+$par -4
+4.\\[ ld [ , ld ]]\\DELETE
+$skip
+The DELETE command deletes the designated line or
+range of lines.
+Deferred substitutes are not applied to lines to be deleted.
+Of necessity, the current line is set to the line following
+the last line deleted.
+If no line designation is given, no action is taken.
+$skip
+$need 4
+$par -4
+5.\\[\ld\[\,\ld\]]\\PRINT\\[\=\]
+$skip
+The PRINT command prints the designated lines on the terminal
+printer. If the "=" option is specified,
+line numbers are placed on the listing.
+If no line designation is given,
+the remainder of the input (.+1,$) is assumed.
+$skip
+$par -4
+6.\\[\ld\]\\MODIFY
+$skip
+The MODIFY command opens the designated line for control
+character editing.
+If no line is designated, the next line (\.+1\) is assumed.
+The control character editing set is as follows:
+C, S, Z, X, H, D, M, V, E, A, Q, O and P.
+They have the same function as in standard QED.
+$skip
+$par -4
+7.\\[\ld\]\\EDIT
+$skip
+The EDIT command is the same as MODIFY,
+except that the designated line is printed before
+being opened for editing.
+$skip
+$need 4
+$par -4
+8.\\ld\\=
+$skip
+THe = command advances to the designated line
+and prints its line number.
+$skip
+$need 4
+$par -4
+9.\\(line feed)
+$skip
+A line feed advances to the next line and prints it.
+$skip
+$need 4
+$par -4
+10.\FINISH
+$skip
+The FINISH command causes all remaining input text
+to be transfered to the output device,
+and a RESET performed to reinitialize the input and output devices.
+Substitutes are performed as the text is transfered.
+This is equivalent to exiting and reentering QED.
+$skip
+$need 4
+$par -4
+11.\RESET
+$skip
+The RESET command may be used to reinitialize the input and output
+devices to the defaults.
+The current line, but not any remaining input text,
+is written before the output device is closed.
+The effect is to truncate the file being edited.
+$skip
+$need 4
+$par -4
+12.\EXPAND\\|\ON\\|
+$par
+\\\\\\\\|\OFF\|
+$skip
+The expand command may be used to set the output device mode
+to either expand visual blocks (lines beginning with a ()) on output
+or not.
+This bypasses the expand mode which may be given in the device
+specification and may be used to selectively expand
+particular visual blocks within the file.
+Visual blocks are expanded by default.
+$skip
+$need 4
+$par -4
+13.\EXIT
+$skip
+The EXIT command terminates an editing session
+by transfering all remaining input text to the output device,
+and returns to the system level (:).
+$indent left 0
+$skip
+Tapes read or written by QED conform to the tape format described
+in Appendix B.
+$skip
+If a parity error is detected in the input,
+the ongoing operation is halted
+so that the affected line can be reconstructed.
+Characters with bad parity are replaced by "@"s.
+$skip 2
+&COPY&
+$skip
+The COPY command transfers data from one device to another,
+and has the following format:
+$skip
+\\\\\COPY\\device\\TO\\device
+$skip
+By appropriate specification of device modes,
+data conversion can be performed during the transfer.
+For example,
+the following command converts an EIA tape to ASCII:
+$skip
+\\\\\COPY PTR(EIA) TO PTP(ASC)
+$skip
+The tapes read and written by the copy command are in the format
+described in the appendix.
+Unlike the duplicate command (below),
+the data/time and checksum is generated anew for an output tape.
+$skip
+If a parity error is detected on input,
+an error message indicating the location of the bad data
+is displayed.
+Copying continues with "@" substituted for
+the bad character.
+$skip 2
+&DUPLICATE&
+$skip
+The duplicate command performs an exact duplication of the tape
+in the paper tape reader.
+No conversion is performed, and the date and checksum
+of the original are reproduced verbatim.
+The command is terminated by typing an escape character on the terminal.
+$skip 2
+$need 4
+&ONLINE&
+$skip
+The ONLINE subsystem provides for the connection of the terminal
+and peripherals to a remote timesharing system.
+When the ONLINE command is issued,
+all peripherals are turned off;
+the terminal keyboard is connected to the modem input,
+and the modem output is connected to the terminal printer.
+$skip
+A command dispatcher is available from ONLINE mode by typing ()
+at the terminal keyboard.
+In response, the online command readiness symbol (*) is printed,
+and a single command processed.
+The following commands are available:
+$skip
+$indent left 9
+$need 4
+$par -4
+1.\\SET\\devicename\\|\ON\\|
+$par
+\\\\\\\\\\\\\\\\\|\OFF\|
+$skip
+This command may be used to connect devices to (ON) or disconnect
+devices from (OFF) the modem.
+Input devices are connected to the input side of the modem,
+and output devices to the output side.
+The connection is direct, that is, no conversion is performed.
+When set on,
+the devices are assumed to be phsically ready.
+Devicenames are given in Appendix A.
+Note that the terminal keyboard can never be disconnected.
+$skip
+$need 4
+$par -4
+2.\\SET\\|\HALFDUPLEX\|
+$par
+\\\\\|\FULLDUPLEX\|
+$skip
+This command controls local copying of input.
+IN HALFDUPLEX,
+input characters from &any& connected device
+are echoed on the terminal printer.
+In FULLDUPLEX mode, no such echoing is performed.
+FULLDUPLEX is the default.
+$skip
+$need 4
+$par -4
+3.\\TAPE\\[\device\]
+$skip
+The TAPE command reads a COMPACT II listing file in tape format
+from the modem output;
+prints it on the terminal printer;
+and outputs a maching tape to the device specified.
+If no device is specified, PTP(ASC) is assumed.
+When transmission of the listing file is complete,
+connections are reestablished such that
+only the terminal keyboard and printer are on.
+$skip
+$need 4
+$par -4
+4.\\OFFLINE
+$skip
+This terminates ONLINE operation and returns to the system level (:).
+$skip
+$indent left 0
+While in ONLINE mode,
+reader on/off and punch on/off characters received
+from the modem output are intercepted.
+They do not actually control the reader and punch.
+Instead, the reader control characters 
+enable and disable transmissions to the modem from connected input devices &including& the keyboard;
+the punch control characters connect and disconnect the punch from
+the modem.
+Note: these control characters have no effect
+when received from the terminal or reader/punch.
+$skip 2
+&TAPE&
+$skip
+The TAPE command reads a COMPACT II listing file;
+prints it on the terminal printer;
+and writes a machine tape to the output device:
+$skip
+\\\\\TAPE\\[\input-device\TO\]\\[\output-device\]
+$skip
+If no input device is specified, PTR(ASC) is assumed;
+if no output device is specified, PTP(ASC) is assumed.
+$skip 2
+&CHECKSUM&
+$skip
+The CHECKSUM command reads data from a device;
+computes a character count and checksum; and prints
+that information on the terminal.
+$skip
+\\\\\CHECKSUM\\[\device\]
+$skip
+If no device is specified, the data is read from PTR(ASC).
+$skip
+This is useful for verifying tapes for which no master exists,
+e.g. a tape transfer from a remote timesharing system.
+$page
+&APPENDIX A& - &Device Specification&
+$skip
+A device specification consists of a device name followed
+by a parenthesized list of options:
+$skip
+\\\\\devicename\\(\options\)
+$skip
+Either the name or the option list
+may be omitted.
+Defaults are discussed below.
+$skip 2
+&Device Names&
+$skip
+A device name identifies a particular data source.
+Currently, the only devices are the peripherals attached
+to the ST-1:
+$skip
+$indent left 11
+$par -6
+PTR\\\the paper tape reader
+$par -6
+PTP\\\the paper tape punch
+$par -6
+KBD\\\the terminal keyboard
+$par -6
+TER\\\the terminal printer (or when used in a context where
+an input device is expected, the keyboard)
+$skip
+$indent left 0
+When only an option list is given in a device specification,
+PTR is assumed as an input device,
+and PTP is assumed as an output device.
+Note well: this is true only for existing commands
+and may change when new commands or new devices are added.
+$skip 2
+&Device Options&
+$skip
+The options control code conversion on input and output,
+uppercasing of output,
+leader conventions,
+and expansion of visual blocks on output.
+The latter two apply only to the tape devices.
+$skip
+The options for code conversion are:
+$skip
+$indent left 11
+$par -6
+ASC\\\ASCII, even parity, to ASCII (input),
+or ASCII to ASCII, even parity (output).
+$par -6
+EIA\\\EIA, odd parity, to ASCII (input), or
+ASCII to EIA, odd parity (output).
+$par -6
+BIN\\\no conversion.
+$skip
+$indent left 0
+During conversion, if a character with bad parity is detected,
+or if a character which is not in the character set is used,
+it is replaced by an "@".
+$skip
+The uppercasing option controls conversion of lowercase characters
+to uppercase on output:
+$skip
+$indent left 17
+$par -12
+UPPERCASE\\\enables conversion
+on output.
+$par -12
+LOWERCASE\\\disable conversion
+$indent left 0
+$skip
+The leader/trailer format is specified by an option of the
+following format:
+$skip
+\\\\\code\\[\(\length\)\]
+$skip
+The integer length is the number of inches of leader/trailer to be used.
+The maximum value permitted is 25.
+If no length is specified, 5 inches is assumed.
+Possible codes are:
+$skip
+$par
+\\\\\NULL
+$par
+\\\\\BLANK
+$par
+\\\\\DELETE
+$skip
+If no leader option is specified,
+the convention to be used is determined from the code conversion
+in effect for the device.
+NULL(5) is used with ASC and BIN;
+BLANK(5) is used with EIA.
+$skip
+The visual block expansion option is applicable only
+to tape output devices.
+It controls the expansion of lines preceded by a ()
+into a visual block as describe in Appendix B.
+Possible options are:
+$skip
+$indent left 16
+$par -11
+EXPAND\\\\\enables expansion
+$par -11
+NOEXPAND\\\suppresses expansion
+$indent left 0
+$skip
+Unless overridden by an explicit option setting,
+the following options are assumed for the devices indicated:
+$skip
+$verbatim
+     PTR (ASC NULL (5))
+     PTP (ASC NULL (5) EXPAND UPPERCASE)
+     TER (ASC LOWERCASE)
+     KBD (ASC)
+$justify
+$page
+&APPENDIX B& - &Tape Format&
+$skip
+The ST-1 commands QED, COPY, TAPE, and CHECKSUM read and punch
+paper tapes having the following format:
+$skip
+$verbatim
+     -------------------------------------------------------------
+      | date.. | leader |      text      | trailer | ..checksum |
+     -------------------------------------------------------------
+$justify
+$skip
+$indent left 12
+$par -12
+date\-\\\\\\Date of tape generation
+punched in visual characters and followed by 1.5 inches of nulls.
+$skip
+$par -12
+leader\-\\\\Leader as specified by device leader option.
+Regardless of the leader size specified,
+any number of leader characters are skipped on input.
+$skip
+$par -12
+text\-\\\\\\Regular information in the code specified
+by the device options.
+ASC or EIA tapes may include interpersed visual blocks.
+$skip
+$par -12
+trailer\-\\\Trailer in format specified by the device options.
+Regardless of the leader length specified,
+one inch of trailer is regarded as an end of tape indicator on input.
+$skip
+$par -12
+checksum\-\\checksum and character count of the text characters
+in the tape, punched in visual characters
+and preceeed by 1.5 inches of nulls.
+$skip
+$indent left 0
+The date and checksum segments are not intended to be machine
+read.
+They are neither recogized nor skipped.
+Reading of the tape should be started in the leader segment,
+and as stated, reading stops automatically before
+the checksum.
+$skip
+As described above, ASC or EIA tapes may include visual identification at
+various points on a tape.
+A visual block has the following format.
+$verbatim
+$skip
+              -------------------------------------------
+               |v| VISUAL |s...s|t| visual |cr| leader |
+              -------------------------------------------
+$skip
+$justify
+$indent left 10
+$par -10
+v\-\\\\\\\a character indicating the start of the visual block.
+$skip
+$par -10
+VISUAL\-\\the identification in visual characters,
+surrounded by visual blanks.
+$skip
+$par -10
+s...s\-\\\some number of visual stop characters.
+$skip
+$par -10
+t\-\\\\\\\a character indicating the start of a line containing
+the text of the visuals.
+$skip
+$need 4
+$par -10
+visual\-\\the text of the characters expanded to visual characters,
+ recorded in the code specified for the device.
+This section together with the start character (t) is optional.
+$skip
+$par -10
+cr\-\\\\\\a carriage return in the code specified for the device.
+Indicates the end of the line of visual text.
+$skip
+$par -10
+leader\-\\tape leader in the format specified for the device.
+On input, a length of leader less than that specified is aed;
+a length greater than specified indicates the end of tape.
+$skip
+$indent left 0
+When a visual block is encountered while reading a tape,
+the visual start character, the visual characters, and the visual stop
+characters are discarded.
+The regular unexpanded text of the visuals,
+including the start character, &is read&.
+The following leader is skipped.
+$skip
+Reading of a tape may be begun in the region containing
+the visual stop characters.
+In such a case, these characters are treated as leader and discarded.
+Again the text of the visuals are read.
+$skip
+On output,
+a line beginning with the visual text start character
+is punched in the above format.
+ <zD9

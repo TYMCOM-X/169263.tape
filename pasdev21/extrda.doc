@@ -1,0 +1,12 @@
+#system(DTIME - day/time manipulation routines)
+#module(EXTR_DATE,11/01/78)
+Extract the date portion of an internal day/time.
+#usage
+EXTERNAL FUNCTION EXTR_DATE(DTIME: DTIME_INT): DATE_INT;
+#input(DTIME)a day/time in internal form.
+#output(<return value>)the date portion of 'DTIME' in 
+internal form.
+#include(DTIME.TYP)
+#include(DTIME.INC)
+#responsible(S. M. ROUSH)
+#end

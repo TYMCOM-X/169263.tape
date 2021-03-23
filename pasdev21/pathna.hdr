@@ -1,0 +1,37 @@
+;    +--------------------------------------------------------------+
+;    |                                                              |
+;    |                       P A T H N A M E                        |
+;    |                       - - - - - - - -                        |
+;    |                                                              |
+;    +--------------------------------------------------------------+
+;    
+;    MDSI, Company Confidential
+;    
+;    SYSTEM:  RDLIB -- pathna.doc
+;    
+;    STARTED:  4/7/78
+;    
+;    PURPOSE:  This function returns the full title of an  open  text
+;       file.  That  is, the name includes such information as device
+;       and actual directory.  It is useful in determining  the  file
+;       found  when  there  is directory searching in effect, or when
+;       defaults may apply.
+;    
+;    USAGE:
+;    
+;       external function PATHNAME (var F: text): FILE_ID;
+;    
+;    INPUT:
+;    
+;       F           is the file whose pathname is to be determined.
+;    
+;    OUTPUT:
+;    
+;       PATHNAME    is the full title of the file in string format.
+;    
+;    INCLUDE FILES REQUIRED:
+;    
+;       CMDUTL.TYP
+;       FILUTL.INC
+;    
+;    ----------------------------------------------------------------

@@ -1,0 +1,43 @@
+;    +--------------------------------------------------------------+
+;    |                                                              |
+;    |                       A D D _ S E C S                        |
+;    |                       - - - - - - - -                        |
+;    |                                                              |
+;    +--------------------------------------------------------------+
+;    
+;    MDSI, Company Confidential
+;    
+;    SYSTEM:  DTIME - day/time manipulation routines
+;    
+;    STARTED:  11/01/78
+;    
+;    PURPOSE:  Add a given number of seconds to an internal day/time.
+;    
+;    USAGE:
+;    
+;       EXTERNAL FUNCTION ADD_SECS(DTIME: DTIME_INT;
+;          NUM_SECS: SECONDS): DTIME_INT;
+;    
+;    INPUT:
+;    
+;       DTIME       a day/time in internal form.
+;    
+;       NUM_SECS    a (possibly negative) number of seconds.
+;    
+;    OUTPUT:
+;    
+;       <return value>
+;                   an  internal  day/time  formed  by   adding   the
+;                   specified   number   of   seconds  to  the  given
+;                   day/time.  If a negative  day/time  would  result
+;                   then  the  internal  day/time  for  day  zero  is
+;                   returned.
+;    
+;    INCLUDE FILES REQUIRED:
+;    
+;       DTIME.TYP
+;       DTIME.INC
+;    
+;    RESPONSIBLE:  S.  M.  ROUSH
+;    
+;    ----------------------------------------------------------------

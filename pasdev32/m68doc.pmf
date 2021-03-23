@@ -1,0 +1,192 @@
+#document(M68000 RDLIB Routines,<:January 13, 1982:>,45)
+#par_default(1,4)
+#define(#list,name,&
+$NEED 4
+#item(^u&name&|u:)&&)
+#sect(RDLIB Routines For The M68000)
+This document  describes the RDLIB routines that will be
+implemented on the M68000. The list of routines is divided into
+two different catigories: routines which can be investigated and
+implemented independently of ANC, and routines which need to be
+discussed with ANC.
+#beginlevel
+#sect(Routines Independent of ANC)
+The following section describes  the  RDLIB
+routines that, at the present time, are known to be needed and
+whose functions can be determined independently of ANC.
+These routines will require little or no investigation
+in order to be coded and implemented.
+#par()
+The list of routines given below is divided into the same package
+topics as are used for the DEC-10 RDLIB and the VAX RDLIB. After each
+routine name is a brief description of the routine's function.
+Qualifiers appended to the end of the routine
+descriptions have the following meanings:
+#beginitem(7,,0)
+#item(\\(P))Written in MDSI PASCAL (system independent
+unless otherwise noted).
+#item(\\(S))Pascal code is system dependent for the DEC-10 and
+VAX versions of the routine and will also be for the M68000 version.
+#item(\\(I))Some minimal amount of investigation or some decision
+is known to be needed before the spec for the routine can be completed
+for the M68000.
+An indication as to what has to be looked into is given in brackets
+after the qualifier.
+#enditem
+Routines not given a (P)  qualifier are assumed to be coded
+in machine
+dependent assembler language.
+#beginitem(4,1,0,2)
+#list(DTIME Routines)
+#beginitem(15,1,0,1)
+#item(DAYTIME)returns the current local day/time in internal
+form. (P,S,I)
+[will need to be written in M68000 assembler]
+#item(DC_EXT)converts an internal
+day/time to standard external form. (P)
+#item(EC_EXT)converts external dates and/or times in any of several
+formats to internal form. (P)
+#item(EXTR_DATE)extracts an internal date from an internal day/time. (P)
+#item(EXTR_TIME)extracts an internal time from an internal day/time.
+#item(DT_COMBINE)constructs an internal day/time from an internal day
+and an internal time.
+#item(DAYS_DIFF)calculates the number of days between two internal
+day/times. (P)
+#item(SECS_DIFF)calculates the number of seconds between two internal
+day/times.
+#item(ADD_DAYS)adds a specified number of days to an internal day/time. (P)
+#item(ADD_SECS)adds a specified number of seconds to an
+internal day/time.
+#item(DAY_OF_WEEK)returns the day of the week which an internal 
+day/time falls on. (P)
+#item(NS_D1)converts an internal date to non-standard external
+date format one: 'mm/dd/yy'. (P)
+#item(NS_D2)converts an internal date to non-standard external
+date format two: 'mmm\dd,\yyyy'. (P)
+#item(NS_T1)converts an internal time into non-standard external
+time format one: 'hh:mm:ss\[AM|PM]'. (P)
+#item(DC_DTIME)returns the binary day/time record corresponding to
+a given internal day/time. (P)
+#item(EC_DTIME)returns the internal day/time corresponding to a
+given binary day/time record. (P)
+#item(DC_DATE)returns the binary date record corresponding to a given
+internal date. (P)
+#item(EC_DATE)returns the internal date corresponding to a
+given binary date record. (P)
+#item(DC_TIME)returns the binary time record corresponding to a given
+internal time. (P)
+#item(EC_TIME)returns the internal time corresponding to a
+given binary time record. (P)
+#enditem
+#list(PASDIR Routines)
+#beginitem(15,1,0,1)
+#item(DIR_OPEN)opens a specified directory.
+#item(DIR_CLOSE)closes a directory previously opened by DIR_OPEN.
+#item(DIR_NEXT)scans through a directory opened by DIR_OPEN, returning
+the filename of the next directory entry.
+#item(DIR_MATCH)matches a string to a wildcard pattern, returning true
+if the string matches the pattern. (P)
+#item(DIR_ATTR)returns the attributes of a given file.
+(I) [the attributes that are going to be available must be
+decided and how they are represented must then be defined]
+#enditem
+#list(FILUTL Routines)
+#beginitem(15,1,0,1)
+#item(PR_FILE_ID)extracts a filename from an input string. (P,S)
+#item(OPEN_FILE)opens a text file for input or output. (P,S)
+#enditem
+#list(CMDUTL Routines)
+#beginitem(15,1,0,1)
+#item(CMD_SKIP_BLANKS)advances cursor to first non-blank character. (P)
+#item(CMD_EOL)determins if there are any more non-blank characters
+in a text line, advancing the cursor while scanning. (P)
+#item(CMD_CHECK_PUNCT)tests whether the next non-blank character
+in the text line matches a specified punctuation character. (P)
+#item(CMD_TOKEN)returns a token from a text line given the character
+set of legal characters. (P)
+#item(CMD_NUMBER)scans a string of digits in a text line, returning the 
+numberic value they represent. (P)
+#item(CMD_STRING)returns a string of characters from a text line
+starting at a specified cursor and continuing until a specified
+character is found. (P)
+#item(CMD_DQSTRING)same as CMD_STRING except double occurences of the
+quote character represent the character itself. (P)
+#item(CMD_LOOKUP)finds the next token in a text line, looks it up
+in a table of names, and returns the code field from the matching
+table entry. (P)
+#item(CMD_FILE_NAME)extracts a filename from a text line. (P,S)
+#item(CMD_QUERY)prints a question on the terminal, gets a yes/no
+answer and returns true or false , respectively. (P)
+#item(CMD_GETLINE)print a prompt on the terminal, read a line, and
+set the cursor position to the start of the line. (P)
+#item(CMD_DISPLAY_TABLE)displays all the command names from a list of
+name description records of the sort used by CMD_LOOKUP. (P)
+#enditem
+#list(Miscellaneous Routines)
+#beginitem(15,1,0,1)
+#item(GET8BITSFROMTTY)reads a character from the terminal returning the
+character to the user's program without any translation.
+(I) [needs to be checked to see if there will be any problem
+in getting all eight bits from the terminal with the default
+terminal characteristics]
+#item(JOBNUM)returns the session number of the user.
+#item(PUT8BITSTOTTY)writes an 8-bit value to the user's terminal.
+#item(QUERY)writes a question to the terminal and gets a YES/NO/REPEAT
+answer. (P)
+#item(RENAME)renames a given file.
+#item(REPROTECT)reprotects a given file.
+(I) [representation of the protection codes (status) needs to 
+be defined]
+#item(RUN)allows a program to call and run another program.
+#item(SLEEP)causes the calling process to delay for a given
+period of time.
+#item(TEMP_FILE_NAME)returns a unique temporary filename given
+a unique three letter key. (P,S)
+#item(TT_IDENTIFIER)returns a string containing the terminal.
+identifier.
+#enditem
+#enditem
+#sect(ANC Dependent Routines)
+The following RDLIB issues will need to be discussed and investigated
+in conjunction with ANC in order to best determine what needs to be
+provided and/or what is possible to provide on the M68000 system.
+Some of the routines listed below may not be able to be provided
+and some suitable alternative may have to be found.
+#beginitem(15,1,0,1)
+#item(CONTIME)returns the elapsed time, in seconds, since the job
+(session) has logged in.
+#item(GET_TERMINAL_CHARACTERISTICS)at the moment the terminal
+characteristics that can be determined from a user program on the
+M68000 are not known. ANC will have to be questioned as to what
+the use of this routine in their programs and the M68000 will have
+to be looked at to determine if the same items or reasonable
+substitutes can be provided.
+#item(GET_USER_ACNT)returns some representation of the UIC
+associated with the calling process.
+#item(IMAGE_FILE_NAME)returns the full filename (pathname) of the file
+that is currently being run.
+#item(LINSPD)returns the baud rate of the user's terminal.
+#item(SET_TERMINAL_CHARACTERISTICS)since it is not known at this
+time which terminal characteristics can be accessed by a program (if any),
+it is also not known which characteristics can be set by a user
+program. Investigation into the issues involved with the
+SET_TERMINAL_CHARACTERISTICS can be determined in conjunction
+with the investigation of the GET_TERMINAL_CHARACTERISTICS routine.
+#item(^uPaper tape routines|u:)ANC will have to be consulted as to their
+needs for paper tape library routines that will be needed on the M68000.
+#enditem
+#sect(Other Necessary Routines)
+The following routines are procedures and functions which are used
+internally
+by RDLIB routines and are not a part of the user RDLIB package.
+#beginitem(15,1,0,1)
+#item(CHARS2)converts an integer between -99 and 99 to a two
+character string. (P)
+#item(CV_BIN_STR)converts an integer to a string. (P)
+#item(DC_DAYS)number of days since base date.
+#item(DC_MONTH)returns a three letter abrieviation for a given
+month number. (P)
+#item(EC_DAYS)day conversion to internal form.
+#enditem
+$SKIP 4
+(pasdev32)m68doc.pmf

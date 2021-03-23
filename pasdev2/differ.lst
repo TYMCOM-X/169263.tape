@@ -1,0 +1,496 @@
+File 1)	DSK:MMMFLS.MAC	created: 1419 06-OCT-81
+File 2)	DSK:MMMODF.MAC[31024,320155]	created: 1630 28-APR-82
+
+1)1		search	rtsym
+1)		$module	MODFIT
+1)	;    +--------------------------------------------------------------+
+****
+2)1		search	RTSYM
+2)		$module	modfit
+2)	;    +--------------------------------------------------------------+
+**************
+1)1		debug=0				;0 for normal, <>0 for debug
+1)	; entry points in this module
+1)		ENTRY	HPREAD,HPLOAD,HPWRIT,HPSAVE	; what's special here
+1)		intern	ALC0.		; cause package to be loaded
+1)		ALC0.=	0
+1)		intern	NEW.,DSPOS.
+1)	;	intern	MARK.,RLEAS.	;currently unused
+1)	; externs for error reporting
+****
+2)1	;	$check
+2)	; entry points in this module
+2)		entry	ALC1.
+2)		intern	NEW.,DSPOS.,MARK.,RLEAS.
+2)		intern	ALC0.
+2)	; externs for error reporting
+**************
+1)1		EXTPTR=3			;word for writing out to file
+1)		HDRSIZ=4			;number of words in heap header
+1)	;
+****
+2)1		HDRSIZ=3			;number of words in heap header
+2)	;
+**************
+1)1		extern	HSTRT.			; synthetic heap start address
+1)	;
+****
+2)1	;
+**************
+1)1		$low
+1)		$STATIC	CHEAP,1			; ptr to current heap
+1)		$STATIC	DUMSTA,1		; status word for dump mode I/O
+1)		$STATIC	CHNUM,1			; channel number cell
+1)		$STATIC DESTREG,1		; store destination register for NEW
+1)		$STATIC RW.ADR,1		; read/write core address
+1)		$STATIC RW.CNT,1		; read/write block count
+1)		$STATIC RW.BLK,1		; read/write disk block
+1)		IFE DEBUG, <
+1)		  DEFINE COUNT(A) <>>
+1)		IFN DEBUG, <
+1)		  DEFINE COUNT(A) <
+1)		    AOS 0,A>
+1)		$STATIC	CNNEW,1
+1)		$STATIC	CNDISP,1
+1)		$STATIC	CNCOAL,1
+1)		$STATIC	CNEXT,1
+1)		$STATIC	CNSPLI,1
+File 1)	DSK:MMMFLS.MAC	created: 1419 06-OCT-81
+File 2)	DSK:MMMODF.MAC[31024,320155]	created: 1630 28-APR-82
+
+1)		$STATIC	CNEXAM,1>
+1)		$high
+1)	; initialize -- get space for heap, and initialize below
+1)	INIT:	MOVEI	HEAP,HSTRT.		; get addr of low seg free start
+1)		PUSHJ	TOP,NEWHP		; tack on new one
+1)		HRRZS	0,LHEAP(HEAP)		; set back pointer to zero
+1)		POPJ	TOP,0			; and go home
+1)	;
+****
+2)1		$static	cheap,1
+2)		$static	blksize,1
+2)		$static	destreg,1
+2)		$static	regsave,psa-1
+2)		$temp	psatemp,1
+2)	;
+2)	HPINI:	SETZM	CHEAP
+2)	;	POPJ	TOP,0
+2)	; initialize -- get space for heap, and initialize below
+2)	ALC1.:
+2)	ALC0.:
+2)	INIT:	HRRZ	HEAP,$STACK(PDA)	; get addr of low seg free start
+2)		SETZM	CHEAP			; set back pointer to zero
+2)	;
+**************
+1)1	; HPWRIT -- call to write out current heap. It is assumed that something
+1)	;   is there, and that the end of the heap falls on a 128-word minus one
+1)	;   boundary (e.g. 12777b, 20777b, etc.). 
+1)		extern	OPN$FI,CLOS$F,READ$P,WRIT$P	; externs for dump I/O
+1)	HPWRIT:	MOVE	PSA,$MODFIT(PDA)	; load data pointer
+1)		SETZM	4(TOP)			; error if we return now
+1)		SKIPN	0,CHEAP			; make sure there's an active heap
+1)		POPJ	TOP,0			;   else go home now
+1)		PUSH	TOP,3			; save addr of skyhook cell
+1)	; load parameters -- assume 2 has addr of file name
+1)		MOVEI	3,CHNUM			; addr of channel number cell
+1)		MOVEI	4,DUMSTA		;   and boolean status cell
+1)		SETZ	5,0			; clear inputonly flag
+1)		MOVEI	6,1			; and set deletecontents true
+1)		PUSHJ	TOP,OPN$FI		; open the file
+1)		SKIPN	0,DUMSTA		; did it go?
+1)		JRST	HPSERR			; no
+1)		HRRZI	HEAP,HSTRT.		; get synthetic heap address start
+1)		HRRZ	T,CHEAP			; must use currently active heap
+1)		HRRZ	T,TAIL(T)		;   to get real tail of heap
+1)		SUBI	T,0(HEAP)		; get length (addr(FREE)-addr(HEAD)-1)
+1)		IDIVI	T,^o200			; get size of heap in blocks
+1)		MOVE	T2,0(TOP)		; get skyhook address to store
+1)		HRLI	T2,0(T)			; left halfword gets size of heap
+1)		MOVEM	T2,EXTPTR(HEAP)		; put down in control area of heap
+1)		HRRZ	T2,CHEAP		; get current CHEAP value
+1)		HRLM	T2,LHEAP(HEAP)		;   and kludge in as backlink of first
+1)	;
+1)	; write the heap to the file.  do the write in chunks of no more
+1)	; than 16 pages (64 disk blocks) to avoid op sys problems
+File 1)	DSK:MMMFLS.MAC	created: 1419 06-OCT-81
+File 2)	DSK:MMMODF.MAC[31024,320155]	created: 1630 28-APR-82
+
+1)	;
+1)		MOVEI	2,0(HEAP)		; starting core address
+1)		MOVEM	2,RW.ADR
+1)		MOVEI	3,0(T)			; number of blocks
+1)		MOVNM	3,RW.CNT
+1)		SETZM	RW.BLK			; starting block number
+1)	W.LOOP:
+1)		MOVE	2,RW.ADR		; next core address
+1)		SKIPN	3,RW.CNT		; neg blocks remaining
+1)		JRST	W.DONE			; all done
+1)		MOVN	3,3
+1)		CAILE	3,^o100			; max count = 64
+1)		MOVEI	3,^o100
+1)		ASH	3,7			; blocks * 128 = words
+1)		ADDM	3,RW.ADR		; increment next core address
+1)		ASH	3,-7			; words / 128 = blocks again
+1)		ADDM	3,RW.CNT		; decrement blocks remaining
+1)		MOVE	4,RW.BLK		; next block to write
+1)		ADDM	3,RW.BLK		; increment next block
+1)		MOVE	5,CHNUM			; get channel number
+1)		MOVEI	6,DUMSTA		; address of status cell
+1)		PUSHJ	TOP,WRIT$P		; do it
+1)		SKIPN	DUMSTA			; success?
+1)		JRST	HPSERR			; no, failure
+1)		JRST	W.LOOP			; yes, do next chunk
+1)	W.DONE:
+1)		MOVE	2,CHNUM			; set up pars to close fil
+1)		SETZ	3,0			; channel, deletefile=false
+1)		PUSHJ	TOP,CLOS$F		; do it
+1)		HRRZS	0,HSTRT.+LHEAP		; zero out phony backlink to avoid trouble
+1)		POP	TOP,T2
+1)		MOVEI	T,1			; return TRUE
+1)		MOVEM	T,4(TOP)
+1)		POPJ	TOP,0			; go home
+1)	HPSERR:	POP	TOP,T2
+1)		SETZM	4(TOP)			; return FALSE
+1)		POPJ	TOP,0
+1)	;
+1)	; HPSAVE -- wrapper for HPWRIT.  Do HPWRIT, then blow up if error.
+1)	;
+1)	HPSAVE:	PUSHJ	TOP,HPWRIT
+1)		SKIPE	5(TOP)			; success?
+1)		POPJ	TOP,0			; yes, return
+1)		MOVEI	T,[asciz/
+1)	?	Disaster in heap save call/]
+1)		JRST	ALCDIE
+1)	;
+1)	; HPREAD -- reset the world from a file.  Filename in R2, purge/nopurge flag
+1)	;   in R3, return skyhook cell.  What could be easier?
+1)	HPREAD:	MOVE	PSA,$MODFIT(PDA)	; data area pointer
+1)		PUSH	TOP,3			; save addr of skyhook cell
+1)		MOVEI	3,CHNUM			; load pars -- 2 has fname, 3 channel cell
+1)		MOVEI	4,DUMSTA		; status cell
+1)		MOVEI	5,1			; inputonly true
+File 1)	DSK:MMMFLS.MAC	created: 1419 06-OCT-81
+File 2)	DSK:MMMODF.MAC[31024,320155]	created: 1630 28-APR-82
+
+1)		SETZ	6,0			; delete contents false
+1)		PUSHJ	TOP,OPN$FI		; do it
+1)		SKIPN	DUMSTA			; did we really do it??
+1)		JRST	HPLERR			; no, sorry.
+1)		MOVEI	HEAP,HSTRT.		; start address
+1)		MOVEI	T2,^o177(HEAP)		;   need one page to read in
+1)		CORE	T2,0			; so try for it
+1)		JRST	FAIL			; no go.
+1)		MOVEI	2,0(HEAP)		; address for read
+1)		MOVEI	3,1			; number of blocks
+1)		SETZ	4,0			; start at disk block zero
+1)		MOVE	5,CHNUM			; get channel number
+1)		MOVEI	6,DUMSTA		; addr of status word
+1)		PUSHJ	TOP,READ$P		; get first page of heap
+1)		SKIPN	0,DUMSTA		; did we get it?
+1)		JRST	HPLERR			; no.
+1)	; now set up for rest of heap
+1)		MOVEI	HEAP,HSTRT.		; get start address
+1)		HLR	T,EXTPTR(HEAP)		; get size of former heap in blocks
+1)		IMULI	T,^o200			; now size in words
+1)		ADDI	T,-1(HEAP)		; end of heap one word before
+1)		CORE	T,0			; get space needed
+1)		JRST	FAIL			; sorry.
+1)	;
+1)	; read the heap from the file.  do it in chunks of no more
+1)	; than 16 pages (64 blocks) to avoid op sys problems
+1)	;
+1)		MOVEI	2,HSTRT.+^o200		; start read one block after heap
+1)		MOVEM	2,RW.ADR
+1)		HLRZ	3,EXTPTR+HSTRT.		; pick up heap length in blocks
+1)		SUBI	3,1			; less one already read
+1)		MOVNM	3,RW.CNT
+1)		MOVEI	4,1			; start at file block one
+1)		MOVEM	4,RW.BLK
+1)	R.LOOP:
+1)		MOVE	2,RW.ADR		; next core address
+1)		SKIPN	3,RW.CNT		; neg remaining disk blocks
+1)		JRST	R.DONE			; none
+1)		MOVN	3,3
+1)		MOVE	4,RW.BLK		; next disk block
+1)		CAILE	3,^o100			; max chunk = 64 blocks
+1)		MOVEI	3,^o100
+1)		ADDM	3,RW.CNT		; decrement blocks remaining
+1)		ASH	3,7			; blocks * 128 = words
+1)		ADDM	3,RW.ADR		; increment next core address
+1)		ASH	3,-7			; words / 128 = blocks again
+1)		ADDM	3,RW.BLK		; increment next disk block
+1)		MOVE	5,CHNUM			; get channel number
+1)		MOVEI	6,DUMSTA		; addr of status word
+1)		PUSHJ	TOP,READ$P		; do it
+1)		SKIPN	DUMSTA			; success?
+1)		JRST	HPLERR			; no, failure
+1)		JRST	R.LOOP			; yes, get next chunk
+1)	R.DONE:
+File 1)	DSK:MMMFLS.MAC	created: 1419 06-OCT-81
+File 2)	DSK:MMMODF.MAC[31024,320155]	created: 1630 28-APR-82
+
+1)		MOVE	2,CHNUM			; gotta close down load file
+1)		POP	TOP,3			; get purge/nopurge flag
+1)		PUSHJ	TOP,CLOS$F
+1)		MOVEI	HEAP,HSTRT.		; addr of new heap
+1)		HLRZ	T,LHEAP(HEAP)		; get old CHEAP value from save
+1)		MOVEM	T,CHEAP			; and restore it
+1)		HRRZS	0,LHEAP(HEAP)		; zap nasty phony backlink
+1)		HRRZ	T,EXTPTR(HEAP)		; get stored skyhook from file
+1)		MOVEM	T,4(TOP)
+1)		POPJ	TOP,0
+1)	HPLERR:	POP	TOP,T2			; get addr of skyhook cell
+1)		MOVEI	T,NIL			; get a nil
+1)		MOVEM	T,4(TOP)
+1)		POPJ	TOP,0
+1)	;
+1)	; HPLOAD -- wrapper for HPREAD.  Assumes nopurge.
+1)	;
+1)	HPLOAD:	SETZ	3,0
+1)		JRST	HPREAD
+1)	;
+****
+2)1	;
+**************
+1)1	NEW.:	ADJSP	TOP,^o20
+1)		HRLI	1,2
+1)		HRRI	1,-^o16(TOP)
+1)		BLT	1,-1(TOP)
+1)		MOVEI	R1,1			; get one ARG word
+1)		ADDB	R1,-^o20(TOP)
+1)		MOVEI	R0,@-1(R1)		; EA is size needed
+1)		MOVE	PSA,$MODFIT(PDA)
+1)		LDB	R1,[point 4,-1(R1),12]	; AC bits give destin reg
+1)		MOVEM	R1,DESTREG
+1)		MOVE	EXP1,R0			; put in right register
+1)		SKIPN	HEAP,CHEAP		; get current hptr, dont skip if zero
+1)		PUSHJ	TOP,INIT		;   and initialize heap structure
+1)		COUNT	CNNEW			; count new call if debug enabled
+1)	NEW2:	MOVEI	ALLOC,1(ALLOC)		; add one to size for data word
+****
+2)1	NEW.:
+2)		AOS	R1,0(TOP)
+2)		MOVEI	R0,@-1(R1)		; EA is size to allocate
+2)		LDB	R1,RT.REG##		; reg for result
+2)		MOVEM	PSA,PSATEMP
+2)		$GETPSA	MODFIT
+2)		DMOVEM	R0,BLKSIZE		; save size and destination reg
+2)		MOVE	R1,PSATEMP
+2)		MOVEM	R1,PSA-1+REGSAVE
+2)		$SAVE	REGSAVE,EXP1,PSA-1
+2)		MOVE	ALLOC,BLKSIZE		; put in right place
+2)		MOVE	HEAP,CHEAP
+2)		$COUNT	CNNEW			; count new call if debug enabled
+2)	NEW2:	MOVEI	ALLOC,1(ALLOC)		; add one to size for data word
+**************
+File 1)	DSK:MMMFLS.MAC	created: 1419 06-OCT-81
+File 2)	DSK:MMMODF.MAC[31024,320155]	created: 1630 28-APR-82
+
+1)1		SETZM	0,1(NEW)		; zero first word of new block
+1)		IFLE MINBLK-2,<			; assemble test for one-word record
+1)		  CAIG	ALLOC,2			; only if minimum block size
+1)		  JRST	NUDONE >		; is <= 1 (obviously)
+1)		HRLI	T,1(NEW)		; source pointer (zeroed word)
+1)		HRRI	T,2(NEW)		; destination (one word after)
+1)		MOVEI	T2,0(NEW)		; set up end of BLT pointer in T2
+1)		ADDI	T2,-1(ALLOC)		;   ALLOC-1 words past control word
+1)		BLT	T,0(T2)
+1)	NUDONE:	MOVEI	ALLOC,1(NEW)		; return addr of block + 1
+1)		MOVE	R0,DESTREG		; where to put it
+1)		ADDI	R0,-^O20(TOP)	; make address of saved reg
+1)		MOVEM	ALLOC,@R0
+1)		HRLI	1,-^o16(TOP)
+1)		HRRI	1,2
+1)		BLT	1,15
+1)		ADJSP	TOP,-^o20
+1)		POPJ	TOP,0
+****
+2)1	; The following code is removed along with the stipulation the storage
+2)	; allocated by NEW be initialized by the runtime to zero. 4/28/82 SEM
+2)	;
+2)	;	SETZM	0,1(NEW)		; zero first word of new block
+2)	;	IFLE MINBLK-2,<			; assemble test for one-word record
+2)	;	  CAIG	ALLOC,2			; only if minimum block size
+2)	;	  JRST	NUDONE >		; is <= 1 (obviously)
+2)	;
+2)	;	HRLI	T,1(NEW)		; source pointer (zeroed word)
+2)	;	HRRI	T,2(NEW)		; destination (one word after)
+2)	;	MOVEI	T2,0(NEW)		; set up end of BLT pointer in T2
+2)	;	ADDI	T2,-1(ALLOC)		;   ALLOC-1 words past control word
+2)	;	BLT	T,0(T2)
+2)	;
+2)	NUDONE:	MOVEI	ALLOC,1(NEW)		; return addr of block + 1
+2)		MOVE	R1,DESTREG
+2)		$RESTORE 1+REGSAVE,EXP2,PSA
+2)		MOVEM	ALLOC,@R1		; where it goes
+2)		POPJ	TOP,0
+**************
+1)1	DSPOS.:	ADJSP	TOP,^o20
+1)		HRLI	1,2
+1)		HRRI	1,-^o16(TOP)
+1)		BLT	1,-1(TOP)
+1)		MOVEI	R1,1			; get ARG word
+1)		ADDB	R1,-^o20(TOP)		; fix return addr too
+1)		MOVEI	EXP1,@-1(R1)		; get addr of DISPOSEable record
+1)		MOVE	PSA,$MODFIT(PDA)
+1)		MOVE	HEAP,CHEAP		; pick up current heap pointer
+****
+2)1	DSPOS.:
+2)		AOS	R1,0(TOP)
+2)		MOVEI	R1,@-1(R1)		; get record addr to dispose
+2)		MOVEM	PSA,PSATEMP
+2)		$GETPSA	MODFIT
+File 1)	DSK:MMMFLS.MAC	created: 1419 06-OCT-81
+File 2)	DSK:MMMODF.MAC[31024,320155]	created: 1630 28-APR-82
+
+2)		MOVE	R0,PSATEMP
+2)		MOVEM	R0,PSA-1+REGSAVE
+2)		$SAVE	REGSAVE,EXP1,PSA-1
+2)		MOVE	EXP1,R1
+2)		MOVE	HEAP,CHEAP		; pick up current heap pointer
+**************
+1)1		COUNT	CNDISP			; count dispose calls
+1)	DSPS2:	CAIG	T,0(ALLOC)		; if record addr. more than heap top
+****
+2)1		$COUNT	CNDISP			; count dispose calls
+2)	DSPS2:	CAIG	T,0(ALLOC)		; if record addr. more than heap top
+**************
+1)1		HRLI	1,-^o16(TOP)
+1)		HRRI	1,2
+1)		BLT	1,15
+1)		ADJSP	TOP,-^o20
+1)		POPJ	TOP,0
+****
+2)1		MOVEI	ALLOC,NIL		; return NIL in parameter (hack)
+2)		$RESTORE 1+REGSAVE,EXP2,PSA
+2)		POPJ	TOP,0
+**************
+1)1		COUNT	CNCOAL			; count as a coalesce
+1)		HLRZ	T3,BLINK(NEXT)		; get deleted block's backlink
+****
+2)1		$COUNT	CNCOAL			; count as a coalesce
+2)		HLRZ	T3,BLINK(NEXT)		; get deleted block's backlink
+**************
+1)1		COUNT	CNEXAM			; count examination of blocks for size
+1)		CAIGE	T,0(ALLOC)		; will it go?
+****
+2)1		$COUNT	CNEXAM			; count examination of blocks for size
+2)		CAIGE	T,0(ALLOC)		; will it go?
+**************
+1)1		COUNT	CNSPLI			; count number of splits
+1)		MOVEM	T,SIZE(BLK)		; else install new split size
+****
+2)1		$COUNT	CNSPLI			; count number of splits
+2)		MOVEM	T,SIZE(BLK)		; else install new split size
+**************
+1)1		COUNT	CNEXT			; count heap extensions
+1)		ADDI	T,0(ALLOC)		; add needed size to new max addr
+1)		CORE	T,0			;   and try for it
+1)		JRST	FAIL			; no go
+1)		HRRZ	T,.JBREL##		; get new loseg limit
+1)		ADDI	T,1			; tick by one word
+****
+2)1		$COUNT	CNEXT			; count heap extensions
+2)		ADDI	T,0(ALLOC)		; add needed size to new max addr
+2)		CAMG	T,.JBREL		; avoid CORE calls which have smaller
+2)		JRST	XTEND1			;   values than .JBREL
+2)		CORE	T,0			;   and try for it
+2)		JRST	FAIL			; no go
+2)	XTEND1:	HRRZ	T,.JBREL##		; get new loseg limit
+File 1)	DSK:MMMFLS.MAC	created: 1419 06-OCT-81
+File 2)	DSK:MMMODF.MAC[31024,320155]	created: 1630 28-APR-82
+
+2)		ADDI	T,1			; tick by one word
+**************
+1)1		COUNT	CNSPLI			; count as a split
+1)		MOVEM	T,0(NEW)		;  control word for new free block
+****
+2)1		$COUNT	CNSPLI			; count as a split
+2)		MOVEM	T,0(NEW)		;  control word for new free block
+**************
+1)1	;
+1)	;MARK.:	SKIPN	HEAP,CHEAP		; if current heap pointer is zero
+1)	;	PUSHJ	TOP,INIT		;   then create a heap to mark
+1)	;	HRRZ	HEAP,TAIL(HEAP)		; get heap's tail, which will be
+1)	;	PUSHJ	TOP,NEWHP		;   start of the new heap
+1)	;	MOVE	HMARK,CHEAP		; return current heap as heapmark
+1)	;	POPJ	TOP,0
+1)	;
+****
+2)1	MARK.:
+2)		$GETPSA	MODFIT
+2)		MOVE	HEAP,CHEAP
+2)		HRRZ	HEAP,TAIL(HEAP)		; get heap's tail, which will be
+2)		PUSHJ	TOP,NEWHP		;   start of the new heap
+2)		MOVE	HMARK,CHEAP		; return current heap as heapmark
+2)		POPJ	TOP,0
+2)	;
+**************
+1)1	;RLEAS.:	MOVE	T,CHEAP			; pick up current heap pointer
+1)	;
+1)	;RLLOOP:	JUMPE	T,RLSERR		; if zero, end of backchain
+1)	;	CAIN	T,0(HMARK)		; is this one the one?
+1)	;	JRST	RLSOK			;   yes, we found it
+1)	;	HLRZ	T,LHEAP(T)		;   no, get previous
+1)	;	JRST	RLLOOP			;     and go back
+1)	;
+1)	;RLSOK:	HLRZ	HEAP,LHEAP(HMARK)	; get heap previous to pointed to.
+1)	;	JUMPE	HEAP,RLSERR		;   first heap -- can't release
+1)	;	MOVEM	HEAP,CHEAP		; make this one new current heap
+1)	;
+1)	;	HRRZ	T,TAIL(HEAP)		; to reset loseg, get end of heap
+1)	;	CORE	T,0			;   and set as new max loseg addr
+1)	;	JRST	RLSERR
+1)	;	POPJ	TOP,0
+1)	;
+1)	;
+****
+2)1	RLEAS.:
+2)		$GETPSA	MODFIT
+2)		MOVE	T,CHEAP			; pick up current heap pointer
+2)	RLLOOP:	JUMPE	T,RLSERR		; if zero, end of backchain
+2)		CAIN	T,0(HMARK)		; is this one the one?
+2)		JRST	RLSOK			;   yes, we found it
+2)		HLRZ	T,LHEAP(T)		;   no, get previous
+2)		JRST	RLLOOP			;     and go back
+2)	RLSOK:	HLRZ	HEAP,LHEAP(HMARK)	;get heap previous to pointed to.
+File 1)	DSK:MMMFLS.MAC	created: 1419 06-OCT-81
+File 2)	DSK:MMMODF.MAC[31024,320155]	created: 1630 28-APR-82
+
+2)		JUMPE	HEAP,RLSERR		;   first heap -- can't release
+2)		MOVEM	HEAP,CHEAP		; make this one new current heap
+2)		HRRZ	T,TAIL(HEAP)		; to reset loseg, get end of heap
+2)		CORE	T,0			;   and set as new max loseg addr
+2)		JRST	RLSERR
+2)		POPJ	TOP,0
+2)	;
+**************
+1)1	RLSERR:	MOVEI	T,[asciz/
+1)	?	Invalid HEAP pointer in RELEASE call/]
+1)		JRST	ALCDIE
+1)	FAIL:	MOVEI	T,[asciz/
+1)	?	HEAP overflow. Try again with more core/]
+1)		POP	TOP,0			; we know this one called from internals
+1)		JRST	ALCDIE
+1)	DSERR:	MOVEI	T,[asciz/
+1)	?	Bad pointer in DISPOSE/]
+1)		JRST	ALCDIE
+1)	DSPREV:	MOVEI	T,[asciz/
+1)	?	Attempt to free freed block/]
+1)	ALCDIE:	PUSHJ	TOP,TWAIT.
+1)		OUTSTR	0(T)
+1)		MOVE	R0,0(TOP)
+1)		PUSHJ	TOP,WRTPC.
+1)		JRST	DIE.
+1)		LIT
+1)		$END	MODFIT
+1)		end
+****
+2)1	RLSERR:	$RTERROR ($EXSPC,$SPCRH)
+2)	FAIL:	POP	TOP,0			; know return buried
+2)		$RTERROR ($EXSTO,$NONE)
+2)	DSERR:	$RTERROR ($EXSPC,$SPCBP)
+2)	DSPREV:	$RTERROR ($EXSPC,$SPCFF)
+2)		$END	MODFIT,HPINI
+2)		end
+**************

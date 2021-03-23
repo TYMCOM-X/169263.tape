@@ -1,0 +1,1160 @@
+        File DSK:QEDENV.PAS[31024,320231]   Compiled 14-Oct-38 00:00   Pascal, Version 2A(463)
+
+        File DSK:QEDENV.PAS[31024,320231]   Compiled 14-Oct-38 00:00   Pascal, Version 2A(463)
+
+        File DSK:QEDENV.PAS[31024,320231]   Compiled 14-Oct-38 00:00   Pascal, Version 2A(463)
+
+        File DSK:QEDENV.PAS[31024,320231]   Compiled 14-Oct-38 00:00   Pascal, Version 2A(463)
+
+
+
+
+
+			     $$$    $$$$$   $$$$    $$$$$   $   $   $   $
+			    $   $   $        $  $   $       $$  $   $   $
+			    $   $   $        $  $   $       $ $ $   $   $
+			    $   $   $$$      $  $   $$$     $  $$    $ $ 
+			    $ $ $   $        $  $   $       $   $    $ $ 
+			    $  $    $        $  $   $       $   $     $  
+			     $$ $   $$$$$   $$$$    $$$$$   $   $     $  
+
+
+				    DSK:QEDENV.PAS[31024,320231]
+
+
+Options in effect: 
+
+	NOCHECK, NOSPECIAL, NOMAP, NOSYMBOLS, NOCALLS, NOASSEMBLY, NOXREF, TRACE, QBLOCKS, 
+	NOOPTIMIZE, CODE, NODEBUG, FINISH, GLOBAL, NOMAINSEG, NOOVERLAY, AUTOQUICK, SOURCE, 
+	NOSTANDARD, LENGTH (45), WIDTH (102), NOEXTLENGTH, STORAGE (2048), ALLOC (0), ENABLE(P10)
+
+
+
+
+        File DSK:QEDENV.PAS[31024,320231]   Compiled 14-Oct-38 00:00   Pascal, Version 2A(463)
+
+        File DSK:QEDENV.PAS[31024,320231]   Compiled 14-Oct-38 00:00   Pascal, Version 2A(463)
+
+        File DSK:QEDENV.PAS[31024,320231]   Compiled 14-Oct-38 00:00   Pascal, Version 2A(463)
+
+        File DSK:QEDENV.PAS[31024,320231]   Compiled 14-Oct-38 00:00   Pascal, Version 2A(463)
+        File DSK:QEDENV.PAS[31024,320231]   Compiled 14-Oct-38 00:00   Pascal, Version 2A(463)
+
+        File DSK:QEDENV.PAS[31024,320231]   Compiled 14-Oct-38 00:00   Pascal, Version 2A(463)
+
+        File DSK:QEDENV.PAS[31024,320231]   Compiled 14-Oct-38 00:00   Pascal, Version 2A(463)
+
+        File DSK:QEDENV.PAS[31024,320231]   Compiled 14-Oct-38 00:00   Pascal, Version 2A(463)
+
+
+
+
+
+			     $$$    $$$$$   $$$$    $$$$$   $   $   $   $
+			    $   $   $        $  $   $       $$  $   $   $
+			    $   $   $        $  $   $       $ $ $   $   $
+			    $   $   $$$      $  $   $$$     $  $$    $ $ 
+			    $ $ $   $        $  $   $       $   $    $ $ 
+			    $  $    $        $  $   $       $   $     $  
+			     $$ $   $$$$$   $$$$    $$$$$   $   $     $  
+
+
+				    DSK:QEDENV.PAS[31024,320231]
+
+
+Options in effect: 
+
+	NOCHECK, NOSPECIAL, NOMAP, NOSYMBOLS, NOCALLS, NOASSEMBLY, NOXREF, TRACE, QBLOCKS, 
+	NOOPTIMIZE, CODE, NODEBUG, FINISH, GLOBAL, NOMAINSEG, NOOVERLAY, AUTOQUICK, SOURCE, 
+	NOSTANDARD, LENGTH (45), WIDTH (102), NOEXTLENGTH, STORAGE (2048), ALLOC (0), ENABLE(P10)
+
+
+
+
+        File DSK:QEDENV.PAS[31024,320231]   Compiled 14-Oct-38 00:00   Pascal, Version 2A(463)
+
+        File DSK:QEDENV.PAS[31024,320231]   Compiled 14-Oct-38 00:00   Pascal, Version 2A(463)
+
+        File DSK:QEDENV.PAS[31024,320231]   Compiled 14-Oct-38 00:00   Pascal, Version 2A(463)
+
+        File DSK:QEDENV.PAS[31024,320231]   Compiled 14-Oct-38 00:00   Pascal, Version 2A(463)
+MODULE  QEDENV       DSK:QEDENV.PAS[31024,320231]                                      17-Nov-82 13:24
+SECTION 0                                                                                       PAGE 1
+MODULE  QEDENV       DSK:QEDENV.PAS[31024,320231]                                      17-Nov-82 13:24
+SECTION 1            QED -- General Environment Module                                          PAGE 2
+
+    2	(* QEDENV.PAS - modified 9/17/81 by djm to change QUERY to QQUERY *)
+    3	(*            - modified 9/25/81 by djm to add conditional compile code
+    4	                around infpac.inc and imgnam.inc *)
+    5	(*            - modified 10/01/81 by djm to put wio.inc into a 
+    6	                conditional compile bracket *)
+    7	(*            - modified 04/30/82 by djm to delete lookup.typ, add
+    8	                cmdutl.inc, add qedtyp.typ, and add qsubst.typ. 
+    9	                These are to allow calls to cmd_lookup. *)
+   10	
+   11	ENVMODULE QEDENV;
+   12	$SYSTEM (pasdev2)cmdutl
+    1	type cmd_lookup_record = record
+    2	        text: packed array [1..10] of char;
+    3	        abbrev: 1 .. 10;
+    4	        code: integer;
+    5	     end;
+    6	external procedure cmd_skip_blanks
+    7	      ( packed array [1..*] of char;
+    8	        var integer );
+    9	external function cmd_check_punct
+   10	      ( packed array [1..*] of char;
+   11	        var integer;
+   12	        char ): boolean;
+   13	external function cmd_token
+   14	      ( packed array [1..*] of char;
+   15	        var integer;
+   16	        set of char;
+   17	        var string [*] ): boolean;
+   18	external function cmd_number
+   19	      ( packed array [1..*] of char;
+   20	        var integer;
+   21	        boolean;
+   22	        var integer ): boolean;
+   23	external function cmd_lookup
+   24	      ( packed array [1..*] of char;
+   25	        var integer;
+   26	        set of char;
+   27	        array [1..*] of cmd_lookup_record;
+   28	        var integer ): boolean;
+   29	external function cmd_string
+   30	      ( packed array [1..*] of char;
+   31	        var integer;MODULE  QEDENV       DSK:QEDENV.PAS[31024,320231]                                      17-Nov-82 13:24
+SECTION 1-0          QED -- General Environment Module                                          PAGE 3
+
+   32	        char;
+   33	        var string [*] ): boolean;
+   34	external function cmd_dqstring
+   35	      ( packed array [1..*] of char;
+   36	        var integer;
+   37	        char;
+   38	        var string [*] ): boolean;
+   39	external function cmd_file_name
+   40	      ( packed array [1..*] of char;
+   41	        var integer;
+   42	        boolean;
+   43	        var string [*] ): boolean;
+   44	external function cmd_eol
+   45	      ( packed array [1..*] of char;
+   46	        var integer ): boolean;
+   47	external function cmd_query
+   48	      ( packed array [1..*] of char;
+   49	        packed array [1..*] of char ): boolean;
+   50	external procedure cmd_getline
+   51	      ( packed array [1..*] of char;
+   52	        var string [*];
+   53	        var integer );
+   54	external procedure cmd_display_table
+   55	      ( array [1..*] of cmd_lookup_record;
+   56	        integer;
+   57	        integer );
+   13	$SYSTEM qerr.typ
+    1	(* ERROR CODES *)
+    2	(* ----------- *)
+    3	
+    4	TYPE
+    5	 QERRCODE = (
+    6	  QOK,                                          (*NORMAL RETURN*)
+    7	  QFATAL,                                       (*INTERNAL ERROR -- FATAL SITUTATION*)
+    8	  QBADLN,                                       (*NON-EXISTANT LINE NUMBER PASSED*)
+    9	  QBADLB,                                       (*NON-EXISTANT LOWER BOUND PASSED*)
+   10	  QBADUB,                                       (*NON-EXISTANT UPPER BOUND PASSED*)
+   11	  QBADRN,                                       (*LOWER BOUND > UPPER BOUND*)
+   12	  QBADARGNO,                                    (* WRONG NUMBER OF LA'S IN LD *)
+   13	  QBADCMD,                                      (* BAD COMMAND NAME PARSED *)
+   14	  QNOCMD,                                       (* CMD INVALID IN CONTEXT USED *)
+   15	  QBADFILE,                                     (* BAD FILENAME PARSED *)MODULE  QEDENV       DSK:QEDENV.PAS[31024,320231]                                      17-Nov-82 13:24
+SECTION 2-0          QED -- General Environment Module                                          PAGE 4
+
+   16	  QNOFILE,                                      (*NON-EXISTANT FILE*)
+   17	  QNOCLOSE,                                     (*NO CLOSING DELIMITER IN STRING PATTERN*)
+   18	  QNODEFAULT,                                   (*DEFAULT PATTERN HAS NOT BEED DEFINED*)
+   19	  QNO2NDLA,                                     (*NO SECOND LINE ADDRESS AFTER COMMA *)
+   20	  QNOINPAREN,                                   (*INVALID FIELD WITHIN PARENS OF STRING PREDIC
+	ATE*)
+   21	  QNOCLOSPAREN,                                 (*NO CLOSING PARENTHESIS*)
+   22	  QNONOT_OP,                                    (*INVALID FIELD AFTER "NOT" OPERATOR*)
+   23	  QNORTOP,                                      (*INVALID FIELD AFTER "AND" OR "OR" OPERATOR*)
+   24	  QOFFIRST,                                     (* SIGNED OFFSET FOUND AS FIRST PART OF LA*)
+   25	  QNONUMF,                                      (*NO NUMERIC FIELD FOUND AFTER '+' OR '-'*)
+   26	  QONLYFIRST,                                   (*  '*','$', OR '.' FOUND NOT AS FIRST PART OF
+	 LA*)
+   27	  QNOPREVIOUS,                                  (*  '*' ONLY ALLOWED IN SECOND HALF OF LD *)
+   28	  QSPNOTFND,                                    (* STRING PREDICATE NOT FOUND IN RANGE *)
+   29	  QOUTRANGE,                                    (* EVALUATED LD OUT OF BUFFER OR SPECIAL RANGE
+	*)
+   30	  QSTUPID,                                      (* UNMATCHABLE PREDICATE DETECTED IN PARSE *)
+   31	  QLNLONG,                                      (*LINE TOO LONG, FROM SPLIT, SUBSTITUTE*)
+   32	  QQUIT,                                        (* QUIT COMMAND GIVEN *)
+   33	  QNOMARK,                                      (* NO LINE MATCHING MARKSTRING WAS FOUND *)
+   34	  QBADSUBST,                                    (* SYNTAX ERROR IN SUBSTITUTE PATTERNS *)
+   35	  QBADOPT,                                      (* BAD OPTION WAS PARSED *)
+   36	  QEXTRATXT,                                    (* EXTRANEOUS TEXT FOLLOWS COMMAND *)
+   37	  QTOOBIG,                                      (* INTEGER TOO BIG TO BE PARSED AS LINE NUMBER
+	 *)
+   38	  QNOFINDPRED,                                  (* NO SPATTERN GIVEN IN FIND COMMAND *)
+   39	  QNOMOVELA,                                    (* 1 LA EXPECTED AFTER MOVE, 0 OR 2 FOUND *)
+   40	  QBADMOVELA,                                   (* LA WAS WITHIN TEXT BEING MOVED *)
+   41	  QNOTOPEN,                                     (* OUTPUT COMMAND WAS ISSUED WITH NO OPEN FILE
+	 *)
+   42	  QBADPARAM,                                    (* MISSING OR INVALID SET PARAMETER *)
+   43	  QNOPARAMVAL,                                  (* NO VALUE GIVEN FOR SET PARAMETER *)
+   44	  QJOINTOOFEW,                                  (* FEWER THAN TWO LINES GIVEN TO JOIN *)
+   45	  QNOSPLITPAT,                                  (* INVALID OR MISSING PATTERN FOR SPLIT *)
+   46	  QEMPTY,                                       (* BUFFER IS EMPTY *)
+   47	  QTOOSHORT,                                    (* NOT ENOUGH LEADING SPACE TO INDENT *)
+   48	  QWRTERR,                                      (* EOF(F) FALSE AFTER WRITE STATEMENT *)
+   49	  QLA1NOTFND,                                   (* SPRED IN FIRST LA NOT FOUND *)
+   50	  QLA2NOTFND,                                   (* SPRED IN SECOND LA NOT FOUND *)
+   51	  QLA1OUTRANGE,                                 (* FIRST LA OUT OF RANGE *)
+   52	  QLA2OUTRANGE,                                 (* SECOND LA OUT OF RANGE *)MODULE  QEDENV       DSK:QEDENV.PAS[31024,320231]                                      17-Nov-82 13:24
+SECTION 2-0          QED -- General Environment Module                                          PAGE 5
+
+   53	  QHEAPFULL,                                    (* HEAP OVERFLOW *)
+   54	  QBADNTH,                                      (* BAD Nth OCCURRANCE PATTERN *)
+   55	  QNOINDNO,                                     (* AMOUNT TO INDENT NOT SPECIFIED *)
+   56	  QMOVOUTRANGE,                                 (* DESTINATION OF MOVE OUT OF RANGE *)
+   57	  QNOINFILE,                                    (* FAILURE TO OPEN INPUT FILE *)
+   58	  QNOOUTFILE,                                   (* FAILURE TO OPEN OUTPUT FILE *)
+   59	  QNOCOPYLA,                                    (* 1 LA EXPECTED AFTER COPY, 0 OR 2 FOUND *)
+   60	  QBADSLINK,                                     (* Error occurred in slink *)
+   61	  QNOLABEL);                                    (* No label found for _ kludge  *)
+   14	$SYSTEM (pasdev2)qstr.typ
+    1	CONST QSTRINGLEN = 254;
+    2	
+    3	TYPE
+    4	  QSTRING = STRING [QSTRINGLEN];
+    5	  QSTRINGIDX = 0..255;
+   15	$SYSTEM (pasdev2)qspat.typ
+    1	(* STRING PATTERN definitions represent a parsed QED string matching pattern.
+    2	   Details may be found in the 'Definition of QED.' *)
+    3	
+    4	TYPE
+    5	  SPATTERN_FORMS =                              (* AS DETERMINED FROM DELIMITER *)
+    6	    (   SIMPLE,                                 (* MATCH ANYWHERE WITHIN LINE *)
+    7	        LEFT,                                   (* MATCHES AT THE BEGINNING OF THE LINE *)
+    8	        RIGHT,                                  (* MATCHES AT THE END OF THE LINE *)
+    9	        LEADSTRING,                             (* MATCH CHARS FOLLOWING LEADING WHITESPACE *)
+   10	        TOKEN,                                  (* MATCH A DELIMITED STRING *)
+   11	        NULLSPAT        );                      (* REPRESENTS INVALID DEFAULT PATTERN *)
+   12	
+   13	  SIDE_TYPE = (
+   14	        LEFTSIDE,                               (* STAR ON THE LEFT SIDE OF PATTERN *)
+   15	        RIGHTSIDE,                              (* ETC. *)
+   16	        BOTHSIDES,
+   17	        NEITHER );
+   18	
+   19	  SPATTERN =
+   20	    RECORD                                      (* INTERNAL REPRSENTATION OF A STRING PATTERN 
+	*)
+   21	      STYPE: SPATTERN_FORMS;                    (* MATCHING BOUNDARY CONDITIONS *)
+   22	      WILDCARD: BOOLEAN;                        (* TRUE IF STRING CONTAINS A '*' *)
+   23	      SIDESTARS: SIDE_TYPE;                     (* POSITIONS OF SIDE STARS *)
+   24	      SLENGTH: QSTRINGIDX;                      (* LENGTH OF PATTERN MINUS WILDCARDS *)
+   25	      LIST: ^SPATREC;                           (* POINTER TO HEAD OF LIST OF PATTERNS *)MODULE  QEDENV       DSK:QEDENV.PAS[31024,320231]                                      17-Nov-82 13:24
+SECTION 4-0          QED -- General Environment Module                                          PAGE 6
+
+   26	      LASTREC: ^SPATREC                         (* POINTER TO LAST TOKEN IN PATTERN LIST*)
+   27	    END;
+   28	
+   29	  SPATLIST = ^SPATREC;
+   30	
+   31	  SPATREC =
+   32	    RECORD
+   33	        WILDCHAR: BOOLEAN;                      (* TRUE IF STRING CONTAINS A '?' *)
+   34	        SSTRING: QSTRING;                       (* STRING TO BE MATCHED *)
+   35	        NEXT: SPATLIST;                         (* POINTER TO NEXT PATTERN TOKEN *)
+   36	        PREVTOK: SPATLIST                       (* POINTER TO PREVIOUS PATTERN TOKEN *)
+   37	    END;
+   16	$SYSTEM (pasdev2)qspred.typ
+    1	(* STRING PREDICATE definitions reprenting a parsed QED string predicated.
+    2	   For details see the 'Definition of QED'. *)
+    3	
+    4	TYPE
+    5	  SPRED_KINDS =
+    6	    (   PATTERN_SPOP,                           (* MATCH A LINE CONTAINING PATTERN *)
+    7	        NOT_SPOP,                               (* MATCH A LINE NOT MATCHING PREDICATE OPERAND
+	 *)
+    8	        AND_SPOP,                               (* MATCH A LINE MATCHING BOTH PREDICATE OPERAN
+	DS *)
+    9	        OR_SPOP         );                      (* MATCH A LINE MATCHING EITHER PREDICATE OPER
+	ANDS *)
+   10	
+   11	  SPRED = ^ SPRED_NODE;                         (* REPRESENTED AS A TREE OF NODES *)
+   12	  SPRED_NODE =
+   13	    RECORD
+   14	      CASE PREDKIND: SPRED_KINDS OF
+   15	        NOT_SPOP:                               (* NOT <NOPER> *)
+   16	              (  NOPER: SPRED  );
+   17	        AND_SPOP, OR_SPOP:                      (* <LOPER> OP <ROPER> *)
+   18	              (  LOPER, ROPER: SPRED  );
+   19	        PATTERN_SPOP:
+   20	              (  PATTERN: SPATTERN  )
+   21	    END;
+   22	
+   23	  TOKTYP = (AND_TOK, OR_TOK, NOT_TOK);
+   17	$SYSTEM (pasdev2)cmdutl.typ
+    1	(* CMDUTL.typ - last modified 7/8/82 - type declarations for command 
+    2	   utility subroutines. *)MODULE  QEDENV       DSK:QEDENV.PAS[31024,320231]                                      17-Nov-82 13:24
+SECTION 6-0          QED -- General Environment Module                                          PAGE 7
+
+    3	
+    4	
+    5	TYPE                                            (* system dependent file name types *)
+    6	  FILE_ID = FILE_NAME;                          (* changed 7-8-82: max string length to 'file_
+	name' *)
+    7	  EXTENSION = PACKED ARRAY [1..3] OF CHAR;
+    8	
+    9	
+   10	CONST CMDLINELEN = 254;                         (* command line declaration *)
+   11	TYPE
+   12	  CMDLINE = STRING[254];                        (* string itself *)
+   13	  CMDLINEIDX = 0..255;                          (* index of above *)
+   14	
+   18	$SYSTEM qedln.typ
+    1	(********************************************************************* *)
+    2	
+    3	                      (* QED type definitions *)
+    4	                      (* -------------------- *)
+    5	
+    6	
+    7	CONST QMAXLINES = 99999;                        (* maximum line number *)
+    8	
+    9	TYPE
+   10	  QLINEP = ^QLINE;                              (* ptr to line descriptor *)
+   11	  QLINENO = 0..QMAXLINES;                       (* QED line number *)
+   12	  QLNOFFSET = -99999..QMAXLINES;                (* line offset *)
+   13	
+   14	  (* BUFFER DESCRIPTOR - callers should only access the following fields:
+   15	     curlineno, lbound, hbound, lastlineno, curfile, curfileok, mark, changes.
+   16	     All other fields are implementation specific. *)
+   17	
+   18	  QBUFFER = RECORD
+   19	    FIRSTLINEP,                                 (* ptr to dummy 0th line desc *)
+   20	    LASTLINEP,                                  (* to last line desc *)
+   21	    GETLINEP: QLINEP;                           (* ptr to last line gotten *)
+   22	    GETLINENO: QLINENO;                         (* line number of last line gotten *)
+   23	    CURLINENO,                                  (* current line number *)
+   24	    FIRSTLINENO: QLINENO;                       (* first line number *)
+   25	    LASTLINENO: QLINENO;                        (* last line number *)
+   26	    TMP2_LAST: QLINENO;                         (* last line nbr. in TMP2 *)
+   27	    NEXT_INPUT: QLINENO;                      (* INPUT FILE HIGH  MARK *)
+   28	    buffer_limit: QLINENO;                      (* size limit of in_core_buffer *)MODULE  QEDENV       DSK:QEDENV.PAS[31024,320231]                                      17-Nov-82 13:24
+SECTION 7-0          QED -- General Environment Module                                          PAGE 8
+
+   29	    nbr_in_entire_file: qlineno;  (* how many records in the file *)
+   30	    GARBLINEP: QLINEP;                          (* lines to be deleted *)
+   31	    LBOUND,
+   32	    HBOUND: QLINENO;                            (* bounded range *)
+   33	    LBOUNDP,
+   34	    HBOUNDP: QLINEP;                            (* pointers to bounds *)
+   35	    OFFSET: QLINENO;                            (* ANC line bounding offset *)
+   36	    OLDOFFSET: QLINENO;                         (* offset previous to above *)
+   37	    MARK: SPRED;                                (* boundary mark *)
+   38	    CURFILE: FILE_ID;                           (* name of defaul file *)
+   39	    empty_buff: boolean;                      (* is in-core buffer empty ? *)
+   40	    TMP1: FILE OF *;
+   41	    TMP2: FILE OF *;
+   42	    TMP3: TEXT;
+   43	    f: TEXT;
+   44	    CURFILEOK: BOOLEAN;                         (* valid filename in above ? *)
+   45	    CHANGES: BOOLEAN;                           (* unwritten changes in buffer *)
+   46	    S940: BOOLEAN                               (* true if current file is 940 file     *)
+   47	  END;
+   48	
+   49	(********************************************************************* *)
+   19	$SYSTEM (pasdev2)qline.typ
+    1	(* QLINE.TYP - last modified 9/21/81 by djm to remove $IF ANC tag field from
+    2	               this version.  The field is still present in the ANC version. *)
+    3	
+    4	TYPE
+    5	  QLINE = PACKED RECORD                         (* QED line descriptor *)
+    6	    PREVLINEP,                                  (* previous line pointer *)
+    7	    NEXTLINEP: QLINEP;                          (* next line pointer *)
+    8	    SOURCE: QSTRING                             (* text of line *)
+    9	  END;                                          (* note: users of QED routines
+   10	                                                should never mess with qlines *)
+   20	$SYSTEM (pasdev2)qld.typ
+    1	(* LINE DESIGNATOR defintions.  An LD is represented as a linked list of nodes
+    2	   giving the atomic parts of a line designator such as predicates, symbolic
+    3	   addresses, and punctuation. Details may be found in the 'Definition of QED.' *)
+    4	
+    5	
+    6	TYPE
+    7	  LD_FORMS =
+    8	     (  NUM_LD,                                 (* LINE OFFSET FROM LAST ADDRESSED LINE *)
+    9	        FORWARD_LD,                             (* ADDRESS SPECIFIED BY PREDICATE *)MODULE  QEDENV       DSK:QEDENV.PAS[31024,320231]                                      17-Nov-82 13:24
+SECTION 9-0          QED -- General Environment Module                                          PAGE 9
+
+   10	        BACKWARD_LD,                            (* ADDRESS SPECIFIED BY ^PREDICATE *)
+   11	        DOT_LD,                                 (* CURRENT LINE *)
+   12	        DOLLAR_LD,                              (* LAST LINE *)
+   13	        STAR_LD,                                (* FIRST LINE OF RANGE *)
+   14	        COMMA_LD        );                      (* RANGE SEPARATOR *)
+   15	
+   16	
+   17	  LDCHAIN = ^ LDPART;                           (* NODE ON LDCHAIN LIST *)
+   18	  LDPART =
+   19	    RECORD
+   20	      NEXT: LDCHAIN;                            (* POINTER TO NEXT NODE ON LIST, OR NIL *)
+   21	      CASE LDKIND : LD_FORMS OF                 (* VARIOUS ATOMIC PARTS *)
+   22	        NUM_LD:      (  OFFSET: QLNOFFSET  );   (* OFFSET OR ABSOLUTE LINENO *)
+   23	        FORWARD_LD,BACKWARD_LD:  (  PRED: SPRED  ); (* PREDICATES TO SEARCH FOR *)
+   24	        DOT_LD,DOLLAR_LD,STAR_LD,COMMA_LD: ()
+   25	    END;
+   26	
+   27	  LDCOUNT = 0..2;                               (* NUMBER OF ADDRESSES IN AN LD *)
+   28	  LDRANGE =                                     (* EVALUATED LD CHAIN, GIVES LIMITS OF RANGE *
+	)
+   29	    RECORD
+   30	      LBOUND: QLINENO;                          (* FIRST LINE ADDRESSED *)
+   31	      HBOUND: QLINENO                           (* SECOND LINE, SAME AS FIRST IF LD NOT RANGE 
+	*)
+   32	    END;
+   21	$SYSTEM (pasdev2)qed.typ
+    1	(* QED.TYP - modified 9/16/81 by djm to add case_param *)
+    2	
+    3	type
+    4	  qedcmds =
+    5	      ( append, change, delete, insert, edit, modify, load, print, substitute,
+    6	        after, before, writecmd, save, find, gotocmd, resetcmd, join, copy,
+    7	        move, transfer, bound, list, eqcmd, number, opencmd, outputcmd, closecmd,
+    8	        setcmd, split, quit, exitcmd, uparrow, why, indent, underbar, readcmd);
+    9	
+   10	  qed_cmd_set =
+   11	    set of qedcmds;
+   12	
+   13	  set_params =
+   14	      ( del_param, lcnt_param, mark_param, tab_param, wild_param, case_param );
+   15	
+   16	  set_param_set = set of set_params;MODULE  QEDENV       DSK:QEDENV.PAS[31024,320231]                                      17-Nov-82 13:24
+SECTION 1            QED -- General Environment Module                                         PAGE 10
+
+   22	$SYSTEM (pasdev2)qsplit.typ
+    1	TYPE
+    2	  SPLIT_OPTIONS = (NUMBER_SPLITOP, CONFIRM_SPLITOP, PRINT_SPLITOP,
+    3	                        ALL_SPLITOP, DELETE_SPLITOP);
+    4	
+    5	  SPLIT_OPT_SET = SET OF SPLIT_OPTIONS;
+   23	$SYSTEM (pasdev2)qsubst.typ
+    1	(* QSUBST.TYP - created 04/30/82 by djm *)
+    2	
+    3	type
+    4	  sub_options =
+    5	    ( confirm_sop, all_sop, print_sop, number_sop  );
+    6	
+    7	  sub_opt_set = set of sub_options;
+   24	$SYSTEM (pasdev2)wio.typ
+    1	(*  Declarations for QED routines to read and write 940 style files *)
+    2	(*  RLD:CMDUTL.TYP must be $INCLUDEd previously to define "file_id" *)
+    3	(*  RND:QSTR.TYP must be $INCLUDEd previously to define "qstring"   *)
+    4	
+    5	TYPE WCHANNEL = 0..15;                          (* channel number obtained from Pascal runtime
+	 *)
+    6	
+    7	     (* error codes returned by routines in this package *)
+    8	
+    9	     WCODES = (WOK, WTENFILE, WBADNAME, WBADFILE, WEOF, WINERROR, WOUTERROR);
+   10	
+   11	     (* following type is for the file name modifier wtring passed to
+   12	        wfileconvert.  Its length is 6 to force the old compiler to
+   13	        pass it by address for compatibility with the new compiler *)
+   14	
+   15	     WMODIFIER = STRING[6];
+   16	
+   17	     (* argument to wopen specifying data transfer direction *)
+   18	
+   19	     WIOMODES = (WINPUT, WOUTPUT);
+   25	$SYSTEM (pasdev2)qedtyp.typ
+    1	(* QEDTYP.TYP - created 04/29/82 by djm *)
+    2	
+    3	const
+    4	  token_chars : set of char = ['A' .. 'Z'];
+    5	
+    6	typeMODULE  QEDENV       DSK:QEDENV.PAS[31024,320231]                                      17-Nov-82 13:24
+SECTION 14-0         QED -- General Environment Module                                         PAGE 11
+
+    7	  rangetypes = (one, dollar, dot, dotp1, lb, lbp1);
+    8	
+    9	  rangelist = record
+   10	      lbound, hbound1, hbound2: rangetypes;
+   11	      required, permitted: 0..2
+   12	  end;
+   13	
+   14	  cmd_range = 1 .. ord (maximum (qedcmds)) + 1;
+   15	  sub_opt_range = 1 .. ord (maximum (sub_options)) + 1;
+   16	  set_param_range = 1 .. ord (maximum (set_params)) + 1;
+   17	  split_opt_range = 1 .. ord (maximum (split_options)) + 1;
+   18	  caller_range = 1 .. ord (maximum (toktyp)) + 1;
+   19	
+   20	  qcmdlist = array [cmd_range] of cmd_lookup_record;
+   21	  sub_opt_list = array [sub_opt_range] of cmd_lookup_record;
+   22	  set_par_list = array [set_param_range] of cmd_lookup_record;
+   23	  split_op_list = array [split_opt_range] of cmd_lookup_record;
+   24	  caller_list = array [caller_range] of cmd_lookup_record;
+   25	  defrangelist = array [qedcmds] of rangelist;
+   26	$SYSTEM (pasdev2)filutl
+    1	(**********  FILUTL.inc  last modified 6/19/78 **********)
+    2	
+    3	
+    4	
+    5	(* PR FILE ID extracts a file title form an input string. If the title parses
+    6	   correctly, file_id information is set, the string cursor is advanced past
+    7	   the title and true is returned.  If the title is incorrectly formed, false
+    8	   is returned, and the cursor is left pointing to the character which is in
+    9	   error.  The file_id information is not changed. *)
+   10	
+   11	EXTERNAL FUNCTION PR_FILE_ID
+   12	            (   LINE: CMDLINE; VAR IDX: CMDLINEIDX;
+   13	                VAR FID: FILE_ID                      ): BOOLEAN;
+   14	
+   15	
+   16	
+   17	(* OPEN FILE opens a text file for input or output. The mode is specified by
+   18	   the caller. For an output file the user can also request append mode and
+   19	   old/new file prompting. The caller may supply a default extension to be used
+   20	   in the file_id if none appears.  A flag is returned indicating if the open
+   21	   was successful. *)
+   22	MODULE  QEDENV       DSK:QEDENV.PAS[31024,320231]                                      17-Nov-82 13:24
+SECTION 15-0         QED -- General Environment Module                                         PAGE 12
+
+   23	TYPE
+   24	  IO_MODE = ( INPUT_MODE, OUTPUT_MODE );
+   25	  IO_OPTION_SET = SET OF ( APPEND_MODE, CONFIRM_OPEN, ASCII_MODE );
+   26	
+   27	EXTERNAL FUNCTION OPEN_FILE
+   28	            (   VAR F: TEXT;
+   29	                FID: FILE_ID;
+   30	                EXT: EXTENSION;
+   31	                MODE: IO_MODE;
+   32	                OPTION_SET: IO_OPTION_SET   ): BOOLEAN;
+   33	
+   34	
+   35	
+   36	(* PATHNAME returns the actual file_id of an opened PASCAL file.  This file_id
+   37	   reflects any directory searching in effect. *)
+   38	
+   39	EXTERNAL FUNCTION PATHNAME  ( VAR F: TEXT ):  FILE_ID;
+   40	
+   27	$SYSTEM (pasdev2)qquery
+    1	
+    2	(* QUERY asks a caller supplied question, and checks for a yes or no reply.
+    3	   Y, YES, NO, N, or <eoln> meaning yes are accepted as replys. Also,
+    4	   REPEAT is accepted as a request to repeat the question.  If no such 
+    5	   replies are received, another response is requested and processed. Notes:
+    6	   This routine appends a question mark to the question. It is assumed that
+    7	   the terminal is in the desired column (i.e. one) when called. *)
+    8	
+    9	TYPE QUERY_STRING = STRING[256];
+   10	
+   11	EXTERNAL FUNCTION QUERY (QUESTION: QUERY_STRING): BOOLEAN;
+   12	
+   28	$SYSTEM (pasdev2)qspat
+    1	(* QSPAT.INC - modified 9/16/81 by djm to add QSETCASE declaration *)
+    2	
+    3	(* QSETCASE sets the CASE flag in QSPAT. *)
+    4	
+    5	EXTERNAL PROCEDURE QSETCASE (X:BOOLEAN);
+    6	
+    7	(* SPATPARSE extracts a string pattern from an input line.  The parse begins
+    8	   at a caller supplied index. Preceding blanks are ignored. If the first 
+    9	   nonblank character is not a valid string pattern delimiter, then false is
+   10	   returned.  The index is not advanced.  If a valid delimiter is found, thenMODULE  QEDENV       DSK:QEDENV.PAS[31024,320231]                                      17-Nov-82 13:24
+SECTION 17-0         QED -- General Environment Module                                         PAGE 13
+
+   11	   the line is scanned to complete the pattern. An error occurs if there is
+   12	   no closing delimiter or if the default pattern is used and there it has no
+   13	   current value.  If the pattern is valid, the pattern record is filled in;
+   14	   the parsing index is advanced to the character past the closing delimiter;
+   15	   and true is returned. If there is an error, true is returned with an error
+   16	   code set. The index is set to the openning delimiter; the pattern record is
+   17	   not modified. *)
+   18	
+   19	
+   20	EXTERNAL FUNCTION SPATPARSE
+   21	            (   LINE: CMDLINE;          (* LINE TO BE PARSED *)
+   22	                VAR IDX: CMDLINEIDX;    (* PARSING CURSOR, ADVANCED IF TRUE RETURNED *)
+   23	                VAR PAT: SPATTERN;      (* PATTERN DESCRIPTION, SET IF COMPLETE PATTERN FOUND 
+	*)
+   24	                WILDSWITCH: BOOLEAN;    (* WILDCARDING SET SWITCH *)
+   25	                VAR ERR: QERRCODE       (* ERROR CODE, SET IF SOMETHING FOUND *)
+   26	                                ): BOOLEAN;
+   27	
+   28	
+   29	
+   30	(* SPATMATCH attempts to find a substring matching a pattern somewhere within
+   31	   a caller supplied line.  If no match is found, then false is returned.  If
+   32	   a match is found, then the starting index and length of the substring are
+   33	   set, and true is returned. *)
+   34	
+   35	
+   36	EXTERNAL FUNCTION SPATMATCH
+   37	            (   LINE: QSTRING;          (* LINE TO SCAN FOR A MATCHING SUBSTRING *)
+   38	                PAT: SPATTERN;          (* PATTERN TO BE MATCHED *)
+   39	                VAR POS, LEN: QSTRINGIDX;  (* STARTING POSITION AND LENGTH OF SUBSTRING *)
+   40	                VAR ERR: QERRCODE       (* ERROR REPORT *)
+   41	                                ): BOOLEAN;
+   42	
+   43	
+   44	
+   45	
+   46	(* SPATDISPOSE disposes of the doubly-linked list in the given SPATTERN *)
+   47	
+   48	EXTERNAL PROCEDURE SPATDISPOSE (PATTERN: SPATTERN);
+   49	
+   50	(* SPATSETDEFAULT sets the default string pattern - i.e. // or equivalent.
+   51	   Initially it has no value; an attempt to reference it causes an error toMODULE  QEDENV       DSK:QEDENV.PAS[31024,320231]                                      17-Nov-82 13:24
+SECTION 17-0         QED -- General Environment Module                                         PAGE 14
+
+   52	   be reported by SPATMATCH. *)
+   53	
+   54	
+   55	EXTERNAL PROCEDURE SPATSETDEFAULT (PATTERN: SPATTERN);
+   56	
+   57	(* SPATGETDEFAULT returns the value of the current
+   58	default spattern. Useful for preventing sub-commands of FIND from
+   59	changing it. Will not report an error if the pattern
+   60	is null. *)
+   61	
+   62	EXTERNAL FUNCTION SPATGETDEFAULT: SPATTERN;
+   63	
+   64	(* QTOKENGET searches for the next non-blank character in line and sets idx
+   65	to that position. The function returns FALSE if no token is found *)
+   66	
+   67	EXTERNAL FUNCTION QTOKENGET(LINE : CMDLINE; VAR IDX : CMDLINEIDX) : BOOLEAN;
+   29	$SYSTEM (pasdev2)qspred
+    1	(* SPREDPARSE extracts a string predicate from an input line.  The parse begins
+    2	   at a caller supplied index. If the first token at or following the index is
+    3	   not a valid initial token for a string predicate, false is returned. No
+    4	   additional parameters, including the line index, are modified. If the
+    5	   token is acceptable, an attempt is made to parse a complete string predicate
+    6	   An error occurs if there is a syntactic error, an error in a contained
+    7	   string pattern, or an AND operator whose operands are both ::, @@, or ##
+    8	   form patterns.  If there is no error, then a pointer to the base of the
+    9	   predicate tree is filled in; the index is set to the character position
+   10	   following the end of the predicate; and true is returned.  If there is an
+   11	   error, true is returned with a nonnull error code.  The index is set to
+   12	   the start of the token at which the error occurred. The predicate tree
+   13	   base is not set. *)
+   14	
+   15	EXTERNAL FUNCTION SPREDPARSE
+   16	            (   LINE: QSTRING;                  (* STRING TO BE PARSED *)
+   17	                VAR IDX: QSTRINGIDX;            (* PARSING CURSOR, ADVANCED IF SOMETHING FOUND
+	 *)
+   18	                VAR PRED: SPRED;                (* PREDICATE TREE, SET IF COMPLETE PATTERN FOU
+	ND *)
+   19	                WILDSWITCH: BOOLEAN;            (* ON/OFF SWITCH FOR WILDCARDING *)
+   20	                VAR ERR: QERRCODE               (* ERROR CODE, SET IF SOMETHING FOUND *)
+   21	                                ): BOOLEAN;
+   22	
+   23	MODULE  QEDENV       DSK:QEDENV.PAS[31024,320231]                                      17-Nov-82 13:24
+SECTION 18-0         QED -- General Environment Module                                         PAGE 15
+
+   24	
+   25	(* SPREDMATCH attempts to match a line against a string predicate. The rules
+   26	   for interpreting a predicate is given in the 'Definition of QED'.  A flag is
+   27	   returned indicating whether or not there was a match. *)
+   28	
+   29	EXTERNAL FUNCTION SPREDMATCH
+   30	            (   LINE: QSTRING;                  (* LINE TO MATCH AGAINST *)
+   31	                PRED: SPRED;                    (* PREDICATE TO MATCH *)
+   32	                VAR ERR: QERRCODE               (* ERROR REPORT *)
+   33	                                  ): BOOLEAN;   (* TRUE IF MATCH FOUND *)
+   34	
+   35	
+   36	
+   37	(* SPREDDISPOSE deletes the nodes of a string predicate tree. It is passed
+   38	   a possibly nil pointer to the base of a tree. *)
+   39	
+   40	EXTERNAL PROCEDURE SPREDDISPOSE (PRED: SPRED);
+   30	$SYSTEM (pasdev2)qederr
+    1	(**********  QEDERR.inc  last modified 3/6/81  **********)
+    2	
+    3	TYPE QEDERRLEVEL = 1..10;
+    4	
+    5	EXTERNAL PROCEDURE QEDERROR
+    6	    (   VAR F: TEXT;                            (* file to write error message to *)
+    7	        CODE: QERRCODE;                         (* error to report *)
+    8	        LEVEL: QEDERRLEVEL  );                  (* level of message desired *)
+    9	
+   31	$SYSTEM (pasdev2)qld
+    1	(* QLDPARSE extracts a line designator from an input line. It returns a count
+    2	   of line addresses seen, and a representation of the LD.  The parse begins
+    3	   with the first token at or following a caller supplied index.  If no LD at
+    4	   all appears, a zero count and nil LD chain are returned. There is no error.
+    5	   If the start of an LD appears, then the parse continues until the first
+    6	   token, not a part of an LD, is seen or an error is detected. If a valid LD
+    7	   is found, the count of address (one for a single address, two for a
+    8	   range) and the LD chain built up are returned with a null error code. An
+    9	   error occurs if there is a syntactic error in a contained string predicate,
+   10	   star is used improperly, or a line address or offset is out of range. In
+   11	   such a case, the count and LD chain parameters are not returned; and a
+   12	   nonnull error code is returned. The index is set to the start of the first
+   13	   token following the LD if there is no error; otherwise is set to point to
+   14	   the start of the erroneous token.  The caller should insure that the LDMODULE  QEDENV       DSK:QEDENV.PAS[31024,320231]                                      17-Nov-82 13:24
+SECTION 20-0         QED -- General Environment Module                                         PAGE 16
+
+   15	   chain has been initialized by QLDDISPOSEing any records on it, and then
+   16	   setting LD to nil.   *)
+   17	
+   18	
+   19	EXTERNAL PROCEDURE QLDPARSE
+   20	            (   LINE: CMDLINE;                  (* LINE TO BE PARSED *)
+   21	                VAR IDX: CMDLINEIDX;            (* PARSING CURSOR *)
+   22	                VAR NLD: LDCOUNT;               (* NUMBER OF LINE ADDRESSES SEEN *)
+   23	                VAR LD: LDCHAIN;                (* REPRESENTATION *)
+   24	                WILDSWITCH: BOOLEAN;            (* SWITCH FOR WILDCARDING *)
+   25	                VAR ERR: QERRCODE       );      (* INDICATES SUCCESS OR NATURE OF FAILURE *)
+   26	
+   27	
+   28	
+   29	(* QLDEVAL resolves a line designation within the range of lines specified,
+   30	   and returns the line numbers of the addressed lines.  The rules governing
+   31	   the evaluation of an LD are given in the 'Definition of QED'.  If an error
+   32	   is detected, the error code is set nonnull, and the range left undefined. *)
+   33	
+   34	EXTERNAL PROCEDURE QLDEVAL
+   35	            (   VAR BUF: QBUFFER;               (* BUFFER TO SEARCH *)
+   36	                LD: LDCHAIN;                    (* PARSED LD TO EVALUATE *)
+   37	                SEARCHRANGE: LDRANGE;           (* LIMITS OF SEARCH *)
+   38	                VAR RANGE: LDRANGE;             (* CONTAINS RETURNED LINE ADDRESSES *)
+   39	                VAR ERR: QERRCODE       );      (* INDICATES SUCCESS OR NATURE OF FAILURE *)
+   40	
+   41	
+   42	
+   43	(* QLDDISPOSE frees the storage associated with an LD chain. It is passed a
+   44	   pointer to the start of the chain to free. This pointer may be nil. *)
+   45	
+   46	EXTERNAL PROCEDURE QLDDISPOSE (LD: LDCHAIN );
+   32	$SYSTEM (pasdev2)qread
+    1	(* QREAD reads a line of input, but will no longer allow intraline editing.
+    2	   Naturally assumes that the terminal is open. This routine will also
+    3	   print a '?' when a control-G is type at the terminal.      *)
+    4	
+    5	EXTERNAL FUNCTION QREAD : QSTRING;
+   33	$SYSTEM qedln
+    1	(* QEDLN.INC - last modified 9/21/81 by djm to remove external references to
+    2	               procedures QTAG, QTAGSET, and QTAGCLEAR.  These procedures are 
+    3	               still present in the ANC version. *)MODULE  QEDENV       DSK:QEDENV.PAS[31024,320231]                                      17-Nov-82 13:24
+SECTION 22-0         QED -- General Environment Module                                         PAGE 17
+
+    4	
+    5	EXTERNAL PROCEDURE QINITBUF                     (* call once for each buffer *)
+    6	(       VAR BUFFER: QBUFFER);                   (* buffer to be created *)
+    7	
+    8	EXTERNAL PROCEDURE QDELBUF                      (* clear and re-initialize buffer *)
+    9	(       VAR BUFFER: QBUFFER);                   (* buffer to be purged *)
+   10	
+   11	EXTERNAL FUNCTION QGETLINE                      (* returns text of specified line *)
+   12	(       VAR BUFFER: QBUFFER;                    (* working buffer *)
+   13	        L: QLINENO;                             (* number of line to be gotten *)
+   14	        VAR ERR: QERRCODE                       (* what went wrong? *)
+   15	                ): QSTRING;                     (* text of line *)
+   16	
+   17	EXTERNAL PROCEDURE QMODLINE                     (* change text of specified line *)
+   18	(       VAR BUFFER: QBUFFER;                    (* in this buffer *)
+   19	        L: QLINENO;                             (* line to be changed *)
+   20	        NEWTEXT: QSTRING;                       (* new line's text *)
+   21	        VAR ERR: QERRCODE);                     (* in case of trouble *)
+   22	
+   23	EXTERNAL PROCEDURE QDELLINES                    (* delete specified range of lines *)
+   24	(       VAR BUFFER: QBUFFER;                    (* from this buffer *)
+   25	        F, L: QLINENO;                          (* from F to L *)
+   26	        VAR ERR: QERRCODE);                     (* everything QOK? *)
+   27	
+   28	EXTERNAL PROCEDURE QADDLINE                     (* add line of text to specified place *)
+   29	(       VAR BUFFER: QBUFFER;                    (* in this buffer *)
+   30	        L: QLINENO;                             (* after this line *)
+   31	        TEXT: QSTRING;                          (* line to add *)
+   32	        VAR ERR: QERRCODE);                     (* did it work? *)
+   33	
+   34	EXTERNAL FUNCTION QBUFLENGTH                    (* return length of bounded buffer *)
+   35	(       VAR BUFFER: QBUFFER
+   36	                ): QLINENO;
+   37	
+   38	EXTERNAL FUNCTION QDOLLAR_VAL                   (* return the value of a $ ld *)
+   39	(       VAR BUFFER: QBUFFER
+   40	                ): QLINENO;
+   41	
+   42	EXTERNAL FUNCTION QFIRST_VAL                    (* return the value of the 1st bounded line*)
+   43	(       VAR BUFFER: QBUFFER
+   44	                ): QLINENO;
+   45	MODULE  QEDENV       DSK:QEDENV.PAS[31024,320231]                                      17-Nov-82 13:24
+SECTION 22-0         QED -- General Environment Module                                         PAGE 18
+
+   46	EXTERNAL PROCEDURE QMOVELINES                   (* relocate a section of the buffer *)
+   47	(       VAR BUFFER: QBUFFER;                    (* working buffer *)
+   48	        FIRST, LAST: QLINENO;                   (* range of lines to be moved *)
+   49	        DEST: QLINENO;                          (* where to move them to *)
+   50	        VAR ERR: QERRCODE);                     (* error report *)
+   51	
+   52	EXTERNAL PROCEDURE QCOPYLINES
+   53	(       VAR BUFFER: QBUFFER;                    (* working buffer *)
+   54	        FIRST, LAST: QLINENO;                   (* range of lines to copy *)
+   55	        DEST: QLINENO;                          (* where to copy them to *)
+   56	        VAR ERR: QERRCODE);                     (* error report *)
+   57	
+   58	EXTERNAL PROCEDURE QSETOFFSET                   (* sets offset for addressing bounded lines *)
+   59	(       NEWOFFSET: QLINENO;                     (* new buffer offset *)
+   60	        VAR BUFFER: QBUFFER);                   (* working buffer *)
+   61	
+   62	EXTERNAL PROCEDURE QSETBOUNDS                   (* set up bounded region in buffer *)
+   63	(       VAR BUFFER: QBUFFER;                    (* working buffer *)
+   64	        F, L: QLINENO;                          (* bounds (in bounded linenos) *)
+   65	        ABSOLUTE: BOOLEAN;                      (* flag for line addressing mode *)
+   66	        VAR ERR: QERRCODE);                     (* any problem? *)
+   67	
+   68	EXTERNAL PROCEDURE QUNBOUND                     (* resets buffer bounds to whole buffer *)
+   69	(       VAR BUFFER: QBUFFER;                    (* working buffer *)
+   70	        VAR ERR: QERRCODE);                     (* done? *)
+   71	
+   72	EXTERNAL PROCEDURE QFILELOAD                    (* read text from file *)
+   73	(       VAR BUFFER: QBUFFER;                    (* in this buffer *)
+   74	        s940id: file_id;                        (* from this file       *)
+   75	        wmod: wmodifier;                        (* 940 file type modifier       *)
+   76	        WHERE: QLINENO;                         (* append to this line *)
+   77	        VAR CNT: QLINENO;                       (* number of lines appended *)
+   78	        VAR ERR: QERRCODE);                     (* and report any problems *)
+   79	
+   80	EXTERNAL PROCEDURE QFILEAPPEND                  (* read text from file *)
+   81	(       VAR BUFFER: QBUFFER;                    (* in this buffer *)
+   82	        s940id: file_id;                        (* from this file       *)
+   83	        wmod: wmodifier;                        (* 940 file type modifier       *)
+   84	        WHERE: QLINENO;                         (* append to this line *)
+   85	        VAR CNT: QLINENO;                       (* number of lines appended *)
+   86	        VAR ERR: QERRCODE);                     (* and report any problems *)
+   87	MODULE  QEDENV       DSK:QEDENV.PAS[31024,320231]                                      17-Nov-82 13:24
+SECTION 22-0         QED -- General Environment Module                                         PAGE 19
+
+   88	EXTERNAL PROCEDURE QTTYAPPEND                   (* append text from the TTY *)
+   89	(       VAR BUFFER: QBUFFER;                    (* in this buffer *)
+   90	        WHERE: QLINENO;                         (* append to this line *)
+   91	        VAR CNT: QLINENO;                       (* number of lines appended *)
+   92	        VAR ERR: QERRCODE);                     (* report failures *)
+   93	
+   94	EXTERNAL PROCEDURE QFILEWRITE                   (* write text to file *)
+   95	(       VAR BUFFER: QBUFFER;                    (* buffer to write from *)
+   96	        s940id: file_id;                        (* file to write to     *)
+   97	        wmod: wmodifier;                        (* 940 file type modifier       *)
+   98	        FNO, LNO: QLINENO;                      (* range to write *)
+   99	        CONFIRM: BOOLEAN;                       (* new/old file prompting desired? *)
+  100	        VAR ERR: QERRCODE);                     (* error report *)
+  101	 
+  102	EXTERNAL PROCEDURE QTMPSCRATCH                    (* scratch all open temp files *)
+  103	  
+  104	     ( var buffer: qbuffer);
+   34	$SYSTEM (pasdev2)qmark
+    1	EXTERNAL PROCEDURE QMARKMATCH                   (* matches lines to the markstring *)
+    2	(       VAR BUFFER: QBUFFER;                    (* in this buffer *)
+    3	        MARK: SPRED;                            (* predicate to match *)
+    4	        SECT_NAME: SPRED;                       (* name predicate to AND in *)
+    5	        START: QLINENO;                         (* place to start looking *)
+    6	        VAR FNO, LNO: QLINENO;                  (* return args, new bounds *)
+    7	        BACKWARD: BOOLEAN;                      (* search direction flag *)
+    8	        WRAP: BOOLEAN;                          (* wrap/no-wrap around buffer flag *)
+    9	        VAR ERR: QERRCODE);                     (* error report *)
+   35	$SYSTEM (pasdev2)qprint
+    1	EXTERNAL PROCEDURE PRLINE (VAR OUTFILE: TEXT; LINE: QSTRING;
+    2	        TAB_PRINT: BOOLEAN; VAR ERR: QERRCODE);
+    3	
+    4	(* outputs the line to the specified file, converting
+    5	   all control characters except &G through &M to &x form. *)
+    6	
+    7	EXTERNAL PROCEDURE QLISTLINES (VAR BUFFER: QBUFFER; LOW, HIGH: QLINENO;
+    8	        VAR F: TEXT; CTL_CHAR, NUMBER, TAB_PRINT: BOOLEAN; VAR ERR: QERRCODE);
+    9	
+   10	(* qlistlines outputs the specified range of lines to
+   11	   the tty. uses prline. *)
+   36	$SYSTEM (pasdev2)qsubst
+    1	(* QSUBSTITUTE replaces zero or more occurrences of a pattern within a line
+    2	   with a caller supplied string.  The caller may select among the followingMODULE  QEDENV       DSK:QEDENV.PAS[31024,320231]                                      17-Nov-82 13:24
+SECTION 25-0         QED -- General Environment Module                                         PAGE 20
+
+    3	   options:
+    4	
+    5	     confirm - display the line, bracketing the matched pattern with BACKSLASH,
+    6	       and query the user to confirm the substitution. It is assumed that
+    7	       the teletype has been opened.
+    8	
+    9	     all - substitute for all occurences of the pattern in the line; if not
+   10	       selected, only the first occurrence may be replaced.
+   11	
+   12	     print - after applying all substitutions, display the resulting line
+   13	       if modifications have been made.
+   14	
+   15	     number - if a match for the pattern is found, display a caller supplied
+   16	       line number before the first substitution.
+   17	
+   18	   This routine returns the modified line, a count of the number of substitutions
+   19	   performed, and a flag indication that a match was found for the pattern. The
+   20	   flag may be true when the count is zero if the substitutions were not confirmed
+   21	   by the user.
+   22	
+   23	   An error is reported if insertion of the replacement string would result in
+   24	   a line that is too long. If on return, the error code is nonnull, then
+   25	   the flag function value is true, but the values of the other values are
+   26	   undefined. 
+   27	   N_PAR is the Nth occurrance parameter. This parameter instructs QSUBST on 
+   28	   which occurrance of matching the pattern substitution(s) should begin.
+   29	   Variable NTH is a count of the number of matches found and not 
+   30	   substituted for. If NTH is less than N_PAR, then no substitution will be
+   31	   made and QSUBST will return false.
+   32	   CMD must be either SUBSTITUTE, BEFORE, or AFTER qedcmd. This instructs
+   33	   QSUBST whether to substitute or insert the replacement string in the
+   34	   line.         *)
+   35	
+   36	EXTERNAL FUNCTION QSUBSTITUTE
+   37	            (   VAR LINE: QSTRING;              (* LINE TO BE MODIFIED *)
+   38	                LINENO: QLINENO;                (* NUMBER OF ABOVE *)
+   39	                PAT: SPATTERN;                  (* PATTERN TO BE REPLACED *)
+   40	                RPLMTSTR: QSTRING;              (* STRING TO REPLACE PATTERN *)
+   41	                OPTION_LIST: SUB_OPT_SET;
+   42	                VAR CNT: QSTRINGIDX;            (* COUNT OF SUBSTITUTIONS PERFORMED *)
+   43	                CMD : QEDCMDS;                  (* PARSED COMMAND *)
+   44	                VAR NTH : QLINENO;              (* COUNT OF OCCURRANCES *)MODULE  QEDENV       DSK:QEDENV.PAS[31024,320231]                                      17-Nov-82 13:24
+SECTION 25-0         QED -- General Environment Module                                         PAGE 21
+
+   45	                N_PAR : QLINENO;                (* OCCURRANCE PARAMETER *)
+   46	                VAR ERR: QERRCODE               (* INDICATES IF RESULT TOO LONG *)
+   47	                                        ): BOOLEAN; (* INDICATES MATCH FOUND *)
+   48	
+   37	$SYSTEM (pasdev2)qjoin
+    1	EXTERNAL PROCEDURE QJOINLINES                   (* turn two (or more) lines into one *)
+    2	(       VAR BUFFER: QBUFFER;                    (* working buffer *)
+    3	        FIRST,
+    4	        LAST: QLINENO;                          (* range of lines to join *)
+    5	        CONTMARK: QSTRING;                      (* string to replace CRs with *)
+    6	        VAR ERR: QERRCODE);                     (* error report *)
+   38	$SYSTEM (pasdev2)qsplit
+    1	EXTERNAL FUNCTION QSPLITLINES                   (* split selected lines into smaller ones *)
+    2	(       VAR BUFFER: QBUFFER;                    (* working buffer *)
+    3	        LINENO: QLINENO;                        (* addr of line to split *)
+    4	        PAT: SPATTERN;                          (* where to split each line *)
+    5	        OPTION_LIST: SPLIT_OPT_SET;             (* various action-controllers *)
+    6	        VAR CNT: QLINENO;                       (* number of splits - new lines created *)
+    7	        VAR ERR: QERRCODE                       (* error report *)
+    8	                ): BOOLEAN;                     (* true if a match for pat found *)
+   39	$SYSTEM (pasdev2)qopen
+    1	TYPE
+    2	  QIOMODE = (QINPUT_MODE, QOUTPUT_MODE);
+    3	  QIOOPTIONS = (QIO_APPEND, QIO_CONFIRM, QIO_ASCII);
+    4	  QIOOPTION_SET = SET OF QIOOPTIONS;
+    5	
+    6	EXTERNAL PROCEDURE QOPENFILE ( VAR F: TEXT;     (* file to open *)
+    7	                             FID: FILE_NAME;    (* name of file *)
+    8	                             EXT: STRING[3];    (* default extension *)
+    9	                             MODE: QIOMODE;     (* I/O mode *)
+   10	                             OPTS: QIOOPTION_SET;   (* options *)
+   11	                             VAR ERR: QERRCODE );   (* error code *)
+   40	$SYSTEM (pasdev2)qed
+    1	(* QED.INC - modified 9/24/81 by djm to add const declarations of 
+    2	             tab, lf, cr, and esc *)
+    3	
+    4	CONST   TAB = CHR (#O11);                       (* Tab             *)
+    5	        LF  = CHR (#O12);                       (* Line Feed       *)
+    6	        CR  = CHR (#O15);                       (* Carriage Return *)
+    7	        ESC = CHR (#O33);                       (* Escape          *)
+    8	
+    9	EXTERNAL PROCEDURE QEDCL                        (* main command loop for QED *)MODULE  QEDENV       DSK:QEDENV.PAS[31024,320231]                                      17-Nov-82 13:24
+SECTION 29-0         QED -- General Environment Module                                         PAGE 22
+
+   10	(       VAR BUFFER: QBUFFER;                    (* pre-setup buffer *)
+   11	        ALLOWED_CMDS: QED_CMD_SET);             (* command set to work with *)
+   12	
+   13	EXTERNAL PROCEDURE QINITEXEC                    (* equiv to qinit and qinitbuf *)
+   14	(       VAR BUFFER: QBUFFER);                   (* buffer to be used *)
+   15	
+   16	EXTERNAL PROCEDURE QINIT                        (* setup QED to run *)
+   17	(       VAR BUFFER: QBUFFER);                   (* buffer to initialize *)
+   18	
+   19	EXTERNAL PROCEDURE QSETTABDEFAULT               (* SET TABS switch default set *)
+   20	(       DEFAULT: BOOLEAN);                      (* true for SET TABS ON default *)
+   21	
+   22	EXTERNAL PROCEDURE QSETMARKDEFAULT              (* mark string default setter *)
+   23	(       LINE: CMDLINE);                         (* the default mark string *)
+   24	
+   25	EXTERNAL PROCEDURE QEXECUTE                     (* parse and execute one command line *)
+   26	(       VAR BUFFER: QBUFFER;                    (* working buffer *)
+   27	        VAR LINE: CMDLINE;                      (* command line to parse *)
+   28	        VAR LINDEX: CMDLINEIDX;                 (* place marker *)
+   29	        VAR EXECRANGE: LDRANGE;                 (* limits of execution *)
+   30	        VAR BLE: QLINENO;                       (* bottommost line examined *)
+   31	        FINDFLAG: BOOLEAN;                      (* running under find? *)
+   32	        ALLOWED_CMDS: QED_CMD_SET;              (* commands permitted to be executed *)
+   33	        VAR ERR: QERRCODE);                     (* errors? *)
+   41	$SYSTEM (pasdev2)tempfi
+    1	(* TEMPFI.INC - include file for RDLIB routine TEMP_FILE_NAME. *)
+    2	
+    3	external function temp_file_name ( string[ 3 ] ): file_name;
+   42	$IF P10
+   43	$SYSTEM (pasdev2)infpac
+    1	(*---------------------------------------------------------------------------*)
+    2	(*
+    3	 *  INCLUDE FILE DEFINING TYPES AND ROUTINES FOR PASCAL
+    4	 *  ENVIRONMENTAL INQUIRY PACKAGE.
+    5	 *)
+    6	
+    7	CONST
+    8	   MAXADDR = #O777777;
+    9	
+   10	TYPE
+   11	   SEGPPN = STRING[15];
+   12	   SEGNAM = STRING[6];MODULE  QEDENV       DSK:QEDENV.PAS[31024,320231]                                      17-Nov-82 13:24
+SECTION 31-0         QED -- General Environment Module                                         PAGE 23
+
+   13	   USRNAME = STRING[12];
+   14	   SEGRECD = RECORD
+   15	      LOWLEN: 0..MAXADDR;
+   16	      HIGHLEN: 0..MAXADDR;      (* ZERO IF NO HIGH SEGMENT *)
+   17	      RDONLY: BOOLEAN;          
+   18	      SHARABLE: BOOLEAN
+   19	   END;
+   20	   USTATREC = RECORD
+   21	      CRUS60: 0..MAXIMUM(INTEGER);      (* DIVIDE BY 60 TO GET CRUS *)
+   22	      DISKRDS: 0..MAXIMUM(INTEGER);     
+   23	      DISKWRS: 0..MAXIMUM(INTEGER);
+   24	      RUNTIME: 0..MAXIMUM(INTEGER);     (* 80 NANOSECOND UNITS *)
+   25	      ELAPTIME: 0..MAXIMUM(INTEGER)     (* SECONDS *)
+   26	   END;
+   27	   JOBREC = RECORD
+   28	      HSEGPPN: SEGPPN;
+   29	      HSEGNAM: SEGNAM;
+   30	      LSEGPPN: SEGPPN;
+   31	      LSEGNAM: SEGNAM;
+   32	      PROGDIR: SEGPPN;          (* DIRECTORY PROGRAM IS RUN FROM *)
+   33	      JOBNUM: 0..MAXIMUM(INTEGER);
+   34	      PROJECTID: USRNAME
+   35	   END;
+   36	   SSTATREC = RECORD
+   37	      NLOGIN: 0..MAXIMUM(INTEGER);      (* NUMBER OF LOGGED IN USERS *)
+   38	      MAXCOR: 0..MAXADDR        (* MAXIMUM CORE AVAILABLE TO ANY JOB *)
+   39	   END;
+   40	
+   41	EXTERNAL PROCEDURE SEGINFO(VAR SEGSTUFF: SEGRECD);
+   42	EXTERNAL PROCEDURE USRSTAT(VAR USRSTATS: USTATREC);
+   43	EXTERNAL PROCEDURE JOBINFO(VAR JOBSTUFF: JOBREC);
+   44	EXTERNAL PROCEDURE SYSSTAT(VAR SYSSTATS: SSTATREC);
+   45	(*---------------------------------------------------------------------------*)
+   44	$SYSTEM (pasdev2)wio
+    1	(* external procedures called by qed for 940 conversion work *)
+    2	
+    3	        (* routine to convert string containing some sort of 940 file name
+    4	           to equivalent PDP-10 file name.  If modifier specifies that file
+    5	           is actually PDP-10 file, wtenfile is returned.  If conversion
+    6	           fails, wbadname is returned, else wok. *)
+    7	
+    8	MODULE  QEDENV       DSK:QEDENV.PAS[31024,320231]                                      17-Nov-82 13:24
+SECTION 32-0         QED -- General Environment Module                                         PAGE 24
+
+    9	EXTERNAL PROCEDURE WFILECONVERT( FILE_ID;       (*name to convert*)
+   10	                                 WMODIFIER;     (*string indicating conversion*)
+   11	                                 VAR FILE_ID;   (*converted name*)
+   12	                                 VAR WCODES;    (*return code*)
+   13	                                 VAR BOOLEAN);  (*add r for revision if true *)
+   14	
+   15	        (* routine to open a 940 file for I/O *)
+   16	
+   17	EXTERNAL PROCEDURE WOPEN( WCHANNEL;             (*channel on which to open file*)
+   18	                          VAR WCODES;           (*wok=success; wbadfile=failure*)
+   19	                          WIOMODES;             (*direction of data transfer*)
+   20	                          VAR FILE_ID);         (*PDP-10 file name*)
+   21	
+   22	        (* routine to close a 940 file *)
+   23	
+   24	EXTERNAL PROCEDURE WCLOSE( WCHANNEL;            (*channel on which to close file*)
+   25	                           VAR WCODES);         (*wok=success, wouterror=failure*)
+   26	
+   27	        (* routine to read a line from 940 file *)
+   28	
+   29	EXTERNAL PROCEDURE WINLINE( WCHANNEL;           (*channel to read from*)
+   30	                            VAR WCODES;         (*wok=success, winerror=failure,
+   31	                                                  weof=end of file*)
+   32	                            VAR QSTRING);       (*line read (no cr on end)*)
+   33	
+   34	        (* routine to write a line *)
+   35	
+   36	EXTERNAL PROCEDURE WOUTLINE( WCHANNEL;          (*channel to write to*)
+   37	                             VAR WCODES;        (*wok=success; wouterror=failure*)
+   38	                             QSTRING);          (*line to write (w/o final cr)*)
+   39	
+   40	        (* routine to return PDP-10 file name open on channel *)
+   41	
+   42	EXTERNAL PROCEDURE WFILENAME( WCHANNEL;
+   43	                              VAR FILE_ID;      (*name of file*)
+   44	                                VAR BOOLEAN);
+   45	
+   46	(**********************************************************************)
+   47	
+   45	$END
+   46 *	$IF VAX
+   47 *	$SYSTEM (pasdev2)imgnamMODULE  QEDENV       DSK:QEDENV.PAS[31024,320231]                                      17-Nov-82 13:24
+SECTION 1            QED -- General Environment Module                                         PAGE 25
+
+   48 *	$END
+   49	$SYSTEM (pasdev2)qlabel
+    1	external function qlabelfind
+    2	(       var buffer:     qbuffer;          
+    3	        start:          qlineno;        (* where to start search *)
+    4	        top:            qlineno;        (* upper search limit *)
+    5	        var qlabel:     qstring;        (* label name, if found *)
+    6	        var displ:      qlineno;        (* disp. of label from start *)
+    7	        var err:        qerrcode):      (* error code *)
+    8	                        boolean;        (* true if label found, else false *)
+    9	
+   10	(* QLABELFIND searches the buffer from the start line backwards to the
+   11	   TOP line for a line with a label. If one is found, the label's name
+   12	   and its displacement from the START line are returned, with the value
+   13	   TRUE. Otherwise, if no label is found, FALSE is returned. 
+   14	   A label begins in column one with a character in the set
+   15	   ['A'..'Z','a'..'z','0'..'9','$'] and ends with the character
+   16	   preceding the next tab, blank, or end of line.  *)
+   50	END.
+
+File   level   on page     name
+
+  0	 0	    1	DSK:QEDENV.PAS[31024,320231]
+  1	 1	    2	DSK:CMDUTL.INC[31024,320156]
+  2	 1	    3	DSK:QERR.TYP[31024,320231]
+  3	 1	    5	DSK:QSTR.TYP[31024,320156]
+  4	 1	    5	DSK:QSPAT.TYP[31024,320156]
+  5	 1	    6	DSK:QSPRED.TYP[31024,320156]
+  6	 1	    6	DSK:CMDUTL.TYP[31024,320156]
+  7	 1	    7	DSK:QEDLN.TYP[31024,320231]
+  8	 1	    8	DSK:QLINE.TYP[31024,320156]
+  9	 1	    8	DSK:QLD.TYP[31024,320156]
+ 10	 1	    9	DSK:QED.TYP[31024,320156]
+ 11	 1	   10	DSK:QSPLIT.TYP[31024,320156]
+ 12	 1	   10	DSK:QSUBST.TYP[31024,320156]
+ 13	 1	   10	DSK:WIO.TYP[31024,320156]
+ 14	 1	   10	DSK:QEDTYP.TYP[31024,320156]
+ 15	 1	   11	DSK:FILUTL.INC[31024,320156]
+ 16	 1	   12	DSK:QQUERY.INC[31024,320156]
+ 17	 1	   12	DSK:QSPAT.INC[31024,320156]
+ 18	 1	   14	DSK:QSPRED.INC[31024,320156]
+ 19	 1	   15	DSK:QEDERR.INC[31024,320156]
+ 20	 1	   15	DSK:QLD.INC[31024,320156]
+ 21	 1	   16	DSK:QREAD.INC[31024,320156]
+ 22	 1	   16	DSK:QEDLN.INC[31024,320231]
+ 23	 1	   19	DSK:QMARK.INC[31024,320156]
+ 24	 1	   19	DSK:QPRINT.INC[31024,320156]
+ 25	 1	   19	DSK:QSUBST.INC[31024,320156]
+ 26	 1	   21	DSK:QJOIN.INC[31024,320156]
+ 27	 1	   21	DSK:QSPLIT.INC[31024,320156]
+ 28	 1	   21	DSK:QOPEN.INC[31024,320156]
+ 29	 1	   21	DSK:QED.INC[31024,320156]
+ 30	 1	   22	DSK:TEMPFI.INC[31024,320156]
+ 31	 1	   22	DSK:INFPAC.INC[31024,320156]
+ 32	 1	   23	DSK:WIO.INC[31024,320156]
+ 33	 1	   25	DSK:QLABEL.INC[31024,320156]
+
+
+
+Section   in file   on page     title
+
+     1	      0	         2    QED -- General Environment Module
+BA)Ù

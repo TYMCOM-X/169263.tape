@@ -1,0 +1,239 @@
+#DOCUMENT(M68000 Project - WNH,,45,,100)
+$POSITIONS +0,+4,+8,+8,+8,+8
+#SECT_DEFAULT(66,0,3,1,2,1)
+#NAME (HOPE)
+#TASK (M68000 MDSI Pascal I/O Runtime)
+My assignment for the foreseeable future is to provide the I/O runtime
+routines for the M68000 implementation of MDSI Pascal.
+#END_DISC
+#BEGINLEVEL
+#TASK (I/O Design Spec,N)
+#SCHEDULE (9/?/81,11/13/81,1)
+#ACTUAL (9/?/81,11/13/81)
+#PROGRESS (11/13/81)
+The spec was completed.
+#END_DISC
+#TASK (I/O Design Review,N)
+#SCHEDULE (11/18/81,11/18/81,1)
+#ACTUAL (11/18/81,11/18/81)
+#TASK (Text File Association,N)
+#SCHEDULE (11/16/81,12/4/81,1)
+#SCHEDULE (11/16/81,12/18/81)
+#ACTUAL(11/16/81,1/13/82)
+#PROGRESS(11/25/81)
+Using the EXORmacs system at the local Motorola sales office, a modem,
+and my ADM terminal, with the Motorola editor in line mode, I have set
+up a file of literals to be used not only on textfile association, but
+on all phases of the I/O runtime project.
+These include all literals needed to address a file block, and the values
+of MDSI Pascal standard type IO_ERROR.
+#PAR
+When the Text File Association part of the I/O runtime is complete, it
+will not be testable until the code for some rudimentary writing and
+reading of files is completed.  If this happens substantially before
+the NEW routine is available, a NEW routine will have to be dummied up
+for the testing.
+#END_DISC
+#PROGRESS (12/2/81)
+I have devised a method of parsing a string passed in to the association
+routines and extracting a resource name acceptable to VERSAdos.
+#END_DISC
+#PROGRESS (12/3/81)
+I badly underestimated this task.  Several factors contributed to the
+underestimate.  A minor contribution came from an underestimate of the
+difficulty of using the Motorola editor in line mode.
+Having an EXORmacs system in house will make possible use of the editor in
+page mode, which, because it was the intended mode for this editor, and
+has been in use by many other people, has had most of the bugs worked out of it.
+Also, having the EXORmacs in house will greatly increase its availability.
+The greatest factor was
+that I did not realize how much was involved in the task.  Perhaps
+it would have been better to leave the resource name parsing and all its
+ramifications for later, and pony up some minimum parsing function for
+this task only.  At any rate, I have rescheduled the entire task, and
+I am further breaking the task down as follows:
+#END_DISC
+#BEGINLEVEL
+#TASK (File block manipulation)
+Without a NEW function, this involves creating
+and working with a very few file blocks at fixed locations.
+What is to be done is to create file blocks which contain IOS
+blocks and FHS blocks which VERSAdos will buy.  This also involves
+finding out how to treat logical unit numbers, how VERSAdos reacts to
+such things as lower case letters in resource name strings, and
+generally how to work with VERSAdos.
+#END_DISC
+#SCHEDULE (12/7/81,12/10/81,1)
+#ACTUAL (12/7/81,1/13/82)
+#PROGRESS (12/11/81)
+I have made less progress than I had hoped on
+the EXORmacs.  The EXORmacs has been flaky since it was delivered, and
+it has not been uncommon to lose several hours worth of editted data.
+I am doing more frequent SAVEs and backup procedures have been instituted
+which alleviate this somewhat.
+Chasing and recovering from system errors has taken much too much time.  
+We now know more about how to recover, and have a good logging system,
+both of which will free up more time.
+#TASK (T.OPEN and T.RESET,N)
+#SCHEDULE (12/10/81,12/14/81,1)
+#ACTUAL (12/10/81,1/13/82)
+#PROGRESS (12/11/81)
+T.OPEN is coded, but gets assembler syntax errors which I believe are
+related to the way static storage is declared.  The error numbers are
+listed in the manual as "RELOCATION OF BYTE FIELD ATTEMPTED", and
+"SYNTAX ERROR".
+These errors occur on lines which refer to static variables.
+T.RESET is a call to T.OPEN followed by a call to T.GET.
+#END_DISC
+#PROGRESS (12/15/81)
+T.OPEN and T.RESET are coded and get no syntax errors.
+#PROGRESS (12,27,81)
+T.OPEN and T.RESET will open files, and the information in the
+FHS block looks reasonable.
+#END_DISC
+#TASK (T.REWRITE,N)
+#SCHEDULE (12/14/81,12/16/81,1)
+#ACTUAL (12/14/81,1/13/82)
+#PROGRESS (12/15/81)
+T.REWRITE is coded and gets no syntax errors.
+#PROGRESS (12/27/81)
+T.REWRIT will create files.
+#END_DISC
+#PROGRESS (1/6/82)
+A file can be created with T.REWRITE, but VERSAdos doesn't want to overwrite
+an existing file of the same name.
+#END_DISC
+#TASK (Testing)
+See if a file opened with T.OPEN appears in the directory, see if a
+file open with T.REWRIT is emptied, see if the information placed
+in the file block looks reasonable.
+#END_DISC
+#SCHEDULE (12/16/81,12/18/81,1)
+#SCHEDULE (12/16/81,5/3/82)
+#ACTUAL (12/16/81)
+#PROGRESS (12/27/81)
+T.OPEN, T.RESET, and T.REWRIT leave reasonable data in the directory and in
+the file block.
+#END_DISC
+#ENDLEVEL
+#TASK (<Text I/O, including GETSTRING and PUTSTRING>,N)
+#SCHEDULE (12/7/81,2/12/82,1)
+#SCHEDULE (12/21/81,2/19/82)
+#ACTUAL (12/28/82)
+#BEGINLEVEL
+#TASK (T.PUT and T.WRTLN,N)
+#SCHEDULE (12/7/81,12/23/81,1)
+#SCHEDULE (12/21/81,1/12/82)
+#ACTUAL (12/28/81,1/13/82)
+#PROGRESS (12/30/81)
+T.PUT and T.WRTLN are coded and get no syntax errors.
+#END_DISC
+#PROGRESS (1/13/82)
+T.PUT and T.WRTLN are debugged.
+#END_DISC
+#TASK (T.READLN and T.GET,N)
+#SCHEDULE (12/28/81,1/15/81,1)
+#SCHEDULE (1/13/82,2/1/82)
+#ACTUAL (12/28/81,1/13/82)
+#PROGRESS (12/30/81)
+T.READLN and T.GET are coded and get no syntax errors.
+#END_DISC
+#PROGRESS (1/13/82)
+T.READLN and T.GET are debugged.
+#END_DISC
+#TASK (Format conversion)
+Design and code a system of coroutines to produce and consume ASCII characters.
+Don Remboski will code the real number format conversion coroutines.
+#SCHEDULE (1/20/82,2/15/82,1)
+#ACTUAL (1/20/82)
+#PROGRESS (2/9/82)
+I lost a day and a half to snow the week of 2/1 - 2/5.  This should be
+made up by 2/15.
+#BEGINLEVEL
+#TASK (Coroutine invocation design,N)
+#SCHEDULE (1/20/82,1/27/82,1)
+#ACTUAL (1/20/82,1/27/82)
+#TASK (Parameter access design,N)
+#SCHEDULE (1/27/82,1/29/82,1)
+#ACTUAL (1/27/82,1/29/82)
+#TASK (Parent routines)
+T.READ, T.WRITE, I.GETSTR, I.PUTSTRV, and I.PUTSTRF.
+#END_DISC
+#SCHEDULE (2/1/82,2/15/82,1)
+#ACTUAL (2/1/82)
+#PROGRESS (2/5/82)
+T.WRITE is coded.
+#END_DISC
+#PROGRESS (2/8/82)
+T.WRITE is debugged,
+except that unframing a variable number of parameters is proving
+stubborn.
+#END_DISC
+#PROGRESS (2/10/82)
+T.WRITE is debugged.
+#END_DISC
+#PROGRESS (2/11/82)
+T.READ is coded and gets no syntax errors.
+#END_DISC
+#TASK (Item producer routines,N)
+#SCHEDULE (1/28/82,2/3/82,1)
+#ACTUAL (1/28/82,2/9/82)
+#PROGRESS (1/29/82)
+I am doing the Boolean and integer item producers, Don is doing the reals
+and double reals.  The boolean producer is coded and gets no syntax
+errors, the integer-decimal routine is coded and gets no syntax errors.
+#END_DISC
+#PROGRESS (2/5/82)
+The hex and octal parts of the integer routine are coded.
+#END_DISC
+#PROGRESS (2/8/82)
+The Boolean producer is debugged.  The integer producer is close but no 
+cigar.
+#END_DISC
+#PROGRESS (2/9/82)
+The integer producer is debugged, for decimal, hex, and octal output.
+#TASK (Target consumer routines,N)
+#SCHEDULE (2/3/82,2/8/82,1)
+#ACTUAL (2/3/82)
+#PROGRESS (2/8/82)
+The text file consumer is debugged.
+#TASK (Target producer routines,N)
+#SCHEDULE (2/8/82,2/11/82,1)
+#ACTUAL (2/9/82)
+#PROGRESS (2/11/82)
+The text file producer routine is coded and gets no syntax errors.
+#END_DISC
+#TASK (Item consumer routines,N)
+#SCHEDULE (2/11/82,2/15/82,1)
+#ACTUAL (2/11/82)
+#PROGRESS (2/11/82)
+The integer consumer routine is coded and gets no syntax errors.
+#END_DISC
+#ENDLEVEL
+#ENDLEVEL
+#ENDLEVEL
+#PROGRESS (1/15/82)
+The following routines are now availaible:
+#BEGINITEM (,,0)
+#ITEM (I.GETUN)Returns the next available VERSAdos logical unit number, marks
+it used in a static map.
+#ITEM (I.DISPUN)Marks a unit not used in the static map.
+#ITEM (I.CHKVAL)Checks whether the file variable passed in has been associated
+with a file, and, if so, whether there was a previous fatal error on the file.
+#ITEM (I.RETRY)To be used when another routine finds an error.  Checks whether
+the file was associated with the "retry" option, and, if not, signaals the
+error.
+#ITEM (T.GET)
+#ITEM (T.READLN)
+#ITEM (T.WRTLN)
+#ITEM (T.PUT)
+#ITEM (T.PAGE)
+#ITEM (T.OPEN)
+#ITEM (T.RESET)
+#ITEM (T.REWRIT)
+#ITEM (I.CLOSE)
+#ITEM (I.CLOSEA)
+#ITEM (I.SCRTCH)
+#ENDITEM
+#END_DISC
+ 

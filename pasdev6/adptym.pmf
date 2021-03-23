@@ -1,0 +1,121 @@
+#document()
+#figure_default(0)
+$TITLE ''
+#memo(Programming Languages,S.\M.\Roush,<:June 4, 1981:>,File transfers from ADP to Tymshare)
+$ski 2
+^UIntroduction|U
+#par
+This memo describes the procedure for transferring ^Utext|U files
+from ADP DEC10s to Tymshare DEC10s.
+Transfers must be done in two steps;
+the file must first be transferred from ADP to a Tymshare 940
+and then transferred from the Tymshare 940 to a Tymshare DEC10.
+The procedure is simple; however, there are a few quirks which
+the user must be careful to avoid.
+In particular, uppercase MUST be used in several of the steps
+and file name extensions must not be used in some places.
+Carefully read and follow the comments in the example given below.
+#par
+Note that this procedure works only for text files;
+in addition, spaces are canonicalized into spaces and
+tabs where possible.
+This transfer mechanism should be used with some restraint;
+MDSI is billed 'real' money for inter-system transfers.
+#par( 2 )
+^UOperating Procedures|U
+#par
+The steps of the transfer procedure are enumerated below.
+An example is included at each step.
+User input is underlined.
+#margin
+$par -3
+1.\On ADP, transfer the file to Tymshare system 6, a XDS 940.
+The destination file name MUST be typed in uppercase and should
+not have an extension.
+The MDSI program FTCOPY is used to do the transfer.
+On (ADP) system 14, FTCOPY is in account [52250,233].
+This transfer is relatively slow;
+periods are printed as the transfer progresses.
+#beginfigure(8)
+.^Ur ftcopy[52250,233]|U
+
+VER. 26 MAR 79
+
+USER NAME: ^Upascal10|U		(* Use account PASCAL10 *)
+COMPUTER: ^U6|U			(* System 6 - Tymshare 940 *)
+PASSWORD:			(* Type Tymshare password *)
+PROJECT CODE: ^Usmr|U		(* Your initials will do *)
+
+	please type your terminal identifier
+	-1005-001-
+	please log in: ;smr	(* This is NOT user input *)
+
+	MDSI H6  6/2/81  10:33
+>^USEND SWITCH.INI;SWITCH|U	(* UPPERCASE !!  NO EXTENSION !! *)
+
+SWITCH.INI COPIED TO SWITCH
+	640 CHARS  ( 148.8 CPS)
+>^Uexit|U
+EXIT
+#endfigure
+#endmargin
+#par(2)
+#margin
+$par -3
+2.\Login to account PASCAL10 on system 6, the Tymshare 940;
+transfer the file to the Tymshare DEC10 using the Tymshare
+program TELECOPY and then delete the file from PASCAL10
+on the 940.
+Life will be much easier if you TYPE ALL INPUT TO THE 940 IN
+UPPERCASE.
+Do not use extensions on file names - EVEN ON THE DESTINATION
+FILE.
+Log off the 940 with 'LOG'; 'BYE' does not work.
+No periods are printed as the transfer takes place.
+However, this transfer goes very quickly.
+#beginfigure(6)
+please log in: ^Upascal10:6;|U	(* Specify Sys 6 explicitly *)
+PROJ CODE: ^Usmr|U
+
+MDSI H6  6/2/81  10:34
+-^UTELECOPY|U			(* UPPERCASE !! *)
+
+:^UONLC|U				(* Prevents uppercasing of *)
+				(* file during transfer *)
+
+:^U(PASCAL10:6)SWITCH,(PASCAL10:56)SWITCH|U  (* <from>,<to> *)
+				(* Use system numbers and *)
+				(* account names *)
+COPY STARTING
+
+SWITCH SYSTEM 6
+COPIED TO
+ SYSTEM 56
+
+111  (122) CHARS. TRANSMITTED
+
+:^UQUIT|U
+
+-^UDEL SWITCH|U			(* Delete file *)
+#endfigure
+#endmargin
+#par
+#margin
+$par -3
+3.\Login to the Tymshare DEC10; copy the file to the
+appropriate account and delete the copy in PASCAL10.
+#beginfigure(9)
+please log in: ^Upasdev24;|U
+
+.^Ucopy (pascal10)switch to switch.ini|U
+
+.^Ugfd pascal10|U
+
+.^Udel switch|U
+
+.^Ugfd pasdev24|U
+#endfigure
+#endmargin
+$ver
+$ski 3
+(pasdev6)adptym.pmf

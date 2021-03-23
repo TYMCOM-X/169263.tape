@@ -1,0 +1,46 @@
+do (pasdev10)pascal
+/sea ((pasdev2),(pasdev3))/stat/a/s/quick/dump(peep)
+:tar m68
+dcext
+.p
+ecext
+.p
+extrda
+.p
+daysdi
+.p
+addday
+.p
+dayofw
+.p
+nsd1
+.p
+nsd2
+.p
+nst1
+.p
+dcdtim
+.p
+ecdtim
+.p
+dcdate
+.p
+ecdate
+.p
+dctime
+.p
+ectime
+.p
+chars2
+.p
+cvbins
+.p
+dcmont
+.p
+filutl
+.p
+cmdutl
+.p
+query
+.p
+/exit

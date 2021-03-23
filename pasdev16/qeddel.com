@@ -1,0 +1,15 @@
+del qedcl.rel
+del qld.rel
+del qjoin.rel
+del qsplit.rel
+del qedtyp.rel
+del qsubst.rel
+del qederr.rel
+del qmark.rel
+del qprint.rel
+del qedln.rel
+del qopen.rel
+del editre.rel
+del qread.rel
+del qspred.rel
+del qspat.rel

@@ -1,0 +1,17 @@
+.r rnd:format
+*/lower
+*stash
+*blkio
+*dirio
+*libasn
+*segasn
+*segin
+*segout
+*libpak
+*
+.r macro
+*checks
+*^C
+.r qlist[,233]
+*checks
+.pri *.lst,checks.q

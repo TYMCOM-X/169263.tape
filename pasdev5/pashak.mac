@@ -1,0 +1,119 @@
+	title	pashak
+
+	search	passym
+
+	entry	left%shift
+	entry	fileb$
+	entry	dump%tree
+	entry	date%run
+	entry	time%run
+	entry	user%ppn
+
+	extern	new.,dspos.,pcall.
+
+	$reloc
+
+;
+; called from structured constant procedures to pack fields
+;
+; parameters:
+;	(reg)  = # to be shifted
+;	(reg1) = # bits to shift
+;
+left%shift:
+	caige	reg1,^d36	;no change
+	lsh	reg,0(reg1)
+	movem	reg,fv(topp)	;fake return value
+	popj	topp,
+;
+; called from writemc to pack a file block for debugger
+;
+; parameter:	(reg) = address of fileblock
+;		(ac0) = address of four word block for result
+;
+fileb$:	move	reg1,ac0	;
+	move	ac1,fildev(reg)	; get device
+	movem	ac1,0(reg1)
+	dmove	ac0,filnam(reg)		; get name and ext
+	dmovem	ac0,1(reg1)
+	move	ac0,filppn(reg)		; get ppn
+	getppn	ac1,			; get user ppn
+	tlnn	ac0,777777		; project # known?
+	hll	ac0,ac1			; no, use user's
+	trnn	ac0,777777		; programmer # known?
+	hrri	ac0,0(ac1)		; no
+	movem	ac0,3(reg1)
+	popj	topp,
+
+;
+; TYPE COPYPROC = PROCEDURE (CTP);
+; PUBLIC PROCEDURE DUMP_TREE (COPY: CTP; HEAD1: CTP; HEAD0: CTP;
+;				VAR FIRSTPASS: BOOLEAN);
+;
+; (* SAVES CURRENT STACK POINTERS, ALLOCATES NEW STACK ON HEAP,
+;    INITIATES WALK OF SYMBOL TABLE, FREES TEMP STACK AND RETURNS *)
+; BEGIN
+;   FOR FIRSTPASS := TRUE DOWNTO FALSE DO BEGIN
+;      COPYCTP (DISPLAY[1].FNAME);
+;      COPYCTP (TTYFPTR);
+;   END;
+; END;
+;
+STACKSIZE==^D6000		;SIZE OF STACK FOR TREE WALK
+
+DUMP%TREE:
+	DMOVEM	REG,COPY	; SAVE PARAMETERS
+	MOVEM	REG2,HEAD0
+	HRRZM	REG3,FIRSTPASS	; WILL INDIRECT THROUGH THIS LOC
+	MOVEI	REG,STACKSIZE
+	PUSHJ	TOPP,NEW.	;ALLOCATE IT
+	MOVEI	REG1,2(REG)	;FORM NEW "TOPP"
+	HRLI	REG1,40+3-STACKSIZE	;RESERVE 40B LOCS FOR RUNTIME
+	HRLI	REG,0(REG)	;NEW "BASIS"
+	DMOVEM	BASIS,1(REG)	;SAVE OLD STACK POINTERS
+	DMOVEM	REG,BASIS	;NEW STACK FRAME
+	MOVEI	REG,1
+	MOVEM	REG,@FIRSTPASS	;FOR FIRSTPASS := TRUE
+	MOVE	REG,HEAD1
+	PUSHJ	TOPP,COPYC	;COPYCTP (DISPLAY[1].FNAME)
+	MOVE	REG,HEAD0
+	PUSHJ	TOPP,COPYC	;COPYCTP (TTYFPTR)
+	SETZM	@FIRSTPASS		;   DOWNTO FALSE
+	MOVE	REG,HEAD1
+	PUSHJ	TOPP,COPYC
+	MOVE	REG,HEAD0
+	PUSHJ	TOPP,COPYC
+	MOVEI	REG,0(BASIS)	;PARAMETER TO DISPOSE
+	DMOVE	BASIS,1(BASIS)
+	JRST	DSPOS.		;FREE STACK AND RETURN
+
+COPYC:	MOVE	AC1,COPY	;PARAMETER TO PCALL.
+	JRST	PCALL.
+
+	$LOW
+
+COPY:	Z
+HEAD1:	Z
+HEAD0:	Z
+FIRSTPASS:	Z
+	$high
+
+;
+; date_run returns the current date from the date uuo
+;
+; date_run returns the current time from the time uuo
+;
+; user_ppn returns the user's ppn
+;
+user%ppn:
+	getppn	reg,
+	jrst	ret
+time%run:
+	mstime	reg,
+	jrst	ret
+date%run:
+	date	reg,
+ret:	movem	reg,fv(topp)
+	popj	topp,
+
+	end

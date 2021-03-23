@@ -1,0 +1,22 @@
+
+DIRECTORY 31024,320155	1112	26-APR-83
+   FILE             CREATION
+NAME    EXT   PAGES    DATE    
+
+ANMAIN  PAS       3  22-OCT-82
+ANAL    SEM       2  16-JUN-80
+ANAL    SYM       2  16-JUN-80
+ANAL    TAB       4  16-JUN-80
+ANAL    LOW       2  16-JUN-80
+ANAL    HGH      14  16-JUN-80
+ANAL    NAM       2  24-MAY-80
+ANSCAN  PAS       6  24-MAY-80
+ANSCAN  VAR       2  24-MAY-80
+ANSCAN  TYP       2  24-MAY-80
+ANSCAN  EXT       2  24-MAY-80
+ANAL    PAS       4  24-MAY-80
+ANAL    BNF       3  24-MAY-80
+ANAL    CMD       2  24-MAY-80
+ANGEN   TYP       3  24-MAY-80
+ANGEN   PAS      14  24-MAY-80
+ANAL    EXT       2  24-MAY-80

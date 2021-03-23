@@ -1,0 +1,12 @@
+#system(DTIME - day/time manipulation routines)
+#module(EC_DCTIME,11/01/78)
+Convert DEC time (milliseconds since midnight) to internal time.
+#usage
+EXTERNAL FUNCTION EC_DCTIME(D_TIME: DEC_TIME): TIME_INT;
+#input(D_TIME)time in milliseconds since midnight.
+#output(<return value>)the internal time corresponding to
+D_TIME.
+#include(DTIME.TYP)
+#Include(DTIME.INC)
+#responsible(S. M. Roush)
+#end

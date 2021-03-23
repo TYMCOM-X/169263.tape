@@ -1,0 +1,479 @@
+(*   MODULE VBUF   *)
+
+$LENGTH 44
+
+$INCLUDE VBUF.TYP
+
+external procedure MASK;
+external procedure UNMASK;
+external procedure OPENFILE (FILENAME; var WORD);
+external procedure CLOSEFILE (var WORD);
+external procedure READPAGE (WORD; WORD; HALFWORD; WORD);
+external procedure WRITEPAGE(WORD; WORD; HALFWORD; WORD);
+external procedure ZAPERR(VERROR);
+
+public var
+  VCTL: VBUFCTL := nil;			(* the only one!! *)
+
+const
+  DEFAULTF: FILENAME := 'VBUFR#.PAG';	(* default paging file name *)
+$PAGE VBUFUTIL
+procedure LISTCHUCK (FOO: VPAGEPTR);
+
+(* a convenient way to dispose a list of VIRTUALPAGEs *)
+
+  begin
+  if FOO^.VNEXT <> nil then
+    LISTCHUCK(FOO^.VNEXT);
+  dispose(FOO^.VSPACE); dispose(FOO)
+  end;
+$PAGE VBUFINIT
+public procedure VBUFINIT (
+	NUMBUF: WORD;
+	FILENM: FILENAME;
+	var ERR: VERROR);
+
+var	TEMP1, TEMP2: VBUFCTL;
+
+  begin
+  ERR := VOK;
+  if NUMBUF <= 0 then TEMP1 := nil	(* no new block to make *)
+  else begin
+    new (TEMP1);			(* make the new block *)
+    with TEMP1^ do
+      begin
+      VBUFNUM := NUMBUF;		(* initialize it *)
+      VBUFUSED := 0;
+      VMRUHEAD := nil;
+      VHPAGE := 0;
+      if FILENM = '' 
+      then VPAGEFILE := DEFAULTF
+      else VPAGEFILE := FILENM;
+      VCHANNEL := 0;
+      new(VGARBBUF)
+      end
+    end;
+
+  MASK;					(* enter critical section *)
+    if (VCTL <> nil) andif
+      (VCTL^.VCHANNEL <> 0) then
+       CLOSEFILE(VCTL^.VCHANNEL);	(* close old PAGE file *)
+    TEMP2 := TEMP1;			(* switch pointers *)
+    TEMP1 := VCTL;
+    VCTL := TEMP2;
+    if VCTL <> nil then
+      OPENFILE (VCTL^.VPAGEFILE||' ',VCTL^.VCHANNEL);
+  UNMASK;				(* end critical section *)
+
+  if VCTL^.VCHANNEL = 0 then
+    ERR := VBADFILE;
+(* flag the error, but we still gotta chuck the old one *)
+
+  with TEMP1^ do
+    begin
+    if VMRUHEAD <> nil then
+      LISTCHUCK (VMRUHEAD);
+    dispose (VGARBBUF)
+    end;
+  dispose (TEMP1)
+  end;	(* procedure VBUFINIT *)
+$PAGE VHOLDUTIL
+procedure TOPMRU (HERE, PREV: VPAGEPTR);
+
+(* Places HERE on the top of the MRU chain.  HERE must already be
+   on the chain at some point.  PREV is the previous VIRTUALPAGE on
+   the chain.  This is an indivisible operation. *)
+
+  begin
+  with VCTL^ do
+    begin
+    if HERE <> VMRUHEAD then
+      begin			(* notice that if HERE is not the head, *)
+      MASK;			(* then it must have a predecessor PREV *)
+	PREV^.VNEXT := HERE^.VNEXT;
+	HERE^.VNEXT := VMRUHEAD;
+	VMRUHEAD := HERE;
+      UNMASK			(* just switch links, HERE now on top *)
+      end
+    end
+  end;  (* PROCEDURE TOPMRU *)
+(*********************************************************************)
+
+procedure CHECKVP(VP: VIRTUALPOINTER);
+(* a quick check for a 'valid' virtual pointer *)
+  begin
+  if (VP = VNIL) orif
+     (VP.VINDEX > WORDCOUNT) then ZAPERR(VBADVP)
+  end;
+
+
+$PAGE VHOLDUTIL2
+$PAGE VHOLDUTIL3
+(*********************************************************************)
+function PAGEONTOP (PAGE: VPAGEID; var LAST,NEXTTOLAST: VPAGEPTR): boolean;
+
+(* Returns true if PAGE is in a core buffer, placing that buffer on
+   top of the MRU list.  Returns false if PAGE is not found, with
+   LAST pointing to the LRU page, and NEXTTOLAST to its predecessor. *)
+
+  begin
+  PAGEONTOP := false;
+  with VCTL^ do
+    begin
+    LAST := VMRUHEAD;
+    NEXTTOLAST := nil;
+      loop
+	exit if LAST = nil;
+	PAGEONTOP := (LAST^.VBLOCK = PAGE);
+	exit if PAGEONTOP;
+	NEXTTOLAST := LAST;
+	LAST := LAST^.VNEXT
+      end;
+
+    if (PAGEONTOP)		(* meaning we got something *)
+    andif (NEXTTOLAST <> nil) then	(* and it's not on top *)
+      TOPMRU(LAST,NEXTTOLAST)	(* then put it on top *)
+    end
+  end;	(* FUNCTION PAGEONTOP *)
+(*********************************************************************)
+procedure BRINGINPAGE (PAGE: VPAGEID; LAST,NEXTTOLAST: VPAGEPTR);
+
+(* Places PAGE in a core buffer.  If not all buffers have been 
+   obtained, it gets a NEW one.  If all buffers are allocated, it
+   writes out the LRU one. *)
+
+var
+  TEMPPAGE: VPAGEPTR;
+  TEMPLINK: SPACEPTR;
+
+  begin
+  with VCTL^ do
+    begin
+    if VBUFUSED = VBUFNUM then
+      begin		(* page out tail *)
+      if LAST^.VREFCT > 0 then ZAPERR(VLASTLOCKED);
+      if LAST^.VDIRTY then
+	WRITEPAGE( ord(LAST^.VSPACE),WORDCOUNT,LAST^.VBLOCK,VCHANNEL);
+      LAST^.VDIRTY := false;	(* may as well mark him clean *)
+      TOPMRU (LAST, NEXTTOLAST)
+      end;
+
+    (* we can go ahead and read the new page into the garbage buffer *)
+
+    READPAGE( ord(VGARBBUF),WORDCOUNT,PAGE,VCHANNEL);
+
+    MASK;			(* now things get critical *)
+
+      if VBUFUSED < VBUFNUM then
+	begin			(* make a new virtualpage *)
+	new(TEMPPAGE);
+	with TEMPPAGE^ do
+	  begin
+	  VNEXT := VMRUHEAD;
+	  VSPACE := VGARBBUF
+	  end;
+	VMRUHEAD := TEMPPAGE;
+	new(VGARBBUF)
+	end
+
+      else with VMRUHEAD^ do
+	begin			(* simply link the garbbuf to VMRUHEAD *)
+	TEMPLINK := VSPACE;
+	VSPACE := VGARBBUF;
+	VGARBBUF := TEMPLINK
+	end;
+
+      (* common code to change identity of VIRTUALPAGE *)
+
+      with VMRUHEAD^ do
+	begin
+	VREFCT := 0;
+	VBLOCK := PAGE;
+	VDIRTY := false
+	end;
+
+    UNMASK
+    end
+  end;  (* PROCEDURE BRINGINPAGE *)
+$PAGE VHOLD
+public procedure VHOLD (VP: VIRTUALPOINTER; RP: WORD);
+
+var
+  LAST, NEXTTOLAST: VPAGEPTR;
+
+  begin
+  if (VCTL = nil) orif (VCTL^.VCHANNEL = 0) then ZAPERR(VNOTINIT);
+  with VCTL^ do
+    begin
+    if VLOCKCT >= VBUFNUM then ZAPERR(VNOBUF);
+
+    if not PAGEONTOP (VP.VPAGE,LAST,NEXTTOLAST) then
+      BRINGINPAGE (VP.VPAGE,LAST,NEXTTOLAST);
+
+(* desired PAGE is now on top of the MRU *)
+
+    MASK;
+      with VMRUHEAD^ do
+	begin
+	VREFCT := VREFCT + 1;
+	RP := ord(VSPACE) + VP.VINDEX - 1
+	end;
+    UNMASK;
+    end
+  end; (* PROCEDURE VHOLD *) 
+$PAGE VFREE
+public procedure VFREE (RP: WORD; DIRTY: boolean);
+
+var WALK: VPAGEPTR;
+
+  begin
+  if (VCTL = nil) orif (VCTL^.VCHANNEL = 0) then ZAPERR(VNOTINIT);
+  with VCTL^ do
+    begin
+    WALK := VMRUHEAD;
+    while (WALK <> nil) andif
+      ((ord(WALK^.VSPACE) > RP) or ((RP - ord(WALK^.VSPACE)) > WORDCOUNT)) do
+        WALK := WALK^.VNEXT;
+
+    if WALK = nil then ZAPERR(VBADRP);
+
+    MASK;
+      WALK^.VREFCT := WALK^.VREFCT - 1;
+      if DIRTY then WALK^.VDIRTY := 1;
+    UNMASK
+    end
+  end; (* PROCEDURE VFREE *)
+$PAGE VFREEALL
+public procedure VFREEALL;
+
+var WALK: VPAGEPTR;
+
+  begin
+  MASK;
+    WALK := VCTL^.VMRUHEAD;
+    while WALK <> nil do
+      begin
+      WALK^.VREFCT := 0;
+      WALK := WALK^.VNEXT
+      end;
+  UNMASK
+  end; (* PROCEDURE FREEALL *)
+$PAGE VNEWUTIL
+function GETPAGE: HALFWORD;
+
+var
+  TEMP: VIRTUALPOINTER;  TEMP2: SPACEPTR;
+  TEMP3: WORD;
+  (* the above for type coercion *)
+
+  begin
+  TEMP.VPAGE := VCTL^.VHPAGE;
+  TEMP.VINDEX := 0;
+  VCTL^.VHPAGE := VCTL^.VHPAGE + 1;
+  VHOLD(TEMP, TEMP3);
+  GETPAGE := TEMP.VPAGE;
+  TEMP2 := ptr(TEMP3);
+  with TEMP2^ do
+    begin
+    VPFIRST := 3;
+    DATASPACE[2] := WORDCOUNT - 2
+    end;
+  VFREE(TEMP3,true)
+  end;
+
+(*********************************************************************)
+
+function FIRSTFIT (PAGE: HALFWORD;
+		   var FIT: VIRTUALPOINTER;
+		   LEN: WORD): boolean;
+
+var 
+  TEMPFIT: VIRTUALPOINTER;
+  WALK: HALFWORD;
+  CHECK: SPACEPTR;
+  BL, ADDR: WORD;
+
+  begin
+  FIRSTFIT := false;  FIT := VNIL;
+  TEMPFIT.VPAGE := PAGE; TEMPFIT.VINDEX := 1;
+
+  VHOLD(TEMPFIT, ADDR);
+  CHECK := ptr(ADDR);
+  with CHECK^ do
+    begin
+    WALK := VPFIRST;  BL := 0;
+    while WALK <> 0 do
+      begin
+      if HEAP[WALK].HLEN >= LEN then
+	begin				(* got it *)
+	MASK;
+	  if BL = 0 then
+	  VPFIRST := HEAP[WALK].HNEXT	(* unchain first one *)
+	  else HEAP[BL].HNEXT := HEAP[WALK].HNEXT;
+	  (* else unchain one with a backlink BL *)
+
+	  (* now chain remainder *)
+	  if DATASPACE[WALK-1] > LEN + 2 then
+	    begin
+	    if BL = 0 then
+	    VPFIRST := WALK + LEN + 1
+	    else HEAP[BL].HNEXT := WALK + LEN + 1;
+	    HEAP[WALK + LEN].HLEN := HEAP[WALK-1].HLEN - LEN - 1
+	    end;
+
+	  TEMPFIT.VINDEX := WALK;
+	  HEAP[WALK-1].HALL := LEN;
+	  FIT := TEMPFIT;
+	  FIRSTFIT := true;
+	  WALK := 0;
+	UNMASK
+	end
+
+      else begin		(* try next if any *)
+	BL := WALK;
+	WALK := HEAP[WALK].HNEXT
+	end
+      end
+
+    end;
+  VFREE(ADDR,FIRSTFIT)
+  end; (* FUNCTION FIRSTFIT *)
+$PAGE VNEW
+public procedure VNEW (var VP: VIRTUALPOINTER; LEN: WORD);
+
+var WALK: VPAGEPTR;
+
+  begin
+  if (VCTL = nil) orif (VCTL^.VCHANNEL = 0) then ZAPERR(VNOTINIT);
+  if LEN >= WORDCOUNT - 1 then ZAPERR (VTOOLONGNEW);
+  VP := VNIL;
+
+  with VCTL^ do
+    begin
+    WALK := VMRUHEAD;
+    while (WALK <> nil) andif
+      ((WALK^.VDIRTY = 0) orif (not FIRSTFIT(WALK^.VBLOCK,VP,LEN))) do
+      WALK := WALK^.VNEXT;
+    if WALK = nil then
+      begin
+      WALK := VMRUHEAD;
+      while (WALK <> nil) andif
+	((WALK^.VDIRTY = 1) orif (not FIRSTFIT(WALK^.VBLOCK,VP,LEN))) do
+	WALK := WALK^.VNEXT;
+
+      if WALK = nil then
+        begin				(* get a blank page *)
+        if not FIRSTFIT(GETPAGE,VP,LEN) then ZAPERR(VINTERR)
+	end
+      end
+    end
+  end; (* PROCEDURE VNEW *)
+$PAGE VDISPOSEUTIL
+function COALESCE (IDX: HALFWORD; DSPACE: SPACEPTR): boolean;
+(*
+  COALESCE tries to combine blocks of free space starting at IDX in
+  the block at which DSPACE points.  It returns FALSE if the entire
+  block is now free space. Thus COALESCE can be passed to VFREE in
+  VDISPOSE to indicate a clean or dirty page (a totally free block
+  should be CLEAN for efficiency. 
+*)
+
+  begin
+  with DSPACE^ do
+    begin
+    while (HEAP[IDX].HNEXT <> 0) andif
+      (HEAP[IDX].HLEN = HEAP[IDX].HNEXT - IDX - 1) do
+      begin		(* we can do it *)
+      MASK;
+        HEAP[IDX].HLEN:=HEAP[HEAP[IDX].HNEXT].HLEN +
+  			  HEAP[IDX].HLEN;
+        HEAP[IDX].HNEXT := HEAP[HEAP[IDX].HNEXT].HNEXT;
+      UNMASK
+      end;
+    COALESCE := (HEAP[IDX].HLEN <> WORDCOUNT - 2)
+    end
+  end;	(*FUNCTION COALESCE *)
+$PAGE VDISPOSE
+public procedure VDISPOSE (VP: VIRTUALPOINTER);
+
+var
+  ADDR: WORD;
+  TEMP1: SPACEPTR;
+  TEMP2, FPREV, FNEW: HALFWORD;
+
+  begin
+  VHOLD (VP, ADDR);
+  TEMP1 := ptr(ADDR);
+  with TEMP1^ do
+    begin
+    FNEW := VPFIRST; FPREV := 0;
+
+    while (FNEW <> 0) andif (FNEW < VP.VINDEX) do
+      begin
+      FPREV := FNEW;
+      FNEW := HEAP[FNEW].HNEXT
+      end;
+
+(* if FNEW is non-zero, then it is the index of the first free block
+   greater than the new one.  For FNEW=0: if FPREV=0, then there are
+   no other free blocks, else the new free block goes on the end *)
+
+    MASK;
+      TEMP2 := VP.VINDEX - 1;	(* loc'n of new free block *)
+      HEAP[TEMP2].HLEN := HEAP[TEMP2].HALL;
+      HEAP[TEMP2].HNEXT := FNEW;
+    UNMASK;
+    if FPREV = 0 then
+    VPFIRST := TEMP2		(* new first one *)
+    else
+      if (HEAP[FPREV].HLEN + FPREV = TEMP2 - 1) then
+	begin
+	MASK;
+	  HEAP[FPREV].HLEN := HEAP[FPREV].HLEN +
+      		HEAP[TEMP2].HLEN;
+	  HEAP[FPREV].HNEXT := HEAP[TEMP2].HNEXT;
+	UNMASK;
+	TEMP2 := FPREV	(* where to start new coalescing *)
+	end;
+
+(* Now the new free block is chained on, and a previous free block
+   has been coalesced if possible.  If there are any following
+   blocks, then try to coalesce.
+*)
+
+    VFREE (ADDR, COALESCE(TEMP2, TEMP1))
+    end
+  end;	(* PROCEDURE VDISPOSE *)
+$PAGE VFETCH
+public procedure VFETCH (VP: VIRTUALPOINTER; DATA: SPACEPTR);
+
+var
+  IDX: HALFWORD;
+  ADDR: SPACEPTR;
+  TEMP: WORD;
+
+  begin
+  VHOLD(VP, TEMP);
+  ADDR := ptr(TEMP);
+  with ADDR^ do
+    for IDX := VP.VINDEX to HEAP[VP.VINDEX-1].HLEN + VP.VINDEX do
+      DATA^.DATASPACE[IDX] := DATASPACE[IDX];
+  VFREE(TEMP, FALSE)
+  end;
+$PAGE VCHANGE
+public procedure VCHANGE (VP: VIRTUALPOINTER; DATA: SPACEPTR);
+
+var
+  ADDR: SPACEPTR;
+  TEMP: WORD;
+  IDX: HALFWORD;
+
+  begin
+  VHOLD(VP, TEMP);
+  ADDR := ptr(TEMP);
+  with ADDR^ do
+    for IDX := VP.VINDEX to HEAP[VP.VINDEX-1].HLEN + VP.VINDEX do
+      DATASPACE[IDX] := DATA^.DATASPACE[IDX];
+  VFREE(TEMP, TRUE)
+  end.
+  

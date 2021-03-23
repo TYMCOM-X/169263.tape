@@ -1,0 +1,2364 @@
+random	MACRO %53A(1155) 14:53  4-Oct-82 Page 1
+RTMATH	MAC	28-May-71 18:53	
+
+						search	rtsym
+						search	fmath
+						$module	random^
+						entry	rand1.
+						entry	rand0.
+						extern	sfor.2
+
+	400000'	525 01 0 00 000001 	rinit:	hrloi	r1,1		;initialize default seed
+	400001'	202 01 0 15 000015 		movem	r1,$rand(pda)
+	400002'	263 17 0 00 000000 		popj	top,
+
+	400003'	200 01 1 17 000000 	rand1.:	move	r1,@0(top)
+	400004'	200 00 1 00 000001 		move	r0,@r1
+	400005'	254 00 0 00 400007'		jrst	rand.
+	400006'				rand0.:
+	400006'	200 00 0 15 000015 		move	r0,$rand(pda)	;use last seed
+	400007'				rand.:
+	400007'	476 00 0 15 000037 		setom	$inrt(pda)
+	400010'	621 00 0 00 760000 		tlz	r0,760000
+	400011'	306 00 0 00 000000 		cain	r0,0
+	400012'	525 00 0 00 000001 		hrloi	r0,1
+	400013'	224 00 0 00 400030'		mul	r0,k
+	400014'	244 00 0 00 000004 		ashc	r0,4
+	400015'	242 01 0 00 777774 		lsh	r1,-4
+	400016'	270 00 0 00 000001 		add	r0,r1
+	400017'	623 00 0 00 760000 		tlze	r0,760000
+	400020'	271 00 0 00 000001 		addi	r0,1
+	400021'	202 00 0 15 000015 		movem	r0,$rand(pda)
+	400022'	554 01 0 00 000000 		hlrz	r1,r0
+	400023'	132 01 0 00 000216 		fsc	r1,216
+	400024'	505 00 0 00 000000 		hrli	r0,0
+	400025'	132 00 0 00 000174 		fsc	r0,174
+	400026'	140 00 0 00 000001 		fad	r0,r1
+	400027'	254 00 0 00 000000*		jrst	sfor.2		;go return
+
+	400030'	004544	503720		k:	byte	(18)4544,503720
+						$end	rand,rinit^
+						prgend
+
+NO ERRORS DETECTED
+random	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-2
+RTMATH	MAC	28-May-71 18:53	
+
+
+HI-SEG. BREAK IS 400031
+PROGRAM BREAK IS 000000
+CPU TIME USED 04:28.836
+
+24P CORE USED
+random	MACRO %53A(1155) 14:53  4-Oct-82 Page S-1
+RTMATH	MAC	28-May-71 18:53		SYMBOL TABLE
+
+I.RAND		400000'	sin	
+K		400030'		
+P.RAND		000000	ext	
+PDA		000015	spd	
+R0		000000	spd	
+R1		000001	spd	
+RAND.		400007'		
+RAND0.		400006'	ent	
+RAND1.		400003'	ent	
+RINIT		400000'		
+S.RAND		000000	sin	
+SFOR.2		400027'	ext	
+TOP		000017	spd	
+X.RAND		000000	sin	
+$ABSLO		000000	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$INRT		000037	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$NEEDP		000001	spd	
+$RAND		000015	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+
+sglexp	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-3
+RTMATH	MAC	28-May-71 18:53	
+
+						search	rtsym
+						search	fmath
+						$module	sglexp^
+						entry	ii.exp,ri.exp,rr.exp
+						extern	fsave.,sfor.1,exp1.,exp2.,exp3.
+						$single^
+						$temp	froutine,1^
+
+	400000'				ii.exp:
+	400000'	201 01 0 00 000000*		movei	r1,exp1.
+	400001'	254 00 0 00 400005'		jrst	do.exp
+
+	400002'				ri.exp:
+	400002'	201 01 0 00 000000*		movei	r1,exp2.
+	400003'	254 00 0 00 400005'		jrst	do.exp
+
+	400004'				rr.exp:
+	400004'	201 01 0 00 000000*		movei	r1,exp3.
+
+	400005'				do.exp:
+	400005'	265 00 0 00 000000*		jsp	r0,fsave.
+	400006'	202 01 0 17 000001 		movem	r1,froutine^.froutine(top)^
+	400007'	350 01 0 17 777773 		aos	r1,-$maxlocals(top)
+	400010'	200 00 1 01 777777 		move	r0,@-1(r1)
+	400011'	200 01 1 01 000000 		move	r1,@0(r1)
+						$getpsa	sglfortran^
+	400012'	200 14 0 15 000010 		move	psa,$sglfortran(pda)^
+	400013'	124 00 0 14 000003 		dmovem	r0,parm1^3(psa)^
+	400014'	515 01 0 00 777776 		hrlzi	r1,-2
+	400015'	202 01 0 14 000000 		movem	r1,length^0(psa)^
+	400016'	201 16 0 14 000001 		movei	basis,addr1^1(psa)^
+	400017'	255 17 0 00 400020'		jfcl	17,.+1		; MUST clear overflow flags first
+	400020'	260 17 1 17 000001 		pushj	top,@froutine^.froutine(top)^
+	400021'	515 01 0 00 777777 		hrlzi	r1,-1
+	400022'	202 01 0 14 000000 		movem	r1,length^0(psa)^
+	400023'	254 00 0 00 000000*		jrst	sfor.1
+						$end	sglexp^
+						prgend
+
+NO ERRORS DETECTED
+sglexp	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-5
+RTMATH	MAC	28-May-71 18:53	
+
+
+HI-SEG. BREAK IS 400024
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:12.392
+
+24P CORE USED
+sglexp	MACRO %53A(1155) 14:53  4-Oct-82 Page S-2
+RTMATH	MAC	28-May-71 18:53		SYMBOL TABLE
+
+BASIS		000016	spd	
+DO.EXP		400005'		
+EXP1.		400000'	ext	
+EXP2.		400002'	ext	
+EXP3.		400004'	ext	
+FSAVE.		400005'	ext	
+FTEMP		000013	spd	
+II.EXP		400000'	ent	
+PDA		000015	spd	
+PSA		000014	spd	
+R0		000000	spd	
+R1		000001	spd	
+RI.EXP		400002'	ent	
+RR.EXP		400004'	ent	
+SFOR.1		400023'	ext	
+TOP		000017	spd	
+$ABSLO		000000	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000005	spd	
+$MAXST		000000	spd	
+$MAXTE		000001	spd	
+$NEEDP		000000	spd	
+$SGLFO		000010	spd	
+$STATS		000000	spd	
+.FROUT		000001	spd	
+.RSAVE		000001	spd	
+.TARGE		000005	spd	
+
+diexp	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-6
+RTMATH	MAC	28-May-71 18:53	
+
+						search	rtsym
+						search	fmath
+						$module	diexp^
+						$double^
+						entry	di.exp
+						extern	dexp2.,dsave.,dfor.2
+
+	400000'				di.exp:
+	400000'	265 00 0 00 000000*		jsp	r0,dsave.
+	400001'	350 01 0 17 777772 		aos	r1,-$maxlocals(top)
+	400002'	200 00 1 01 000000 		move	r0,@0(r1)	;get i
+	400003'	120 12 1 01 777777 		dmove	dtemp,@-1(r1)	;get x
+						$getpsa	dblfortran^
+	400004'	200 14 0 15 000033 		move	psa,$dblfortran(pda)^
+	400005'	124 12 0 14 000003 		dmovem	dtemp,parm1^3(psa)^
+	400006'	202 00 0 14 000005 		movem	r0,parm2^5(psa)^
+	400007'	515 01 0 00 777776 		hrlzi	r1,-2
+	400010'	202 01 0 14 000000 		movem	r1,length^0(psa)^
+	400011'	201 16 0 14 000001 		movei	basis,addr1^1(psa)^
+	400012'	255 17 0 00 400013'		jfcl	17,.+1
+	400013'	260 17 0 00 000000*		pushj	top,dexp2.
+	400014'	515 12 0 00 777777 		hrlzi	dtemp,-1
+	400015'	202 12 0 14 000000 		movem	dtemp,length^0(psa)^
+	400016'	254 00 0 00 000000*		jrst	dfor.2
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400017
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:07.434
+
+24P CORE USED
+diexp	MACRO %53A(1155) 14:53  4-Oct-82 Page S-3
+RTMATH	MAC	28-May-71 18:53		SYMBOL TABLE
+
+BASIS		000016	spd	
+DEXP2.		400013'	ext	
+DFOR.2		400016'	ext	
+DI.EXP		400000'	ent	
+DSAVE.		400000'	ext	
+DTEMP		000012	spd	
+PDA		000015	spd	
+PSA		000014	spd	
+R0		000000	spd	
+R1		000001	spd	
+TOP		000017	spd	
+$ABSLO		000000	spd	
+$DBLFO		000033	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000006	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+.RSAVE		000001	spd	
+.TARGE		000006	spd	
+
+rsqrt	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-7
+RTMATH	MAC	28-May-71 18:53	
+
+						search	rtsym
+						search	fmath
+						$module	rsqrt^
+					        entry   r.sqrt
+
+	400000'				r.sqrt:
+					        $sfortran(sqrt)^
+	400000'	201 01 0 00 000000*		movei	r1,sqrt
+	400001'	254 00 0 00 000000*		jrst	sfor.^
+						$end	rsqrt^
+					        prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400002
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:04.372
+
+24P CORE USED
+rsqrt	MACRO %53A(1155) 14:53  4-Oct-82 Page S-4
+RTMATH	MAC	28-May-71 18:53		SYMBOL TABLE
+
+R.SQRT		400000'	ent	
+R1		000001	spd	
+SFOR.		400001'	ext	
+SQRT		400000'	ext	
+$ABSLO		000000	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$NEEDP		000000	spd	
+$STATS		000000	spd	
+
+dsqrt	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-8
+RTMATH	MAC	28-May-71 18:53	
+
+					        search  rtsym
+						search	fmath
+						$module	dsqrt^
+					        entry   d.sqrt
+
+	400000'				d.sqrt:
+					        $dfortran(dsqrt)^
+	400000'	201 01 0 00 000000*		movei	r1,dsqrt
+	400001'	254 00 0 00 000000*		jrst	dfor.^
+						$end	dsqrt^
+					        prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400002
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:04.330
+
+24P CORE USED
+dsqrt	MACRO %53A(1155) 14:53  4-Oct-82 Page S-5
+RTMATH	MAC	28-May-71 18:53		SYMBOL TABLE
+
+D.SQRT		400000'	ent	
+DFOR.		400001'	ext	
+DSQRT		400000'	ext	
+R1		000001	spd	
+$ABSLO		000000	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$NEEDP		000000	spd	
+$STATS		000000	spd	
+
+rln	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-9
+RTMATH	MAC	28-May-71 18:53	
+
+					        search  rtsym
+						search	fmath
+						$module	rln^
+					        entry   r.ln
+
+	400000'				r.ln:
+					        $sfortran(alog)^
+	400000'	201 01 0 00 000000*		movei	r1,alog
+	400001'	254 00 0 00 000000*		jrst	sfor.^
+					        prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400002
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:03.513
+
+24P CORE USED
+rln	MACRO %53A(1155) 14:53  4-Oct-82 Page S-6
+RTMATH	MAC	28-May-71 18:53		SYMBOL TABLE
+
+ALOG		400000'	ext	
+R.LN		400000'	ent	
+R1		000001	spd	
+SFOR.		400001'	ext	
+$ABSLO		000000	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+
+dln	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-10
+RTMATH	MAC	28-May-71 18:53	
+
+					        search  rtsym
+						search	fmath
+						$module	dln^
+					        entry   d.ln
+
+	400000'				d.ln:
+					        $dfortran(dlog)^
+	400000'	201 01 0 00 000000*		movei	r1,dlog
+	400001'	254 00 0 00 000000*		jrst	dfor.^
+						$end	dln^
+					        prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400002
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:04.321
+
+24P CORE USED
+dln	MACRO %53A(1155) 14:53  4-Oct-82 Page S-7
+RTMATH	MAC	28-May-71 18:53		SYMBOL TABLE
+
+D.LN		400000'	ent	
+DFOR.		400001'	ext	
+DLOG		400000'	ext	
+R1		000001	spd	
+$ABSLO		000000	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$NEEDP		000000	spd	
+$STATS		000000	spd	
+
+rlog	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-11
+RTMATH	MAC	28-May-71 18:53	
+
+					        search  rtsym
+						search	fmath
+						$module	rlog^
+					        entry   r.log
+
+	400000'				r.log:
+					        $sfortran(alog10)^
+	400000'	201 01 0 00 000000*		movei	r1,alog10
+	400001'	254 00 0 00 000000*		jrst	sfor.^
+						$end	rlog^
+					        prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400002
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:03.888
+
+24P CORE USED
+rlog	MACRO %53A(1155) 14:53  4-Oct-82 Page S-8
+RTMATH	MAC	28-May-71 18:53		SYMBOL TABLE
+
+ALOG10		400000'	ext	
+R.LOG		400000'	ent	
+R1		000001	spd	
+SFOR.		400001'	ext	
+$ABSLO		000000	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$NEEDP		000000	spd	
+$STATS		000000	spd	
+
+dlog	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-12
+RTMATH	MAC	28-May-71 18:53	
+
+					        search  rtsym
+						search	fmath
+						$module	dlog^
+					        entry   d.log
+
+	400000'				d.log:
+					        $dfortran(dlog10)^
+	400000'	201 01 0 00 000000*		movei	r1,dlog10
+	400001'	254 00 0 00 000000*		jrst	dfor.^
+						$end	dlog^
+					        prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400002
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:03.271
+
+24P CORE USED
+dlog	MACRO %53A(1155) 14:53  4-Oct-82 Page S-9
+RTMATH	MAC	28-May-71 18:53		SYMBOL TABLE
+
+D.LOG		400000'	ent	
+DFOR.		400001'	ext	
+DLOG10		400000'	ext	
+R1		000001	spd	
+$ABSLO		000000	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$NEEDP		000000	spd	
+$STATS		000000	spd	
+
+rexp	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-13
+RTMATH	MAC	28-May-71 18:53	
+
+					        search  rtsym
+						search	fmath
+						$module	rexp^
+					        entry   r.exp
+
+	400000'				r.exp:
+					        $sfortran(exp)^
+	400000'	201 01 0 00 000000*		movei	r1,exp
+	400001'	254 00 0 00 000000*		jrst	sfor.^
+						$end	rexp^
+					        prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400002
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:04.076
+
+24P CORE USED
+rexp	MACRO %53A(1155) 14:53  4-Oct-82 Page S-10
+RTMATH	MAC	28-May-71 18:53		SYMBOL TABLE
+
+EXP		400000'	ext	
+R.EXP		400000'	ent	
+R1		000001	spd	
+SFOR.		400001'	ext	
+$ABSLO		000000	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$NEEDP		000000	spd	
+$STATS		000000	spd	
+
+dexp	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-14
+RTMATH	MAC	28-May-71 18:53	
+
+					        search  rtsym
+						search	fmath
+						$module	dexp^
+					        entry   d.exp
+
+	400000'				d.exp:
+					        $dfortran(dexp)^
+	400000'	201 01 0 00 000000*		movei	r1,dexp
+	400001'	254 00 0 00 000000*		jrst	dfor.^
+						$end	dexp^
+					        prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400002
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:05.406
+
+24P CORE USED
+dexp	MACRO %53A(1155) 14:53  4-Oct-82 Page S-11
+RTMATH	MAC	28-May-71 18:53		SYMBOL TABLE
+
+D.EXP		400000'	ent	
+DEXP		400000'	ext	
+DFOR.		400001'	ext	
+R1		000001	spd	
+$ABSLO		000000	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$NEEDP		000000	spd	
+$STATS		000000	spd	
+
+rsin	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-15
+RTMATH	MAC	28-May-71 18:53	
+
+					        search  rtsym
+						search	fmath
+						$module	rsin^
+					        entry   r.sin
+
+	400000'				r.sin:
+					        $sfortran(sin)^
+	400000'	201 01 0 00 000000*		movei	r1,sin
+	400001'	254 00 0 00 000000*		jrst	sfor.^
+						$end	rsin^
+					        prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400002
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:03.162
+
+24P CORE USED
+rsin	MACRO %53A(1155) 14:53  4-Oct-82 Page S-12
+RTMATH	MAC	28-May-71 18:53		SYMBOL TABLE
+
+R.SIN		400000'	ent	
+R1		000001	spd	
+SFOR.		400001'	ext	
+SIN		400000'	ext	
+$ABSLO		000000	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$NEEDP		000000	spd	
+$STATS		000000	spd	
+
+dsin	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-16
+RTMATH	MAC	28-May-71 18:53	
+
+					        search  rtsym
+						search	fmath
+						$module	dsin^
+					        entry   d.sin
+
+	400000'				d.sin:
+					        $dfortran(dsin)^
+	400000'	201 01 0 00 000000*		movei	r1,dsin
+	400001'	254 00 0 00 000000*		jrst	dfor.^
+						$end	dsin^
+					        prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400002
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:03.713
+
+24P CORE USED
+dsin	MACRO %53A(1155) 14:53  4-Oct-82 Page S-13
+RTMATH	MAC	28-May-71 18:53		SYMBOL TABLE
+
+D.SIN		400000'	ent	
+DFOR.		400001'	ext	
+DSIN		400000'	ext	
+R1		000001	spd	
+$ABSLO		000000	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$NEEDP		000000	spd	
+$STATS		000000	spd	
+
+rasin	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-17
+RTMATH	MAC	28-May-71 18:53	
+
+					        search  rtsym
+						search	fmath
+						$module	rasin^
+					        entry   r.asin
+
+	400000'				r.asin:
+					        $sfortran(asin)^
+	400000'	201 01 0 00 000000*		movei	r1,asin
+	400001'	254 00 0 00 000000*		jrst	sfor.^
+						$end	rasin^
+					        prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400002
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:03.679
+
+24P CORE USED
+rasin	MACRO %53A(1155) 14:53  4-Oct-82 Page S-14
+RTMATH	MAC	28-May-71 18:53		SYMBOL TABLE
+
+ASIN		400000'	ext	
+R.ASIN		400000'	ent	
+R1		000001	spd	
+SFOR.		400001'	ext	
+$ABSLO		000000	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$NEEDP		000000	spd	
+$STATS		000000	spd	
+
+dasin	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-18
+RTMATH	MAC	28-May-71 18:53	
+
+					        search  rtsym
+						search	fmath
+						$module	dasin^
+						$excpt^
+						$double^
+					        entry   d.asin
+						extern	datan.,dfor.2,dsqrt.,dsave.
+						extern	f1.0.,piov2.
+
+					;
+					; calculate arcsin (x) as arctan (x/sqrt(1-x**2))
+					;
+
+	400000'				d.asin:
+	400000'	265 00 0 00 000000*		jsp	r0,dsave.
+	400001'	200 01 1 17 777772 		move	r1,@-$maxlocals(top)
+	400002'	120 00 1 00 000001 		dmove	r0,@r1	;get parameter
+						$getpsa	dblfortran^
+	400003'	200 14 0 15 000033 		move	psa,$dblfortran(pda)^
+	400004'	124 00 0 14 000005 		dmovem	r0,parm2	^5(psa)^;temp
+	400005'	325 00 0 00 400007'		jumpge	r0,.+2
+	400006'	121 00 0 00 000000 		dmovn	r0,r0
+	400007'	313 00 0 00 000000*		camle	r0,f1.0.
+	400010'	254 00 0 00 400040'		jrst	error
+	400011'	316 00 0 00 400007*		camn	r0,f1.0.
+	400012'	326 01 0 00 400040'		jumpn	r1,error
+	400013'	120 00 0 14 000005 		dmove	r0,parm2^5(psa)^
+	400014'	112 00 0 00 000000 		dfmp	r0,r0		;squared
+	400015'	121 00 0 00 000000 		dmovn	r0,r0		;-x**2
+	400016'	255 17 0 00 400017'		jfcl	17,.+1
+	400017'	110 00 0 00 400011*		dfad	r0,f1.0.	;1.0-x**2
+	400020'	322 00 0 00 400034'		jumpe	r0,zero
+	400021'	321 00 0 00 400040'		jumpl	r0,error
+	400022'	124 00 0 14 000003 		dmovem	r0,parm1^3(psa)^
+	400023'	201 16 0 14 000001 		movei	basis,addr1^1(psa)^
+	400024'	255 17 0 00 400025'		jfcl	17,.+1
+	400025'	260 17 0 00 000000*		pushj	top,dsqrt.
+	400026'	120 12 0 14 000005 		dmove	dtemp,parm2^5(psa)^
+	400027'	113 12 0 00 000000 		dfdv	dtemp,r0		;x/sqrt(1-x**2)
+	400030'	124 12 0 14 000003 		dmovem	dtemp,parm1^3(psa)^
+dasin	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-19
+RTMATH	MAC	28-May-71 18:53	
+
+	400031'	255 17 0 00 400032'		jfcl	17,.+1
+	400032'	260 17 0 00 000000*		pushj	top,datan.
+	400033'	254 00 0 00 000000*		jrst	dfor.2
+
+	400034'	120 00 0 00 000000*	zero:	dmove	r0,piov2.	;pi div 2
+	400035'	335 00 0 14 000005 		skipge	parm2^5(psa)^
+	400036'	121 00 0 00 000000 		dmovn	r0,r0
+	400037'	254 00 0 00 400033*		jrst	dfor.2		;go return
+
+	400040'				error:
+	400040'	200 14 0 17 777775 		move	psa,2+rsave^.rsave-$maxlocal(top)^
+						$unframe^
+	400041'	105 17 0 00 777772 		adjsp	top,-$maxlocal>^
+	400042'	350 00 0 17 000000 		aos	0(top)	;in case he continues
+	400043'	200 00 0 17 000000 		move	r0,0(top)
+						$errload (r1,$exmth,$mthas,$true)^
+	400044'	201 01 0 00 003005 		movei	r1,$errcode($exmth,$mthas,$true)^$exmth*2000+$true*1000+$mthas^^			$rtsignal^
+	400045'	254 00 0 00 000000*		jrst	rtexc.##^
+					        prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400046
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:41.649
+
+24P CORE USED
+dasin	MACRO %53A(1155) 14:53  4-Oct-82 Page S-15
+RTMATH	MAC	28-May-71 18:53		SYMBOL TABLE
+
+ADJSP	105000	000000		$CHBT		000003	spd	.VECTO		000110	spd	
+BASIS		000016	spd	$DBLFO		000033	spd	.XPAGE		000040	spd	
+D.ASIN		400000'	ent	$EXMTH		000001	spd	.XSTMT		000037	spd	
+DATAN.		400032'	ext	$FALSE		000000	spd	
+DFOR.2		400037'	ext	$HBTEN		000002	spd	
+DISMIS	047000	777755		$HBTLI		000000	spd	
+DSAVE.		400000'	ext	$HBTVA		000000	spd	
+DSQRT.		400025'	ext	$HILOC		400000	spd	
+DTEMP		000012	spd	$HSBFL		000000	spd	
+ERROR		400040'		$HSBOF		000001	spd	
+EX.SET		000000	ext	$HSBXA		000000	spd	
+F1.0.		400017'	ext	$HSBXB		000001	spd	
+INTACT	047000	777743		$LOC	777777	777777	spd	
+INTADR	047000	777745		$LOLOC		000000	spd	
+INTASS	047000	777742		$MAXLO		000006	spd	
+INTENB	047000	777744		$MAXST		000217	spd	
+M1.5		000000	ext	$MAXTE		000000	spd	
+PDA		000015	spd	$MTHAS		000005	spd	
+PIOV2.		400034'	ext	$MXCH		000204	spd	
+PSA		000014	spd	$STATS		000000	spd	
+R0		000000	spd	$STDMA		000100	spd	
+R1		000001	spd	$STDNU		000010	spd	
+R10		000010	spd	$SYS		000001	spd	
+R11		000011	spd	$TRUE		000001	spd	
+R12		000012	spd	$TYM		000001	spd	
+R13		000013	spd	.AROVF		000104	spd	
+R2		000002	spd	.CANCO		000033	spd	
+R3		000003	spd	.CELLS		000001	spd	
+R4		000004	spd	.EXLOC		000047	spd	
+R5		000005	spd	.IADDR		000216	spd	
+R6		000006	spd	.INTMA		000000	spd	
+R7		000007	spd	.OTH16		000034	spd	
+RTEXC.		400045'	ext	.OTHBT		000035	spd	
+SETTR1	047000	777740		.OTHCE		000036	spd	
+SETTR2	047000	777737		.REGS		000011	spd	
+TINASS	047000	777736		.RESIG		000031	spd	
+TOP		000017	spd	.RSAVE		000001	spd	
+ZERO		400034'		.STKOV		000106	spd	
+$ABSLO		000000	spd	.TARGE		000006	spd	
+$ADP		000000	spd	.TMPAD		000041	spd	
+rsinh	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-20
+RTMATH	MAC	28-May-71 18:53	
+
+					        search  rtsym
+						search	fmath
+						$module	rsinh^
+					        entry   r.sinh
+
+	400000'				r.sinh:
+					        $sfortran(sinh)^
+	400000'	201 01 0 00 000000*		movei	r1,sinh
+	400001'	254 00 0 00 000000*		jrst	sfor.^
+						$end	rsinh^
+					        prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400002
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:03.683
+
+24P CORE USED
+rsinh	MACRO %53A(1155) 14:53  4-Oct-82 Page S-16
+RTMATH	MAC	28-May-71 18:53		SYMBOL TABLE
+
+R.SINH		400000'	ent	
+R1		000001	spd	
+SFOR.		400001'	ext	
+SINH		400000'	ext	
+$ABSLO		000000	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$NEEDP		000000	spd	
+$STATS		000000	spd	
+
+dsinh	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-21
+RTMATH	MAC	28-May-71 18:53	
+
+					        search  rtsym
+						search	fmath
+						$module	dsinh^
+						$double^
+					        entry   d.sinh
+						entry	d.cosh
+
+						extern	dexp.,f1.0.,dfor.2,dsave.
+
+	400000'				d.sinh:
+	400000'	476 00 0 17 000007 		setom	1+$maxlocals(top)	;remember it was sinh
+	400001'	254 00 0 00 400003'		jrst	.+2
+	400002'				d.cosh:
+	400002'	402 00 0 17 000007 		setzm	1+$maxlocals(top)	;remember as cosh
+	400003'	265 00 0 00 000000*		jsp	r0,dsave.
+	400004'	200 01 1 17 777772 		move	r1,@-$maxlocals(top)
+	400005'	120 00 1 00 000001 		dmove	r0,@r1	;get parameter
+						$getpsa	dblfortran^
+	400006'	200 14 0 15 000033 		move	psa,$dblfortran(pda)^
+	400007'	124 00 0 14 000003 		dmovem	r0,parm1^3(psa)^
+	400010'	200 01 0 17 000001 		move	r1,1(top)	;sinh/cosh flag
+	400011'	202 01 0 14 000005 		movem	r1,parm2^5(psa)^
+	400012'	201 16 0 14 000001 		movei	basis,addr1	^1(psa)^;addr of parameterlist
+	400013'	255 17 0 00 400014'		jfcl	17,.+1
+	400014'	260 17 0 00 000000*		pushj	top,dexp.
+	400015'	120 12 0 00 000000*		dmove	dtemp,f1.0.	;get floating 1.0
+	400016'	113 12 0 00 000000 		dfdv	dtemp,r0		;exp (-x)
+	400017'	332 00 0 14 000005 		skipe	parm2	^5(psa)^	;if it was sinh
+	400020'	121 12 0 00 000012 		dmovn	dtemp,dtemp	;then negate
+	400021'	110 00 0 00 000012 		dfad	r0,dtemp
+	400022'	132 00 0 00 777777 		fsc	r0,-1		;divide by 2.0
+	400023'	254 00 0 00 000000*		jrst	dfor.2		;go return
+
+						$end	dsinh^
+					        prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400024
+dsinh	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-22
+RTMATH	MAC	28-May-71 18:53	
+
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:09.617
+
+24P CORE USED
+dsinh	MACRO %53A(1155) 14:53  4-Oct-82 Page S-17
+RTMATH	MAC	28-May-71 18:53		SYMBOL TABLE
+
+BASIS		000016	spd	
+D.COSH		400002'	ent	
+D.SINH		400000'	ent	
+DEXP.		400014'	ext	
+DFOR.2		400023'	ext	
+DSAVE.		400003'	ext	
+DTEMP		000012	spd	
+F1.0.		400015'	ext	
+PDA		000015	spd	
+PSA		000014	spd	
+R0		000000	spd	
+R1		000001	spd	
+TOP		000017	spd	
+$ABSLO		000000	spd	
+$DBLFO		000033	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000006	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$NEEDP		000000	spd	
+$STATS		000000	spd	
+.RSAVE		000001	spd	
+.TARGE		000006	spd	
+
+rcos	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-23
+RTMATH	MAC	28-May-71 18:53	
+
+					        search  rtsym
+						search	fmath
+						$module	rcos^
+					        entry   r.cos
+
+	400000'				r.cos:
+					        $sfortran(cos)^
+	400000'	201 01 0 00 000000*		movei	r1,cos
+	400001'	254 00 0 00 000000*		jrst	sfor.^
+						$end	rcos^
+					        prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400002
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:07.203
+
+24P CORE USED
+rcos	MACRO %53A(1155) 14:53  4-Oct-82 Page S-18
+RTMATH	MAC	28-May-71 18:53		SYMBOL TABLE
+
+COS		400000'	ext	
+R.COS		400000'	ent	
+R1		000001	spd	
+SFOR.		400001'	ext	
+$ABSLO		000000	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$NEEDP		000000	spd	
+$STATS		000000	spd	
+
+dcos	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-24
+RTMATH	MAC	28-May-71 18:53	
+
+					        search  rtsym
+						search	fmath
+						$module	dcos^
+					        entry   d.cos
+
+	400000'				d.cos:
+					        $dfortran(dcos)^
+	400000'	201 01 0 00 000000*		movei	r1,dcos
+	400001'	254 00 0 00 000000*		jrst	dfor.^
+						$end	dcos^
+					        prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400002
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:05.251
+
+24P CORE USED
+dcos	MACRO %53A(1155) 14:53  4-Oct-82 Page S-19
+RTMATH	MAC	28-May-71 18:53		SYMBOL TABLE
+
+D.COS		400000'	ent	
+DCOS		400000'	ext	
+DFOR.		400001'	ext	
+R1		000001	spd	
+$ABSLO		000000	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$NEEDP		000000	spd	
+$STATS		000000	spd	
+
+racos	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-25
+RTMATH	MAC	28-May-71 18:53	
+
+					        search  rtsym
+						search	fmath
+						$module	racos^
+					        entry   r.acos
+
+	400000'				r.acos:
+					        $sfortran(acos)^
+	400000'	201 01 0 00 000000*		movei	r1,acos
+	400001'	254 00 0 00 000000*		jrst	sfor.^
+						$end	racos^
+					        prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400002
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:04.351
+
+24P CORE USED
+racos	MACRO %53A(1155) 14:53  4-Oct-82 Page S-20
+RTMATH	MAC	28-May-71 18:53		SYMBOL TABLE
+
+ACOS		400000'	ext	
+R.ACOS		400000'	ent	
+R1		000001	spd	
+SFOR.		400001'	ext	
+$ABSLO		000000	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$NEEDP		000000	spd	
+$STATS		000000	spd	
+
+dacos	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-26
+RTMATH	MAC	28-May-71 18:53	
+
+					        search  rtsym
+						search	fmath
+						$module	dacos^
+						$excpt^
+						$double^
+					        entry   d.acos
+						extern	dfor.2,pi.,f1.0.,piov2.,dsave.
+						extern	dsqrt.,datan.
+						extern	forer.
+
+					;
+					; calculate arccos (x) as arctan (sqrt(1-x**2)/x)
+					;
+
+	400000'				d.acos:
+	400000'	265 00 0 00 000000*		jsp	r0,dsave.
+	400001'	200 01 1 17 777772 		move	r1,@-$maxlocals(top)
+	400002'	120 12 1 00 000001 		dmove	dtemp,@r1	;get parameter
+	400003'	322 12 0 00 400035'		jumpe	dtemp,zero
+						$getpsa	dblfortran^
+	400004'	200 14 0 15 000033 		move	psa,$dblfortran(pda)^
+	400005'	124 12 0 14 000005 		dmovem	dtemp,parm2^5(psa)^
+	400006'	325 12 0 00 400010'		jumpge	dtemp,.+2
+	400007'	121 12 0 00 000012 		dmovn	dtemp,dtemp
+	400010'	313 12 0 00 000000*		camle	dtemp,f1.0.
+	400011'	254 00 0 00 400037'		jrst	error
+	400012'	316 12 0 00 400010*		camn	dtemp,f1.0.
+	400013'	326 13 0 00 400037'		jumpn	1+dtemp,error
+	400014'	120 12 0 14 000005 		dmove	dtemp,parm2^5(psa)^
+	400015'	112 12 0 00 000012 		dfmp	dtemp,dtemp
+	400016'	121 12 0 00 000012 		dmovn	dtemp,dtemp
+	400017'	255 17 0 00 400020'		jfcl	17,.+1
+	400020'	110 12 0 00 400012*		dfad	dtemp,f1.0.	;1-x**2
+	400021'	321 12 0 00 400037'		jumpl	dtemp,error
+	400022'	124 12 0 14 000003 		dmovem	dtemp,parm1^3(psa)^
+	400023'	201 16 0 14 000001 		movei	basis,addr1^1(psa)^
+	400024'	255 17 0 00 400025'		jfcl	17,.+1
+	400025'	260 17 0 00 000000*		pushj	top,dsqrt.
+
+	400026'	113 00 0 14 000005 		dfdv	r0,parm2^5(psa)^
+dacos	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-27
+RTMATH	MAC	28-May-71 18:53	
+
+	400027'	124 00 0 14 000003 		dmovem	r0,parm1^3(psa)^
+	400030'	255 17 0 00 400031'		jfcl	17,.+1
+	400031'	260 17 0 00 000000*		pushj	top,datan.
+	400032'	335 00 0 14 000005 		skipge	parm2^5(psa)^
+	400033'	110 00 0 00 000000*		dfad	r0,pi.
+	400034'	254 00 0 00 000000*		jrst	dfor.2
+
+	400035'	120 00 0 00 000000*	zero:	dmove	r0,piov2.
+	400036'	254 00 0 00 400034*		jrst	dfor.2
+
+	400037'				error:
+	400037'	120 12 0 17 777773 		dmove	dtemp,rsave^.rsave-$maxlocal(top)^
+	400040'	200 14 0 17 777775 		move	psa,2+rsave^.rsave-$maxlocal(top)^
+						$unframe^
+	400041'	105 17 0 00 777772 		adjsp	top,-$maxlocal>^
+	400042'	350 00 0 17 000000 		aos	0(top)
+	400043'	200 00 0 17 000000 		move	r0,0(top)
+						$errload (r1,$exmth,$mthac,$true)^
+	400044'	201 01 0 00 003006 		movei	r1,$errcode($exmth,$mthac,$true)^$exmth*2000+$true*1000+$mthac^^
+						$rtsignal^
+	400045'	254 00 0 00 000000*		jrst	rtexc.##^
+					        prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400046
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:44.705
+
+26P CORE USED
+dacos	MACRO %53A(1155) 14:53  4-Oct-82 Page S-21
+RTMATH	MAC	28-May-71 18:53		SYMBOL TABLE
+
+ADJSP	105000	000000		$ABSLO		000000	spd	.TARGE		000006	spd	
+BASIS		000016	spd	$ADP		000000	spd	.TMPAD		000041	spd	
+D.ACOS		400000'	ent	$CHBT		000003	spd	.VECTO		000110	spd	
+DATAN.		400031'	ext	$DBLFO		000033	spd	.XPAGE		000040	spd	
+DFOR.2		400036'	ext	$EXMTH		000001	spd	.XSTMT		000037	spd	
+DISMIS	047000	777755		$FALSE		000000	spd	
+DSAVE.		400000'	ext	$HBTEN		000002	spd	
+DSQRT.		400025'	ext	$HBTLI		000000	spd	
+DTEMP		000012	spd	$HBTVA		000000	spd	
+ERROR		400037'		$HILOC		400000	spd	
+EX.SET		000000	ext	$HSBFL		000000	spd	
+F1.0.		400020'	ext	$HSBOF		000001	spd	
+FORER.		000000	ext	$HSBXA		000000	spd	
+INTACT	047000	777743		$HSBXB		000001	spd	
+INTADR	047000	777745		$LOC	777777	777777	spd	
+INTASS	047000	777742		$LOLOC		000000	spd	
+INTENB	047000	777744		$MAXLO		000006	spd	
+M1.6		000000	ext	$MAXST		000217	spd	
+PDA		000015	spd	$MAXTE		000000	spd	
+PI.		400033'	ext	$MTHAC		000006	spd	
+PIOV2.		400035'	ext	$MXCH		000204	spd	
+PSA		000014	spd	$STATS		000000	spd	
+R0		000000	spd	$STDMA		000100	spd	
+R1		000001	spd	$STDNU		000010	spd	
+R10		000010	spd	$SYS		000001	spd	
+R11		000011	spd	$TRUE		000001	spd	
+R12		000012	spd	$TYM		000001	spd	
+R13		000013	spd	.AROVF		000104	spd	
+R2		000002	spd	.CANCO		000033	spd	
+R3		000003	spd	.CELLS		000001	spd	
+R4		000004	spd	.EXLOC		000047	spd	
+R5		000005	spd	.IADDR		000216	spd	
+R6		000006	spd	.INTMA		000000	spd	
+R7		000007	spd	.OTH16		000034	spd	
+RTEXC.		400045'	ext	.OTHBT		000035	spd	
+SETTR1	047000	777740		.OTHCE		000036	spd	
+SETTR2	047000	777737		.REGS		000011	spd	
+TINASS	047000	777736		.RESIG		000031	spd	
+TOP		000017	spd	.RSAVE		000001	spd	
+ZERO		400035'		.STKOV		000106	spd	
+rcosh	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-28
+RTMATH	MAC	28-May-71 18:53	
+
+					        search  rtsym
+						search	fmath
+						$module	rcosh^
+					        entry   r.cosh
+
+	400000'				r.cosh:
+					        $sfortran(cosh)^
+	400000'	201 01 0 00 000000*		movei	r1,cosh
+	400001'	254 00 0 00 000000*		jrst	sfor.^
+						$end	rcosh^
+					        prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400002
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:04.270
+
+26P CORE USED
+rcosh	MACRO %53A(1155) 14:53  4-Oct-82 Page S-22
+RTMATH	MAC	28-May-71 18:53		SYMBOL TABLE
+
+COSH		400000'	ext	
+R.COSH		400000'	ent	
+R1		000001	spd	
+SFOR.		400001'	ext	
+$ABSLO		000000	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$NEEDP		000000	spd	
+$STATS		000000	spd	
+
+rtan	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-29
+RTMATH	MAC	28-May-71 18:53	
+
+					        search  rtsym
+						search	fmath
+						$module	rtan^
+						$single^
+					        entry   r.tan
+
+						extern	fsave.,sin.,sfor.1,cos.
+
+	400000'				r.tan:
+	400000'	265 00 0 00 000000*		jsp	r0,fsave.
+	400001'	200 01 1 17 777773 		move	r1,@-$maxlocals(top)
+	400002'	200 01 1 00 000001 		move	r1,@r1		;get parameter
+						$getpsa	sglfortran^
+	400003'	200 14 0 15 000010 		move	psa,$sglfortran(pda)^
+	400004'	202 01 0 14 000003 		movem	r1,parm1^3(psa)^
+	400005'	201 16 0 14 000001 		movei	basis,addr1	^1(psa)^;addr of parameterlist
+	400006'	255 17 0 00 400007'		jfcl	17,.+1
+	400007'	260 17 0 00 000000*		pushj	top,cos.
+	400010'	202 00 0 14 000004 		movem	r0,parm2	^4(psa)^;save cos
+	400011'	255 17 0 00 400012'		jfcl	17,.+1
+	400012'	260 17 0 00 000000*		pushj	top,sin.
+	400013'	174 00 0 14 000004 		fdvr	r0,parm2	^4(psa)^;calculate tan = sin/cos
+	400014'	254 00 0 00 000000*		jrst	sfor.1		;go return
+						$end	rtan^
+					        prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400015
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:10.532
+
+26P CORE USED
+rtan	MACRO %53A(1155) 14:53  4-Oct-82 Page S-23
+RTMATH	MAC	28-May-71 18:53		SYMBOL TABLE
+
+BASIS		000016	spd	
+COS.		400007'	ext	
+FSAVE.		400000'	ext	
+FTEMP		000013	spd	
+PDA		000015	spd	
+PSA		000014	spd	
+R.TAN		400000'	ent	
+R0		000000	spd	
+R1		000001	spd	
+SFOR.1		400014'	ext	
+SIN.		400012'	ext	
+TOP		000017	spd	
+$ABSLO		000000	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000005	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$NEEDP		000000	spd	
+$SGLFO		000010	spd	
+$STATS		000000	spd	
+.RSAVE		000001	spd	
+.TARGE		000005	spd	
+
+dtan	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-30
+RTMATH	MAC	28-May-71 18:53	
+
+					        search  rtsym
+						search	fmath
+						$module	dtan^
+						$double^
+					        entry   d.tan
+						extern	dsin.,dcos.,dfor.2,dsave.
+
+	400000'				d.tan:
+	400000'	265 00 0 00 000000*		jsp	r0,dsave.
+	400001'	200 01 1 17 777772 		move	r1,@-$maxlocals(top)
+	400002'	120 00 1 00 000001 		dmove	r0,@r1		;get parameter
+						$getpsa	dblfortran^
+	400003'	200 14 0 15 000033 		move	psa,$dblfortran(pda)^
+	400004'	124 00 0 14 000003 		dmovem	r0,parm1^3(psa)^
+	400005'	201 16 0 14 000001 		movei	basis,addr1	^1(psa)^;addr of parameterlist
+	400006'	255 17 0 00 400007'		jfcl	17,.+1
+	400007'	260 17 0 00 000000*		pushj	top,dcos.
+	400010'	124 00 0 14 000005 		dmovem	r0,parm2	^5(psa)^;save
+	400011'	255 17 0 00 400012'		jfcl	17,.+1
+	400012'	260 17 0 00 000000*		pushj	top,dsin.
+	400013'	113 00 0 14 000005 		dfdv	r0,parm2	^5(psa)^;tan = sin/cos
+	400014'	254 00 0 00 000000*		jrst	dfor.2		;go return
+						$end	dtan^
+					        prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400015
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:10.821
+
+26P CORE USED
+dtan	MACRO %53A(1155) 14:53  4-Oct-82 Page S-24
+RTMATH	MAC	28-May-71 18:53		SYMBOL TABLE
+
+BASIS		000016	spd	
+D.TAN		400000'	ent	
+DCOS.		400007'	ext	
+DFOR.2		400014'	ext	
+DSAVE.		400000'	ext	
+DSIN.		400012'	ext	
+DTEMP		000012	spd	
+PDA		000015	spd	
+PSA		000014	spd	
+R0		000000	spd	
+R1		000001	spd	
+TOP		000017	spd	
+$ABSLO		000000	spd	
+$DBLFO		000033	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000006	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$NEEDP		000000	spd	
+$STATS		000000	spd	
+.RSAVE		000001	spd	
+.TARGE		000006	spd	
+
+rtanh	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-31
+RTMATH	MAC	28-May-71 18:53	
+
+					        search  rtsym
+						search	fmath
+						$module	rtanh^
+					        entry   r.tanh
+
+	400000'				r.tanh:
+					        $sfortran(tanh)^
+	400000'	201 01 0 00 000000*		movei	r1,tanh
+	400001'	254 00 0 00 000000*		jrst	sfor.^
+						$end	rtanh^
+					        prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400002
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:03.851
+
+26P CORE USED
+rtanh	MACRO %53A(1155) 14:53  4-Oct-82 Page S-25
+RTMATH	MAC	28-May-71 18:53		SYMBOL TABLE
+
+R.TANH		400000'	ent	
+R1		000001	spd	
+SFOR.		400001'	ext	
+TANH		400000'	ext	
+$ABSLO		000000	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$NEEDP		000000	spd	
+$STATS		000000	spd	
+
+dtanh	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-32
+RTMATH	MAC	28-May-71 18:53	
+
+					        search  rtsym
+						search	fmath
+						$module	dtanh^
+						$double^
+					        entry   d.tanh
+
+						extern	dexp.,dfor.2,f1.0.,dsave.
+						$temp	ltemp,2^
+
+	400000'				d.tanh:
+	400000'	265 00 0 00 000000*		jsp	r0,dsave.
+	400001'	200 01 1 17 777772 		move	r1,@-$maxlocals(top)
+	400002'	120 00 1 00 000001 		dmove	r0,@r1		;get parameter
+						$getpsa	dblfortran^
+	400003'	200 14 0 15 000033 		move	psa,$dblfortran(pda)^
+	400004'	124 00 0 14 000003 		dmovem	r0,parm1^3(psa)^
+	400005'	201 16 0 14 000001 		movei	basis,addr1	^1(psa)^;addr of paramterlist
+	400006'	255 17 0 00 400007'		jfcl	17,.+1
+	400007'	260 17 0 00 000000*		pushj	top,dexp.	;exp(x)
+	400010'	120 12 0 00 000000 		dmove	dtemp,r0
+	400011'	124 04 0 17 000001 		dmovem	exp3,ltemp	^.ltemp(top)^;free temp registers
+	400012'	120 04 0 00 000000*		dmove	exp3,f1.0.	;floating 1.0
+	400013'	113 04 0 00 000012 		dfdv	exp3,dtemp	;invert
+	400014'	111 00 0 00 000004 		dfsb	r0,exp3		;exp(x)-exp(-x)
+	400015'	110 12 0 00 000004 		dfad	dtemp,exp3	;exp(x)+exp(-x)
+	400016'	113 00 0 00 000012 		dfdv	r0,dtemp		;tanh
+	400017'	120 04 0 17 000001 		dmove	exp3,ltemp	^.ltemp(top)^;restore temp registers
+	400020'	254 00 0 00 000000*		jrst	dfor.2		;go return
+
+						$end	dtanh^
+					        prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400021
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:11.563
+
+26P CORE USED
+dtanh	MACRO %53A(1155) 14:53  4-Oct-82 Page S-26
+RTMATH	MAC	28-May-71 18:53		SYMBOL TABLE
+
+BASIS		000016	spd	
+D.TANH		400000'	ent	
+DEXP.		400007'	ext	
+DFOR.2		400020'	ext	
+DSAVE.		400000'	ext	
+DTEMP		000012	spd	
+EXP3		000004	spd	
+F1.0.		400012'	ext	
+PDA		000015	spd	
+PSA		000014	spd	
+R0		000000	spd	
+R1		000001	spd	
+TOP		000017	spd	
+$ABSLO		000000	spd	
+$DBLFO		000033	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000006	spd	
+$MAXST		000000	spd	
+$MAXTE		000002	spd	
+$NEEDP		000000	spd	
+$STATS		000000	spd	
+.LTEMP		000001	spd	
+.RSAVE		000001	spd	
+.TARGE		000006	spd	
+
+rctn	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-33
+RTMATH	MAC	28-May-71 18:53	
+
+					        search  rtsym
+						search	fmath
+						$module	rctn^
+						$single^
+					        entry   r.ctn
+
+						extern	fsave.,cos.,sin.,sfor.1
+
+	400000'				r.ctn:
+	400000'	265 00 0 00 000000*		jsp	r0,fsave.
+	400001'	200 01 1 17 777773 		move	r1,@-$maxlocals(top)
+	400002'	200 01 1 00 000001 		move	r1,@r1		;get parameter
+						$getpsa	sglfortran^
+	400003'	200 14 0 15 000010 		move	psa,$sglfortran(pda)^
+	400004'	202 01 0 14 000003 		movem	r1,parm1^3(psa)^
+	400005'	201 16 0 14 000001 		movei	basis,addr1	^1(psa)^;addr of parameterlist
+	400006'	255 17 0 00 400007'		jfcl	17,.+1
+	400007'	260 17 0 00 000000*		pushj	top,sin.
+	400010'	202 00 0 14 000004 		movem	r0,parm2	^4(psa)^;save sin
+	400011'	255 17 0 00 400012'		jfcl	17,.+1
+	400012'	260 17 0 00 000000*		pushj	top,cos.
+	400013'	174 00 0 14 000004 		fdvr	r0,parm2	^4(psa)^;calculate ctn = cos/sin
+	400014'	254 00 0 00 000000*		jrst	sfor.1		;go return
+						$end	rctn^
+					        prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400015
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:08.880
+
+26P CORE USED
+rctn	MACRO %53A(1155) 14:53  4-Oct-82 Page S-27
+RTMATH	MAC	28-May-71 18:53		SYMBOL TABLE
+
+BASIS		000016	spd	
+COS.		400012'	ext	
+FSAVE.		400000'	ext	
+FTEMP		000013	spd	
+PDA		000015	spd	
+PSA		000014	spd	
+R.CTN		400000'	ent	
+R0		000000	spd	
+R1		000001	spd	
+SFOR.1		400014'	ext	
+SIN.		400007'	ext	
+TOP		000017	spd	
+$ABSLO		000000	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000005	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$NEEDP		000000	spd	
+$SGLFO		000010	spd	
+$STATS		000000	spd	
+.RSAVE		000001	spd	
+.TARGE		000005	spd	
+
+dctn	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-34
+RTMATH	MAC	28-May-71 18:53	
+
+					        search  rtsym
+						search	fmath
+						$module	dctn^
+						$double^
+					        entry   d.ctn
+						extern	dsin.,dcos.,dfor.2,dsave.
+
+	400000'				d.ctn:
+	400000'	265 00 0 00 000000*		jsp	r0,dsave.
+	400001'	200 01 1 17 777772 		move	r1,@-$maxlocals(top)
+	400002'	120 00 1 00 000001 		dmove	r0,@r1		;get parameter
+						$getpsa	dblfortran^
+	400003'	200 14 0 15 000033 		move	psa,$dblfortran(pda)^
+	400004'	124 00 0 14 000003 		dmovem	r0,parm1^3(psa)^
+	400005'	201 16 0 14 000001 		movei	basis,addr1	^1(psa)^;addr of parameterlist
+	400006'	255 17 0 00 400007'		jfcl	17,.+1
+	400007'	260 17 0 00 000000*		pushj	top,dsin.
+	400010'	124 00 0 14 000005 		dmovem	r0,parm2	^5(psa)^;save sin
+	400011'	255 17 0 00 400012'		jfcl	17,.+1
+	400012'	260 17 0 00 000000*		pushj	top,dcos.
+	400013'	113 00 0 14 000005 		dfdv	r0,parm2	^5(psa)^;ctn = cos/sin
+	400014'	254 00 0 00 000000*		jrst	dfor.2		;go return
+						$end	dctn^
+					        prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400015
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:08.953
+
+26P CORE USED
+dctn	MACRO %53A(1155) 14:53  4-Oct-82 Page S-28
+RTMATH	MAC	28-May-71 18:53		SYMBOL TABLE
+
+BASIS		000016	spd	
+D.CTN		400000'	ent	
+DCOS.		400012'	ext	
+DFOR.2		400014'	ext	
+DSAVE.		400000'	ext	
+DSIN.		400007'	ext	
+DTEMP		000012	spd	
+PDA		000015	spd	
+PSA		000014	spd	
+R0		000000	spd	
+R1		000001	spd	
+TOP		000017	spd	
+$ABSLO		000000	spd	
+$DBLFO		000033	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000006	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$NEEDP		000000	spd	
+$STATS		000000	spd	
+.RSAVE		000001	spd	
+.TARGE		000006	spd	
+
+ratn	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-35
+RTMATH	MAC	28-May-71 18:53	
+
+					        search  rtsym
+						search	fmath
+						$module	ratn^
+					        entry   r.atn
+
+	400000'				r.atn:
+					        $sfortran(atan)^
+	400000'	201 01 0 00 000000*		movei	r1,atan
+	400001'	254 00 0 00 000000*		jrst	sfor.^
+						$end	ratn^
+					        prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400002
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:04.551
+
+26P CORE USED
+ratn	MACRO %53A(1155) 14:53  4-Oct-82 Page S-29
+RTMATH	MAC	28-May-71 18:53		SYMBOL TABLE
+
+ATAN		400000'	ext	
+R.ATN		400000'	ent	
+R1		000001	spd	
+SFOR.		400001'	ext	
+$ABSLO		000000	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$NEEDP		000000	spd	
+$STATS		000000	spd	
+
+datn	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-36
+RTMATH	MAC	28-May-71 18:53	
+
+					        search  rtsym
+						search	fmath
+						$module	datn^
+					        entry   d.atn
+
+	400000'				d.atn:
+					        $dfortran(datan)^
+	400000'	201 01 0 00 000000*		movei	r1,datan
+	400001'	254 00 0 00 000000*		jrst	dfor.^
+						$end	datn^
+					        prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400002
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:04.701
+
+26P CORE USED
+datn	MACRO %53A(1155) 14:53  4-Oct-82 Page S-30
+RTMATH	MAC	28-May-71 18:53		SYMBOL TABLE
+
+D.ATN		400000'	ent	
+DATAN		400000'	ext	
+DFOR.		400001'	ext	
+R1		000001	spd	
+$ABSLO		000000	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$NEEDP		000000	spd	
+$STATS		000000	spd	
+
+ratn2	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-37
+RTMATH	MAC	28-May-71 18:53	
+
+					        search  rtsym
+						search	fmath
+						$module	ratn2^
+						$single^
+					        entry   r.atn2
+						extern	fsave.,atan2,sfor.1,piov2.
+
+	400000'				r.atn2:
+	400000'	265 00 0 00 000000*		jsp	r0,fsave.
+	400001'	350 01 0 17 777773 		aos	r1,-$maxlocals(top)
+	400002'	200 00 1 01 777777 		move	r0,@-1(r1)	;get first parameter
+	400003'	200 01 1 01 000000 		move	r1,@0(r1)	;get second parameter
+						$getpsa	sglfortran^
+	400004'	200 14 0 15 000010 		move	psa,$sglfortran(pda)^
+	400005'	124 00 0 14 000003 		dmovem	r0,parm1^3(psa)^
+	400006'	201 16 0 14 000001 		movei	basis,addr1^1(psa)^
+
+					;
+					; Check for ARCTAN (X, 0) specifically.
+					; Someday signal error for ARCTAN (0, 0).
+					;
+
+	400007'	326 01 0 00 400014'		jumpn	r1,nzero2
+	400010'				nzero1:
+	400010'	200 00 0 00 000000*		move	r0,piov2.
+	400011'	335 00 0 14 000003 		skipge	parm1^3(psa)^
+	400012'	210 00 0 00 000000 		movn	r0,r0
+	400013'	254 00 0 00 000000*		jrst	sfor.1
+	400014'				nzero2:
+	400014'	255 17 0 00 400015'		jfcl	17,.+1
+	400015'	174 00 0 00 000001 		fdvr	r0,r1		;check for overflow, too
+	400016'	255 01 0 00 400010'		jfov	nzero1
+	400017'	515 00 0 00 777776 		hrlzi	r0,-2
+	400020'	202 00 0 14 000000 		movem	r0,length^0(psa)^
+	400021'	255 17 0 00 400022'		jfcl	17,.+1
+	400022'	260 17 0 00 000000*		pushj	top,atan2
+	400023'	515 13 0 00 777777 		hrlzi	ftemp,-1
+	400024'	202 13 0 14 000000 		movem	ftemp,length^0(psa)^
+	400025'	254 00 0 00 400013*		jrst	sfor.1		;go return
+
+ratn2	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-38
+RTMATH	MAC	28-May-71 18:53	
+
+						$end	ratn2^
+					        prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400026
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:12.062
+
+26P CORE USED
+ratn2	MACRO %53A(1155) 14:53  4-Oct-82 Page S-31
+RTMATH	MAC	28-May-71 18:53		SYMBOL TABLE
+
+ATAN2		400022'	ext	
+BASIS		000016	spd	
+FSAVE.		400000'	ext	
+FTEMP		000013	spd	
+NZERO1		400010'		
+NZERO2		400014'		
+PDA		000015	spd	
+PIOV2.		400010'	ext	
+PSA		000014	spd	
+R.ATN2		400000'	ent	
+R0		000000	spd	
+R1		000001	spd	
+SFOR.1		400025'	ext	
+TOP		000017	spd	
+$ABSLO		000000	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000005	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$NEEDP		000000	spd	
+$SGLFO		000010	spd	
+$STATS		000000	spd	
+.RSAVE		000001	spd	
+.TARGE		000005	spd	
+
+datn2	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-39
+RTMATH	MAC	28-May-71 18:53	
+
+					        search  rtsym
+						search	fmath
+						$module	datn2^
+						$double^
+					        entry   d.atn2
+						extern	datn2.,dfor.2,dsave.,piov2.
+						$temp	temploc,2^
+
+	400000'				d.atn2:
+	400000'	265 00 0 00 000000*		jsp	r0,dsave.
+	400001'	200 01 1 17 777772 		move	r1,@-$maxlocals(top)
+	400002'	120 00 1 00 000001 		dmove	r0,@r1		;get first parameter
+	400003'	124 00 0 17 000001 		dmovem	r0,temploc^.temploc(top)^
+	400004'	350 01 0 17 777772 		aos	r1,-$maxlocals(top)
+	400005'	120 00 1 01 000000 		dmove	r0,@0(r1)	;get second parameter
+						$getpsa	dblfortran^
+	400006'	200 14 0 15 000033 		move	psa,$dblfortran(pda)^
+	400007'	124 00 0 14 000005 		dmovem	r0,parm2^5(psa)^
+	400010'	120 00 0 17 000001 		dmove	r0,temploc^.temploc(top)^
+	400011'	124 00 0 14 000003 		dmovem	r0,parm1^3(psa)^
+	400012'	201 16 0 14 000001 		movei	basis,addr1	^1(psa)^;addr of parameterlist
+
+					;
+					; Check for ARCTAN (X, 0) specifically.
+					; Eventually signal error for ARCTAN (0, 0).
+					;
+
+	400013'	332 00 0 14 000005 		skipe	parm2^5(psa)^
+	400014'	254 00 0 00 400021'		jrst	nzero2
+	400015'				nzero1:
+	400015'	120 00 0 00 000000*		dmove	r0,piov2.
+	400016'	335 00 0 14 000003 		skipge	parm1^3(psa)^
+	400017'	121 00 0 00 000000 		dmovn	r0,r0
+	400020'	254 00 0 00 000000*		jrst	dfor.2
+	400021'				nzero2:
+	400021'	255 17 0 00 400022'		jfcl	17,.+1
+	400022'	113 00 0 14 000005 		dfdv	r0,parm2	^5(psa)^	;check for overflow, too
+	400023'	255 01 0 00 400015'		jfov	nzero1
+	400024'	515 01 0 00 777776 		hrlzi	r1,-2
+	400025'	202 01 0 14 000000 		movem	r1,length^0(psa)^
+datn2	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-40
+RTMATH	MAC	28-May-71 18:53	
+
+	400026'	255 17 0 00 400027'		jfcl	17,.+1
+	400027'	260 17 0 00 000000*		pushj	top,datn2.
+	400030'	515 12 0 00 777777 		hrlzi	dtemp,-1
+	400031'	202 12 0 14 000000 		movem	dtemp,length^0(psa)^
+	400032'	254 00 0 00 400020*		jrst	dfor.2		;go return
+
+						$end	datn2^
+					        prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400033
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:14.924
+
+26P CORE USED
+datn2	MACRO %53A(1155) 14:53  4-Oct-82 Page S-32
+RTMATH	MAC	28-May-71 18:53		SYMBOL TABLE
+
+BASIS		000016	spd	
+D.ATN2		400000'	ent	
+DATN2.		400027'	ext	
+DFOR.2		400032'	ext	
+DSAVE.		400000'	ext	
+DTEMP		000012	spd	
+NZERO1		400015'		
+NZERO2		400021'		
+PDA		000015	spd	
+PIOV2.		400015'	ext	
+PSA		000014	spd	
+R0		000000	spd	
+R1		000001	spd	
+TOP		000017	spd	
+$ABSLO		000000	spd	
+$DBLFO		000033	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000006	spd	
+$MAXST		000000	spd	
+$MAXTE		000002	spd	
+$NEEDP		000000	spd	
+$STATS		000000	spd	
+.RSAVE		000001	spd	
+.TARGE		000006	spd	
+.TEMPL		000001	spd	
+
+ddexp	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-41
+RTMATH	MAC	28-May-71 18:53	
+
+					        search  rtsym
+						search	fmath
+						$module	ddexp^
+						$double^
+					        entry   dd.exp
+						extern	dfor.2,dsave.,dexp3.
+						$temp	temploc,2^
+
+	400000'				dd.exp:
+	400000'	265 00 0 00 000000*		jsp	r0,dsave.
+	400001'	200 01 1 17 777772 		move	r1,@-$maxlocals(top)
+	400002'	120 00 1 00 000001 		dmove	r0,@r1		;get first parameter
+	400003'	124 00 0 17 000001 		dmovem	r0,temploc^.temploc(top)^
+	400004'	350 01 0 17 777772 		aos	r1,-$maxlocals(top)
+	400005'	120 00 1 01 000000 		dmove	r0,@0(r1)	;get second parameter
+						$getpsa	dblfortran^
+	400006'	200 14 0 15 000033 		move	psa,$dblfortran(pda)^
+	400007'	124 00 0 14 000005 		dmovem	r0,parm2^5(psa)^
+	400010'	120 00 0 17 000001 		dmove	r0,temploc^.temploc(top)^
+	400011'	124 00 0 14 000003 		dmovem	r0,parm1^3(psa)^
+	400012'	201 16 0 14 000001 		movei	basis,addr1	^1(psa)^;addr of parameterlist
+	400013'	515 01 0 00 777776 		hrlzi	r1,-2
+	400014'	202 01 0 14 000000 		movem	r1,length^0(psa)^
+	400015'	255 17 0 00 400016'		jfcl	17,.+1
+	400016'	260 17 0 00 000000*		pushj	top,dexp3.
+	400017'	515 12 0 00 777777 		hrlzi	dtemp,-1
+	400020'	202 12 0 14 000000 		movem	dtemp,length^0(psa)^
+	400021'	254 00 0 00 000000*		jrst	dfor.2		;go return
+
+						$end	ddexp^
+					        prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400022
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:11.175
+
+26P CORE USED
+ddexp	MACRO %53A(1155) 14:53  4-Oct-82 Page S-33
+RTMATH	MAC	28-May-71 18:53		SYMBOL TABLE
+
+BASIS		000016	spd	
+DD.EXP		400000'	ent	
+DEXP3.		400016'	ext	
+DFOR.2		400021'	ext	
+DSAVE.		400000'	ext	
+DTEMP		000012	spd	
+PDA		000015	spd	
+PSA		000014	spd	
+R0		000000	spd	
+R1		000001	spd	
+TOP		000017	spd	
+$ABSLO		000000	spd	
+$DBLFO		000033	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000006	spd	
+$MAXST		000000	spd	
+$MAXTE		000002	spd	
+$NEEDP		000000	spd	
+$STATS		000000	spd	
+.RSAVE		000001	spd	
+.TARGE		000006	spd	
+.TEMPL		000001	spd	
+
+sfor	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-42
+RTMATH	MAC	28-May-71 18:53	
+
+						search	rtsym
+						search	fmath
+						$module	sfor^
+						$single^
+						entry	sfor.,sfor.1
+						extern	forer.,fsave.	;required
+						intern	sfor.2
+						extern	rt.reg
+						$static	parms,5^
+
+					;
+					; common code to call a single precision fortran
+					; library function. On entry:
+					;	(r1) = address of routine to be called
+					;	@0(top) = ZRO R,@ADDR(INDEXR)
+					;	  where R is the result register and
+					;	  @ADDR(INDEXR) is the address of the operand
+					;
+
+	400000'				sfor.:
+	400000'	265 00 0 00 000000*		jsp	r0,fsave.
+	400001'	200 00 1 17 777773 		move	r0,@-$maxlocals(top)	;get addr of parameter
+	400002'	200 00 1 00 000000 		move	r0,@r0		;parameter value
+						$getpsa	sglfortran^
+	400003'	200 14 0 15 000010 		move	psa,$sglfortran(pda)^
+	400004'	202 00 0 14 000003 		movem	r0,parm1	^3(psa)^;in parameterlist
+	400005'	201 16 0 14 000001 		movei	basis,addr1	^1(psa)^;addr of parameterlist
+	400006'	255 17 0 00 400007'		jfcl	17,.+1		;prevent bogus overflows
+	400007'	260 17 0 01 000000 		pushj	top,0(r1)	;actual fortran call
+
+					;
+					; First alternate entry point. Assumes:
+					;
+					;	(1) regs FTEMP - BASIS saved by FSAVE
+					;	(2) locals preserved by $FRAME in FSAVE.
+					;	(3) return value in R0
+					;
+
+	400010'				sfor.1:
+						$restore rsave,ftemp,basis^
+sfor	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-43
+RTMATH	MAC	28-May-71 18:53	
+
+	400010'	120 13 0 17 777774 		dmove	$first,rsave^.rsave-$maxlocal(top)^
+	400011'	120 15 0 17 777776 		dmove	$first+2,2+rsave^.rsave-$maxlocal(top)^
+						$unframe^
+	400012'	105 17 0 00 777773 		adjsp	top,-$maxlocal>^
+
+					;
+					; Second alternate entry point. Assumes:
+					;
+					;	(1) all registers restored
+					;	(2) all locals freed
+					;	(3) return address points to last argument word
+					;
+
+	400013'				sfor.2:
+	400013'	265 01 0 00 400014'		jsp	r1,.+1		;get the PC flags
+	400014'	621 01 0 00 440140 		tlz	r1,440140	;clear the error indicators
+	400015'	541 01 0 00 400017'		hrri	r1,flagsok
+	400016'	254 02 1 00 000001 		jrstf	@r1		;clear in PC word, now
+	400017'				flagsok:
+	400017'	350 01 0 17 000000 		aos	r1,0(top)	;bump return address
+	400020'	135 01 0 00 000000*		ldb	r1,rt.reg	;get result exp1 R
+	400021'	202 00 0 01 000000 		movem	r0,0(r1)
+	400022'	402 00 0 15 000037 		setzm	$inrt(pda)
+	400023'	263 17 0 00 000000 		popj	top,		;all done
+
+					;
+					; S.INIT initializes the parameterlist locations.
+					;
+	400024'	515 01 0 00 777777 	s.init:	hrlzi	r1,-1
+	400025'	202 01 0 14 000000 		movem	r1,length^0(psa)^
+	400026'	201 01 0 14 000003 		movei	r1,parm1^3(psa)^
+	400027'	201 02 0 14 000004 		movei	exp1,parm2^4(psa)^
+	400030'	124 01 0 14 000001 		dmovem	r1,addr1^1(psa)^
+	400031'	263 17 0 00 000000 		popj	top,
+
+						$end	sglfortran,s.init^
+
+						prgend
+
+NO ERRORS DETECTED
+sfor	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-45
+RTMATH	MAC	28-May-71 18:53	
+
+
+HI-SEG. BREAK IS 400032
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:19.240
+
+26P CORE USED
+sfor	MACRO %53A(1155) 14:53  4-Oct-82 Page S-34
+RTMATH	MAC	28-May-71 18:53		SYMBOL TABLE
+
+ADJSP	105000	000000		
+BASIS		000016	spd	
+EXP1		000002	spd	
+FLAGSO		400017'		
+FORER.		000000	ext	
+FSAVE.		400000'	ext	
+FTEMP		000013	spd	
+I.SGLF		400024'	sin	
+P.SGLF		000000	ext	
+PDA		000015	spd	
+PSA		000014	spd	
+R0		000000	spd	
+R1		000001	spd	
+RT.REG		400020'	ext	
+S.INIT		400024'		
+S.SGLF		000005	sin	
+SFOR.		400000'	ent	
+SFOR.1		400010'	ent	
+SFOR.2		400013'	int	
+TOP		000017	spd	
+X.SGLF		000000	sin	
+$ABSLO		000000	spd	
+$FALSE		000000	spd	
+$FIRST		000013	spd	
+$HILOC		400000	spd	
+$INRT		000037	spd	
+$LAST		000016	spd	
+$LEN		000003	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000005	spd	
+$MAXST		000005	spd	
+$MAXTE		000000	spd	
+$NEEDP		000001	spd	
+$SGLFO		000010	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+.PARMS		000000	spd	
+.RSAVE		000001	spd	
+.TARGE		000005	spd	
+sfor2	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-46
+RTMATH	MAC	28-May-71 18:53	
+
+						search	rtsym
+						$module	sfor2^
+						entry	sfor.2
+						extern	rt.reg
+					;
+					; SFOR.2 is called by by random and exponentiation routines
+					; and may be required even if double precision selected.
+					;
+	400000'				sfor.2:
+	400000'	265 01 0 00 400001'		jsp	r1,.+1		;get the PC flags
+	400001'	621 01 0 00 440140 		tlz	r1,440140	;clear the error indicators
+	400002'	541 01 0 00 400004'		hrri	r1,flagsok
+	400003'	254 02 1 00 000001 		jrstf	@r1		;clear in PC word, now
+	400004'				flagsok:
+	400004'	350 01 0 17 000000 		aos	r1,0(top)	;bump return address
+	400005'	135 01 0 00 000000*		ldb	r1,rt.reg	;get result exp1 R
+	400006'	202 00 0 01 000000 		movem	r0,0(r1)
+	400007'	402 00 0 15 000037 		setzm	$inrt(pda)
+	400010'	263 17 0 00 000000 		popj	top,		;all done
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400011
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:03.953
+
+26P CORE USED
+sfor2	MACRO %53A(1155) 14:53  4-Oct-82 Page S-35
+RTMATH	MAC	28-May-71 18:53		SYMBOL TABLE
+
+FLAGSO		400004'		
+PDA		000015	spd	
+R0		000000	spd	
+R1		000001	spd	
+RT.REG		400005'	ext	
+SFOR.2		400000'	ent	
+TOP		000017	spd	
+$ABSLO		000000	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$INRT		000037	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+
+dfor	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-47
+RTMATH	MAC	28-May-71 18:53	
+
+						search	rtsym
+						search	fmath
+						$module	dfor^
+						$double^
+						entry	dfor.,dfor.1,dfor.2,pi.,piov2.
+						intern	f1.0.
+						intern	dbl.bp
+						extern	forer.,dsave.	;required
+						$static	parms,7^
+
+					;
+					; common code to call a double precision fortran routine.
+					; On entry:
+					;	(r1) = address of routine to call
+					;	@0(top) = ZRO R,@ADDR(INDEXR)
+					;	 where R,R+1 are the result registers and
+					;	 @ADDR(INDEXR) is the address of the operand
+					;
+
+	400000'				dfor.:	
+	400000'	265 00 0 00 000000*		jsp	r0,dsave.	;save regs and preserve locals
+	400001'	200 00 1 17 777772 		move	r0,@-$maxlocals(top)	;get addr of parameter
+	400002'	120 12 1 00 000000 		dmove	dtemp,@r0	;get parameter value
+
+					;
+					; First alternate entry point.  Assumes:
+					;
+					;	(1) registers dtemp - basis saved by DSAVE.
+					;	(2) locals preserved with $FRAME by DSAVE.
+					;	(3) parameter in regs DTEMP and DTEMP+1
+					;
+
+	400003'				dfor.1:
+						$getpsa	dblfortran^
+	400003'	200 14 0 15 000033 		move	psa,$dblfortran(pda)^
+	400004'	124 12 0 14 000003 		dmovem	dtemp,parm1	^3(psa)^;save value
+	400005'	201 16 0 14 000001 		movei	basis,addr1	^1(psa)^;addr of parameterlist
+	400006'	255 17 0 00 400007'		jfcl	17,.+1
+	400007'	260 17 0 01 000000 		pushj	top,0(r1)	;actual call
+
+dfor	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-48
+RTMATH	MAC	28-May-71 18:53	
+
+					;
+					; Second alternate entry point. Assumes
+					;
+					;	(1) result in registers R0 and R1
+					;	(2) regs saved and preserved as in DFOR.1
+					;	(3) return address points to last of parameter list
+					;
+
+	400010'				dfor.2:
+	400010'	350 12 0 17 777772 		aos	dtemp,-$maxlocal(top)	;bump return address
+	400011'	135 12 0 00 400026'		ldb	dtemp,dbl.bp	;get result reg
+	400012'	202 12 0 17 000000 		movem	dtemp,target	^.target-$maxlocal(top)^;register target for result
+	400013'	265 12 0 00 400014'		jsp	dtemp,.+1		;get the PC flags
+	400014'	621 12 0 00 440140 		tlz	dtemp,440140	;clear the error indicators
+	400015'	541 12 0 00 400017'		hrri	dtemp,flagsok
+	400016'	254 02 1 00 000012 		jrstf	@dtemp		;clear in PC word, now
+	400017'				flagsok:
+						$restore rsave,dtemp,basis^
+	400017'	120 12 0 17 777773 		dmove	$first,rsave^.rsave-$maxlocal(top)^
+	400020'	120 14 0 17 777775 		dmove	$first+2,2+rsave^.rsave-$maxlocal(top)^
+	400021'	200 16 0 17 777777 		move	$first+4,4+rsave>^.rsave-$maxlocal(top)^
+						$unframe^
+	400022'	105 17 0 00 777772 		adjsp	top,-$maxlocal>^
+	400023'	124 00 1 17 000006 		dmovem	r0,@$maxlocals+target^.target-$maxlocal(top)^
+	400024'	402 00 0 15 000037 		setzm	$inrt(pda)
+	400025'	263 17 0 00 000000 		popj	top,		;and done
+
+	400026'	27 04 0 12 777777 	dbl.bp:	point	4,-1(dtemp),12
+	400027'	201400	000000		f1.0.:	dec	1.0
+	400030'	000000	000000			exp	0
+	400031'	202622	077325		pi.:	byte	(18)202622,077325,021026,430215
+	400032'	021026	430215
+	400033'	201622	077325		piov2.:	byte	(18)201622,077325,021026,430215
+	400034'	021026	430215
+
+					;
+					; D.INIT initializes the parameterlist
+					;
+	400035'	515 01 0 00 777777 	d.init:	hrlzi	r1,-1
+	400036'	202 01 0 14 000000 		movem	r1,length^0(psa)^
+dfor	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-49
+RTMATH	MAC	28-May-71 18:53	
+
+	400037'	201 01 0 14 000003 		movei	r1,parm1^3(psa)^
+	400040'	201 02 0 14 000005 		movei	exp1,parm2^5(psa)^
+	400041'	124 01 0 14 000001 		dmovem	r1,addr1^1(psa)^
+	400042'	263 17 0 00 000000 		popj	top,
+
+						$end	dblfortran,d.init^
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400043
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:22.344
+
+26P CORE USED
+dfor	MACRO %53A(1155) 14:53  4-Oct-82 Page S-36
+RTMATH	MAC	28-May-71 18:53		SYMBOL TABLE
+
+ADJSP	105000	000000		.PARMS		000000	spd	
+BASIS		000016	spd	.RSAVE		000001	spd	
+D.INIT		400035'		.TARGE		000006	spd	
+DBL.BP		400026'	int	
+DFOR.		400000'	ent	
+DFOR.1		400003'	ent	
+DFOR.2		400010'	ent	
+DSAVE.		400000'	ext	
+DTEMP		000012	spd	
+EXP1		000002	spd	
+F1.0.		400027'	int	
+FLAGSO		400017'		
+FORER.		000000	ext	
+I.DBLF		400035'	sin	
+P.DBLF		000000	ext	
+PDA		000015	spd	
+PI.		400031'	ent	
+PIOV2.		400033'	ent	
+PSA		000014	spd	
+R0		000000	spd	
+R1		000001	spd	
+S.DBLF		000007	sin	
+TOP		000017	spd	
+X.DBLF		000000	sin	
+$ABSLO		000000	spd	
+$DBLFO		000033	spd	
+$FALSE		000000	spd	
+$FIRST		000012	spd	
+$HILOC		400000	spd	
+$INRT		000037	spd	
+$LAST		000016	spd	
+$LEN		000004	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000006	spd	
+$MAXST		000007	spd	
+$MAXTE		000000	spd	
+$NEEDP		000001	spd	
+$STATS		000000	spd	
+$TRUE		000001	spd	
+fcst	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-50
+RTMATH	MAC	28-May-71 18:53	
+
+						search	rtsym
+						$module	fcst^
+						entry	f1.0.
+					;
+					; Constants required by some math routines.
+					;
+
+	400000'	201400	000000		f1.0.:	dec	1.0
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400001
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:01.997
+
+26P CORE USED
+fcst	MACRO %53A(1155) 14:53  4-Oct-82 Page S-37
+RTMATH	MAC	28-May-71 18:53		SYMBOL TABLE
+
+F1.0.		400000'	ent	
+$ABSLO		000000	spd	
+$FALSE		000000	spd	
+$HILOC		400000	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000000	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+
+fsave	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-51
+RTMATH	MAC	28-May-71 18:53	
+
+						search	rtsym
+						search	fmath
+						$module	fsave^
+						entry	fsave.
+						$single^
+
+	400000'				fsave.:
+						$frame^
+	400000'	105 17 0 00 000005 		adjsp	top,$maxlocal>^
+						$save	rsave,ftemp,basis^
+	400001'	124 13 0 17 777774 		dmovem	$first,rsave^.rsave-$maxlocal(top)^
+	400002'	124 15 0 17 777776 		dmovem	$first+2,2+rsave^.rsave-$maxlocal(top)^
+	400003'	476 00 0 15 000037 		setom	$inrt(pda)
+	400004'	254 00 1 00 000000 		jrst	@r0
+						prgend
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400005
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:08.957
+
+26P CORE USED
+fsave	MACRO %53A(1155) 14:53  4-Oct-82 Page S-38
+RTMATH	MAC	28-May-71 18:53		SYMBOL TABLE
+
+ADJSP	105000	000000		
+BASIS		000016	spd	
+FSAVE.		400000'	ent	
+FTEMP		000013	spd	
+PDA		000015	spd	
+R0		000000	spd	
+TOP		000017	spd	
+$ABSLO		000000	spd	
+$FALSE		000000	spd	
+$FIRST		000013	spd	
+$HILOC		400000	spd	
+$INRT		000037	spd	
+$LAST		000016	spd	
+$LEN		000003	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000005	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+.RSAVE		000001	spd	
+.TARGE		000005	spd	
+
+dsave	MACRO %53A(1155) 14:53  4-Oct-82 Page 1-52
+RTMATH	MAC	28-May-71 18:53	
+
+						search	rtsym
+						search	fmath
+						$module	dsave^
+						$double^
+						entry	dsave.
+
+	400000'				dsave.:
+						$frame^
+	400000'	105 17 0 00 000006 		adjsp	top,$maxlocal>^
+						$save	rsave,dtemp,basis^
+	400001'	124 12 0 17 777773 		dmovem	$first,rsave^.rsave-$maxlocal(top)^
+	400002'	124 14 0 17 777775 		dmovem	$first+2,2+rsave^.rsave-$maxlocal(top)^
+	400003'	202 16 0 17 777777 		movem	$first+4,4+rsave>^.rsave-$maxlocal(top)^
+	400004'	476 00 0 15 000037 		setom	$inrt(pda)
+	400005'	254 00 1 00 000000 		jrst	@r0
+						end
+
+NO ERRORS DETECTED
+
+HI-SEG. BREAK IS 400006
+PROGRAM BREAK IS 000000
+CPU TIME USED 00:08.228
+
+26P CORE USED
+dsave	MACRO %53A(1155) 14:53  4-Oct-82 Page S-39
+RTMATH	MAC	28-May-71 18:53		SYMBOL TABLE
+
+ADJSP	105000	000000		
+BASIS		000016	spd	
+DSAVE.		400000'	ent	
+DTEMP		000012	spd	
+PDA		000015	spd	
+R0		000000	spd	
+TOP		000017	spd	
+$ABSLO		000000	spd	
+$FALSE		000000	spd	
+$FIRST		000012	spd	
+$HILOC		400000	spd	
+$INRT		000037	spd	
+$LAST		000016	spd	
+$LEN		000004	spd	
+$LOC	777777	777777	spd	
+$LOLOC		000000	spd	
+$MAXLO		000006	spd	
+$MAXST		000000	spd	
+$MAXTE		000000	spd	
+$STATS		000000	spd	
+.RSAVE		000001	spd	
+.TARGE		000006	spd	
+
+    \@"é

@@ -1,0 +1,459 @@
+OPERATORS
+
+********************     CONFLICT RESOLUTION CONTROL     ********************
+
+*   The following declarations control the structure of <term>s.
+
+    'NOT'		PREC 10	
+    '**'		PREC 9	ASSOC NONE
+    'multiplication op'	PREC 8	ASSOC LEFT
+    'addition op'	PREC 7	ASSOC LEFT
+
+*   The following declaration controls the evaluation of ambiguous if statements
+*   ("if B1 then if B2 then S1 else S2").  In conjunction with the production
+*   <if statement> = <if then statement>, which has precedence 3, this will
+*   force the shifting of an ELSE rather than the reduction of the preceding
+*   "IF <expression> THEN <statement>", thus enforcing the standard rule that
+*   an ELSE binds to the closest unbound preceding THEN.
+
+    'ELSE'		PREC 4	
+
+*   A problem arises on the input "PACKED [ <expression> ]" when a <type> is
+*   expected.  Obviously, the "[ <expression> ]" is a packing clause, and the
+*   "]" ought to be shifted.  However, it is syntactically possible that the
+*   "[ <expression> ]" is a set expression, which will be the lower bound of
+*   a subrange type with the PACKED attribute but no packing clause, in which
+*   case the <expression> ought to be reduced to a <range>.  To prevent this,
+*   the "]" symbol is given precedence 4, and the production <range> =
+*   <expression> is given precedence 3, to force the shifting of the "]".
+
+    ']'			PREC 4	
+
+*   A conflict arises when a <type> is expected and "( identifier ," or
+*   "( identifier )" is read.  An enumerated type is almost certainly
+*   intended, in which case the 'identifier' ought to be reduced to an
+*   <identifier list>.  However, it is syntactically possible that this
+*   is a parenthesized expression which is the lower bound of a subrange,
+*   in which case the 'identifier' ought to be reduced to a <reference>.
+*   The production <identifier list> = 'identifier' is given an order of
+*   10, and the production <reference> = 'identifier' is given an order
+*   of 20, so the enumerated type interpretation takes precedence, which
+*   is what is desired.
+
+
+GRAMMAR
+
+<compilation> =
+    <compilation heading> <declarations> <compound statement> '.'   |
+    <compilation heading> <declarations> '.'   ;
+
+<compilation heading> =
+    'compilation keyword' 'identifier' <options> ';'   ;
+
+* 'compilation keyword' =
+*   'PROGRAM'   |   'MODULE'   |   'ENVMODULE'   ;
+
+<options> =
+    ''   |
+    <option list>   ;
+
+<option list> =
+    <option heading> '*' <option>   |
+    <option heading> <option>   ;
+
+<option heading> =
+    'OPTIONS'   |
+    <option list> ','   ;
+
+<option> =
+    'identifier'   |
+    'identifier' <option sublist> ')'   ;
+
+<option sublist> =
+    '(' <suboption>   |
+    <option sublist> ',' <suboption>   ;
+
+<suboption> =
+    'identifier'   |
+    'integer'   |
+    'string'   ;
+
+********************     DECLARATIONS     ********************
+
+<declarations> =
+    ''   |
+    <declarations> <label declaration> ';'   |
+    <declarations> <const declaration>   |
+    <declarations> <type declaration>   |
+    <declarations> <var declaration>   |
+    <declarations> <condition declaration> ';'   |
+    <declarations> <subr declaration> ';'   ;
+
+<label declaration> =
+    'LABEL' 'integer'   |
+    <label declaration> ',' 'integer'   ;
+
+<const declaration> =
+    <storage class> 'CONST' <const id declaration> ';'   |
+    <const declaration> <const id declaration> ';'   ;
+
+<const id declaration> =
+    'identifier' <optional type>   |
+    'identifier' <optional type> '=' <expression>   |
+    'identifier' <optional type> ':=' <expression>   ;
+
+<storage class> =
+    ''   |
+    'STATIC'   |
+    'PUBLIC'   |
+    'EXTERNAL'   ;
+
+<optional type> =
+    ''   |
+    ':' <type>   ;
+
+<var declaration> =
+    <storage class> 'VAR' <var id declaration> ';'   |
+    <var declaration> <var id declaration> ';'   ;
+
+<var id declaration> =
+    <identifier list> ':' <type>   |
+    <identifier list> ':' <type> ':=' <expression>   ;
+
+<identifier list> =
+    'identifier' ORDER 10   |
+    <identifier list> ',' 'identifier'   ;
+
+<type declaration> =
+    'TYPE' 'identifier' '=' <type> ';'   |
+    <type declaration> 'identifier' '=' <type> ';'   ;
+
+<condition declaration> =
+    <storage class> 'EXCEPTION' <identifier list>   ;
+
+<subr declaration> =
+    'EXTERNAL' <subr heading>   |
+    <optional public> <subr heading> <declarations> <compound statement>   |
+    <optional public> <subr heading> 'FORWARD'   ;
+
+<subr heading> =
+    'subr keyword' 'identifier' <parameters> <optional type> <options> ';'   ;
+
+* 'subr keyword' =
+*   'PROCEDURE'   |
+*   'FUNCTION'   ;
+
+<parameters> =
+    ''   |
+    <parameter list> ')'   ;
+
+<parameter list> =
+    '(' <parameter declaration>   |
+    <parameter list> ';' <parameter declaration>   ;
+
+<parameter declaration> =
+    'VAR' <identifier list> ':' <type>   |
+    'VAR' <type>   |
+    <identifier list> ':' <type>   |
+    <type>   ;
+
+<optional public> =
+    ''   |
+    'PUBLIC'   ;
+
+********************     TYPES     ********************
+
+<type> =
+    <unpacked type>   |
+    'PACKED' <unpacked type>   |
+    'PACKED' '[' <expression> ']' <unpacked type>   ;
+
+<unpacked type> =
+    'identifier'   |
+    <enumerated type>   |
+    <range type>   |
+    <string type>   |
+    <pointer type>   |
+    <set type>   |
+    <array type>   |
+    <record type>   |
+    <file type>   |
+    <subr type>   ;
+
+<enumerated type> =
+    '(' <identifier list> ')'   ;
+
+<range type> =
+    <term> '..' <term>   |
+    <term> '..' <term> 'PREC' <term>   ;
+
+<string type> =
+    'STRING'   |
+    'STRING' '[' <expression> ']'   |
+    'STRING' '[' '*' ']'   ;
+
+<pointer type> =
+    '^' <type>   ;
+
+
+<set type> =
+    'SET' 'OF' <type>   ;
+
+<array type> =
+    'ARRAY' '[' <type> ']' 'OF' <type>   |
+    'ARRAY' '[' <term> '..' '*' ']' 'OF' <type>   ;
+
+<record type> =
+    'RECORD' <field list> 'END'   ;
+
+<field list> =
+    ''   |
+    <fixed field list> <optional ;>   |
+    <variant record part> <optional ;>   |
+    <fixed field list> ';' <variant record part> <optional ;>   ;
+
+<fixed field list> =
+    <identifier list> ':' <type>   |
+    <fixed field list> ';' <identifier list> ':' <type>   ;
+
+<variant record part> =
+    <variant record heading> <variant case>   ;
+
+<variant record heading> =
+    'CASE' 'identifier' ':' <type> 'OF'   |
+    'CASE' <type> 'OF'   |
+    <variant record part> ';'   ;
+
+<variant case> =
+    <range list> ':' '(' <field list> ')'   |
+    'OTHERS' ':' '(' <field list> ')'   ;
+
+<optional ;> =
+    ''   |
+    ';'   ;
+
+<range list> =
+    <range>   |
+    <range list> ',' <range>   ;
+
+<range> =
+    <expression>  PREC 3   |
+    <expression> '..' <expression>   ;
+
+<file type> =
+    'FILE' 'OF' <type>   |
+    'FILE' 'OF' '*'   ;
+
+<subr type> =
+    'subr keyword' <parameters> <optional type>   ;
+
+********************     STATEMENTS     ********************
+
+<statement list> =
+    <statement>   |
+    <statement list> ';' <statement>   ;
+
+<statement> =
+    <unlabeled statement>   |
+    'integer' ':' <unlabeled statement>   ;
+
+<unlabeled statement> =
+    ''   |
+    <assignment statement>   |
+    <procedure call>   |
+    <goto statement>   |
+    <i/o statement>   |
+    <return statement>   |
+    <stop statement>   |
+    <compound statement>   |
+    <if statement>   |
+    <for statement>   |
+    <repeat statement>   |
+    <while statement>   |
+    <loop statement>   |
+    <case statement>   |
+    <with statement>   |
+    <exit clause>   ;
+
+<assignment statement> =
+    <reference> ':=' <expression>   ;
+
+<procedure call> =
+    <reference>   ;
+
+<goto statement> =
+    'GOTO' 'integer'   ;
+
+<i/o statement> =
+    'i/o keyword'   |
+    'i/o keyword' <i/o arguments> ')'   ;
+
+* 'i/o keyword' =
+*   'READ'   |
+*   'READLN'   |
+*   'READRN'   |
+*   'WRITE'   |
+*   'WRITELN'   |
+*   'WRITERN'   |
+*   'GETSTRING'   |
+*   'PUTSTRING'   ;
+
+<i/o arguments> =
+    '(' <i/o argument>   |
+    <i/o arguments> ',' <i/o argument>   ;
+
+<i/o argument> =
+    <expression>   |
+    <i/o argument> ':' <expression>   ;
+
+<return statement> =
+    'RETURN'   ;
+
+<stop statement> =
+    'STOP'   ;
+
+<compound statement> =
+    'BEGIN' <statement list> 'END'   |
+    'BEGIN' <statement list> <handler clause> <optional ;> 'END'   ;
+
+<handler clause> =
+    'EXCEPTION' <handler>   |
+    <handler clause> ';' <handler>   ;
+
+
+<handler> =
+    <handler selector> ':' <statement>   ;
+
+<handler selector> =
+    <identifier list>   |
+    'OTHERS'   |
+    'ALLCONDITIONS'   ;
+
+<if statement> =
+    <if then statement> 'ELSE' <statement>   |
+    <if then statement>  PREC 3   ;
+
+<if then statement> =
+    <if head> <statement>   ;
+
+<if head> =
+    'IF' <expression> 'THEN'   ;
+
+<for statement> =
+    <for head> <statement>   ;
+
+<for head> =
+    'FOR' 'identifier' ':=' <expression> 'direction' <expression> 'DO'   ;
+
+* 'direction' =
+*   'TO'   |
+*   'DOWNTO'   ;
+
+<repeat statement> =
+    <repeat head> <statement list> 'UNTIL' <expression>   ;
+
+<repeat head> =
+    'REPEAT'   ;
+
+<while statement> =
+    <while head> <statement>   ;
+
+<while head> =
+    'WHILE' <expression>   ;
+
+<loop statement> =
+    <loop head> <statement list> 'END'   ;
+
+<loop head> =
+    'LOOP'   ;
+
+<case statement> =
+    <case list> <optional ;> 'END'   ;
+
+<case list> =
+    <case head> <range list> ':' <statement>   |
+    <case head> 'OTHERS' ':' <statement>   ;
+
+<case head> =
+    'CASE' <expression> 'OF'   |
+    <case list> ';'   ;
+
+<with statement> =
+    <with head> 'DO' <statement>   ;
+
+<with head> =
+    'WITH' <expression>   |
+    <with head> ',' <expression>   ;
+
+<exit clause> =
+    <exit head> 'DO' <statement>   |
+    <exit head>   ;
+
+<exit head> =
+    'EXIT' 'IF' <expression>   ;
+
+********************     EXPRESSIONS     ********************
+
+<expression> =
+    <term>   |
+    <term> 'relation op' <term>   |
+    <term> '=' <term>   ;
+
+<term> =
+    'integer'   |
+    'real'   |
+    'string'   |
+    'NIL'   |
+    <reference>   |
+    '(' <aggregate expression> ')'   |
+    '[' <range list> ']'   |
+    'addition op' <term>  PREC 10   |
+    'NOT' <term>   |
+    <term> '**' <term>   |
+    <term> 'multiplication op' <term>   |
+    <term> 'addition op' <term>   ;
+
+<reference> =
+    'identifier' ORDER 20   |
+    <reference> '[' <subscript list> ']'   |
+    <reference> '.' 'identifier'   |
+    <reference> '^'   |
+    <reference> '(' <argument list> ')'   ;
+
+* 'relation op' =
+*   '<'   |
+*   '>'   |
+*   '<='   |
+*   '>='   |
+*   '<>'   ;
+
+* 'addition op' =
+*   '+'   |
+*   '-'   ;
+
+* 'multiplication op' =
+*   '*'   |
+*   '/'   |
+*   'DIV'   |
+*   'MOD'   ;
+
+<aggregate expression> =
+    <aggregate element>   |
+    <aggregate expression> ',' <aggregate element>   ;
+
+<aggregate element> =
+    <expression>   |
+    <expression> 'OF' <expression>   ;
+
+<subscript list> =
+    <subscript>   |
+    <subscript list> ',' <subscript>   ;
+
+<subscript> =
+    <expression>   |
+    <expression> ':' <expression>   ;
+
+<argument list> =
+    <expression>   |
+    <argument list> ',' <expression>   ;
+ 

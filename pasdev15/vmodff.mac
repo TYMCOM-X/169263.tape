@@ -1,0 +1,444 @@
+	title	MODFIT	Modified first-fit heap allocation
+	search	PASSYM
+;    +--------------------------------------------------------------+
+;    |                                                              |
+;    |                          V M O D F                           |
+;    |                          - - - - -                           |
+;    |                                                              |
+;    +--------------------------------------------------------------+
+;    
+;    MDSI, Company Confidential
+;    
+;    SYSTEM:  PASCAL Runtime
+;    
+;    STARTED:  11/17/78
+;    
+;    PURPOSE:  This module provides management of the  virtual  space
+;       for NEW, DISPOSE, and related operations.  It uses a modified
+;       first-fit allocation algorithm.
+;    
+;    USAGE:
+;    
+;          MOVEI  REG, size
+;          PUSHJ  TOPP,VNEW.
+;          returns: (AC1) -- real address of new record
+;                   (REG) -- virtual address of new record
+;    
+;          ANEW. -- same as VNEW., except (AC1) contains area number in which
+;                   the allocation is to be made.
+;    
+;          MOVE   REG,ptr
+;          PUSHJ  TOPP,VDSPS.
+;    
+;          PUSHJ  TOPP,VMARK.
+;          returns: (REG) contains the base heap address of the default area.
+;    
+;          PUSHJ  TOPP,AMARK.
+;          same as VMARK., except explicit area number given in (AC1).
+;    
+;          MOVE   REG,heapmark
+;          PUSHJ  TOPP,VRLES.
+;    
+;          The normal entries NEW., DSPOS., MARK., and RLEAS. cause runtime errors.
+;    
+;    ALGORITHM:  This module uses a version of the modified first-fit
+;       algorithm   from   Knuth  (see  routine  KNUTH  below).  Heap
+;       extensions are done as precisely as  possible  (exact  if  no
+;       page  alignment  is  specified)  to avoid filling the virtual
+;       space with small free  blocks  when  disposes  are  few,  far
+;       between,  and complete.  Of course, random disposes will slow
+;       down any allocation algorithm.
+;    
+;    RESPONSIBLE:  Jerry Rosen -- PASCAL group
+;    
+;    ----------------------------------------------------------------
+;
+	$reloc
+;
+; routine control parameters -- various and sundry
+
+	MINBLK=3			; word size of minimum block to allocate
+					;   note--must be >= 3 for free block info
+	SMALL=3				; don't split free blocks leaving
+					;   remnants of this size or smaller
+	RECORD=0			; if <> 0, count various things
+	PAGSIZ=^o1000			; page size in words
+					;   note -- must agree with VMANGR
+	MAXPAG=^o77777			; largest page index
+	DEFAREA=1			; default area number for NEW.
+
+;
+; heap header DSECT -- each active heap has one
+
+	LHEAP=0				; pointer to previous heap, or zero
+	TAIL=1				; points to word past end of heap
+	FTAIL=2				; points to last block of free list
+	FHEAD=3				;   and first block (VA's)
+	ROVER=4				; points to free block to test first
+
+	HDRSIZ=5			; size of above header
+
+;
+; block header DSECT 
+
+	SIZE=0				; size word -- negative if alloc'd
+;	next two for blocks on free list only
+	BLINK=1				; back link on free list
+	FLINK=2				;   and fore link
+	BHSIZE=3			; size of above block header
+
+;
+; register equates used by this module
+
+	HEAP=3
+	T=4
+	T2=T+1
+	T3=T+2
+	T4=T+3
+	T5=T+4
+	NEW=T+5
+	NEWVIR=T+6
+	T6=T+7
+	ALLOC=REG
+	NIL=^o377777
+
+;
+; TRANS macro -- used for all address translation in this module
+
+	opdef	TR.OP	[0]		; phony to make macro easier
+
+	define TRANS (TREG,TSIZE) <
+	  PUSHJ	TOPP,VTRNS.
+	  TR.OP TREG,TSIZE >
+;
+; COUNT macro -- may be used to count various events in the heap management
+
+	ife RECORD,<define COUNT(A) <>>	; null definition to avoid counting
+
+	ifn RECORD,<
+	  define COUNT(A) <
+	    AOS 0,A>
+	  $low
+	  C$NEW:: exp 0
+	  C$DISP::exp 0
+	  C$COAL::exp 0
+	  C$EXT:: exp 0
+	  C$SPLI::exp 0
+	  C$EXCT::exp 0
+	  C$EXAM::exp 0 >
+
+;
+; externs in the virtual space handler
+
+	extern	VTRNS.,VINFO.,VINFS.,VCORE.
+
+; externs in PASCAL runtime for error trapping
+
+	extern	TWAIT.,WRTPC.,DIE.
+
+; our entry points
+
+	entry	VNEW.,ANEW.,VMARK.,AMARK.,VRLES.,VDPS.,ALC0.
+	ALC0.=0				; heh-heh
+
+; the ones we trap for errors
+
+	intern	NEW.,DSPOS.,MARK.,RLEAS.
+	$high
+;
+; NEWHP -- initializes a heap header. It assumes that HEAP contains the
+;   desired starting address for the new heap. First we must ask the
+;   virtual space manager to extend the end of the space sufficiently.
+;   Then we get addressibility, and initialize.
+
+NEWHP:	MOVE	AC1,HEAP
+	MOVE	T,HEAP			; remember virtual addr. of new heap
+	ADDI	AC1,HDRSIZ		; AC1 now has new maximum addr
+	MOVE	T2,AC1			; remember that for tail of heap
+	PUSHJ	TOPP,VCORE.		; "CORE monitor call"
+
+	TRANS	(HEAP,HDRSIZ)		; get addr'ty over heap header
+
+	MOVE	AC1,T			; get heap origin for area ID
+	PUSHJ	TOPP,VINFO.		; get old magic word in AC1
+	MOVEM	AC1,LHEAP(HEAP)		; install as back heap pointer
+	MOVEM	T2,TAIL(HEAP)		; new tail of heap
+	MOVE	AC1,T			; get virtual addr of new heap
+	PUSHJ	TOPP,VINFS.		; and store as new magic word
+	ADDI	T,<FTAIL-1>		; get virtual addr for free list
+	MOVEM	T,FHEAD(HEAP)		; and install as head,
+	MOVEM	T,FTAIL(HEAP)		;   tail,
+	MOVEM	T,ROVER(HEAP)		;   and rover for new heap.
+	POPJ	TOPP,0			; and we're done.
+;
+; NEW. and ANEW. -- All NEW. does extra is insert the default area number
+;   into AC1. Then we check with the manager for the CHEAP value, and
+;   initialize the heap if it is zero.  Then insure addressibilty over
+;   the header, call the allocation routines KNUTH and/or XTEND. These
+;   return with addressibility established over the entire new record.
+;   Zero out the record, set up return parameters, and return.
+
+VNEW.:	MOVEI	AC1,DEFAREA		; install default area number
+
+ANEW.:	IMUL	AC1,[<PAGSIZ*<MAXPAG+1>>] ; compose pointer into right area
+	COUNT	C$NEW			; count all NEW calls
+	MOVE	HEAP,AC1		; hang onto this
+	PUSHJ	TOPP,VINFO.		; get CHEAP for this area
+	JUMPN	AC1,NEW2		; non-zero -- establish address'y
+	PUSHJ	TOPP,NEWHP		; else initialize HEAP
+	MOVE	AC0,AC1			; save virtual addr in AC0
+	JRST	NEW3
+
+NEW2:	MOVE	AC0,AC1			; hang onto virtual addr of heap
+	TRANS	(AC1,HDRSIZ)		; get real addr of heap header
+	MOVE	HEAP,AC1		; and put real address in HEAP
+
+NEW3:	MOVEI	ALLOC,1(ALLOC)		; add one to size passed for real size
+	CAIGE	ALLOC,MINBLK		; is up to minimum size to allocate?
+	MOVEI	ALLOC,MINBLK		; no, but allocate MINBLK words anyway
+
+	JRST	KNUTH			; try to allocate or extend
+
+; at this point, a block has been allocated. The entire block must be
+;   addressible, for we are going to zero it out!
+
+NEWOK:	SETZM	0,1(NEW)		; zero out first word
+	HRLI	T,1(NEW)		; source pointer is zeroed word
+	HRRI	T,2(NEW)		; dest. ptr. is one word after
+	MOVEI	T2,0(NEW)		; compose final address of BLT
+	ADDI	T2,-1(ALLOC)		; one less than allocated size
+	BLT	T,0(T2)
+
+	MOVE	ALLOC,NEWVIR		; return virtual pointer in REG
+	ADDI	ALLOC,1			;   tick one for control word
+	MOVEI	AC1,1(NEW)		; return real address in AC1
+	POPJ	TOPP,0
+;
+; DISPOSE -- after discovering that the address is reasonable, place
+;   the newly freed block as the head of the free list.
+
+VDPS.:	COUNT	C$DISP			; count dispose calls
+	SUBI	ALLOC,1			; control addr one before
+	MOVE	AC1,ALLOC		; put alleged address in AC1
+	PUSHJ	TOPP,VINFO.		;   to get its area's CHEAP word
+
+DSPS2:	JUMPE	AC1,DSERR		; zero -- can't find right heap
+	CAMG	AC1,ALLOC		; if record addr. more than heap top
+	JRST	DSPS3			; then we've got the right heap
+	TRANS	(AC1,HDRSIZ)		; else get addr. of this heap
+	MOVE	AC1,LHEAP(AC1)		; get heap back pointer
+	JRST	DSPS2			; and try again
+
+DSPS3:	MOVE	T,AC1
+	ADDI	T,HDRSIZ		; if record address is less than
+	CAMGE	ALLOC,T			;   end of header, then error
+	JRST	DSERR
+
+	MOVE	T,AC1
+	TRANS	(T,HDRSIZ)		; get heap header address
+	MOVE	T2,TAIL(T)		;   to get tail virtual address
+	SUBI	T2,MINBLK		; now last possible start address
+	CAMLE	ALLOC,T2		; if record is past this address
+	JRST	DSERR			;   then is error
+
+	MOVE	T3,ALLOC		; we need real address of record
+	TRANS	(T3,BHSIZE)
+	SKIPL	T4,SIZE(T3)		; pick up size of record
+	JRST	DSPREV			;   positive, already free: error
+
+; Now, ALLOC-T3 has the (virtual) address of the new free record, and
+;   T has the real address of heap header. T4 has the size.
+
+	MOVE	T2,FHEAD(T)		; get virtual addr of current first
+	MOVEM	ALLOC,FHEAD(T)		; and put us as new first
+	MOVEM	T2,FLINK(T3)		; record our forelink
+	TRANS	(T2,BHSIZE)		; get addr of old first
+	EXCH	ALLOC,BLINK(T2)		; pick up old blink, put us as new one
+	MOVEM	ALLOC,BLINK(T3)		; put down new blink of new record
+
+	MOVMS	0,SIZE(T3)		; record new size as free
+	MOVEI	ALLOC,NIL		; return nil pointer
+	POPJ	TOPP,0
+;
+; KNUTH -- allocation-compaction algorithm taken from "Art of Computer
+;    Programming" Vol. 1, sec. 2.5, problem 19. It looks for a free
+;    block large enough for the allocation, coalescing free blocks as it looks.
+;
+; ALLOC contains the word size of the block needed, HEAP and AC0 contain
+;    the real and virtual addresses, respectively, of the heap header. NEW
+;    and NEWVIR will contain the address of the control word of the
+;    allocated block if successful (skip 1) else the routine will return
+;    without a skip.  Special considerations must be made in the case of
+;    ALIGN<>0 (never allocate a block across a page boundary).
+
+KNUTH:	MOVE	NEWVIR,ROVER(HEAP)	; get VA of first block to check
+	SETZ	T2,0			; clear done flag
+	MOVE	T3,TAIL(HEAP)		; remember tail address
+	MOVE	T,AC0			; using virtual addr of heap header,
+	ADDI	T,<FTAIL-1>		; get addr of free list header block
+
+KNCHEK:	CAME	NEWVIR,T		; are we at freelist header block
+	JRST	KNSIZE			; no, check NEWVIR block out
+	JUMPN	T2,KNFAIL		; second time, KNUTH fails
+	MOVE	NEWVIR,FHEAD(HEAP)	; else get first block
+	AOJA	T2,KNCHEK		; and try again
+
+KNSIZE:	MOVE	NEW,NEWVIR		; get real address of current block
+	TRANS	(NEW,BHSIZE)
+KNSIZ2:	MOVE	T4,SIZE(NEW)		; pick up size of this block
+	ADD	T4,NEWVIR		; get VA of next physical block
+	CAMN	T4,T3			; if end of heap, try to use it
+	JRST	KNFIT
+
+	TRANS	(T4,BHSIZE)		; address mystery block
+	SKIPG	T6,SIZE(T4)		; pick up size
+	JRST	KNFIT			; negative, try to use current
+
+	COUNT	C$COAL
+	MOVE	T5,FLINK(T4)		; pick up links from block to eat
+	MOVE	T4,BLINK(T4)
+	MOVE	AC1,T4
+	TRANS	(AC1,BHSIZE)
+	MOVEM	T5,FLINK(AC1)		; put forelink as new forelink
+	MOVE	AC1,T5			; now get addr of fore block
+	TRANS	(AC1,BHSIZE)
+	MOVEM	T4,BLINK(AC1)		; and put link
+
+	MOVE	NEW,NEWVIR		; must readdress old block
+	TRANS	(NEW,BHSIZE)
+	ADDM	T6,SIZE(NEW)		; to fix size
+	JRST	KNSIZ2
+
+KNFIT:	MOVE	T4,SIZE(NEW)		; calculate split point
+	SUBI	T4,0(ALLOC)
+	COUNT	C$EXAM
+	JUMPL	T4,KNNEXT		; negative, block too small
+	MOVE	T3,FLINK(NEW)		; since we must allocate, set new ROVER
+	CAIG	T4,SMALL		; should we split?
+	JRST	KALLOC			; remnant too small, do whole thing
+
+	COUNT	C$SPLI
+	MOVEM	T4,SIZE(NEW)		; new size -- difference
+	ADDB	T4,NEWVIR		; fix VA of alloc'd block
+	TRANS	(T4,BHSIZE)
+	MOVNM	ALLOC,SIZE(T4)		; put size, negative for alloc'd
+	JRST	KNDONE
+
+KALLOC:	MOVNS	0,SIZE(NEW)		; set size negative for alloc'd
+	COUNT	C$EXCT
+	MOVE	T4,BLINK(NEW)		; get both links for changing
+	MOVE	AC1,T3
+	TRANS	(AC1,BHSIZE)		; get forward free block
+	MOVEM	T4,BLINK(AC1)		; delete block
+	TRANS	(T4,BHSIZE)		; get backward free block
+	MOVEM	T3,FLINK(AC1)		;   and delete block both ways
+
+KNDONE:	MOVE	HEAP,AC0		; must readdress heap header
+	TRANS	(HEAP,HDRSIZ)
+	MOVEM	T3,ROVER(HEAP)		; T3 set before, new ROVER
+	MOVE	NEW,NEWVIR		; must address entire record
+	TRANS	(NEW,0(ALLOC))
+	JRST	NEWOK			; return to NEW with the goodies
+
+KNNEXT:	MOVE	NEWVIR,FLINK(NEW)	; get VA of next block on list
+	JRST	KNCHEK			; back up to top
+
+KNFAIL:	MOVE	HEAP,AC0		; must get heap header back
+	TRANS	(HEAP,HDRSIZ)
+	MOVEM	NEWVIR,ROVER(HEAP)	; new rover for next time
+	JRST	XTEND			; extend heap
+;
+; VMARK. -- virtual heap mark. Two entry points, VMARK. uses the default
+;   area number while AMARK. gives an explicit area in AC1. We may have
+;   to initialize the world, but then just push another heap onto the
+;   current.
+
+VMARK.:	MOVEI	AC1,DEFAREA		; default if none from caller
+
+AMARK.:	IMUL	AC1,[<PAGSIZ*<MAXPAG+1>>]	; convert to pointer into area
+	MOVE	HEAP,AC1		; hang onto in case we need to init
+	PUSHJ	TOPP,VINFO.		; get cheap for this heap
+	JUMPN	AC1,MARK2		; non-zero, have a heap now
+	PUSHJ	TOPP,NEWHP		; else initialize, HEAP has addr
+	JRST	MARK3
+
+MARK2:	TRANS	(AC1,HDRSIZ)		; get real address of heap header
+	MOVE	HEAP,AC1		; and put into HEAP
+
+MARK3:	MOVE	HEAP,TAIL(HEAP)		; pick up tail addr (virtual)
+	PUSHJ	TOPP,NEWHP		; and make a new one
+	MOVE	REG,AC1			; AC1 has V.A. of new heap from NEWHP
+	POPJ	TOPP,0
+
+VRLES.:	MOVE	AC1,REG			; copy mark addr to get area's CHEAP
+	PUSHJ	TOPP,VINFO.
+
+RLLOOP:	JUMPE	AC1,RLSERR		; end of backchain, not found, error
+	CAMN	AC1,REG			; have we found it?
+	JRST	RLSOK			; yep
+	TRANS	(AC1,HDRSIZ)		; else get addressibility
+	MOVE	AC1,LHEAP(AC1)		; get virtual addr. of previous heap
+	JRST	RLLOOP
+
+RLSOK:	TRANS	(AC1,HDRSIZ)		; get addressibility
+	MOVE	T2,LHEAP(AC1)		; pick up previous heap addr
+	JUMPE	T2,RLSERR		; can't release first heap
+	MOVE	AC1,T2			; put as CHEAP for this one
+	PUSHJ	TOPP,VINFS.		; store in same area
+	TRANS	(T2,HDRSIZ)		; get addr'y for new current heap
+	MOVE	AC1,TAIL(T2)		; get its tail
+	JRST	VCORE.			; restrict addressing, let VCORE return
+;
+; XTEND -- if we can't get anything from the free list, just extend core
+;   sufficiently.  If ALIGN <>0, then we may end up with a new free block
+;   taking up the end of the former page. 
+
+XTEND:	MOVE	HEAP,AC0		; may not have address of heap header
+	COUNT	C$EXT			; count space extensions
+	TRANS	(HEAP,HDRSIZ)
+	MOVE	NEWVIR,TAIL(HEAP)	; old tail is start of new record(s)
+	MOVE	T4,NEWVIR		; hang onto it
+	ADDI	T4,0(ALLOC)		; get end of record
+
+	MOVEM	T4,TAIL(HEAP)		; install new tail
+
+	MOVE	AC1,T4			; get sufficient virtual core
+	PUSHJ	TOPP,VCORE.
+
+XTOUT:	MOVE	NEW,NEWVIR		; translate new record addr
+	TRANS	(NEW,0(ALLOC))
+	MOVNM	ALLOC,SIZE(NEW)		; install allocated size
+	JRST	NEWOK			; and we're done
+;
+; ERROR ROUTINES
+
+MARK.:
+RLEAS.:
+NEW.:
+DSPOS.:	MOVEI	T,[asciz/
+?	Virtual heap program has non-virtual module/]
+	JRST	ALCDIE
+
+RLSERR:	MOVEI	T,[asciz/
+?	Invalid VHEAP pointer in release call/]
+	JRST	ALCDIE
+
+DSERR:	MOVEI	T,[asciz/
+?	Bad pointer in DISPOSE/]
+	JRST	ALCDIE
+
+DSPREV:	MOVEI	T,[asciz/
+?	Attempt to free freed block/]
+
+ALCDIE:	PUSHJ	TOPP,TWAIT.
+	OUTSTR	0(T)
+	MOVE	AC0,0(TOPP)
+	PUSHJ	TOPP,WRTPC.
+	JRST	DIE.
+;
+; PMASK for isolating page number from a virtual address
+
+PMASK:	exp	PAGSIZ-1
+	lit
+	end
+ 
